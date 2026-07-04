@@ -1,0 +1,13 @@
+{
+  "name": "minimal-light",
+  "canvas": {
+    "background": "#ffffff",
+    "text": "#172033",
+    "muted": "#5b6778",
+    "grid": "#edf2f7"
+  },
+  "title": {
+    "accent": "#2563eb",
+    "highlight": "#e8f1ff"
+  }
+}

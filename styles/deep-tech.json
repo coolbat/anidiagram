@@ -1,0 +1,24 @@
+{
+  "name": "deep-tech",
+  "canvas": {
+    "background": "#050816",
+    "text": "#f8fafc",
+    "muted": "#cbd5e1",
+    "grid": "#111c36"
+  },
+  "title": {
+    "accent": "#22d3ee",
+    "highlight": "#0f2742"
+  },
+  "roles": {
+    "actor": {"stroke": "#fbbf24", "fill": "#1f1a0d", "text": "#f8fafc"},
+    "source": {"stroke": "#22d3ee", "fill": "#071f2f", "text": "#f8fafc"},
+    "process": {"stroke": "#38bdf8", "fill": "#0f172a", "text": "#f8fafc"},
+    "agent": {"stroke": "#a78bfa", "fill": "#1e1b4b", "text": "#f8fafc"},
+    "memory": {"stroke": "#34d399", "fill": "#052e24", "text": "#f8fafc"},
+    "tool": {"stroke": "#f59e0b", "fill": "#21160a", "text": "#f8fafc"},
+    "output": {"stroke": "#4ade80", "fill": "#052e16", "text": "#f8fafc"},
+    "risk": {"stroke": "#fb7185", "fill": "#2a0f16", "text": "#f8fafc"},
+    "neutral": {"stroke": "#64748b", "fill": "#111827", "text": "#f8fafc"}
+  }
+}

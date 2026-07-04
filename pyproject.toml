@@ -1,0 +1,17 @@
+[project]
+name = "animated-diagram"
+version = "0.1.0"
+description = "Clean-room JSON-to-animated-SVG renderer for architecture diagrams."
+readme = "README.md"
+requires-python = ">=3.9"
+license = {file = "LICENSE"}
+authors = [{name = "Animated Diagram contributors"}]
+
+[project.scripts]
+animated-diagram = "animated_diagram.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

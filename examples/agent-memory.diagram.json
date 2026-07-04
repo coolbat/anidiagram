@@ -1,0 +1,29 @@
+{
+  "version": "0.1",
+  "canvas": {"width": 1200, "height": 720},
+  "style": "blueprint",
+  "title": {
+    "text": "Agent Memory System",
+    "subtitle": "request, planning, tools, memory, and response"
+  },
+  "groups": [
+    {"id": "runtime", "label": "Runtime", "bounds": [285, 150, 365, 390], "role": "process"},
+    {"id": "knowledge", "label": "Knowledge", "bounds": [700, 150, 310, 390], "role": "memory"}
+  ],
+  "nodes": [
+    {"id": "user", "label": "User", "caption": "asks a task", "position": [80, 310], "size": [150, 82], "role": "actor"},
+    {"id": "agent", "label": "Planner Agent", "caption": "routes work", "position": [360, 230], "size": [190, 92], "role": "agent"},
+    {"id": "tools", "label": "Tool Layer", "caption": "search and APIs", "position": [360, 400], "size": [190, 92], "role": "tool"},
+    {"id": "memory", "label": "Memory", "caption": "facts and traces", "position": [760, 230], "size": [180, 92], "role": "memory"},
+    {"id": "store", "label": "Vector Store", "caption": "retrieval index", "position": [760, 400], "size": [180, 92], "role": "source"},
+    {"id": "response", "label": "Response", "caption": "grounded answer", "position": [1030, 310], "size": [145, 82], "role": "output"}
+  ],
+  "edges": [
+    {"from": "user", "to": "agent", "label": "request", "role": "actor"},
+    {"from": "agent", "to": "tools", "label": "invoke", "role": "tool"},
+    {"from": "agent", "to": "memory", "label": "read", "role": "memory"},
+    {"from": "tools", "to": "store", "label": "retrieve", "role": "source"},
+    {"from": "memory", "to": "response", "label": "context", "role": "memory"},
+    {"from": "store", "to": "response", "label": "evidence", "role": "source"}
+  ]
+}

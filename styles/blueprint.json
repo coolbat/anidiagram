@@ -1,0 +1,32 @@
+{
+  "name": "blueprint",
+  "canvas": {
+    "background": "#07162c",
+    "text": "#e6f7ff",
+    "muted": "#9cc7e8",
+    "grid": "#12345c"
+  },
+  "title": {
+    "accent": "#55c7ff",
+    "highlight": "#0d3b5c"
+  },
+  "node": {
+    "radius": 8,
+    "stroke_width": 1.8
+  },
+  "edge": {
+    "width": 2,
+    "duration": "4.6s"
+  },
+  "roles": {
+    "actor": {"stroke": "#f6d365", "fill": "#10243a", "text": "#e6f7ff"},
+    "source": {"stroke": "#7dd3fc", "fill": "#0b273c", "text": "#e6f7ff"},
+    "process": {"stroke": "#55c7ff", "fill": "#0b1d38", "text": "#e6f7ff"},
+    "agent": {"stroke": "#a7b8ff", "fill": "#101b45", "text": "#e6f7ff"},
+    "memory": {"stroke": "#33e6a6", "fill": "#0b2f2b", "text": "#e6f7ff"},
+    "tool": {"stroke": "#f6d365", "fill": "#1f2835", "text": "#e6f7ff"},
+    "output": {"stroke": "#33e6a6", "fill": "#0a2d33", "text": "#e6f7ff"},
+    "risk": {"stroke": "#ff8ab3", "fill": "#331827", "text": "#e6f7ff"},
+    "neutral": {"stroke": "#2f6f9f", "fill": "#0a1a33", "text": "#e6f7ff"}
+  }
+}
