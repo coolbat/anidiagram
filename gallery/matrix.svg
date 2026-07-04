@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="diagram-title diagram-desc">
+<title id="diagram-title">Matrix</title>
+<desc id="diagram-desc">two-by-two prioritization grid</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+</style>
+<rect width="100%" height="100%" fill="#f8fafc" />
+<defs>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#e2e8f0" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="1144" height="668" rx="26" fill="none" stroke="#64748b" stroke-width="1.4" />
+<rect x="44" y="44" width="12" height="52" rx="6" fill="#0ea5e9" />
+<rect x="72" y="46" width="360" height="56" rx="16" fill="#e0f2fe" />
+<text id="main-title" x="90" y="84" class="title" fill="#111827">Matrix</text>
+<text x="74" y="126" class="subtitle" fill="#64748b">two-by-two prioritization grid</text>
+
+<g id="group-matrix" class="group">
+  <rect x="250.0" y="155.0" width="700.0" height="440.0" rx="22"
+        fill="#ffffff" fill-opacity="0.34" stroke="#64748b" stroke-width="1.6" stroke-dasharray="9 8" />
+  <text x="268.0" y="185.0" class="group-label" fill="#64748b">Impact x Effort</text>
+</g>
+
+
+<g id="node-quick" class="node" data-role="output">
+  <rect x="330.0" y="220.0" width="160.0" height="82.0" rx="10.0"
+        fill="#dcfce7" stroke="#16a34a" stroke-width="2.0" />
+
+  <circle cx="348.0" cy="238.0" r="14" fill="#16a34a" />
+  <text x="348.0" y="243.0" class="step-label" fill="#dcfce7" text-anchor="middle">1</text>
+  <text x="410.0" y="247.0" text-anchor="middle" fill="#111827">
+<tspan x="410.0" dy="18" class="node-title">Quick Win</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-major" class="node" data-role="agent">
+  <rect x="690.0" y="220.0" width="160.0" height="82.0" rx="10.0"
+        fill="#f3e8ff" stroke="#9333ea" stroke-width="2.0" />
+
+  <circle cx="708.0" cy="238.0" r="14" fill="#9333ea" />
+  <text x="708.0" y="243.0" class="step-label" fill="#f3e8ff" text-anchor="middle">2</text>
+  <text x="770.0" y="247.0" text-anchor="middle" fill="#111827">
+<tspan x="770.0" dy="18" class="node-title">Major Bet</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-fill" class="node" data-role="tool">
+  <rect x="330.0" y="430.0" width="160.0" height="82.0" rx="10.0"
+        fill="#fef3c7" stroke="#ca8a04" stroke-width="2.0" />
+
+  <circle cx="348.0" cy="448.0" r="14" fill="#ca8a04" />
+  <text x="348.0" y="453.0" class="step-label" fill="#fef3c7" text-anchor="middle">3</text>
+  <text x="410.0" y="457.0" text-anchor="middle" fill="#111827">
+<tspan x="410.0" dy="18" class="node-title">Fill-In</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-avoid" class="node" data-role="risk">
+  <rect x="690.0" y="430.0" width="160.0" height="82.0" rx="10.0"
+        fill="#fee2e2" stroke="#dc2626" stroke-width="2.0" />
+
+  <circle cx="708.0" cy="448.0" r="14" fill="#dc2626" />
+  <text x="708.0" y="453.0" class="step-label" fill="#fee2e2" text-anchor="middle">4</text>
+  <text x="770.0" y="457.0" text-anchor="middle" fill="#111827">
+<tspan x="770.0" dy="18" class="node-title">Avoid</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+</svg>

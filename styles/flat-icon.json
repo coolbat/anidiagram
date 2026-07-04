@@ -1,0 +1,28 @@
+{
+  "name": "flat-icon",
+  "canvas": {
+    "background": "#f8fafc",
+    "text": "#111827",
+    "muted": "#64748b",
+    "grid": "#e2e8f0"
+  },
+  "title": {
+    "accent": "#0ea5e9",
+    "highlight": "#e0f2fe"
+  },
+  "node": {
+    "radius": 10,
+    "stroke_width": 2
+  },
+  "roles": {
+    "actor": {"stroke": "#f97316", "fill": "#ffedd5", "text": "#111827"},
+    "source": {"stroke": "#06b6d4", "fill": "#cffafe", "text": "#111827"},
+    "process": {"stroke": "#2563eb", "fill": "#dbeafe", "text": "#111827"},
+    "agent": {"stroke": "#9333ea", "fill": "#f3e8ff", "text": "#111827"},
+    "memory": {"stroke": "#059669", "fill": "#d1fae5", "text": "#111827"},
+    "tool": {"stroke": "#ca8a04", "fill": "#fef3c7", "text": "#111827"},
+    "output": {"stroke": "#16a34a", "fill": "#dcfce7", "text": "#111827"},
+    "risk": {"stroke": "#dc2626", "fill": "#fee2e2", "text": "#111827"},
+    "neutral": {"stroke": "#64748b", "fill": "#ffffff", "text": "#111827"}
+  }
+}

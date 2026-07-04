@@ -4,12 +4,24 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from typing import Any, Dict, Iterable, List, Optional, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Set
 
 from .model import Bounds, Canvas, Edge, Group, Motion, Node, Point, Scene, Style, Title
 
 
-SUPPORTED_VERSIONS = ("0.1",)
+SUPPORTED_VERSIONS = ("0.1", "0.2")
+KNOWN_ROLES = {
+    "actor",
+    "source",
+    "process",
+    "agent",
+    "memory",
+    "tool",
+    "output",
+    "risk",
+    "neutral",
+}
+KNOWN_ROUTES = {"curved", "straight", "hv", "vh", "orthogonal", "points"}
 
 
 @dataclass(frozen=True)
@@ -17,9 +29,15 @@ class ValidationIssue:
     path: str
     message: str
     code: str = "invalid"
+    severity: str = "error"
 
     def to_dict(self) -> Dict[str, str]:
-        return {"path": self.path, "message": self.message, "code": self.code}
+        return {
+            "path": self.path,
+            "message": self.message,
+            "code": self.code,
+            "severity": self.severity,
+        }
 
 
 class DiagramScriptValidationError(ValueError):
@@ -38,7 +56,7 @@ class DiagramScriptValidationError(ValueError):
 
 
 def compile_scene(data: Dict[str, Any]) -> Scene:
-    """Validate DiagramScript v0.1 JSON and compile it to the AniDiagram IR."""
+    """Validate DiagramScript JSON and compile it to the AniDiagram IR."""
 
     issues: List[ValidationIssue] = []
     if not isinstance(data, dict):
@@ -57,10 +75,11 @@ def compile_scene(data: Dict[str, Any]) -> Scene:
     canvas = _parse_canvas(data.get("canvas", {}), "$.canvas", issues)
     title = _parse_title(data.get("title", {}), "$.title", issues)
     style = Style(name=_string(data, "style", "$.style", issues, required=False))
-    groups = _parse_groups(data.get("groups", []), "$.groups", issues)
-    nodes = _parse_nodes(data.get("nodes"), "$.nodes", issues)
+    groups = _parse_groups(data.get("groups", []), "$.groups", issues, canvas)
+    nodes = _parse_nodes(data.get("nodes"), "$.nodes", issues, canvas)
     node_ids = {node.node_id for node in nodes}
     edges = _parse_edges(data.get("edges", []), "$.edges", node_ids, issues)
+    preset = _string(data, "preset", "$.preset", issues, required=False)
 
     if issues:
         raise DiagramScriptValidationError(issues)
@@ -73,7 +92,18 @@ def compile_scene(data: Dict[str, Any]) -> Scene:
         nodes=nodes,
         edges=edges,
         groups=groups,
+        preset=preset,
     )
+
+
+def validate_scene(data: Dict[str, Any]) -> Dict[str, Any]:
+    """Return structured validation status without raising on invalid input."""
+
+    try:
+        scene = compile_scene(data)
+    except DiagramScriptValidationError as exc:
+        return {"ok": False, "error": exc.to_result()}
+    return {"ok": True, "schema": {"name": "DiagramScript", "version": scene.version}, "stats": scene.stats()}
 
 
 def _parse_canvas(value: Any, path: str, issues: List[ValidationIssue]) -> Canvas:
@@ -99,7 +129,7 @@ def _parse_title(value: Any, path: str, issues: List[ValidationIssue]) -> Title:
     )
 
 
-def _parse_groups(value: Any, path: str, issues: List[ValidationIssue]) -> List[Group]:
+def _parse_groups(value: Any, path: str, issues: List[ValidationIssue], canvas: Canvas) -> List[Group]:
     if value is None:
         return []
     if not isinstance(value, list):
@@ -107,7 +137,7 @@ def _parse_groups(value: Any, path: str, issues: List[ValidationIssue]) -> List[
         return []
 
     groups: List[Group] = []
-    seen: set = set()
+    seen: Set[str] = set()
     for index, item in enumerate(value):
         item_path = f"{path}[{index}]"
         if not isinstance(item, dict):
@@ -117,12 +147,13 @@ def _parse_groups(value: Any, path: str, issues: List[ValidationIssue]) -> List[
         if group_id:
             _check_duplicate(group_id, seen, f"{item_path}.id", "group id", issues)
         bounds = _bounds(item.get("bounds"), f"{item_path}.bounds", issues)
+        _check_bounds_inside_canvas(bounds, canvas, f"{item_path}.bounds", issues)
         groups.append(
             Group(
                 group_id=group_id or f"group-{index + 1}",
                 label=_string(item, "label", f"{item_path}.label", issues, required=False) or group_id or "",
                 bounds=bounds,
-                role=_string(item, "role", f"{item_path}.role", issues, required=False) or "neutral",
+                role=_role(item, "role", f"{item_path}.role", issues),
                 fill=_string(item, "fill", f"{item_path}.fill", issues, required=False),
                 stroke=_string(item, "stroke", f"{item_path}.stroke", issues, required=False),
             )
@@ -130,7 +161,7 @@ def _parse_groups(value: Any, path: str, issues: List[ValidationIssue]) -> List[
     return groups
 
 
-def _parse_nodes(value: Any, path: str, issues: List[ValidationIssue]) -> List[Node]:
+def _parse_nodes(value: Any, path: str, issues: List[ValidationIssue], canvas: Canvas) -> List[Node]:
     if not isinstance(value, list):
         issues.append(ValidationIssue(path, "expected a non-empty array", "type"))
         return []
@@ -138,7 +169,7 @@ def _parse_nodes(value: Any, path: str, issues: List[ValidationIssue]) -> List[N
         issues.append(ValidationIssue(path, "must contain at least one node", "required"))
 
     nodes: List[Node] = []
-    seen: set = set()
+    seen: Set[str] = set()
     for index, item in enumerate(value):
         item_path = f"{path}[{index}]"
         if not isinstance(item, dict):
@@ -149,6 +180,7 @@ def _parse_nodes(value: Any, path: str, issues: List[ValidationIssue]) -> List[N
             _check_duplicate(node_id, seen, f"{item_path}.id", "node id", issues)
         position = _point(item.get("position"), f"{item_path}.position", issues, required=True)
         size = _point(item.get("size"), f"{item_path}.size", issues, required=True, positive=True)
+        _check_box_inside_canvas(position, size, canvas, item_path, issues)
         nodes.append(
             Node(
                 node_id=node_id or f"node-{index + 1}",
@@ -156,7 +188,8 @@ def _parse_nodes(value: Any, path: str, issues: List[ValidationIssue]) -> List[N
                 caption=_string(item, "caption", f"{item_path}.caption", issues, required=False) or "",
                 position=position,
                 size=size,
-                role=_string(item, "role", f"{item_path}.role", issues, required=False) or "neutral",
+                role=_role(item, "role", f"{item_path}.role", issues),
+                step=_optional_positive_int(item, "step", f"{item_path}.step", issues),
                 radius=_optional_number(item, "radius", f"{item_path}.radius", issues, positive=True),
                 fill=_string(item, "fill", f"{item_path}.fill", issues, required=False),
                 stroke=_string(item, "stroke", f"{item_path}.stroke", issues, required=False),
@@ -166,7 +199,7 @@ def _parse_nodes(value: Any, path: str, issues: List[ValidationIssue]) -> List[N
     return nodes
 
 
-def _parse_edges(value: Any, path: str, node_ids: set, issues: List[ValidationIssue]) -> List[Edge]:
+def _parse_edges(value: Any, path: str, node_ids: Set[str], issues: List[ValidationIssue]) -> List[Edge]:
     if value is None:
         return []
     if not isinstance(value, list):
@@ -186,6 +219,10 @@ def _parse_edges(value: Any, path: str, node_ids: set, issues: List[ValidationIs
         if target and target not in node_ids:
             issues.append(ValidationIssue(f"{item_path}.to", f"unknown node id {target!r}", "reference"))
 
+        route = _enum(item, "route", f"{item_path}.route", KNOWN_ROUTES, issues, default="curved")
+        points = tuple(_points(item.get("points"), f"{item_path}.points", issues))
+        if route == "points" and len(points) < 2:
+            issues.append(ValidationIssue(f"{item_path}.points", "route 'points' requires at least two points", "required"))
         duration = _string(item, "duration", f"{item_path}.duration", issues, required=False)
         delay = _optional_number(item, "delay", f"{item_path}.delay", issues, positive=False) or 0.0
         animated = _optional_bool(item, "animated", f"{item_path}.animated", issues, default=True)
@@ -194,14 +231,37 @@ def _parse_edges(value: Any, path: str, node_ids: set, issues: List[ValidationIs
                 source=source or "",
                 target=target or "",
                 label=_string(item, "label", f"{item_path}.label", issues, required=False) or "",
-                role=_string(item, "role", f"{item_path}.role", issues, required=False) or "neutral",
-                points=tuple(_points(item.get("points"), f"{item_path}.points", issues)),
+                role=_role(item, "role", f"{item_path}.role", issues),
+                route=route,
+                step=_optional_positive_int(item, "step", f"{item_path}.step", issues),
+                points=points,
                 stroke=_string(item, "stroke", f"{item_path}.stroke", issues, required=False),
                 width=_optional_number(item, "width", f"{item_path}.width", issues, positive=True),
                 motion=Motion(duration=duration, delay=delay, enabled=animated),
             )
         )
     return edges
+
+
+def _role(data: Dict[str, Any], key: str, path: str, issues: List[ValidationIssue]) -> str:
+    return _enum(data, key, path, KNOWN_ROLES, issues, default="neutral")
+
+
+def _enum(
+    data: Dict[str, Any],
+    key: str,
+    path: str,
+    allowed: Set[str],
+    issues: List[ValidationIssue],
+    default: str,
+) -> str:
+    value = _string(data, key, path, issues, required=False)
+    if value is None:
+        return default
+    if value not in allowed:
+        issues.append(ValidationIssue(path, f"expected one of: {', '.join(sorted(allowed))}", "enum"))
+        return default
+    return value
 
 
 def _string(data: Dict[str, Any], key: str, path: str, issues: List[ValidationIssue], required: bool) -> Optional[str]:
@@ -234,6 +294,19 @@ def _positive_int(data: Dict[str, Any], key: str, path: str, issues: List[Valida
     if value <= 0:
         issues.append(ValidationIssue(path, "must be greater than zero", "range"))
         return default
+    return value
+
+
+def _optional_positive_int(data: Dict[str, Any], key: str, path: str, issues: List[ValidationIssue]) -> Optional[int]:
+    if key not in data:
+        return None
+    value = data[key]
+    if isinstance(value, bool) or not isinstance(value, int):
+        issues.append(ValidationIssue(path, "expected a positive integer", "type"))
+        return None
+    if value <= 0:
+        issues.append(ValidationIssue(path, "must be greater than zero", "range"))
+        return None
     return value
 
 
@@ -303,7 +376,31 @@ def _points(value: Any, path: str, issues: List[ValidationIssue]) -> List[Point]
     return points
 
 
-def _check_duplicate(value: str, seen: set, path: str, label: str, issues: List[ValidationIssue]) -> None:
+def _check_box_inside_canvas(
+    position: Point,
+    size: Point,
+    canvas: Canvas,
+    path: str,
+    issues: List[ValidationIssue],
+) -> None:
+    x, y = position
+    w, h = size
+    if x < 0 or y < 0 or x + w > canvas.width or y + h > canvas.height:
+        issues.append(ValidationIssue(path, "node bounds must stay inside canvas", "bounds"))
+
+
+def _check_bounds_inside_canvas(
+    bounds: Bounds,
+    canvas: Canvas,
+    path: str,
+    issues: List[ValidationIssue],
+) -> None:
+    x, y, w, h = bounds
+    if x < 0 or y < 0 or x + w > canvas.width or y + h > canvas.height:
+        issues.append(ValidationIssue(path, "bounds must stay inside canvas", "bounds"))
+
+
+def _check_duplicate(value: str, seen: Set[str], path: str, label: str, issues: List[ValidationIssue]) -> None:
     if value in seen:
         issues.append(ValidationIssue(path, f"duplicate {label} {value!r}", "duplicate"))
         return

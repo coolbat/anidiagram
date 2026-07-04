@@ -7,6 +7,8 @@ from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 
 from anidiagram.cli import main
+from anidiagram.presets import preset_names
+from anidiagram.quality import quality_report
 from anidiagram.renderer_svg import render_svg
 from anidiagram.schema import DiagramScriptValidationError, compile_scene
 from anidiagram.styles import load_style
@@ -86,8 +88,8 @@ class SvgRendererTest(unittest.TestCase):
             compile_scene(spec)
 
         issues = [issue.to_dict() for issue in context.exception.issues]
-        self.assertIn({"path": "$.edges[0].to", "message": "unknown node id 'missing'", "code": "reference"}, issues)
-        self.assertIn({"path": "$.edges[0].animated", "message": "expected a boolean", "code": "type"}, issues)
+        self.assertIn({"path": "$.edges[0].to", "message": "unknown node id 'missing'", "code": "reference", "severity": "error"}, issues)
+        self.assertIn({"path": "$.edges[0].animated", "message": "expected a boolean", "code": "type", "severity": "error"}, issues)
 
     def test_cli_prints_validation_error_json_to_stderr(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -119,9 +121,62 @@ class SvgRendererTest(unittest.TestCase):
         svg = render_svg(scene, load_style(ROOT / "styles" / "minimal-light.json"))
 
         self.assertEqual(
-            "e389fecb13b5abc9a8bcb43a9bccf2e0c9a3e8570ca36cd9745dc5030b8fe0c0",
+            "4e427a26cac00a9e50d72493a09993a70616fc7eb26eaaa4c32129603e61efeb",
             hashlib.sha256(svg.encode("utf-8")).hexdigest(),
         )
+
+    def test_cli_renders_preset_lottie_and_quality(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            stdout = io.StringIO()
+            with redirect_stdout(stdout):
+                main(
+                    [
+                        "--preset",
+                        "agent-memory",
+                        "--outdir",
+                        tmp,
+                        "--basename",
+                        "agent-memory",
+                        "--formats",
+                        "svg,html,lottie,quality",
+                    ]
+                )
+
+            result = json.loads(stdout.getvalue())
+
+            self.assertTrue(result["ok"])
+            self.assertEqual("0.2", result["schema"]["version"])
+            self.assertEqual("agent-memory", result["preset"])
+            self.assertTrue(Path(result["outputs"]["svg"]["path"]).is_file())
+            self.assertTrue(Path(result["outputs"]["html"]["path"]).is_file())
+            self.assertTrue(Path(result["outputs"]["lottie"]["path"]).is_file())
+            self.assertTrue(Path(result["outputs"]["quality"]["path"]).is_file())
+            self.assertIn("summary", result["outputs"]["quality"])
+
+    def test_all_presets_compile_and_render(self):
+        for name in preset_names():
+            stdout = io.StringIO()
+            with tempfile.TemporaryDirectory() as tmp, redirect_stdout(stdout):
+                main(["--preset", name, "--outdir", tmp, "--basename", name, "--formats", "svg,quality"])
+            result = json.loads(stdout.getvalue())
+            self.assertTrue(result["ok"], name)
+            self.assertEqual(name, result["preset"])
+
+    def test_style_catalog_loads(self):
+        catalog = json.loads((ROOT / "styles" / "catalog.json").read_text(encoding="utf-8"))
+        for name in catalog["styles"]:
+            style = load_style(ROOT / "styles" / f"{name}.json")
+            self.assertEqual(name, style["name"])
+
+    def test_quality_report_detects_overlap(self):
+        spec = json.loads((ROOT / "tests" / "fixtures" / "minimal.diagram.json").read_text(encoding="utf-8"))
+        spec["nodes"][1]["position"] = [90, 155]
+        scene = compile_scene(spec)
+
+        report = quality_report(scene)
+
+        self.assertFalse(report["ok"])
+        self.assertEqual("node_overlap", report["issues"][0]["code"])
 
 
 if __name__ == "__main__":

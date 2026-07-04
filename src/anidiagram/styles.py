@@ -6,6 +6,8 @@ import json
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
+from .schema import KNOWN_ROLES, ValidationIssue
+
 
 DEFAULT_STYLE: Dict[str, Any] = {
     "name": "minimal-light",
@@ -55,9 +57,35 @@ def load_style(path: Optional[Union[str, Path]] = None) -> Dict[str, Any]:
     if not path:
         return json.loads(json.dumps(DEFAULT_STYLE))
     data = json.loads(Path(path).read_text(encoding="utf-8"))
+    issues = validate_style_profile(data)
+    if issues:
+        messages = "; ".join(f"{issue.path}: {issue.message}" for issue in issues)
+        raise ValueError(f"style profile validation failed: {messages}")
     return deep_merge(DEFAULT_STYLE, data)
 
 
 def role_style(style: Dict[str, Any], role: Optional[str]) -> Dict[str, str]:
     roles = style.get("roles", {})
     return dict(roles.get(role or "neutral", roles.get("neutral", {})))
+
+
+def validate_style_profile(data: Dict[str, Any]) -> list:
+    issues = []
+    if not isinstance(data, dict):
+        return [ValidationIssue("$", "expected an object", "type")]
+    if "name" in data and not isinstance(data["name"], str):
+        issues.append(ValidationIssue("$.name", "expected a string", "type"))
+    roles = data.get("roles", {})
+    if roles and not isinstance(roles, dict):
+        issues.append(ValidationIssue("$.roles", "expected an object", "type"))
+        return issues
+    for role, tokens in roles.items():
+        if role not in KNOWN_ROLES:
+            issues.append(ValidationIssue(f"$.roles.{role}", "unknown role", "enum"))
+        if not isinstance(tokens, dict):
+            issues.append(ValidationIssue(f"$.roles.{role}", "expected an object", "type"))
+            continue
+        for token in ("stroke", "fill", "text"):
+            if token in tokens and not isinstance(tokens[token], str):
+                issues.append(ValidationIssue(f"$.roles.{role}.{token}", "expected a string", "type"))
+    return issues

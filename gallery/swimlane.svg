@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="diagram-title diagram-desc">
+<title id="diagram-title">Swimlane</title>
+<desc id="diagram-desc">handoffs across owners</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+</style>
+<rect width="100%" height="100%" fill="#ffffff" />
+<defs>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#edf2f7" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="1144" height="668" rx="26" fill="none" stroke="#94a3b8" stroke-width="1.4" />
+<rect x="44" y="44" width="12" height="52" rx="6" fill="#2563eb" />
+<rect x="72" y="46" width="360" height="56" rx="16" fill="#e8f1ff" />
+<text id="main-title" x="90" y="84" class="title" fill="#172033">Swimlane</text>
+<text x="74" y="126" class="subtitle" fill="#5b6778">handoffs across owners</text>
+
+<g id="group-customer" class="group">
+  <rect x="60.0" y="160.0" width="1080.0" height="120.0" rx="22"
+        fill="#fff7ed" fill-opacity="0.34" stroke="#f97316" stroke-width="1.6" stroke-dasharray="9 8" />
+  <text x="78.0" y="190.0" class="group-label" fill="#5b6778">Customer</text>
+</g>
+
+<g id="group-team" class="group">
+  <rect x="60.0" y="310.0" width="1080.0" height="120.0" rx="22"
+        fill="#f5f3ff" fill-opacity="0.34" stroke="#7c3aed" stroke-width="1.6" stroke-dasharray="9 8" />
+  <text x="78.0" y="340.0" class="group-label" fill="#5b6778">Team</text>
+</g>
+
+<g id="group-system" class="group">
+  <rect x="60.0" y="460.0" width="1080.0" height="120.0" rx="22"
+        fill="#fffbeb" fill-opacity="0.34" stroke="#d97706" stroke-width="1.6" stroke-dasharray="9 8" />
+  <text x="78.0" y="490.0" class="group-label" fill="#5b6778">System</text>
+</g>
+
+<defs>
+  <marker id="arrow-1" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path d="M 290.0 226.0 L 290.0 301.0 L 330.0 301.0 L 330.0 376.0" fill="none" stroke="#2563eb" stroke-width="2.4" marker-end="url(#arrow-1)" />
+  <circle r="5" fill="#2563eb">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 290.0 226.0 L 290.0 301.0 L 330.0 301.0 L 330.0 376.0" begin="0.35s" />
+  </circle>
+
+  <circle cx="288.0" cy="282.0" r="14" fill="#2563eb" />
+  <text x="288.0" y="287.0" class="step-label" fill="#ffffff" text-anchor="middle">1</text>
+  <text x="310.0" y="287.0" class="edge-label" fill="#5b6778">handoff</text>
+</g>
+
+<defs>
+  <marker id="arrow-2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path d="M 490.0 376.0 L 490.0 451.0 L 560.0 451.0 L 560.0 526.0" fill="none" stroke="#2563eb" stroke-width="2.4" marker-end="url(#arrow-2)" />
+  <circle r="5" fill="#2563eb">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 490.0 376.0 L 490.0 451.0 L 560.0 451.0 L 560.0 526.0" begin="0.70s" />
+  </circle>
+
+  <circle cx="503.0" cy="432.0" r="14" fill="#2563eb" />
+  <text x="503.0" y="437.0" class="step-label" fill="#ffffff" text-anchor="middle">2</text>
+  <text x="525.0" y="437.0" class="edge-label" fill="#5b6778">handoff</text>
+</g>
+
+<defs>
+  <marker id="arrow-3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path d="M 720.0 526.0 L 720.0 451.0 L 790.0 451.0 L 790.0 376.0" fill="none" stroke="#2563eb" stroke-width="2.4" marker-end="url(#arrow-3)" />
+  <circle r="5" fill="#2563eb">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 720.0 526.0 L 720.0 451.0 L 790.0 451.0 L 790.0 376.0" begin="1.05s" />
+  </circle>
+
+  <circle cx="733.0" cy="432.0" r="14" fill="#2563eb" />
+  <text x="733.0" y="437.0" class="step-label" fill="#ffffff" text-anchor="middle">3</text>
+  <text x="755.0" y="437.0" class="edge-label" fill="#5b6778">handoff</text>
+</g>
+
+<defs>
+  <marker id="arrow-4" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path d="M 950.0 376.0 L 950.0 301.0 L 990.0 301.0 L 990.0 226.0" fill="none" stroke="#2563eb" stroke-width="2.4" marker-end="url(#arrow-4)" />
+  <circle r="5" fill="#2563eb">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 950.0 376.0 L 950.0 301.0 L 990.0 301.0 L 990.0 226.0" begin="1.40s" />
+  </circle>
+
+  <circle cx="948.0" cy="282.0" r="14" fill="#2563eb" />
+  <text x="948.0" y="287.0" class="step-label" fill="#ffffff" text-anchor="middle">4</text>
+  <text x="970.0" y="287.0" class="edge-label" fill="#5b6778">handoff</text>
+</g>
+
+<g id="node-request" class="node" data-role="actor">
+  <rect x="130.0" y="185.0" width="160.0" height="82.0" rx="14.0"
+        fill="#fff7ed" stroke="#f97316" stroke-width="2.0" />
+
+  <circle cx="148.0" cy="203.0" r="14" fill="#f97316" />
+  <text x="148.0" y="208.0" class="step-label" fill="#fff7ed" text-anchor="middle">1</text>
+  <text x="210.0" y="212.0" text-anchor="middle" fill="#172033">
+<tspan x="210.0" dy="18" class="node-title">Request</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-triage" class="node" data-role="agent">
+  <rect x="330.0" y="335.0" width="160.0" height="82.0" rx="14.0"
+        fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.0" />
+
+  <circle cx="348.0" cy="353.0" r="14" fill="#7c3aed" />
+  <text x="348.0" y="358.0" class="step-label" fill="#f5f3ff" text-anchor="middle">2</text>
+  <text x="410.0" y="362.0" text-anchor="middle" fill="#172033">
+<tspan x="410.0" dy="18" class="node-title">Triage</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-automate" class="node" data-role="tool">
+  <rect x="560.0" y="485.0" width="160.0" height="82.0" rx="14.0"
+        fill="#fffbeb" stroke="#d97706" stroke-width="2.0" />
+
+  <circle cx="578.0" cy="503.0" r="14" fill="#d97706" />
+  <text x="578.0" y="508.0" class="step-label" fill="#fffbeb" text-anchor="middle">3</text>
+  <text x="640.0" y="512.0" text-anchor="middle" fill="#172033">
+<tspan x="640.0" dy="18" class="node-title">Automate</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-approve" class="node" data-role="agent">
+  <rect x="790.0" y="335.0" width="160.0" height="82.0" rx="14.0"
+        fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.0" />
+
+  <circle cx="808.0" cy="353.0" r="14" fill="#7c3aed" />
+  <text x="808.0" y="358.0" class="step-label" fill="#f5f3ff" text-anchor="middle">4</text>
+  <text x="870.0" y="362.0" text-anchor="middle" fill="#172033">
+<tspan x="870.0" dy="18" class="node-title">Approve</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-notify" class="node" data-role="output">
+  <rect x="990.0" y="185.0" width="160.0" height="82.0" rx="14.0"
+        fill="#f0fdf4" stroke="#16a34a" stroke-width="2.0" />
+
+  <circle cx="1008.0" cy="203.0" r="14" fill="#16a34a" />
+  <text x="1008.0" y="208.0" class="step-label" fill="#f0fdf4" text-anchor="middle">5</text>
+  <text x="1070.0" y="212.0" text-anchor="middle" fill="#172033">
+<tspan x="1070.0" dy="18" class="node-title">Notify</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+</svg>

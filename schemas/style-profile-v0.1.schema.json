@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anidiagram.dev/schemas/style-profile-v0.1.schema.json",
+  "title": "AniDiagram Style Profile v0.1",
+  "type": "object",
+  "required": ["name"],
+  "properties": {
+    "name": {"type": "string"},
+    "canvas": {
+      "type": "object",
+      "properties": {
+        "background": {"type": "string"},
+        "text": {"type": "string"},
+        "muted": {"type": "string"},
+        "grid": {"type": "string"}
+      }
+    },
+    "title": {
+      "type": "object",
+      "properties": {
+        "accent": {"type": "string"},
+        "highlight": {"type": "string"}
+      }
+    },
+    "node": {
+      "type": "object",
+      "properties": {
+        "radius": {"type": "number", "minimum": 0},
+        "stroke_width": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "edge": {
+      "type": "object",
+      "properties": {
+        "width": {"type": "number", "exclusiveMinimum": 0},
+        "duration": {"type": "string"}
+      }
+    },
+    "roles": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "stroke": {"type": "string"},
+          "fill": {"type": "string"},
+          "text": {"type": "string"}
+        }
+      }
+    }
+  }
+}

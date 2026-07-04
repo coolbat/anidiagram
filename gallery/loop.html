@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Loop</title>
+  <style>
+    body { margin: 0; background: #111827; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    main { min-height: 100vh; display: grid; grid-template-rows: auto 1fr; gap: 12px; padding: 16px; box-sizing: border-box; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    button, a { border: 1px solid #475569; background: #1f2937; color: #f8fafc; border-radius: 8px; padding: 8px 10px; font: inherit; text-decoration: none; cursor: pointer; }
+    button:hover, a:hover { background: #334155; }
+    .stage { width: 100%; min-height: 0; overflow: hidden; border: 1px solid #334155; border-radius: 12px; background: #020617; cursor: grab; }
+    .stage.dragging { cursor: grabbing; }
+    .viewport { transform-origin: 0 0; width: max-content; }
+    svg { display: block; max-width: none; height: auto; user-select: none; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="toolbar">
+      <button type="button" id="toggle">Pause</button>
+      <button type="button" id="zoom-in">Zoom In</button>
+      <button type="button" id="zoom-out">Zoom Out</button>
+      <button type="button" id="reset">Reset</button>
+      <a id="download" download="Loop.svg">Download SVG</a>
+    </div>
+    <div class="stage" id="stage">
+      <div class="viewport" id="viewport">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="diagram-title diagram-desc">
+<title id="diagram-title">Loop</title>
+<desc id="diagram-desc">observe, decide, act, learn</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+</style>
+<rect width="100%" height="100%" fill="#fbfaf7" />
+<defs>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#ece7df" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="1144" height="668" rx="26" fill="none" stroke="#a8a29e" stroke-width="1.4" />
+<rect x="44" y="44" width="12" height="52" rx="6" fill="#c2410c" />
+<rect x="72" y="46" width="360" height="56" rx="16" fill="#fff4e6" />
+<text id="main-title" x="90" y="84" class="title" fill="#2f2a24">Loop</text>
+<text x="74" y="126" class="subtitle" fill="#706a61">observe, decide, act, learn</text>
+
+
+<defs>
+  <marker id="arrow-1" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#0e7490" />
+  </marker>
+</defs>
+<g class="edge" data-role="source">
+  <path d="M 670.0 191.0 C 670.0 233.0, 770.0 299.0, 770.0 341.0" fill="none" stroke="#0e7490" stroke-width="2.4" marker-end="url(#arrow-1)" />
+  <circle r="5" fill="#0e7490">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 670.0 191.0 C 670.0 233.0, 770.0 299.0, 770.0 341.0" begin="0.35s" />
+  </circle>
+
+  <circle cx="698.0" cy="247.0" r="14" fill="#0e7490" />
+  <text x="698.0" y="252.0" class="step-label" fill="#ffffff" text-anchor="middle">1</text>
+  <text x="720.0" y="252.0" class="edge-label" fill="#706a61">signal</text>
+</g>
+
+<defs>
+  <marker id="arrow-2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#7c2d12" />
+  </marker>
+</defs>
+<g class="edge" data-role="agent">
+  <path d="M 770.0 341.0 C 770.0 383.0, 670.0 454.0, 670.0 496.0" fill="none" stroke="#7c2d12" stroke-width="2.4" marker-end="url(#arrow-2)" />
+  <circle r="5" fill="#7c2d12">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 770.0 341.0 C 770.0 383.0, 670.0 454.0, 670.0 496.0" begin="0.70s" />
+  </circle>
+
+  <circle cx="698.0" cy="399.5" r="14" fill="#7c2d12" />
+  <text x="698.0" y="404.5" class="step-label" fill="#ffffff" text-anchor="middle">2</text>
+  <text x="720.0" y="404.5" class="edge-label" fill="#706a61">plan</text>
+</g>
+
+<defs>
+  <marker id="arrow-3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#9333ea" />
+  </marker>
+</defs>
+<g class="edge" data-role="tool">
+  <path d="M 510.0 496.0 C 510.0 454.0, 410.0 383.0, 410.0 341.0" fill="none" stroke="#9333ea" stroke-width="2.4" marker-end="url(#arrow-3)" />
+  <circle r="5" fill="#9333ea">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 510.0 496.0 C 510.0 454.0, 410.0 383.0, 410.0 341.0" begin="1.05s" />
+  </circle>
+
+  <circle cx="438.0" cy="399.5" r="14" fill="#9333ea" />
+  <text x="438.0" y="404.5" class="step-label" fill="#ffffff" text-anchor="middle">3</text>
+  <text x="460.0" y="404.5" class="edge-label" fill="#706a61">result</text>
+</g>
+
+<defs>
+  <marker id="arrow-4" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#15803d" />
+  </marker>
+</defs>
+<g class="edge" data-role="memory">
+  <path d="M 410.0 341.0 C 410.0 299.0, 510.0 233.0, 510.0 191.0" fill="none" stroke="#15803d" stroke-width="2.4" marker-end="url(#arrow-4)" />
+  <circle r="5" fill="#15803d">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 410.0 341.0 C 410.0 299.0, 510.0 233.0, 510.0 191.0" begin="1.40s" />
+  </circle>
+
+  <circle cx="438.0" cy="247.0" r="14" fill="#15803d" />
+  <text x="438.0" y="252.0" class="step-label" fill="#ffffff" text-anchor="middle">4</text>
+  <text x="460.0" y="252.0" class="edge-label" fill="#706a61">feedback</text>
+</g>
+
+<g id="node-observe" class="node" data-role="source">
+  <rect x="510.0" y="150.0" width="160.0" height="82.0" rx="12.0"
+        fill="#ecfeff" stroke="#0e7490" stroke-width="1.8" />
+
+  <circle cx="528.0" cy="168.0" r="14" fill="#0e7490" />
+  <text x="528.0" y="173.0" class="step-label" fill="#ecfeff" text-anchor="middle">1</text>
+  <text x="590.0" y="177.0" text-anchor="middle" fill="#2f2a24">
+<tspan x="590.0" dy="18" class="node-title">Observe</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-decide" class="node" data-role="agent">
+  <rect x="770.0" y="300.0" width="160.0" height="82.0" rx="12.0"
+        fill="#fff1e8" stroke="#7c2d12" stroke-width="1.8" />
+
+  <circle cx="788.0" cy="318.0" r="14" fill="#7c2d12" />
+  <text x="788.0" y="323.0" class="step-label" fill="#fff1e8" text-anchor="middle">2</text>
+  <text x="850.0" y="327.0" text-anchor="middle" fill="#2f2a24">
+<tspan x="850.0" dy="18" class="node-title">Decide</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-act" class="node" data-role="tool">
+  <rect x="510.0" y="455.0" width="160.0" height="82.0" rx="12.0"
+        fill="#faf5ff" stroke="#9333ea" stroke-width="1.8" />
+
+  <circle cx="528.0" cy="473.0" r="14" fill="#9333ea" />
+  <text x="528.0" y="478.0" class="step-label" fill="#faf5ff" text-anchor="middle">3</text>
+  <text x="590.0" y="482.0" text-anchor="middle" fill="#2f2a24">
+<tspan x="590.0" dy="18" class="node-title">Act</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-learn" class="node" data-role="memory">
+  <rect x="250.0" y="300.0" width="160.0" height="82.0" rx="12.0"
+        fill="#f0fdf4" stroke="#15803d" stroke-width="1.8" />
+
+  <circle cx="268.0" cy="318.0" r="14" fill="#15803d" />
+  <text x="268.0" y="323.0" class="step-label" fill="#f0fdf4" text-anchor="middle">4</text>
+  <text x="330.0" y="327.0" text-anchor="middle" fill="#2f2a24">
+<tspan x="330.0" dy="18" class="node-title">Learn</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+</svg>
+
+      </div>
+    </div>
+  </main>
+  <script>
+    const stage = document.getElementById('stage');
+    const viewport = document.getElementById('viewport');
+    const svg = viewport.querySelector('svg');
+    const download = document.getElementById('download');
+    let scale = 1;
+    let x = 0;
+    let y = 0;
+    let dragging = false;
+    let lastX = 0;
+    let lastY = 0;
+    function applyTransform() {
+      viewport.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+    }
+    function setDownload() {
+      const blob = new Blob([new XMLSerializer().serializeToString(svg)], {type: 'image/svg+xml'});
+      download.href = URL.createObjectURL(blob);
+    }
+    document.getElementById('toggle').addEventListener('click', (event) => {
+      if (svg.animationsPaused && svg.animationsPaused()) {
+        svg.unpauseAnimations();
+        event.currentTarget.textContent = 'Pause';
+      } else {
+        svg.pauseAnimations();
+        event.currentTarget.textContent = 'Play';
+      }
+    });
+    document.getElementById('zoom-in').addEventListener('click', () => { scale = Math.min(3, scale + 0.15); applyTransform(); });
+    document.getElementById('zoom-out').addEventListener('click', () => { scale = Math.max(0.35, scale - 0.15); applyTransform(); });
+    document.getElementById('reset').addEventListener('click', () => { scale = 1; x = 0; y = 0; applyTransform(); });
+    stage.addEventListener('pointerdown', (event) => { dragging = true; stage.classList.add('dragging'); lastX = event.clientX; lastY = event.clientY; stage.setPointerCapture(event.pointerId); });
+    stage.addEventListener('pointermove', (event) => {
+      if (!dragging) return;
+      x += event.clientX - lastX;
+      y += event.clientY - lastY;
+      lastX = event.clientX;
+      lastY = event.clientY;
+      applyTransform();
+    });
+    stage.addEventListener('pointerup', () => { dragging = false; stage.classList.remove('dragging'); });
+    setDownload();
+  </script>
+</body>
+</html>

@@ -1,128 +1,131 @@
 # AniDiagram
 
-Clean-room JSON-to-animated-SVG renderer for animated architecture visuals.
+Clean-room DiagramScript renderer for animated architecture visuals.
 
 This repository is not a GitHub fork and does not copy source code, documents,
 images, generated assets, or repository history from the projects listed in
 [REFERENCES.md](./REFERENCES.md).
 
+## Examples
+
+| Pipeline | Agent Memory |
+| --- | --- |
+| ![Pipeline preset](./gallery/pipeline.svg) | ![Agent memory preset](./gallery/agent-memory.svg) |
+
+| Swimlane | Network |
+| --- | --- |
+| ![Swimlane preset](./gallery/swimlane.svg) | ![Network preset](./gallery/network.svg) |
+
+Full gallery: [gallery/index.html](./gallery/index.html)
+
 ## What It Does
 
-- Reads a structured DiagramScript JSON file.
-- Validates DiagramScript and compiles it to an internal Scene IR.
-- Applies a visual style profile.
-- Renders a deterministic animated SVG.
-- Optionally writes a self-contained HTML viewer.
-- Uses only the Python standard library.
+- Validates DiagramScript `0.1` and `0.2`.
+- Compiles JSON specs or presets into a typed Scene IR.
+- Renders animated SVG and self-contained HTML viewers.
+- Exports optional PNG, GIF, PDF, WebP, MP4, APNG, and Lottie files.
+- Produces quality reports for bounds, overlaps, text fit, and explicit paths.
+- Includes 14 clean-room preset compilers and 10 visual styles.
+
+SVG, HTML, Lottie, and quality reports use the Python standard library. Raster
+and video exports use optional Pillow support; MP4 also needs `ffmpeg`.
 
 ## Quick Start
 
-```bash
-python3 -m anidiagram.cli \
-  --spec examples/agent-memory.diagram.json \
-  --style styles/blueprint.json \
-  --outdir outputs \
-  --basename agent-memory \
-  --html
-```
-
-For local development without installing the package:
+Render a JSON spec:
 
 ```bash
 PYTHONPATH=src python3 -m anidiagram.cli \
   --spec examples/agent-memory.diagram.json \
-  --style styles/deep-tech.json \
+  --style styles/blueprint.json \
   --outdir outputs \
   --basename agent-memory \
-  --html
+  --formats svg,html,quality
 ```
 
-## DiagramScript
+Render a clean-room preset:
 
-The current schema is `DiagramScript` v0.1. It is intentionally small and
-freeform-layout first.
-
-```json
-{
-  "version": "0.1",
-  "canvas": {"width": 1200, "height": 720},
-  "style": "blueprint",
-  "title": {"text": "Agent Memory System", "subtitle": "request, tools, memory, response"},
-  "groups": [
-    {"id": "runtime", "label": "Runtime", "bounds": [300, 150, 360, 370], "role": "process"}
-  ],
-  "nodes": [
-    {"id": "user", "label": "User", "caption": "asks", "position": [80, 310], "size": [150, 82], "role": "actor"}
-  ],
-  "edges": [
-    {"from": "user", "to": "agent", "label": "request", "role": "control"}
-  ]
-}
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --preset agent-memory \
+  --outdir outputs \
+  --basename agent-memory \
+  --all
 ```
 
-Required fields:
+Install optional raster dependencies:
 
-- `version`: currently `"0.1"`.
-- `nodes`: non-empty array of node objects.
-- each node: `id`, `position`, and `size`.
-- each edge: `from` and `to`, both referencing existing node ids.
-
-Optional fields:
-
-- `canvas.width` and `canvas.height`, defaulting to `1200 x 720`.
-- `style`, mapped to a JSON file under `styles/` when the CLI can resolve it.
-- `title.text` and `title.subtitle`.
-- `groups`, where each group has `id` and `bounds`.
-- edge `points`, for explicit point-to-point line paths.
-- visual overrides such as `role`, `fill`, `stroke`, `width`, `duration`, `delay`, and `animated`.
-
-The CLI validates the spec before rendering. Validation failures are printed as
-structured JSON on stderr and exit with code `2`:
-
-```json
-{
-  "ok": false,
-  "error": {
-    "code": "diagram_script_validation_failed",
-    "issues": [
-      {"path": "$.edges[0].to", "message": "unknown node id 'missing'", "code": "reference"}
-    ]
-  }
-}
+```bash
+python3 -m pip install ".[raster]"
 ```
 
-Successful CLI runs print structured result JSON:
+## CLI Result
+
+Successful runs print structured JSON:
 
 ```json
 {
   "ok": true,
-  "schema": {"name": "DiagramScript", "version": "0.1"},
+  "schema": {"name": "DiagramScript", "version": "0.2"},
+  "preset": "agent-memory",
   "style": "blueprint",
   "outputs": {
-    "svg": {"format": "svg", "path": "/absolute/path/to/agent-memory.svg"}
+    "svg": {"format": "svg", "path": "/abs/agent-memory.svg", "status": "written"},
+    "quality": {"format": "quality", "path": "/abs/agent-memory.quality.json", "status": "written"}
   },
   "stats": {"nodes": 6, "edges": 6, "groups": 2}
 }
 ```
 
-Internally, v0.1 compiles into a typed Scene IR made of `Scene`, `Node`,
-`Edge`, `Group`, `Style`, and `Motion` objects before reaching the SVG renderer.
+Validation failures are printed on stderr and exit with code `2`.
 
-## Style Profiles
+## DiagramScript
 
-Style profiles are visual grammar files, not only palettes. A profile defines:
+Schema files:
 
-- canvas colors
-- role colors
-- node radius and stroke width
-- edge width and animation timing
-- title treatment
+- [schemas/diagram-script-v0.1.schema.json](./schemas/diagram-script-v0.1.schema.json)
+- [schemas/diagram-script-v0.2.schema.json](./schemas/diagram-script-v0.2.schema.json)
+- [schemas/style-profile-v0.1.schema.json](./schemas/style-profile-v0.1.schema.json)
 
-Bundled starter styles:
+v0.2 adds route types, step badges, preset metadata, and stricter role
+validation. See [docs/diagram-script.md](./docs/diagram-script.md).
 
-- `styles/minimal-light.json`
-- `styles/deep-tech.json`
-- `styles/blueprint.json`
+## Presets
+
+Built-in clean-room presets:
+
+`pipeline`, `loop`, `hub-spoke`, `layered`, `swimlane`, `compare`, `matrix`,
+`timeline`, `stack`, `funnel`, `sequence`, `er`, `network`, `agent-memory`.
+
+List them with:
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli --list-presets
+```
+
+## Styles
+
+Bundled styles:
+
+`minimal-light`, `deep-tech`, `blueprint`, `flat-icon`, `dark-terminal`,
+`notion-clean`, `glassmorphism`, `claude-warm`, `openai-minimal`,
+`dark-luxury`.
+
+Style catalog: [styles/catalog.json](./styles/catalog.json)
+
+## Gallery
+
+Regenerate the committed gallery assets:
+
+```bash
+PYTHONPATH=src python3 scripts/batch_render.py --outdir gallery --quality
+```
+
+## Tests
+
+```bash
+PYTHONPATH=src python3 -m unittest discover -s tests
+```
 
 ## Clean-Room Boundary
 

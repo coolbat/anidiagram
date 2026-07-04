@@ -42,6 +42,7 @@ class Node:
     position: Point
     size: Point
     role: str = "neutral"
+    step: Optional[int] = None
     radius: Optional[float] = None
     fill: Optional[str] = None
     stroke: Optional[str] = None
@@ -54,6 +55,8 @@ class Edge:
     target: str
     label: str = ""
     role: str = "neutral"
+    route: str = "curved"
+    step: Optional[int] = None
     points: Tuple[Point, ...] = field(default_factory=tuple)
     stroke: Optional[str] = None
     width: Optional[float] = None
@@ -79,6 +82,7 @@ class Scene:
     nodes: List[Node]
     edges: List[Edge]
     groups: List[Group]
+    preset: Optional[str] = None
 
     def stats(self) -> dict:
         return {

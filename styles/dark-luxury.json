@@ -1,0 +1,28 @@
+{
+  "name": "dark-luxury",
+  "canvas": {
+    "background": "#0a0a0b",
+    "text": "#f5f5f4",
+    "muted": "#a8a29e",
+    "grid": "#1c1917"
+  },
+  "title": {
+    "accent": "#d6a84f",
+    "highlight": "#181512"
+  },
+  "node": {
+    "radius": 12,
+    "stroke_width": 1.4
+  },
+  "roles": {
+    "actor": {"stroke": "#d6a84f", "fill": "#1c1710", "text": "#f5f5f4"},
+    "source": {"stroke": "#38bdf8", "fill": "#07151a", "text": "#f5f5f4"},
+    "process": {"stroke": "#a8a29e", "fill": "#151515", "text": "#f5f5f4"},
+    "agent": {"stroke": "#c084fc", "fill": "#16101f", "text": "#f5f5f4"},
+    "memory": {"stroke": "#34d399", "fill": "#071711", "text": "#f5f5f4"},
+    "tool": {"stroke": "#f59e0b", "fill": "#1b1408", "text": "#f5f5f4"},
+    "output": {"stroke": "#84cc16", "fill": "#101607", "text": "#f5f5f4"},
+    "risk": {"stroke": "#fb7185", "fill": "#1d0a10", "text": "#f5f5f4"},
+    "neutral": {"stroke": "#57534e", "fill": "#111111", "text": "#f5f5f4"}
+  }
+}

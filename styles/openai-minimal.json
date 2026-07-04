@@ -1,0 +1,28 @@
+{
+  "name": "openai-minimal",
+  "canvas": {
+    "background": "#ffffff",
+    "text": "#111111",
+    "muted": "#626262",
+    "grid": "#eeeeee"
+  },
+  "title": {
+    "accent": "#10a37f",
+    "highlight": "#f4f7f6"
+  },
+  "node": {
+    "radius": 8,
+    "stroke_width": 1.5
+  },
+  "roles": {
+    "actor": {"stroke": "#a16207", "fill": "#fffbe8", "text": "#111111"},
+    "source": {"stroke": "#0891b2", "fill": "#f0fdff", "text": "#111111"},
+    "process": {"stroke": "#404040", "fill": "#fafafa", "text": "#111111"},
+    "agent": {"stroke": "#10a37f", "fill": "#effcf8", "text": "#111111"},
+    "memory": {"stroke": "#15803d", "fill": "#f0fdf4", "text": "#111111"},
+    "tool": {"stroke": "#2563eb", "fill": "#eff6ff", "text": "#111111"},
+    "output": {"stroke": "#16a34a", "fill": "#f0fdf4", "text": "#111111"},
+    "risk": {"stroke": "#dc2626", "fill": "#fef2f2", "text": "#111111"},
+    "neutral": {"stroke": "#d4d4d4", "fill": "#ffffff", "text": "#111111"}
+  }
+}

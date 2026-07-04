@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Layered</title>
+  <style>
+    body { margin: 0; background: #111827; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    main { min-height: 100vh; display: grid; grid-template-rows: auto 1fr; gap: 12px; padding: 16px; box-sizing: border-box; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    button, a { border: 1px solid #475569; background: #1f2937; color: #f8fafc; border-radius: 8px; padding: 8px 10px; font: inherit; text-decoration: none; cursor: pointer; }
+    button:hover, a:hover { background: #334155; }
+    .stage { width: 100%; min-height: 0; overflow: hidden; border: 1px solid #334155; border-radius: 12px; background: #020617; cursor: grab; }
+    .stage.dragging { cursor: grabbing; }
+    .viewport { transform-origin: 0 0; width: max-content; }
+    svg { display: block; max-width: none; height: auto; user-select: none; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="toolbar">
+      <button type="button" id="toggle">Pause</button>
+      <button type="button" id="zoom-in">Zoom In</button>
+      <button type="button" id="zoom-out">Zoom Out</button>
+      <button type="button" id="reset">Reset</button>
+      <a id="download" download="Layered.svg">Download SVG</a>
+    </div>
+    <div class="stage" id="stage">
+      <div class="viewport" id="viewport">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="diagram-title diagram-desc">
+<title id="diagram-title">Layered</title>
+<desc id="diagram-desc">separate interface, domain, and data layers</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+</style>
+<rect width="100%" height="100%" fill="#ffffff" />
+<defs>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#f3f4f6" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="1144" height="668" rx="26" fill="none" stroke="#d1d5db" stroke-width="1.4" />
+<rect x="44" y="44" width="12" height="52" rx="6" fill="#111827" />
+<rect x="72" y="46" width="360" height="56" rx="16" fill="#f5f5f4" />
+<text id="main-title" x="90" y="84" class="title" fill="#1f2937">Layered</text>
+<text x="74" y="126" class="subtitle" fill="#6b7280">separate interface, domain, and data layers</text>
+
+<g id="group-ui" class="group">
+  <rect x="60.0" y="170.0" width="1080.0" height="110.0" rx="22"
+        fill="#fff7ed" fill-opacity="0.34" stroke="#d97706" stroke-width="1.6" stroke-dasharray="9 8" />
+  <text x="78.0" y="200.0" class="group-label" fill="#6b7280">Interface</text>
+</g>
+
+<g id="group-domain" class="group">
+  <rect x="60.0" y="310.0" width="1080.0" height="110.0" rx="22"
+        fill="#f9fafb" fill-opacity="0.34" stroke="#4b5563" stroke-width="1.6" stroke-dasharray="9 8" />
+  <text x="78.0" y="340.0" class="group-label" fill="#6b7280">Domain</text>
+</g>
+
+<g id="group-data" class="group">
+  <rect x="60.0" y="450.0" width="1080.0" height="110.0" rx="22"
+        fill="#f0fdf4" fill-opacity="0.34" stroke="#15803d" stroke-width="1.6" stroke-dasharray="9 8" />
+  <text x="78.0" y="480.0" class="group-label" fill="#6b7280">Data</text>
+</g>
+
+<defs>
+  <marker id="arrow-1" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="tool">
+  <path d="M 330.0 231.0 L 520.0 231.0" fill="none" stroke="#2563eb" stroke-width="2.4" marker-end="url(#arrow-1)" />
+  <circle r="5" fill="#2563eb">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 330.0 231.0 L 520.0 231.0" begin="0.35s" />
+  </circle>
+
+  <text x="425.0" y="217.0" class="edge-label" fill="#6b7280">call</text>
+</g>
+
+<defs>
+  <marker id="arrow-2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#4b5563" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path d="M 520.0 231.0 L 520.0 371.0 L 510.0 371.0" fill="none" stroke="#4b5563" stroke-width="2.4" marker-end="url(#arrow-2)" />
+  <circle r="5" fill="#4b5563">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 520.0 231.0 L 520.0 371.0 L 510.0 371.0" begin="0.70s" />
+  </circle>
+
+  <text x="515.0" y="287.0" class="edge-label" fill="#6b7280">validate</text>
+</g>
+
+<defs>
+  <marker id="arrow-3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#15803d" />
+  </marker>
+</defs>
+<g class="edge" data-role="memory">
+  <path d="M 430.0 412.0 L 430.0 470.0 L 430.0 470.0" fill="none" stroke="#15803d" stroke-width="2.4" marker-end="url(#arrow-3)" />
+  <circle r="5" fill="#15803d">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 430.0 412.0 L 430.0 470.0 L 430.0 470.0" begin="1.05s" />
+  </circle>
+
+  <text x="430.0" y="427.0" class="edge-label" fill="#6b7280">persist</text>
+</g>
+
+<defs>
+  <marker id="arrow-4" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#0f766e" />
+  </marker>
+</defs>
+<g class="edge" data-role="source">
+  <path d="M 770.0 412.0 L 770.0 470.0 L 770.0 470.0" fill="none" stroke="#0f766e" stroke-width="2.4" marker-end="url(#arrow-4)" />
+  <circle r="5" fill="#0f766e">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 770.0 412.0 L 770.0 470.0 L 770.0 470.0" begin="1.40s" />
+  </circle>
+
+  <text x="770.0" y="427.0" class="edge-label" fill="#6b7280">consume</text>
+</g>
+
+<g id="node-app" class="node" data-role="actor">
+  <rect x="170.0" y="190.0" width="160.0" height="82.0" rx="7.0"
+        fill="#fff7ed" stroke="#d97706" stroke-width="1.4" />
+
+  <circle cx="188.0" cy="208.0" r="14" fill="#d97706" />
+  <text x="188.0" y="213.0" class="step-label" fill="#fff7ed" text-anchor="middle">1</text>
+  <text x="250.0" y="217.0" text-anchor="middle" fill="#1f2937">
+<tspan x="250.0" dy="18" class="node-title">App</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-api" class="node" data-role="tool">
+  <rect x="520.0" y="190.0" width="160.0" height="82.0" rx="7.0"
+        fill="#eff6ff" stroke="#2563eb" stroke-width="1.4" />
+
+  <circle cx="538.0" cy="208.0" r="14" fill="#2563eb" />
+  <text x="538.0" y="213.0" class="step-label" fill="#eff6ff" text-anchor="middle">2</text>
+  <text x="600.0" y="217.0" text-anchor="middle" fill="#1f2937">
+<tspan x="600.0" dy="18" class="node-title">API</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-rules" class="node" data-role="process">
+  <rect x="350.0" y="330.0" width="160.0" height="82.0" rx="7.0"
+        fill="#f9fafb" stroke="#4b5563" stroke-width="1.4" />
+
+  <circle cx="368.0" cy="348.0" r="14" fill="#4b5563" />
+  <text x="368.0" y="353.0" class="step-label" fill="#f9fafb" text-anchor="middle">3</text>
+  <text x="430.0" y="357.0" text-anchor="middle" fill="#1f2937">
+<tspan x="430.0" dy="18" class="node-title">Rules</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-worker" class="node" data-role="agent">
+  <rect x="690.0" y="330.0" width="160.0" height="82.0" rx="7.0"
+        fill="#faf5ff" stroke="#7c3aed" stroke-width="1.4" />
+
+  <circle cx="708.0" cy="348.0" r="14" fill="#7c3aed" />
+  <text x="708.0" y="353.0" class="step-label" fill="#faf5ff" text-anchor="middle">4</text>
+  <text x="770.0" y="357.0" text-anchor="middle" fill="#1f2937">
+<tspan x="770.0" dy="18" class="node-title">Worker</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-db" class="node" data-role="memory">
+  <rect x="350.0" y="470.0" width="160.0" height="82.0" rx="7.0"
+        fill="#f0fdf4" stroke="#15803d" stroke-width="1.4" />
+
+  <circle cx="368.0" cy="488.0" r="14" fill="#15803d" />
+  <text x="368.0" y="493.0" class="step-label" fill="#f0fdf4" text-anchor="middle">5</text>
+  <text x="430.0" y="497.0" text-anchor="middle" fill="#1f2937">
+<tspan x="430.0" dy="18" class="node-title">Database</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-queue" class="node" data-role="source">
+  <rect x="690.0" y="470.0" width="160.0" height="82.0" rx="7.0"
+        fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4" />
+
+  <circle cx="708.0" cy="488.0" r="14" fill="#0f766e" />
+  <text x="708.0" y="493.0" class="step-label" fill="#f0fdfa" text-anchor="middle">6</text>
+  <text x="770.0" y="497.0" text-anchor="middle" fill="#1f2937">
+<tspan x="770.0" dy="18" class="node-title">Queue</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+</svg>
+
+      </div>
+    </div>
+  </main>
+  <script>
+    const stage = document.getElementById('stage');
+    const viewport = document.getElementById('viewport');
+    const svg = viewport.querySelector('svg');
+    const download = document.getElementById('download');
+    let scale = 1;
+    let x = 0;
+    let y = 0;
+    let dragging = false;
+    let lastX = 0;
+    let lastY = 0;
+    function applyTransform() {
+      viewport.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+    }
+    function setDownload() {
+      const blob = new Blob([new XMLSerializer().serializeToString(svg)], {type: 'image/svg+xml'});
+      download.href = URL.createObjectURL(blob);
+    }
+    document.getElementById('toggle').addEventListener('click', (event) => {
+      if (svg.animationsPaused && svg.animationsPaused()) {
+        svg.unpauseAnimations();
+        event.currentTarget.textContent = 'Pause';
+      } else {
+        svg.pauseAnimations();
+        event.currentTarget.textContent = 'Play';
+      }
+    });
+    document.getElementById('zoom-in').addEventListener('click', () => { scale = Math.min(3, scale + 0.15); applyTransform(); });
+    document.getElementById('zoom-out').addEventListener('click', () => { scale = Math.max(0.35, scale - 0.15); applyTransform(); });
+    document.getElementById('reset').addEventListener('click', () => { scale = 1; x = 0; y = 0; applyTransform(); });
+    stage.addEventListener('pointerdown', (event) => { dragging = true; stage.classList.add('dragging'); lastX = event.clientX; lastY = event.clientY; stage.setPointerCapture(event.pointerId); });
+    stage.addEventListener('pointermove', (event) => {
+      if (!dragging) return;
+      x += event.clientX - lastX;
+      y += event.clientY - lastY;
+      lastX = event.clientX;
+      lastY = event.clientY;
+      applyTransform();
+    });
+    stage.addEventListener('pointerup', () => { dragging = false; stage.classList.remove('dragging'); });
+    setDownload();
+  </script>
+</body>
+</html>

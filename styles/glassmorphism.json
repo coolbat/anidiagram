@@ -1,0 +1,28 @@
+{
+  "name": "glassmorphism",
+  "canvas": {
+    "background": "#eef2ff",
+    "text": "#172033",
+    "muted": "#475569",
+    "grid": "#dbe4ff"
+  },
+  "title": {
+    "accent": "#06b6d4",
+    "highlight": "#ffffff"
+  },
+  "node": {
+    "radius": 18,
+    "stroke_width": 1.5
+  },
+  "roles": {
+    "actor": {"stroke": "#f97316", "fill": "#ffffff", "text": "#172033"},
+    "source": {"stroke": "#0891b2", "fill": "#f0fdff", "text": "#172033"},
+    "process": {"stroke": "#2563eb", "fill": "#f8fbff", "text": "#172033"},
+    "agent": {"stroke": "#8b5cf6", "fill": "#fbfaff", "text": "#172033"},
+    "memory": {"stroke": "#10b981", "fill": "#f1fff8", "text": "#172033"},
+    "tool": {"stroke": "#f59e0b", "fill": "#fffaf0", "text": "#172033"},
+    "output": {"stroke": "#22c55e", "fill": "#f4fff8", "text": "#172033"},
+    "risk": {"stroke": "#ef4444", "fill": "#fff5f5", "text": "#172033"},
+    "neutral": {"stroke": "#94a3b8", "fill": "#ffffff", "text": "#172033"}
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "claude-warm",
+  "canvas": {
+    "background": "#fbfaf7",
+    "text": "#2f2a24",
+    "muted": "#706a61",
+    "grid": "#ece7df"
+  },
+  "title": {
+    "accent": "#c2410c",
+    "highlight": "#fff4e6"
+  },
+  "node": {
+    "radius": 12,
+    "stroke_width": 1.8
+  },
+  "roles": {
+    "actor": {"stroke": "#ea580c", "fill": "#fff7ed", "text": "#2f2a24"},
+    "source": {"stroke": "#0e7490", "fill": "#ecfeff", "text": "#2f2a24"},
+    "process": {"stroke": "#92400e", "fill": "#fffbeb", "text": "#2f2a24"},
+    "agent": {"stroke": "#7c2d12", "fill": "#fff1e8", "text": "#2f2a24"},
+    "memory": {"stroke": "#15803d", "fill": "#f0fdf4", "text": "#2f2a24"},
+    "tool": {"stroke": "#9333ea", "fill": "#faf5ff", "text": "#2f2a24"},
+    "output": {"stroke": "#16a34a", "fill": "#f0fdf4", "text": "#2f2a24"},
+    "risk": {"stroke": "#b91c1c", "fill": "#fef2f2", "text": "#2f2a24"},
+    "neutral": {"stroke": "#a8a29e", "fill": "#ffffff", "text": "#2f2a24"}
+  }
+}

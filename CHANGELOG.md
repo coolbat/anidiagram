@@ -2,6 +2,15 @@
 
 ## 2026-07-04
 
+- Added DiagramScript v0.2, JSON schema files, and dedicated schema documentation.
+- Added route-aware edges, step badges, stricter roles, preset metadata, and canvas bounds validation.
+- Added exporters for HTML, PNG, GIF, PDF, WebP, MP4, APNG, Lottie, and quality reports.
+- Added HTML viewer controls for play/pause, zoom, drag pan, reset, and SVG download.
+- Added quality checks for node bounds, overlaps, text fit, and explicit edge path collisions.
+- Added clean-room preset compilers for 14 diagram types.
+- Added seven more style profiles, style validation, and a style catalog.
+- Added a `$anidiagram` Skill entrypoint, batch gallery generator, GitHub Actions CI, and optional raster packaging metadata.
+- Added a committed preset gallery and README case showcase.
 - Added a typed internal Scene IR for `Scene`, `Node`, `Edge`, `Group`, `Style`, and `Motion`.
 - Added DiagramScript v0.1 validation with structured path-level error reports.
 - Updated the CLI to emit structured success and validation-error result JSON.

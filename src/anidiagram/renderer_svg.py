@@ -99,6 +99,12 @@ def render_text_block(x: float, y: float, width: float, label: str, caption: str
     return "\n".join(parts)
 
 
+def render_step_badge(x: float, y: float, value: int, fill: str, text: str) -> str:
+    return f"""
+  <circle cx="{x:.1f}" cy="{y:.1f}" r="14" fill="{esc(fill)}" />
+  <text x="{x:.1f}" y="{y + 5:.1f}" class="step-label" fill="{esc(text)}" text-anchor="middle">{value}</text>"""
+
+
 def render_node(node: Node, style: Dict[str, Any]) -> str:
     box = node_box(node)
     role = role_style(style, node.role)
@@ -112,10 +118,14 @@ def render_node(node: Node, style: Dict[str, Any]) -> str:
     label = node.label
     caption = node.caption
     content_y = box.y + max(26, box.h / 2 - 14)
+    badge = ""
+    if node.step is not None:
+        badge = render_step_badge(box.x + 18, box.y + 18, node.step, stroke, fill)
     return f"""
 <g id="node-{esc(box.node_id)}" class="node" data-role="{esc(node.role)}">
   <rect x="{box.x:.1f}" y="{box.y:.1f}" width="{box.w:.1f}" height="{box.h:.1f}" rx="{radius:.1f}"
         fill="{esc(fill)}" stroke="{esc(stroke)}" stroke-width="{stroke_width:.1f}" />
+{badge}
   {render_text_block(box.x + 12, content_y, box.w - 24, label, caption, text)}
   <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
 </g>"""
@@ -146,6 +156,25 @@ def edge_points(edge: Edge, nodes: Dict[str, NodeBox]) -> Tuple[Point, Point]:
     return anchor_between(source, target)
 
 
+def route_points(edge: Edge, nodes: Dict[str, NodeBox]) -> List[Point]:
+    if len(edge.points) >= 2:
+        return list(edge.points)
+    start, end = edge_points(edge, nodes)
+    sx, sy = start
+    ex, ey = end
+    if edge.route == "hv":
+        return [start, (ex, sy), end]
+    if edge.route == "vh":
+        return [start, (sx, ey), end]
+    if edge.route == "orthogonal":
+        if abs(ex - sx) >= abs(ey - sy):
+            mx = (sx + ex) / 2
+            return [start, (mx, sy), (mx, ey), end]
+        my = (sy + ey) / 2
+        return [start, (sx, my), (ex, my), end]
+    return [start, end]
+
+
 def line_path(points: Iterable[Point]) -> str:
     items = list(points)
     first = items[0]
@@ -154,8 +183,8 @@ def line_path(points: Iterable[Point]) -> str:
 
 
 def edge_path(edge: Edge, nodes: Dict[str, NodeBox]) -> str:
-    if len(edge.points) >= 2:
-        return line_path(edge.points)
+    if edge.route != "curved" or len(edge.points) >= 2:
+        return line_path(route_points(edge, nodes))
     start, end = edge_points(edge, nodes)
     return curve_path(start, end)
 
@@ -171,6 +200,9 @@ def render_edge(edge: Edge, nodes: Dict[str, NodeBox], style: Dict[str, Any], in
     mid_y = (start[1] + end[1]) / 2 - 14
     label = edge.label
     marker_id = f"arrow-{index}"
+    badge = ""
+    if edge.step is not None:
+        badge = render_step_badge(mid_x - 22, mid_y - 5, edge.step, stroke, "#ffffff")
     motion_markup = ""
     if edge.motion.enabled:
         begin = index * 0.35 + edge.motion.delay
@@ -186,6 +218,7 @@ def render_edge(edge: Edge, nodes: Dict[str, NodeBox], style: Dict[str, Any], in
 <g class="edge" data-role="{esc(edge.role)}">
   <path d="{path}" fill="none" stroke="{esc(stroke)}" stroke-width="{width:.1f}" marker-end="url(#{marker_id})" />
 {motion_markup}
+{badge}
   <text x="{mid_x:.1f}" y="{mid_y:.1f}" class="edge-label" fill="{esc(style.get("canvas", {}).get("muted", "#5b6778"))}">{esc(label)}</text>
 </g>"""
 
@@ -218,6 +251,7 @@ def render_svg(spec: Any, style: Dict[str, Any]) -> str:
   .node-caption {{ font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }}
   .group-label {{ font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }}
   .edge-label {{ font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }}
+  .step-label {{ font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }}
 </style>
 <rect width="100%" height="100%" fill="{esc(background)}" />
 <defs>
@@ -247,17 +281,73 @@ def render_html(svg: str, title: str) -> str:
   <title>{esc(title)}</title>
   <style>
     body {{ margin: 0; background: #111827; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }}
-    main {{ min-height: 100vh; display: grid; place-items: center; padding: 24px; box-sizing: border-box; }}
-    .stage {{ width: min(1200px, 100%); overflow: auto; border: 1px solid #334155; border-radius: 12px; background: #020617; }}
-    svg {{ display: block; max-width: 100%; height: auto; }}
+    main {{ min-height: 100vh; display: grid; grid-template-rows: auto 1fr; gap: 12px; padding: 16px; box-sizing: border-box; }}
+    .toolbar {{ display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }}
+    button, a {{ border: 1px solid #475569; background: #1f2937; color: #f8fafc; border-radius: 8px; padding: 8px 10px; font: inherit; text-decoration: none; cursor: pointer; }}
+    button:hover, a:hover {{ background: #334155; }}
+    .stage {{ width: 100%; min-height: 0; overflow: hidden; border: 1px solid #334155; border-radius: 12px; background: #020617; cursor: grab; }}
+    .stage.dragging {{ cursor: grabbing; }}
+    .viewport {{ transform-origin: 0 0; width: max-content; }}
+    svg {{ display: block; max-width: none; height: auto; user-select: none; }}
   </style>
 </head>
 <body>
   <main>
-    <div class="stage">
+    <div class="toolbar">
+      <button type="button" id="toggle">Pause</button>
+      <button type="button" id="zoom-in">Zoom In</button>
+      <button type="button" id="zoom-out">Zoom Out</button>
+      <button type="button" id="reset">Reset</button>
+      <a id="download" download="{esc(title)}.svg">Download SVG</a>
+    </div>
+    <div class="stage" id="stage">
+      <div class="viewport" id="viewport">
 {svg}
+      </div>
     </div>
   </main>
+  <script>
+    const stage = document.getElementById('stage');
+    const viewport = document.getElementById('viewport');
+    const svg = viewport.querySelector('svg');
+    const download = document.getElementById('download');
+    let scale = 1;
+    let x = 0;
+    let y = 0;
+    let dragging = false;
+    let lastX = 0;
+    let lastY = 0;
+    function applyTransform() {{
+      viewport.style.transform = `translate(${{x}}px, ${{y}}px) scale(${{scale}})`;
+    }}
+    function setDownload() {{
+      const blob = new Blob([new XMLSerializer().serializeToString(svg)], {{type: 'image/svg+xml'}});
+      download.href = URL.createObjectURL(blob);
+    }}
+    document.getElementById('toggle').addEventListener('click', (event) => {{
+      if (svg.animationsPaused && svg.animationsPaused()) {{
+        svg.unpauseAnimations();
+        event.currentTarget.textContent = 'Pause';
+      }} else {{
+        svg.pauseAnimations();
+        event.currentTarget.textContent = 'Play';
+      }}
+    }});
+    document.getElementById('zoom-in').addEventListener('click', () => {{ scale = Math.min(3, scale + 0.15); applyTransform(); }});
+    document.getElementById('zoom-out').addEventListener('click', () => {{ scale = Math.max(0.35, scale - 0.15); applyTransform(); }});
+    document.getElementById('reset').addEventListener('click', () => {{ scale = 1; x = 0; y = 0; applyTransform(); }});
+    stage.addEventListener('pointerdown', (event) => {{ dragging = true; stage.classList.add('dragging'); lastX = event.clientX; lastY = event.clientY; stage.setPointerCapture(event.pointerId); }});
+    stage.addEventListener('pointermove', (event) => {{
+      if (!dragging) return;
+      x += event.clientX - lastX;
+      y += event.clientY - lastY;
+      lastX = event.clientX;
+      lastY = event.clientY;
+      applyTransform();
+    }});
+    stage.addEventListener('pointerup', () => {{ dragging = false; stage.classList.remove('dragging'); }});
+    setDownload();
+  </script>
 </body>
 </html>
 """

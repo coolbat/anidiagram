@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Funnel</title>
+  <style>
+    body { margin: 0; background: #111827; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    main { min-height: 100vh; display: grid; grid-template-rows: auto 1fr; gap: 12px; padding: 16px; box-sizing: border-box; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    button, a { border: 1px solid #475569; background: #1f2937; color: #f8fafc; border-radius: 8px; padding: 8px 10px; font: inherit; text-decoration: none; cursor: pointer; }
+    button:hover, a:hover { background: #334155; }
+    .stage { width: 100%; min-height: 0; overflow: hidden; border: 1px solid #334155; border-radius: 12px; background: #020617; cursor: grab; }
+    .stage.dragging { cursor: grabbing; }
+    .viewport { transform-origin: 0 0; width: max-content; }
+    svg { display: block; max-width: none; height: auto; user-select: none; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="toolbar">
+      <button type="button" id="toggle">Pause</button>
+      <button type="button" id="zoom-in">Zoom In</button>
+      <button type="button" id="zoom-out">Zoom Out</button>
+      <button type="button" id="reset">Reset</button>
+      <a id="download" download="Funnel.svg">Download SVG</a>
+    </div>
+    <div class="stage" id="stage">
+      <div class="viewport" id="viewport">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="diagram-title diagram-desc">
+<title id="diagram-title">Funnel</title>
+<desc id="diagram-desc">narrow broad input into qualified output</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+</style>
+<rect width="100%" height="100%" fill="#eef2ff" />
+<defs>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#dbe4ff" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="1144" height="668" rx="26" fill="none" stroke="#94a3b8" stroke-width="1.4" />
+<rect x="44" y="44" width="12" height="52" rx="6" fill="#06b6d4" />
+<rect x="72" y="46" width="360" height="56" rx="16" fill="#ffffff" />
+<text id="main-title" x="90" y="84" class="title" fill="#172033">Funnel</text>
+<text x="74" y="126" class="subtitle" fill="#475569">narrow broad input into qualified output</text>
+
+
+<defs>
+  <marker id="arrow-1" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path d="M 640.0 237.0 L 640.0 265.0 L 625.0 265.0" fill="none" stroke="#2563eb" stroke-width="2.4" marker-end="url(#arrow-1)" />
+  <circle r="5" fill="#2563eb">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 640.0 237.0 L 640.0 265.0 L 625.0 265.0" begin="0.35s" />
+  </circle>
+
+  <circle cx="610.5" cy="232.0" r="14" fill="#2563eb" />
+  <text x="610.5" y="237.0" class="step-label" fill="#ffffff" text-anchor="middle">1</text>
+  <text x="632.5" y="237.0" class="edge-label" fill="#475569">filter</text>
+</g>
+
+<defs>
+  <marker id="arrow-2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path d="M 625.0 347.0 L 625.0 375.0 L 610.0 375.0" fill="none" stroke="#2563eb" stroke-width="2.4" marker-end="url(#arrow-2)" />
+  <circle r="5" fill="#2563eb">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 625.0 347.0 L 625.0 375.0 L 610.0 375.0" begin="0.70s" />
+  </circle>
+
+  <circle cx="595.5" cy="342.0" r="14" fill="#2563eb" />
+  <text x="595.5" y="347.0" class="step-label" fill="#ffffff" text-anchor="middle">2</text>
+  <text x="617.5" y="347.0" class="edge-label" fill="#475569">filter</text>
+</g>
+
+<defs>
+  <marker id="arrow-3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path d="M 610.0 457.0 L 610.0 485.0 L 595.0 485.0" fill="none" stroke="#2563eb" stroke-width="2.4" marker-end="url(#arrow-3)" />
+  <circle r="5" fill="#2563eb">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 610.0 457.0 L 610.0 485.0 L 595.0 485.0" begin="1.05s" />
+  </circle>
+
+  <circle cx="580.5" cy="452.0" r="14" fill="#2563eb" />
+  <text x="580.5" y="457.0" class="step-label" fill="#ffffff" text-anchor="middle">3</text>
+  <text x="602.5" y="457.0" class="edge-label" fill="#475569">filter</text>
+</g>
+
+<g id="node-traffic" class="node" data-role="source">
+  <rect x="520.0" y="155.0" width="240.0" height="82.0" rx="18.0"
+        fill="#f0fdff" stroke="#0891b2" stroke-width="1.5" />
+
+  <circle cx="538.0" cy="173.0" r="14" fill="#0891b2" />
+  <text x="538.0" y="178.0" class="step-label" fill="#f0fdff" text-anchor="middle">1</text>
+  <text x="640.0" y="182.0" text-anchor="middle" fill="#172033">
+<tspan x="640.0" dy="18" class="node-title">Traffic</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-score" class="node" data-role="process">
+  <rect x="520.0" y="265.0" width="210.0" height="82.0" rx="18.0"
+        fill="#f8fbff" stroke="#2563eb" stroke-width="1.5" />
+
+  <circle cx="538.0" cy="283.0" r="14" fill="#2563eb" />
+  <text x="538.0" y="288.0" class="step-label" fill="#f8fbff" text-anchor="middle">2</text>
+  <text x="625.0" y="292.0" text-anchor="middle" fill="#172033">
+<tspan x="625.0" dy="18" class="node-title">Score</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-qualify" class="node" data-role="agent">
+  <rect x="520.0" y="375.0" width="180.0" height="82.0" rx="18.0"
+        fill="#fbfaff" stroke="#8b5cf6" stroke-width="1.5" />
+
+  <circle cx="538.0" cy="393.0" r="14" fill="#8b5cf6" />
+  <text x="538.0" y="398.0" class="step-label" fill="#fbfaff" text-anchor="middle">3</text>
+  <text x="610.0" y="402.0" text-anchor="middle" fill="#172033">
+<tspan x="610.0" dy="18" class="node-title">Qualify</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-convert" class="node" data-role="output">
+  <rect x="520.0" y="485.0" width="150.0" height="82.0" rx="18.0"
+        fill="#f4fff8" stroke="#22c55e" stroke-width="1.5" />
+
+  <circle cx="538.0" cy="503.0" r="14" fill="#22c55e" />
+  <text x="538.0" y="508.0" class="step-label" fill="#f4fff8" text-anchor="middle">4</text>
+  <text x="595.0" y="512.0" text-anchor="middle" fill="#172033">
+<tspan x="595.0" dy="18" class="node-title">Convert</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+</svg>
+
+      </div>
+    </div>
+  </main>
+  <script>
+    const stage = document.getElementById('stage');
+    const viewport = document.getElementById('viewport');
+    const svg = viewport.querySelector('svg');
+    const download = document.getElementById('download');
+    let scale = 1;
+    let x = 0;
+    let y = 0;
+    let dragging = false;
+    let lastX = 0;
+    let lastY = 0;
+    function applyTransform() {
+      viewport.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+    }
+    function setDownload() {
+      const blob = new Blob([new XMLSerializer().serializeToString(svg)], {type: 'image/svg+xml'});
+      download.href = URL.createObjectURL(blob);
+    }
+    document.getElementById('toggle').addEventListener('click', (event) => {
+      if (svg.animationsPaused && svg.animationsPaused()) {
+        svg.unpauseAnimations();
+        event.currentTarget.textContent = 'Pause';
+      } else {
+        svg.pauseAnimations();
+        event.currentTarget.textContent = 'Play';
+      }
+    });
+    document.getElementById('zoom-in').addEventListener('click', () => { scale = Math.min(3, scale + 0.15); applyTransform(); });
+    document.getElementById('zoom-out').addEventListener('click', () => { scale = Math.max(0.35, scale - 0.15); applyTransform(); });
+    document.getElementById('reset').addEventListener('click', () => { scale = 1; x = 0; y = 0; applyTransform(); });
+    stage.addEventListener('pointerdown', (event) => { dragging = true; stage.classList.add('dragging'); lastX = event.clientX; lastY = event.clientY; stage.setPointerCapture(event.pointerId); });
+    stage.addEventListener('pointermove', (event) => {
+      if (!dragging) return;
+      x += event.clientX - lastX;
+      y += event.clientY - lastY;
+      lastX = event.clientX;
+      lastY = event.clientY;
+      applyTransform();
+    });
+    stage.addEventListener('pointerup', () => { dragging = false; stage.classList.remove('dragging'); });
+    setDownload();
+  </script>
+</body>
+</html>

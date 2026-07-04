@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anidiagram.dev/schemas/diagram-script-v0.1.schema.json",
+  "title": "DiagramScript v0.1",
+  "type": "object",
+  "required": ["version", "nodes"],
+  "properties": {
+    "version": {"const": "0.1"},
+    "canvas": {
+      "type": "object",
+      "properties": {
+        "width": {"type": "integer", "minimum": 1},
+        "height": {"type": "integer", "minimum": 1}
+      }
+    },
+    "style": {"type": "string"},
+    "title": {
+      "type": "object",
+      "properties": {
+        "text": {"type": "string"},
+        "subtitle": {"type": "string"}
+      }
+    },
+    "groups": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/group"}
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/node"}
+    },
+    "edges": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/edge"}
+    }
+  },
+  "$defs": {
+    "point": {
+      "type": "array",
+      "prefixItems": [{"type": "number"}, {"type": "number"}],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "bounds": {
+      "type": "array",
+      "prefixItems": [{"type": "number"}, {"type": "number"}, {"type": "number"}, {"type": "number"}],
+      "items": false,
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "node": {
+      "type": "object",
+      "required": ["id", "position", "size"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "label": {"type": "string"},
+        "caption": {"type": "string"},
+        "position": {"$ref": "#/$defs/point"},
+        "size": {"$ref": "#/$defs/point"},
+        "role": {"type": "string"},
+        "fill": {"type": "string"},
+        "stroke": {"type": "string"}
+      }
+    },
+    "edge": {
+      "type": "object",
+      "required": ["from", "to"],
+      "properties": {
+        "from": {"type": "string", "minLength": 1},
+        "to": {"type": "string", "minLength": 1},
+        "label": {"type": "string"},
+        "role": {"type": "string"},
+        "points": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/point"}}
+      }
+    },
+    "group": {
+      "type": "object",
+      "required": ["id", "bounds"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "label": {"type": "string"},
+        "bounds": {"$ref": "#/$defs/bounds"},
+        "role": {"type": "string"}
+      }
+    }
+  }
+}

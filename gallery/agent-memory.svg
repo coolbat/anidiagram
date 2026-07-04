@@ -1,0 +1,211 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="diagram-title diagram-desc">
+<title id="diagram-title">Agent Memory</title>
+<desc id="diagram-desc">planning, tools, memory, and grounded output</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+</style>
+<rect width="100%" height="100%" fill="#07162c" />
+<defs>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#12345c" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="1144" height="668" rx="26" fill="none" stroke="#2f6f9f" stroke-width="1.4" />
+<rect x="44" y="44" width="12" height="52" rx="6" fill="#55c7ff" />
+<rect x="72" y="46" width="360" height="56" rx="16" fill="#0d3b5c" />
+<text id="main-title" x="90" y="84" class="title" fill="#e6f7ff">Agent Memory</text>
+<text x="74" y="126" class="subtitle" fill="#9cc7e8">planning, tools, memory, and grounded output</text>
+
+<g id="group-runtime" class="group">
+  <rect x="280.0" y="155.0" width="375.0" height="395.0" rx="22"
+        fill="#0b1d38" fill-opacity="0.34" stroke="#55c7ff" stroke-width="1.6" stroke-dasharray="9 8" />
+  <text x="298.0" y="185.0" class="group-label" fill="#9cc7e8">Runtime</text>
+</g>
+
+<g id="group-knowledge" class="group">
+  <rect x="700.0" y="155.0" width="315.0" height="395.0" rx="22"
+        fill="#0b2f2b" fill-opacity="0.34" stroke="#33e6a6" stroke-width="1.6" stroke-dasharray="9 8" />
+  <text x="718.0" y="185.0" class="group-label" fill="#9cc7e8">Knowledge</text>
+</g>
+
+<defs>
+  <marker id="arrow-1" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#f6d365" />
+  </marker>
+</defs>
+<g class="edge" data-role="actor">
+  <path d="M 240.0 356.0 L 365.0 276.0" fill="none" stroke="#f6d365" stroke-width="2.0" marker-end="url(#arrow-1)" />
+  <circle r="5" fill="#f6d365">
+    <animateMotion dur="4.6s" repeatCount="indefinite" path="M 240.0 356.0 L 365.0 276.0" begin="0.35s" />
+  </circle>
+
+  <circle cx="280.5" cy="297.0" r="14" fill="#f6d365" />
+  <text x="280.5" y="302.0" class="step-label" fill="#ffffff" text-anchor="middle">1</text>
+  <text x="302.5" y="302.0" class="edge-label" fill="#9cc7e8">request</text>
+</g>
+
+<defs>
+  <marker id="arrow-2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#f6d365" />
+  </marker>
+</defs>
+<g class="edge" data-role="tool">
+  <path d="M 445.0 317.0 L 445.0 405.0 L 445.0 405.0" fill="none" stroke="#f6d365" stroke-width="2.0" marker-end="url(#arrow-2)" />
+  <circle r="5" fill="#f6d365">
+    <animateMotion dur="4.6s" repeatCount="indefinite" path="M 445.0 317.0 L 445.0 405.0 L 445.0 405.0" begin="0.70s" />
+  </circle>
+
+  <circle cx="423.0" cy="342.0" r="14" fill="#f6d365" />
+  <text x="423.0" y="347.0" class="step-label" fill="#ffffff" text-anchor="middle">2</text>
+  <text x="445.0" y="347.0" class="edge-label" fill="#9cc7e8">invoke</text>
+</g>
+
+<defs>
+  <marker id="arrow-3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#33e6a6" />
+  </marker>
+</defs>
+<g class="edge" data-role="memory">
+  <path d="M 525.0 276.0 L 770.0 276.0" fill="none" stroke="#33e6a6" stroke-width="2.0" marker-end="url(#arrow-3)" />
+  <circle r="5" fill="#33e6a6">
+    <animateMotion dur="4.6s" repeatCount="indefinite" path="M 525.0 276.0 L 770.0 276.0" begin="1.05s" />
+  </circle>
+
+  <circle cx="625.5" cy="257.0" r="14" fill="#33e6a6" />
+  <text x="625.5" y="262.0" class="step-label" fill="#ffffff" text-anchor="middle">3</text>
+  <text x="647.5" y="262.0" class="edge-label" fill="#9cc7e8">read</text>
+</g>
+
+<defs>
+  <marker id="arrow-4" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#7dd3fc" />
+  </marker>
+</defs>
+<g class="edge" data-role="source">
+  <path d="M 525.0 446.0 L 770.0 446.0" fill="none" stroke="#7dd3fc" stroke-width="2.0" marker-end="url(#arrow-4)" />
+  <circle r="5" fill="#7dd3fc">
+    <animateMotion dur="4.6s" repeatCount="indefinite" path="M 525.0 446.0 L 770.0 446.0" begin="1.40s" />
+  </circle>
+
+  <circle cx="625.5" cy="427.0" r="14" fill="#7dd3fc" />
+  <text x="625.5" y="432.0" class="step-label" fill="#ffffff" text-anchor="middle">4</text>
+  <text x="647.5" y="432.0" class="edge-label" fill="#9cc7e8">retrieve</text>
+</g>
+
+<defs>
+  <marker id="arrow-5" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#33e6a6" />
+  </marker>
+</defs>
+<g class="edge" data-role="memory">
+  <path d="M 930.0 276.0 L 1030.0 356.0" fill="none" stroke="#33e6a6" stroke-width="2.0" marker-end="url(#arrow-5)" />
+  <circle r="5" fill="#33e6a6">
+    <animateMotion dur="4.6s" repeatCount="indefinite" path="M 930.0 276.0 L 1030.0 356.0" begin="1.75s" />
+  </circle>
+
+  <circle cx="958.0" cy="297.0" r="14" fill="#33e6a6" />
+  <text x="958.0" y="302.0" class="step-label" fill="#ffffff" text-anchor="middle">5</text>
+  <text x="980.0" y="302.0" class="edge-label" fill="#9cc7e8">context</text>
+</g>
+
+<defs>
+  <marker id="arrow-6" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#7dd3fc" />
+  </marker>
+</defs>
+<g class="edge" data-role="source">
+  <path d="M 930.0 446.0 L 1030.0 356.0" fill="none" stroke="#7dd3fc" stroke-width="2.0" marker-end="url(#arrow-6)" />
+  <circle r="5" fill="#7dd3fc">
+    <animateMotion dur="4.6s" repeatCount="indefinite" path="M 930.0 446.0 L 1030.0 356.0" begin="2.10s" />
+  </circle>
+
+  <circle cx="958.0" cy="382.0" r="14" fill="#7dd3fc" />
+  <text x="958.0" y="387.0" class="step-label" fill="#ffffff" text-anchor="middle">6</text>
+  <text x="980.0" y="387.0" class="edge-label" fill="#9cc7e8">evidence</text>
+</g>
+
+<g id="node-user" class="node" data-role="actor">
+  <rect x="80.0" y="315.0" width="160.0" height="82.0" rx="8.0"
+        fill="#10243a" stroke="#f6d365" stroke-width="1.8" />
+
+  <circle cx="98.0" cy="333.0" r="14" fill="#f6d365" />
+  <text x="98.0" y="338.0" class="step-label" fill="#10243a" text-anchor="middle">1</text>
+  <text x="160.0" y="342.0" text-anchor="middle" fill="#e6f7ff">
+<tspan x="160.0" dy="18" class="node-title">User</tspan>
+<tspan x="160.0" dy="17" class="node-caption">asks</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-agent" class="node" data-role="agent">
+  <rect x="365.0" y="235.0" width="160.0" height="82.0" rx="8.0"
+        fill="#101b45" stroke="#a7b8ff" stroke-width="1.8" />
+
+  <circle cx="383.0" cy="253.0" r="14" fill="#a7b8ff" />
+  <text x="383.0" y="258.0" class="step-label" fill="#101b45" text-anchor="middle">2</text>
+  <text x="445.0" y="262.0" text-anchor="middle" fill="#e6f7ff">
+<tspan x="445.0" dy="18" class="node-title">Planner</tspan>
+<tspan x="445.0" dy="17" class="node-caption">routes</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-tools" class="node" data-role="tool">
+  <rect x="365.0" y="405.0" width="160.0" height="82.0" rx="8.0"
+        fill="#1f2835" stroke="#f6d365" stroke-width="1.8" />
+
+  <circle cx="383.0" cy="423.0" r="14" fill="#f6d365" />
+  <text x="383.0" y="428.0" class="step-label" fill="#1f2835" text-anchor="middle">3</text>
+  <text x="445.0" y="432.0" text-anchor="middle" fill="#e6f7ff">
+<tspan x="445.0" dy="18" class="node-title">Tools</tspan>
+<tspan x="445.0" dy="17" class="node-caption">acts</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-memory" class="node" data-role="memory">
+  <rect x="770.0" y="235.0" width="160.0" height="82.0" rx="8.0"
+        fill="#0b2f2b" stroke="#33e6a6" stroke-width="1.8" />
+
+  <circle cx="788.0" cy="253.0" r="14" fill="#33e6a6" />
+  <text x="788.0" y="258.0" class="step-label" fill="#0b2f2b" text-anchor="middle">4</text>
+  <text x="850.0" y="262.0" text-anchor="middle" fill="#e6f7ff">
+<tspan x="850.0" dy="18" class="node-title">Memory</tspan>
+<tspan x="850.0" dy="17" class="node-caption">recalls</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-store" class="node" data-role="source">
+  <rect x="770.0" y="405.0" width="160.0" height="82.0" rx="8.0"
+        fill="#0b273c" stroke="#7dd3fc" stroke-width="1.8" />
+
+  <circle cx="788.0" cy="423.0" r="14" fill="#7dd3fc" />
+  <text x="788.0" y="428.0" class="step-label" fill="#0b273c" text-anchor="middle">5</text>
+  <text x="850.0" y="432.0" text-anchor="middle" fill="#e6f7ff">
+<tspan x="850.0" dy="18" class="node-title">Store</tspan>
+<tspan x="850.0" dy="17" class="node-caption">retrieves</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-answer" class="node" data-role="output">
+  <rect x="1030.0" y="315.0" width="160.0" height="82.0" rx="8.0"
+        fill="#0a2d33" stroke="#33e6a6" stroke-width="1.8" />
+
+  <circle cx="1048.0" cy="333.0" r="14" fill="#33e6a6" />
+  <text x="1048.0" y="338.0" class="step-label" fill="#0a2d33" text-anchor="middle">6</text>
+  <text x="1110.0" y="342.0" text-anchor="middle" fill="#e6f7ff">
+<tspan x="1110.0" dy="18" class="node-title">Answer</tspan>
+<tspan x="1110.0" dy="17" class="node-caption">responds</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+</svg>

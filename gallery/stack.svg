@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="diagram-title diagram-desc">
+<title id="diagram-title">Stack</title>
+<desc id="diagram-desc">vertical dependency layers</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+</style>
+<rect width="100%" height="100%" fill="#050505" />
+<defs>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#171717" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="1144" height="668" rx="26" fill="none" stroke="#525252" stroke-width="1.4" />
+<rect x="44" y="44" width="12" height="52" rx="6" fill="#22c55e" />
+<rect x="72" y="46" width="360" height="56" rx="16" fill="#101810" />
+<text id="main-title" x="90" y="84" class="title" fill="#e5e7eb">Stack</text>
+<text x="74" y="126" class="subtitle" fill="#9ca3af">vertical dependency layers</text>
+
+
+<defs>
+  <marker id="arrow-1" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#22c55e" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path d="M 600.0 237.0 L 600.0 265.0 L 600.0 265.0" fill="none" stroke="#22c55e" stroke-width="2.0" marker-end="url(#arrow-1)" />
+  <circle r="5" fill="#22c55e">
+    <animateMotion dur="3.8s" repeatCount="indefinite" path="M 600.0 237.0 L 600.0 265.0 L 600.0 265.0" begin="0.35s" />
+  </circle>
+
+  <circle cx="578.0" cy="232.0" r="14" fill="#22c55e" />
+  <text x="578.0" y="237.0" class="step-label" fill="#ffffff" text-anchor="middle">1</text>
+  <text x="600.0" y="237.0" class="edge-label" fill="#9ca3af">depends</text>
+</g>
+
+<defs>
+  <marker id="arrow-2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#22c55e" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path d="M 600.0 347.0 L 600.0 375.0 L 600.0 375.0" fill="none" stroke="#22c55e" stroke-width="2.0" marker-end="url(#arrow-2)" />
+  <circle r="5" fill="#22c55e">
+    <animateMotion dur="3.8s" repeatCount="indefinite" path="M 600.0 347.0 L 600.0 375.0 L 600.0 375.0" begin="0.70s" />
+  </circle>
+
+  <circle cx="578.0" cy="342.0" r="14" fill="#22c55e" />
+  <text x="578.0" y="347.0" class="step-label" fill="#ffffff" text-anchor="middle">2</text>
+  <text x="600.0" y="347.0" class="edge-label" fill="#9ca3af">depends</text>
+</g>
+
+<defs>
+  <marker id="arrow-3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#22c55e" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path d="M 600.0 457.0 L 600.0 485.0 L 600.0 485.0" fill="none" stroke="#22c55e" stroke-width="2.0" marker-end="url(#arrow-3)" />
+  <circle r="5" fill="#22c55e">
+    <animateMotion dur="3.8s" repeatCount="indefinite" path="M 600.0 457.0 L 600.0 485.0 L 600.0 485.0" begin="1.05s" />
+  </circle>
+
+  <circle cx="578.0" cy="452.0" r="14" fill="#22c55e" />
+  <text x="578.0" y="457.0" class="step-label" fill="#ffffff" text-anchor="middle">3</text>
+  <text x="600.0" y="457.0" class="edge-label" fill="#9ca3af">depends</text>
+</g>
+
+<g id="node-client" class="node" data-role="actor">
+  <rect x="520.0" y="155.0" width="160.0" height="82.0" rx="4.0"
+        fill="#17120a" stroke="#f59e0b" stroke-width="1.6" />
+
+  <circle cx="538.0" cy="173.0" r="14" fill="#f59e0b" />
+  <text x="538.0" y="178.0" class="step-label" fill="#17120a" text-anchor="middle">1</text>
+  <text x="600.0" y="182.0" text-anchor="middle" fill="#e5e7eb">
+<tspan x="600.0" dy="18" class="node-title">Client</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-gateway" class="node" data-role="tool">
+  <rect x="520.0" y="265.0" width="160.0" height="82.0" rx="4.0"
+        fill="#181506" stroke="#eab308" stroke-width="1.6" />
+
+  <circle cx="538.0" cy="283.0" r="14" fill="#eab308" />
+  <text x="538.0" y="288.0" class="step-label" fill="#181506" text-anchor="middle">2</text>
+  <text x="600.0" y="292.0" text-anchor="middle" fill="#e5e7eb">
+<tspan x="600.0" dy="18" class="node-title">Gateway</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-service" class="node" data-role="process">
+  <rect x="520.0" y="375.0" width="160.0" height="82.0" rx="4.0"
+        fill="#07130a" stroke="#22c55e" stroke-width="1.6" />
+
+  <circle cx="538.0" cy="393.0" r="14" fill="#22c55e" />
+  <text x="538.0" y="398.0" class="step-label" fill="#07130a" text-anchor="middle">3</text>
+  <text x="600.0" y="402.0" text-anchor="middle" fill="#e5e7eb">
+<tspan x="600.0" dy="18" class="node-title">Service</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+
+<g id="node-storage" class="node" data-role="memory">
+  <rect x="520.0" y="485.0" width="160.0" height="82.0" rx="4.0"
+        fill="#061513" stroke="#14b8a6" stroke-width="1.6" />
+
+  <circle cx="538.0" cy="503.0" r="14" fill="#14b8a6" />
+  <text x="538.0" y="508.0" class="step-label" fill="#061513" text-anchor="middle">4</text>
+  <text x="600.0" y="512.0" text-anchor="middle" fill="#e5e7eb">
+<tspan x="600.0" dy="18" class="node-title">Storage</tspan>
+</text>
+  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
+</g>
+</svg>

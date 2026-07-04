@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anidiagram.dev/schemas/diagram-script-v0.2.schema.json",
+  "title": "DiagramScript v0.2",
+  "type": "object",
+  "required": ["version", "nodes"],
+  "properties": {
+    "version": {"const": "0.2"},
+    "preset": {"type": "string"},
+    "canvas": {
+      "type": "object",
+      "properties": {
+        "width": {"type": "integer", "minimum": 1},
+        "height": {"type": "integer", "minimum": 1}
+      }
+    },
+    "style": {"type": "string"},
+    "title": {
+      "type": "object",
+      "properties": {
+        "text": {"type": "string"},
+        "subtitle": {"type": "string"}
+      }
+    },
+    "groups": {"type": "array", "items": {"$ref": "#/$defs/group"}},
+    "nodes": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/node"}},
+    "edges": {"type": "array", "items": {"$ref": "#/$defs/edge"}}
+  },
+  "$defs": {
+    "role": {"enum": ["actor", "source", "process", "agent", "memory", "tool", "output", "risk", "neutral"]},
+    "route": {"enum": ["curved", "straight", "hv", "vh", "orthogonal", "points"]},
+    "point": {
+      "type": "array",
+      "prefixItems": [{"type": "number"}, {"type": "number"}],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "bounds": {
+      "type": "array",
+      "prefixItems": [{"type": "number"}, {"type": "number"}, {"type": "number"}, {"type": "number"}],
+      "items": false,
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "node": {
+      "type": "object",
+      "required": ["id", "position", "size"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "label": {"type": "string"},
+        "caption": {"type": "string"},
+        "position": {"$ref": "#/$defs/point"},
+        "size": {"$ref": "#/$defs/point"},
+        "role": {"$ref": "#/$defs/role"},
+        "step": {"type": "integer", "minimum": 1},
+        "radius": {"type": "number", "exclusiveMinimum": 0},
+        "fill": {"type": "string"},
+        "stroke": {"type": "string"},
+        "stroke_width": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "edge": {
+      "type": "object",
+      "required": ["from", "to"],
+      "properties": {
+        "from": {"type": "string", "minLength": 1},
+        "to": {"type": "string", "minLength": 1},
+        "label": {"type": "string"},
+        "role": {"$ref": "#/$defs/role"},
+        "route": {"$ref": "#/$defs/route"},
+        "step": {"type": "integer", "minimum": 1},
+        "points": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/point"}},
+        "duration": {"type": "string"},
+        "delay": {"type": "number"},
+        "animated": {"type": "boolean"},
+        "width": {"type": "number", "exclusiveMinimum": 0},
+        "stroke": {"type": "string"}
+      }
+    },
+    "group": {
+      "type": "object",
+      "required": ["id", "bounds"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "label": {"type": "string"},
+        "bounds": {"$ref": "#/$defs/bounds"},
+        "role": {"$ref": "#/$defs/role"},
+        "fill": {"type": "string"},
+        "stroke": {"type": "string"}
+      }
+    }
+  }
+}

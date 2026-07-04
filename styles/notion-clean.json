@@ -1,0 +1,28 @@
+{
+  "name": "notion-clean",
+  "canvas": {
+    "background": "#ffffff",
+    "text": "#1f2937",
+    "muted": "#6b7280",
+    "grid": "#f3f4f6"
+  },
+  "title": {
+    "accent": "#111827",
+    "highlight": "#f5f5f4"
+  },
+  "node": {
+    "radius": 7,
+    "stroke_width": 1.4
+  },
+  "roles": {
+    "actor": {"stroke": "#d97706", "fill": "#fff7ed", "text": "#1f2937"},
+    "source": {"stroke": "#0f766e", "fill": "#f0fdfa", "text": "#1f2937"},
+    "process": {"stroke": "#4b5563", "fill": "#f9fafb", "text": "#1f2937"},
+    "agent": {"stroke": "#7c3aed", "fill": "#faf5ff", "text": "#1f2937"},
+    "memory": {"stroke": "#15803d", "fill": "#f0fdf4", "text": "#1f2937"},
+    "tool": {"stroke": "#2563eb", "fill": "#eff6ff", "text": "#1f2937"},
+    "output": {"stroke": "#16a34a", "fill": "#f0fdf4", "text": "#1f2937"},
+    "risk": {"stroke": "#b91c1c", "fill": "#fef2f2", "text": "#1f2937"},
+    "neutral": {"stroke": "#d1d5db", "fill": "#ffffff", "text": "#1f2937"}
+  }
+}
