@@ -186,7 +186,7 @@ def render_svg(spec: Dict[str, Any], style: Dict[str, Any]) -> str:
     muted = canvas_style.get("muted", "#5b6778")
     grid = canvas_style.get("grid", "#edf2f7")
     title = spec.get("title", {})
-    title_text = title.get("text", "Animated Diagram")
+    title_text = title.get("text", "AniDiagram")
     subtitle = title.get("subtitle", "")
     nodes = {node.get("id"): node_box(node) for node in spec.get("nodes", []) if node.get("id")}
 

@@ -1,14 +1,14 @@
 [project]
-name = "animated-diagram"
+name = "anidiagram"
 version = "0.1.0"
-description = "Clean-room JSON-to-animated-SVG renderer for architecture diagrams."
+description = "Clean-room JSON-to-animated-SVG renderer for AniDiagram architecture visuals."
 readme = "README.md"
 requires-python = ">=3.9"
 license = {file = "LICENSE"}
-authors = [{name = "Animated Diagram contributors"}]
+authors = [{name = "AniDiagram contributors"}]
 
 [project.scripts]
-animated-diagram = "animated_diagram.cli:main"
+anidiagram = "anidiagram.cli:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

@@ -1,6 +1,6 @@
-# Animated Diagram
+# AniDiagram
 
-Clean-room JSON-to-animated-SVG renderer for architecture diagrams.
+Clean-room JSON-to-animated-SVG renderer for animated architecture visuals.
 
 This repository is not a GitHub fork and does not copy source code, documents,
 images, generated assets, or repository history from the projects listed in
@@ -17,7 +17,7 @@ images, generated assets, or repository history from the projects listed in
 ## Quick Start
 
 ```bash
-python3 -m animated_diagram.cli \
+python3 -m anidiagram.cli \
   --spec examples/agent-memory.diagram.json \
   --style styles/blueprint.json \
   --outdir outputs \
@@ -28,7 +28,7 @@ python3 -m animated_diagram.cli \
 For local development without installing the package:
 
 ```bash
-PYTHONPATH=src python3 -m animated_diagram.cli \
+PYTHONPATH=src python3 -m anidiagram.cli \
   --spec examples/agent-memory.diagram.json \
   --style styles/deep-tech.json \
   --outdir outputs \

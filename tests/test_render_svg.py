@@ -3,9 +3,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from animated_diagram.cli import main
-from animated_diagram.renderer_svg import render_svg
-from animated_diagram.styles import load_style
+from anidiagram.cli import main
+from anidiagram.renderer_svg import render_svg
+from anidiagram.styles import load_style
 
 
 ROOT = Path(__file__).resolve().parents[1]
