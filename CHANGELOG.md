@@ -2,6 +2,9 @@
 
 ## 2026-07-04
 
+- Added the `aurora-orb` style profile with soft gradient node fills, clipped color bands, grain texture, and low-contrast canvas treatment.
+- Improved SVG/HTML motion with staggered node entry, glow breathing, burst rings, draw-on edges, flow dashes, multi-particle edge motion, animated group boundaries, restart controls, and reduced-motion handling.
+- Added clean-room motion research notes based on open-source animation libraries without importing third-party code or assets.
 - Added DiagramScript v0.2, JSON schema files, and dedicated schema documentation.
 - Added route-aware edges, step badges, stricter roles, preset metadata, and canvas bounds validation.
 - Added exporters for HTML, PNG, GIF, PDF, WebP, MP4, APNG, Lottie, and quality reports.

@@ -9,35 +9,75 @@
   .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
   .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
   .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .edge-flow { stroke-linecap: round; }
+  .edge-draw, .edge-base { stroke-linecap: round; stroke-linejoin: round; }
+  .edge-particle { filter: url(#particle-glow); }
+  .node-glow, .node-burst { pointer-events: none; }
+  #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
+  #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
+  @keyframes titlePulse { 0%, 100% { opacity: 0.76; } 50% { opacity: 1; } }
+  @keyframes titleSlide { 0%, 100% { transform: translateX(0); opacity: 0.9; } 50% { transform: translateX(8px); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    #title-accent, #title-highlight { animation: none; }
+  }
 </style>
 <rect width="100%" height="100%" fill="#ffffff" />
 <defs>
+  <filter id="soft-glow" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="5" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <filter id="particle-glow" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="2.6" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
   <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
     <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#edf2f7" stroke-width="1" />
   </pattern>
 </defs>
 <rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
-<rect x="28" y="26" width="1144" height="668" rx="26" fill="none" stroke="#94a3b8" stroke-width="1.4" />
-<rect x="44" y="44" width="12" height="52" rx="6" fill="#2563eb" />
-<rect x="72" y="46" width="360" height="56" rx="16" fill="#e8f1ff" />
-<text id="main-title" x="90" y="84" class="title" fill="#172033">Swimlane</text>
-<text x="74" y="126" class="subtitle" fill="#5b6778">handoffs across owners</text>
+<rect x="28" y="26" width="1144" height="668" rx="26" fill="none" stroke="#94a3b8" stroke-width="1.4" opacity="1.00" />
+<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#2563eb" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#e8f1ff" />
+<text id="main-title" x="90" y="84" class="title" fill="#172033" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.08s" fill="freeze" />
+  Swimlane
+</text>
+<text x="74" y="126" class="subtitle" fill="#5b6778" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />
+  handoffs across owners
+</text>
 
-<g id="group-customer" class="group">
+<g id="group-customer" class="group" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.7s" begin="0.30s" fill="freeze" />
   <rect x="60.0" y="160.0" width="1080.0" height="120.0" rx="22"
-        fill="#fff7ed" fill-opacity="0.34" stroke="#f97316" stroke-width="1.6" stroke-dasharray="9 8" />
+        fill="#fff7ed" fill-opacity="0.34" stroke="#f97316" stroke-width="1.6" stroke-dasharray="9 8">
+    <animate attributeName="stroke-dashoffset" values="0;-34" dur="5.60s" begin="0.30s" repeatCount="indefinite" />
+  </rect>
   <text x="78.0" y="190.0" class="group-label" fill="#5b6778">Customer</text>
 </g>
 
-<g id="group-team" class="group">
+<g id="group-team" class="group" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.7s" begin="0.42s" fill="freeze" />
   <rect x="60.0" y="310.0" width="1080.0" height="120.0" rx="22"
-        fill="#f5f3ff" fill-opacity="0.34" stroke="#7c3aed" stroke-width="1.6" stroke-dasharray="9 8" />
+        fill="#f5f3ff" fill-opacity="0.34" stroke="#7c3aed" stroke-width="1.6" stroke-dasharray="9 8">
+    <animate attributeName="stroke-dashoffset" values="0;-34" dur="6.00s" begin="0.42s" repeatCount="indefinite" />
+  </rect>
   <text x="78.0" y="340.0" class="group-label" fill="#5b6778">Team</text>
 </g>
 
-<g id="group-system" class="group">
+<g id="group-system" class="group" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.7s" begin="0.54s" fill="freeze" />
   <rect x="60.0" y="460.0" width="1080.0" height="120.0" rx="22"
-        fill="#fffbeb" fill-opacity="0.34" stroke="#d97706" stroke-width="1.6" stroke-dasharray="9 8" />
+        fill="#fffbeb" fill-opacity="0.34" stroke="#d97706" stroke-width="1.6" stroke-dasharray="9 8">
+    <animate attributeName="stroke-dashoffset" values="0;-34" dur="6.40s" begin="0.54s" repeatCount="indefinite" />
+  </rect>
   <text x="78.0" y="490.0" class="group-label" fill="#5b6778">System</text>
 </g>
 
@@ -47,14 +87,34 @@
   </marker>
 </defs>
 <g class="edge" data-role="process">
-  <path d="M 290.0 226.0 L 290.0 301.0 L 330.0 301.0 L 330.0 376.0" fill="none" stroke="#2563eb" stroke-width="2.4" marker-end="url(#arrow-1)" />
-  <circle r="5" fill="#2563eb">
-    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 290.0 226.0 L 290.0 301.0 L 330.0 301.0 L 330.0 376.0" begin="0.35s" />
+  <path class="edge-base" d="M 290.0 226.0 L 290.0 301.0 L 330.0 301.0 L 330.0 376.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-1)" />
+  <path class="edge-draw" d="M 290.0 226.0 L 290.0 301.0 L 330.0 301.0 L 330.0 376.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-1)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.9s" begin="0.16s" fill="freeze" />
+  </path>
+  <path class="edge-flow" d="M 290.0 226.0 L 290.0 301.0 L 330.0 301.0 L 330.0 376.0" fill="none" stroke="#2563eb" stroke-width="1.7"
+        stroke-dasharray="9 18" opacity="0.55">
+    <animate attributeName="stroke-dashoffset" values="0;-54" dur="3.02s" begin="0.36s" repeatCount="indefinite" />
+  </path>
+  <circle class="edge-particle" r="5.5" fill="#2563eb" opacity="0.92">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 290.0 226.0 L 290.0 301.0 L 330.0 301.0 L 330.0 376.0" begin="0.32s" />
+    <animate attributeName="opacity" values="0;0.92;0" dur="4.2s" begin="0.32s" repeatCount="indefinite" />
+  </circle>
+  <circle class="edge-particle" r="3.5" fill="#2563eb" opacity="0.74">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 290.0 226.0 L 290.0 301.0 L 330.0 301.0 L 330.0 376.0" begin="1.72s" />
+    <animate attributeName="opacity" values="0;0.74;0" dur="4.2s" begin="1.72s" repeatCount="indefinite" />
+  </circle>
+  <circle class="edge-particle" r="2.4" fill="#2563eb" opacity="0.56">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 290.0 226.0 L 290.0 301.0 L 330.0 301.0 L 330.0 376.0" begin="3.12s" />
+    <animate attributeName="opacity" values="0;0.56;0" dur="4.2s" begin="3.12s" repeatCount="indefinite" />
   </circle>
 
   <circle cx="288.0" cy="282.0" r="14" fill="#2563eb" />
   <text x="288.0" y="287.0" class="step-label" fill="#ffffff" text-anchor="middle">1</text>
-  <text x="310.0" y="287.0" class="edge-label" fill="#5b6778">handoff</text>
+  <text x="310.0" y="287.0" class="edge-label" fill="#5b6778" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.71s" fill="freeze" />
+    handoff
+  </text>
 </g>
 
 <defs>
@@ -63,14 +123,34 @@
   </marker>
 </defs>
 <g class="edge" data-role="process">
-  <path d="M 490.0 376.0 L 490.0 451.0 L 560.0 451.0 L 560.0 526.0" fill="none" stroke="#2563eb" stroke-width="2.4" marker-end="url(#arrow-2)" />
-  <circle r="5" fill="#2563eb">
-    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 490.0 376.0 L 490.0 451.0 L 560.0 451.0 L 560.0 526.0" begin="0.70s" />
+  <path class="edge-base" d="M 490.0 376.0 L 490.0 451.0 L 560.0 451.0 L 560.0 526.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-2)" />
+  <path class="edge-draw" d="M 490.0 376.0 L 490.0 451.0 L 560.0 451.0 L 560.0 526.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-2)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.9s" begin="0.32s" fill="freeze" />
+  </path>
+  <path class="edge-flow" d="M 490.0 376.0 L 490.0 451.0 L 560.0 451.0 L 560.0 526.0" fill="none" stroke="#2563eb" stroke-width="1.7"
+        stroke-dasharray="9 18" opacity="0.55">
+    <animate attributeName="stroke-dashoffset" values="0;-54" dur="3.02s" begin="0.52s" repeatCount="indefinite" />
+  </path>
+  <circle class="edge-particle" r="5.5" fill="#2563eb" opacity="0.92">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 490.0 376.0 L 490.0 451.0 L 560.0 451.0 L 560.0 526.0" begin="0.64s" />
+    <animate attributeName="opacity" values="0;0.92;0" dur="4.2s" begin="0.64s" repeatCount="indefinite" />
+  </circle>
+  <circle class="edge-particle" r="3.5" fill="#2563eb" opacity="0.74">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 490.0 376.0 L 490.0 451.0 L 560.0 451.0 L 560.0 526.0" begin="2.04s" />
+    <animate attributeName="opacity" values="0;0.74;0" dur="4.2s" begin="2.04s" repeatCount="indefinite" />
+  </circle>
+  <circle class="edge-particle" r="2.4" fill="#2563eb" opacity="0.56">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 490.0 376.0 L 490.0 451.0 L 560.0 451.0 L 560.0 526.0" begin="3.44s" />
+    <animate attributeName="opacity" values="0;0.56;0" dur="4.2s" begin="3.44s" repeatCount="indefinite" />
   </circle>
 
   <circle cx="503.0" cy="432.0" r="14" fill="#2563eb" />
   <text x="503.0" y="437.0" class="step-label" fill="#ffffff" text-anchor="middle">2</text>
-  <text x="525.0" y="437.0" class="edge-label" fill="#5b6778">handoff</text>
+  <text x="525.0" y="437.0" class="edge-label" fill="#5b6778" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.87s" fill="freeze" />
+    handoff
+  </text>
 </g>
 
 <defs>
@@ -79,14 +159,34 @@
   </marker>
 </defs>
 <g class="edge" data-role="process">
-  <path d="M 720.0 526.0 L 720.0 451.0 L 790.0 451.0 L 790.0 376.0" fill="none" stroke="#2563eb" stroke-width="2.4" marker-end="url(#arrow-3)" />
-  <circle r="5" fill="#2563eb">
-    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 720.0 526.0 L 720.0 451.0 L 790.0 451.0 L 790.0 376.0" begin="1.05s" />
+  <path class="edge-base" d="M 720.0 526.0 L 720.0 451.0 L 790.0 451.0 L 790.0 376.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-3)" />
+  <path class="edge-draw" d="M 720.0 526.0 L 720.0 451.0 L 790.0 451.0 L 790.0 376.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-3)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.9s" begin="0.48s" fill="freeze" />
+  </path>
+  <path class="edge-flow" d="M 720.0 526.0 L 720.0 451.0 L 790.0 451.0 L 790.0 376.0" fill="none" stroke="#2563eb" stroke-width="1.7"
+        stroke-dasharray="9 18" opacity="0.55">
+    <animate attributeName="stroke-dashoffset" values="0;-54" dur="3.02s" begin="0.68s" repeatCount="indefinite" />
+  </path>
+  <circle class="edge-particle" r="5.5" fill="#2563eb" opacity="0.92">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 720.0 526.0 L 720.0 451.0 L 790.0 451.0 L 790.0 376.0" begin="0.96s" />
+    <animate attributeName="opacity" values="0;0.92;0" dur="4.2s" begin="0.96s" repeatCount="indefinite" />
+  </circle>
+  <circle class="edge-particle" r="3.5" fill="#2563eb" opacity="0.74">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 720.0 526.0 L 720.0 451.0 L 790.0 451.0 L 790.0 376.0" begin="2.36s" />
+    <animate attributeName="opacity" values="0;0.74;0" dur="4.2s" begin="2.36s" repeatCount="indefinite" />
+  </circle>
+  <circle class="edge-particle" r="2.4" fill="#2563eb" opacity="0.56">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 720.0 526.0 L 720.0 451.0 L 790.0 451.0 L 790.0 376.0" begin="3.76s" />
+    <animate attributeName="opacity" values="0;0.56;0" dur="4.2s" begin="3.76s" repeatCount="indefinite" />
   </circle>
 
   <circle cx="733.0" cy="432.0" r="14" fill="#2563eb" />
   <text x="733.0" y="437.0" class="step-label" fill="#ffffff" text-anchor="middle">3</text>
-  <text x="755.0" y="437.0" class="edge-label" fill="#5b6778">handoff</text>
+  <text x="755.0" y="437.0" class="edge-label" fill="#5b6778" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="1.03s" fill="freeze" />
+    handoff
+  </text>
 </g>
 
 <defs>
@@ -95,17 +195,47 @@
   </marker>
 </defs>
 <g class="edge" data-role="process">
-  <path d="M 950.0 376.0 L 950.0 301.0 L 990.0 301.0 L 990.0 226.0" fill="none" stroke="#2563eb" stroke-width="2.4" marker-end="url(#arrow-4)" />
-  <circle r="5" fill="#2563eb">
-    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 950.0 376.0 L 950.0 301.0 L 990.0 301.0 L 990.0 226.0" begin="1.40s" />
+  <path class="edge-base" d="M 950.0 376.0 L 950.0 301.0 L 990.0 301.0 L 990.0 226.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-4)" />
+  <path class="edge-draw" d="M 950.0 376.0 L 950.0 301.0 L 990.0 301.0 L 990.0 226.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-4)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.9s" begin="0.64s" fill="freeze" />
+  </path>
+  <path class="edge-flow" d="M 950.0 376.0 L 950.0 301.0 L 990.0 301.0 L 990.0 226.0" fill="none" stroke="#2563eb" stroke-width="1.7"
+        stroke-dasharray="9 18" opacity="0.55">
+    <animate attributeName="stroke-dashoffset" values="0;-54" dur="3.02s" begin="0.84s" repeatCount="indefinite" />
+  </path>
+  <circle class="edge-particle" r="5.5" fill="#2563eb" opacity="0.92">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 950.0 376.0 L 950.0 301.0 L 990.0 301.0 L 990.0 226.0" begin="1.28s" />
+    <animate attributeName="opacity" values="0;0.92;0" dur="4.2s" begin="1.28s" repeatCount="indefinite" />
+  </circle>
+  <circle class="edge-particle" r="3.5" fill="#2563eb" opacity="0.74">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 950.0 376.0 L 950.0 301.0 L 990.0 301.0 L 990.0 226.0" begin="2.68s" />
+    <animate attributeName="opacity" values="0;0.74;0" dur="4.2s" begin="2.68s" repeatCount="indefinite" />
+  </circle>
+  <circle class="edge-particle" r="2.4" fill="#2563eb" opacity="0.56">
+    <animateMotion dur="4.2s" repeatCount="indefinite" path="M 950.0 376.0 L 950.0 301.0 L 990.0 301.0 L 990.0 226.0" begin="4.08s" />
+    <animate attributeName="opacity" values="0;0.56;0" dur="4.2s" begin="4.08s" repeatCount="indefinite" />
   </circle>
 
   <circle cx="948.0" cy="282.0" r="14" fill="#2563eb" />
   <text x="948.0" y="287.0" class="step-label" fill="#ffffff" text-anchor="middle">4</text>
-  <text x="970.0" y="287.0" class="edge-label" fill="#5b6778">handoff</text>
+  <text x="970.0" y="287.0" class="edge-label" fill="#5b6778" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="1.19s" fill="freeze" />
+    handoff
+  </text>
 </g>
 
-<g id="node-request" class="node" data-role="actor">
+<g id="node-request" class="node motion-node" data-role="actor" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.12s" fill="freeze" />
+  <animateTransform attributeName="transform" type="translate"
+        values="0 0;0 -3;0 0;0 2;0 0" dur="5.85s" begin="0.82s"
+        repeatCount="indefinite" additive="sum" />
+
+  <rect class="node-glow" x="126.0" y="181.0" width="168.0" height="90.0" rx="18.0"
+        fill="none" stroke="#f97316" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
+    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="4.25s" begin="0.32s" repeatCount="indefinite" />
+    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="4.25s" begin="0.32s" repeatCount="indefinite" />
+  </rect>
   <rect x="130.0" y="185.0" width="160.0" height="82.0" rx="14.0"
         fill="#fff7ed" stroke="#f97316" stroke-width="2.0" />
 
@@ -114,10 +244,29 @@
   <text x="210.0" y="212.0" text-anchor="middle" fill="#172033">
 <tspan x="210.0" dy="18" class="node-title">Request</tspan>
 </text>
-  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
 </g>
 
-<g id="node-triage" class="node" data-role="agent">
+<g id="node-triage" class="node motion-node" data-role="agent" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.24s" fill="freeze" />
+  <animateTransform attributeName="transform" type="translate"
+        values="0 0;0 -3;0 0;0 2;0 0" dur="6.30s" begin="0.94s"
+        repeatCount="indefinite" additive="sum" />
+
+  <circle class="node-burst" cx="410.0" cy="376.0" r="80.0" fill="none"
+          stroke="#7c3aed" stroke-width="1.6" opacity="0">
+    <animate attributeName="r" values="80.0;115.2" dur="3.4s" begin="1.01s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.28;0" dur="3.4s" begin="1.01s" repeatCount="indefinite" />
+  </circle>
+  <circle class="node-burst" cx="410.0" cy="376.0" r="80.0" fill="none"
+          stroke="#7c3aed" stroke-width="1" opacity="0">
+    <animate attributeName="r" values="80.0;137.6" dur="4.6s" begin="1.91s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.18;0" dur="4.6s" begin="1.91s" repeatCount="indefinite" />
+  </circle>
+  <rect class="node-glow" x="326.0" y="331.0" width="168.0" height="90.0" rx="18.0"
+        fill="none" stroke="#7c3aed" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
+    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="4.60s" begin="0.44s" repeatCount="indefinite" />
+    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="4.60s" begin="0.44s" repeatCount="indefinite" />
+  </rect>
   <rect x="330.0" y="335.0" width="160.0" height="82.0" rx="14.0"
         fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.0" />
 
@@ -126,10 +275,19 @@
   <text x="410.0" y="362.0" text-anchor="middle" fill="#172033">
 <tspan x="410.0" dy="18" class="node-title">Triage</tspan>
 </text>
-  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
 </g>
 
-<g id="node-automate" class="node" data-role="tool">
+<g id="node-automate" class="node motion-node" data-role="tool" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.36s" fill="freeze" />
+  <animateTransform attributeName="transform" type="translate"
+        values="0 0;0 -3;0 0;0 2;0 0" dur="5.40s" begin="1.06s"
+        repeatCount="indefinite" additive="sum" />
+
+  <rect class="node-glow" x="556.0" y="481.0" width="168.0" height="90.0" rx="18.0"
+        fill="none" stroke="#d97706" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
+    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="4.95s" begin="0.56s" repeatCount="indefinite" />
+    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="4.95s" begin="0.56s" repeatCount="indefinite" />
+  </rect>
   <rect x="560.0" y="485.0" width="160.0" height="82.0" rx="14.0"
         fill="#fffbeb" stroke="#d97706" stroke-width="2.0" />
 
@@ -138,10 +296,29 @@
   <text x="640.0" y="512.0" text-anchor="middle" fill="#172033">
 <tspan x="640.0" dy="18" class="node-title">Automate</tspan>
 </text>
-  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
 </g>
 
-<g id="node-approve" class="node" data-role="agent">
+<g id="node-approve" class="node motion-node" data-role="agent" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.48s" fill="freeze" />
+  <animateTransform attributeName="transform" type="translate"
+        values="0 0;0 -3;0 0;0 2;0 0" dur="5.85s" begin="1.18s"
+        repeatCount="indefinite" additive="sum" />
+
+  <circle class="node-burst" cx="870.0" cy="376.0" r="80.0" fill="none"
+          stroke="#7c3aed" stroke-width="1.6" opacity="0">
+    <animate attributeName="r" values="80.0;115.2" dur="3.4s" begin="1.37s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.28;0" dur="3.4s" begin="1.37s" repeatCount="indefinite" />
+  </circle>
+  <circle class="node-burst" cx="870.0" cy="376.0" r="80.0" fill="none"
+          stroke="#7c3aed" stroke-width="1" opacity="0">
+    <animate attributeName="r" values="80.0;137.6" dur="4.6s" begin="2.27s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.18;0" dur="4.6s" begin="2.27s" repeatCount="indefinite" />
+  </circle>
+  <rect class="node-glow" x="786.0" y="331.0" width="168.0" height="90.0" rx="18.0"
+        fill="none" stroke="#7c3aed" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
+    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="3.90s" begin="0.68s" repeatCount="indefinite" />
+    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="3.90s" begin="0.68s" repeatCount="indefinite" />
+  </rect>
   <rect x="790.0" y="335.0" width="160.0" height="82.0" rx="14.0"
         fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.0" />
 
@@ -150,10 +327,29 @@
   <text x="870.0" y="362.0" text-anchor="middle" fill="#172033">
 <tspan x="870.0" dy="18" class="node-title">Approve</tspan>
 </text>
-  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
 </g>
 
-<g id="node-notify" class="node" data-role="output">
+<g id="node-notify" class="node motion-node" data-role="output" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.60s" fill="freeze" />
+  <animateTransform attributeName="transform" type="translate"
+        values="0 0;0 -3;0 0;0 2;0 0" dur="6.30s" begin="1.30s"
+        repeatCount="indefinite" additive="sum" />
+
+  <circle class="node-burst" cx="1070.0" cy="226.0" r="80.0" fill="none"
+          stroke="#16a34a" stroke-width="1.6" opacity="0">
+    <animate attributeName="r" values="80.0;115.2" dur="3.4s" begin="1.55s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.28;0" dur="3.4s" begin="1.55s" repeatCount="indefinite" />
+  </circle>
+  <circle class="node-burst" cx="1070.0" cy="226.0" r="80.0" fill="none"
+          stroke="#16a34a" stroke-width="1" opacity="0">
+    <animate attributeName="r" values="80.0;137.6" dur="4.6s" begin="2.45s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.18;0" dur="4.6s" begin="2.45s" repeatCount="indefinite" />
+  </circle>
+  <rect class="node-glow" x="986.0" y="181.0" width="168.0" height="90.0" rx="18.0"
+        fill="none" stroke="#16a34a" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
+    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="4.25s" begin="0.80s" repeatCount="indefinite" />
+    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="4.25s" begin="0.80s" repeatCount="indefinite" />
+  </rect>
   <rect x="990.0" y="185.0" width="160.0" height="82.0" rx="14.0"
         fill="#f0fdf4" stroke="#16a34a" stroke-width="2.0" />
 
@@ -162,6 +358,5 @@
   <text x="1070.0" y="212.0" text-anchor="middle" fill="#172033">
 <tspan x="1070.0" dy="18" class="node-title">Notify</tspan>
 </text>
-  <animate attributeName="opacity" values="0.92;1;0.92" dur="3.8s" repeatCount="indefinite" />
 </g>
 </svg>

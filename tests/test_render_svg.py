@@ -27,6 +27,10 @@ class SvgRendererTest(unittest.TestCase):
 
         self.assertIn("<svg", svg)
         self.assertIn("animateMotion", svg)
+        self.assertIn("edge-draw", svg)
+        self.assertIn("edge-flow", svg)
+        self.assertIn("node-glow", svg)
+        self.assertIn("node-burst", svg)
         self.assertIn("Agent Memory System", svg)
         self.assertIn("Planner Agent", svg)
         self.assertIn("marker-end", svg)
@@ -121,7 +125,7 @@ class SvgRendererTest(unittest.TestCase):
         svg = render_svg(scene, load_style(ROOT / "styles" / "minimal-light.json"))
 
         self.assertEqual(
-            "4e427a26cac00a9e50d72493a09993a70616fc7eb26eaaa4c32129603e61efeb",
+            "a745916e452003d54bb182fcfcb07b2ea33eb751ef340cb513151d194b067eef",
             hashlib.sha256(svg.encode("utf-8")).hexdigest(),
         )
 
@@ -167,6 +171,16 @@ class SvgRendererTest(unittest.TestCase):
         for name in catalog["styles"]:
             style = load_style(ROOT / "styles" / f"{name}.json")
             self.assertEqual(name, style["name"])
+
+    def test_aurora_orb_style_renders_gradient_texture_nodes(self):
+        spec = json.loads((ROOT / "tests" / "fixtures" / "minimal.diagram.json").read_text(encoding="utf-8"))
+        scene = compile_scene(spec)
+        svg = render_svg(scene, load_style(ROOT / "styles" / "aurora-orb.json"))
+
+        self.assertIn('id="aurora-node-process"', svg)
+        self.assertIn('id="grain-texture"', svg)
+        self.assertIn('clip-path="url(#clip-', svg)
+        self.assertIn('fill="url(#aurora-node-', svg)
 
     def test_quality_report_detects_overlap(self):
         spec = json.loads((ROOT / "tests" / "fixtures" / "minimal.diagram.json").read_text(encoding="utf-8"))
