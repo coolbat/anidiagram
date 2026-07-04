@@ -2,6 +2,9 @@
 
 ## 2026-07-04
 
+- Added AniDiagram-native motion profiles inspired by timeline/stagger animation systems: `off`, `subtle`, `normal`, and `expressive`.
+- Added scene-level motion controls for sequencing, easing labels, stagger, duration scale, intensity, node motion, edge motion, group motion, and reduced-motion policy.
+- Added HTML viewer controls for full/subtle/off motion intensity.
 - Added the `aurora-orb` style profile with soft gradient node fills, clipped color bands, grain texture, and low-contrast canvas treatment.
 - Improved SVG/HTML motion with staggered node entry, glow breathing, burst rings, draw-on edges, flow dashes, multi-particle edge motion, animated group boundaries, restart controls, and reduced-motion handling.
 - Added clean-room motion research notes based on open-source animation libraries without importing third-party code or assets.

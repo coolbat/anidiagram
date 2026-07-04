@@ -31,6 +31,11 @@ Current implementation stays dependency-free in the primary SVG/HTML path:
 - Edge flow dash animation.
 - Multiple edge particles with staggered phase offsets.
 - HTML viewer restart and reduced-motion handling.
+- Scene-level motion profiles: `off`, `subtle`, `normal`, and `expressive`.
+- GSAP-inspired sequencing controls: `simultaneous`, `step-stagger`, and
+  `layered`.
+- Channel-specific motion controls for node, edge, group, intensity, duration
+  scale, and reduced-motion behavior.
 
 If a future release imports a third-party runtime, add its copyright and license
 notice to `REFERENCES.md` before shipping.

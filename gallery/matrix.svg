@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="diagram-title diagram-desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="normal" data-motion-sequence="step-stagger" data-motion-edge="comet-flow" data-motion-node="glow-breathe" data-motion-group="marching-ants" data-motion-reduced="subtle">
 <title id="diagram-title">Matrix</title>
 <desc id="diagram-desc">two-by-two prioritization grid</desc>
 <style>
@@ -55,35 +55,35 @@
 </text>
 
 <g id="group-matrix" class="group" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.7s" begin="0.30s" fill="freeze" />
+  <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.17s" fill="freeze" />
   <rect x="250.0" y="155.0" width="700.0" height="440.0" rx="22"
         fill="#ffffff" fill-opacity="0.34" stroke="#64748b" stroke-width="1.6" stroke-dasharray="9 8">
-    <animate attributeName="stroke-dashoffset" values="0;-34" dur="5.60s" begin="0.30s" repeatCount="indefinite" />
+    <animate attributeName="stroke-dashoffset" values="0;-34" dur="5.60s" begin="0.17s" repeatCount="indefinite" />
   </rect>
   <text x="268.0" y="185.0" class="group-label" fill="#64748b">Impact x Effort</text>
 </g>
 
 
 <g id="node-quick" class="node motion-node" data-role="output" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.12s" fill="freeze" />
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.25s" fill="freeze" />
   <animateTransform attributeName="transform" type="translate"
-        values="0 0;0 -3;0 0;0 2;0 0" dur="5.85s" begin="0.82s"
+        values="0 0;0 -3.0;0 0;0 2.0;0 0" dur="5.85s" begin="0.95s"
         repeatCount="indefinite" additive="sum" />
 
   <circle class="node-burst" cx="410.0" cy="261.0" r="80.0" fill="none"
           stroke="#16a34a" stroke-width="1.6" opacity="0">
-    <animate attributeName="r" values="80.0;115.2" dur="3.4s" begin="0.83s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0;0.28;0" dur="3.4s" begin="0.83s" repeatCount="indefinite" />
+    <animate attributeName="r" values="80.0;115.2" dur="3.40s" begin="0.70s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.28;0" dur="3.40s" begin="0.70s" repeatCount="indefinite" />
   </circle>
   <circle class="node-burst" cx="410.0" cy="261.0" r="80.0" fill="none"
           stroke="#16a34a" stroke-width="1" opacity="0">
-    <animate attributeName="r" values="80.0;137.6" dur="4.6s" begin="1.73s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0;0.18;0" dur="4.6s" begin="1.73s" repeatCount="indefinite" />
+    <animate attributeName="r" values="80.0;134.4" dur="4.60s" begin="1.60s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.18;0" dur="4.60s" begin="1.60s" repeatCount="indefinite" />
   </circle>
   <rect class="node-glow" x="326.0" y="216.0" width="168.0" height="90.0" rx="14.0"
         fill="none" stroke="#16a34a" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
-    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="4.25s" begin="0.32s" repeatCount="indefinite" />
-    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="4.25s" begin="0.32s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="4.25s" begin="0.45s" repeatCount="indefinite" />
+    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="4.25s" begin="0.45s" repeatCount="indefinite" />
   </rect>
   <rect x="330.0" y="220.0" width="160.0" height="82.0" rx="10.0"
         fill="#dcfce7" stroke="#16a34a" stroke-width="2.0" />
@@ -96,25 +96,25 @@
 </g>
 
 <g id="node-major" class="node motion-node" data-role="agent" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.24s" fill="freeze" />
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.37s" fill="freeze" />
   <animateTransform attributeName="transform" type="translate"
-        values="0 0;0 -3;0 0;0 2;0 0" dur="6.30s" begin="0.94s"
+        values="0 0;0 -3.0;0 0;0 2.0;0 0" dur="6.30s" begin="1.07s"
         repeatCount="indefinite" additive="sum" />
 
   <circle class="node-burst" cx="770.0" cy="261.0" r="80.0" fill="none"
           stroke="#9333ea" stroke-width="1.6" opacity="0">
-    <animate attributeName="r" values="80.0;115.2" dur="3.4s" begin="1.01s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0;0.28;0" dur="3.4s" begin="1.01s" repeatCount="indefinite" />
+    <animate attributeName="r" values="80.0;115.2" dur="3.40s" begin="0.82s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.28;0" dur="3.40s" begin="0.82s" repeatCount="indefinite" />
   </circle>
   <circle class="node-burst" cx="770.0" cy="261.0" r="80.0" fill="none"
           stroke="#9333ea" stroke-width="1" opacity="0">
-    <animate attributeName="r" values="80.0;137.6" dur="4.6s" begin="1.91s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0;0.18;0" dur="4.6s" begin="1.91s" repeatCount="indefinite" />
+    <animate attributeName="r" values="80.0;134.4" dur="4.60s" begin="1.72s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.18;0" dur="4.60s" begin="1.72s" repeatCount="indefinite" />
   </circle>
   <rect class="node-glow" x="686.0" y="216.0" width="168.0" height="90.0" rx="14.0"
         fill="none" stroke="#9333ea" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
-    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="4.60s" begin="0.44s" repeatCount="indefinite" />
-    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="4.60s" begin="0.44s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="4.60s" begin="0.57s" repeatCount="indefinite" />
+    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="4.60s" begin="0.57s" repeatCount="indefinite" />
   </rect>
   <rect x="690.0" y="220.0" width="160.0" height="82.0" rx="10.0"
         fill="#f3e8ff" stroke="#9333ea" stroke-width="2.0" />
@@ -127,15 +127,15 @@
 </g>
 
 <g id="node-fill" class="node motion-node" data-role="tool" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.36s" fill="freeze" />
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.49s" fill="freeze" />
   <animateTransform attributeName="transform" type="translate"
-        values="0 0;0 -3;0 0;0 2;0 0" dur="5.40s" begin="1.06s"
+        values="0 0;0 -3.0;0 0;0 2.0;0 0" dur="5.40s" begin="1.19s"
         repeatCount="indefinite" additive="sum" />
 
   <rect class="node-glow" x="326.0" y="426.0" width="168.0" height="90.0" rx="14.0"
         fill="none" stroke="#ca8a04" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
-    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="4.95s" begin="0.56s" repeatCount="indefinite" />
-    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="4.95s" begin="0.56s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="4.95s" begin="0.69s" repeatCount="indefinite" />
+    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="4.95s" begin="0.69s" repeatCount="indefinite" />
   </rect>
   <rect x="330.0" y="430.0" width="160.0" height="82.0" rx="10.0"
         fill="#fef3c7" stroke="#ca8a04" stroke-width="2.0" />
@@ -148,25 +148,25 @@
 </g>
 
 <g id="node-avoid" class="node motion-node" data-role="risk" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.48s" fill="freeze" />
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.61s" fill="freeze" />
   <animateTransform attributeName="transform" type="translate"
-        values="0 0;0 -3;0 0;0 2;0 0" dur="5.85s" begin="1.18s"
+        values="0 0;0 -3.0;0 0;0 2.0;0 0" dur="5.85s" begin="1.31s"
         repeatCount="indefinite" additive="sum" />
 
   <circle class="node-burst" cx="770.0" cy="471.0" r="80.0" fill="none"
           stroke="#dc2626" stroke-width="1.6" opacity="0">
-    <animate attributeName="r" values="80.0;115.2" dur="3.4s" begin="1.37s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0;0.28;0" dur="3.4s" begin="1.37s" repeatCount="indefinite" />
+    <animate attributeName="r" values="80.0;115.2" dur="3.40s" begin="1.06s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.28;0" dur="3.40s" begin="1.06s" repeatCount="indefinite" />
   </circle>
   <circle class="node-burst" cx="770.0" cy="471.0" r="80.0" fill="none"
           stroke="#dc2626" stroke-width="1" opacity="0">
-    <animate attributeName="r" values="80.0;137.6" dur="4.6s" begin="2.27s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0;0.18;0" dur="4.6s" begin="2.27s" repeatCount="indefinite" />
+    <animate attributeName="r" values="80.0;134.4" dur="4.60s" begin="1.96s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.18;0" dur="4.60s" begin="1.96s" repeatCount="indefinite" />
   </circle>
   <rect class="node-glow" x="686.0" y="426.0" width="168.0" height="90.0" rx="14.0"
         fill="none" stroke="#dc2626" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
-    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="3.90s" begin="0.68s" repeatCount="indefinite" />
-    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="3.90s" begin="0.68s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="3.90s" begin="0.81s" repeatCount="indefinite" />
+    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="3.90s" begin="0.81s" repeatCount="indefinite" />
   </rect>
   <rect x="690.0" y="430.0" width="160.0" height="82.0" rx="10.0"
         fill="#fee2e2" stroke="#dc2626" stroke-width="2.0" />

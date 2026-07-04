@@ -35,6 +35,20 @@ class Motion:
 
 
 @dataclass(frozen=True)
+class SceneMotion:
+    profile: str = "normal"
+    sequence: str = "step-stagger"
+    ease: str = "calm"
+    stagger: float = 0.12
+    duration_scale: float = 1.0
+    intensity: float = 1.0
+    node: str = "glow-breathe"
+    edge: str = "comet-flow"
+    group: str = "marching-ants"
+    reduced_motion: str = "subtle"
+
+
+@dataclass(frozen=True)
 class Node:
     node_id: str
     label: str
@@ -82,6 +96,7 @@ class Scene:
     nodes: List[Node]
     edges: List[Edge]
     groups: List[Group]
+    motion: SceneMotion = field(default_factory=SceneMotion)
     preset: Optional[str] = None
 
     def stats(self) -> dict:

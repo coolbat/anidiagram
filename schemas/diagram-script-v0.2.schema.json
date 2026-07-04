@@ -7,6 +7,7 @@
   "properties": {
     "version": {"const": "0.2"},
     "preset": {"type": "string"},
+    "motion": {"$ref": "#/$defs/motion"},
     "canvas": {
       "type": "object",
       "properties": {
@@ -88,6 +89,21 @@
         "role": {"$ref": "#/$defs/role"},
         "fill": {"type": "string"},
         "stroke": {"type": "string"}
+      }
+    },
+    "motion": {
+      "type": "object",
+      "properties": {
+        "profile": {"enum": ["off", "subtle", "normal", "expressive"]},
+        "sequence": {"enum": ["simultaneous", "step-stagger", "layered"]},
+        "ease": {"enum": ["linear", "calm", "snappy", "back-out", "elastic", "spring"]},
+        "stagger": {"type": "number", "minimum": 0},
+        "duration_scale": {"type": "number", "exclusiveMinimum": 0},
+        "intensity": {"type": "number", "minimum": 0},
+        "node": {"enum": ["none", "fade", "float", "glow-breathe", "pop"]},
+        "edge": {"enum": ["none", "draw", "pulse", "comet-flow", "trace"]},
+        "group": {"enum": ["none", "soft-reveal", "marching-ants"]},
+        "reduced_motion": {"enum": ["static", "subtle", "pause"]}
       }
     }
   }

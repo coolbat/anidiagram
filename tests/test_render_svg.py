@@ -10,6 +10,7 @@ from anidiagram.cli import main
 from anidiagram.presets import preset_names
 from anidiagram.quality import quality_report
 from anidiagram.renderer_svg import render_svg
+from anidiagram.renderer_svg import render_html
 from anidiagram.schema import DiagramScriptValidationError, compile_scene
 from anidiagram.styles import load_style
 
@@ -125,9 +126,43 @@ class SvgRendererTest(unittest.TestCase):
         svg = render_svg(scene, load_style(ROOT / "styles" / "minimal-light.json"))
 
         self.assertEqual(
-            "a745916e452003d54bb182fcfcb07b2ea33eb751ef340cb513151d194b067eef",
+            "004f90bcd23377a004d33ec94947108990df9a0e0e2832639e513f3ebb27cfff",
             hashlib.sha256(svg.encode("utf-8")).hexdigest(),
         )
+
+    def test_motion_profile_off_renders_static_svg(self):
+        spec = json.loads((ROOT / "tests" / "fixtures" / "minimal.diagram.json").read_text(encoding="utf-8"))
+        spec["version"] = "0.2"
+        spec["motion"] = {"profile": "off"}
+        scene = compile_scene(spec)
+        svg = render_svg(scene, load_style(ROOT / "styles" / "minimal-light.json"))
+
+        self.assertEqual("off", scene.motion.profile)
+        self.assertIn('data-motion-profile="off"', svg)
+        self.assertNotIn("animateMotion", svg)
+        self.assertNotIn('class="edge-flow', svg)
+        self.assertNotIn('class="edge-particle', svg)
+
+    def test_motion_profile_expressive_adds_viewer_controls(self):
+        spec = json.loads((ROOT / "tests" / "fixtures" / "minimal.diagram.json").read_text(encoding="utf-8"))
+        spec["version"] = "0.2"
+        spec["motion"] = {
+            "profile": "expressive",
+            "sequence": "layered",
+            "edge": "comet-flow",
+            "node": "pop",
+            "group": "marching-ants",
+        }
+        scene = compile_scene(spec)
+        svg = render_svg(scene, load_style(ROOT / "styles" / "minimal-light.json"))
+        html = render_html(svg, "Motion Test")
+
+        self.assertEqual("expressive", scene.motion.profile)
+        self.assertIn('data-motion-sequence="layered"', svg)
+        self.assertIn("Full Motion", html)
+        self.assertIn("setMotionMode", html)
+        self.assertIn("motion-subtle", html)
+        self.assertIn("motion-off", html)
 
     def test_cli_renders_preset_lottie_and_quality(self):
         with tempfile.TemporaryDirectory() as tmp:

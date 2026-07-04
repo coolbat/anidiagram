@@ -1,6 +1,6 @@
 """AniDiagram clean-room animated diagram renderer."""
 
-from .model import Canvas, Edge, Group, Motion, Node, Scene, Style, Title
+from .model import Canvas, Edge, Group, Motion, Node, Scene, SceneMotion, Style, Title
 from .presets import compile_preset, preset_names
 from .quality import quality_report
 from .schema import DiagramScriptValidationError, ValidationIssue, compile_scene, validate_scene
@@ -15,6 +15,7 @@ __all__ = [
     "Motion",
     "Node",
     "Scene",
+    "SceneMotion",
     "Style",
     "Title",
     "ValidationIssue",

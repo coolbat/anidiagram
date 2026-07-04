@@ -6,7 +6,7 @@ import math
 from dataclasses import dataclass
 from typing import Any, Dict, Iterable, List, Optional, Set
 
-from .model import Bounds, Canvas, Edge, Group, Motion, Node, Point, Scene, Style, Title
+from .model import Bounds, Canvas, Edge, Group, Motion, Node, Point, Scene, SceneMotion, Style, Title
 
 
 SUPPORTED_VERSIONS = ("0.1", "0.2")
@@ -22,6 +22,13 @@ KNOWN_ROLES = {
     "neutral",
 }
 KNOWN_ROUTES = {"curved", "straight", "hv", "vh", "orthogonal", "points"}
+KNOWN_MOTION_PROFILES = {"off", "subtle", "normal", "expressive"}
+KNOWN_MOTION_SEQUENCES = {"simultaneous", "step-stagger", "layered"}
+KNOWN_MOTION_EASES = {"linear", "calm", "snappy", "back-out", "elastic", "spring"}
+KNOWN_NODE_MOTION = {"none", "fade", "float", "glow-breathe", "pop"}
+KNOWN_EDGE_MOTION = {"none", "draw", "pulse", "comet-flow", "trace"}
+KNOWN_GROUP_MOTION = {"none", "soft-reveal", "marching-ants"}
+KNOWN_REDUCED_MOTION = {"static", "subtle", "pause"}
 
 
 @dataclass(frozen=True)
@@ -75,6 +82,7 @@ def compile_scene(data: Dict[str, Any]) -> Scene:
     canvas = _parse_canvas(data.get("canvas", {}), "$.canvas", issues)
     title = _parse_title(data.get("title", {}), "$.title", issues)
     style = Style(name=_string(data, "style", "$.style", issues, required=False))
+    motion = _parse_scene_motion(data.get("motion", {}), "$.motion", issues)
     groups = _parse_groups(data.get("groups", []), "$.groups", issues, canvas)
     nodes = _parse_nodes(data.get("nodes"), "$.nodes", issues, canvas)
     node_ids = {node.node_id for node in nodes}
@@ -92,6 +100,7 @@ def compile_scene(data: Dict[str, Any]) -> Scene:
         nodes=nodes,
         edges=edges,
         groups=groups,
+        motion=motion,
         preset=preset,
     )
 
@@ -127,6 +136,52 @@ def _parse_title(value: Any, path: str, issues: List[ValidationIssue]) -> Title:
         text=_string(value, "text", f"{path}.text", issues, required=False) or "AniDiagram",
         subtitle=_string(value, "subtitle", f"{path}.subtitle", issues, required=False) or "",
     )
+
+
+def _parse_scene_motion(value: Any, path: str, issues: List[ValidationIssue]) -> SceneMotion:
+    if value is None:
+        return SceneMotion()
+    if not isinstance(value, dict):
+        issues.append(ValidationIssue(path, "expected an object", "type"))
+        return SceneMotion()
+    profile = _enum(value, "profile", f"{path}.profile", KNOWN_MOTION_PROFILES, issues, default="normal")
+    defaults = _motion_defaults(profile)
+    return SceneMotion(
+        profile=profile,
+        sequence=_enum(value, "sequence", f"{path}.sequence", KNOWN_MOTION_SEQUENCES, issues, default=defaults.sequence),
+        ease=_enum(value, "ease", f"{path}.ease", KNOWN_MOTION_EASES, issues, default=defaults.ease),
+        stagger=_optional_number(value, "stagger", f"{path}.stagger", issues, positive=False, default=defaults.stagger),
+        duration_scale=_optional_number(
+            value,
+            "duration_scale",
+            f"{path}.duration_scale",
+            issues,
+            positive=True,
+            default=defaults.duration_scale,
+        ),
+        intensity=_optional_number(value, "intensity", f"{path}.intensity", issues, positive=False, default=defaults.intensity),
+        node=_enum(value, "node", f"{path}.node", KNOWN_NODE_MOTION, issues, default=defaults.node),
+        edge=_enum(value, "edge", f"{path}.edge", KNOWN_EDGE_MOTION, issues, default=defaults.edge),
+        group=_enum(value, "group", f"{path}.group", KNOWN_GROUP_MOTION, issues, default=defaults.group),
+        reduced_motion=_enum(
+            value,
+            "reduced_motion",
+            f"{path}.reduced_motion",
+            KNOWN_REDUCED_MOTION,
+            issues,
+            default=defaults.reduced_motion,
+        ),
+    )
+
+
+def _motion_defaults(profile: str) -> SceneMotion:
+    if profile == "off":
+        return SceneMotion(profile="off", sequence="simultaneous", ease="linear", stagger=0.0, duration_scale=1.0, intensity=0.0, node="none", edge="none", group="none", reduced_motion="static")
+    if profile == "subtle":
+        return SceneMotion(profile="subtle", sequence="step-stagger", ease="calm", stagger=0.08, duration_scale=1.2, intensity=0.55, node="fade", edge="draw", group="soft-reveal", reduced_motion="static")
+    if profile == "expressive":
+        return SceneMotion(profile="expressive", sequence="layered", ease="spring", stagger=0.16, duration_scale=0.9, intensity=1.25, node="pop", edge="comet-flow", group="marching-ants", reduced_motion="subtle")
+    return SceneMotion()
 
 
 def _parse_groups(value: Any, path: str, issues: List[ValidationIssue], canvas: Canvas) -> List[Group]:
@@ -316,9 +371,10 @@ def _optional_number(
     path: str,
     issues: List[ValidationIssue],
     positive: bool,
+    default: Optional[float] = None,
 ) -> Optional[float]:
     if key not in data:
-        return None
+        return default
     value = data[key]
     if not _is_number(value):
         issues.append(ValidationIssue(path, "expected a number", "type"))
@@ -326,7 +382,10 @@ def _optional_number(
     number = float(value)
     if positive and number <= 0:
         issues.append(ValidationIssue(path, "must be greater than zero", "range"))
-        return None
+        return default
+    if not positive and number < 0:
+        issues.append(ValidationIssue(path, "must be greater than or equal to zero", "range"))
+        return default
     return number
 
 

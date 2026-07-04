@@ -25,6 +25,8 @@ Full gallery: [gallery/index.html](./gallery/index.html)
 - Renders animated SVG and self-contained HTML viewers.
 - Uses richer motion layers: staggered entry, line drawing, flow particles,
   node glow, burst rings, and animated group boundaries.
+- Supports scene-level motion profiles for `off`, `subtle`, `normal`, and
+  `expressive` animation behavior.
 - Exports optional PNG, GIF, PDF, WebP, MP4, APNG, and Lottie files.
 - Produces quality reports for bounds, overlaps, text fit, and explicit paths.
 - Includes 14 clean-room preset compilers and 11 visual styles.
@@ -129,6 +131,21 @@ The current renderer uses dependency-free SVG/SMIL motion inspired by common
 open-source animation patterns: draw-on paths, staggered timelines, flow
 particles, glow, and burst rings. Research notes live in
 [docs/motion-research.md](./docs/motion-research.md).
+
+Example motion profile:
+
+```json
+{
+  "motion": {
+    "profile": "expressive",
+    "sequence": "layered",
+    "edge": "comet-flow",
+    "node": "pop",
+    "group": "marching-ants",
+    "reduced_motion": "subtle"
+  }
+}
+```
 
 ## Tests
 
