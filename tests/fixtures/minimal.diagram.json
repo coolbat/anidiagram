@@ -1,0 +1,13 @@
+{
+  "version": "0.1",
+  "canvas": {"width": 640, "height": 360},
+  "style": "minimal-light",
+  "title": {"text": "Minimal Flow", "subtitle": "stable fixture"},
+  "nodes": [
+    {"id": "start", "label": "Start", "caption": "input", "position": [80, 150], "size": [140, 76], "role": "source"},
+    {"id": "finish", "label": "Finish", "caption": "output", "position": [420, 150], "size": [140, 76], "role": "output"}
+  ],
+  "edges": [
+    {"from": "start", "to": "finish", "label": "render", "role": "process", "duration": "2.8s"}
+  ]
+}

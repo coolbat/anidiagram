@@ -11,6 +11,8 @@ import math
 from dataclasses import dataclass
 from typing import Any, Dict, Iterable, List, Tuple
 
+from .model import Edge, Group, Node, Scene
+from .schema import compile_scene
 from .styles import role_style
 
 
@@ -34,13 +36,6 @@ def esc(value: Any) -> str:
     return html.escape(str(value), quote=True)
 
 
-def as_float_pair(value: Iterable[Any], fallback: Point) -> Point:
-    items = list(value or [])
-    if len(items) != 2:
-        return fallback
-    return (float(items[0]), float(items[1]))
-
-
 def wrap_words(text: str, max_chars: int) -> List[str]:
     words = str(text or "").split()
     if not words:
@@ -57,10 +52,10 @@ def wrap_words(text: str, max_chars: int) -> List[str]:
     return lines
 
 
-def node_box(node: Dict[str, Any]) -> NodeBox:
-    x, y = as_float_pair(node.get("position"), (0, 0))
-    w, h = as_float_pair(node.get("size"), (160, 88))
-    return NodeBox(str(node.get("id", "")), x, y, w, h)
+def node_box(node: Node) -> NodeBox:
+    x, y = node.position
+    w, h = node.size
+    return NodeBox(node.node_id, x, y, w, h)
 
 
 def anchor_between(source: NodeBox, target: NodeBox) -> Tuple[Point, Point]:
@@ -104,19 +99,21 @@ def render_text_block(x: float, y: float, width: float, label: str, caption: str
     return "\n".join(parts)
 
 
-def render_node(node: Dict[str, Any], style: Dict[str, Any]) -> str:
+def render_node(node: Node, style: Dict[str, Any]) -> str:
     box = node_box(node)
-    role = role_style(style, node.get("role"))
-    radius = float(node.get("radius", style.get("node", {}).get("radius", 14)))
-    stroke_width = float(node.get("stroke_width", style.get("node", {}).get("stroke_width", 2)))
-    stroke = node.get("stroke", role.get("stroke", "#94a3b8"))
-    fill = node.get("fill", role.get("fill", "#f8fafc"))
-    text = node.get("text", role.get("text", style.get("canvas", {}).get("text", "#172033")))
-    label = str(node.get("label", node.get("id", "")))
-    caption = str(node.get("caption", ""))
+    role = role_style(style, node.role)
+    radius = float(node.radius if node.radius is not None else style.get("node", {}).get("radius", 14))
+    stroke_width = float(
+        node.stroke_width if node.stroke_width is not None else style.get("node", {}).get("stroke_width", 2)
+    )
+    stroke = node.stroke or role.get("stroke", "#94a3b8")
+    fill = node.fill or role.get("fill", "#f8fafc")
+    text = role.get("text", style.get("canvas", {}).get("text", "#172033"))
+    label = node.label
+    caption = node.caption
     content_y = box.y + max(26, box.h / 2 - 14)
     return f"""
-<g id="node-{esc(box.node_id)}" class="node" data-role="{esc(node.get("role", "neutral"))}">
+<g id="node-{esc(box.node_id)}" class="node" data-role="{esc(node.role)}">
   <rect x="{box.x:.1f}" y="{box.y:.1f}" width="{box.w:.1f}" height="{box.h:.1f}" rx="{radius:.1f}"
         fill="{esc(fill)}" stroke="{esc(stroke)}" stroke-width="{stroke_width:.1f}" />
   {render_text_block(box.x + 12, content_y, box.w - 24, label, caption, text)}
@@ -124,75 +121,92 @@ def render_node(node: Dict[str, Any], style: Dict[str, Any]) -> str:
 </g>"""
 
 
-def render_group(group: Dict[str, Any], style: Dict[str, Any]) -> str:
-    x, y, w, h = [float(value) for value in group.get("bounds", [0, 0, 100, 100])]
-    role = role_style(style, group.get("role"))
-    stroke = group.get("stroke", role.get("stroke", "#94a3b8"))
-    fill = group.get("fill", role.get("fill", "none"))
-    label = group.get("label", group.get("id", ""))
+def render_group(group: Group, style: Dict[str, Any]) -> str:
+    x, y, w, h = group.bounds
+    role = role_style(style, group.role)
+    stroke = group.stroke or role.get("stroke", "#94a3b8")
+    fill = group.fill or role.get("fill", "none")
+    label = group.label
     muted = style.get("canvas", {}).get("muted", "#5b6778")
     return f"""
-<g id="group-{esc(group.get("id", ""))}" class="group">
+<g id="group-{esc(group.group_id)}" class="group">
   <rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="22"
         fill="{esc(fill)}" fill-opacity="0.34" stroke="{esc(stroke)}" stroke-width="1.6" stroke-dasharray="9 8" />
   <text x="{x + 18:.1f}" y="{y + 30:.1f}" class="group-label" fill="{esc(muted)}">{esc(label)}</text>
 </g>"""
 
 
-def edge_points(edge: Dict[str, Any], nodes: Dict[str, NodeBox]) -> Tuple[Point, Point]:
-    if "points" in edge and len(edge["points"]) >= 2:
-        return as_float_pair(edge["points"][0], (0, 0)), as_float_pair(edge["points"][-1], (0, 0))
-    source = nodes.get(edge.get("from"))
-    target = nodes.get(edge.get("to"))
+def edge_points(edge: Edge, nodes: Dict[str, NodeBox]) -> Tuple[Point, Point]:
+    if len(edge.points) >= 2:
+        return edge.points[0], edge.points[-1]
+    source = nodes.get(edge.source)
+    target = nodes.get(edge.target)
     if not source or not target:
         return (0, 0), (0, 0)
     return anchor_between(source, target)
 
 
-def render_edge(edge: Dict[str, Any], nodes: Dict[str, NodeBox], style: Dict[str, Any], index: int) -> str:
+def line_path(points: Iterable[Point]) -> str:
+    items = list(points)
+    first = items[0]
+    rest = " ".join(f"L {x:.1f} {y:.1f}" for x, y in items[1:])
+    return f"M {first[0]:.1f} {first[1]:.1f} {rest}".strip()
+
+
+def edge_path(edge: Edge, nodes: Dict[str, NodeBox]) -> str:
+    if len(edge.points) >= 2:
+        return line_path(edge.points)
     start, end = edge_points(edge, nodes)
-    path = curve_path(start, end)
-    role = role_style(style, edge.get("role"))
-    stroke = edge.get("stroke", role.get("stroke", "#64748b"))
-    width = float(edge.get("width", style.get("edge", {}).get("width", 2.4)))
-    duration = edge.get("duration", style.get("edge", {}).get("duration", "4.2s"))
+    return curve_path(start, end)
+
+
+def render_edge(edge: Edge, nodes: Dict[str, NodeBox], style: Dict[str, Any], index: int) -> str:
+    start, end = edge_points(edge, nodes)
+    path = edge_path(edge, nodes)
+    role = role_style(style, edge.role)
+    stroke = edge.stroke or role.get("stroke", "#64748b")
+    width = float(edge.width if edge.width is not None else style.get("edge", {}).get("width", 2.4))
+    duration = edge.motion.duration or style.get("edge", {}).get("duration", "4.2s")
     mid_x = (start[0] + end[0]) / 2
     mid_y = (start[1] + end[1]) / 2 - 14
-    label = edge.get("label", "")
+    label = edge.label
     marker_id = f"arrow-{index}"
+    motion_markup = ""
+    if edge.motion.enabled:
+        begin = index * 0.35 + edge.motion.delay
+        motion_markup = f"""  <circle r="5" fill="{esc(stroke)}">
+    <animateMotion dur="{esc(duration)}" repeatCount="indefinite" path="{path}" begin="{begin:.2f}s" />
+  </circle>"""
     return f"""
 <defs>
   <marker id="{marker_id}" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
     <path d="M 0 0 L 7 3 L 0 6 z" fill="{esc(stroke)}" />
   </marker>
 </defs>
-<g class="edge" data-role="{esc(edge.get("role", "neutral"))}">
+<g class="edge" data-role="{esc(edge.role)}">
   <path d="{path}" fill="none" stroke="{esc(stroke)}" stroke-width="{width:.1f}" marker-end="url(#{marker_id})" />
-  <circle r="5" fill="{esc(stroke)}">
-    <animateMotion dur="{esc(duration)}" repeatCount="indefinite" path="{path}" begin="{index * 0.35:.2f}s" />
-  </circle>
+{motion_markup}
   <text x="{mid_x:.1f}" y="{mid_y:.1f}" class="edge-label" fill="{esc(style.get("canvas", {}).get("muted", "#5b6778"))}">{esc(label)}</text>
 </g>"""
 
 
-def render_svg(spec: Dict[str, Any], style: Dict[str, Any]) -> str:
-    canvas = spec.get("canvas", {})
-    width = int(canvas.get("width", 1200))
-    height = int(canvas.get("height", 720))
+def render_svg(spec: Any, style: Dict[str, Any]) -> str:
+    scene = spec if isinstance(spec, Scene) else compile_scene(spec)
+    width = scene.canvas.width
+    height = scene.canvas.height
     canvas_style = style.get("canvas", {})
     title_style = style.get("title", {})
     background = canvas_style.get("background", "#ffffff")
     text = canvas_style.get("text", "#172033")
     muted = canvas_style.get("muted", "#5b6778")
     grid = canvas_style.get("grid", "#edf2f7")
-    title = spec.get("title", {})
-    title_text = title.get("text", "AniDiagram")
-    subtitle = title.get("subtitle", "")
-    nodes = {node.get("id"): node_box(node) for node in spec.get("nodes", []) if node.get("id")}
+    title_text = scene.title.text
+    subtitle = scene.title.subtitle
+    nodes = {node.node_id: node_box(node) for node in scene.nodes}
 
-    groups_markup = "\n".join(render_group(group, style) for group in spec.get("groups", []))
-    edges_markup = "\n".join(render_edge(edge, nodes, style, index) for index, edge in enumerate(spec.get("edges", []), start=1))
-    nodes_markup = "\n".join(render_node(node, style) for node in spec.get("nodes", []))
+    groups_markup = "\n".join(render_group(group, style) for group in scene.groups)
+    edges_markup = "\n".join(render_edge(edge, nodes, style, index) for index, edge in enumerate(scene.edges, start=1))
+    nodes_markup = "\n".join(render_node(node, style) for node in scene.nodes)
 
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="diagram-title diagram-desc">
 <title id="diagram-title">{esc(title_text)}</title>

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional, Union
 
 
 DEFAULT_STYLE: Dict[str, Any] = {
@@ -51,13 +51,13 @@ def deep_merge(base: Dict[str, Any], override: Dict[str, Any]) -> Dict[str, Any]
     return merged
 
 
-def load_style(path: str | Path | None = None) -> Dict[str, Any]:
+def load_style(path: Optional[Union[str, Path]] = None) -> Dict[str, Any]:
     if not path:
         return json.loads(json.dumps(DEFAULT_STYLE))
     data = json.loads(Path(path).read_text(encoding="utf-8"))
     return deep_merge(DEFAULT_STYLE, data)
 
 
-def role_style(style: Dict[str, Any], role: str | None) -> Dict[str, str]:
+def role_style(style: Dict[str, Any], role: Optional[str]) -> Dict[str, str]:
     roles = style.get("roles", {})
     return dict(roles.get(role or "neutral", roles.get("neutral", {})))

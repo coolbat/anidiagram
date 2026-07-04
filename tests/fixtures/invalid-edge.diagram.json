@@ -1,0 +1,9 @@
+{
+  "version": "0.1",
+  "nodes": [
+    {"id": "source", "label": "Source", "position": [80, 120], "size": [140, 76]}
+  ],
+  "edges": [
+    {"from": "source", "to": "missing", "label": "broken", "animated": "yes"}
+  ]
+}

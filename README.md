@@ -9,6 +9,7 @@ images, generated assets, or repository history from the projects listed in
 ## What It Does
 
 - Reads a structured DiagramScript JSON file.
+- Validates DiagramScript and compiles it to an internal Scene IR.
 - Applies a visual style profile.
 - Renders a deterministic animated SVG.
 - Optionally writes a self-contained HTML viewer.
@@ -38,7 +39,8 @@ PYTHONPATH=src python3 -m anidiagram.cli \
 
 ## DiagramScript
 
-The initial schema is intentionally small:
+The current schema is `DiagramScript` v0.1. It is intentionally small and
+freeform-layout first.
 
 ```json
 {
@@ -57,6 +59,54 @@ The initial schema is intentionally small:
   ]
 }
 ```
+
+Required fields:
+
+- `version`: currently `"0.1"`.
+- `nodes`: non-empty array of node objects.
+- each node: `id`, `position`, and `size`.
+- each edge: `from` and `to`, both referencing existing node ids.
+
+Optional fields:
+
+- `canvas.width` and `canvas.height`, defaulting to `1200 x 720`.
+- `style`, mapped to a JSON file under `styles/` when the CLI can resolve it.
+- `title.text` and `title.subtitle`.
+- `groups`, where each group has `id` and `bounds`.
+- edge `points`, for explicit point-to-point line paths.
+- visual overrides such as `role`, `fill`, `stroke`, `width`, `duration`, `delay`, and `animated`.
+
+The CLI validates the spec before rendering. Validation failures are printed as
+structured JSON on stderr and exit with code `2`:
+
+```json
+{
+  "ok": false,
+  "error": {
+    "code": "diagram_script_validation_failed",
+    "issues": [
+      {"path": "$.edges[0].to", "message": "unknown node id 'missing'", "code": "reference"}
+    ]
+  }
+}
+```
+
+Successful CLI runs print structured result JSON:
+
+```json
+{
+  "ok": true,
+  "schema": {"name": "DiagramScript", "version": "0.1"},
+  "style": "blueprint",
+  "outputs": {
+    "svg": {"format": "svg", "path": "/absolute/path/to/agent-memory.svg"}
+  },
+  "stats": {"nodes": 6, "edges": 6, "groups": 2}
+}
+```
+
+Internally, v0.1 compiles into a typed Scene IR made of `Scene`, `Node`,
+`Edge`, `Group`, `Style`, and `Motion` objects before reaching the SVG renderer.
 
 ## Style Profiles
 
