@@ -1,0 +1,114 @@
+{
+  "name": "aurora-orb",
+  "canvas": {
+    "background": "#ffffff",
+    "text": "#1c1721",
+    "muted": "#6f6877",
+    "grid": "#f2eef3"
+  },
+  "title": {
+    "accent": "#ff7f6e",
+    "highlight": "#fff7f1"
+  },
+  "node": {
+    "radius": 42,
+    "stroke_width": 1.1,
+    "fill_mode": "aurora"
+  },
+  "edge": {
+    "width": 2.2,
+    "duration": "5.8s"
+  },
+  "effects": {
+    "node_fill": "aurora",
+    "grain_opacity": 0.11,
+    "blob_opacity": 0.24,
+    "band_opacity": 0.32,
+    "node_border_opacity": 0.58,
+    "grid_opacity": 0.14,
+    "frame_opacity": 0.18
+  },
+  "roles": {
+    "actor": {
+      "stroke": "#ff7a66",
+      "fill": "#fff1eb",
+      "text": "#201826",
+      "glow": "#ffd0a8",
+      "band": "#ff4f73",
+      "shadow": "#56308f",
+      "gradient": ["#ffc18f", "#ff6f66", "#6b45a2"]
+    },
+    "source": {
+      "stroke": "#2468ff",
+      "fill": "#edf7ff",
+      "text": "#162038",
+      "glow": "#b9f3e9",
+      "band": "#7b86ff",
+      "shadow": "#172068",
+      "gradient": ["#b7fff0", "#3e8dff", "#20207a"]
+    },
+    "process": {
+      "stroke": "#2f8cff",
+      "fill": "#f1fff3",
+      "text": "#16243a",
+      "glow": "#eaffc5",
+      "band": "#bdf0d6",
+      "shadow": "#2575dc",
+      "gradient": ["#fffed2", "#b8f7d5", "#2d83e6"]
+    },
+    "agent": {
+      "stroke": "#ee5a90",
+      "fill": "#fff0f6",
+      "text": "#211729",
+      "glow": "#ffe8ce",
+      "band": "#ff7fa7",
+      "shadow": "#151947",
+      "gradient": ["#151947", "#ff79a8", "#ffe8ce"]
+    },
+    "memory": {
+      "stroke": "#169b58",
+      "fill": "#f7ffdc",
+      "text": "#17261c",
+      "glow": "#ffe571",
+      "band": "#8ecf64",
+      "shadow": "#0a6a37",
+      "gradient": ["#ffd75d", "#a8cf55", "#086b3a"]
+    },
+    "tool": {
+      "stroke": "#5870ff",
+      "fill": "#f5f3ff",
+      "text": "#1b1d33",
+      "glow": "#d3fff0",
+      "band": "#b9a8ff",
+      "shadow": "#2844d9",
+      "gradient": ["#dfffee", "#8fc3ff", "#5047d9"]
+    },
+    "output": {
+      "stroke": "#18a95e",
+      "fill": "#f2fff2",
+      "text": "#14251c",
+      "glow": "#fff2a4",
+      "band": "#9edc6c",
+      "shadow": "#0a7a40",
+      "gradient": ["#fff19a", "#b9e06b", "#087a41"]
+    },
+    "risk": {
+      "stroke": "#ff4d7f",
+      "fill": "#fff0f4",
+      "text": "#241421",
+      "glow": "#ffe3c4",
+      "band": "#ff74a4",
+      "shadow": "#22194d",
+      "gradient": ["#24194f", "#ff6d9a", "#ffe1bd"]
+    },
+    "neutral": {
+      "stroke": "#ddd4df",
+      "fill": "#ffffff",
+      "text": "#221c27",
+      "glow": "#ffffff",
+      "band": "#e7d9ef",
+      "shadow": "#cfc5d4",
+      "gradient": ["#ffffff", "#f4edf8", "#ded6e6"]
+    }
+  }
+}

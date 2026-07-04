@@ -26,7 +26,8 @@
       "type": "object",
       "properties": {
         "radius": {"type": "number", "minimum": 0},
-        "stroke_width": {"type": "number", "exclusiveMinimum": 0}
+        "stroke_width": {"type": "number", "exclusiveMinimum": 0},
+        "fill_mode": {"type": "string", "enum": ["solid", "aurora"]}
       }
     },
     "edge": {
@@ -36,6 +37,18 @@
         "duration": {"type": "string"}
       }
     },
+    "effects": {
+      "type": "object",
+      "properties": {
+        "node_fill": {"type": "string", "enum": ["solid", "aurora"]},
+        "grain_opacity": {"type": "number", "minimum": 0, "maximum": 1},
+        "blob_opacity": {"type": "number", "minimum": 0, "maximum": 1},
+        "band_opacity": {"type": "number", "minimum": 0, "maximum": 1},
+        "node_border_opacity": {"type": "number", "minimum": 0, "maximum": 1},
+        "grid_opacity": {"type": "number", "minimum": 0, "maximum": 1},
+        "frame_opacity": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
     "roles": {
       "type": "object",
       "additionalProperties": {
@@ -43,7 +56,28 @@
         "properties": {
           "stroke": {"type": "string"},
           "fill": {"type": "string"},
-          "text": {"type": "string"}
+          "text": {"type": "string"},
+          "glow": {"type": "string"},
+          "band": {"type": "string"},
+          "shadow": {"type": "string"},
+          "gradient": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {"type": "string"},
+                {
+                  "type": "object",
+                  "required": ["color"],
+                  "properties": {
+                    "offset": {"type": "string"},
+                    "color": {"type": "string"},
+                    "opacity": {"type": "number", "minimum": 0, "maximum": 1}
+                  }
+                }
+              ]
+            },
+            "minItems": 2
+          }
         }
       }
     }

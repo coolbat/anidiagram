@@ -24,6 +24,7 @@ DEFAULT_STYLE: Dict[str, Any] = {
     "node": {
         "radius": 14,
         "stroke_width": 2,
+        "fill_mode": "solid",
     },
     "edge": {
         "width": 2.4,
@@ -75,6 +76,30 @@ def validate_style_profile(data: Dict[str, Any]) -> list:
         return [ValidationIssue("$", "expected an object", "type")]
     if "name" in data and not isinstance(data["name"], str):
         issues.append(ValidationIssue("$.name", "expected a string", "type"))
+    node = data.get("node", {})
+    if node and not isinstance(node, dict):
+        issues.append(ValidationIssue("$.node", "expected an object", "type"))
+    elif isinstance(node, dict):
+        fill_mode = node.get("fill_mode")
+        if fill_mode is not None and fill_mode not in {"solid", "aurora"}:
+            issues.append(ValidationIssue("$.node.fill_mode", "expected 'solid' or 'aurora'", "enum"))
+    effects = data.get("effects", {})
+    if effects and not isinstance(effects, dict):
+        issues.append(ValidationIssue("$.effects", "expected an object", "type"))
+    elif isinstance(effects, dict):
+        node_fill = effects.get("node_fill")
+        if node_fill is not None and node_fill not in {"solid", "aurora"}:
+            issues.append(ValidationIssue("$.effects.node_fill", "expected 'solid' or 'aurora'", "enum"))
+        for token in (
+            "grain_opacity",
+            "blob_opacity",
+            "band_opacity",
+            "node_border_opacity",
+            "grid_opacity",
+            "frame_opacity",
+        ):
+            if token in effects and not _is_opacity(effects[token]):
+                issues.append(ValidationIssue(f"$.effects.{token}", "expected a number from 0 to 1", "type"))
     roles = data.get("roles", {})
     if roles and not isinstance(roles, dict):
         issues.append(ValidationIssue("$.roles", "expected an object", "type"))
@@ -85,7 +110,24 @@ def validate_style_profile(data: Dict[str, Any]) -> list:
         if not isinstance(tokens, dict):
             issues.append(ValidationIssue(f"$.roles.{role}", "expected an object", "type"))
             continue
-        for token in ("stroke", "fill", "text"):
+        for token in ("stroke", "fill", "text", "glow", "band", "shadow"):
             if token in tokens and not isinstance(tokens[token], str):
                 issues.append(ValidationIssue(f"$.roles.{role}.{token}", "expected a string", "type"))
+        gradient = tokens.get("gradient")
+        if gradient is not None:
+            if not isinstance(gradient, list) or len(gradient) < 2:
+                issues.append(ValidationIssue(f"$.roles.{role}.gradient", "expected at least two color stops", "type"))
+            else:
+                for index, stop in enumerate(gradient):
+                    if isinstance(stop, str):
+                        continue
+                    if not isinstance(stop, dict) or not isinstance(stop.get("color"), str):
+                        issues.append(ValidationIssue(f"$.roles.{role}.gradient[{index}]", "expected a color string or stop object", "type"))
+                        continue
+                    if "opacity" in stop and not _is_opacity(stop["opacity"]):
+                        issues.append(ValidationIssue(f"$.roles.{role}.gradient[{index}].opacity", "expected a number from 0 to 1", "type"))
     return issues
+
+
+def _is_opacity(value: Any) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and 0 <= value <= 1
