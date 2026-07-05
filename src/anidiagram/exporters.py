@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import json
+import math
 import shutil
 import subprocess
 import tempfile
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
+from .effects import channel_effect, effect_active
 from .model import Edge, Node, Point, Scene
 from .quality import quality_report
 from .renderer_svg import render_html, render_svg
@@ -76,7 +78,17 @@ def write_gif(scene: Scene, style: Dict[str, Any], path: Path, frames: int = 16)
     images = _render_frames(scene, style, frames)
     if not images:
         return _skipped("gif", path, "Pillow is not installed")
-    images[0].save(path, save_all=True, append_images=images[1:], duration=90, loop=0, format="GIF")
+    gif_images = [_flatten_frame_for_gif(image, style) for image in images]
+    gif_images[0].save(
+        path,
+        save_all=True,
+        append_images=gif_images[1:],
+        duration=90,
+        loop=0,
+        format="GIF",
+        optimize=False,
+        disposal=2,
+    )
     return _done("gif", path)
 
 
@@ -153,7 +165,7 @@ def _render_frame(scene: Scene, style: Dict[str, Any], frame: int = 0, frames: i
     grid = canvas.get("grid", "#edf2f7")
     muted = canvas.get("muted", "#5b6778")
     image = Image.new("RGBA", (scene.canvas.width, scene.canvas.height), background)
-    draw = ImageDraw.Draw(image)
+    draw = ImageDraw.Draw(image, "RGBA")
     for x in range(0, scene.canvas.width, 32):
         draw.line((x, 0, x, scene.canvas.height), fill=grid, width=1)
     for y in range(0, scene.canvas.height, 32):
@@ -179,9 +191,6 @@ def _render_frame(scene: Scene, style: Dict[str, Any], frame: int = 0, frames: i
             sx, sy = points[0]
             ex, ey = points[-1]
             draw.text(((sx + ex) / 2, (sy + ey) / 2 - 16), edge.label, fill=muted, font=font)
-        if frames > 1 and edge.motion.enabled:
-            point = points[(frame + edge_index) % len(points)]
-            draw.ellipse((point[0] - 5, point[1] - 5, point[0] + 5, point[1] + 5), fill=stroke)
 
     for node in scene.nodes:
         x, y = node.position
@@ -196,7 +205,81 @@ def _render_frame(scene: Scene, style: Dict[str, Any], frame: int = 0, frames: i
             draw.text((x + 14, y + 12), str(node.step), fill=fill, font=font)
         draw.text((x + 14, y + h / 2 - 12), node.label, fill=text, font=font)
         draw.text((x + 14, y + h / 2 + 8), node.caption, fill=text, font=font)
+    if frames > 1 and scene.motion.profile != "off":
+        _draw_raster_particles(draw, scene, style, node_map, frame, frames)
     return image
+
+
+def _flatten_frame_for_gif(image: Any, style: Dict[str, Any]) -> Any:
+    from PIL import Image
+
+    background = style.get("canvas", {}).get("background", "#ffffff")
+    if image.mode == "RGBA":
+        base = Image.new("RGBA", image.size, background)
+        return Image.alpha_composite(base, image).convert("RGB")
+    return image.convert("RGB")
+
+
+def _draw_raster_particles(draw: Any, scene: Scene, style: Dict[str, Any], nodes: Dict[str, Node], frame: int, frames: int) -> None:
+    intensity = max(0.25, min(1.8, scene.motion.intensity))
+    edge_width = float(style.get("edge", {}).get("width", 2.4))
+    for edge_index, edge in enumerate(scene.edges):
+        if not edge.motion.enabled:
+            continue
+        edge_effect = channel_effect(scene.motion, style, "edge", edge.effect)
+        if not effect_active(scene.motion, edge_effect):
+            continue
+        points = _edge_points(edge, nodes)
+        if len(points) < 2:
+            continue
+        role = role_style(style, edge.role)
+        stroke = edge.stroke or role.get("stroke", "#64748b")
+        color = _hex_to_rgba(stroke, 235)
+        glow = _hex_to_rgba(stroke, 72)
+        phase = (frame / max(1, frames) + edge_index * 0.071 + edge.motion.delay * 0.03) % 1.0
+        radii = (6.5, 4.4, 3.0, 2.0) if edge_effect.preset == "ghost-flow" else (6.0, 4.0, 2.8)
+        for trail_index, radius in enumerate(radii):
+            progress = (phase - trail_index * 0.055) % 1.0
+            x, y = _point_along_polyline(points, progress)
+            scaled_radius = max(edge_width + 1.0, radius * intensity)
+            draw.ellipse(
+                (x - scaled_radius * 1.8, y - scaled_radius * 1.8, x + scaled_radius * 1.8, y + scaled_radius * 1.8),
+                fill=glow,
+            )
+            draw.ellipse((x - scaled_radius, y - scaled_radius, x + scaled_radius, y + scaled_radius), fill=color)
+
+
+def _point_along_polyline(points: PointList, progress: float) -> Point:
+    if len(points) == 1:
+        return points[0]
+    segments = []
+    total = 0.0
+    for start, end in zip(points, points[1:]):
+        length = math.hypot(end[0] - start[0], end[1] - start[1])
+        if length <= 0:
+            continue
+        segments.append((start, end, length))
+        total += length
+    if not segments or total <= 0:
+        return points[0]
+    target = (progress % 1.0) * total
+    walked = 0.0
+    for start, end, length in segments:
+        if walked + length >= target:
+            local = (target - walked) / length
+            return (start[0] + (end[0] - start[0]) * local, start[1] + (end[1] - start[1]) * local)
+        walked += length
+    return segments[-1][1]
+
+
+def _hex_to_rgba(value: str, alpha: int) -> Tuple[int, int, int, int]:
+    value = value.strip().lstrip("#")
+    if len(value) != 6:
+        return (100, 116, 139, alpha)
+    try:
+        return (int(value[0:2], 16), int(value[2:4], 16), int(value[4:6], 16), alpha)
+    except ValueError:
+        return (100, 116, 139, alpha)
 
 
 def _edge_points(edge: Edge, nodes: Dict[str, Node]) -> PointList:

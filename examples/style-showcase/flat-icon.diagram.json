@@ -1,0 +1,188 @@
+{
+  "version": "0.3",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "style": "flat-icon",
+  "title": {
+    "text": "Feature Priority Board",
+    "subtitle": "demand signals become a focused roadmap"
+  },
+  "motion": {
+    "profile": "normal",
+    "sequence": "step-stagger",
+    "ease": "calm",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 0.95,
+    "edge": {
+      "preset": "flow-dot",
+      "particle": "soft-dot",
+      "trail": false
+    },
+    "node": {
+      "preset": "icon-pulse",
+      "accent": "ripple"
+    },
+    "group": {
+      "preset": "soft-reveal"
+    },
+    "title": {
+      "preset": "fade"
+    },
+    "reduced_motion": "subtle"
+  },
+  "groups": [
+    {
+      "id": "matrix",
+      "label": "Impact x Effort",
+      "bounds": [
+        310,
+        150,
+        570,
+        380
+      ],
+      "role": "neutral"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "demand",
+      "label": "Demand",
+      "caption": "requests",
+      "position": [
+        95,
+        320
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "source",
+      "icon": "search"
+    },
+    {
+      "id": "quick",
+      "label": "Quick Win",
+      "caption": "high value",
+      "position": [
+        345,
+        205
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "output",
+      "icon": "tool"
+    },
+    {
+      "id": "bet",
+      "label": "Big Bet",
+      "caption": "strategic",
+      "position": [
+        655,
+        205
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "agent",
+      "icon": "agent"
+    },
+    {
+      "id": "fill",
+      "label": "Fill In",
+      "caption": "low effort",
+      "position": [
+        345,
+        425
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "tool",
+      "icon": "file"
+    },
+    {
+      "id": "avoid",
+      "label": "Avoid",
+      "caption": "too risky",
+      "position": [
+        655,
+        425
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "risk",
+      "icon": "shield"
+    },
+    {
+      "id": "roadmap",
+      "label": "Roadmap",
+      "caption": "commit",
+      "position": [
+        985,
+        320
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "memory",
+      "icon": "folder"
+    }
+  ],
+  "edges": [
+    {
+      "from": "demand",
+      "to": "quick",
+      "label": "score",
+      "role": "source",
+      "route": "orthogonal"
+    },
+    {
+      "from": "demand",
+      "to": "fill",
+      "label": "score",
+      "role": "source",
+      "route": "orthogonal"
+    },
+    {
+      "from": "quick",
+      "to": "roadmap",
+      "label": "select",
+      "role": "output",
+      "route": "orthogonal",
+      "effect": {
+        "preset": "flow-dot",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "bet",
+      "to": "roadmap",
+      "label": "sequence",
+      "role": "agent",
+      "route": "orthogonal"
+    },
+    {
+      "from": "avoid",
+      "to": "roadmap",
+      "label": "defer",
+      "role": "risk",
+      "route": "orthogonal",
+      "effect": {
+        "preset": "static",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    }
+  ]
+}

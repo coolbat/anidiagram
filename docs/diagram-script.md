@@ -37,6 +37,34 @@ The Python validator also checks cross-field behavior that JSON Schema cannot
 fully express here, including duplicate ids, edge references, route/points
 requirements, and canvas bounds.
 
+## v0.3
+
+`0.3` adds the first version of AniDiagram's effect registry syntax:
+
+- `motion.profile`: adds `teaching`.
+- `motion.sequence`: adds `staged`.
+- `motion.edge`, `motion.node`, `motion.group`, and `motion.title`: accept
+  either the legacy string form or a structured effect object.
+- node `icon`: semantic icon id for built-in clean-room SVG primitives.
+- node, edge, and group `effect`: per-element effect override.
+
+Schema: `schemas/diagram-script-v0.3.schema.json`.
+
+Structured effect object example:
+
+```json
+{
+  "preset": "ghost-flow",
+  "particle": "soft-dot",
+  "trail": true
+}
+```
+
+Supported semantic icons:
+
+`database`, `file`, `folder`, `api`, `cloud`, `search`, `shield`, `agent`,
+`token`, `memory`, `tool`, `output`.
+
 ## Motion Profiles
 
 `motion` is AniDiagram's clean-room animation vocabulary inspired by timeline
@@ -74,3 +102,12 @@ Motion channels:
 - `edge`: `none`, `draw`, `pulse`, `comet-flow`, or `trace`.
 - `group`: `none`, `soft-reveal`, or `marching-ants`.
 - `reduced_motion`: `static`, `subtle`, or `pause`.
+
+## Effect Objects
+
+DiagramScript v0.3 keeps the existing string motion channels as compatibility
+syntax and adds structured effect objects for richer line, node, group, title,
+and semantic icon behavior.
+
+The broader feature plan is documented in
+[motion-effects-feature-plan.md](./motion-effects-feature-plan.md).

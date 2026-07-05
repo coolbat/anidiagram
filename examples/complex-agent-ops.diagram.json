@@ -1,0 +1,64 @@
+{
+  "version": "0.2",
+  "preset": "complex-agent-ops",
+  "canvas": {"width": 1500, "height": 900},
+  "style": "aurora-orb",
+  "motion": {
+    "profile": "expressive",
+    "sequence": "layered",
+    "ease": "spring",
+    "stagger": 0.14,
+    "duration_scale": 0.92,
+    "intensity": 1.25,
+    "node": "pop",
+    "edge": "comet-flow",
+    "group": "marching-ants",
+    "reduced_motion": "subtle"
+  },
+  "title": {
+    "text": "Complex Agent Ops",
+    "subtitle": "intake, planning, tools, memory, governance, and final delivery"
+  },
+  "groups": [
+    {"id": "ingress", "label": "Ingress", "bounds": [45, 330, 410, 205], "role": "actor"},
+    {"id": "runtime", "label": "Runtime", "bounds": [470, 115, 260, 590], "role": "agent"},
+    {"id": "knowledge", "label": "Knowledge", "bounds": [770, 90, 250, 650], "role": "memory"},
+    {"id": "governance", "label": "Governance", "bounds": [1070, 150, 230, 520], "role": "risk"},
+    {"id": "delivery", "label": "Delivery", "bounds": [1300, 330, 170, 205], "role": "output"}
+  ],
+  "nodes": [
+    {"id": "user", "label": "User", "caption": "task owner", "position": [85, 390], "size": [150, 82], "role": "actor", "step": 1},
+    {"id": "gateway", "label": "Gateway", "caption": "normalize", "position": [285, 390], "size": [150, 82], "role": "source", "step": 2},
+    {"id": "planner", "label": "Planner", "caption": "break down", "position": [520, 185], "size": [170, 86], "role": "agent", "step": 3},
+    {"id": "router", "label": "Router", "caption": "assign work", "position": [520, 390], "size": [170, 86], "role": "process", "step": 4},
+    {"id": "executor", "label": "Executor", "caption": "run tasks", "position": [520, 595], "size": [170, 86], "role": "agent", "step": 5},
+    {"id": "web", "label": "Web Tool", "caption": "fresh data", "position": [815, 135], "size": [160, 82], "role": "tool", "step": 6},
+    {"id": "code", "label": "Code Tool", "caption": "local edit", "position": [815, 295], "size": [160, 82], "role": "tool", "step": 7},
+    {"id": "db", "label": "SQL Store", "caption": "facts", "position": [815, 455], "size": [160, 82], "role": "memory", "step": 8},
+    {"id": "vector", "label": "Vector Index", "caption": "semantic", "position": [815, 615], "size": [160, 82], "role": "memory", "step": 9},
+    {"id": "policy", "label": "Policy", "caption": "rules", "position": [1105, 205], "size": [160, 82], "role": "risk", "step": 10},
+    {"id": "eval", "label": "Evaluator", "caption": "quality gate", "position": [1105, 390], "size": [160, 82], "role": "process", "step": 11},
+    {"id": "human", "label": "Human Review", "caption": "approval", "position": [1105, 575], "size": [160, 82], "role": "actor", "step": 12},
+    {"id": "answer", "label": "Answer", "caption": "deliverable", "position": [1320, 390], "size": [130, 82], "role": "output", "step": 13}
+  ],
+  "edges": [
+    {"from": "user", "to": "gateway", "label": "request", "role": "actor", "route": "straight", "step": 1},
+    {"from": "gateway", "to": "router", "label": "payload", "role": "source", "route": "straight", "step": 2},
+    {"from": "router", "to": "planner", "label": "plan", "role": "agent", "route": "vh", "step": 3},
+    {"from": "planner", "to": "web", "label": "search", "role": "tool", "route": "straight", "step": 4},
+    {"from": "planner", "to": "code", "label": "inspect", "role": "tool", "route": "straight", "step": 5},
+    {"from": "router", "to": "db", "label": "read", "role": "memory", "route": "straight", "step": 6},
+    {"from": "router", "to": "vector", "label": "retrieve", "role": "memory", "route": "straight", "step": 7},
+    {"from": "executor", "to": "code", "label": "patch", "role": "tool", "route": "straight", "step": 8},
+    {"from": "executor", "to": "vector", "label": "embed", "role": "memory", "route": "straight", "step": 9},
+    {"from": "gateway", "to": "policy", "label": "constraints", "role": "risk", "route": "points", "points": [[435, 431], [435, 80], [1185, 80], [1185, 205]], "step": 10},
+    {"from": "web", "to": "eval", "label": "evidence", "role": "source", "route": "hv", "step": 11},
+    {"from": "code", "to": "eval", "label": "diff", "role": "tool", "route": "straight", "step": 12},
+    {"from": "db", "to": "eval", "label": "facts", "role": "memory", "route": "straight", "step": 13},
+    {"from": "vector", "to": "eval", "label": "context", "role": "memory", "route": "straight", "step": 14},
+    {"from": "policy", "to": "eval", "label": "guard", "role": "risk", "route": "vh", "step": 15},
+    {"from": "eval", "to": "human", "label": "review", "role": "actor", "route": "points", "points": [[1105, 431], [1080, 431], [1080, 616], [1105, 616]], "step": 16},
+    {"from": "human", "to": "eval", "label": "approve", "role": "actor", "route": "points", "points": [[1265, 616], [1290, 616], [1290, 431], [1265, 431]], "duration": "7.0s", "step": 17},
+    {"from": "eval", "to": "answer", "label": "ship", "role": "output", "route": "straight", "step": 18}
+  ]
+}

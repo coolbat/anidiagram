@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Product Discovery Workflow</title>
+  <style>
+    body { margin: 0; background: #111827; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    main { min-height: 100vh; display: grid; grid-template-rows: auto 1fr; gap: 12px; padding: 16px; box-sizing: border-box; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    button, a { border: 1px solid #475569; background: #1f2937; color: #f8fafc; border-radius: 8px; padding: 8px 10px; font: inherit; text-decoration: none; cursor: pointer; }
+    button:hover, a:hover { background: #334155; }
+    button[aria-pressed="true"] { background: #475569; border-color: #94a3b8; }
+    .stage { width: 100%; min-height: 0; overflow: hidden; border: 1px solid #334155; border-radius: 12px; background: #020617; cursor: grab; }
+    .stage.dragging { cursor: grabbing; }
+    .viewport { transform-origin: 0 0; width: max-content; }
+    svg { display: block; max-width: none; height: auto; user-select: none; }
+    main.motion-subtle .edge-particle,
+    main.motion-subtle .node-burst { display: none; }
+    main.motion-subtle .edge-flow { opacity: 0.22; }
+    main.motion-off .edge-flow,
+    main.motion-off .edge-particle,
+    main.motion-off .node-burst,
+    main.motion-off .node-glow { display: none; }
+  </style>
+</head>
+<body>
+  <main id="viewer" class="motion-full">
+    <div class="toolbar">
+      <button type="button" id="toggle">Pause</button>
+      <button type="button" id="restart">Restart</button>
+      <button type="button" class="motion-choice" data-motion="full" aria-pressed="true">Full Motion</button>
+      <button type="button" class="motion-choice" data-motion="subtle" aria-pressed="false">Subtle</button>
+      <button type="button" class="motion-choice" data-motion="off" aria-pressed="false">Off</button>
+      <button type="button" id="zoom-in">Zoom In</button>
+      <button type="button" id="zoom-out">Zoom Out</button>
+      <button type="button" id="reset">Reset</button>
+      <a id="download" download="Product Discovery Workflow.svg">Download SVG</a>
+    </div>
+    <div class="stage" id="stage">
+      <div class="viewport" id="viewport">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="subtle" data-motion-sequence="step-stagger" data-motion-edge="draw" data-motion-node="fade" data-motion-group="soft-reveal" data-motion-title="fade" data-motion-reduced="subtle">
+<title id="diagram-title">Product Discovery Workflow</title>
+<desc id="diagram-desc">research notes become a tested product decision</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .edge-flow { stroke-linecap: round; }
+  .edge-draw, .edge-base { stroke-linecap: round; stroke-linejoin: round; }
+  .edge-particle { filter: url(#particle-glow); }
+  .edge-arrow-particle { filter: url(#particle-glow); }
+  .semantic-icon { fill: none; vector-effect: non-scaling-stroke; }
+  .node-glow, .node-burst { pointer-events: none; }
+  #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
+  #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
+  @keyframes titlePulse { 0%, 100% { opacity: 0.76; } 50% { opacity: 1; } }
+  @keyframes titleSlide { 0%, 100% { transform: translateX(0); opacity: 0.9; } 50% { transform: translateX(8px); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    #title-accent, #title-highlight { animation: none; }
+  }
+</style>
+<rect width="100%" height="100%" fill="#ffffff" />
+<defs>
+  <filter id="soft-glow" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="5" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <filter id="particle-glow" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="2.6" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#f3f4f6" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="1224" height="668" rx="26" fill="none" stroke="#d1d5db" stroke-width="1.4" opacity="1.00" />
+<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#111827" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#f5f5f4" />
+
+<text id="main-title" x="90" y="84" class="title" fill="#1f2937" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.08s" fill="freeze" />
+  Product Discovery Workflow
+</text>
+<text x="74" y="126" class="subtitle" fill="#6b7280" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />
+  research notes become a tested product decision
+</text>
+
+<g id="group-research" class="group" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.17s" fill="freeze" />
+  <rect x="70.0" y="215.0" width="450.0" height="180.0" rx="22"
+        fill="#f0fdfa" fill-opacity="0.34" stroke="#0f766e" stroke-width="1.6" stroke-dasharray="9 8">
+  </rect>
+
+
+  <text x="88.0" y="245.0" class="group-label" fill="#6b7280">Research</text>
+</g>
+
+<g id="group-decision" class="group" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.29s" fill="freeze" />
+  <rect x="520.0" y="215.0" width="635.0" height="180.0" rx="22"
+        fill="#f9fafb" fill-opacity="0.34" stroke="#4b5563" stroke-width="1.6" stroke-dasharray="9 8">
+  </rect>
+
+
+  <text x="538.0" y="245.0" class="group-label" fill="#6b7280">Decision</text>
+</g>
+
+<defs>
+  <marker id="arrow-1" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#4b5563" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 285.0 327.0 L 325.0 327.0" fill="none" stroke="#4b5563" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-1)" />
+  <path class="edge-draw" d="M 285.0 327.0 L 325.0 327.0" fill="none" stroke="#4b5563" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-1)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.47s" fill="freeze" />
+  </path>
+
+
+
+  <text x="305.0" y="313.0" class="edge-label" fill="#6b7280" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.61s" fill="freeze" />
+    next
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#4b5563" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 505.0 327.0 L 545.0 327.0" fill="none" stroke="#4b5563" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-2)" />
+  <path class="edge-draw" d="M 505.0 327.0 L 545.0 327.0" fill="none" stroke="#4b5563" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-2)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.59s" fill="freeze" />
+  </path>
+
+
+
+  <text x="525.0" y="313.0" class="edge-label" fill="#6b7280" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.73s" fill="freeze" />
+    next
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#4b5563" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 725.0 327.0 L 765.0 327.0" fill="none" stroke="#4b5563" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-3)" />
+  <path class="edge-draw" d="M 725.0 327.0 L 765.0 327.0" fill="none" stroke="#4b5563" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-3)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.71s" fill="freeze" />
+  </path>
+
+
+
+  <text x="745.0" y="313.0" class="edge-label" fill="#6b7280" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.85s" fill="freeze" />
+    next
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-4" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#4b5563" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 945.0 327.0 L 985.0 327.0" fill="none" stroke="#4b5563" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-4)" />
+  <path class="edge-draw" d="M 945.0 327.0 L 985.0 327.0" fill="none" stroke="#4b5563" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-4)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.83s" fill="freeze" />
+  </path>
+
+
+
+  <text x="965.0" y="313.0" class="edge-label" fill="#6b7280" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.97s" fill="freeze" />
+    next
+  </text>
+</g>
+
+<g id="node-notes" class="node motion-node" data-role="source" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.25s" fill="freeze" />
+
+
+
+  <rect x="105.0" y="285.0" width="180.0" height="84.0" rx="7.0"
+        fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4" />
+
+<g class="semantic-icon-wrap" opacity="0.94">
+
+
+  <path d="M 132.4 310.0 H 149.4 L 156.8 317.5 V 344.0 H 132.4 Z" class="semantic-icon semantic-icon-file" stroke="#0f766e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#f0fdfa" />
+  <path d="M 149.4 310.0 V 317.5 H 156.8" class="semantic-icon semantic-icon-file" stroke="#0f766e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+</g>
+
+  <text x="221.4" y="313.0" text-anchor="middle" fill="#1f2937">
+<tspan x="221.4" dy="18" class="node-title">Notes</tspan>
+<tspan x="221.4" dy="17" class="node-caption">interviews</tspan>
+</text>
+</g>
+
+<g id="node-patterns" class="node motion-node" data-role="memory" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.37s" fill="freeze" />
+
+
+
+  <rect x="325.0" y="285.0" width="180.0" height="84.0" rx="7.0"
+        fill="#f0fdf4" stroke="#15803d" stroke-width="1.4" />
+
+<g class="semantic-icon-wrap" opacity="0.94">
+
+
+  <path d="M 347.6 318.8 H 360.9 L 364.6 313.7 H 381.6 V 340.9 H 347.6 Z" class="semantic-icon semantic-icon-folder" stroke="#15803d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#f0fdf4" />
+</g>
+
+  <text x="441.4" y="313.0" text-anchor="middle" fill="#1f2937">
+<tspan x="441.4" dy="18" class="node-title">Patterns</tspan>
+<tspan x="441.4" dy="17" class="node-caption">cluster</tspan>
+</text>
+</g>
+
+<g id="node-prototype" class="node motion-node" data-role="tool" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.49s" fill="freeze" />
+
+
+
+  <rect x="545.0" y="285.0" width="180.0" height="84.0" rx="7.0"
+        fill="#eff6ff" stroke="#2563eb" stroke-width="1.4" />
+
+<g class="semantic-icon-wrap" opacity="0.94">
+
+
+  <rect x="572.4" y="314.8" width="24.5" height="24.5" rx="3.1" class="semantic-icon semantic-icon-tool" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#eff6ff" />
+  <path d="M 578.5 324.3 H 590.7" class="semantic-icon semantic-icon-tool" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M 578.5 330.7 H 590.7" class="semantic-icon semantic-icon-tool" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+</g>
+
+  <text x="661.4" y="313.0" text-anchor="middle" fill="#1f2937">
+<tspan x="661.4" dy="18" class="node-title">Prototype</tspan>
+<tspan x="661.4" dy="17" class="node-caption">try</tspan>
+</text>
+</g>
+
+<g id="node-test" class="node motion-node" data-role="agent" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.61s" fill="freeze" />
+
+
+
+  <rect x="765.0" y="285.0" width="180.0" height="84.0" rx="7.0"
+        fill="#faf5ff" stroke="#7c3aed" stroke-width="1.4" />
+
+<g class="semantic-icon-wrap" opacity="0.94">
+
+
+  <circle cx="801.9" cy="324.3" r="9.2" class="semantic-icon semantic-icon-search" stroke="#7c3aed" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#faf5ff" />
+  <path d="M 809.7 332.1 L 820.2 342.6" class="semantic-icon semantic-icon-search" stroke="#7c3aed" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+</g>
+
+  <text x="881.4" y="313.0" text-anchor="middle" fill="#1f2937">
+<tspan x="881.4" dy="18" class="node-title">Test</tspan>
+<tspan x="881.4" dy="17" class="node-caption">measure</tspan>
+</text>
+</g>
+
+<g id="node-decision" class="node motion-node" data-role="output" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.73s" fill="freeze" />
+
+
+
+  <rect x="985.0" y="285.0" width="180.0" height="84.0" rx="7.0"
+        fill="#f0fdf4" stroke="#16a34a" stroke-width="1.4" />
+
+<g class="semantic-icon-wrap" opacity="0.94">
+
+
+  <rect x="1012.4" y="314.8" width="24.5" height="24.5" rx="3.1" class="semantic-icon semantic-icon-output" stroke="#16a34a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#f0fdf4" />
+  <path d="M 1018.5 324.3 H 1030.7" class="semantic-icon semantic-icon-output" stroke="#16a34a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M 1018.5 330.7 H 1030.7" class="semantic-icon semantic-icon-output" stroke="#16a34a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+</g>
+
+  <text x="1101.4" y="313.0" text-anchor="middle" fill="#1f2937">
+<tspan x="1101.4" dy="18" class="node-title">Decision</tspan>
+<tspan x="1101.4" dy="17" class="node-caption">ship or</tspan>
+<tspan x="1101.4" dy="17" class="node-caption">stop</tspan>
+</text>
+</g>
+</svg>
+
+      </div>
+    </div>
+  </main>
+  <script>
+    const stage = document.getElementById('stage');
+    const viewer = document.getElementById('viewer');
+    const viewport = document.getElementById('viewport');
+    const svg = viewport.querySelector('svg');
+    const download = document.getElementById('download');
+    let scale = 1;
+    let x = 0;
+    let y = 0;
+    let dragging = false;
+    let lastX = 0;
+    let lastY = 0;
+    function applyTransform() {
+      viewport.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+    }
+    function setDownload() {
+      const blob = new Blob([new XMLSerializer().serializeToString(svg)], {type: 'image/svg+xml'});
+      download.href = URL.createObjectURL(blob);
+    }
+    document.getElementById('toggle').addEventListener('click', (event) => {
+      if (svg.animationsPaused && svg.animationsPaused()) {
+        svg.unpauseAnimations();
+        event.currentTarget.textContent = 'Pause';
+      } else {
+        svg.pauseAnimations();
+        event.currentTarget.textContent = 'Play';
+      }
+    });
+    document.getElementById('restart').addEventListener('click', () => {
+      svg.setCurrentTime(0);
+      svg.unpauseAnimations();
+      document.getElementById('toggle').textContent = 'Pause';
+    });
+    function setMotionMode(mode) {
+      viewer.classList.remove('motion-full', 'motion-subtle', 'motion-off');
+      viewer.classList.add(`motion-${mode}`);
+      document.querySelectorAll('.motion-choice').forEach((button) => {
+        button.setAttribute('aria-pressed', String(button.dataset.motion === mode));
+      });
+      if (mode === 'off') {
+        svg.pauseAnimations();
+        document.getElementById('toggle').textContent = 'Play';
+      } else {
+        svg.unpauseAnimations();
+        document.getElementById('toggle').textContent = 'Pause';
+      }
+    }
+    document.querySelectorAll('.motion-choice').forEach((button) => {
+      button.addEventListener('click', () => setMotionMode(button.dataset.motion));
+    });
+    document.getElementById('zoom-in').addEventListener('click', () => { scale = Math.min(3, scale + 0.15); applyTransform(); });
+    document.getElementById('zoom-out').addEventListener('click', () => { scale = Math.max(0.35, scale - 0.15); applyTransform(); });
+    document.getElementById('reset').addEventListener('click', () => { scale = 1; x = 0; y = 0; applyTransform(); });
+    stage.addEventListener('pointerdown', (event) => { dragging = true; stage.classList.add('dragging'); lastX = event.clientX; lastY = event.clientY; stage.setPointerCapture(event.pointerId); });
+    stage.addEventListener('pointermove', (event) => {
+      if (!dragging) return;
+      x += event.clientX - lastX;
+      y += event.clientY - lastY;
+      lastX = event.clientX;
+      lastY = event.clientY;
+      applyTransform();
+    });
+    stage.addEventListener('pointerup', () => { dragging = false; stage.classList.remove('dragging'); });
+    setDownload();
+    if (svg.dataset.motionProfile === 'off') {
+      setMotionMode('off');
+    } else if (svg.dataset.motionProfile === 'subtle') {
+      setMotionMode('subtle');
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const reduced = svg.dataset.motionReduced || 'subtle';
+      setMotionMode(reduced === 'pause' || reduced === 'static' ? 'off' : 'subtle');
+    }
+  </script>
+</body>
+</html>

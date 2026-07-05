@@ -1,0 +1,43 @@
+{
+  "name": "sketch-board",
+  "canvas": {
+    "background": "#f7f9fb",
+    "text": "#111827",
+    "muted": "#4b5563",
+    "grid": "#e4e9ee"
+  },
+  "title": {
+    "accent": "#0f8f7a",
+    "highlight": "#d7f2e9"
+  },
+  "node": {
+    "radius": 12,
+    "stroke_width": 2.2,
+    "fill_mode": "solid"
+  },
+  "edge": {
+    "width": 2.6,
+    "duration": "4.8s"
+  },
+  "effects": {
+    "grid_opacity": 0.62,
+    "frame_opacity": 0.72
+  },
+  "motion_defaults": {
+    "edge": {"preset": "ghost-flow", "particle": "soft-dot", "trail": "ghost"},
+    "node": {"preset": "icon-pulse", "accent": "ripple"},
+    "group": {"preset": "border-scan"},
+    "title": {"preset": "handwrite-reveal"}
+  },
+  "roles": {
+    "actor": {"stroke": "#d95f36", "fill": "#fff1e8", "text": "#111827", "glow": "#ffd7c2"},
+    "source": {"stroke": "#0f8f7a", "fill": "#e7f7f2", "text": "#111827", "glow": "#b9efe2"},
+    "process": {"stroke": "#3157d4", "fill": "#edf3ff", "text": "#111827", "glow": "#c9d7ff"},
+    "agent": {"stroke": "#7b3fd1", "fill": "#f4edff", "text": "#111827", "glow": "#dfccff"},
+    "memory": {"stroke": "#0f8a51", "fill": "#e9f8ef", "text": "#111827", "glow": "#c8efd8"},
+    "tool": {"stroke": "#a76a0a", "fill": "#fff7df", "text": "#111827", "glow": "#ffe6a3"},
+    "output": {"stroke": "#14904f", "fill": "#ecfaef", "text": "#111827", "glow": "#bff2cf"},
+    "risk": {"stroke": "#c23d63", "fill": "#fff0f4", "text": "#111827", "glow": "#ffd1dd"},
+    "neutral": {"stroke": "#64748b", "fill": "#ffffff", "text": "#111827", "glow": "#d7dde6"}
+  }
+}

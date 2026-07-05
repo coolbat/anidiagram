@@ -1,0 +1,62 @@
+{
+  "version": "0.3",
+  "preset": "teaching-transformer",
+  "canvas": {"width": 1500, "height": 940},
+  "style": "sketch-board",
+  "motion": {
+    "profile": "teaching",
+    "sequence": "staged",
+    "ease": "spring",
+    "stagger": 0.13,
+    "duration_scale": 0.95,
+    "intensity": 1.18,
+    "edge": {"preset": "ghost-flow", "particle": "soft-dot", "trail": true},
+    "node": {"preset": "icon-pulse", "accent": "ripple"},
+    "group": {"preset": "border-scan"},
+    "title": {"preset": "handwrite-reveal"},
+    "reduced_motion": "subtle"
+  },
+  "title": {
+    "text": "Transformer Teaching Flow",
+    "subtitle": "tokens, attention, alignment, and output explained as a staged animated diagram"
+  },
+  "groups": [
+    {"id": "source", "label": "Source Tokens", "bounds": [60, 165, 390, 160], "role": "source"},
+    {"id": "core", "label": "Transformer Core", "bounds": [470, 165, 640, 420], "role": "agent"},
+    {"id": "attention", "label": "Attention Block", "bounds": [375, 640, 650, 225], "role": "process"},
+    {"id": "evidence", "label": "Why It Works", "bounds": [1095, 625, 335, 250], "role": "memory"},
+    {"id": "delivery", "label": "Prediction", "bounds": [1160, 165, 270, 410], "role": "output"}
+  ],
+  "nodes": [
+    {"id": "tokens", "label": "Tokens", "caption": "input words", "position": [95, 220], "size": [150, 76], "role": "source", "icon": "token", "step": 1},
+    {"id": "embed", "label": "Embed", "caption": "meaning plus place", "position": [275, 220], "size": [150, 76], "role": "source", "icon": "file", "step": 2},
+    {"id": "encoder", "label": "Encode", "caption": "read context", "position": [520, 270], "size": [180, 86], "role": "process", "icon": "search", "step": 3},
+    {"id": "attend", "label": "Attend", "caption": "mix relations", "position": [735, 270], "size": [180, 86], "role": "agent", "icon": "agent", "step": 4},
+    {"id": "decoder", "label": "Decode", "caption": "next token", "position": [950, 270], "size": [150, 86], "role": "risk", "icon": "shield", "step": 5},
+    {"id": "aligned", "label": "Aligned?", "caption": "mask plus context", "position": [770, 460], "size": [160, 82], "role": "risk", "icon": "shield", "step": 6},
+    {"id": "softmax", "label": "Softmax", "caption": "token scores", "position": [1215, 420], "size": [150, 82], "role": "output", "icon": "token", "step": 7},
+    {"id": "query", "label": "Query", "caption": "what to find", "position": [420, 715], "size": [130, 78], "role": "source", "icon": "token"},
+    {"id": "key", "label": "Key", "caption": "what matches", "position": [575, 715], "size": [130, 78], "role": "process", "icon": "file"},
+    {"id": "value", "label": "Value", "caption": "what flows", "position": [730, 715], "size": [130, 78], "role": "memory", "icon": "database"},
+    {"id": "heads", "label": "Heads", "caption": "parallel views", "position": [885, 715], "size": [130, 78], "role": "agent", "icon": "agent"},
+    {"id": "paper", "label": "No Recurrence", "caption": "parallel path", "position": [1125, 695], "size": [140, 78], "role": "memory", "icon": "file"},
+    {"id": "long", "label": "Long Range", "caption": "direct links", "position": [1280, 695], "size": [130, 78], "role": "memory", "icon": "search"},
+    {"id": "parallel", "label": "Reusable", "caption": "shared block", "position": [1165, 785], "size": [170, 72], "role": "memory", "icon": "folder"}
+  ],
+  "edges": [
+    {"from": "tokens", "to": "encoder", "label": "read", "role": "source", "route": "points", "points": [[245, 258], [245, 320], [500, 320], [520, 313]], "effect": {"preset": "flow-dot"}, "step": 1},
+    {"from": "embed", "to": "attend", "label": "position", "role": "source", "route": "points", "points": [[425, 258], [455, 200], [735, 200], [735, 313]], "effect": {"preset": "ghost-flow"}, "step": 2},
+    {"from": "encoder", "to": "attend", "label": "context", "role": "process", "route": "straight", "effect": {"preset": "flow-arrow", "particle": "soft-arrow"}, "step": 3},
+    {"from": "attend", "to": "decoder", "label": "weighted", "role": "agent", "route": "straight", "effect": {"preset": "flow-arrow", "particle": "soft-arrow"}, "step": 4},
+    {"from": "decoder", "to": "aligned", "label": "mask", "role": "risk", "route": "points", "points": [[1025, 356], [1025, 501], [930, 501]], "effect": {"preset": "dynamic-dash"}, "step": 5},
+    {"from": "aligned", "to": "softmax", "label": "yes", "role": "output", "route": "straight", "effect": {"preset": "glow-line"}, "step": 6},
+    {"from": "query", "to": "key", "label": "match", "role": "process", "route": "straight", "effect": {"preset": "dynamic-dash"}},
+    {"from": "key", "to": "value", "label": "weight", "role": "memory", "route": "straight", "effect": {"preset": "dynamic-dash"}},
+    {"from": "value", "to": "heads", "label": "project", "role": "agent", "route": "straight", "effect": {"preset": "flow-dot"}},
+    {"from": "heads", "to": "attend", "label": "concat", "role": "agent", "route": "points", "points": [[950, 715], [950, 620], [825, 620], [825, 356]], "effect": {"preset": "ghost-flow"}},
+    {"from": "paper", "to": "encoder", "label": "no loop", "role": "memory", "route": "points", "points": [[1125, 734], [1090, 734], [1090, 600], [610, 600], [610, 356]], "effect": {"preset": "dynamic-dash"}},
+    {"from": "long", "to": "aligned", "label": "links", "role": "memory", "route": "points", "points": [[1280, 734], [1280, 660], [1050, 660], [1050, 545], [930, 501]], "effect": {"preset": "ghost-flow"}},
+    {"from": "parallel", "to": "softmax", "label": "reuse", "role": "output", "route": "points", "points": [[1250, 785], [1250, 600], [1290, 502]], "effect": {"preset": "flow-arrow", "particle": "soft-arrow"}},
+    {"from": "aligned", "to": "encoder", "label": "residual", "role": "risk", "route": "points", "points": [[770, 501], [660, 501], [660, 356]], "effect": {"preset": "dynamic-dash"}}
+  ]
+}

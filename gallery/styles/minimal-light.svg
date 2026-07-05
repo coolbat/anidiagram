@@ -1,0 +1,259 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="subtle" data-motion-sequence="step-stagger" data-motion-edge="draw" data-motion-node="fade" data-motion-group="soft-reveal" data-motion-title="fade" data-motion-reduced="subtle">
+<title id="diagram-title">Customer Support Triage</title>
+<desc id="diagram-desc">intake, classify, answer, and learn</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .edge-flow { stroke-linecap: round; }
+  .edge-draw, .edge-base { stroke-linecap: round; stroke-linejoin: round; }
+  .edge-particle { filter: url(#particle-glow); }
+  .edge-arrow-particle { filter: url(#particle-glow); }
+  .semantic-icon { fill: none; vector-effect: non-scaling-stroke; }
+  .node-glow, .node-burst { pointer-events: none; }
+  #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
+  #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
+  @keyframes titlePulse { 0%, 100% { opacity: 0.76; } 50% { opacity: 1; } }
+  @keyframes titleSlide { 0%, 100% { transform: translateX(0); opacity: 0.9; } 50% { transform: translateX(8px); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    #title-accent, #title-highlight { animation: none; }
+  }
+</style>
+<rect width="100%" height="100%" fill="#ffffff" />
+<defs>
+  <filter id="soft-glow" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="5" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <filter id="particle-glow" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="2.6" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#edf2f7" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="1224" height="668" rx="26" fill="none" stroke="#94a3b8" stroke-width="1.4" opacity="1.00" />
+<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#2563eb" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#e8f1ff" />
+
+<text id="main-title" x="90" y="84" class="title" fill="#172033" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.08s" fill="freeze" />
+  Customer Support Triage
+</text>
+<text x="74" y="126" class="subtitle" fill="#5b6778" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />
+  intake, classify, answer, and learn
+</text>
+
+<g id="group-ops" class="group" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.17s" fill="freeze" />
+  <rect x="60.0" y="250.0" width="1080.0" height="190.0" rx="22"
+        fill="#f8fafc" fill-opacity="0.34" stroke="#94a3b8" stroke-width="1.6" stroke-dasharray="9 8">
+  </rect>
+
+
+  <text x="78.0" y="280.0" class="group-label" fill="#5b6778">Support Desk</text>
+</g>
+
+<defs>
+  <marker id="arrow-1" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 270.0 377.0 L 300.0 377.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-1)" />
+  <path class="edge-draw" d="M 270.0 377.0 L 300.0 377.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-1)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.47s" fill="freeze" />
+  </path>
+
+
+
+  <text x="285.0" y="363.0" class="edge-label" fill="#5b6778" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.61s" fill="freeze" />
+    handoff
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 480.0 377.0 L 510.0 377.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-2)" />
+  <path class="edge-draw" d="M 480.0 377.0 L 510.0 377.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-2)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.59s" fill="freeze" />
+  </path>
+
+
+
+  <text x="495.0" y="363.0" class="edge-label" fill="#5b6778" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.73s" fill="freeze" />
+    handoff
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 690.0 377.0 L 720.0 377.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-3)" />
+  <path class="edge-draw" d="M 690.0 377.0 L 720.0 377.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-3)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.71s" fill="freeze" />
+  </path>
+
+
+
+  <text x="705.0" y="363.0" class="edge-label" fill="#5b6778" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.85s" fill="freeze" />
+    handoff
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-4" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 900.0 377.0 L 930.0 377.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-4)" />
+  <path class="edge-draw" d="M 900.0 377.0 L 930.0 377.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-4)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.83s" fill="freeze" />
+  </path>
+
+
+
+  <text x="915.0" y="363.0" class="edge-label" fill="#5b6778" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.97s" fill="freeze" />
+    handoff
+  </text>
+</g>
+
+<g id="node-customer" class="node motion-node" data-role="actor" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.25s" fill="freeze" />
+
+
+
+  <rect x="90.0" y="335.0" width="180.0" height="84.0" rx="14.0"
+        fill="#fff7ed" stroke="#f97316" stroke-width="2.0" />
+
+<g class="semantic-icon-wrap" opacity="0.94">
+
+
+  <polygon points="129.6,360.0 144.2,368.5 144.2,385.5 129.6,394.0 115.0,385.5 115.0,368.5" class="semantic-icon semantic-icon-agent" stroke="#f97316" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#fff7ed" />
+  <circle cx="129.6" cy="377.0" r="3.7" fill="#f97316" />
+</g>
+
+  <text x="206.4" y="363.0" text-anchor="middle" fill="#172033">
+<tspan x="206.4" dy="18" class="node-title">Customer</tspan>
+<tspan x="206.4" dy="17" class="node-caption">new request</tspan>
+</text>
+</g>
+
+<g id="node-inbox" class="node motion-node" data-role="source" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.37s" fill="freeze" />
+
+
+
+  <rect x="300.0" y="335.0" width="180.0" height="84.0" rx="14.0"
+        fill="#ecfeff" stroke="#0891b2" stroke-width="2.0" />
+
+<g class="semantic-icon-wrap" opacity="0.94">
+
+
+  <path d="M 322.6 368.8 H 335.9 L 339.6 363.7 H 356.6 V 390.9 H 322.6 Z" class="semantic-icon semantic-icon-folder" stroke="#0891b2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#ecfeff" />
+</g>
+
+  <text x="416.4" y="363.0" text-anchor="middle" fill="#172033">
+<tspan x="416.4" dy="18" class="node-title">Inbox</tspan>
+<tspan x="416.4" dy="17" class="node-caption">ticket</tspan>
+<tspan x="416.4" dy="17" class="node-caption">queue</tspan>
+</text>
+</g>
+
+<g id="node-triage" class="node motion-node" data-role="process" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.49s" fill="freeze" />
+
+
+
+  <rect x="510.0" y="335.0" width="180.0" height="84.0" rx="14.0"
+        fill="#eff6ff" stroke="#2563eb" stroke-width="2.0" />
+
+<g class="semantic-icon-wrap" opacity="0.94">
+
+
+  <circle cx="546.9" cy="374.3" r="9.2" class="semantic-icon semantic-icon-search" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#eff6ff" />
+  <path d="M 554.7 382.1 L 565.2 392.6" class="semantic-icon semantic-icon-search" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+</g>
+
+  <text x="626.4" y="363.0" text-anchor="middle" fill="#172033">
+<tspan x="626.4" dy="18" class="node-title">Triage</tspan>
+<tspan x="626.4" dy="17" class="node-caption">route issue</tspan>
+</text>
+</g>
+
+<g id="node-reply" class="node motion-node" data-role="tool" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.61s" fill="freeze" />
+
+
+
+  <rect x="720.0" y="335.0" width="180.0" height="84.0" rx="14.0"
+        fill="#fffbeb" stroke="#d97706" stroke-width="2.0" />
+
+<g class="semantic-icon-wrap" opacity="0.94">
+
+
+  <path d="M 747.4 360.0 H 764.4 L 771.8 367.5 V 394.0 H 747.4 Z" class="semantic-icon semantic-icon-file" stroke="#d97706" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#fffbeb" />
+  <path d="M 764.4 360.0 V 367.5 H 771.8" class="semantic-icon semantic-icon-file" stroke="#d97706" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+</g>
+
+  <text x="836.4" y="363.0" text-anchor="middle" fill="#172033">
+<tspan x="836.4" dy="18" class="node-title">Reply</tspan>
+<tspan x="836.4" dy="17" class="node-caption">draft</tspan>
+<tspan x="836.4" dy="17" class="node-caption">answer</tspan>
+</text>
+</g>
+
+<g id="node-learn" class="node motion-node" data-role="memory" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.73s" fill="freeze" />
+
+
+
+  <rect x="930.0" y="335.0" width="180.0" height="84.0" rx="14.0"
+        fill="#ecfdf5" stroke="#059669" stroke-width="2.0" />
+
+<g class="semantic-icon-wrap" opacity="0.94">
+
+
+  <ellipse cx="969.6" cy="366.5" rx="13.9" ry="5.8" class="semantic-icon semantic-icon-memory" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#ecfdf5" />
+  <path d="M 955.7 366.5 L 955.7 385.8
+           C 955.7 392.0, 983.5 392.0, 983.5 385.8
+           L 983.5 366.5" class="semantic-icon semantic-icon-memory" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M 955.7 377.0 C 955.7 382.8, 983.5 382.8, 983.5 377.0" class="semantic-icon semantic-icon-memory" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+</g>
+
+  <text x="1046.4" y="363.0" text-anchor="middle" fill="#172033">
+<tspan x="1046.4" dy="18" class="node-title">Learn</tspan>
+<tspan x="1046.4" dy="17" class="node-caption">update</tspan>
+<tspan x="1046.4" dy="17" class="node-caption">notes</tspan>
+</text>
+</g>
+</svg>

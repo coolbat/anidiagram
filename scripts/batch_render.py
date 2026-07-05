@@ -59,7 +59,8 @@ def write_index(outdir: Path, cards: list) -> None:
   <style>
     body {{ margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: #f8fafc; color: #111827; }}
     main {{ max-width: 1180px; margin: 0 auto; padding: 28px; }}
-    h1 {{ font-size: 32px; margin: 0 0 20px; }}
+    h1 {{ font-size: 32px; margin: 0 0 8px; }}
+    .intro {{ color: #4b5563; margin: 0 0 22px; }}
     .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }}
     article {{ border: 1px solid #e5e7eb; border-radius: 8px; background: #ffffff; overflow: hidden; }}
     img {{ display: block; width: 100%; height: auto; }}
@@ -70,6 +71,7 @@ def write_index(outdir: Path, cards: list) -> None:
 <body>
   <main>
     <h1>AniDiagram Gallery</h1>
+    <p class="intro"><a href="styles/index.html">Open the style showcase</a> for one rendered case per visual style.</p>
     <section class="grid">
 {body}
     </section>

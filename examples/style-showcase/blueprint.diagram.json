@@ -1,0 +1,211 @@
+{
+  "version": "0.3",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "style": "blueprint",
+  "title": {
+    "text": "Cloud Deployment Blueprint",
+    "subtitle": "source code becomes a monitored service"
+  },
+  "motion": {
+    "profile": "expressive",
+    "sequence": "step-stagger",
+    "ease": "spring",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 1.1,
+    "edge": {
+      "preset": "dynamic-dash",
+      "particle": "soft-dot",
+      "trail": false
+    },
+    "node": {
+      "preset": "pop",
+      "accent": "glow"
+    },
+    "group": {
+      "preset": "border-scan"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "subtle"
+  },
+  "groups": [
+    {
+      "id": "build",
+      "label": "Build Plane",
+      "bounds": [
+        60,
+        185,
+        690,
+        190
+      ],
+      "role": "process"
+    },
+    {
+      "id": "run",
+      "label": "Runtime Plane",
+      "bounds": [
+        720,
+        185,
+        420,
+        380
+      ],
+      "role": "agent"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "repo",
+      "label": "Repo",
+      "caption": "source",
+      "position": [
+        90,
+        250
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "source",
+      "icon": "folder"
+    },
+    {
+      "id": "ci",
+      "label": "CI",
+      "caption": "build",
+      "position": [
+        310,
+        250
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "tool",
+      "icon": "api"
+    },
+    {
+      "id": "artifact",
+      "label": "Artifact",
+      "caption": "versioned",
+      "position": [
+        530,
+        250
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "memory",
+      "icon": "file"
+    },
+    {
+      "id": "deploy",
+      "label": "Deploy",
+      "caption": "release",
+      "position": [
+        750,
+        250
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "process",
+      "icon": "cloud"
+    },
+    {
+      "id": "service",
+      "label": "Service",
+      "caption": "serve",
+      "position": [
+        970,
+        250
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "output",
+      "icon": "output"
+    },
+    {
+      "id": "monitor",
+      "label": "Monitor",
+      "caption": "observe",
+      "position": [
+        750,
+        455
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "agent",
+      "icon": "search"
+    }
+  ],
+  "edges": [
+    {
+      "from": "repo",
+      "to": "ci",
+      "label": "commit",
+      "role": "source",
+      "route": "straight"
+    },
+    {
+      "from": "ci",
+      "to": "artifact",
+      "label": "package",
+      "role": "tool",
+      "route": "straight"
+    },
+    {
+      "from": "artifact",
+      "to": "deploy",
+      "label": "promote",
+      "role": "memory",
+      "route": "straight"
+    },
+    {
+      "from": "deploy",
+      "to": "service",
+      "label": "ship",
+      "role": "output",
+      "route": "straight",
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "trail": false
+      }
+    },
+    {
+      "from": "service",
+      "to": "monitor",
+      "label": "metrics",
+      "role": "agent",
+      "route": "vh",
+      "effect": {
+        "preset": "dynamic-dash",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "monitor",
+      "to": "deploy",
+      "label": "rollback",
+      "role": "risk",
+      "route": "vh",
+      "effect": {
+        "preset": "ghost-flow",
+        "particle": "soft-dot",
+        "trail": true
+      }
+    }
+  ]
+}

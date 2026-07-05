@@ -9,9 +9,10 @@ from __future__ import annotations
 import html
 import math
 from dataclasses import dataclass
-from typing import Any, Dict, Iterable, List, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
-from .model import Edge, Group, Node, Scene, SceneMotion
+from .effects import channel_effect, effect_active
+from .model import Edge, EffectConfig, Group, Node, Scene, SceneMotion
 from .schema import compile_scene
 from .styles import role_style
 
@@ -63,14 +64,15 @@ def motion_delay(index: int, motion: SceneMotion, phase: str) -> float:
     return index * motion.stagger + phase_offsets.get(phase, 0.0) * 0.4
 
 
-def node_translate_values(motion: SceneMotion, index: int) -> str:
+def node_translate_values(motion: SceneMotion, index: int, mode: Optional[str] = None) -> str:
     intensity = clamp(motion.intensity, 0.0, 1.8)
-    if motion.node == "pop":
+    node_mode = mode or motion.node
+    if node_mode in {"pop", "icon-pulse"}:
         rise = 8 * intensity
         overshoot = 4 * intensity
         drift = 3 * intensity
         return f"0 {rise:.1f};0 {-overshoot:.1f};0 0;0 {-drift:.1f};0 0;0 {max(1.0, drift - 1):.1f};0 0"
-    if motion.node == "float":
+    if node_mode == "float":
         drift = 2.5 * intensity
         return f"0 0;0 {-drift:.1f};0 0;0 {drift * 0.7:.1f};0 0"
     drift = 3 * intensity
@@ -234,8 +236,75 @@ def render_step_badge(x: float, y: float, value: int, fill: str, text: str) -> s
   <text x="{x:.1f}" y="{y + 5:.1f}" class="step-label" fill="{esc(text)}" text-anchor="middle">{value}</text>"""
 
 
-def render_node_burst(box: NodeBox, role: str, stroke: str, index: int, motion: SceneMotion) -> str:
-    if role not in {"agent", "output", "risk"} or not motion_active(motion, motion.node) or motion.node not in {"glow-breathe", "pop"}:
+def render_semantic_icon(icon: Optional[str], box: NodeBox, stroke: str, fill: str, text: str, motion: SceneMotion, effect: EffectConfig, index: int) -> str:
+    if not icon:
+        return ""
+    cx = box.x + min(42, max(30, box.w * 0.22))
+    cy = box.y + box.h / 2
+    size = min(34, max(24, box.h * 0.42))
+    half = size / 2
+    delay = motion_delay(index, motion, "node") + 0.4
+    accent = ""
+    if effect_active(motion, effect) and effect.preset in {"icon-pulse", "pulse", "status-blink"}:
+        accent = f"""    <animate attributeName="opacity" values="0.52;1;0.52" dur="{seconds(scaled_duration(2.8, motion))}" begin="{seconds(delay)}" repeatCount="indefinite" />"""
+    common = f'class="semantic-icon semantic-icon-{esc(icon)}" stroke="{esc(stroke)}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"'
+    if icon in {"database", "memory"}:
+        body = f"""
+  <ellipse cx="{cx:.1f}" cy="{cy - half * 0.62:.1f}" rx="{half * 0.82:.1f}" ry="{half * 0.34:.1f}" {common} fill="{esc(fill)}" />
+  <path d="M {cx - half * 0.82:.1f} {cy - half * 0.62:.1f} L {cx - half * 0.82:.1f} {cy + half * 0.52:.1f}
+           C {cx - half * 0.82:.1f} {cy + half * 0.88:.1f}, {cx + half * 0.82:.1f} {cy + half * 0.88:.1f}, {cx + half * 0.82:.1f} {cy + half * 0.52:.1f}
+           L {cx + half * 0.82:.1f} {cy - half * 0.62:.1f}" {common} />
+  <path d="M {cx - half * 0.82:.1f} {cy:.1f} C {cx - half * 0.82:.1f} {cy + half * 0.34:.1f}, {cx + half * 0.82:.1f} {cy + half * 0.34:.1f}, {cx + half * 0.82:.1f} {cy:.1f}" {common} />"""
+    elif icon == "file":
+        body = f"""
+  <path d="M {cx - half * 0.72:.1f} {cy - half:.1f} H {cx + half * 0.28:.1f} L {cx + half * 0.72:.1f} {cy - half * 0.56:.1f} V {cy + half:.1f} H {cx - half * 0.72:.1f} Z" {common} fill="{esc(fill)}" />
+  <path d="M {cx + half * 0.28:.1f} {cy - half:.1f} V {cy - half * 0.56:.1f} H {cx + half * 0.72:.1f}" {common} />"""
+    elif icon == "folder":
+        body = f"""
+  <path d="M {cx - half:.1f} {cy - half * 0.48:.1f} H {cx - half * 0.22:.1f} L {cx:.1f} {cy - half * 0.78:.1f} H {cx + half:.1f} V {cy + half * 0.82:.1f} H {cx - half:.1f} Z" {common} fill="{esc(fill)}" />"""
+    elif icon == "api":
+        body = f"""
+  <path d="M {cx - half:.1f} {cy - half * 0.68:.1f} L {cx - half * 0.34:.1f} {cy:.1f} L {cx - half:.1f} {cy + half * 0.68:.1f}" {common} />
+  <path d="M {cx + half:.1f} {cy - half * 0.68:.1f} L {cx + half * 0.34:.1f} {cy:.1f} L {cx + half:.1f} {cy + half * 0.68:.1f}" {common} />
+  <path d="M {cx - half * 0.08:.1f} {cy + half * 0.82:.1f} L {cx + half * 0.20:.1f} {cy - half * 0.82:.1f}" {common} />"""
+    elif icon == "cloud":
+        body = f"""
+  <path d="M {cx - half:.1f} {cy + half * 0.22:.1f}
+           C {cx - half:.1f} {cy - half * 0.18:.1f}, {cx - half * 0.56:.1f} {cy - half * 0.34:.1f}, {cx - half * 0.28:.1f} {cy - half * 0.36:.1f}
+           C {cx - half * 0.12:.1f} {cy - half * 0.90:.1f}, {cx + half * 0.62:.1f} {cy - half * 0.72:.1f}, {cx + half * 0.56:.1f} {cy - half * 0.16:.1f}
+           C {cx + half * 1.08:.1f} {cy - half * 0.10:.1f}, {cx + half * 1.06:.1f} {cy + half * 0.62:.1f}, {cx + half * 0.54:.1f} {cy + half * 0.62:.1f}
+           H {cx - half * 0.72:.1f}" {common} fill="{esc(fill)}" />"""
+    elif icon == "search":
+        body = f"""
+  <circle cx="{cx - half * 0.16:.1f}" cy="{cy - half * 0.16:.1f}" r="{half * 0.54:.1f}" {common} fill="{esc(fill)}" />
+  <path d="M {cx + half * 0.30:.1f} {cy + half * 0.30:.1f} L {cx + half * 0.92:.1f} {cy + half * 0.92:.1f}" {common} />"""
+    elif icon == "shield":
+        body = f"""
+  <path d="M {cx:.1f} {cy - half:.1f} L {cx + half * 0.86:.1f} {cy - half * 0.58:.1f} V {cy + half * 0.10:.1f}
+           C {cx + half * 0.86:.1f} {cy + half * 0.66:.1f}, {cx + half * 0.34:.1f} {cy + half * 0.92:.1f}, {cx:.1f} {cy + half:.1f}
+           C {cx - half * 0.34:.1f} {cy + half * 0.92:.1f}, {cx - half * 0.86:.1f} {cy + half * 0.66:.1f}, {cx - half * 0.86:.1f} {cy + half * 0.10:.1f}
+           V {cy - half * 0.58:.1f} Z" {common} fill="{esc(fill)}" />
+  <path d="M {cx - half * 0.34:.1f} {cy:.1f} L {cx - half * 0.06:.1f} {cy + half * 0.30:.1f} L {cx + half * 0.42:.1f} {cy - half * 0.38:.1f}" {common} />"""
+    elif icon == "agent":
+        body = f"""
+  <polygon points="{cx:.1f},{cy - half:.1f} {cx + half * 0.86:.1f},{cy - half * 0.50:.1f} {cx + half * 0.86:.1f},{cy + half * 0.50:.1f} {cx:.1f},{cy + half:.1f} {cx - half * 0.86:.1f},{cy + half * 0.50:.1f} {cx - half * 0.86:.1f},{cy - half * 0.50:.1f}" {common} fill="{esc(fill)}" />
+  <circle cx="{cx:.1f}" cy="{cy:.1f}" r="{half * 0.22:.1f}" fill="{esc(stroke)}" />"""
+    else:
+        body = f"""
+  <rect x="{cx - half * 0.72:.1f}" y="{cy - half * 0.72:.1f}" width="{half * 1.44:.1f}" height="{half * 1.44:.1f}" rx="{half * 0.18:.1f}" {common} fill="{esc(fill)}" />
+  <path d="M {cx - half * 0.36:.1f} {cy - half * 0.16:.1f} H {cx + half * 0.36:.1f}" {common} />
+  <path d="M {cx - half * 0.36:.1f} {cy + half * 0.22:.1f} H {cx + half * 0.36:.1f}" {common} />"""
+    return f"""
+<g class="semantic-icon-wrap" opacity="0.94">
+{accent}
+{body}
+</g>"""
+
+
+def render_node_burst(box: NodeBox, role: str, stroke: str, index: int, motion: SceneMotion, effect: EffectConfig) -> str:
+    if role not in {"agent", "output", "risk"} and effect.accent != "ripple":
+        return ""
+    if not effect_active(motion, effect) or effect.preset not in {"glow-breathe", "pop", "ripple", "icon-pulse"}:
         return ""
     cx, cy = box.center
     intensity = clamp(motion.intensity, 0.2, 1.8)
@@ -308,6 +377,8 @@ def render_node_surface(
 
 def render_node(node: Node, style: Dict[str, Any], index: int, motion: SceneMotion) -> str:
     box = node_box(node)
+    node_effect = channel_effect(motion, style, "node", node.effect)
+    node_mode = node_effect.preset
     role = role_style(style, node.role)
     radius = float(node.radius if node.radius is not None else style.get("node", {}).get("radius", 14))
     stroke_width = float(
@@ -319,22 +390,28 @@ def render_node(node: Node, style: Dict[str, Any], index: int, motion: SceneMoti
     label = node.label
     caption = node.caption
     content_y = box.y + max(26, box.h / 2 - 14)
+    text_x = box.x + 12
+    text_width = box.w - 24
+    if node.icon:
+        text_x = box.x + min(68, max(54, box.w * 0.36))
+        text_width = max(42, box.w - (text_x - box.x) - 12)
     badge = ""
     if node.step is not None:
         badge = render_step_badge(box.x + 18, box.y + 18, node.step, stroke, fill)
     delay = motion_delay(index, motion, "node")
     float_duration = scaled_duration(5.4 + (index % 3) * 0.45, motion)
-    burst = render_node_burst(box, node.role, stroke, index, motion)
+    burst = render_node_burst(box, node.role, stroke, index, motion, node_effect)
+    icon = render_semantic_icon(node.icon, box, stroke, fill, text, motion, node_effect, index)
     enter_markup = ""
     float_markup = ""
     glow_markup = ""
-    if motion_active(motion, motion.node):
+    if effect_active(motion, node_effect):
         enter_markup = f'  <animate attributeName="opacity" values="0;1" dur="{seconds(scaled_duration(0.55, motion))}" begin="{seconds(delay)}" fill="freeze" />'
-        if motion.node in {"float", "glow-breathe", "pop"}:
+        if node_mode in {"float", "glow-breathe", "pop", "icon-pulse", "pulse", "ripple"}:
             float_markup = f"""  <animateTransform attributeName="transform" type="translate"
-        values="{node_translate_values(motion, index)}" dur="{seconds(float_duration)}" begin="{seconds(delay + 0.7)}"
+        values="{node_translate_values(motion, index, node_mode)}" dur="{seconds(float_duration)}" begin="{seconds(delay + 0.7)}"
         repeatCount="indefinite" additive="sum" />"""
-        if motion.node in {"glow-breathe", "pop"}:
+        if node_mode in {"glow-breathe", "pop", "pulse", "icon-pulse", "ripple", "status-blink"}:
             glow_opacity = 0.24 * clamp(motion.intensity, 0.25, 1.7)
             glow_markup = f"""  <rect class="node-glow" x="{box.x - 4:.1f}" y="{box.y - 4:.1f}" width="{box.w + 8:.1f}" height="{box.h + 8:.1f}" rx="{radius + 4:.1f}"
         fill="none" stroke="{esc(stroke)}" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
@@ -350,13 +427,16 @@ def render_node(node: Node, style: Dict[str, Any], index: int, motion: SceneMoti
 {burst}
 {glow_markup}
 {render_node_surface(node, box, radius, fill, stroke, stroke_width, style, index)}
+{icon}
 {badge}
-  {render_text_block(box.x + 12, content_y, box.w - 24, label, caption, text)}
+  {render_text_block(text_x, content_y, text_width, label, caption, text)}
 </g>"""
 
 
 def render_group(group: Group, style: Dict[str, Any], index: int, motion: SceneMotion) -> str:
     x, y, w, h = group.bounds
+    group_effect = channel_effect(motion, style, "group", group.effect)
+    group_mode = group_effect.preset
     role = role_style(style, group.role)
     stroke = group.stroke or role.get("stroke", "#94a3b8")
     fill = group.fill or role.get("fill", "none")
@@ -365,17 +445,38 @@ def render_group(group: Group, style: Dict[str, Any], index: int, motion: SceneM
     delay = motion_delay(index, motion, "group")
     enter_markup = '<set attributeName="opacity" to="1" />'
     dash_markup = ""
-    if motion_active(motion, motion.group):
+    scan_markup = ""
+    corner_markup = ""
+    if effect_active(motion, group_effect):
         enter_markup = f'<animate attributeName="opacity" values="0;1" dur="{seconds(scaled_duration(0.7, motion))}" begin="{seconds(delay)}" fill="freeze" />'
-        if motion.group == "marching-ants":
+        if group_mode in {"marching-ants", "border-scan"}:
             dash_markup = f'<animate attributeName="stroke-dashoffset" values="0;-34" dur="{seconds(scaled_duration(5.2 + index * 0.4, motion))}" begin="{seconds(delay)}" repeatCount="indefinite" />'
+        if group_mode == "border-scan":
+            scan_markup = f"""
+  <rect class="group-border-scan" x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="22"
+        fill="none" stroke="{esc(stroke)}" stroke-width="3.4" stroke-linecap="round"
+        stroke-dasharray="{max(80, min(180, (w + h) * 0.12)):.1f} {max(260, (w + h) * 0.7):.1f}" opacity="0.72" filter="url(#soft-glow)">
+    <animate attributeName="stroke-dashoffset" values="0;-{2 * (w + h):.1f}" dur="{seconds(scaled_duration(6.8 + index * 0.35, motion))}" begin="{seconds(delay + 0.1)}" repeatCount="indefinite" />
+  </rect>"""
+        if group_mode == "corner-pulse":
+            line = max(24, min(54, min(w, h) * 0.16))
+            corner_markup = f"""
+  <path class="group-corner-pulse" d="M {x:.1f} {y + line:.1f} V {y:.1f} H {x + line:.1f}
+       M {x + w - line:.1f} {y:.1f} H {x + w:.1f} V {y + line:.1f}
+       M {x + w:.1f} {y + h - line:.1f} V {y + h:.1f} H {x + w - line:.1f}
+       M {x + line:.1f} {y + h:.1f} H {x:.1f} V {y + h - line:.1f}"
+       fill="none" stroke="{esc(stroke)}" stroke-width="4" stroke-linecap="round" opacity="0.28">
+    <animate attributeName="opacity" values="0.22;0.86;0.22" dur="{seconds(scaled_duration(3.2, motion))}" begin="{seconds(delay + 0.25)}" repeatCount="indefinite" />
+  </path>"""
+    dash_line = f"    {dash_markup}\n" if dash_markup else ""
     return f"""
 <g id="group-{esc(group.group_id)}" class="group" opacity="0">
   {enter_markup}
   <rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="22"
         fill="{esc(fill)}" fill-opacity="0.34" stroke="{esc(stroke)}" stroke-width="1.6" stroke-dasharray="9 8">
-    {dash_markup}
-  </rect>
+{dash_line}  </rect>
+{scan_markup}
+{corner_markup}
   <text x="{x + 18:.1f}" y="{y + 30:.1f}" class="group-label" fill="{esc(muted)}">{esc(label)}</text>
 </g>"""
 
@@ -435,6 +536,7 @@ def edge_path(edge: Edge, nodes: Dict[str, NodeBox]) -> str:
 def render_edge(edge: Edge, nodes: Dict[str, NodeBox], style: Dict[str, Any], index: int, motion: SceneMotion) -> str:
     start, end = edge_points(edge, nodes)
     path = edge_path(edge, nodes)
+    edge_effect = channel_effect(motion, style, "edge", edge.effect)
     role = role_style(style, edge.role)
     stroke = edge.stroke or role.get("stroke", "#64748b")
     width = float(edge.width if edge.width is not None else style.get("edge", {}).get("width", 2.4))
@@ -451,42 +553,57 @@ def render_edge(edge: Edge, nodes: Dict[str, NodeBox], style: Dict[str, Any], in
     badge = ""
     if edge.step is not None:
         badge = render_step_badge(mid_x - 22, mid_y - 5, edge.step, stroke, "#ffffff")
-    edge_mode = motion.edge if edge.motion.enabled else "none"
-    edge_is_active = motion_active(motion, edge_mode)
+    edge_mode = edge_effect.preset if edge.motion.enabled else "none"
+    edge_is_active = effect_active(motion, edge_effect) and edge.motion.enabled
     draw_markup = f"""  <path class="edge-draw" d="{path}" fill="none" stroke="{esc(stroke)}" stroke-width="{width:.1f}" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#{marker_id})" />"""
     flow_markup = ""
     motion_markup = ""
-    if edge_is_active and edge_mode in {"draw", "pulse", "trace", "comet-flow"}:
+    if edge_is_active and edge_mode in {"draw", "pulse", "trace", "comet-flow", "dynamic-dash", "flow-dot", "flow-arrow", "ghost-flow", "glow-line", "comet"}:
         draw_markup = f"""  <path class="edge-draw" d="{path}" fill="none" stroke="{esc(stroke)}" stroke-width="{width:.1f}" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#{marker_id})">
     <animate attributeName="stroke-dashoffset" values="1;0" dur="{seconds(scaled_duration(0.9, motion))}" begin="{seconds(draw_begin)}" fill="freeze" />
   </path>"""
-    if edge_is_active and edge_mode in {"pulse", "trace", "comet-flow"}:
-        dash = "4 22" if edge_mode == "trace" else "9 18"
-        opacity = 0.42 if edge_mode == "trace" else 0.55
+    if edge_is_active and edge_mode in {"pulse", "trace", "comet-flow", "dynamic-dash", "ghost-flow", "glow-line", "comet"}:
+        dash = "4 22" if edge_mode == "trace" else "8 12" if edge_mode == "dynamic-dash" else "2 18" if edge_mode == "ghost-flow" else "9 18"
+        opacity = 0.42 if edge_mode == "trace" else 0.38 if edge_mode == "ghost-flow" else 0.55
+        flow_width = max(1, width * (1.8 if edge_mode == "glow-line" else 0.72))
+        glow_filter = ' filter="url(#soft-glow)"' if edge_mode == "glow-line" else ""
         flow_markup = f"""  <path class="edge-flow edge-flow-{esc(edge_mode)}" d="{path}" fill="none" stroke="{esc(stroke)}" stroke-width="{max(1, width * 0.72):.1f}"
-        stroke-dasharray="{dash}" opacity="{opacity:.2f}">
+        stroke-dasharray="{dash}" opacity="{opacity:.2f}"{glow_filter}>
     <animate attributeName="stroke-dashoffset" values="0;-54" dur="{seconds(scaled_duration(max(1.8, duration_value * 0.72), motion))}" begin="{seconds(draw_begin + 0.2)}" repeatCount="indefinite" />
     <animate attributeName="opacity" values="{opacity * 0.45:.2f};{opacity:.2f};{opacity * 0.45:.2f}" dur="{seconds(scaled_duration(max(1.8, duration_value * 0.72), motion))}" begin="{seconds(draw_begin + 0.2)}" repeatCount="indefinite" />
   </path>"""
-    if edge_is_active and edge_mode == "comet-flow":
+        if edge_mode == "glow-line":
+            flow_markup = flow_markup.replace(f'stroke-width="{max(1, width * 0.72):.1f}"', f'stroke-width="{flow_width:.1f}"')
+    if edge_is_active and edge_mode in {"comet-flow", "comet", "flow-dot", "flow-arrow", "ghost-flow"}:
         particles = []
         intensity = clamp(motion.intensity, 0.25, 1.8)
-        for particle_index, radius in enumerate((5.5, 3.5, 2.4)):
+        particle_shape = edge_effect.particle or ("soft-arrow" if edge_mode == "flow-arrow" else "soft-dot")
+        radii = (5.5, 3.5, 2.4, 1.8) if edge_mode == "ghost-flow" else (6.0, 3.8) if edge_mode == "flow-dot" else (5.5, 3.5, 2.4)
+        for particle_index, radius in enumerate(radii):
             begin = index * 0.32 + edge.motion.delay + particle_index * (duration_value / 3)
             opacity = 0.92 - particle_index * 0.18
-            particles.append(
-                f"""  <circle class="edge-particle" r="{radius * intensity:.1f}" fill="{esc(stroke)}" opacity="{opacity:.2f}">
+            if particle_shape == "soft-arrow":
+                particles.append(
+                    f"""  <path class="edge-particle edge-arrow-particle" d="M {-8 * intensity:.1f} {-4.8 * intensity:.1f} L {8 * intensity:.1f} 0 L {-8 * intensity:.1f} {4.8 * intensity:.1f} Z" fill="{esc(stroke)}" opacity="{opacity:.2f}">
+    <animateMotion dur="{seconds(scaled_duration(duration_value, motion))}" repeatCount="indefinite" path="{path}" begin="{seconds(begin)}" rotate="auto" />
+    <animate attributeName="opacity" values="0;{opacity:.2f};0" dur="{seconds(scaled_duration(duration_value, motion))}" begin="{seconds(begin)}" repeatCount="indefinite" />
+  </path>"""
+                )
+            else:
+                particles.append(
+                    f"""  <circle class="edge-particle" r="{radius * intensity:.1f}" fill="{esc(stroke)}" opacity="{opacity:.2f}">
     <animateMotion dur="{seconds(scaled_duration(duration_value, motion))}" repeatCount="indefinite" path="{path}" begin="{seconds(begin)}" />
     <animate attributeName="opacity" values="0;{opacity:.2f};0" dur="{seconds(scaled_duration(duration_value, motion))}" begin="{seconds(begin)}" repeatCount="indefinite" />
   </circle>"""
-            )
+                )
         motion_markup = "\n".join(particles)
     label_opacity = "1" if not edge_is_active else "0"
     label_motion = ""
     if edge_is_active:
         label_motion = f'<animate attributeName="opacity" values="0;1" dur="{seconds(scaled_duration(0.45, motion))}" begin="{seconds(motion_delay(index, motion, "label") + edge.motion.delay)}" fill="freeze" />'
+    label_motion_line = f"    {label_motion}\n" if label_motion else ""
     return f"""
 <defs>
   <marker id="{marker_id}" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
@@ -500,8 +617,7 @@ def render_edge(edge: Edge, nodes: Dict[str, NodeBox], style: Dict[str, Any], in
 {motion_markup}
 {badge}
   <text x="{mid_x:.1f}" y="{mid_y:.1f}" class="edge-label" fill="{esc(style.get("canvas", {}).get("muted", "#5b6778"))}" opacity="{label_opacity}">
-    {label_motion}
-    {esc(label)}
+{label_motion_line}    {esc(label)}
   </text>
 </g>"""
 
@@ -520,6 +636,7 @@ def render_svg(spec: Any, style: Dict[str, Any]) -> str:
     subtitle = scene.title.subtitle
     nodes = {node.node_id: node_box(node) for node in scene.nodes}
     motion = scene.motion
+    title_effect = channel_effect(motion, style, "title")
 
     groups_markup = "\n".join(render_group(group, style, index, motion) for index, group in enumerate(scene.groups, start=1))
     edges_markup = "\n".join(render_edge(edge, nodes, style, index, motion) for index, edge in enumerate(scene.edges, start=1))
@@ -532,8 +649,21 @@ def render_svg(spec: Any, style: Dict[str, Any]) -> str:
     title_text_opacity = "1" if motion.profile == "off" else "0"
     title_text_anim = "" if motion.profile == "off" else '<animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.08s" fill="freeze" />'
     subtitle_anim = "" if motion.profile == "off" else '<animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />'
+    title_motion_markup = ""
+    if effect_active(motion, title_effect) and title_effect.preset in {"handwrite-reveal", "highlight-sweep"}:
+        title_motion_markup = f"""
+<path class="title-handwrite" d="M 92 98 C 188 108, 310 100, 428 104" fill="none"
+      stroke="{esc(title_style.get("accent", "#2563eb"))}" stroke-width="4" stroke-linecap="round"
+      pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0.78">
+  <animate attributeName="stroke-dashoffset" values="1;0" dur="{seconds(scaled_duration(1.35, motion))}" begin="0.18s" fill="freeze" />
+  <animate attributeName="opacity" values="0;0.78;0.42" dur="{seconds(scaled_duration(2.4, motion))}" begin="0.18s" fill="freeze" />
+</path>
+<rect class="title-sweep" x="72" y="46" width="0" height="56" rx="16" fill="{esc(title_style.get("accent", "#2563eb"))}" opacity="0.16">
+  <animate attributeName="width" values="0;360;0" dur="{seconds(scaled_duration(3.2, motion))}" begin="0.34s" repeatCount="indefinite" />
+  <animate attributeName="x" values="72;72;432" dur="{seconds(scaled_duration(3.2, motion))}" begin="0.34s" repeatCount="indefinite" />
+</rect>"""
 
-    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="{esc(motion.profile)}" data-motion-sequence="{esc(motion.sequence)}" data-motion-edge="{esc(motion.edge)}" data-motion-node="{esc(motion.node)}" data-motion-group="{esc(motion.group)}" data-motion-reduced="{esc(motion.reduced_motion)}">
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="{esc(motion.profile)}" data-motion-sequence="{esc(motion.sequence)}" data-motion-edge="{esc(motion.edge)}" data-motion-node="{esc(motion.node)}" data-motion-group="{esc(motion.group)}" data-motion-title="{esc(title_effect.preset)}" data-motion-reduced="{esc(motion.reduced_motion)}">
 <title id="diagram-title">{esc(title_text)}</title>
 <desc id="diagram-desc">{esc(subtitle)}</desc>
 <style>
@@ -547,6 +677,8 @@ def render_svg(spec: Any, style: Dict[str, Any]) -> str:
   .edge-flow {{ stroke-linecap: round; }}
   .edge-draw, .edge-base {{ stroke-linecap: round; stroke-linejoin: round; }}
   .edge-particle {{ filter: url(#particle-glow); }}
+  .edge-arrow-particle {{ filter: url(#particle-glow); }}
+  .semantic-icon {{ fill: none; vector-effect: non-scaling-stroke; }}
   .node-glow, .node-burst {{ pointer-events: none; }}
   #title-accent {{ transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }}
   #title-highlight {{ transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }}
@@ -562,6 +694,7 @@ def render_svg(spec: Any, style: Dict[str, Any]) -> str:
 <rect x="28" y="26" width="{width - 56}" height="{height - 52}" rx="26" fill="none" stroke="{esc(style.get("roles", {}).get("neutral", {}).get("stroke", "#94a3b8"))}" stroke-width="1.4" opacity="{frame_opacity:.2f}" />
 <rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="{esc(title_style.get("accent", "#2563eb"))}"{title_style_attr} />
 <rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="{esc(title_style.get("highlight", "#e8f1ff"))}"{title_style_attr} />
+{title_motion_markup}
 <text id="main-title" x="90" y="84" class="title" fill="{esc(text)}" opacity="{title_text_opacity}">
   {title_text_anim}
   {esc(title_text)}

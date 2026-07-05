@@ -35,6 +35,17 @@ class Motion:
 
 
 @dataclass(frozen=True)
+class EffectConfig:
+    preset: str = "none"
+    line: Optional[str] = None
+    particle: Optional[str] = None
+    trail: Optional[str] = None
+    entry: Optional[str] = None
+    accent: Optional[str] = None
+    icon: Optional[str] = None
+
+
+@dataclass(frozen=True)
 class SceneMotion:
     profile: str = "normal"
     sequence: str = "step-stagger"
@@ -46,6 +57,10 @@ class SceneMotion:
     edge: str = "comet-flow"
     group: str = "marching-ants"
     reduced_motion: str = "subtle"
+    edge_effect: EffectConfig = field(default_factory=lambda: EffectConfig("comet-flow"))
+    node_effect: EffectConfig = field(default_factory=lambda: EffectConfig("glow-breathe"))
+    group_effect: EffectConfig = field(default_factory=lambda: EffectConfig("marching-ants"))
+    title_effect: EffectConfig = field(default_factory=lambda: EffectConfig("fade"))
 
 
 @dataclass(frozen=True)
@@ -61,6 +76,8 @@ class Node:
     fill: Optional[str] = None
     stroke: Optional[str] = None
     stroke_width: Optional[float] = None
+    icon: Optional[str] = None
+    effect: EffectConfig = field(default_factory=EffectConfig)
 
 
 @dataclass(frozen=True)
@@ -75,6 +92,7 @@ class Edge:
     stroke: Optional[str] = None
     width: Optional[float] = None
     motion: Motion = field(default_factory=Motion)
+    effect: EffectConfig = field(default_factory=EffectConfig)
 
 
 @dataclass(frozen=True)
@@ -85,6 +103,7 @@ class Group:
     role: str = "neutral"
     fill: Optional[str] = None
     stroke: Optional[str] = None
+    effect: EffectConfig = field(default_factory=EffectConfig)
 
 
 @dataclass(frozen=True)

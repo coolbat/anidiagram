@@ -1,7 +1,30 @@
 # Changelog
 
+## 2026-07-05
+
+- Added DiagramScript v0.3 support for structured motion effect objects.
+- Added the first motion effect registry layer for edge, node, group, and title
+  channels while preserving legacy string motion values.
+- Added semantic node icons and per-element `effect` overrides for nodes, edges,
+  and groups.
+- Added edge presets for dynamic dashes, flow dots, flow arrows, ghost flow, and
+  glow lines.
+- Added group border-scan motion and title handwrite/highlight reveal.
+- Added the `teaching` motion profile and `sketch-board` style profile.
+- Added the clean-room `teaching-transformer` example and v0.3 schema file.
+- Added a motion effects feature plan covering edge, node, group, title, and
+  semantic icon effect presets.
+- Documented clean-room compatibility rules for richer teaching-diagram motion
+  targets, including style-token based motion and raster/video fallbacks.
+- Linked the motion effects plan from README and DiagramScript docs.
+- Expanded the GitHub README with complete style, layout preset, routing, and
+  motion effect reference tables.
+- Added a generated style showcase with one clean-room DiagramScript case,
+  SVG preview, HTML viewer, and quality report for every bundled visual style.
+
 ## 2026-07-04
 
+- Fixed raster animation exports so GIF, WebP, APNG, and MP4 frames render visible moving edge particles instead of static duplicate frames.
 - Added AniDiagram-native motion profiles inspired by timeline/stagger animation systems: `off`, `subtle`, `normal`, and `expressive`.
 - Added scene-level motion controls for sequencing, easing labels, stagger, duration scale, intensity, node motion, edge motion, group motion, and reduced-motion policy.
 - Added HTML viewer controls for full/subtle/off motion intensity.

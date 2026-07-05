@@ -1,0 +1,665 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="expressive" data-motion-sequence="step-stagger" data-motion-edge="ghost-flow" data-motion-node="icon-pulse" data-motion-group="border-scan" data-motion-title="highlight-sweep" data-motion-reduced="subtle">
+<title id="diagram-title">Creative Agent Studio</title>
+<desc id="diagram-desc">briefs become variants, reviews, and publishable assets</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .edge-flow { stroke-linecap: round; }
+  .edge-draw, .edge-base { stroke-linecap: round; stroke-linejoin: round; }
+  .edge-particle { filter: url(#particle-glow); }
+  .edge-arrow-particle { filter: url(#particle-glow); }
+  .semantic-icon { fill: none; vector-effect: non-scaling-stroke; }
+  .node-glow, .node-burst { pointer-events: none; }
+  #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
+  #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
+  @keyframes titlePulse { 0%, 100% { opacity: 0.76; } 50% { opacity: 1; } }
+  @keyframes titleSlide { 0%, 100% { transform: translateX(0); opacity: 0.9; } 50% { transform: translateX(8px); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    #title-accent, #title-highlight { animation: none; }
+  }
+</style>
+<rect width="100%" height="100%" fill="#ffffff" />
+<defs>
+  <filter id="soft-glow" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="5" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <filter id="particle-glow" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="2.6" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#f2eef3" stroke-width="1" />
+  </pattern>
+  <filter id="aurora-blur" x="-35%" y="-35%" width="170%" height="170%">
+    <feGaussianBlur stdDeviation="12" />
+  </filter>
+  <filter id="grain-texture" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.92" numOctaves="2" seed="11" result="noise" />
+    <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0.18 0 0 0 0 0.16 0 0 0 0 0.14 0 0 0 0.42 0" />
+  </filter>
+  <linearGradient id="aurora-node-actor" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffc18f" />
+      <stop offset="50%" stop-color="#ff6f66" />
+      <stop offset="100%" stop-color="#6b45a2" />
+  </linearGradient>
+  <linearGradient id="aurora-node-source" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#b7fff0" />
+      <stop offset="50%" stop-color="#3e8dff" />
+      <stop offset="100%" stop-color="#20207a" />
+  </linearGradient>
+  <linearGradient id="aurora-node-process" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fffed2" />
+      <stop offset="50%" stop-color="#b8f7d5" />
+      <stop offset="100%" stop-color="#2d83e6" />
+  </linearGradient>
+  <linearGradient id="aurora-node-agent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#151947" />
+      <stop offset="50%" stop-color="#ff79a8" />
+      <stop offset="100%" stop-color="#ffe8ce" />
+  </linearGradient>
+  <linearGradient id="aurora-node-memory" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffd75d" />
+      <stop offset="50%" stop-color="#a8cf55" />
+      <stop offset="100%" stop-color="#086b3a" />
+  </linearGradient>
+  <linearGradient id="aurora-node-tool" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#dfffee" />
+      <stop offset="50%" stop-color="#8fc3ff" />
+      <stop offset="100%" stop-color="#5047d9" />
+  </linearGradient>
+  <linearGradient id="aurora-node-output" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff19a" />
+      <stop offset="50%" stop-color="#b9e06b" />
+      <stop offset="100%" stop-color="#087a41" />
+  </linearGradient>
+  <linearGradient id="aurora-node-risk" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#24194f" />
+      <stop offset="50%" stop-color="#ff6d9a" />
+      <stop offset="100%" stop-color="#ffe1bd" />
+  </linearGradient>
+  <linearGradient id="aurora-node-neutral" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="50%" stop-color="#f4edf8" />
+      <stop offset="100%" stop-color="#ded6e6" />
+  </linearGradient>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.14" />
+<rect x="28" y="26" width="1224" height="668" rx="26" fill="none" stroke="#ddd4df" stroke-width="1.4" opacity="0.18" />
+<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#ff7f6e" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#fff7f1" />
+
+<path class="title-handwrite" d="M 92 98 C 188 108, 310 100, 428 104" fill="none"
+      stroke="#ff7f6e" stroke-width="4" stroke-linecap="round"
+      pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0.78">
+  <animate attributeName="stroke-dashoffset" values="1;0" dur="1.35s" begin="0.18s" fill="freeze" />
+  <animate attributeName="opacity" values="0;0.78;0.42" dur="2.40s" begin="0.18s" fill="freeze" />
+</path>
+<rect class="title-sweep" x="72" y="46" width="0" height="56" rx="16" fill="#ff7f6e" opacity="0.16">
+  <animate attributeName="width" values="0;360;0" dur="3.20s" begin="0.34s" repeatCount="indefinite" />
+  <animate attributeName="x" values="72;72;432" dur="3.20s" begin="0.34s" repeatCount="indefinite" />
+</rect>
+<text id="main-title" x="90" y="84" class="title" fill="#1c1721" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.08s" fill="freeze" />
+  Creative Agent Studio
+</text>
+<text x="74" y="126" class="subtitle" fill="#6f6877" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />
+  briefs become variants, reviews, and publishable assets
+</text>
+
+<g id="group-studio" class="group" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.17s" fill="freeze" />
+  <rect x="55.0" y="145.0" width="1090.0" height="420.0" rx="22"
+        fill="#fff0f6" fill-opacity="0.34" stroke="#ee5a90" stroke-width="1.6" stroke-dasharray="9 8">
+    <animate attributeName="stroke-dashoffset" values="0;-34" dur="5.60s" begin="0.17s" repeatCount="indefinite" />
+  </rect>
+
+  <rect class="group-border-scan" x="55.0" y="145.0" width="1090.0" height="420.0" rx="22"
+        fill="none" stroke="#ee5a90" stroke-width="3.4" stroke-linecap="round"
+        stroke-dasharray="180.0 1057.0" opacity="0.72" filter="url(#soft-glow)">
+    <animate attributeName="stroke-dashoffset" values="0;-3020.0" dur="7.15s" begin="0.27s" repeatCount="indefinite" />
+  </rect>
+
+  <text x="73.0" y="175.0" class="group-label" fill="#6f6877">Studio Canvas</text>
+</g>
+
+<defs>
+  <marker id="arrow-1" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#ff7a66" />
+  </marker>
+</defs>
+<g class="edge" data-role="actor">
+  <path class="edge-base" d="M 270.0 357.0 L 520.0 361.0" fill="none" stroke="#ff7a66" stroke-width="1.5" opacity="0.24" marker-end="url(#arrow-1)" />
+  <path class="edge-draw" d="M 270.0 357.0 L 520.0 361.0" fill="none" stroke="#ff7a66" stroke-width="2.2" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-1)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.47s" fill="freeze" />
+  </path>
+  <path class="edge-flow edge-flow-ghost-flow" d="M 270.0 357.0 L 520.0 361.0" fill="none" stroke="#ff7a66" stroke-width="1.6"
+        stroke-dasharray="2 18" opacity="0.38">
+    <animate attributeName="stroke-dashoffset" values="0;-54" dur="4.18s" begin="0.67s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.17;0.38;0.17" dur="4.18s" begin="0.67s" repeatCount="indefinite" />
+  </path>
+  <circle class="edge-particle" r="6.6" fill="#ff7a66" opacity="0.92">
+    <animateMotion dur="5.80s" repeatCount="indefinite" path="M 270.0 357.0 L 520.0 361.0" begin="0.32s" />
+    <animate attributeName="opacity" values="0;0.92;0" dur="5.80s" begin="0.32s" repeatCount="indefinite" />
+  </circle>
+  <circle class="edge-particle" r="4.2" fill="#ff7a66" opacity="0.74">
+    <animateMotion dur="5.80s" repeatCount="indefinite" path="M 270.0 357.0 L 520.0 361.0" begin="2.25s" />
+    <animate attributeName="opacity" values="0;0.74;0" dur="5.80s" begin="2.25s" repeatCount="indefinite" />
+  </circle>
+  <circle class="edge-particle" r="2.9" fill="#ff7a66" opacity="0.56">
+    <animateMotion dur="5.80s" repeatCount="indefinite" path="M 270.0 357.0 L 520.0 361.0" begin="4.19s" />
+    <animate attributeName="opacity" values="0;0.56;0" dur="5.80s" begin="4.19s" repeatCount="indefinite" />
+  </circle>
+  <circle class="edge-particle" r="2.2" fill="#ff7a66" opacity="0.38">
+    <animateMotion dur="5.80s" repeatCount="indefinite" path="M 270.0 357.0 L 520.0 361.0" begin="6.12s" />
+    <animate attributeName="opacity" values="0;0.38;0" dur="5.80s" begin="6.12s" repeatCount="indefinite" />
+  </circle>
+
+  <text x="395.0" y="345.0" class="edge-label" fill="#6f6877" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.61s" fill="freeze" />
+    intent
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#2468ff" />
+  </marker>
+</defs>
+<g class="edge" data-role="source">
+  <path class="edge-base" d="M 485.0 252.0 L 485.0 306.5 L 520.0 306.5 L 520.0 361.0" fill="none" stroke="#2468ff" stroke-width="1.5" opacity="0.24" marker-end="url(#arrow-2)" />
+  <path class="edge-draw" d="M 485.0 252.0 L 485.0 306.5 L 520.0 306.5 L 520.0 361.0" fill="none" stroke="#2468ff" stroke-width="2.2" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-2)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.59s" fill="freeze" />
+  </path>
+  <path class="edge-flow edge-flow-ghost-flow" d="M 485.0 252.0 L 485.0 306.5 L 520.0 306.5 L 520.0 361.0" fill="none" stroke="#2468ff" stroke-width="1.6"
+        stroke-dasharray="2 18" opacity="0.38">
+    <animate attributeName="stroke-dashoffset" values="0;-54" dur="4.18s" begin="0.79s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.17;0.38;0.17" dur="4.18s" begin="0.79s" repeatCount="indefinite" />
+  </path>
+  <circle class="edge-particle" r="6.6" fill="#2468ff" opacity="0.92">
+    <animateMotion dur="5.80s" repeatCount="indefinite" path="M 485.0 252.0 L 485.0 306.5 L 520.0 306.5 L 520.0 361.0" begin="0.64s" />
+    <animate attributeName="opacity" values="0;0.92;0" dur="5.80s" begin="0.64s" repeatCount="indefinite" />
+  </circle>
+  <circle class="edge-particle" r="4.2" fill="#2468ff" opacity="0.74">
+    <animateMotion dur="5.80s" repeatCount="indefinite" path="M 485.0 252.0 L 485.0 306.5 L 520.0 306.5 L 520.0 361.0" begin="2.57s" />
+    <animate attributeName="opacity" values="0;0.74;0" dur="5.80s" begin="2.57s" repeatCount="indefinite" />
+  </circle>
+  <circle class="edge-particle" r="2.9" fill="#2468ff" opacity="0.56">
+    <animateMotion dur="5.80s" repeatCount="indefinite" path="M 485.0 252.0 L 485.0 306.5 L 520.0 306.5 L 520.0 361.0" begin="4.51s" />
+    <animate attributeName="opacity" values="0;0.56;0" dur="5.80s" begin="4.51s" repeatCount="indefinite" />
+  </circle>
+  <circle class="edge-particle" r="2.2" fill="#2468ff" opacity="0.38">
+    <animateMotion dur="5.80s" repeatCount="indefinite" path="M 485.0 252.0 L 485.0 306.5 L 520.0 306.5 L 520.0 361.0" begin="6.44s" />
+    <animate attributeName="opacity" values="0;0.38;0" dur="5.80s" begin="6.44s" repeatCount="indefinite" />
+  </circle>
+
+  <text x="502.5" y="292.5" class="edge-label" fill="#6f6877" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.73s" fill="freeze" />
+    style
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#ee5a90" />
+  </marker>
+</defs>
+<g class="edge" data-role="agent">
+  <path class="edge-base" d="M 725.0 361.0 L 725.0 306.5 L 765.0 306.5 L 765.0 252.0" fill="none" stroke="#ee5a90" stroke-width="1.5" opacity="0.24" marker-end="url(#arrow-3)" />
+  <path class="edge-draw" d="M 725.0 361.0 L 725.0 306.5 L 765.0 306.5 L 765.0 252.0" fill="none" stroke="#ee5a90" stroke-width="2.2" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-3)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.71s" fill="freeze" />
+  </path>
+
+  <path class="edge-particle edge-arrow-particle" d="M -9.6 -5.8 L 9.6 0 L -9.6 5.8 Z" fill="#ee5a90" opacity="0.92">
+    <animateMotion dur="5.80s" repeatCount="indefinite" path="M 725.0 361.0 L 725.0 306.5 L 765.0 306.5 L 765.0 252.0" begin="0.96s" rotate="auto" />
+    <animate attributeName="opacity" values="0;0.92;0" dur="5.80s" begin="0.96s" repeatCount="indefinite" />
+  </path>
+  <path class="edge-particle edge-arrow-particle" d="M -9.6 -5.8 L 9.6 0 L -9.6 5.8 Z" fill="#ee5a90" opacity="0.74">
+    <animateMotion dur="5.80s" repeatCount="indefinite" path="M 725.0 361.0 L 725.0 306.5 L 765.0 306.5 L 765.0 252.0" begin="2.89s" rotate="auto" />
+    <animate attributeName="opacity" values="0;0.74;0" dur="5.80s" begin="2.89s" repeatCount="indefinite" />
+  </path>
+  <path class="edge-particle edge-arrow-particle" d="M -9.6 -5.8 L 9.6 0 L -9.6 5.8 Z" fill="#ee5a90" opacity="0.56">
+    <animateMotion dur="5.80s" repeatCount="indefinite" path="M 725.0 361.0 L 725.0 306.5 L 765.0 306.5 L 765.0 252.0" begin="4.83s" rotate="auto" />
+    <animate attributeName="opacity" values="0;0.56;0" dur="5.80s" begin="4.83s" repeatCount="indefinite" />
+  </path>
+
+  <text x="745.0" y="292.5" class="edge-label" fill="#6f6877" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.85s" fill="freeze" />
+    create
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-4" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#5870ff" />
+  </marker>
+</defs>
+<g class="edge" data-role="tool">
+  <path class="edge-base" d="M 855.0 294.0 L 855.0 420.0" fill="none" stroke="#5870ff" stroke-width="1.5" opacity="0.24" marker-end="url(#arrow-4)" />
+  <path class="edge-draw" d="M 855.0 294.0 L 855.0 420.0" fill="none" stroke="#5870ff" stroke-width="2.2" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-4)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.83s" fill="freeze" />
+  </path>
+  <path class="edge-flow edge-flow-ghost-flow" d="M 855.0 294.0 L 855.0 420.0" fill="none" stroke="#5870ff" stroke-width="1.6"
+        stroke-dasharray="2 18" opacity="0.38">
+    <animate attributeName="stroke-dashoffset" values="0;-54" dur="4.18s" begin="1.03s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.17;0.38;0.17" dur="4.18s" begin="1.03s" repeatCount="indefinite" />
+  </path>
+  <circle class="edge-particle" r="6.6" fill="#5870ff" opacity="0.92">
+    <animateMotion dur="5.80s" repeatCount="indefinite" path="M 855.0 294.0 L 855.0 420.0" begin="1.28s" />
+    <animate attributeName="opacity" values="0;0.92;0" dur="5.80s" begin="1.28s" repeatCount="indefinite" />
+  </circle>
+  <circle class="edge-particle" r="4.2" fill="#5870ff" opacity="0.74">
+    <animateMotion dur="5.80s" repeatCount="indefinite" path="M 855.0 294.0 L 855.0 420.0" begin="3.21s" />
+    <animate attributeName="opacity" values="0;0.74;0" dur="5.80s" begin="3.21s" repeatCount="indefinite" />
+  </circle>
+  <circle class="edge-particle" r="2.9" fill="#5870ff" opacity="0.56">
+    <animateMotion dur="5.80s" repeatCount="indefinite" path="M 855.0 294.0 L 855.0 420.0" begin="5.15s" />
+    <animate attributeName="opacity" values="0;0.56;0" dur="5.80s" begin="5.15s" repeatCount="indefinite" />
+  </circle>
+  <circle class="edge-particle" r="2.2" fill="#5870ff" opacity="0.38">
+    <animateMotion dur="5.80s" repeatCount="indefinite" path="M 855.0 294.0 L 855.0 420.0" begin="7.08s" />
+    <animate attributeName="opacity" values="0;0.38;0" dur="5.80s" begin="7.08s" repeatCount="indefinite" />
+  </circle>
+
+  <text x="855.0" y="343.0" class="edge-label" fill="#6f6877" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.97s" fill="freeze" />
+    choose
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-5" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#18a95e" />
+  </marker>
+</defs>
+<g class="edge" data-role="output">
+  <path class="edge-base" d="M 945.0 462.0 L 945.0 409.5 L 1000.0 409.5 L 1000.0 357.0" fill="none" stroke="#18a95e" stroke-width="1.5" opacity="0.24" marker-end="url(#arrow-5)" />
+  <path class="edge-draw" d="M 945.0 462.0 L 945.0 409.5 L 1000.0 409.5 L 1000.0 357.0" fill="none" stroke="#18a95e" stroke-width="2.2" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-5)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.95s" fill="freeze" />
+  </path>
+
+  <circle class="edge-particle" r="7.2" fill="#18a95e" opacity="0.92">
+    <animateMotion dur="5.80s" repeatCount="indefinite" path="M 945.0 462.0 L 945.0 409.5 L 1000.0 409.5 L 1000.0 357.0" begin="1.60s" />
+    <animate attributeName="opacity" values="0;0.92;0" dur="5.80s" begin="1.60s" repeatCount="indefinite" />
+  </circle>
+  <circle class="edge-particle" r="4.6" fill="#18a95e" opacity="0.74">
+    <animateMotion dur="5.80s" repeatCount="indefinite" path="M 945.0 462.0 L 945.0 409.5 L 1000.0 409.5 L 1000.0 357.0" begin="3.53s" />
+    <animate attributeName="opacity" values="0;0.74;0" dur="5.80s" begin="3.53s" repeatCount="indefinite" />
+  </circle>
+
+  <text x="972.5" y="395.5" class="edge-label" fill="#6f6877" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="1.09s" fill="freeze" />
+    approve
+  </text>
+</g>
+
+<g id="node-brief" class="node motion-node" data-role="actor" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.25s" fill="freeze" />
+  <animateTransform attributeName="transform" type="translate"
+        values="0 9.6;0 -4.8;0 0;0 -3.6;0 0;0 2.6;0 0" dur="5.85s" begin="0.95s"
+        repeatCount="indefinite" additive="sum" />
+
+  <circle class="node-burst" cx="180.0" cy="357.0" r="90.0" fill="none"
+          stroke="#ff7a66" stroke-width="1.6" opacity="0">
+    <animate attributeName="r" values="90.0;133.2" dur="3.40s" begin="0.70s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.34;0" dur="3.40s" begin="0.70s" repeatCount="indefinite" />
+  </circle>
+  <circle class="node-burst" cx="180.0" cy="357.0" r="90.0" fill="none"
+          stroke="#ff7a66" stroke-width="1" opacity="0">
+    <animate attributeName="r" values="90.0;155.5" dur="4.60s" begin="1.60s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.22;0" dur="4.60s" begin="1.60s" repeatCount="indefinite" />
+  </circle>
+  <rect class="node-glow" x="86.0" y="311.0" width="188.0" height="92.0" rx="46.0"
+        fill="none" stroke="#ff7a66" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
+    <animate attributeName="opacity" values="0.08;0.29;0.08" dur="4.25s" begin="0.45s" repeatCount="indefinite" />
+    <animate attributeName="stroke-width" values="1.0;2.7;1.0" dur="4.25s" begin="0.45s" repeatCount="indefinite" />
+  </rect>
+  <defs>
+    <clipPath id="clip-brief">
+      <rect x="90.0" y="315.0" width="180.0" height="84.0" rx="42.0" />
+    </clipPath>
+  </defs>
+  <g clip-path="url(#clip-brief)">
+    <rect x="90.0" y="315.0" width="180.0" height="84.0" rx="42.0"
+          fill="url(#aurora-node-actor)" />
+    <ellipse cx="126.0" cy="333.5" rx="104.4" ry="40.3"
+          fill="#ffd0a8" opacity="0.24" filter="url(#aurora-blur)" />
+    <ellipse cx="248.4" cy="390.6" rx="111.6" ry="45.4"
+          fill="#56308f" opacity="0.17" filter="url(#aurora-blur)" />
+    <path d="M 68.4 365.4
+             C 129.6 330.1,
+               201.6 392.3,
+               297.0 343.6"
+          fill="none" stroke="#ff4f73" stroke-width="28.6" stroke-linecap="round"
+          opacity="0.32" filter="url(#aurora-blur)" />
+    <rect x="90.0" y="315.0" width="180.0" height="84.0" rx="42.0"
+          fill="#ffffff" opacity="0.11" filter="url(#grain-texture)" />
+  </g>
+  <rect x="90.0" y="315.0" width="180.0" height="84.0" rx="42.0"
+        fill="none" stroke="#ff7a66" stroke-width="1.1" opacity="0.58" />
+
+<g class="semantic-icon-wrap" opacity="0.94">
+    <animate attributeName="opacity" values="0.52;1;0.52" dur="2.80s" begin="0.65s" repeatCount="indefinite" />
+
+  <path d="M 117.4 340.0 H 134.4 L 141.8 347.5 V 374.0 H 117.4 Z" class="semantic-icon semantic-icon-file" stroke="#ff7a66" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#fff1eb" />
+  <path d="M 134.4 340.0 V 347.5 H 141.8" class="semantic-icon semantic-icon-file" stroke="#ff7a66" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+</g>
+
+  <text x="206.4" y="343.0" text-anchor="middle" fill="#201826">
+<tspan x="206.4" dy="18" class="node-title">Brief</tspan>
+<tspan x="206.4" dy="17" class="node-caption">intent</tspan>
+</text>
+</g>
+
+<g id="node-mood" class="node motion-node" data-role="source" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.37s" fill="freeze" />
+  <animateTransform attributeName="transform" type="translate"
+        values="0 9.6;0 -4.8;0 0;0 -3.6;0 0;0 2.6;0 0" dur="6.30s" begin="1.07s"
+        repeatCount="indefinite" additive="sum" />
+
+  <circle class="node-burst" cx="395.0" cy="252.0" r="90.0" fill="none"
+          stroke="#2468ff" stroke-width="1.6" opacity="0">
+    <animate attributeName="r" values="90.0;133.2" dur="3.40s" begin="0.82s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.34;0" dur="3.40s" begin="0.82s" repeatCount="indefinite" />
+  </circle>
+  <circle class="node-burst" cx="395.0" cy="252.0" r="90.0" fill="none"
+          stroke="#2468ff" stroke-width="1" opacity="0">
+    <animate attributeName="r" values="90.0;155.5" dur="4.60s" begin="1.72s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.22;0" dur="4.60s" begin="1.72s" repeatCount="indefinite" />
+  </circle>
+  <rect class="node-glow" x="301.0" y="206.0" width="188.0" height="92.0" rx="46.0"
+        fill="none" stroke="#2468ff" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
+    <animate attributeName="opacity" values="0.08;0.29;0.08" dur="4.60s" begin="0.57s" repeatCount="indefinite" />
+    <animate attributeName="stroke-width" values="1.0;2.7;1.0" dur="4.60s" begin="0.57s" repeatCount="indefinite" />
+  </rect>
+  <defs>
+    <clipPath id="clip-mood">
+      <rect x="305.0" y="210.0" width="180.0" height="84.0" rx="42.0" />
+    </clipPath>
+  </defs>
+  <g clip-path="url(#clip-mood)">
+    <rect x="305.0" y="210.0" width="180.0" height="84.0" rx="42.0"
+          fill="url(#aurora-node-source)" />
+    <ellipse cx="341.0" cy="228.5" rx="104.4" ry="40.3"
+          fill="#b9f3e9" opacity="0.24" filter="url(#aurora-blur)" />
+    <ellipse cx="463.4" cy="285.6" rx="111.6" ry="45.4"
+          fill="#172068" opacity="0.17" filter="url(#aurora-blur)" />
+    <path d="M 283.4 263.8
+             C 344.6 225.1,
+               416.6 287.3,
+               512.0 238.6"
+          fill="none" stroke="#7b86ff" stroke-width="28.6" stroke-linecap="round"
+          opacity="0.32" filter="url(#aurora-blur)" />
+    <rect x="305.0" y="210.0" width="180.0" height="84.0" rx="42.0"
+          fill="#ffffff" opacity="0.11" filter="url(#grain-texture)" />
+  </g>
+  <rect x="305.0" y="210.0" width="180.0" height="84.0" rx="42.0"
+        fill="none" stroke="#2468ff" stroke-width="1.1" opacity="0.58" />
+
+<g class="semantic-icon-wrap" opacity="0.94">
+    <animate attributeName="opacity" values="0.52;1;0.52" dur="2.80s" begin="0.77s" repeatCount="indefinite" />
+
+  <path d="M 327.6 243.8 H 340.9 L 344.6 238.7 H 361.6 V 265.9 H 327.6 Z" class="semantic-icon semantic-icon-folder" stroke="#2468ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#edf7ff" />
+</g>
+
+  <text x="421.4" y="238.0" text-anchor="middle" fill="#162038">
+<tspan x="421.4" dy="18" class="node-title">Mood</tspan>
+<tspan x="421.4" dy="17" class="node-caption">palette</tspan>
+</text>
+</g>
+
+<g id="node-agent" class="node motion-node" data-role="agent" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.49s" fill="freeze" />
+  <animateTransform attributeName="transform" type="translate"
+        values="0 9.6;0 -4.8;0 0;0 -3.6;0 0;0 2.6;0 0" dur="5.40s" begin="1.19s"
+        repeatCount="indefinite" additive="sum" />
+
+  <circle class="node-burst" cx="622.5" cy="361.0" r="102.5" fill="none"
+          stroke="#ee5a90" stroke-width="1.6" opacity="0">
+    <animate attributeName="r" values="102.5;151.7" dur="3.40s" begin="0.94s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.34;0" dur="3.40s" begin="0.94s" repeatCount="indefinite" />
+  </circle>
+  <circle class="node-burst" cx="622.5" cy="361.0" r="102.5" fill="none"
+          stroke="#ee5a90" stroke-width="1" opacity="0">
+    <animate attributeName="r" values="102.5;177.1" dur="4.60s" begin="1.84s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.22;0" dur="4.60s" begin="1.84s" repeatCount="indefinite" />
+  </circle>
+  <rect class="node-glow" x="516.0" y="311.0" width="213.0" height="100.0" rx="46.0"
+        fill="none" stroke="#ee5a90" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
+    <animate attributeName="opacity" values="0.08;0.29;0.08" dur="4.95s" begin="0.69s" repeatCount="indefinite" />
+    <animate attributeName="stroke-width" values="1.0;2.7;1.0" dur="4.95s" begin="0.69s" repeatCount="indefinite" />
+  </rect>
+  <defs>
+    <clipPath id="clip-agent">
+      <rect x="520.0" y="315.0" width="205.0" height="92.0" rx="42.0" />
+    </clipPath>
+  </defs>
+  <g clip-path="url(#clip-agent)">
+    <rect x="520.0" y="315.0" width="205.0" height="92.0" rx="42.0"
+          fill="url(#aurora-node-agent)" />
+    <ellipse cx="561.0" cy="335.2" rx="118.9" ry="44.2"
+          fill="#ffe8ce" opacity="0.24" filter="url(#aurora-blur)" />
+    <ellipse cx="700.4" cy="397.8" rx="127.1" ry="49.7"
+          fill="#151947" opacity="0.17" filter="url(#aurora-blur)" />
+    <path d="M 495.4 366.5
+             C 565.1 331.6,
+               647.1 399.6,
+               755.8 346.3"
+          fill="none" stroke="#ff7fa7" stroke-width="31.3" stroke-linecap="round"
+          opacity="0.32" filter="url(#aurora-blur)" />
+    <rect x="520.0" y="315.0" width="205.0" height="92.0" rx="42.0"
+          fill="#ffffff" opacity="0.11" filter="url(#grain-texture)" />
+  </g>
+  <rect x="520.0" y="315.0" width="205.0" height="92.0" rx="42.0"
+        fill="none" stroke="#ee5a90" stroke-width="1.1" opacity="0.58" />
+
+<g class="semantic-icon-wrap" opacity="0.94">
+    <animate attributeName="opacity" values="0.52;1;0.52" dur="2.80s" begin="0.89s" repeatCount="indefinite" />
+
+  <polygon points="562.0,344.0 576.6,352.5 576.6,369.5 562.0,378.0 547.4,369.5 547.4,352.5" class="semantic-icon semantic-icon-agent" stroke="#ee5a90" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#fff0f6" />
+  <circle cx="562.0" cy="361.0" r="3.7" fill="#ee5a90" />
+</g>
+
+  <text x="650.5" y="347.0" text-anchor="middle" fill="#211729">
+<tspan x="650.5" dy="18" class="node-title">Studio</tspan>
+<tspan x="650.5" dy="18" class="node-title">Agent</tspan>
+<tspan x="650.5" dy="17" class="node-caption">compose</tspan>
+</text>
+</g>
+
+<g id="node-variants" class="node motion-node" data-role="tool" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.61s" fill="freeze" />
+  <animateTransform attributeName="transform" type="translate"
+        values="0 9.6;0 -4.8;0 0;0 -3.6;0 0;0 2.6;0 0" dur="5.85s" begin="1.31s"
+        repeatCount="indefinite" additive="sum" />
+
+  <circle class="node-burst" cx="855.0" cy="252.0" r="90.0" fill="none"
+          stroke="#5870ff" stroke-width="1.6" opacity="0">
+    <animate attributeName="r" values="90.0;133.2" dur="3.40s" begin="1.06s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.34;0" dur="3.40s" begin="1.06s" repeatCount="indefinite" />
+  </circle>
+  <circle class="node-burst" cx="855.0" cy="252.0" r="90.0" fill="none"
+          stroke="#5870ff" stroke-width="1" opacity="0">
+    <animate attributeName="r" values="90.0;155.5" dur="4.60s" begin="1.96s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.22;0" dur="4.60s" begin="1.96s" repeatCount="indefinite" />
+  </circle>
+  <rect class="node-glow" x="761.0" y="206.0" width="188.0" height="92.0" rx="46.0"
+        fill="none" stroke="#5870ff" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
+    <animate attributeName="opacity" values="0.08;0.29;0.08" dur="3.90s" begin="0.81s" repeatCount="indefinite" />
+    <animate attributeName="stroke-width" values="1.0;2.7;1.0" dur="3.90s" begin="0.81s" repeatCount="indefinite" />
+  </rect>
+  <defs>
+    <clipPath id="clip-variants">
+      <rect x="765.0" y="210.0" width="180.0" height="84.0" rx="42.0" />
+    </clipPath>
+  </defs>
+  <g clip-path="url(#clip-variants)">
+    <rect x="765.0" y="210.0" width="180.0" height="84.0" rx="42.0"
+          fill="url(#aurora-node-tool)" />
+    <ellipse cx="801.0" cy="228.5" rx="104.4" ry="40.3"
+          fill="#d3fff0" opacity="0.24" filter="url(#aurora-blur)" />
+    <ellipse cx="923.4" cy="285.6" rx="111.6" ry="45.4"
+          fill="#2844d9" opacity="0.17" filter="url(#aurora-blur)" />
+    <path d="M 743.4 260.4
+             C 804.6 225.1,
+               876.6 287.3,
+               972.0 238.6"
+          fill="none" stroke="#b9a8ff" stroke-width="28.6" stroke-linecap="round"
+          opacity="0.32" filter="url(#aurora-blur)" />
+    <rect x="765.0" y="210.0" width="180.0" height="84.0" rx="42.0"
+          fill="#ffffff" opacity="0.11" filter="url(#grain-texture)" />
+  </g>
+  <rect x="765.0" y="210.0" width="180.0" height="84.0" rx="42.0"
+        fill="none" stroke="#5870ff" stroke-width="1.1" opacity="0.58" />
+
+<g class="semantic-icon-wrap" opacity="0.94">
+    <animate attributeName="opacity" values="0.52;1;0.52" dur="2.80s" begin="1.01s" repeatCount="indefinite" />
+
+  <rect x="792.4" y="239.8" width="24.5" height="24.5" rx="3.1" class="semantic-icon semantic-icon-tool" stroke="#5870ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#f5f3ff" />
+  <path d="M 798.5 249.3 H 810.7" class="semantic-icon semantic-icon-tool" stroke="#5870ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M 798.5 255.7 H 810.7" class="semantic-icon semantic-icon-tool" stroke="#5870ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+</g>
+
+  <text x="881.4" y="238.0" text-anchor="middle" fill="#1b1d33">
+<tspan x="881.4" dy="18" class="node-title">Variants</tspan>
+<tspan x="881.4" dy="17" class="node-caption">options</tspan>
+</text>
+</g>
+
+<g id="node-review" class="node motion-node" data-role="risk" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.73s" fill="freeze" />
+  <animateTransform attributeName="transform" type="translate"
+        values="0 9.6;0 -4.8;0 0;0 -3.6;0 0;0 2.6;0 0" dur="6.30s" begin="1.43s"
+        repeatCount="indefinite" additive="sum" />
+
+  <circle class="node-burst" cx="855.0" cy="462.0" r="90.0" fill="none"
+          stroke="#ff4d7f" stroke-width="1.6" opacity="0">
+    <animate attributeName="r" values="90.0;133.2" dur="3.40s" begin="1.18s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.34;0" dur="3.40s" begin="1.18s" repeatCount="indefinite" />
+  </circle>
+  <circle class="node-burst" cx="855.0" cy="462.0" r="90.0" fill="none"
+          stroke="#ff4d7f" stroke-width="1" opacity="0">
+    <animate attributeName="r" values="90.0;155.5" dur="4.60s" begin="2.08s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.22;0" dur="4.60s" begin="2.08s" repeatCount="indefinite" />
+  </circle>
+  <rect class="node-glow" x="761.0" y="416.0" width="188.0" height="92.0" rx="46.0"
+        fill="none" stroke="#ff4d7f" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
+    <animate attributeName="opacity" values="0.08;0.29;0.08" dur="4.25s" begin="0.93s" repeatCount="indefinite" />
+    <animate attributeName="stroke-width" values="1.0;2.7;1.0" dur="4.25s" begin="0.93s" repeatCount="indefinite" />
+  </rect>
+  <defs>
+    <clipPath id="clip-review">
+      <rect x="765.0" y="420.0" width="180.0" height="84.0" rx="42.0" />
+    </clipPath>
+  </defs>
+  <g clip-path="url(#clip-review)">
+    <rect x="765.0" y="420.0" width="180.0" height="84.0" rx="42.0"
+          fill="url(#aurora-node-risk)" />
+    <ellipse cx="801.0" cy="438.5" rx="104.4" ry="40.3"
+          fill="#ffe3c4" opacity="0.24" filter="url(#aurora-blur)" />
+    <ellipse cx="923.4" cy="495.6" rx="111.6" ry="45.4"
+          fill="#22194d" opacity="0.17" filter="url(#aurora-blur)" />
+    <path d="M 743.4 473.8
+             C 804.6 435.1,
+               876.6 497.3,
+               972.0 448.6"
+          fill="none" stroke="#ff74a4" stroke-width="28.6" stroke-linecap="round"
+          opacity="0.32" filter="url(#aurora-blur)" />
+    <rect x="765.0" y="420.0" width="180.0" height="84.0" rx="42.0"
+          fill="#ffffff" opacity="0.11" filter="url(#grain-texture)" />
+  </g>
+  <rect x="765.0" y="420.0" width="180.0" height="84.0" rx="42.0"
+        fill="none" stroke="#ff4d7f" stroke-width="1.1" opacity="0.58" />
+
+<g class="semantic-icon-wrap" opacity="0.94">
+    <animate attributeName="opacity" values="0.52;1;0.52" dur="2.80s" begin="1.13s" repeatCount="indefinite" />
+
+  <path d="M 804.6 445.0 L 819.2 452.1 V 463.7
+           C 819.2 473.2, 810.4 477.6, 804.6 479.0
+           C 798.8 477.6, 790.0 473.2, 790.0 463.7
+           V 452.1 Z" class="semantic-icon semantic-icon-shield" stroke="#ff4d7f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#fff0f4" />
+  <path d="M 798.8 462.0 L 803.6 467.1 L 811.7 455.5" class="semantic-icon semantic-icon-shield" stroke="#ff4d7f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+</g>
+
+  <text x="881.4" y="448.0" text-anchor="middle" fill="#241421">
+<tspan x="881.4" dy="18" class="node-title">Review</tspan>
+<tspan x="881.4" dy="17" class="node-caption">select</tspan>
+</text>
+</g>
+
+<g id="node-publish" class="node motion-node" data-role="output" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.85s" fill="freeze" />
+  <animateTransform attributeName="transform" type="translate"
+        values="0 9.6;0 -4.8;0 0;0 -3.6;0 0;0 2.6;0 0" dur="5.40s" begin="1.55s"
+        repeatCount="indefinite" additive="sum" />
+
+  <circle class="node-burst" cx="1090.0" cy="357.0" r="90.0" fill="none"
+          stroke="#18a95e" stroke-width="1.6" opacity="0">
+    <animate attributeName="r" values="90.0;133.2" dur="3.40s" begin="1.30s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.34;0" dur="3.40s" begin="1.30s" repeatCount="indefinite" />
+  </circle>
+  <circle class="node-burst" cx="1090.0" cy="357.0" r="90.0" fill="none"
+          stroke="#18a95e" stroke-width="1" opacity="0">
+    <animate attributeName="r" values="90.0;155.5" dur="4.60s" begin="2.20s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;0.22;0" dur="4.60s" begin="2.20s" repeatCount="indefinite" />
+  </circle>
+  <rect class="node-glow" x="996.0" y="311.0" width="188.0" height="92.0" rx="46.0"
+        fill="none" stroke="#18a95e" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
+    <animate attributeName="opacity" values="0.08;0.29;0.08" dur="4.60s" begin="1.05s" repeatCount="indefinite" />
+    <animate attributeName="stroke-width" values="1.0;2.7;1.0" dur="4.60s" begin="1.05s" repeatCount="indefinite" />
+  </rect>
+  <defs>
+    <clipPath id="clip-publish">
+      <rect x="1000.0" y="315.0" width="180.0" height="84.0" rx="42.0" />
+    </clipPath>
+  </defs>
+  <g clip-path="url(#clip-publish)">
+    <rect x="1000.0" y="315.0" width="180.0" height="84.0" rx="42.0"
+          fill="url(#aurora-node-output)" />
+    <ellipse cx="1036.0" cy="333.5" rx="104.4" ry="40.3"
+          fill="#fff2a4" opacity="0.24" filter="url(#aurora-blur)" />
+    <ellipse cx="1158.4" cy="390.6" rx="111.6" ry="45.4"
+          fill="#0a7a40" opacity="0.17" filter="url(#aurora-blur)" />
+    <path d="M 978.4 362.0
+             C 1039.6 330.1,
+               1111.6 392.3,
+               1207.0 343.6"
+          fill="none" stroke="#9edc6c" stroke-width="28.6" stroke-linecap="round"
+          opacity="0.32" filter="url(#aurora-blur)" />
+    <rect x="1000.0" y="315.0" width="180.0" height="84.0" rx="42.0"
+          fill="#ffffff" opacity="0.11" filter="url(#grain-texture)" />
+  </g>
+  <rect x="1000.0" y="315.0" width="180.0" height="84.0" rx="42.0"
+        fill="none" stroke="#18a95e" stroke-width="1.1" opacity="0.58" />
+
+<g class="semantic-icon-wrap" opacity="0.94">
+    <animate attributeName="opacity" values="0.52;1;0.52" dur="2.80s" begin="1.25s" repeatCount="indefinite" />
+
+  <rect x="1027.4" y="344.8" width="24.5" height="24.5" rx="3.1" class="semantic-icon semantic-icon-output" stroke="#18a95e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#f2fff2" />
+  <path d="M 1033.5 354.3 H 1045.7" class="semantic-icon semantic-icon-output" stroke="#18a95e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M 1033.5 360.7 H 1045.7" class="semantic-icon semantic-icon-output" stroke="#18a95e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+</g>
+
+  <text x="1116.4" y="343.0" text-anchor="middle" fill="#14251c">
+<tspan x="1116.4" dy="18" class="node-title">Publish</tspan>
+<tspan x="1116.4" dy="17" class="node-caption">export</tspan>
+</text>
+</g>
+</svg>

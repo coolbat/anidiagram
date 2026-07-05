@@ -39,7 +39,7 @@
     </div>
     <div class="stage" id="stage">
       <div class="viewport" id="viewport">
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="normal" data-motion-sequence="step-stagger" data-motion-edge="comet-flow" data-motion-node="glow-breathe" data-motion-group="marching-ants" data-motion-reduced="subtle">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="normal" data-motion-sequence="step-stagger" data-motion-edge="comet-flow" data-motion-node="glow-breathe" data-motion-group="marching-ants" data-motion-title="fade" data-motion-reduced="subtle">
 <title id="diagram-title">Pipeline</title>
 <desc id="diagram-desc">linear work from input to output</desc>
 <style>
@@ -53,6 +53,8 @@
   .edge-flow { stroke-linecap: round; }
   .edge-draw, .edge-base { stroke-linecap: round; stroke-linejoin: round; }
   .edge-particle { filter: url(#particle-glow); }
+  .edge-arrow-particle { filter: url(#particle-glow); }
+  .semantic-icon { fill: none; vector-effect: non-scaling-stroke; }
   .node-glow, .node-burst { pointer-events: none; }
   #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
   #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
@@ -86,6 +88,7 @@
 <rect x="28" y="26" width="1144" height="668" rx="26" fill="none" stroke="#2f6f9f" stroke-width="1.4" opacity="1.00" />
 <rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#55c7ff" />
 <rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#0d3b5c" />
+
 <text id="main-title" x="90" y="84" class="title" fill="#e6f7ff" opacity="0">
   <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.08s" fill="freeze" />
   Pipeline
@@ -258,6 +261,7 @@
   <rect x="70.0" y="320.0" width="160.0" height="82.0" rx="8.0"
         fill="#0b273c" stroke="#7dd3fc" stroke-width="1.8" />
 
+
   <circle cx="88.0" cy="338.0" r="14" fill="#7dd3fc" />
   <text x="88.0" y="343.0" class="step-label" fill="#0b273c" text-anchor="middle">1</text>
   <text x="150.0" y="347.0" text-anchor="middle" fill="#e6f7ff">
@@ -278,6 +282,7 @@
   </rect>
   <rect x="275.0" y="320.0" width="160.0" height="82.0" rx="8.0"
         fill="#0b1d38" stroke="#55c7ff" stroke-width="1.8" />
+
 
   <circle cx="293.0" cy="338.0" r="14" fill="#55c7ff" />
   <text x="293.0" y="343.0" class="step-label" fill="#0b1d38" text-anchor="middle">2</text>
@@ -310,6 +315,7 @@
   <rect x="480.0" y="320.0" width="160.0" height="82.0" rx="8.0"
         fill="#101b45" stroke="#a7b8ff" stroke-width="1.8" />
 
+
   <circle cx="498.0" cy="338.0" r="14" fill="#a7b8ff" />
   <text x="498.0" y="343.0" class="step-label" fill="#101b45" text-anchor="middle">3</text>
   <text x="560.0" y="347.0" text-anchor="middle" fill="#e6f7ff">
@@ -330,6 +336,7 @@
   </rect>
   <rect x="685.0" y="320.0" width="160.0" height="82.0" rx="8.0"
         fill="#1f2835" stroke="#f6d365" stroke-width="1.8" />
+
 
   <circle cx="703.0" cy="338.0" r="14" fill="#f6d365" />
   <text x="703.0" y="343.0" class="step-label" fill="#1f2835" text-anchor="middle">4</text>
@@ -361,6 +368,7 @@
   </rect>
   <rect x="890.0" y="320.0" width="160.0" height="82.0" rx="8.0"
         fill="#0a2d33" stroke="#33e6a6" stroke-width="1.8" />
+
 
   <circle cx="908.0" cy="338.0" r="14" fill="#33e6a6" />
   <text x="908.0" y="343.0" class="step-label" fill="#0a2d33" text-anchor="middle">5</text>

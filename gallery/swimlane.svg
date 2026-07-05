@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="normal" data-motion-sequence="step-stagger" data-motion-edge="comet-flow" data-motion-node="glow-breathe" data-motion-group="marching-ants" data-motion-reduced="subtle">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="normal" data-motion-sequence="step-stagger" data-motion-edge="comet-flow" data-motion-node="glow-breathe" data-motion-group="marching-ants" data-motion-title="fade" data-motion-reduced="subtle">
 <title id="diagram-title">Swimlane</title>
 <desc id="diagram-desc">handoffs across owners</desc>
 <style>
@@ -12,6 +12,8 @@
   .edge-flow { stroke-linecap: round; }
   .edge-draw, .edge-base { stroke-linecap: round; stroke-linejoin: round; }
   .edge-particle { filter: url(#particle-glow); }
+  .edge-arrow-particle { filter: url(#particle-glow); }
+  .semantic-icon { fill: none; vector-effect: non-scaling-stroke; }
   .node-glow, .node-burst { pointer-events: none; }
   #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
   #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
@@ -45,6 +47,7 @@
 <rect x="28" y="26" width="1144" height="668" rx="26" fill="none" stroke="#94a3b8" stroke-width="1.4" opacity="1.00" />
 <rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#2563eb" />
 <rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#e8f1ff" />
+
 <text id="main-title" x="90" y="84" class="title" fill="#172033" opacity="0">
   <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.08s" fill="freeze" />
   Swimlane
@@ -60,6 +63,8 @@
         fill="#fff7ed" fill-opacity="0.34" stroke="#f97316" stroke-width="1.6" stroke-dasharray="9 8">
     <animate attributeName="stroke-dashoffset" values="0;-34" dur="5.60s" begin="0.17s" repeatCount="indefinite" />
   </rect>
+
+
   <text x="78.0" y="190.0" class="group-label" fill="#5b6778">Customer</text>
 </g>
 
@@ -69,6 +74,8 @@
         fill="#f5f3ff" fill-opacity="0.34" stroke="#7c3aed" stroke-width="1.6" stroke-dasharray="9 8">
     <animate attributeName="stroke-dashoffset" values="0;-34" dur="6.00s" begin="0.29s" repeatCount="indefinite" />
   </rect>
+
+
   <text x="78.0" y="340.0" class="group-label" fill="#5b6778">Team</text>
 </g>
 
@@ -78,6 +85,8 @@
         fill="#fffbeb" fill-opacity="0.34" stroke="#d97706" stroke-width="1.6" stroke-dasharray="9 8">
     <animate attributeName="stroke-dashoffset" values="0;-34" dur="6.40s" begin="0.41s" repeatCount="indefinite" />
   </rect>
+
+
   <text x="78.0" y="490.0" class="group-label" fill="#5b6778">System</text>
 </g>
 
@@ -243,6 +252,7 @@
   <rect x="130.0" y="185.0" width="160.0" height="82.0" rx="14.0"
         fill="#fff7ed" stroke="#f97316" stroke-width="2.0" />
 
+
   <circle cx="148.0" cy="203.0" r="14" fill="#f97316" />
   <text x="148.0" y="208.0" class="step-label" fill="#fff7ed" text-anchor="middle">1</text>
   <text x="210.0" y="212.0" text-anchor="middle" fill="#172033">
@@ -274,6 +284,7 @@
   <rect x="330.0" y="335.0" width="160.0" height="82.0" rx="14.0"
         fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.0" />
 
+
   <circle cx="348.0" cy="353.0" r="14" fill="#7c3aed" />
   <text x="348.0" y="358.0" class="step-label" fill="#f5f3ff" text-anchor="middle">2</text>
   <text x="410.0" y="362.0" text-anchor="middle" fill="#172033">
@@ -294,6 +305,7 @@
   </rect>
   <rect x="560.0" y="485.0" width="160.0" height="82.0" rx="14.0"
         fill="#fffbeb" stroke="#d97706" stroke-width="2.0" />
+
 
   <circle cx="578.0" cy="503.0" r="14" fill="#d97706" />
   <text x="578.0" y="508.0" class="step-label" fill="#fffbeb" text-anchor="middle">3</text>
@@ -326,6 +338,7 @@
   <rect x="790.0" y="335.0" width="160.0" height="82.0" rx="14.0"
         fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.0" />
 
+
   <circle cx="808.0" cy="353.0" r="14" fill="#7c3aed" />
   <text x="808.0" y="358.0" class="step-label" fill="#f5f3ff" text-anchor="middle">4</text>
   <text x="870.0" y="362.0" text-anchor="middle" fill="#172033">
@@ -356,6 +369,7 @@
   </rect>
   <rect x="990.0" y="185.0" width="160.0" height="82.0" rx="14.0"
         fill="#f0fdf4" stroke="#16a34a" stroke-width="2.0" />
+
 
   <circle cx="1008.0" cy="203.0" r="14" fill="#16a34a" />
   <text x="1008.0" y="208.0" class="step-label" fill="#f0fdf4" text-anchor="middle">5</text>

@@ -6,10 +6,10 @@ import math
 from dataclasses import dataclass
 from typing import Any, Dict, Iterable, List, Optional, Set
 
-from .model import Bounds, Canvas, Edge, Group, Motion, Node, Point, Scene, SceneMotion, Style, Title
+from .model import Bounds, Canvas, Edge, EffectConfig, Group, Motion, Node, Point, Scene, SceneMotion, Style, Title
 
 
-SUPPORTED_VERSIONS = ("0.1", "0.2")
+SUPPORTED_VERSIONS = ("0.1", "0.2", "0.3")
 KNOWN_ROLES = {
     "actor",
     "source",
@@ -22,13 +22,15 @@ KNOWN_ROLES = {
     "neutral",
 }
 KNOWN_ROUTES = {"curved", "straight", "hv", "vh", "orthogonal", "points"}
-KNOWN_MOTION_PROFILES = {"off", "subtle", "normal", "expressive"}
-KNOWN_MOTION_SEQUENCES = {"simultaneous", "step-stagger", "layered"}
+KNOWN_MOTION_PROFILES = {"off", "subtle", "normal", "expressive", "teaching"}
+KNOWN_MOTION_SEQUENCES = {"simultaneous", "step-stagger", "layered", "staged"}
 KNOWN_MOTION_EASES = {"linear", "calm", "snappy", "back-out", "elastic", "spring"}
-KNOWN_NODE_MOTION = {"none", "fade", "float", "glow-breathe", "pop"}
-KNOWN_EDGE_MOTION = {"none", "draw", "pulse", "comet-flow", "trace"}
-KNOWN_GROUP_MOTION = {"none", "soft-reveal", "marching-ants"}
+KNOWN_NODE_MOTION = {"none", "fade", "float", "glow-breathe", "pop", "pulse", "ripple", "status-blink", "icon-pulse"}
+KNOWN_EDGE_MOTION = {"none", "static", "draw", "pulse", "comet-flow", "trace", "dynamic-dash", "flow-dot", "flow-arrow", "ghost-flow", "glow-line", "comet"}
+KNOWN_GROUP_MOTION = {"none", "static", "soft-reveal", "marching-ants", "border-scan", "corner-pulse"}
 KNOWN_REDUCED_MOTION = {"static", "subtle", "pause"}
+KNOWN_TITLE_MOTION = {"none", "fade", "handwrite-reveal", "highlight-sweep"}
+KNOWN_ICONS = {"database", "file", "folder", "api", "cloud", "search", "shield", "agent", "token", "memory", "tool", "output"}
 
 
 @dataclass(frozen=True)
@@ -146,6 +148,10 @@ def _parse_scene_motion(value: Any, path: str, issues: List[ValidationIssue]) ->
         return SceneMotion()
     profile = _enum(value, "profile", f"{path}.profile", KNOWN_MOTION_PROFILES, issues, default="normal")
     defaults = _motion_defaults(profile)
+    edge_effect = _effect_config(value.get("edge"), f"{path}.edge", KNOWN_EDGE_MOTION, issues, defaults.edge_effect)
+    node_effect = _effect_config(value.get("node"), f"{path}.node", KNOWN_NODE_MOTION, issues, defaults.node_effect)
+    group_effect = _effect_config(value.get("group"), f"{path}.group", KNOWN_GROUP_MOTION, issues, defaults.group_effect)
+    title_effect = _effect_config(value.get("title"), f"{path}.title", KNOWN_TITLE_MOTION, issues, defaults.title_effect)
     return SceneMotion(
         profile=profile,
         sequence=_enum(value, "sequence", f"{path}.sequence", KNOWN_MOTION_SEQUENCES, issues, default=defaults.sequence),
@@ -160,9 +166,9 @@ def _parse_scene_motion(value: Any, path: str, issues: List[ValidationIssue]) ->
             default=defaults.duration_scale,
         ),
         intensity=_optional_number(value, "intensity", f"{path}.intensity", issues, positive=False, default=defaults.intensity),
-        node=_enum(value, "node", f"{path}.node", KNOWN_NODE_MOTION, issues, default=defaults.node),
-        edge=_enum(value, "edge", f"{path}.edge", KNOWN_EDGE_MOTION, issues, default=defaults.edge),
-        group=_enum(value, "group", f"{path}.group", KNOWN_GROUP_MOTION, issues, default=defaults.group),
+        node=node_effect.preset,
+        edge=edge_effect.preset,
+        group=group_effect.preset,
         reduced_motion=_enum(
             value,
             "reduced_motion",
@@ -171,17 +177,98 @@ def _parse_scene_motion(value: Any, path: str, issues: List[ValidationIssue]) ->
             issues,
             default=defaults.reduced_motion,
         ),
+        edge_effect=edge_effect,
+        node_effect=node_effect,
+        group_effect=group_effect,
+        title_effect=title_effect,
     )
 
 
 def _motion_defaults(profile: str) -> SceneMotion:
     if profile == "off":
-        return SceneMotion(profile="off", sequence="simultaneous", ease="linear", stagger=0.0, duration_scale=1.0, intensity=0.0, node="none", edge="none", group="none", reduced_motion="static")
+        return _scene_motion("off", "simultaneous", "linear", 0.0, 1.0, 0.0, "none", "none", "none", "none", "static")
     if profile == "subtle":
-        return SceneMotion(profile="subtle", sequence="step-stagger", ease="calm", stagger=0.08, duration_scale=1.2, intensity=0.55, node="fade", edge="draw", group="soft-reveal", reduced_motion="static")
+        return _scene_motion("subtle", "step-stagger", "calm", 0.08, 1.2, 0.55, "fade", "draw", "soft-reveal", "fade", "static")
     if profile == "expressive":
-        return SceneMotion(profile="expressive", sequence="layered", ease="spring", stagger=0.16, duration_scale=0.9, intensity=1.25, node="pop", edge="comet-flow", group="marching-ants", reduced_motion="subtle")
+        return _scene_motion("expressive", "layered", "spring", 0.16, 0.9, 1.25, "pop", "comet-flow", "marching-ants", "highlight-sweep", "subtle")
+    if profile == "teaching":
+        return _scene_motion("teaching", "staged", "spring", 0.14, 0.95, 1.15, "icon-pulse", "ghost-flow", "border-scan", "handwrite-reveal", "subtle")
     return SceneMotion()
+
+
+def _scene_motion(
+    profile: str,
+    sequence: str,
+    ease: str,
+    stagger: float,
+    duration_scale: float,
+    intensity: float,
+    node: str,
+    edge: str,
+    group: str,
+    title: str,
+    reduced_motion: str,
+) -> SceneMotion:
+    return SceneMotion(
+        profile=profile,
+        sequence=sequence,
+        ease=ease,
+        stagger=stagger,
+        duration_scale=duration_scale,
+        intensity=intensity,
+        node=node,
+        edge=edge,
+        group=group,
+        reduced_motion=reduced_motion,
+        node_effect=EffectConfig(preset=node),
+        edge_effect=EffectConfig(preset=edge),
+        group_effect=EffectConfig(preset=group),
+        title_effect=EffectConfig(preset=title),
+    )
+
+
+def _effect_config(
+    value: Any,
+    path: str,
+    allowed_presets: Set[str],
+    issues: List[ValidationIssue],
+    default: EffectConfig,
+) -> EffectConfig:
+    if value is None:
+        return default
+    if isinstance(value, str):
+        if value not in allowed_presets:
+            issues.append(ValidationIssue(path, f"expected one of: {', '.join(sorted(allowed_presets))}", "enum"))
+            return default
+        return EffectConfig(preset=value)
+    if not isinstance(value, dict):
+        issues.append(ValidationIssue(path, "expected a string or object", "type"))
+        return default
+    preset = value.get("preset", default.preset)
+    if not isinstance(preset, str):
+        issues.append(ValidationIssue(f"{path}.preset", "expected a string", "type"))
+        preset = default.preset
+    elif preset not in allowed_presets:
+        issues.append(ValidationIssue(f"{path}.preset", f"expected one of: {', '.join(sorted(allowed_presets))}", "enum"))
+        preset = default.preset
+    for key in ("line", "particle", "trail", "entry", "accent", "icon"):
+        if key in value and value[key] is not None and not isinstance(value[key], (str, bool)):
+            issues.append(ValidationIssue(f"{path}.{key}", "expected a string or boolean", "type"))
+    trail = value.get("trail")
+    return EffectConfig(
+        preset=preset,
+        line=_optional_string_token(value, "line"),
+        particle=_optional_string_token(value, "particle"),
+        trail=str(trail).lower() if isinstance(trail, bool) else _optional_string_token(value, "trail"),
+        entry=_optional_string_token(value, "entry"),
+        accent=_optional_string_token(value, "accent"),
+        icon=_optional_string_token(value, "icon"),
+    )
+
+
+def _optional_string_token(data: Dict[str, Any], key: str) -> Optional[str]:
+    value = data.get(key)
+    return value if isinstance(value, str) else None
 
 
 def _parse_groups(value: Any, path: str, issues: List[ValidationIssue], canvas: Canvas) -> List[Group]:
@@ -211,6 +298,7 @@ def _parse_groups(value: Any, path: str, issues: List[ValidationIssue], canvas: 
                 role=_role(item, "role", f"{item_path}.role", issues),
                 fill=_string(item, "fill", f"{item_path}.fill", issues, required=False),
                 stroke=_string(item, "stroke", f"{item_path}.stroke", issues, required=False),
+                effect=_effect_config(item.get("effect"), f"{item_path}.effect", KNOWN_GROUP_MOTION, issues, EffectConfig()),
             )
         )
     return groups
@@ -249,6 +337,8 @@ def _parse_nodes(value: Any, path: str, issues: List[ValidationIssue], canvas: C
                 fill=_string(item, "fill", f"{item_path}.fill", issues, required=False),
                 stroke=_string(item, "stroke", f"{item_path}.stroke", issues, required=False),
                 stroke_width=_optional_number(item, "stroke_width", f"{item_path}.stroke_width", issues, positive=True),
+                icon=_icon(item, "icon", f"{item_path}.icon", issues),
+                effect=_effect_config(item.get("effect"), f"{item_path}.effect", KNOWN_NODE_MOTION, issues, EffectConfig()),
             )
         )
     return nodes
@@ -293,9 +383,20 @@ def _parse_edges(value: Any, path: str, node_ids: Set[str], issues: List[Validat
                 stroke=_string(item, "stroke", f"{item_path}.stroke", issues, required=False),
                 width=_optional_number(item, "width", f"{item_path}.width", issues, positive=True),
                 motion=Motion(duration=duration, delay=delay, enabled=animated),
+                effect=_effect_config(item.get("effect"), f"{item_path}.effect", KNOWN_EDGE_MOTION, issues, EffectConfig()),
             )
         )
     return edges
+
+
+def _icon(data: Dict[str, Any], key: str, path: str, issues: List[ValidationIssue]) -> Optional[str]:
+    value = _string(data, key, path, issues, required=False)
+    if value is None:
+        return None
+    if value not in KNOWN_ICONS:
+        issues.append(ValidationIssue(path, f"expected one of: {', '.join(sorted(KNOWN_ICONS))}", "enum"))
+        return None
+    return value
 
 
 def _role(data: Dict[str, Any], key: str, path: str, issues: List[ValidationIssue]) -> str:

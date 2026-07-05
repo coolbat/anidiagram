@@ -1,0 +1,173 @@
+{
+  "version": "0.3",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "style": "claude-warm",
+  "title": {
+    "text": "Research Reasoning Loop",
+    "subtitle": "questions cycle through evidence and critique"
+  },
+  "motion": {
+    "profile": "expressive",
+    "sequence": "step-stagger",
+    "ease": "spring",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 0.9,
+    "edge": {
+      "preset": "comet-flow",
+      "particle": "soft-dot",
+      "trail": true
+    },
+    "node": {
+      "preset": "pop",
+      "accent": "glow"
+    },
+    "group": {
+      "preset": "marching-ants"
+    },
+    "title": {
+      "preset": "fade"
+    },
+    "reduced_motion": "subtle"
+  },
+  "groups": [
+    {
+      "id": "loop",
+      "label": "Reasoning Loop",
+      "bounds": [
+        210,
+        90,
+        790,
+        500
+      ],
+      "role": "neutral"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "question",
+      "label": "Question",
+      "caption": "frame",
+      "position": [
+        515,
+        130
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "actor",
+      "icon": "agent"
+    },
+    {
+      "id": "collect",
+      "label": "Collect",
+      "caption": "sources",
+      "position": [
+        780,
+        285
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "source",
+      "icon": "search"
+    },
+    {
+      "id": "synth",
+      "label": "Synthesis",
+      "caption": "draft",
+      "position": [
+        515,
+        445
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "process",
+      "icon": "file"
+    },
+    {
+      "id": "critique",
+      "label": "Critique",
+      "caption": "check",
+      "position": [
+        250,
+        285
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "risk",
+      "icon": "shield"
+    },
+    {
+      "id": "memory",
+      "label": "Memory",
+      "caption": "reuse",
+      "position": [
+        515,
+        285
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "memory",
+      "icon": "memory"
+    }
+  ],
+  "edges": [
+    {
+      "from": "question",
+      "to": "collect",
+      "label": "look up",
+      "role": "source",
+      "route": "curved"
+    },
+    {
+      "from": "collect",
+      "to": "synth",
+      "label": "evidence",
+      "role": "source",
+      "route": "curved"
+    },
+    {
+      "from": "synth",
+      "to": "critique",
+      "label": "review",
+      "role": "risk",
+      "route": "curved",
+      "effect": {
+        "preset": "dynamic-dash",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "critique",
+      "to": "question",
+      "label": "revise",
+      "role": "actor",
+      "route": "curved"
+    },
+    {
+      "from": "memory",
+      "to": "synth",
+      "label": "recall",
+      "role": "memory",
+      "route": "vh",
+      "effect": {
+        "preset": "flow-dot",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    }
+  ]
+}

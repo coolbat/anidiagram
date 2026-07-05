@@ -39,7 +39,7 @@
     </div>
     <div class="stage" id="stage">
       <div class="viewport" id="viewport">
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="normal" data-motion-sequence="step-stagger" data-motion-edge="comet-flow" data-motion-node="glow-breathe" data-motion-group="marching-ants" data-motion-reduced="subtle">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="normal" data-motion-sequence="step-stagger" data-motion-edge="comet-flow" data-motion-node="glow-breathe" data-motion-group="marching-ants" data-motion-title="fade" data-motion-reduced="subtle">
 <title id="diagram-title">Compare</title>
 <desc id="diagram-desc">two options with shared decision criteria</desc>
 <style>
@@ -53,6 +53,8 @@
   .edge-flow { stroke-linecap: round; }
   .edge-draw, .edge-base { stroke-linecap: round; stroke-linejoin: round; }
   .edge-particle { filter: url(#particle-glow); }
+  .edge-arrow-particle { filter: url(#particle-glow); }
+  .semantic-icon { fill: none; vector-effect: non-scaling-stroke; }
   .node-glow, .node-burst { pointer-events: none; }
   #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
   #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
@@ -86,6 +88,7 @@
 <rect x="28" y="26" width="1144" height="668" rx="26" fill="none" stroke="#d4d4d4" stroke-width="1.4" opacity="1.00" />
 <rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#10a37f" />
 <rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#f4f7f6" />
+
 <text id="main-title" x="90" y="84" class="title" fill="#111111" opacity="0">
   <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.08s" fill="freeze" />
   Compare
@@ -101,6 +104,8 @@
         fill="#fafafa" fill-opacity="0.34" stroke="#404040" stroke-width="1.6" stroke-dasharray="9 8">
     <animate attributeName="stroke-dashoffset" values="0;-34" dur="5.60s" begin="0.17s" repeatCount="indefinite" />
   </rect>
+
+
   <text x="138.0" y="200.0" class="group-label" fill="#626262">Option A</text>
 </g>
 
@@ -110,6 +115,8 @@
         fill="#effcf8" fill-opacity="0.34" stroke="#10a37f" stroke-width="1.6" stroke-dasharray="9 8">
     <animate attributeName="stroke-dashoffset" values="0;-34" dur="6.00s" begin="0.29s" repeatCount="indefinite" />
   </rect>
+
+
   <text x="708.0" y="200.0" class="group-label" fill="#626262">Option B</text>
 </g>
 
@@ -197,6 +204,7 @@
   <rect x="220.0" y="235.0" width="160.0" height="82.0" rx="8.0"
         fill="#fafafa" stroke="#404040" stroke-width="1.5" />
 
+
   <circle cx="238.0" cy="253.0" r="14" fill="#404040" />
   <text x="238.0" y="258.0" class="step-label" fill="#fafafa" text-anchor="middle">1</text>
   <text x="300.0" y="262.0" text-anchor="middle" fill="#111111">
@@ -227,6 +235,7 @@
   </rect>
   <rect x="220.0" y="385.0" width="160.0" height="82.0" rx="8.0"
         fill="#fef2f2" stroke="#dc2626" stroke-width="1.5" />
+
 
   <circle cx="238.0" cy="403.0" r="14" fill="#dc2626" />
   <text x="238.0" y="408.0" class="step-label" fill="#fef2f2" text-anchor="middle">2</text>
@@ -259,6 +268,7 @@
   <rect x="790.0" y="235.0" width="160.0" height="82.0" rx="8.0"
         fill="#effcf8" stroke="#10a37f" stroke-width="1.5" />
 
+
   <circle cx="808.0" cy="253.0" r="14" fill="#10a37f" />
   <text x="808.0" y="258.0" class="step-label" fill="#effcf8" text-anchor="middle">3</text>
   <text x="870.0" y="262.0" text-anchor="middle" fill="#111111">
@@ -290,6 +300,7 @@
   <rect x="790.0" y="385.0" width="160.0" height="82.0" rx="8.0"
         fill="#fef2f2" stroke="#dc2626" stroke-width="1.5" />
 
+
   <circle cx="808.0" cy="403.0" r="14" fill="#dc2626" />
   <text x="808.0" y="408.0" class="step-label" fill="#fef2f2" text-anchor="middle">4</text>
   <text x="870.0" y="412.0" text-anchor="middle" fill="#111111">
@@ -320,6 +331,7 @@
   </rect>
   <rect x="520.0" y="565.0" width="160.0" height="82.0" rx="8.0"
         fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5" />
+
 
   <circle cx="538.0" cy="583.0" r="14" fill="#16a34a" />
   <text x="538.0" y="588.0" class="step-label" fill="#f0fdf4" text-anchor="middle">5</text>

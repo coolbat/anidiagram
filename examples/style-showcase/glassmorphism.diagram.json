@@ -1,0 +1,188 @@
+{
+  "version": "0.3",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "style": "glassmorphism",
+  "title": {
+    "text": "Revenue Funnel",
+    "subtitle": "traffic is filtered into qualified expansion"
+  },
+  "motion": {
+    "profile": "expressive",
+    "sequence": "step-stagger",
+    "ease": "spring",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 1.0,
+    "edge": {
+      "preset": "ghost-flow",
+      "particle": "soft-dot",
+      "trail": true
+    },
+    "node": {
+      "preset": "pulse",
+      "accent": "ripple"
+    },
+    "group": {
+      "preset": "border-scan"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "subtle"
+  },
+  "groups": [
+    {
+      "id": "funnel",
+      "label": "Funnel",
+      "bounds": [
+        450,
+        80,
+        345,
+        600
+      ],
+      "role": "process"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "traffic",
+      "label": "Traffic",
+      "caption": "visits",
+      "position": [
+        505,
+        130
+      ],
+      "size": [
+        230,
+        78
+      ],
+      "role": "source",
+      "icon": "cloud"
+    },
+    {
+      "id": "qualify",
+      "label": "Qualify",
+      "caption": "fit",
+      "position": [
+        525,
+        245
+      ],
+      "size": [
+        190,
+        78
+      ],
+      "role": "process",
+      "icon": "search"
+    },
+    {
+      "id": "score",
+      "label": "Score",
+      "caption": "intent",
+      "position": [
+        545,
+        360
+      ],
+      "size": [
+        150,
+        78
+      ],
+      "role": "agent",
+      "icon": "agent"
+    },
+    {
+      "id": "demo",
+      "label": "Demo",
+      "caption": "show",
+      "position": [
+        565,
+        475
+      ],
+      "size": [
+        130,
+        78
+      ],
+      "role": "tool",
+      "icon": "tool"
+    },
+    {
+      "id": "close",
+      "label": "Close",
+      "caption": "deal",
+      "position": [
+        575,
+        590
+      ],
+      "size": [
+        110,
+        70
+      ],
+      "role": "output",
+      "icon": "output"
+    },
+    {
+      "id": "crm",
+      "label": "CRM",
+      "caption": "history",
+      "position": [
+        870,
+        360
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "memory",
+      "icon": "database"
+    }
+  ],
+  "edges": [
+    {
+      "from": "traffic",
+      "to": "qualify",
+      "label": "filter",
+      "role": "source",
+      "route": "vh"
+    },
+    {
+      "from": "qualify",
+      "to": "score",
+      "label": "rank",
+      "role": "process",
+      "route": "vh"
+    },
+    {
+      "from": "score",
+      "to": "demo",
+      "label": "book",
+      "role": "agent",
+      "route": "vh",
+      "effect": {
+        "preset": "ghost-flow",
+        "particle": "soft-dot",
+        "trail": true
+      }
+    },
+    {
+      "from": "demo",
+      "to": "close",
+      "label": "commit",
+      "role": "output",
+      "route": "vh",
+      "effect": {
+        "preset": "flow-dot",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "crm",
+      "to": "score",
+      "label": "context",
+      "role": "memory",
+      "route": "straight"
+    }
+  ]
+}
