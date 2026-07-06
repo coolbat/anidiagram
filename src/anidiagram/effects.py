@@ -20,9 +20,12 @@ def effect_from_value(value: Any, fallback: EffectConfig) -> EffectConfig:
         line=value.get("line") if isinstance(value.get("line"), str) else fallback.line,
         particle=value.get("particle") if isinstance(value.get("particle"), str) else fallback.particle,
         trail=_trail_value(value.get("trail"), fallback.trail),
+        particle_count=_optional_int(value.get("particle_count"), fallback.particle_count),
+        trail_count=_optional_int(value.get("trail_count"), fallback.trail_count),
         entry=value.get("entry") if isinstance(value.get("entry"), str) else fallback.entry,
         accent=value.get("accent") if isinstance(value.get("accent"), str) else fallback.accent,
         icon=value.get("icon") if isinstance(value.get("icon"), str) else fallback.icon,
+        icon_motion=value.get("icon_motion") if isinstance(value.get("icon_motion"), str) else fallback.icon_motion,
     )
 
 
@@ -49,9 +52,12 @@ def merge_effects(base: EffectConfig, override: EffectConfig) -> EffectConfig:
         line=override.line or base.line,
         particle=override.particle or base.particle,
         trail=override.trail or base.trail,
+        particle_count=override.particle_count if override.particle_count is not None else base.particle_count,
+        trail_count=override.trail_count if override.trail_count is not None else base.trail_count,
         entry=override.entry or base.entry,
         accent=override.accent or base.accent,
         icon=override.icon or base.icon,
+        icon_motion=override.icon_motion or base.icon_motion,
     )
 
 
@@ -67,3 +73,7 @@ def _trail_value(value: Any, fallback: Optional[str]) -> Optional[str]:
     if isinstance(value, bool):
         return "ghost" if value else "none"
     return value if isinstance(value, str) else fallback
+
+
+def _optional_int(value: Any, fallback: Optional[int]) -> Optional[int]:
+    return value if isinstance(value, int) and not isinstance(value, bool) and value >= 0 else fallback

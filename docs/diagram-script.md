@@ -46,7 +46,14 @@ requirements, and canvas bounds.
 - `motion.edge`, `motion.node`, `motion.group`, and `motion.title`: accept
   either the legacy string form or a structured effect object.
 - node `icon`: semantic icon id for built-in clean-room SVG primitives.
+- node `shape`: `rect` or `decision`.
 - node, edge, and group `effect`: per-element effect override.
+- effect `icon_motion`: icon-local motion hint for `icon-semantic` nodes.
+- top-level `motion_policy`: budget controls for how many edges, particles,
+  nodes, and group borders may be actively animated.
+- effect `particle_count` and `trail_count`: per-effect density controls.
+- `runtime-loop` profile: looping runtime-state motion with static structure,
+  signal edges, icon breathing, static groups, and breathing title.
 
 Schema: `schemas/diagram-script-v0.3.schema.json`.
 
@@ -54,9 +61,8 @@ Structured effect object example:
 
 ```json
 {
-  "preset": "ghost-flow",
-  "particle": "soft-dot",
-  "trail": true
+  "preset": "icon-semantic",
+  "icon_motion": "database-write"
 }
 ```
 
@@ -64,6 +70,15 @@ Supported semantic icons:
 
 `database`, `file`, `folder`, `api`, `cloud`, `search`, `shield`, `agent`,
 `token`, `memory`, `tool`, `output`.
+
+Supported node shapes:
+
+- `rect`: default rounded rectangle node.
+- `decision`: diamond-shaped decision node for branches and quality gates.
+
+DiagramPlan v0.1 is the higher-level brief/LLM contract that can compile into
+freeform DiagramScript v0.3. See
+[prompt-to-diagram-flow.md](./prompt-to-diagram-flow.md).
 
 ## Motion Profiles
 
@@ -94,20 +109,100 @@ Profiles:
 - `subtle`: restrained entry and draw-on edges.
 - `normal`: default balanced motion.
 - `expressive`: layered sequence with stronger node and edge motion.
+- `teaching`: staged teaching motion with semantic icons, line flow, and title
+  reveal defaults.
 
 Motion channels:
 
-- `sequence`: `simultaneous`, `step-stagger`, or `layered`.
-- `node`: `none`, `fade`, `float`, `glow-breathe`, or `pop`.
-- `edge`: `none`, `draw`, `pulse`, `comet-flow`, or `trace`.
-- `group`: `none`, `soft-reveal`, or `marching-ants`.
+- `sequence`: `simultaneous`, `step-stagger`, `layered`, `staged`, or `loop`.
+- `node`: `none`, `fade`, `float`, `glow-breathe`, `pop`, `pulse`,
+  `ripple`, `status-blink`, `icon-pulse`, `icon-breathe`, `icon-semantic`,
+  or `micro-icon`.
+- `edge`: `none`, `static`, `draw`, `pulse`, `comet-flow`, `trace`,
+  `dynamic-dash`, `dash-flow`, `flow-dot`, `flow-arrow`, `signal-dot`,
+  `signal-arrow`, `ghost-flow`, `glow-line`, or `comet`.
+- `group`: `none`, `static`, `soft-reveal`, `marching-ants`, `border-scan`,
+  or `corner-pulse`.
+- `title`: `none`, `fade`, `breathe`, `handwrite-reveal`, or
+  `highlight-sweep`.
 - `reduced_motion`: `static`, `subtle`, or `pause`.
+
+## Motion Policy
+
+`motion_policy` is a separate budget layer. It does not change what an effect
+means; it limits how many resolved effects are allowed to remain active. This
+keeps generated diagrams readable when many elements ask for motion.
+
+```json
+{
+  "motion_policy": {
+    "profile": "focused",
+    "motion_area": "small",
+    "max_active_flow_edges": 4,
+    "max_particle_edges": 3,
+    "particle_count_per_edge": 1,
+    "flow_trail_count": 1,
+    "max_active_pulse_nodes": 1,
+    "pulse_mode": "rotate",
+    "max_scanning_groups": 1
+  }
+}
+```
+
+Profiles:
+
+- `unrestricted`: no built-in clamp.
+- `readable`: sparse movement for dense architecture diagrams.
+- `focused`: a few active paths for explainer and teaching diagrams.
+- `expressive`: higher limits for showcase output.
+- `readable-runtime`: larger edge count but micro-sized motion for runtime-loop
+  diagrams.
+
+When the configured effects exceed the policy, SVG and raster renderers clamp
+extras into calmer draw/fade/soft-reveal behavior. Quality reports emit a
+`motion_overload` warning so generated specs can be tuned upstream.
+
+Runtime-loop example:
+
+```json
+{
+  "motion": {
+    "profile": "runtime-loop",
+    "sequence": "loop",
+    "edge": {"preset": "signal-dot", "particle_count": 1, "trail_count": 0},
+    "node": {"preset": "icon-breathe"},
+    "group": {"preset": "static"},
+    "title": {"preset": "breathe"}
+  },
+  "motion_policy": {
+    "profile": "readable-runtime",
+    "motion_area": "micro"
+  }
+}
+```
 
 ## Effect Objects
 
 DiagramScript v0.3 keeps the existing string motion channels as compatibility
 syntax and adds structured effect objects for richer line, node, group, title,
 and semantic icon behavior.
+
+`icon-semantic` keeps node frames still and animates only local icon parts.
+Default icon motions are:
+
+| Icon | Default motion |
+| --- | --- |
+| `database`, `memory` | `database-write` |
+| `file` | `file-lines`: page entrance, scale overshoot, folded-corner motion, and fast content-line reveal |
+| `folder` | `folder-open` |
+| `api` | `api-ping` |
+| `cloud` | `cloud-upload` |
+| `search` | `search-sweep` |
+| `shield` | `shield-check` |
+| `agent` | `agent-orbit` |
+| `tool` | `tool-tap` |
+| `output` | `output-check` |
+| `token` | `token-pulse` |
 
 The broader feature plan is documented in
 [motion-effects-feature-plan.md](./motion-effects-feature-plan.md).

@@ -3,12 +3,41 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict, Iterable, List, Tuple
+from typing import Dict, Iterable, List, Optional, Tuple
 
+from .effects import channel_effect, effect_active
 from .model import Edge, Node, Point, Scene
 
 
 Rect = Tuple[float, float, float, float]
+CONTINUOUS_EDGE_MOTION = {
+    "pulse",
+    "trace",
+    "comet-flow",
+    "dynamic-dash",
+    "dash-flow",
+    "flow-dot",
+    "flow-arrow",
+    "signal-dot",
+    "signal-arrow",
+    "ghost-flow",
+    "glow-line",
+    "comet",
+}
+PARTICLE_EDGE_MOTION = {"comet-flow", "comet", "flow-dot", "flow-arrow", "signal-dot", "signal-arrow", "ghost-flow"}
+CONTINUOUS_NODE_MOTION = {
+    "float",
+    "glow-breathe",
+    "pop",
+    "pulse",
+    "ripple",
+    "status-blink",
+    "icon-pulse",
+    "icon-breathe",
+    "icon-semantic",
+    "micro-icon",
+}
+SCANNING_GROUP_MOTION = {"marching-ants", "border-scan", "corner-pulse"}
 
 
 @dataclass(frozen=True)
@@ -34,6 +63,7 @@ def quality_report(scene: Scene) -> Dict[str, object]:
     _check_node_collisions(scene.nodes, issues)
     _check_text_fit(scene.nodes, issues)
     _check_edge_node_collisions(scene.edges, nodes, issues)
+    _check_motion_budget(scene, issues)
     errors = sum(1 for issue in issues if issue.severity == "error")
     warnings = sum(1 for issue in issues if issue.severity == "warning")
     score = max(0, 100 - errors * 20 - warnings * 5)
@@ -130,3 +160,85 @@ def _check_edge_node_collisions(edges: Iterable[Edge], nodes: Dict[str, Node], i
 def _point_in_rect(point: Point, rect: Rect) -> bool:
     x, y = point
     return rect[0] <= x <= rect[2] and rect[1] <= y <= rect[3]
+
+
+def _check_motion_budget(scene: Scene, issues: List[QualityIssue]) -> None:
+    policy = scene.motion_policy
+    if (
+        policy.max_active_flow_edges is None
+        and policy.max_particle_edges is None
+        and policy.max_active_pulse_nodes is None
+        and policy.max_scanning_groups is None
+    ):
+        return
+    edge_motion_count = 0
+    particle_edge_count = 0
+    for edge in scene.edges:
+        if not edge.motion.enabled:
+            continue
+        effect = channel_effect(scene.motion, {}, "edge", edge.effect)
+        if not effect_active(scene.motion, effect):
+            continue
+        if effect.preset in CONTINUOUS_EDGE_MOTION:
+            edge_motion_count += 1
+        if effect.preset in PARTICLE_EDGE_MOTION:
+            particle_edge_count += 1
+    node_motion_count = sum(
+        1
+        for node in scene.nodes
+        if (effect := channel_effect(scene.motion, {}, "node", node.effect)).preset in CONTINUOUS_NODE_MOTION
+        and effect_active(scene.motion, effect)
+    )
+    group_motion_count = sum(
+        1
+        for group in scene.groups
+        if (effect := channel_effect(scene.motion, {}, "group", group.effect)).preset in SCANNING_GROUP_MOTION
+        and effect_active(scene.motion, effect)
+    )
+    _motion_budget_warning(
+        issues,
+        "$.motion_policy.max_active_flow_edges",
+        edge_motion_count,
+        policy.max_active_flow_edges,
+        "active flow edges",
+    )
+    _motion_budget_warning(
+        issues,
+        "$.motion_policy.max_particle_edges",
+        particle_edge_count,
+        policy.max_particle_edges,
+        "particle edges",
+    )
+    _motion_budget_warning(
+        issues,
+        "$.motion_policy.max_active_pulse_nodes",
+        node_motion_count,
+        policy.max_active_pulse_nodes,
+        "pulse nodes",
+    )
+    _motion_budget_warning(
+        issues,
+        "$.motion_policy.max_scanning_groups",
+        group_motion_count,
+        policy.max_scanning_groups,
+        "scanning groups",
+    )
+
+
+def _motion_budget_warning(
+    issues: List[QualityIssue],
+    path: str,
+    configured: int,
+    limit: Optional[int],
+    label: str,
+) -> None:
+    if limit is None or configured <= limit:
+        return
+    issues.append(
+        QualityIssue(
+            "motion_overload",
+            "warning",
+            path,
+            f"{configured} configured {label} exceed the motion policy limit of {limit}; renderer will clamp the extras",
+        )
+    )

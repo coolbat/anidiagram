@@ -40,9 +40,25 @@ class EffectConfig:
     line: Optional[str] = None
     particle: Optional[str] = None
     trail: Optional[str] = None
+    particle_count: Optional[int] = None
+    trail_count: Optional[int] = None
     entry: Optional[str] = None
     accent: Optional[str] = None
     icon: Optional[str] = None
+    icon_motion: Optional[str] = None
+
+
+@dataclass(frozen=True)
+class MotionPolicy:
+    profile: str = "unrestricted"
+    motion_area: str = "auto"
+    max_active_flow_edges: Optional[int] = None
+    max_particle_edges: Optional[int] = None
+    particle_count_per_edge: Optional[int] = None
+    flow_trail_count: Optional[int] = None
+    max_active_pulse_nodes: Optional[int] = None
+    pulse_mode: str = "all"
+    max_scanning_groups: Optional[int] = None
 
 
 @dataclass(frozen=True)
@@ -70,6 +86,7 @@ class Node:
     caption: str
     position: Point
     size: Point
+    shape: str = "rect"
     role: str = "neutral"
     step: Optional[int] = None
     radius: Optional[float] = None
@@ -116,6 +133,7 @@ class Scene:
     edges: List[Edge]
     groups: List[Group]
     motion: SceneMotion = field(default_factory=SceneMotion)
+    motion_policy: MotionPolicy = field(default_factory=MotionPolicy)
     preset: Optional[str] = None
 
     def stats(self) -> dict:

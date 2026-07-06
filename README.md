@@ -1,5 +1,7 @@
 # AniDiagram
 
+Language: English | [简体中文](./README.zh-CN.md)
+
 Clean-room DiagramScript renderer for animated architecture visuals.
 
 This repository is not a GitHub fork and does not copy source code, documents,
@@ -44,6 +46,8 @@ Full style showcase: [gallery/styles/index.html](./gallery/styles/index.html)
 ## What It Does
 
 - Validates DiagramScript `0.1`, `0.2`, and `0.3`.
+- Compiles natural-language briefs into DiagramPlan v0.1 and then freeform
+  DiagramScript v0.3.
 - Compiles JSON specs or presets into a typed Scene IR.
 - Renders animated SVG and self-contained HTML viewers.
 - Uses richer motion layers: staggered entry, line drawing, flow particles,
@@ -52,6 +56,8 @@ Full style showcase: [gallery/styles/index.html](./gallery/styles/index.html)
   `expressive`, and `teaching` animation behavior.
 - Supports structured motion effect objects for line flow, arrow particles,
   dynamic dashes, border scans, icon pulses, and title reveal effects.
+- Supports `motion_policy` budgets so generated diagrams can keep a few focused
+  animated paths without turning every element on at once.
 - Exports optional PNG, GIF, PDF, WebP, MP4, APNG, and Lottie files.
 - Produces quality reports for bounds, overlaps, text fit, and explicit paths.
 - Includes 14 clean-room preset compilers and 12 visual styles.
@@ -80,6 +86,19 @@ PYTHONPATH=src python3 -m anidiagram.cli \
   --outdir outputs \
   --basename agent-memory \
   --all
+```
+
+Compile a natural-language brief into a complex freeform diagram:
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --brief examples/briefs/loop-engineering.txt \
+  --style styles/sketch-board.json \
+  --outdir outputs \
+  --basename loop-engineering \
+  --formats svg,html,quality \
+  --plan-out outputs/loop-engineering.plan.json \
+  --spec-out outputs/loop-engineering.diagram.json
 ```
 
 Install optional raster dependencies:
@@ -115,11 +134,17 @@ Schema files:
 - [schemas/diagram-script-v0.1.schema.json](./schemas/diagram-script-v0.1.schema.json)
 - [schemas/diagram-script-v0.2.schema.json](./schemas/diagram-script-v0.2.schema.json)
 - [schemas/diagram-script-v0.3.schema.json](./schemas/diagram-script-v0.3.schema.json)
+- [schemas/diagram-plan-v0.1.schema.json](./schemas/diagram-plan-v0.1.schema.json)
 - [schemas/style-profile-v0.1.schema.json](./schemas/style-profile-v0.1.schema.json)
 
 v0.2 adds route types, step badges, preset metadata, and stricter role
-validation. v0.3 adds structured effect objects and semantic icons. See
+validation. v0.3 adds structured effect objects, semantic icons, and node
+shapes. See
 [docs/diagram-script.md](./docs/diagram-script.md).
+
+DiagramPlan v0.1 is the higher-level brief/LLM contract. The current local
+planner and compiler are documented in
+[docs/prompt-to-diagram-flow.md](./docs/prompt-to-diagram-flow.md).
 
 ## Layout Presets
 
@@ -160,6 +185,7 @@ DiagramScript also supports freeform layout controls:
 | `edge.route` | `curved`, `straight`, `hv`, `vh`, `orthogonal`, `points` | Edge routing style. |
 | `edge.points` | list of `[x, y]` points | Explicit path geometry when `route` is `points`. |
 | `node.step` / `edge.step` | integer | Visible step badges for ordered diagrams. |
+| `node.shape` | `rect`, `decision` | Rectangle or diamond decision node. |
 
 ## Styles
 
@@ -219,12 +245,13 @@ also supports structured effect objects.
 | `normal` | Balanced default motion with glow-breathe nodes, comet-flow edges, and marching group boundaries. |
 | `expressive` | Stronger layered motion with pop nodes, comet-flow edges, and animated group borders. |
 | `teaching` | Staged teaching motion with icon pulses, ghost-flow edges, border scans, and title reveal. |
+| `runtime-loop` | Static structure with looping signal flow, icon breathing, static groups, and breathing title. |
 
 ### Motion Sequencing
 
 | Field | Supported Values |
 | --- | --- |
-| `motion.sequence` | `simultaneous`, `step-stagger`, `layered`, `staged` |
+| `motion.sequence` | `simultaneous`, `step-stagger`, `layered`, `staged`, `loop` |
 | `motion.ease` | `linear`, `calm`, `snappy`, `back-out`, `elastic`, `spring` |
 | `motion.reduced_motion` | `static`, `subtle`, `pause` |
 
@@ -235,6 +262,33 @@ Numeric controls:
 | `motion.stagger` | Delay between staged items. |
 | `motion.duration_scale` | Multiplier for animation timing. |
 | `motion.intensity` | Overall strength for glow, pulse, and particle effects. |
+
+### Motion Policy
+
+`motion_policy` controls how much motion may be active after all scene-level and
+per-element effects are resolved. This is useful for generated diagrams: the
+spec can keep semantic effects on important elements, while the renderer clamps
+extras into calmer draw/fade behavior.
+
+| Field | Use |
+| --- | --- |
+| `profile` | `unrestricted`, `readable`, `focused`, `expressive`, or `readable-runtime` budget defaults. |
+| `motion_area` | `auto`, `micro`, `small`, `medium`, or `unrestricted`; currently scales particle size for low-area motion. |
+| `max_active_flow_edges` | Maximum number of continuously animated edges. |
+| `max_particle_edges` | Maximum number of edges allowed to show moving particles/arrows. |
+| `particle_count_per_edge` | Default particle count on each animated particle edge. |
+| `flow_trail_count` | Maximum particle trail/echo count per edge. |
+| `max_active_pulse_nodes` | Maximum number of nodes allowed to pulse/glow/float. |
+| `pulse_mode` | `all` or `rotate`; current renderers use the value as policy metadata. |
+| `max_scanning_groups` | Maximum number of animated group borders. |
+
+Recommended defaults:
+
+| Profile | Recommended Use |
+| --- | --- |
+| `readable` | Dense architecture diagrams where motion should be sparse. |
+| `focused` | Teaching/explainer diagrams with a small number of active paths. |
+| `expressive` | Showcase diagrams that can tolerate more visible motion. |
 
 ### Node Motion Types
 
@@ -249,6 +303,9 @@ Numeric controls:
 | `ripple` | Expanding emphasis rings. |
 | `status-blink` | Low-duty active status indicator. |
 | `icon-pulse` | Pulse focused on the node's semantic icon. |
+| `icon-breathe` | Gentle semantic-icon scale/halo breathing; node frame stays still. |
+| `icon-semantic` | Icon-local motion matched to the semantic icon, such as database writes or shield checks. |
+| `micro-icon` | Alias-style micro icon breathing for runtime diagrams. |
 
 ### Edge Motion Types
 
@@ -261,8 +318,11 @@ Numeric controls:
 | `comet-flow` | Bright particle with a fading trail. |
 | `trace` | Moving trace dash along the path. |
 | `dynamic-dash` | Moving dashed stroke. |
+| `dash-flow` | Marching dashed arrow effect where the dash continuity appears to move forward. |
 | `flow-dot` | Soft circular particles move along the path. |
 | `flow-arrow` | Semi-transparent arrow particles move along the path. |
+| `signal-dot` | One small signal point moves along a complete static path. |
+| `signal-arrow` | One small arrow-like signal moves along a complete static path. |
 | `ghost-flow` | Particle trail with translucent echoes. |
 | `glow-line` | Low-frequency glow pulse on the line. |
 | `comet` | Alias-style comet preset for bright leading flow. |
@@ -284,6 +344,7 @@ Numeric controls:
 | --- | --- |
 | `none` | No title motion. |
 | `fade` | Subtle title reveal. |
+| `breathe` | Gentle title opacity breathing without sliding or jumping. |
 | `handwrite-reveal` | Handwritten underline/reveal accent. |
 | `highlight-sweep` | Soft highlight sweeps behind the title. |
 
@@ -293,6 +354,22 @@ DiagramScript v0.3 nodes can set `icon` to one of:
 
 `database`, `file`, `folder`, `api`, `cloud`, `search`, `shield`, `agent`,
 `token`, `memory`, `tool`, `output`.
+
+`icon-semantic` maps common icons to local micro-motions:
+
+| Icon | Default icon motion |
+| --- | --- |
+| `database`, `memory` | `database-write`: top ellipse compresses/rebounds, a write line scans across, a data point enters, and the lower layer flashes lightly. |
+| `file` | `file-lines`: page enters from lower-left, overshoots scale, folds the corner, then draws content lines quickly. |
+| `folder` | `folder-open`: folder tab opens and exposes a short internal file line. |
+| `api` | `api-ping`: request point travels between brackets. |
+| `cloud` | `cloud-upload`: upload arrow moves inside the cloud with faint transfer dots. |
+| `search` | `search-sweep`: lens sweep highlight plus a small light point. |
+| `shield` | `shield-check`: checkmark draws and a low-opacity protection pulse follows the shield outline. |
+| `agent` | `agent-orbit`: center core glows while a thinking/status dot orbits locally. |
+| `tool` | `tool-tap`: short tool tap motion with a contact spark. |
+| `output` | `output-check`: result lines reveal first, then the checkmark draws. |
+| `token` | `token-pulse`: center pulse plus short outer ticks lighting in sequence. |
 
 ### Effect Object Fields
 
@@ -306,9 +383,12 @@ and `group.effect`.
 | `line` | Optional line treatment hint. |
 | `particle` | Optional particle shape hint such as `soft-dot` or `soft-arrow`. |
 | `trail` | Optional trail hint; boolean values are accepted. |
+| `particle_count` | Per-edge override for the number of moving particles. |
+| `trail_count` | Per-edge override for the maximum trail/echo count. |
 | `entry` | Optional node/title entry hint. |
 | `accent` | Optional accent effect such as ripple. |
 | `icon` | Optional icon-local treatment hint. |
+| `icon_motion` | Optional icon-local motion id such as `database-write` or `shield-check`. |
 
 String motion example:
 
@@ -331,10 +411,19 @@ Structured motion example:
 {
   "motion": {
     "profile": "teaching",
-    "edge": {"preset": "ghost-flow", "particle": "soft-dot", "trail": true},
-    "node": {"preset": "icon-pulse", "accent": "ripple"},
+    "edge": {"preset": "ghost-flow", "particle": "soft-dot", "trail": true, "particle_count": 1},
+    "node": {"preset": "icon-semantic", "icon_motion": "database-write"},
     "group": {"preset": "border-scan"},
     "title": {"preset": "handwrite-reveal"}
+  },
+  "motion_policy": {
+    "profile": "focused",
+    "max_active_flow_edges": 4,
+    "max_particle_edges": 3,
+    "particle_count_per_edge": 1,
+    "flow_trail_count": 1,
+    "max_active_pulse_nodes": 1,
+    "max_scanning_groups": 1
   }
 }
 ```
@@ -348,6 +437,17 @@ PYTHONPATH=src python3 -m anidiagram.cli \
   --outdir outputs \
   --basename teaching-transformer \
   --all
+```
+
+Try the runtime-loop motion example:
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --spec examples/runtime-loop-motion.diagram.json \
+  --style styles/minimal-light.json \
+  --outdir outputs \
+  --basename runtime-loop-motion \
+  --formats svg,html,quality
 ```
 
 ## Tests

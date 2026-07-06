@@ -1,0 +1,56 @@
+{
+  "version": "0.3",
+  "preset": "runtime-loop-motion",
+  "canvas": {"width": 920, "height": 560},
+  "style": "minimal-light",
+  "title": {
+    "text": "Runtime Loop Motion",
+    "subtitle": "Static structure with micro icon breathing, signal flow, and marching dashed arrows"
+  },
+  "motion": {
+    "profile": "runtime-loop",
+    "sequence": "loop",
+    "ease": "linear",
+    "stagger": 0.08,
+    "duration_scale": 1.0,
+    "intensity": 0.84,
+    "edge": {"preset": "signal-dot", "particle_count": 1, "trail_count": 0},
+    "node": {"preset": "icon-breathe"},
+    "group": {"preset": "static"},
+    "title": {"preset": "breathe"},
+    "reduced_motion": "subtle"
+  },
+  "motion_policy": {
+    "profile": "readable-runtime",
+    "motion_area": "micro",
+    "max_active_flow_edges": 10,
+    "max_particle_edges": 10,
+    "particle_count_per_edge": 1,
+    "flow_trail_count": 0,
+    "max_active_pulse_nodes": 7,
+    "pulse_mode": "rotate",
+    "max_scanning_groups": 0
+  },
+  "groups": [
+    {"id": "loop", "label": "Runtime Loop", "bounds": [55, 160, 810, 185], "role": "agent", "effect": {"preset": "static"}},
+    {"id": "support", "label": "Support Paths", "bounds": [55, 385, 810, 110], "role": "process", "effect": {"preset": "static"}}
+  ],
+  "nodes": [
+    {"id": "trigger", "label": "Trigger", "caption": "input event", "position": [90, 215], "size": [150, 82], "role": "source", "icon": "api"},
+    {"id": "think", "label": "Think", "caption": "reason", "position": [285, 215], "size": [150, 82], "role": "agent", "icon": "agent"},
+    {"id": "act", "label": "Act", "caption": "tool call", "position": [480, 215], "size": [150, 82], "role": "tool", "icon": "tool"},
+    {"id": "observe", "label": "Observe", "caption": "result", "position": [675, 215], "size": [150, 82], "role": "output", "icon": "search"},
+    {"id": "memory", "label": "Memory", "caption": "context", "position": [145, 410], "size": [170, 64], "role": "memory", "icon": "database"},
+    {"id": "guard", "label": "Guard", "caption": "validate", "position": [390, 410], "size": [170, 64], "role": "risk", "icon": "shield"},
+    {"id": "return", "label": "Return", "caption": "feedback", "position": [635, 410], "size": [170, 64], "role": "process", "icon": "output"}
+  ],
+  "edges": [
+    {"from": "trigger", "to": "think", "label": "event", "role": "source", "effect": {"preset": "signal-dot"}},
+    {"from": "think", "to": "act", "label": "decision", "role": "agent", "effect": {"preset": "signal-arrow"}},
+    {"from": "act", "to": "observe", "label": "response", "role": "tool", "effect": {"preset": "signal-dot"}},
+    {"from": "memory", "to": "think", "label": "context", "role": "memory", "route": "points", "points": [[230, 410], [230, 345], [360, 345], [360, 297]], "effect": {"preset": "signal-dot"}},
+    {"from": "act", "to": "guard", "label": "check", "role": "risk", "route": "points", "points": [[555, 297], [555, 360], [475, 360], [475, 410]], "effect": {"preset": "dash-flow"}},
+    {"from": "observe", "to": "return", "label": "result", "role": "output", "route": "points", "points": [[750, 297], [750, 360], [720, 360], [720, 410]], "effect": {"preset": "signal-arrow"}},
+    {"from": "return", "to": "think", "label": "revise", "role": "process", "route": "points", "points": [[635, 442], [330, 442], [330, 297]], "effect": {"preset": "dash-flow"}}
+  ]
+}

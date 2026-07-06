@@ -1,0 +1,7 @@
+Create a teaching diagram for a loop engineering agent.
+
+The user gives a brief, project context, events, and policy rules. The agent
+clarifies the goal, plans the next step, acts with tools, observes the result,
+and decides whether the work is done. If checks fail, it loops back to planning.
+The diagram should show working memory, long-term notes, guardrail validation,
+tool calls, tool results, and verified output.

@@ -8,6 +8,7 @@
     "version": {"const": "0.3"},
     "preset": {"type": "string"},
     "motion": {"$ref": "#/$defs/motion"},
+    "motion_policy": {"$ref": "#/$defs/motion_policy"},
     "canvas": {
       "type": "object",
       "properties": {
@@ -27,10 +28,11 @@
     "nodes": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/node"}},
     "edges": {"type": "array", "items": {"$ref": "#/$defs/edge"}}
   },
-  "$defs": {
+    "$defs": {
     "role": {"enum": ["actor", "source", "process", "agent", "memory", "tool", "output", "risk", "neutral"]},
     "route": {"enum": ["curved", "straight", "hv", "vh", "orthogonal", "points"]},
     "icon": {"enum": ["database", "file", "folder", "api", "cloud", "search", "shield", "agent", "token", "memory", "tool", "output"]},
+    "node_shape": {"enum": ["rect", "decision"]},
     "point": {
       "type": "array",
       "prefixItems": [{"type": "number"}, {"type": "number"}],
@@ -52,9 +54,12 @@
         "line": {"type": "string"},
         "particle": {"type": "string"},
         "trail": {"oneOf": [{"type": "string"}, {"type": "boolean"}]},
+        "particle_count": {"type": "integer", "minimum": 0},
+        "trail_count": {"type": "integer", "minimum": 0},
         "entry": {"type": "string"},
         "accent": {"type": "string"},
-        "icon": {"type": "string"}
+        "icon": {"type": "string"},
+        "icon_motion": {"type": "string"}
       }
     },
     "motion_channel": {
@@ -72,6 +77,7 @@
         "caption": {"type": "string"},
         "position": {"$ref": "#/$defs/point"},
         "size": {"$ref": "#/$defs/point"},
+        "shape": {"$ref": "#/$defs/node_shape"},
         "role": {"$ref": "#/$defs/role"},
         "icon": {"$ref": "#/$defs/icon"},
         "effect": {"$ref": "#/$defs/effect"},
@@ -117,8 +123,8 @@
     "motion": {
       "type": "object",
       "properties": {
-        "profile": {"enum": ["off", "subtle", "normal", "expressive", "teaching"]},
-        "sequence": {"enum": ["simultaneous", "step-stagger", "layered", "staged"]},
+        "profile": {"enum": ["off", "subtle", "normal", "expressive", "teaching", "runtime-loop"]},
+        "sequence": {"enum": ["simultaneous", "step-stagger", "layered", "staged", "loop"]},
         "ease": {"enum": ["linear", "calm", "snappy", "back-out", "elastic", "spring"]},
         "stagger": {"type": "number", "minimum": 0},
         "duration_scale": {"type": "number", "exclusiveMinimum": 0},
@@ -128,6 +134,20 @@
         "group": {"$ref": "#/$defs/motion_channel"},
         "title": {"$ref": "#/$defs/motion_channel"},
         "reduced_motion": {"enum": ["static", "subtle", "pause"]}
+      }
+    },
+    "motion_policy": {
+      "type": "object",
+      "properties": {
+        "profile": {"enum": ["unrestricted", "readable", "focused", "expressive", "readable-runtime"]},
+        "motion_area": {"enum": ["auto", "micro", "small", "medium", "unrestricted"]},
+        "max_active_flow_edges": {"type": "integer", "minimum": 0},
+        "max_particle_edges": {"type": "integer", "minimum": 0},
+        "particle_count_per_edge": {"type": "integer", "minimum": 0},
+        "flow_trail_count": {"type": "integer", "minimum": 0},
+        "max_active_pulse_nodes": {"type": "integer", "minimum": 0},
+        "pulse_mode": {"enum": ["all", "rotate"]},
+        "max_scanning_groups": {"type": "integer", "minimum": 0}
       }
     }
   }

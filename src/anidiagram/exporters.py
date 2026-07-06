@@ -13,7 +13,7 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple
 from .effects import channel_effect, effect_active
 from .model import Edge, Node, Point, Scene
 from .quality import quality_report
-from .renderer_svg import render_html, render_svg
+from .renderer_svg import CONTINUOUS_EDGE_MOTION, PARTICLE_EDGE_MOTION, particle_radii, policy_allows, render_html, render_svg
 from .styles import role_style
 
 
@@ -199,12 +199,20 @@ def _render_frame(scene: Scene, style: Dict[str, Any], frame: int = 0, frames: i
         fill = node.fill or role.get("fill", "#f8fafc")
         stroke = node.stroke or role.get("stroke", "#94a3b8")
         text = role.get("text", canvas.get("text", "#172033"))
-        draw.rounded_rectangle((x, y, x + w, y + h), radius=int(node.radius or style.get("node", {}).get("radius", 14)), fill=fill, outline=stroke, width=int(node.stroke_width or 2))
+        stroke_width = int(node.stroke_width or 2)
+        if node.shape == "decision":
+            cx, cy = x + w / 2, y + h / 2
+            draw.polygon([(cx, y), (x + w, cy), (cx, y + h), (x, cy)], fill=fill, outline=stroke)
+            if stroke_width > 1:
+                draw.line([(cx, y), (x + w, cy), (cx, y + h), (x, cy), (cx, y)], fill=stroke, width=stroke_width)
+        else:
+            draw.rounded_rectangle((x, y, x + w, y + h), radius=int(node.radius or style.get("node", {}).get("radius", 14)), fill=fill, outline=stroke, width=stroke_width)
         if node.step is not None:
             draw.ellipse((x + 4, y + 4, x + 32, y + 32), fill=stroke)
             draw.text((x + 14, y + 12), str(node.step), fill=fill, font=font)
-        draw.text((x + 14, y + h / 2 - 12), node.label, fill=text, font=font)
-        draw.text((x + 14, y + h / 2 + 8), node.caption, fill=text, font=font)
+        text_x = x + 14 if node.shape != "decision" else x + 34
+        draw.text((text_x, y + h / 2 - 12), node.label, fill=text, font=font)
+        draw.text((text_x, y + h / 2 + 8), node.caption, fill=text, font=font)
     if frames > 1 and scene.motion.profile != "off":
         _draw_raster_particles(draw, scene, style, node_map, frame, frames)
     return image
@@ -223,11 +231,29 @@ def _flatten_frame_for_gif(image: Any, style: Dict[str, Any]) -> Any:
 def _draw_raster_particles(draw: Any, scene: Scene, style: Dict[str, Any], nodes: Dict[str, Node], frame: int, frames: int) -> None:
     intensity = max(0.25, min(1.8, scene.motion.intensity))
     edge_width = float(style.get("edge", {}).get("width", 2.4))
+    policy = scene.motion_policy
+    edge_motion_rank = 0
+    particle_motion_rank = 0
     for edge_index, edge in enumerate(scene.edges):
         if not edge.motion.enabled:
             continue
         edge_effect = channel_effect(scene.motion, style, "edge", edge.effect)
         if not effect_active(scene.motion, edge_effect):
+            continue
+        edge_mode = edge_effect.preset
+        active_rank: Optional[int] = None
+        particle_rank: Optional[int] = None
+        if edge_mode in CONTINUOUS_EDGE_MOTION:
+            edge_motion_rank += 1
+            active_rank = edge_motion_rank
+        if edge_mode in PARTICLE_EDGE_MOTION:
+            particle_motion_rank += 1
+            particle_rank = particle_motion_rank
+        if edge_mode not in PARTICLE_EDGE_MOTION:
+            continue
+        if not policy_allows(active_rank, policy.max_active_flow_edges):
+            continue
+        if not policy_allows(particle_rank, policy.max_particle_edges):
             continue
         points = _edge_points(edge, nodes)
         if len(points) < 2:
@@ -237,7 +263,8 @@ def _draw_raster_particles(draw: Any, scene: Scene, style: Dict[str, Any], nodes
         color = _hex_to_rgba(stroke, 235)
         glow = _hex_to_rgba(stroke, 72)
         phase = (frame / max(1, frames) + edge_index * 0.071 + edge.motion.delay * 0.03) % 1.0
-        radii = (6.5, 4.4, 3.0, 2.0) if edge_effect.preset == "ghost-flow" else (6.0, 4.0, 2.8)
+        particle_shape = edge_effect.particle or ("soft-arrow" if edge_mode in {"flow-arrow", "signal-arrow"} else "soft-dot")
+        radii = particle_radii(edge_mode, particle_shape, edge_effect, policy)
         for trail_index, radius in enumerate(radii):
             progress = (phase - trail_index * 0.055) % 1.0
             x, y = _point_along_polyline(points, progress)

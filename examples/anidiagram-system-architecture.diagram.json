@@ -1,0 +1,85 @@
+{
+  "version": "0.3",
+  "preset": "system-architecture",
+  "canvas": {"width": 1280, "height": 920},
+  "style": "sketch-board",
+  "title": {
+    "text": "AniDiagram System Architecture",
+    "subtitle": "Clean-room brief/spec to animated diagram rendering pipeline"
+  },
+  "motion": {
+    "profile": "teaching",
+    "sequence": "staged",
+    "ease": "spring",
+    "stagger": 0.1,
+    "duration_scale": 0.95,
+    "intensity": 0.82,
+    "edge": {"preset": "draw"},
+    "node": {"preset": "fade"},
+    "group": {"preset": "soft-reveal"},
+    "title": {"preset": "fade"},
+    "reduced_motion": "subtle"
+  },
+  "motion_policy": {
+    "profile": "focused",
+    "max_active_flow_edges": 4,
+    "max_particle_edges": 3,
+    "particle_count_per_edge": 1,
+    "flow_trail_count": 1,
+    "max_active_pulse_nodes": 1,
+    "pulse_mode": "rotate",
+    "max_scanning_groups": 1
+  },
+  "groups": [
+    {"id": "inputs", "label": "Input Sources", "bounds": [50, 150, 1180, 112], "role": "source", "effect": {"preset": "soft-reveal"}},
+    {"id": "compile", "label": "Compilation and Validation", "bounds": [50, 295, 1180, 135], "role": "agent", "effect": {"preset": "soft-reveal"}},
+    {"id": "kernel", "label": "Core Product Kernel", "bounds": [50, 485, 1180, 140], "role": "process", "effect": {"preset": "border-scan"}},
+    {"id": "outputs", "label": "Rendering, Exports, Quality", "bounds": [50, 700, 1180, 140], "role": "output", "effect": {"preset": "soft-reveal"}}
+  ],
+  "nodes": [
+    {"id": "user-skill", "label": "User / Skill", "caption": "$anidiagram request", "position": [85, 182], "size": [165, 66], "role": "actor", "icon": "agent", "step": 1},
+    {"id": "brief", "label": "Brief / Text", "caption": "natural language", "position": [300, 182], "size": [165, 66], "role": "source", "icon": "file"},
+    {"id": "diagram-script", "label": "DiagramScript", "caption": "JSON scene spec", "position": [515, 182], "size": [175, 66], "role": "source", "icon": "file"},
+    {"id": "presets", "label": "Presets", "caption": "14 layout starters", "position": [740, 182], "size": [155, 66], "role": "process", "icon": "folder"},
+    {"id": "style-json", "label": "Style JSON", "caption": "12 profiles", "position": [945, 182], "size": [155, 66], "role": "source", "icon": "file"},
+
+    {"id": "cli", "label": "CLI", "caption": "orchestrates render", "position": [85, 335], "size": [165, 72], "role": "agent", "icon": "tool", "step": 2},
+    {"id": "planner", "label": "Brief Planner", "caption": "DiagramPlan v0.1", "position": [315, 335], "size": [180, 72], "role": "process", "icon": "agent"},
+    {"id": "preset-compiler", "label": "Preset Compiler", "caption": "starter to spec", "position": [545, 335], "size": [185, 72], "role": "process", "icon": "folder"},
+    {"id": "validator", "label": "Schema Validator", "caption": "errors with paths", "position": [790, 335], "size": [185, 72], "role": "risk", "icon": "shield", "step": 3, "effect": {"preset": "icon-pulse", "accent": "ripple"}},
+    {"id": "result-json", "label": "Result JSON", "caption": "structured CLI output", "position": [1025, 335], "size": [160, 72], "role": "output", "icon": "output"},
+
+    {"id": "diagram-plan", "label": "DiagramPlan", "caption": "semantic intent", "position": [110, 530], "size": [180, 70], "role": "memory", "icon": "memory"},
+    {"id": "scene-ir", "label": "Scene IR", "caption": "Scene Node Edge Group", "position": [380, 530], "size": [190, 70], "role": "agent", "icon": "agent", "step": 4},
+    {"id": "style-loader", "label": "Style Loader", "caption": "roles and tokens", "position": [650, 530], "size": [180, 70], "role": "process", "icon": "api"},
+    {"id": "effects", "label": "Effect Resolver", "caption": "motion presets", "position": [890, 530], "size": [190, 70], "role": "process", "icon": "cloud"},
+
+    {"id": "svg-renderer", "label": "SVG Renderer", "caption": "animated SVG", "position": [90, 745], "size": [165, 72], "role": "output", "icon": "output", "step": 5},
+    {"id": "html-viewer", "label": "HTML Viewer", "caption": "play zoom pan", "position": [305, 745], "size": [165, 72], "role": "output", "icon": "api"},
+    {"id": "exporters", "label": "Exporters", "caption": "PNG GIF PDF MP4", "position": [520, 745], "size": [180, 72], "role": "output", "icon": "cloud"},
+    {"id": "quality", "label": "Quality Report", "caption": "bounds collisions text", "position": [750, 745], "size": [180, 72], "role": "risk", "icon": "shield", "step": 6},
+    {"id": "tests-gallery", "label": "Tests / Gallery", "caption": "unittest and batches", "position": [985, 745], "size": [175, 72], "role": "tool", "icon": "folder"}
+  ],
+  "edges": [
+    {"from": "user-skill", "to": "cli", "label": "run", "role": "actor", "route": "points", "points": [[168, 248], [168, 335]], "effect": {"preset": "draw"}},
+    {"from": "brief", "to": "planner", "label": "brief", "role": "source", "route": "points", "points": [[382, 248], [382, 290], [405, 290], [405, 335]], "effect": {"preset": "flow-arrow", "particle": "soft-arrow", "particle_count": 1, "trail_count": 1}},
+    {"from": "diagram-script", "to": "validator", "label": "spec", "role": "risk", "route": "points", "points": [[602, 248], [602, 282], [882, 282], [882, 335]], "effect": {"preset": "draw"}},
+    {"from": "presets", "to": "preset-compiler", "label": "starter", "role": "process", "route": "points", "points": [[818, 248], [818, 290], [638, 290], [638, 335]], "effect": {"preset": "draw"}},
+    {"from": "style-json", "to": "style-loader", "label": "tokens", "role": "source", "route": "points", "points": [[1022, 248], [1022, 462], [740, 462], [740, 530]], "effect": {"preset": "draw"}},
+
+    {"from": "cli", "to": "planner", "label": "--brief", "role": "agent", "route": "straight", "effect": {"preset": "draw"}},
+    {"from": "planner", "to": "diagram-plan", "label": "plan", "role": "memory", "route": "points", "points": [[405, 407], [405, 455], [200, 455], [200, 530]], "effect": {"preset": "draw"}},
+    {"from": "diagram-plan", "to": "scene-ir", "label": "compile", "role": "process", "route": "straight", "effect": {"preset": "flow-dot", "particle_count": 1, "trail_count": 1}},
+    {"from": "preset-compiler", "to": "validator", "label": "validate", "role": "risk", "route": "straight", "effect": {"preset": "draw"}},
+    {"from": "validator", "to": "scene-ir", "label": "Scene", "role": "agent", "route": "points", "points": [[882, 407], [882, 455], [475, 455], [475, 530]], "effect": {"preset": "draw"}},
+    {"from": "validator", "to": "result-json", "label": "status", "role": "output", "route": "straight", "effect": {"preset": "draw"}},
+
+    {"from": "style-loader", "to": "effects", "label": "defaults", "role": "process", "route": "straight", "effect": {"preset": "draw"}},
+    {"from": "scene-ir", "to": "svg-renderer", "label": "render", "role": "output", "route": "points", "points": [[475, 600], [475, 660], [172, 660], [172, 745]], "effect": {"preset": "flow-arrow", "particle": "soft-arrow", "particle_count": 1, "trail_count": 1}},
+    {"from": "effects", "to": "svg-renderer", "label": "style/motion", "role": "process", "route": "points", "points": [[985, 600], [985, 660], [172, 660], [172, 745]], "effect": {"preset": "draw"}},
+    {"from": "svg-renderer", "to": "html-viewer", "label": "viewer", "role": "output", "route": "straight", "effect": {"preset": "draw"}},
+    {"from": "svg-renderer", "to": "exporters", "label": "exports", "role": "output", "route": "points", "points": [[255, 781], [500, 781], [520, 781]], "effect": {"preset": "draw"}},
+    {"from": "scene-ir", "to": "quality", "label": "check", "role": "risk", "route": "points", "points": [[570, 565], [840, 565], [840, 745]], "effect": {"preset": "draw"}},
+    {"from": "quality", "to": "tests-gallery", "label": "gate", "role": "tool", "route": "straight", "effect": {"preset": "dynamic-dash"}}
+  ]
+}

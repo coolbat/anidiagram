@@ -1,0 +1,62 @@
+{
+  "version": "0.3",
+  "preset": "semantic-icon-motion",
+  "canvas": {"width": 1040, "height": 620},
+  "style": "minimal-light",
+  "title": {
+    "text": "Semantic Icon Motion",
+    "subtitle": "Icon-local motion: file writes, folders, API pings, cloud transfer, data writes, search sweeps, checks, orbits, tools, outputs, and tokens"
+  },
+  "motion": {
+    "profile": "runtime-loop",
+    "sequence": "loop",
+    "ease": "linear",
+    "stagger": 0.06,
+    "duration_scale": 1.0,
+    "intensity": 0.82,
+    "edge": {"preset": "signal-dot", "particle_count": 1, "trail_count": 0},
+    "node": {"preset": "icon-semantic"},
+    "group": {"preset": "static"},
+    "title": {"preset": "breathe"},
+    "reduced_motion": "subtle"
+  },
+  "motion_policy": {
+    "profile": "readable-runtime",
+    "motion_area": "micro",
+    "max_active_flow_edges": 8,
+    "max_particle_edges": 8,
+    "particle_count_per_edge": 1,
+    "flow_trail_count": 0,
+    "max_active_pulse_nodes": 12,
+    "pulse_mode": "rotate",
+    "max_scanning_groups": 0
+  },
+  "groups": [
+    {"id": "inputs", "label": "Inputs", "bounds": [48, 150, 290, 265], "role": "source", "effect": {"preset": "static"}},
+    {"id": "runtime", "label": "Runtime", "bounds": [375, 150, 290, 265], "role": "agent", "effect": {"preset": "static"}},
+    {"id": "outputs", "label": "Outputs", "bounds": [702, 150, 290, 265], "role": "output", "effect": {"preset": "static"}}
+  ],
+  "nodes": [
+    {"id": "docs", "label": "Docs", "caption": "file lines", "position": [82, 195], "size": [190, 72], "role": "source", "icon": "file", "effect": {"preset": "icon-semantic", "icon_motion": "file-lines"}},
+    {"id": "assets", "label": "Assets", "caption": "folder open", "position": [82, 315], "size": [190, 72], "role": "tool", "icon": "folder", "effect": {"preset": "icon-semantic", "icon_motion": "folder-open"}},
+    {"id": "api", "label": "API", "caption": "request ping", "position": [410, 195], "size": [190, 72], "role": "process", "icon": "api", "effect": {"preset": "icon-semantic", "icon_motion": "api-ping"}},
+    {"id": "agent", "label": "Agent", "caption": "orbit", "position": [410, 315], "size": [190, 72], "role": "agent", "icon": "agent", "effect": {"preset": "icon-semantic", "icon_motion": "agent-orbit"}},
+    {"id": "memory", "label": "Memory", "caption": "data write", "position": [735, 175], "size": [190, 64], "role": "memory", "icon": "database", "effect": {"preset": "icon-semantic", "icon_motion": "database-write"}},
+    {"id": "cloud", "label": "Cloud", "caption": "transfer", "position": [735, 267], "size": [190, 64], "role": "agent", "icon": "cloud", "effect": {"preset": "icon-semantic", "icon_motion": "cloud-upload"}},
+    {"id": "search", "label": "Search", "caption": "lens sweep", "position": [735, 355], "size": [190, 64], "role": "source", "icon": "search", "effect": {"preset": "icon-semantic", "icon_motion": "search-sweep"}},
+    {"id": "token", "label": "Token", "caption": "pulse", "position": [80, 468], "size": [160, 72], "role": "neutral", "icon": "token", "effect": {"preset": "icon-semantic", "icon_motion": "token-pulse"}},
+    {"id": "guard", "label": "Guard", "caption": "check draw", "position": [300, 468], "size": [160, 72], "role": "risk", "icon": "shield", "effect": {"preset": "icon-semantic", "icon_motion": "shield-check"}},
+    {"id": "tool", "label": "Tool", "caption": "tap", "position": [520, 468], "size": [160, 72], "role": "tool", "icon": "tool", "effect": {"preset": "icon-semantic", "icon_motion": "tool-tap"}},
+    {"id": "result", "label": "Result", "caption": "output check", "position": [740, 468], "size": [160, 72], "role": "output", "icon": "output", "effect": {"preset": "icon-semantic", "icon_motion": "output-check"}}
+  ],
+  "edges": [
+    {"from": "docs", "to": "api", "label": "load", "role": "source", "effect": {"preset": "signal-dot"}},
+    {"from": "assets", "to": "agent", "label": "context", "role": "tool", "effect": {"preset": "signal-dot"}},
+    {"from": "api", "to": "memory", "label": "write", "role": "memory", "effect": {"preset": "signal-arrow"}},
+    {"from": "memory", "to": "cloud", "label": "sync", "role": "agent", "effect": {"preset": "signal-dot"}},
+    {"from": "cloud", "to": "search", "label": "index", "role": "source", "effect": {"preset": "signal-arrow"}},
+    {"from": "agent", "to": "guard", "label": "validate", "role": "risk", "route": "points", "points": [[505, 387], [505, 430], [380, 430], [380, 468]], "effect": {"preset": "dash-flow"}},
+    {"from": "guard", "to": "tool", "label": "allow", "role": "process", "effect": {"preset": "signal-dot"}},
+    {"from": "tool", "to": "result", "label": "produce", "role": "output", "effect": {"preset": "signal-arrow"}}
+  ]
+}

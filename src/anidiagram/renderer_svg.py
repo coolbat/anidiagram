@@ -12,12 +12,55 @@ from dataclasses import dataclass
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 from .effects import channel_effect, effect_active
-from .model import Edge, EffectConfig, Group, Node, Scene, SceneMotion
+from .model import Edge, EffectConfig, Group, MotionPolicy, Node, Scene, SceneMotion
 from .schema import compile_scene
 from .styles import role_style
 
 
 Point = Tuple[float, float]
+
+CONTINUOUS_EDGE_MOTION = {
+    "pulse",
+    "trace",
+    "comet-flow",
+    "dynamic-dash",
+    "dash-flow",
+    "flow-dot",
+    "flow-arrow",
+    "signal-dot",
+    "signal-arrow",
+    "ghost-flow",
+    "glow-line",
+    "comet",
+}
+DRAW_ENTRY_EDGE_MOTION = {
+    "draw",
+    "pulse",
+    "trace",
+    "comet-flow",
+    "dynamic-dash",
+    "flow-dot",
+    "flow-arrow",
+    "ghost-flow",
+    "glow-line",
+    "comet",
+}
+PARTICLE_EDGE_MOTION = {"comet-flow", "comet", "flow-dot", "flow-arrow", "signal-dot", "signal-arrow", "ghost-flow"}
+CONTINUOUS_NODE_MOTION = {
+    "float",
+    "glow-breathe",
+    "pop",
+    "pulse",
+    "ripple",
+    "status-blink",
+    "icon-pulse",
+    "icon-breathe",
+    "icon-semantic",
+    "micro-icon",
+}
+SCANNING_GROUP_MOTION = {"marching-ants", "border-scan", "corner-pulse"}
+RUNTIME_EDGE_MOTION = {"signal-dot", "signal-arrow", "dash-flow"}
+BREATHING_NODE_MOTION = {"icon-breathe", "micro-icon"}
 
 
 @dataclass(frozen=True)
@@ -47,6 +90,74 @@ def clamp(value: float, minimum: float, maximum: float) -> float:
 
 def motion_active(motion: SceneMotion, mode: str) -> bool:
     return motion.profile != "off" and motion.intensity > 0 and mode != "none"
+
+
+def policy_allows(rank: Optional[int], limit: Optional[int]) -> bool:
+    return rank is None or limit is None or rank <= limit
+
+
+def effect_with_preset(effect: EffectConfig, preset: str) -> EffectConfig:
+    return EffectConfig(
+        preset=preset,
+        line=effect.line,
+        particle=effect.particle,
+        trail=effect.trail,
+        particle_count=effect.particle_count,
+        trail_count=effect.trail_count,
+        entry=effect.entry,
+        accent=effect.accent,
+        icon=effect.icon,
+        icon_motion=effect.icon_motion,
+    )
+
+
+def ranked_motion_modes(
+    items: Iterable[Tuple[int, EffectConfig, str]],
+    motion: SceneMotion,
+    allowed: set[str],
+) -> Dict[int, int]:
+    ranks: Dict[int, int] = {}
+    rank = 0
+    for index, effect, mode in items:
+        if effect_active(motion, effect) and mode in allowed:
+            rank += 1
+            ranks[index] = rank
+    return ranks
+
+
+def particle_radii(edge_mode: str, particle_shape: str, effect: EffectConfig, policy: MotionPolicy) -> Tuple[float, ...]:
+    if edge_mode == "signal-dot":
+        base = (4.2,)
+    elif edge_mode == "signal-arrow":
+        base = (5.0,)
+    elif edge_mode == "ghost-flow":
+        base = (5.5, 3.5, 2.4, 1.8)
+    elif edge_mode == "flow-dot":
+        base = (6.0, 3.8)
+    else:
+        base = (5.5, 3.5, 2.4)
+    default_count = 1 if particle_shape == "soft-arrow" or edge_mode in {"signal-dot", "signal-arrow"} else len(base)
+    count = effect.particle_count if effect.particle_count is not None else policy.particle_count_per_edge
+    if count is None:
+        count = default_count
+    cap = effect.trail_count if effect.trail_count is not None else policy.flow_trail_count
+    if cap is not None and cap > 0:
+        count = min(count, cap)
+    return base[: max(0, min(len(base), count))]
+
+
+def motion_area_scale(policy: MotionPolicy) -> float:
+    if policy.motion_area == "micro":
+        return 0.86
+    if policy.motion_area == "small":
+        return 0.86
+    if policy.motion_area == "medium":
+        return 1.0
+    return 1.0
+
+
+def runtime_loop_active(motion: SceneMotion) -> bool:
+    return motion.profile == "runtime-loop" or motion.sequence == "loop"
 
 
 def scaled_duration(value: float, motion: SceneMotion) -> float:
@@ -90,6 +201,51 @@ def style_effect(style: Dict[str, Any], key: str, default: Any) -> Any:
     if isinstance(effects, dict) and key in effects:
         return effects[key]
     return default
+
+
+def parse_hex_color(value: str) -> Optional[Tuple[int, int, int]]:
+    text = str(value or "").strip()
+    if not text.startswith("#"):
+        return None
+    raw = text[1:]
+    if len(raw) == 3:
+        raw = "".join(char * 2 for char in raw)
+    if len(raw) != 6 or any(char not in "0123456789abcdefABCDEF" for char in raw):
+        return None
+    return (int(raw[0:2], 16), int(raw[2:4], 16), int(raw[4:6], 16))
+
+
+def rgb_to_hex(rgb: Tuple[int, int, int]) -> str:
+    return "#" + "".join(f"{int(clamp(channel, 0, 255)):02x}" for channel in rgb)
+
+
+def mix_rgb(base: Tuple[int, int, int], overlay: Tuple[int, int, int], amount: float) -> Tuple[int, int, int]:
+    ratio = clamp(amount, 0.0, 1.0)
+    return tuple(round(base[index] * (1 - ratio) + overlay[index] * ratio) for index in range(3))  # type: ignore[return-value]
+
+
+def color_luminance(rgb: Tuple[int, int, int]) -> float:
+    return (0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]) / 255
+
+
+def icon_surface_fill(background: str, stroke: str) -> str:
+    bg = parse_hex_color(background)
+    accent = parse_hex_color(stroke)
+    if bg is None:
+        return "#ffffff"
+    if color_luminance(bg) < 0.42:
+        return rgb_to_hex(mix_rgb(bg, (255, 255, 255), 0.74))
+    if accent is not None:
+        return rgb_to_hex(mix_rgb(bg, accent, 0.30))
+    return rgb_to_hex(mix_rgb(bg, (15, 23, 42), 0.14))
+
+
+def icon_surface_accent(surface: str, stroke: str) -> str:
+    base = parse_hex_color(surface)
+    accent = parse_hex_color(stroke)
+    if base is None or accent is None:
+        return stroke
+    return rgb_to_hex(mix_rgb(base, accent, 0.32))
 
 
 def aurora_nodes_enabled(style: Dict[str, Any]) -> bool:
@@ -236,32 +392,368 @@ def render_step_badge(x: float, y: float, value: int, fill: str, text: str) -> s
   <text x="{x:.1f}" y="{y + 5:.1f}" class="step-label" fill="{esc(text)}" text-anchor="middle">{value}</text>"""
 
 
+ICON_MOTION_IDS = {
+    "database-write",
+    "file-lines",
+    "folder-open",
+    "api-ping",
+    "cloud-upload",
+    "search-sweep",
+    "shield-check",
+    "agent-orbit",
+    "tool-tap",
+    "output-check",
+    "token-pulse",
+    "status-ping",
+}
+
+
+def default_icon_motion(icon: str) -> str:
+    if icon in {"database", "memory"}:
+        return "database-write"
+    return {
+        "file": "file-lines",
+        "folder": "folder-open",
+        "api": "api-ping",
+        "cloud": "cloud-upload",
+        "search": "search-sweep",
+        "shield": "shield-check",
+        "agent": "agent-orbit",
+        "tool": "tool-tap",
+        "output": "output-check",
+        "token": "token-pulse",
+    }.get(icon, "status-ping")
+
+
+def render_icon_semantic_motion(
+    icon: str,
+    cx: float,
+    cy: float,
+    half: float,
+    stroke: str,
+    motion: SceneMotion,
+    effect: EffectConfig,
+    index: int,
+) -> str:
+    if not effect_active(motion, effect) or effect.preset != "icon-semantic":
+        return ""
+    requested = effect.icon_motion or effect.icon or default_icon_motion(icon)
+    motion_id = requested if requested in ICON_MOTION_IDS else default_icon_motion(icon)
+    duration = scaled_duration(2.15 + (index % 3) * 0.12, motion)
+    if motion_id == "file-lines":
+        duration = scaled_duration(1.75 + (index % 3) * 0.08, motion)
+    begin = motion_delay(index, motion, "node") + 0.52
+    motion_class = f"icon-semantic-motion icon-motion-{esc(svg_fragment_id(motion_id))}"
+    data = f'data-icon-motion="{esc(motion_id)}"'
+
+    if motion_id == "database-write":
+        left = cx - half * 0.74
+        right = cx + half * 0.74
+        top = cy - half * 0.68
+        mid = cy + half * 0.12
+        layer_y = cy + half * 0.52
+        return f"""
+  <g class="{motion_class}" {data}>
+    <ellipse class="icon-database-top-bounce" cx="{cx:.1f}" cy="{cy - half * 0.62:.1f}" rx="{half * 0.84:.1f}" ry="{half * 0.28:.1f}"
+          fill="none" stroke="{esc(stroke)}" stroke-width="2.4" opacity="0.74">
+      <animate attributeName="ry" values="{half * 0.28:.1f};{half * 0.17:.1f};{half * 0.39:.1f};{half * 0.28:.1f}" keyTimes="0;0.18;0.34;1" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 {half * 0.10:.1f};0 {-half * 0.06:.1f};0 0" keyTimes="0;0.18;0.34;1" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0.36;0.88;0.64;0.36" keyTimes="0;0.18;0.34;1" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+    </ellipse>
+    <path d="M {left:.1f} {top:.1f} H {right:.1f}" fill="none" stroke="{esc(stroke)}" stroke-width="3"
+          stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0.95">
+      <animate attributeName="stroke-dashoffset" values="1;0;0;1" keyTimes="0;0.22;0.68;1" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.95;0.95;0" keyTimes="0;0.12;0.72;1" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+    </path>
+    <circle r="{max(2.7, half * 0.22):.1f}" fill="{esc(stroke)}" opacity="0">
+      <animateMotion dur="{seconds(duration)}" begin="{seconds(begin + 0.08)}" repeatCount="indefinite" path="M {left:.1f} {mid:.1f} H {right:.1f}" />
+      <animate attributeName="opacity" values="0;0.92;0" dur="{seconds(duration)}" begin="{seconds(begin + 0.08)}" repeatCount="indefinite" />
+    </circle>
+    <path class="icon-database-layer-flash" d="M {cx - half * 0.78:.1f} {layer_y:.1f} C {cx - half * 0.42:.1f} {layer_y + half * 0.22:.1f}, {cx + half * 0.42:.1f} {layer_y + half * 0.22:.1f}, {cx + half * 0.78:.1f} {layer_y:.1f}"
+          fill="none" stroke="{esc(stroke)}" stroke-width="2.3" stroke-linecap="round" opacity="0">
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 {half * 0.18:.1f};0 {-half * 0.08:.1f};0 0" keyTimes="0;0.18;0.34;1" dur="{seconds(duration)}" begin="{seconds(begin + 0.16)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.74;0.32;0" keyTimes="0;0.18;0.44;1" dur="{seconds(duration)}" begin="{seconds(begin + 0.16)}" repeatCount="indefinite" />
+    </path>
+  </g>"""
+
+    if motion_id == "file-lines":
+        x1 = cx - half * 0.42
+        x2 = cx + half * 0.44
+        lines = []
+        for line_index, line_y in enumerate((cy - half * 0.18, cy + half * 0.18, cy + half * 0.52)):
+            line_begin = begin + 0.22 + line_index * 0.045
+            lines.append(
+                f"""    <path d="M {x1:.1f} {line_y:.1f} H {x2 - line_index * half * 0.12:.1f}" fill="none" stroke="{esc(stroke)}" stroke-width="2.4"
+          stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0.76">
+      <animate attributeName="stroke-dashoffset" values="1;0;0;1" keyTimes="0;0.08;0.68;1" dur="{seconds(duration)}" begin="{seconds(line_begin)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.92;0.92;0" keyTimes="0;0.06;0.66;1" dur="{seconds(duration)}" begin="{seconds(line_begin)}" repeatCount="indefinite" />
+    </path>"""
+            )
+        return f"""
+  <g class="{motion_class}" {data}>
+{chr(10).join(lines)}
+  </g>"""
+
+    if motion_id == "folder-open":
+        hinge_x = cx - half * 0.92
+        hinge_y = cy - half * 0.48
+        return f"""
+  <g class="{motion_class}" {data}>
+    <path d="M {hinge_x:.1f} {hinge_y:.1f} H {cx - half * 0.20:.1f} L {cx + half * 0.02:.1f} {cy - half * 0.78:.1f} H {cx + half * 0.95:.1f}"
+          fill="none" stroke="{esc(stroke)}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.92">
+      <animateTransform attributeName="transform" type="rotate" values="3 {hinge_x:.1f} {hinge_y:.1f};-20 {hinge_x:.1f} {hinge_y:.1f};3 {hinge_x:.1f} {hinge_y:.1f}" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0.36;0.96;0.36" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+    </path>
+    <path class="icon-folder-file-line" d="M {cx - half * 0.52:.1f} {cy + half * 0.16:.1f} H {cx + half * 0.54:.1f}"
+          fill="none" stroke="{esc(stroke)}" stroke-width="2.5" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0">
+      <animate attributeName="stroke-dashoffset" values="1;0;0;1" keyTimes="0;0.16;0.52;1" dur="{seconds(duration)}" begin="{seconds(begin + 0.16)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.86;0.72;0" keyTimes="0;0.12;0.58;1" dur="{seconds(duration)}" begin="{seconds(begin + 0.16)}" repeatCount="indefinite" />
+    </path>
+  </g>"""
+
+    if motion_id == "api-ping":
+        return f"""
+  <g class="{motion_class}" {data}>
+    <circle r="{max(3.0, half * 0.24):.1f}" fill="{esc(stroke)}" opacity="0">
+      <animateMotion dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" path="M {cx - half * 0.78:.1f} {cy:.1f} H {cx + half * 0.78:.1f}" />
+      <animate attributeName="opacity" values="0;0.98;0" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+    </circle>
+    <circle cx="{cx + half * 0.78:.1f}" cy="{cy:.1f}" r="{max(4.0, half * 0.24):.1f}" fill="none" stroke="{esc(stroke)}" stroke-width="2.1" opacity="0">
+      <animate attributeName="r" values="{half * 0.20:.1f};{half * 0.72:.1f}" dur="{seconds(duration)}" begin="{seconds(begin + 0.24)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.58;0" dur="{seconds(duration)}" begin="{seconds(begin + 0.24)}" repeatCount="indefinite" />
+    </circle>
+  </g>"""
+
+    if motion_id == "cloud-upload":
+        return f"""
+  <g class="{motion_class}" {data}>
+    <path d="M {cx:.1f} {cy + half * 0.58:.1f} V {cy - half * 0.12:.1f}
+             M {cx - half * 0.26:.1f} {cy + half * 0.12:.1f} L {cx:.1f} {cy - half * 0.16:.1f} L {cx + half * 0.26:.1f} {cy + half * 0.12:.1f}"
+          fill="none" stroke="{esc(stroke)}" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round" opacity="0.92">
+      <animateTransform attributeName="transform" type="translate" values="0 {half * 0.42:.1f};0 {-half * 0.36:.1f};0 {half * 0.42:.1f}" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.96;0" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+    </path>
+    <circle class="icon-cloud-dot" cx="{cx - half * 0.34:.1f}" cy="{cy + half * 0.26:.1f}" r="{max(2.0, half * 0.13):.1f}" fill="{esc(stroke)}" opacity="0">
+      <animate attributeName="r" values="{max(1.4, half * 0.08):.1f};{max(2.6, half * 0.18):.1f};{max(1.4, half * 0.08):.1f}" dur="{seconds(duration)}" begin="{seconds(begin + 0.12)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.62;0" dur="{seconds(duration)}" begin="{seconds(begin + 0.12)}" repeatCount="indefinite" />
+    </circle>
+    <circle class="icon-cloud-dot" cx="{cx + half * 0.34:.1f}" cy="{cy + half * 0.30:.1f}" r="{max(1.8, half * 0.11):.1f}" fill="{esc(stroke)}" opacity="0">
+      <animate attributeName="r" values="{max(1.2, half * 0.07):.1f};{max(2.4, half * 0.16):.1f};{max(1.2, half * 0.07):.1f}" dur="{seconds(duration)}" begin="{seconds(begin + 0.34)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.48;0" dur="{seconds(duration)}" begin="{seconds(begin + 0.34)}" repeatCount="indefinite" />
+    </circle>
+  </g>"""
+
+    if motion_id == "search-sweep":
+        return f"""
+  <g class="{motion_class}" {data}>
+    <path d="M {cx - half * 0.78:.1f} {cy - half * 0.58:.1f} L {cx + half * 0.36:.1f} {cy + half * 0.52:.1f}"
+          fill="none" stroke="{esc(stroke)}" stroke-width="3.1" stroke-linecap="round" opacity="0.88">
+      <animateTransform attributeName="transform" type="rotate" values="-22 {cx:.1f} {cy:.1f};32 {cx:.1f} {cy:.1f};-22 {cx:.1f} {cy:.1f}" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.96;0" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+    </path>
+    <circle class="icon-search-light" r="{max(2.2, half * 0.15):.1f}" fill="{esc(stroke)}" opacity="0">
+      <animateMotion dur="{seconds(duration)}" begin="{seconds(begin + 0.08)}" repeatCount="indefinite" path="M {cx - half * 0.46:.1f} {cy - half * 0.48:.1f} L {cx + half * 0.18:.1f} {cy + half * 0.16:.1f}" />
+      <animate attributeName="opacity" values="0;0.86;0" keyTimes="0;0.22;1" dur="{seconds(duration)}" begin="{seconds(begin + 0.08)}" repeatCount="indefinite" />
+    </circle>
+  </g>"""
+
+    if motion_id == "shield-check":
+        return f"""
+  <g class="{motion_class}" {data}>
+    <path class="icon-shield-pulse" d="M {cx:.1f} {cy - half * 1.05:.1f} L {cx + half * 0.96:.1f} {cy - half * 0.58:.1f} V {cy + half * 0.10:.1f}
+           C {cx + half * 0.96:.1f} {cy + half * 0.72:.1f}, {cx + half * 0.38:.1f} {cy + half * 1.02:.1f}, {cx:.1f} {cy + half * 1.12:.1f}
+           C {cx - half * 0.38:.1f} {cy + half * 1.02:.1f}, {cx - half * 0.96:.1f} {cy + half * 0.72:.1f}, {cx - half * 0.96:.1f} {cy + half * 0.10:.1f}
+           V {cy - half * 0.58:.1f} Z"
+          fill="none" stroke="{esc(stroke)}" stroke-width="1.5" stroke-linejoin="round" opacity="0">
+      <animate attributeName="stroke-width" values="1.2;2.8;1.2" keyTimes="0;0.34;1" dur="{seconds(duration)}" begin="{seconds(begin + 0.12)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.34;0" keyTimes="0;0.34;1" dur="{seconds(duration)}" begin="{seconds(begin + 0.12)}" repeatCount="indefinite" />
+    </path>
+    <path d="M {cx - half * 0.44:.1f} {cy + half * 0.03:.1f} L {cx - half * 0.08:.1f} {cy + half * 0.42:.1f} L {cx + half * 0.58:.1f} {cy - half * 0.48:.1f}"
+          fill="none" stroke="{esc(stroke)}" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"
+          pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0.98">
+      <animate attributeName="stroke-dashoffset" values="1;0;0;1" keyTimes="0;0.20;0.72;1" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.98;0.98;0" keyTimes="0;0.10;0.70;1" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+    </path>
+  </g>"""
+
+    if motion_id == "agent-orbit":
+        return f"""
+  <g class="{motion_class}" {data}>
+    <circle class="icon-agent-core" cx="{cx:.1f}" cy="{cy:.1f}" r="{half * 0.18:.1f}" fill="{esc(stroke)}" opacity="0.34">
+      <animate attributeName="r" values="{half * 0.14:.1f};{half * 0.28:.1f};{half * 0.14:.1f}" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0.24;0.82;0.24" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+    </circle>
+    <circle cx="{cx:.1f}" cy="{cy - half * 0.78:.1f}" r="{max(3.0, half * 0.18):.1f}" fill="{esc(stroke)}" opacity="0.92">
+      <animateTransform attributeName="transform" type="rotate" values="0 {cx:.1f} {cy:.1f};360 {cx:.1f} {cy:.1f}" dur="{seconds(duration * 1.1)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0.18;0.98;0.18" dur="{seconds(duration * 1.1)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+    </circle>
+  </g>"""
+
+    if motion_id == "tool-tap":
+        return f"""
+  <g class="{motion_class}" {data}>
+    <path d="M {cx - half * 0.42:.1f} {cy - half * 0.34:.1f} L {cx + half * 0.42:.1f} {cy + half * 0.42:.1f}"
+          fill="none" stroke="{esc(stroke)}" stroke-width="3.5" stroke-linecap="round" opacity="0.92">
+      <animateTransform attributeName="transform" type="rotate" values="5 {cx:.1f} {cy:.1f};-24 {cx:.1f} {cy:.1f};7 {cx:.1f} {cy:.1f};0 {cx:.1f} {cy:.1f}" keyTimes="0;0.22;0.34;1" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0.24;0.98;0.50;0.24" keyTimes="0;0.22;0.34;1" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+    </path>
+    <path class="icon-tool-spark" d="M {cx + half * 0.50:.1f} {cy + half * 0.26:.1f} L {cx + half * 0.76:.1f} {cy + half * 0.16:.1f}
+             M {cx + half * 0.46:.1f} {cy + half * 0.40:.1f} L {cx + half * 0.76:.1f} {cy + half * 0.54:.1f}"
+          fill="none" stroke="{esc(stroke)}" stroke-width="2.4" stroke-linecap="round" opacity="0">
+      <animate attributeName="opacity" values="0;0.95;0" keyTimes="0;0.18;1" dur="{seconds(duration)}" begin="{seconds(begin + 0.18)}" repeatCount="indefinite" />
+    </path>
+  </g>"""
+
+    if motion_id == "output-check":
+        line_x1 = cx - half * 0.58
+        line_x2 = cx + half * 0.46
+        output_lines = []
+        for line_index, line_y in enumerate((cy - half * 0.38, cy - half * 0.08)):
+            output_lines.append(
+                f"""    <path class="icon-output-line" d="M {line_x1:.1f} {line_y:.1f} H {line_x2 - line_index * half * 0.18:.1f}"
+          fill="none" stroke="{esc(stroke)}" stroke-width="2.4" stroke-linecap="round"
+          pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0">
+      <animate attributeName="stroke-dashoffset" values="1;0;0;1" keyTimes="0;0.12;0.54;1" dur="{seconds(duration)}" begin="{seconds(begin + line_index * 0.06)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.78;0.78;0" keyTimes="0;0.10;0.58;1" dur="{seconds(duration)}" begin="{seconds(begin + line_index * 0.06)}" repeatCount="indefinite" />
+    </path>"""
+            )
+        return f"""
+  <g class="{motion_class}" {data}>
+{chr(10).join(output_lines)}
+    <path d="M {cx - half * 0.58:.1f} {cy + half * 0.10:.1f} L {cx - half * 0.14:.1f} {cy + half * 0.52:.1f} L {cx + half * 0.68:.1f} {cy - half * 0.46:.1f}"
+          fill="none" stroke="{esc(stroke)}" stroke-width="3.9" stroke-linecap="round" stroke-linejoin="round"
+          pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0.96">
+      <animate attributeName="stroke-dashoffset" values="1;0;0;1" keyTimes="0;0.20;0.74;1" dur="{seconds(duration)}" begin="{seconds(begin + 0.18)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.96;0.96;0" keyTimes="0;0.10;0.72;1" dur="{seconds(duration)}" begin="{seconds(begin + 0.18)}" repeatCount="indefinite" />
+    </path>
+  </g>"""
+
+    if motion_id == "token-pulse":
+        tick_specs = [
+            (cx - half * 0.70, cy - half * 0.42, cx - half * 0.92, cy - half * 0.62),
+            (cx + half * 0.48, cy - half * 0.58, cx + half * 0.74, cy - half * 0.80),
+            (cx + half * 0.62, cy + half * 0.36, cx + half * 0.90, cy + half * 0.52),
+            (cx - half * 0.50, cy + half * 0.58, cx - half * 0.74, cy + half * 0.80),
+        ]
+        ticks = []
+        for tick_index, (x1, y1, x2, y2) in enumerate(tick_specs):
+            tick_begin = begin + tick_index * 0.08
+            ticks.append(
+                f"""    <path class="icon-token-tick" d="M {x1:.1f} {y1:.1f} L {x2:.1f} {y2:.1f}"
+          fill="none" stroke="{esc(stroke)}" stroke-width="2.3" stroke-linecap="round"
+          pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0">
+      <animate attributeName="stroke-dashoffset" values="1;0;0;1" keyTimes="0;0.16;0.48;1" dur="{seconds(duration)}" begin="{seconds(tick_begin)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.76;0.36;0" keyTimes="0;0.16;0.52;1" dur="{seconds(duration)}" begin="{seconds(tick_begin)}" repeatCount="indefinite" />
+    </path>"""
+            )
+        return f"""
+  <g class="{motion_class}" {data}>
+    <circle class="icon-token-core" cx="{cx:.1f}" cy="{cy:.1f}" r="{half * 0.18:.1f}" fill="{esc(stroke)}" opacity="0.42">
+      <animate attributeName="r" values="{half * 0.13:.1f};{half * 0.27:.1f};{half * 0.13:.1f}" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0.30;0.82;0.30" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+    </circle>
+{chr(10).join(ticks)}
+  </g>"""
+
+    radius = max(half * 0.68, 9.0)
+    return f"""
+  <g class="{motion_class}" {data}>
+    <circle cx="{cx:.1f}" cy="{cy:.1f}" r="{radius:.1f}" fill="none" stroke="{esc(stroke)}" stroke-width="2.4" opacity="0">
+      <animate attributeName="r" values="{radius * 0.46:.1f};{radius:.1f}" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.68;0" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+    </circle>
+  </g>"""
+
+
 def render_semantic_icon(icon: Optional[str], box: NodeBox, stroke: str, fill: str, text: str, motion: SceneMotion, effect: EffectConfig, index: int) -> str:
     if not icon:
         return ""
     cx = box.x + min(42, max(30, box.w * 0.22))
     cy = box.y + box.h / 2
     size = min(34, max(24, box.h * 0.42))
+    if effect_active(motion, effect) and effect.preset == "icon-semantic":
+        size = min(42, max(30, box.h * 0.54))
     half = size / 2
     delay = motion_delay(index, motion, "node") + 0.4
     accent = ""
-    if effect_active(motion, effect) and effect.preset in {"icon-pulse", "pulse", "status-blink"}:
+    halo = ""
+    wrap_class = "semantic-icon-wrap"
+    icon_open = ""
+    icon_close = ""
+    semantic_motion = render_icon_semantic_motion(icon, cx, cy, half, stroke, motion, effect, index)
+    breathing = effect_active(motion, effect) and effect.preset in BREATHING_NODE_MOTION
+    if breathing:
+        wrap_class += " semantic-icon-breathe-wrap"
+        duration = scaled_duration(2.8 + (index % 3) * 0.16, motion)
+        halo_radius = half * 0.74
+        halo = f"""  <circle class="icon-breathe-halo" cx="{cx:.1f}" cy="{cy:.1f}" r="{halo_radius:.1f}" fill="none"
+          stroke="{esc(stroke)}" stroke-width="1.5" opacity="0.05">
+    <animate attributeName="r" values="{halo_radius:.1f};{half * 1.10:.1f};{halo_radius:.1f}" dur="{seconds(duration)}" begin="{seconds(delay)}" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.04;0.24;0.04" dur="{seconds(duration)}" begin="{seconds(delay)}" repeatCount="indefinite" />
+  </circle>"""
+        icon_open = f'<g class="semantic-icon-breathe" style="animation-delay: {seconds(delay)};">'
+        icon_close = "</g>"
+    elif effect_active(motion, effect) and effect.preset in {"icon-pulse", "pulse", "status-blink"}:
         accent = f"""    <animate attributeName="opacity" values="0.52;1;0.52" dur="{seconds(scaled_duration(2.8, motion))}" begin="{seconds(delay)}" repeatCount="indefinite" />"""
-    common = f'class="semantic-icon semantic-icon-{esc(icon)}" stroke="{esc(stroke)}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"'
+    icon_class = f"semantic-icon semantic-icon-{esc(icon)}"
+    common = f'class="{icon_class}" fill="none" stroke="{esc(stroke)}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"'
+    filled_common = f'class="semantic-icon icon-filled semantic-icon-{esc(icon)}" stroke="{esc(stroke)}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"'
+    symbol_fill = icon_surface_fill(fill, stroke)
     if icon in {"database", "memory"}:
         body = f"""
-  <ellipse cx="{cx:.1f}" cy="{cy - half * 0.62:.1f}" rx="{half * 0.82:.1f}" ry="{half * 0.34:.1f}" {common} fill="{esc(fill)}" />
+  <ellipse cx="{cx:.1f}" cy="{cy - half * 0.62:.1f}" rx="{half * 0.82:.1f}" ry="{half * 0.34:.1f}" {filled_common} fill="{esc(symbol_fill)}" />
   <path d="M {cx - half * 0.82:.1f} {cy - half * 0.62:.1f} L {cx - half * 0.82:.1f} {cy + half * 0.52:.1f}
            C {cx - half * 0.82:.1f} {cy + half * 0.88:.1f}, {cx + half * 0.82:.1f} {cy + half * 0.88:.1f}, {cx + half * 0.82:.1f} {cy + half * 0.52:.1f}
            L {cx + half * 0.82:.1f} {cy - half * 0.62:.1f}" {common} />
   <path d="M {cx - half * 0.82:.1f} {cy:.1f} C {cx - half * 0.82:.1f} {cy + half * 0.34:.1f}, {cx + half * 0.82:.1f} {cy + half * 0.34:.1f}, {cx + half * 0.82:.1f} {cy:.1f}" {common} />"""
     elif icon == "file":
+        page_fill = icon_surface_fill(fill, stroke)
+        fold_fill = icon_surface_accent(page_fill, stroke)
+        file_active = effect_active(motion, effect) and effect.preset == "icon-semantic"
+        file_duration = scaled_duration(1.85 + (index % 3) * 0.10, motion)
+        file_begin = motion_delay(index, motion, "node") + 0.38
+        file_translate = ""
+        file_scale = ""
+        file_opacity = ""
+        fold_motion = ""
+        if file_active:
+            file_translate = f"""      <animateTransform attributeName="transform" type="translate"
+        values="{-(half * 0.54):.1f} {half * 0.56:.1f};{half * 0.16:.1f} {-half * 0.14:.1f};0 0;0 0"
+        keyTimes="0;0.22;0.34;1" dur="{seconds(file_duration)}" begin="{seconds(file_begin)}" repeatCount="indefinite" />"""
+            file_scale = f"""          <animateTransform attributeName="transform" type="scale"
+            values="0.78;1.22;1;1" keyTimes="0;0.22;0.34;1"
+            dur="{seconds(file_duration)}" begin="{seconds(file_begin)}" repeatCount="indefinite" />"""
+            file_opacity = f"""      <animate attributeName="opacity" values="0;1;1;0.92" keyTimes="0;0.14;0.74;1"
+        dur="{seconds(file_duration)}" begin="{seconds(file_begin)}" repeatCount="indefinite" />"""
+            fold_motion = f"""      <animateTransform attributeName="transform" type="rotate"
+        values="-38 {cx + half * 0.28:.1f} {cy - half:.1f};0 {cx + half * 0.28:.1f} {cy - half:.1f};0 {cx + half * 0.28:.1f} {cy - half:.1f};-16 {cx + half * 0.28:.1f} {cy - half:.1f};0 {cx + half * 0.28:.1f} {cy - half:.1f}"
+        keyTimes="0;0.20;0.64;0.78;1" dur="{seconds(file_duration)}" begin="{seconds(file_begin + 0.06)}" repeatCount="indefinite" />"""
         body = f"""
-  <path d="M {cx - half * 0.72:.1f} {cy - half:.1f} H {cx + half * 0.28:.1f} L {cx + half * 0.72:.1f} {cy - half * 0.56:.1f} V {cy + half:.1f} H {cx - half * 0.72:.1f} Z" {common} fill="{esc(fill)}" />
-  <path d="M {cx + half * 0.28:.1f} {cy - half:.1f} V {cy - half * 0.56:.1f} H {cx + half * 0.72:.1f}" {common} />"""
+  <g class="semantic-icon-file-page icon-file-page-motion" opacity="0.96">
+{file_translate}
+{file_opacity}
+    <g transform="translate({cx:.1f} {cy:.1f})">
+      <g>
+{file_scale}
+        <g transform="translate({-cx:.1f} {-cy:.1f})">
+          <path class="semantic-icon icon-filled semantic-icon-file icon-file-sheet"
+                d="M {cx - half * 0.72:.1f} {cy - half:.1f} H {cx + half * 0.28:.1f} L {cx + half * 0.72:.1f} {cy - half * 0.56:.1f} V {cy + half:.1f} H {cx - half * 0.72:.1f} Z"
+                fill="{esc(page_fill)}" stroke="{esc(stroke)}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+          <g class="icon-file-fold-motion">
+{fold_motion}
+            <path d="M {cx + half * 0.28:.1f} {cy - half:.1f} L {cx + half * 0.72:.1f} {cy - half * 0.56:.1f} H {cx + half * 0.28:.1f} Z"
+                  fill="{esc(fold_fill)}" stroke="{esc(stroke)}" stroke-width="2.2" stroke-linejoin="round" />
+            <path d="M {cx + half * 0.28:.1f} {cy - half:.1f} V {cy - half * 0.56:.1f} H {cx + half * 0.72:.1f}"
+                  fill="none" stroke="{esc(stroke)}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.88" />
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>"""
     elif icon == "folder":
         body = f"""
-  <path d="M {cx - half:.1f} {cy - half * 0.48:.1f} H {cx - half * 0.22:.1f} L {cx:.1f} {cy - half * 0.78:.1f} H {cx + half:.1f} V {cy + half * 0.82:.1f} H {cx - half:.1f} Z" {common} fill="{esc(fill)}" />"""
+  <path class="semantic-icon icon-filled semantic-icon-folder icon-folder-body" d="M {cx - half:.1f} {cy - half * 0.48:.1f} H {cx - half * 0.22:.1f} L {cx:.1f} {cy - half * 0.78:.1f} H {cx + half:.1f} V {cy + half * 0.82:.1f} H {cx - half:.1f} Z"
+        stroke="{esc(stroke)}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="{esc(symbol_fill)}" />"""
     elif icon == "api":
         body = f"""
   <path d="M {cx - half:.1f} {cy - half * 0.68:.1f} L {cx - half * 0.34:.1f} {cy:.1f} L {cx - half:.1f} {cy + half * 0.68:.1f}" {common} />
@@ -273,31 +765,35 @@ def render_semantic_icon(icon: Optional[str], box: NodeBox, stroke: str, fill: s
            C {cx - half:.1f} {cy - half * 0.18:.1f}, {cx - half * 0.56:.1f} {cy - half * 0.34:.1f}, {cx - half * 0.28:.1f} {cy - half * 0.36:.1f}
            C {cx - half * 0.12:.1f} {cy - half * 0.90:.1f}, {cx + half * 0.62:.1f} {cy - half * 0.72:.1f}, {cx + half * 0.56:.1f} {cy - half * 0.16:.1f}
            C {cx + half * 1.08:.1f} {cy - half * 0.10:.1f}, {cx + half * 1.06:.1f} {cy + half * 0.62:.1f}, {cx + half * 0.54:.1f} {cy + half * 0.62:.1f}
-           H {cx - half * 0.72:.1f}" {common} fill="{esc(fill)}" />"""
+           H {cx - half * 0.72:.1f}" {filled_common} fill="{esc(symbol_fill)}" />"""
     elif icon == "search":
         body = f"""
-  <circle cx="{cx - half * 0.16:.1f}" cy="{cy - half * 0.16:.1f}" r="{half * 0.54:.1f}" {common} fill="{esc(fill)}" />
+  <circle cx="{cx - half * 0.16:.1f}" cy="{cy - half * 0.16:.1f}" r="{half * 0.54:.1f}" {filled_common} fill="{esc(symbol_fill)}" />
   <path d="M {cx + half * 0.30:.1f} {cy + half * 0.30:.1f} L {cx + half * 0.92:.1f} {cy + half * 0.92:.1f}" {common} />"""
     elif icon == "shield":
         body = f"""
   <path d="M {cx:.1f} {cy - half:.1f} L {cx + half * 0.86:.1f} {cy - half * 0.58:.1f} V {cy + half * 0.10:.1f}
            C {cx + half * 0.86:.1f} {cy + half * 0.66:.1f}, {cx + half * 0.34:.1f} {cy + half * 0.92:.1f}, {cx:.1f} {cy + half:.1f}
            C {cx - half * 0.34:.1f} {cy + half * 0.92:.1f}, {cx - half * 0.86:.1f} {cy + half * 0.66:.1f}, {cx - half * 0.86:.1f} {cy + half * 0.10:.1f}
-           V {cy - half * 0.58:.1f} Z" {common} fill="{esc(fill)}" />
+           V {cy - half * 0.58:.1f} Z" {filled_common} fill="{esc(symbol_fill)}" />
   <path d="M {cx - half * 0.34:.1f} {cy:.1f} L {cx - half * 0.06:.1f} {cy + half * 0.30:.1f} L {cx + half * 0.42:.1f} {cy - half * 0.38:.1f}" {common} />"""
     elif icon == "agent":
         body = f"""
-  <polygon points="{cx:.1f},{cy - half:.1f} {cx + half * 0.86:.1f},{cy - half * 0.50:.1f} {cx + half * 0.86:.1f},{cy + half * 0.50:.1f} {cx:.1f},{cy + half:.1f} {cx - half * 0.86:.1f},{cy + half * 0.50:.1f} {cx - half * 0.86:.1f},{cy - half * 0.50:.1f}" {common} fill="{esc(fill)}" />
+  <polygon points="{cx:.1f},{cy - half:.1f} {cx + half * 0.86:.1f},{cy - half * 0.50:.1f} {cx + half * 0.86:.1f},{cy + half * 0.50:.1f} {cx:.1f},{cy + half:.1f} {cx - half * 0.86:.1f},{cy + half * 0.50:.1f} {cx - half * 0.86:.1f},{cy - half * 0.50:.1f}" {filled_common} fill="{esc(symbol_fill)}" />
   <circle cx="{cx:.1f}" cy="{cy:.1f}" r="{half * 0.22:.1f}" fill="{esc(stroke)}" />"""
     else:
         body = f"""
-  <rect x="{cx - half * 0.72:.1f}" y="{cy - half * 0.72:.1f}" width="{half * 1.44:.1f}" height="{half * 1.44:.1f}" rx="{half * 0.18:.1f}" {common} fill="{esc(fill)}" />
+  <rect x="{cx - half * 0.72:.1f}" y="{cy - half * 0.72:.1f}" width="{half * 1.44:.1f}" height="{half * 1.44:.1f}" rx="{half * 0.18:.1f}" {filled_common} fill="{esc(symbol_fill)}" />
   <path d="M {cx - half * 0.36:.1f} {cy - half * 0.16:.1f} H {cx + half * 0.36:.1f}" {common} />
   <path d="M {cx - half * 0.36:.1f} {cy + half * 0.22:.1f} H {cx + half * 0.36:.1f}" {common} />"""
     return f"""
-<g class="semantic-icon-wrap" opacity="0.94">
+<g class="{wrap_class}" opacity="0.94">
+{halo}
+{icon_open}
 {accent}
 {body}
+{semantic_motion}
+{icon_close}
 </g>"""
 
 
@@ -336,6 +832,10 @@ def render_node_surface(
     style: Dict[str, Any],
     index: int,
 ) -> str:
+    if node.shape == "decision":
+        points = diamond_points(box)
+        return f"""  <polygon class="node-decision-shape" points="{points}"
+        fill="{esc(fill)}" stroke="{esc(stroke)}" stroke-width="{stroke_width:.1f}" />"""
     if not aurora_nodes_enabled(style) or node.fill:
         return f"""  <rect x="{box.x:.1f}" y="{box.y:.1f}" width="{box.w:.1f}" height="{box.h:.1f}" rx="{radius:.1f}"
         fill="{esc(fill)}" stroke="{esc(stroke)}" stroke-width="{stroke_width:.1f}" />"""
@@ -375,9 +875,34 @@ def render_node_surface(
         fill="none" stroke="{esc(stroke)}" stroke-width="{stroke_width:.1f}" opacity="{border_opacity:.2f}" />"""
 
 
-def render_node(node: Node, style: Dict[str, Any], index: int, motion: SceneMotion) -> str:
+def diamond_points(box: NodeBox, padding: float = 0.0) -> str:
+    cx, cy = box.center
+    half_w = max(0.0, box.w / 2 - padding)
+    half_h = max(0.0, box.h / 2 - padding)
+    return (
+        f"{cx:.1f},{cy - half_h:.1f} "
+        f"{cx + half_w:.1f},{cy:.1f} "
+        f"{cx:.1f},{cy + half_h:.1f} "
+        f"{cx - half_w:.1f},{cy:.1f}"
+    )
+
+
+def render_node(
+    node: Node,
+    style: Dict[str, Any],
+    index: int,
+    motion: SceneMotion,
+    policy: MotionPolicy,
+    node_motion_rank: Optional[int],
+) -> str:
     box = node_box(node)
     node_effect = channel_effect(motion, style, "node", node.effect)
+    if (
+        effect_active(motion, node_effect)
+        and node_effect.preset in CONTINUOUS_NODE_MOTION
+        and not policy_allows(node_motion_rank, policy.max_active_pulse_nodes)
+    ):
+        node_effect = effect_with_preset(node_effect, "fade")
     node_mode = node_effect.preset
     role = role_style(style, node.role)
     radius = float(node.radius if node.radius is not None else style.get("node", {}).get("radius", 14))
@@ -395,6 +920,10 @@ def render_node(node: Node, style: Dict[str, Any], index: int, motion: SceneMoti
     if node.icon:
         text_x = box.x + min(68, max(54, box.w * 0.36))
         text_width = max(42, box.w - (text_x - box.x) - 12)
+    if node.shape == "decision":
+        content_y = box.y + box.h / 2 - 14
+        text_x = box.x + 34
+        text_width = max(50, box.w - 68)
     badge = ""
     if node.step is not None:
         badge = render_step_badge(box.x + 18, box.y + 18, node.step, stroke, fill)
@@ -406,14 +935,24 @@ def render_node(node: Node, style: Dict[str, Any], index: int, motion: SceneMoti
     float_markup = ""
     glow_markup = ""
     if effect_active(motion, node_effect):
-        enter_markup = f'  <animate attributeName="opacity" values="0;1" dur="{seconds(scaled_duration(0.55, motion))}" begin="{seconds(delay)}" fill="freeze" />'
+        if runtime_loop_active(motion):
+            enter_markup = '  <set attributeName="opacity" to="1" />'
+        else:
+            enter_markup = f'  <animate attributeName="opacity" values="0;1" dur="{seconds(scaled_duration(0.55, motion))}" begin="{seconds(delay)}" fill="freeze" />'
         if node_mode in {"float", "glow-breathe", "pop", "icon-pulse", "pulse", "ripple"}:
             float_markup = f"""  <animateTransform attributeName="transform" type="translate"
         values="{node_translate_values(motion, index, node_mode)}" dur="{seconds(float_duration)}" begin="{seconds(delay + 0.7)}"
         repeatCount="indefinite" additive="sum" />"""
         if node_mode in {"glow-breathe", "pop", "pulse", "icon-pulse", "ripple", "status-blink"}:
             glow_opacity = 0.24 * clamp(motion.intensity, 0.25, 1.7)
-            glow_markup = f"""  <rect class="node-glow" x="{box.x - 4:.1f}" y="{box.y - 4:.1f}" width="{box.w + 8:.1f}" height="{box.h + 8:.1f}" rx="{radius + 4:.1f}"
+            if node.shape == "decision":
+                glow_markup = f"""  <polygon class="node-glow" points="{diamond_points(box, padding=-4)}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
+    <animate attributeName="opacity" values="0.08;{glow_opacity:.2f};0.08" dur="{seconds(scaled_duration(3.9 + (index % 4) * 0.35, motion))}" begin="{seconds(delay + 0.2)}" repeatCount="indefinite" />
+    <animate attributeName="stroke-width" values="1.0;{1.0 + 1.4 * clamp(motion.intensity, 0.25, 1.7):.1f};1.0" dur="{seconds(scaled_duration(3.9 + (index % 4) * 0.35, motion))}" begin="{seconds(delay + 0.2)}" repeatCount="indefinite" />
+  </polygon>"""
+            else:
+                glow_markup = f"""  <rect class="node-glow" x="{box.x - 4:.1f}" y="{box.y - 4:.1f}" width="{box.w + 8:.1f}" height="{box.h + 8:.1f}" rx="{radius + 4:.1f}"
         fill="none" stroke="{esc(stroke)}" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
     <animate attributeName="opacity" values="0.08;{glow_opacity:.2f};0.08" dur="{seconds(scaled_duration(3.9 + (index % 4) * 0.35, motion))}" begin="{seconds(delay + 0.2)}" repeatCount="indefinite" />
     <animate attributeName="stroke-width" values="1.0;{1.0 + 1.4 * clamp(motion.intensity, 0.25, 1.7):.1f};1.0" dur="{seconds(scaled_duration(3.9 + (index % 4) * 0.35, motion))}" begin="{seconds(delay + 0.2)}" repeatCount="indefinite" />
@@ -433,9 +972,22 @@ def render_node(node: Node, style: Dict[str, Any], index: int, motion: SceneMoti
 </g>"""
 
 
-def render_group(group: Group, style: Dict[str, Any], index: int, motion: SceneMotion) -> str:
+def render_group(
+    group: Group,
+    style: Dict[str, Any],
+    index: int,
+    motion: SceneMotion,
+    policy: MotionPolicy,
+    group_motion_rank: Optional[int],
+) -> str:
     x, y, w, h = group.bounds
     group_effect = channel_effect(motion, style, "group", group.effect)
+    if (
+        effect_active(motion, group_effect)
+        and group_effect.preset in SCANNING_GROUP_MOTION
+        and not policy_allows(group_motion_rank, policy.max_scanning_groups)
+    ):
+        group_effect = effect_with_preset(group_effect, "soft-reveal")
     group_mode = group_effect.preset
     role = role_style(style, group.role)
     stroke = group.stroke or role.get("stroke", "#94a3b8")
@@ -533,7 +1085,16 @@ def edge_path(edge: Edge, nodes: Dict[str, NodeBox]) -> str:
     return curve_path(start, end)
 
 
-def render_edge(edge: Edge, nodes: Dict[str, NodeBox], style: Dict[str, Any], index: int, motion: SceneMotion) -> str:
+def render_edge(
+    edge: Edge,
+    nodes: Dict[str, NodeBox],
+    style: Dict[str, Any],
+    index: int,
+    motion: SceneMotion,
+    policy: MotionPolicy,
+    edge_motion_rank: Optional[int],
+    particle_motion_rank: Optional[int],
+) -> str:
     start, end = edge_points(edge, nodes)
     path = edge_path(edge, nodes)
     edge_effect = channel_effect(motion, style, "edge", edge.effect)
@@ -554,35 +1115,59 @@ def render_edge(edge: Edge, nodes: Dict[str, NodeBox], style: Dict[str, Any], in
     if edge.step is not None:
         badge = render_step_badge(mid_x - 22, mid_y - 5, edge.step, stroke, "#ffffff")
     edge_mode = edge_effect.preset if edge.motion.enabled else "none"
+    if edge_mode in RUNTIME_EDGE_MOTION and edge.motion.duration is None:
+        duration_value = 2.05
     edge_is_active = effect_active(motion, edge_effect) and edge.motion.enabled
+    if edge_is_active and edge_mode in CONTINUOUS_EDGE_MOTION and not policy_allows(edge_motion_rank, policy.max_active_flow_edges):
+        edge_effect = effect_with_preset(edge_effect, "draw")
+        edge_mode = edge_effect.preset
+        edge_is_active = effect_active(motion, edge_effect) and edge.motion.enabled
+    particle_allowed = policy_allows(particle_motion_rank, policy.max_particle_edges)
+    if edge_is_active and edge_mode in PARTICLE_EDGE_MOTION and not particle_allowed:
+        edge_effect = effect_with_preset(edge_effect, "draw")
+        edge_mode = edge_effect.preset
+        edge_is_active = effect_active(motion, edge_effect) and edge.motion.enabled
     draw_markup = f"""  <path class="edge-draw" d="{path}" fill="none" stroke="{esc(stroke)}" stroke-width="{width:.1f}" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#{marker_id})" />"""
     flow_markup = ""
     motion_markup = ""
-    if edge_is_active and edge_mode in {"draw", "pulse", "trace", "comet-flow", "dynamic-dash", "flow-dot", "flow-arrow", "ghost-flow", "glow-line", "comet"}:
+    if edge_is_active and edge_mode in DRAW_ENTRY_EDGE_MOTION:
         draw_markup = f"""  <path class="edge-draw" d="{path}" fill="none" stroke="{esc(stroke)}" stroke-width="{width:.1f}" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#{marker_id})">
     <animate attributeName="stroke-dashoffset" values="1;0" dur="{seconds(scaled_duration(0.9, motion))}" begin="{seconds(draw_begin)}" fill="freeze" />
   </path>"""
-    if edge_is_active and edge_mode in {"pulse", "trace", "comet-flow", "dynamic-dash", "ghost-flow", "glow-line", "comet"}:
-        dash = "4 22" if edge_mode == "trace" else "8 12" if edge_mode == "dynamic-dash" else "2 18" if edge_mode == "ghost-flow" else "9 18"
-        opacity = 0.42 if edge_mode == "trace" else 0.38 if edge_mode == "ghost-flow" else 0.55
+    if edge_is_active and edge_mode in {"pulse", "trace", "comet-flow", "dynamic-dash", "dash-flow", "ghost-flow", "glow-line", "comet"}:
+        dash = (
+            "4 22"
+            if edge_mode == "trace"
+            else "7 11"
+            if edge_mode == "dash-flow"
+            else "8 12"
+            if edge_mode == "dynamic-dash"
+            else "2 18"
+            if edge_mode == "ghost-flow"
+            else "9 18"
+        )
+        opacity = 0.42 if edge_mode == "trace" else 0.52 if edge_mode == "dash-flow" else 0.38 if edge_mode == "ghost-flow" else 0.55
         flow_width = max(1, width * (1.8 if edge_mode == "glow-line" else 0.72))
         glow_filter = ' filter="url(#soft-glow)"' if edge_mode == "glow-line" else ""
         flow_markup = f"""  <path class="edge-flow edge-flow-{esc(edge_mode)}" d="{path}" fill="none" stroke="{esc(stroke)}" stroke-width="{max(1, width * 0.72):.1f}"
         stroke-dasharray="{dash}" opacity="{opacity:.2f}"{glow_filter}>
-    <animate attributeName="stroke-dashoffset" values="0;-54" dur="{seconds(scaled_duration(max(1.8, duration_value * 0.72), motion))}" begin="{seconds(draw_begin + 0.2)}" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="{opacity * 0.45:.2f};{opacity:.2f};{opacity * 0.45:.2f}" dur="{seconds(scaled_duration(max(1.8, duration_value * 0.72), motion))}" begin="{seconds(draw_begin + 0.2)}" repeatCount="indefinite" />
+    <animate attributeName="stroke-dashoffset" values="0;-54" dur="{seconds(scaled_duration(max(1.25, duration_value * 0.72), motion))}" begin="{seconds(draw_begin + 0.2 if edge_mode != "dash-flow" else -((index * 0.11) % duration_value))}" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="{opacity * 0.70:.2f};{opacity:.2f};{opacity * 0.70:.2f}" dur="{seconds(scaled_duration(max(1.25, duration_value * 0.72), motion))}" begin="{seconds(draw_begin + 0.2 if edge_mode != "dash-flow" else -((index * 0.11) % duration_value))}" repeatCount="indefinite" />
   </path>"""
         if edge_mode == "glow-line":
             flow_markup = flow_markup.replace(f'stroke-width="{max(1, width * 0.72):.1f}"', f'stroke-width="{flow_width:.1f}"')
-    if edge_is_active and edge_mode in {"comet-flow", "comet", "flow-dot", "flow-arrow", "ghost-flow"}:
+    if edge_is_active and edge_mode in PARTICLE_EDGE_MOTION and particle_allowed:
         particles = []
-        intensity = clamp(motion.intensity, 0.25, 1.8)
-        particle_shape = edge_effect.particle or ("soft-arrow" if edge_mode == "flow-arrow" else "soft-dot")
-        radii = (5.5, 3.5, 2.4, 1.8) if edge_mode == "ghost-flow" else (6.0, 3.8) if edge_mode == "flow-dot" else (5.5, 3.5, 2.4)
+        intensity = clamp(motion.intensity, 0.25, 1.8) * motion_area_scale(policy)
+        particle_shape = edge_effect.particle or ("soft-arrow" if edge_mode in {"flow-arrow", "signal-arrow"} else "soft-dot")
+        radii = particle_radii(edge_mode, particle_shape, edge_effect, policy)
         for particle_index, radius in enumerate(radii):
-            begin = index * 0.32 + edge.motion.delay + particle_index * (duration_value / 3)
+            if edge_mode in RUNTIME_EDGE_MOTION:
+                begin = -((index * 0.19 + edge.motion.delay + particle_index * (duration_value / 2)) % duration_value)
+            else:
+                begin = index * 0.32 + edge.motion.delay + particle_index * (duration_value / 3)
             opacity = 0.92 - particle_index * 0.18
             if particle_shape == "soft-arrow":
                 particles.append(
@@ -599,9 +1184,10 @@ def render_edge(edge: Edge, nodes: Dict[str, NodeBox], style: Dict[str, Any], in
   </circle>"""
                 )
         motion_markup = "\n".join(particles)
-    label_opacity = "1" if not edge_is_active else "0"
+    label_static = not edge_is_active or runtime_loop_active(motion) or edge_mode in RUNTIME_EDGE_MOTION
+    label_opacity = "1" if label_static else "0"
     label_motion = ""
-    if edge_is_active:
+    if not label_static:
         label_motion = f'<animate attributeName="opacity" values="0;1" dur="{seconds(scaled_duration(0.45, motion))}" begin="{seconds(motion_delay(index, motion, "label") + edge.motion.delay)}" fill="freeze" />'
     label_motion_line = f"    {label_motion}\n" if label_motion else ""
     return f"""
@@ -636,19 +1222,56 @@ def render_svg(spec: Any, style: Dict[str, Any]) -> str:
     subtitle = scene.title.subtitle
     nodes = {node.node_id: node_box(node) for node in scene.nodes}
     motion = scene.motion
+    policy = scene.motion_policy
     title_effect = channel_effect(motion, style, "title")
+    edge_modes = []
+    for index, edge in enumerate(scene.edges, start=1):
+        effect = channel_effect(motion, style, "edge", edge.effect)
+        edge_modes.append((index, effect, effect.preset if edge.motion.enabled else "none"))
+    edge_motion_ranks = ranked_motion_modes(edge_modes, motion, CONTINUOUS_EDGE_MOTION)
+    particle_motion_ranks = ranked_motion_modes(edge_modes, motion, PARTICLE_EDGE_MOTION)
+    node_modes = []
+    for index, node in enumerate(scene.nodes, start=1):
+        effect = channel_effect(motion, style, "node", node.effect)
+        node_modes.append((index, effect, effect.preset))
+    node_motion_ranks = ranked_motion_modes(node_modes, motion, CONTINUOUS_NODE_MOTION)
+    group_modes = []
+    for index, group in enumerate(scene.groups, start=1):
+        effect = channel_effect(motion, style, "group", group.effect)
+        group_modes.append((index, effect, effect.preset))
+    group_motion_ranks = ranked_motion_modes(group_modes, motion, SCANNING_GROUP_MOTION)
 
-    groups_markup = "\n".join(render_group(group, style, index, motion) for index, group in enumerate(scene.groups, start=1))
-    edges_markup = "\n".join(render_edge(edge, nodes, style, index, motion) for index, edge in enumerate(scene.edges, start=1))
-    nodes_markup = "\n".join(render_node(node, style, index, motion) for index, node in enumerate(scene.nodes, start=1))
+    groups_markup = "\n".join(
+        render_group(group, style, index, motion, policy, group_motion_ranks.get(index))
+        for index, group in enumerate(scene.groups, start=1)
+    )
+    edges_markup = "\n".join(
+        render_edge(edge, nodes, style, index, motion, policy, edge_motion_ranks.get(index), particle_motion_ranks.get(index))
+        for index, edge in enumerate(scene.edges, start=1)
+    )
+    nodes_markup = "\n".join(
+        render_node(node, style, index, motion, policy, node_motion_ranks.get(index))
+        for index, node in enumerate(scene.nodes, start=1)
+    )
     defs_markup = render_style_defs(style, grid)
     grid_opacity = float(style_effect(style, "grid_opacity", 0.52))
     frame_opacity = float(style_effect(style, "frame_opacity", 1.0))
 
-    title_style_attr = ' style="animation:none"' if motion.profile == "off" else ""
-    title_text_opacity = "1" if motion.profile == "off" else "0"
-    title_text_anim = "" if motion.profile == "off" else '<animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.08s" fill="freeze" />'
-    subtitle_anim = "" if motion.profile == "off" else '<animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />'
+    title_is_breathing = effect_active(motion, title_effect) and title_effect.preset == "breathe"
+    title_style_attr = ' style="animation:none"' if motion.profile == "off" or title_is_breathing or runtime_loop_active(motion) else ""
+    title_text_opacity = "1" if motion.profile == "off" or title_is_breathing or runtime_loop_active(motion) else "0"
+    if title_is_breathing:
+        title_text_anim = f'<animate attributeName="opacity" values="0.86;1;0.86" dur="{seconds(scaled_duration(3.6, motion))}" begin="0s" repeatCount="indefinite" />'
+    elif motion.profile == "off":
+        title_text_anim = ""
+    else:
+        title_text_anim = '<animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.08s" fill="freeze" />'
+    if runtime_loop_active(motion):
+        subtitle_anim = ""
+    elif motion.profile == "off":
+        subtitle_anim = ""
+    else:
+        subtitle_anim = '<animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />'
     title_motion_markup = ""
     if effect_active(motion, title_effect) and title_effect.preset in {"handwrite-reveal", "highlight-sweep"}:
         title_motion_markup = f"""
@@ -678,14 +1301,17 @@ def render_svg(spec: Any, style: Dict[str, Any]) -> str:
   .edge-draw, .edge-base {{ stroke-linecap: round; stroke-linejoin: round; }}
   .edge-particle {{ filter: url(#particle-glow); }}
   .edge-arrow-particle {{ filter: url(#particle-glow); }}
-  .semantic-icon {{ fill: none; vector-effect: non-scaling-stroke; }}
+  .semantic-icon {{ vector-effect: non-scaling-stroke; }}
+  .semantic-icon-breathe {{ transform-box: fill-box; transform-origin: center; animation: semanticIconBreathe 2.8s ease-in-out infinite; }}
+  .icon-breathe-halo {{ pointer-events: none; filter: url(#particle-glow); }}
   .node-glow, .node-burst {{ pointer-events: none; }}
   #title-accent {{ transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }}
   #title-highlight {{ transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }}
   @keyframes titlePulse {{ 0%, 100% {{ opacity: 0.76; }} 50% {{ opacity: 1; }} }}
   @keyframes titleSlide {{ 0%, 100% {{ transform: translateX(0); opacity: 0.9; }} 50% {{ transform: translateX(8px); opacity: 1; }} }}
+  @keyframes semanticIconBreathe {{ 0%, 100% {{ transform: scale(0.96); opacity: 0.72; }} 50% {{ transform: scale(1.08); opacity: 1; }} }}
   @media (prefers-reduced-motion: reduce) {{
-    #title-accent, #title-highlight {{ animation: none; }}
+    #title-accent, #title-highlight, .semantic-icon-breathe {{ animation: none; }}
   }}
 </style>
 <rect width="100%" height="100%" fill="{esc(background)}" />
@@ -729,12 +1355,16 @@ def render_html(svg: str, title: str) -> str:
     .viewport {{ transform-origin: 0 0; width: max-content; }}
     svg {{ display: block; max-width: none; height: auto; user-select: none; }}
     main.motion-subtle .edge-particle,
-    main.motion-subtle .node-burst {{ display: none; }}
+    main.motion-subtle .node-burst,
+    main.motion-subtle .icon-breathe-halo {{ display: none; }}
     main.motion-subtle .edge-flow {{ opacity: 0.22; }}
+    main.motion-subtle .semantic-icon-breathe {{ animation-duration: 4.2s; }}
     main.motion-off .edge-flow,
     main.motion-off .edge-particle,
     main.motion-off .node-burst,
-    main.motion-off .node-glow {{ display: none; }}
+    main.motion-off .node-glow,
+    main.motion-off .icon-breathe-halo {{ display: none; }}
+    main.motion-off .semantic-icon-breathe {{ animation: none !important; }}
   </style>
 </head>
 <body>

@@ -10,10 +10,12 @@ Use AniDiagram for clean-room animated architecture visuals.
 ## Workflow
 
 1. Write or update a DiagramScript JSON spec.
-2. Validate with `PYTHONPATH=src python3 -m anidiagram.cli --spec <file> --outdir outputs --basename <name> --quality`.
-3. Render the requested formats with `--formats svg,html,png,gif,pdf,webp,mp4,apng,lottie,quality` or `--all`.
-4. Inspect the CLI result JSON for skipped optional exports. Optional raster/video exports depend on Pillow and, for MP4, ffmpeg.
-5. Run `PYTHONPATH=src python3 -m unittest discover -s tests` before considering code changes complete.
+2. For complex diagrams, set a `motion_policy` such as `focused` or `readable`
+   so only key paths, nodes, and borders animate continuously.
+3. Validate with `PYTHONPATH=src python3 -m anidiagram.cli --spec <file> --outdir outputs --basename <name> --quality`.
+4. Render the requested formats with `--formats svg,html,png,gif,pdf,webp,mp4,apng,lottie,quality` or `--all`.
+5. Inspect the CLI result JSON for skipped optional exports. Optional raster/video exports depend on Pillow and, for MP4, ffmpeg.
+6. Run `PYTHONPATH=src python3 -m unittest discover -s tests` before considering code changes complete.
 
 ## Presets
 

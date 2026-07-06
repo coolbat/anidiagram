@@ -6,7 +6,7 @@ import math
 from dataclasses import dataclass
 from typing import Any, Dict, Iterable, List, Optional, Set
 
-from .model import Bounds, Canvas, Edge, EffectConfig, Group, Motion, Node, Point, Scene, SceneMotion, Style, Title
+from .model import Bounds, Canvas, Edge, EffectConfig, Group, Motion, MotionPolicy, Node, Point, Scene, SceneMotion, Style, Title
 
 
 SUPPORTED_VERSIONS = ("0.1", "0.2", "0.3")
@@ -22,15 +22,48 @@ KNOWN_ROLES = {
     "neutral",
 }
 KNOWN_ROUTES = {"curved", "straight", "hv", "vh", "orthogonal", "points"}
-KNOWN_MOTION_PROFILES = {"off", "subtle", "normal", "expressive", "teaching"}
-KNOWN_MOTION_SEQUENCES = {"simultaneous", "step-stagger", "layered", "staged"}
+KNOWN_MOTION_PROFILES = {"off", "subtle", "normal", "expressive", "teaching", "runtime-loop"}
+KNOWN_MOTION_SEQUENCES = {"simultaneous", "step-stagger", "layered", "staged", "loop"}
 KNOWN_MOTION_EASES = {"linear", "calm", "snappy", "back-out", "elastic", "spring"}
-KNOWN_NODE_MOTION = {"none", "fade", "float", "glow-breathe", "pop", "pulse", "ripple", "status-blink", "icon-pulse"}
-KNOWN_EDGE_MOTION = {"none", "static", "draw", "pulse", "comet-flow", "trace", "dynamic-dash", "flow-dot", "flow-arrow", "ghost-flow", "glow-line", "comet"}
+KNOWN_NODE_MOTION = {
+    "none",
+    "fade",
+    "float",
+    "glow-breathe",
+    "pop",
+    "pulse",
+    "ripple",
+    "status-blink",
+    "icon-pulse",
+    "icon-breathe",
+    "icon-semantic",
+    "micro-icon",
+}
+KNOWN_EDGE_MOTION = {
+    "none",
+    "static",
+    "draw",
+    "pulse",
+    "comet-flow",
+    "trace",
+    "dynamic-dash",
+    "dash-flow",
+    "flow-dot",
+    "flow-arrow",
+    "signal-dot",
+    "signal-arrow",
+    "ghost-flow",
+    "glow-line",
+    "comet",
+}
 KNOWN_GROUP_MOTION = {"none", "static", "soft-reveal", "marching-ants", "border-scan", "corner-pulse"}
 KNOWN_REDUCED_MOTION = {"static", "subtle", "pause"}
-KNOWN_TITLE_MOTION = {"none", "fade", "handwrite-reveal", "highlight-sweep"}
+KNOWN_TITLE_MOTION = {"none", "fade", "breathe", "handwrite-reveal", "highlight-sweep"}
 KNOWN_ICONS = {"database", "file", "folder", "api", "cloud", "search", "shield", "agent", "token", "memory", "tool", "output"}
+KNOWN_NODE_SHAPES = {"rect", "decision"}
+KNOWN_MOTION_POLICY_PROFILES = {"unrestricted", "readable", "focused", "expressive", "readable-runtime"}
+KNOWN_PULSE_MODES = {"all", "rotate"}
+KNOWN_MOTION_AREAS = {"auto", "micro", "small", "medium", "unrestricted"}
 
 
 @dataclass(frozen=True)
@@ -85,6 +118,7 @@ def compile_scene(data: Dict[str, Any]) -> Scene:
     title = _parse_title(data.get("title", {}), "$.title", issues)
     style = Style(name=_string(data, "style", "$.style", issues, required=False))
     motion = _parse_scene_motion(data.get("motion", {}), "$.motion", issues)
+    motion_policy = _parse_motion_policy(data.get("motion_policy"), "$.motion_policy", issues)
     groups = _parse_groups(data.get("groups", []), "$.groups", issues, canvas)
     nodes = _parse_nodes(data.get("nodes"), "$.nodes", issues, canvas)
     node_ids = {node.node_id for node in nodes}
@@ -103,6 +137,7 @@ def compile_scene(data: Dict[str, Any]) -> Scene:
         edges=edges,
         groups=groups,
         motion=motion,
+        motion_policy=motion_policy,
         preset=preset,
     )
 
@@ -193,7 +228,94 @@ def _motion_defaults(profile: str) -> SceneMotion:
         return _scene_motion("expressive", "layered", "spring", 0.16, 0.9, 1.25, "pop", "comet-flow", "marching-ants", "highlight-sweep", "subtle")
     if profile == "teaching":
         return _scene_motion("teaching", "staged", "spring", 0.14, 0.95, 1.15, "icon-pulse", "ghost-flow", "border-scan", "handwrite-reveal", "subtle")
+    if profile == "runtime-loop":
+        return _scene_motion("runtime-loop", "loop", "linear", 0.09, 1.0, 0.82, "icon-breathe", "signal-dot", "static", "breathe", "subtle")
     return SceneMotion()
+
+
+def _parse_motion_policy(value: Any, path: str, issues: List[ValidationIssue]) -> MotionPolicy:
+    if value is None:
+        return MotionPolicy()
+    if not isinstance(value, dict):
+        issues.append(ValidationIssue(path, "expected an object", "type"))
+        return MotionPolicy()
+    profile = _enum(value, "profile", f"{path}.profile", KNOWN_MOTION_POLICY_PROFILES, issues, default="unrestricted")
+    defaults = _motion_policy_defaults(profile)
+    return MotionPolicy(
+        profile=profile,
+        motion_area=_enum(value, "motion_area", f"{path}.motion_area", KNOWN_MOTION_AREAS, issues, default=defaults.motion_area),
+        max_active_flow_edges=_optional_non_negative_int(
+            value, "max_active_flow_edges", f"{path}.max_active_flow_edges", issues, defaults.max_active_flow_edges
+        ),
+        max_particle_edges=_optional_non_negative_int(
+            value, "max_particle_edges", f"{path}.max_particle_edges", issues, defaults.max_particle_edges
+        ),
+        particle_count_per_edge=_optional_non_negative_int(
+            value, "particle_count_per_edge", f"{path}.particle_count_per_edge", issues, defaults.particle_count_per_edge
+        ),
+        flow_trail_count=_optional_non_negative_int(
+            value, "flow_trail_count", f"{path}.flow_trail_count", issues, defaults.flow_trail_count
+        ),
+        max_active_pulse_nodes=_optional_non_negative_int(
+            value, "max_active_pulse_nodes", f"{path}.max_active_pulse_nodes", issues, defaults.max_active_pulse_nodes
+        ),
+        pulse_mode=_enum(value, "pulse_mode", f"{path}.pulse_mode", KNOWN_PULSE_MODES, issues, default=defaults.pulse_mode),
+        max_scanning_groups=_optional_non_negative_int(
+            value, "max_scanning_groups", f"{path}.max_scanning_groups", issues, defaults.max_scanning_groups
+        ),
+    )
+
+
+def _motion_policy_defaults(profile: str) -> MotionPolicy:
+    if profile == "readable-runtime":
+        return MotionPolicy(
+            profile=profile,
+            motion_area="micro",
+            max_active_flow_edges=12,
+            max_particle_edges=12,
+            particle_count_per_edge=1,
+            flow_trail_count=0,
+            max_active_pulse_nodes=4,
+            pulse_mode="rotate",
+            max_scanning_groups=0,
+        )
+    if profile == "readable":
+        return MotionPolicy(
+            profile=profile,
+            motion_area="small",
+            max_active_flow_edges=3,
+            max_particle_edges=2,
+            particle_count_per_edge=1,
+            flow_trail_count=1,
+            max_active_pulse_nodes=1,
+            pulse_mode="rotate",
+            max_scanning_groups=0,
+        )
+    if profile == "focused":
+        return MotionPolicy(
+            profile=profile,
+            motion_area="small",
+            max_active_flow_edges=4,
+            max_particle_edges=3,
+            particle_count_per_edge=1,
+            flow_trail_count=2,
+            max_active_pulse_nodes=1,
+            pulse_mode="rotate",
+            max_scanning_groups=1,
+        )
+    if profile == "expressive":
+        return MotionPolicy(
+            profile=profile,
+            motion_area="medium",
+            max_active_flow_edges=8,
+            max_particle_edges=5,
+            particle_count_per_edge=2,
+            flow_trail_count=3,
+            max_active_pulse_nodes=3,
+            pulse_mode="rotate",
+            max_scanning_groups=2,
+        )
+    return MotionPolicy(profile=profile)
 
 
 def _scene_motion(
@@ -251,7 +373,7 @@ def _effect_config(
     elif preset not in allowed_presets:
         issues.append(ValidationIssue(f"{path}.preset", f"expected one of: {', '.join(sorted(allowed_presets))}", "enum"))
         preset = default.preset
-    for key in ("line", "particle", "trail", "entry", "accent", "icon"):
+    for key in ("line", "particle", "trail", "entry", "accent", "icon", "icon_motion"):
         if key in value and value[key] is not None and not isinstance(value[key], (str, bool)):
             issues.append(ValidationIssue(f"{path}.{key}", "expected a string or boolean", "type"))
     trail = value.get("trail")
@@ -260,9 +382,12 @@ def _effect_config(
         line=_optional_string_token(value, "line"),
         particle=_optional_string_token(value, "particle"),
         trail=str(trail).lower() if isinstance(trail, bool) else _optional_string_token(value, "trail"),
+        particle_count=_optional_non_negative_int(value, "particle_count", f"{path}.particle_count", issues),
+        trail_count=_optional_non_negative_int(value, "trail_count", f"{path}.trail_count", issues),
         entry=_optional_string_token(value, "entry"),
         accent=_optional_string_token(value, "accent"),
         icon=_optional_string_token(value, "icon"),
+        icon_motion=_optional_string_token(value, "icon_motion"),
     )
 
 
@@ -331,6 +456,7 @@ def _parse_nodes(value: Any, path: str, issues: List[ValidationIssue], canvas: C
                 caption=_string(item, "caption", f"{item_path}.caption", issues, required=False) or "",
                 position=position,
                 size=size,
+                shape=_enum(item, "shape", f"{item_path}.shape", KNOWN_NODE_SHAPES, issues, default="rect"),
                 role=_role(item, "role", f"{item_path}.role", issues),
                 step=_optional_positive_int(item, "step", f"{item_path}.step", issues),
                 radius=_optional_number(item, "radius", f"{item_path}.radius", issues, positive=True),
@@ -463,6 +589,25 @@ def _optional_positive_int(data: Dict[str, Any], key: str, path: str, issues: Li
     if value <= 0:
         issues.append(ValidationIssue(path, "must be greater than zero", "range"))
         return None
+    return value
+
+
+def _optional_non_negative_int(
+    data: Dict[str, Any],
+    key: str,
+    path: str,
+    issues: List[ValidationIssue],
+    default: Optional[int] = None,
+) -> Optional[int]:
+    if key not in data:
+        return default
+    value = data[key]
+    if isinstance(value, bool) or not isinstance(value, int):
+        issues.append(ValidationIssue(path, "expected a non-negative integer", "type"))
+        return default
+    if value < 0:
+        issues.append(ValidationIssue(path, "must be greater than or equal to zero", "range"))
+        return default
     return value
 
 

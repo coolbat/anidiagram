@@ -31,6 +31,13 @@ The first implementation slice is available in DiagramScript v0.3:
 - group `border-scan` and existing moving boundary effects;
 - node `icon-pulse` plus existing glow/burst behavior;
 - `teaching` motion profile and `sketch-board` style;
+- `motion_policy` budgets for active flow edges, particle edges, per-edge
+  particle/trail density, pulse nodes, and scanning group borders;
+- runtime-loop motion primitives: `signal-dot`, `signal-arrow`, `dash-flow`,
+  `icon-breathe`, and title `breathe`;
+- semantic icon-local motion primitives through `icon-semantic` and
+  `icon_motion`;
+- quality warnings for configured motion that exceeds the selected policy;
 - a clean-room teaching example at
   `examples/teaching-transformer.diagram.json`.
 
@@ -102,6 +109,27 @@ Individual elements should be able to override scene defaults:
 }
 ```
 
+`motion_policy` is the density-control layer. It should be applied after style
+defaults and per-element overrides are resolved:
+
+```json
+{
+  "motion_policy": {
+    "profile": "focused",
+    "max_active_flow_edges": 4,
+    "max_particle_edges": 3,
+    "particle_count_per_edge": 1,
+    "flow_trail_count": 1,
+    "max_active_pulse_nodes": 1,
+    "max_scanning_groups": 1
+  }
+}
+```
+
+The rule of thumb is: all important elements may declare a semantic effect, but
+only the budgeted subset keeps continuous motion. Extras degrade to draw,
+fade, or soft-reveal so the diagram remains readable.
+
 ## Effect Registry
 
 The renderer should add an internal effect registry, likely in
@@ -125,8 +153,11 @@ Recommended edge presets:
 | `static` | No edge motion. |
 | `draw` | Path draws on once. |
 | `dynamic-dash` | Moving dashed stroke. |
+| `dash-flow` | Moving dashed arrow effect where dash continuity implies forward motion. |
 | `flow-dot` | One or more soft circles travel along the path. |
 | `flow-arrow` | Semi-transparent arrow particles travel along the path. |
+| `signal-dot` | One small signal point travels along a complete static path. |
+| `signal-arrow` | One small arrow-shaped signal travels along a complete static path. |
 | `ghost-flow` | Particle trail with translucent echoes. |
 | `glow-line` | Low-frequency glow pulse along the line. |
 | `comet` | Bright leading particle with fading tail. |
@@ -142,6 +173,35 @@ Recommended node presets:
 | `ripple` | Expanding rings around important nodes. |
 | `status-blink` | Low-duty status indicator for active tools. |
 | `icon-pulse` | Semantic icon accent pulse. |
+| `icon-breathe` | Gentle semantic-icon breathing with the node frame static. |
+| `icon-semantic` | Icon-specific local motion such as database writes, file lines, or shield checks. |
+| `micro-icon` | Alias-style micro icon breathing for runtime diagrams. |
+
+Recommended title presets:
+
+| Preset | Description |
+| --- | --- |
+| `fade` | Simple title reveal. |
+| `breathe` | Gentle title opacity breathing without spatial movement. |
+| `handwrite-reveal` | Hand-drawn underline or reveal accent. |
+| `highlight-sweep` | Soft highlight sweep behind the title. |
+
+## Runtime-Loop Motion Rules
+
+For reference-style runtime diagrams, AniDiagram should prefer:
+
+- complete static structure from the first frame;
+- node frames and large group frames remain still;
+- semantic icons may breathe gently, with no jump or whole-node movement;
+- semantic icons may use `icon-semantic` for icon-specific local motion such as
+  `database-write`, `file-lines`, `api-ping`, `search-sweep`,
+  `shield-check`, `agent-orbit`, `tool-tap`, and `output-check`;
+- edges carry one signal point or one signal arrow per path;
+- dashed-arrow paths use `dash-flow`, where dash continuity creates forward
+  motion;
+- title motion uses `breathe`, not sliding or bouncing;
+- `motion_policy.motion_area` starts as an optional clamp. `micro` currently
+  reduces particle scale and can be revised or removed after visual testing.
 
 Recommended group presets:
 
@@ -166,6 +226,22 @@ Recommended semantic icons:
 | `shield` | policy, safety, validation. |
 | `agent` | autonomous or assistant components. |
 | `token` | token/source/embedding examples. |
+
+Recommended icon motions:
+
+| Motion | Intended icon behavior |
+| --- | --- |
+| `database-write` | Database top ellipse compresses/rebounds, a write line scans across, a data point enters, and the lower layer flashes lightly. |
+| `file-lines` | File page enters from lower-left, noticeably overshoots scale, folded corner moves, then document lines reveal quickly. |
+| `folder-open` | Folder tab opens slightly and exposes a short internal file line before settling. |
+| `api-ping` | Request dot travels between API brackets. |
+| `cloud-upload` | Small upload arrow moves inside a cloud with faint internal transfer dots. |
+| `search-sweep` | Lens sweep highlight plus a small light point inside the lens. |
+| `shield-check` | Checkmark draws in place and a low-opacity protection pulse follows the shield outline. |
+| `agent-orbit` | Center core glows while a small thinking/status dot orbits locally. |
+| `tool-tap` | Tool stroke taps locally and emits a short spark at the contact point. |
+| `output-check` | Output lines reveal first, then the result checkmark draws in place. |
+| `token-pulse` | Center token pulse plus short outer ticks lighting in sequence. |
 
 ## Style Compatibility
 
@@ -225,14 +301,18 @@ Raster/video exporters should render simplified equivalents:
 Quality reports should eventually flag effects that may obscure labels, exceed
 canvas bounds, or create excessive contrast/flicker.
 
+Current quality reports already flag `motion_overload` when configured active
+motion exceeds `motion_policy` budgets.
+
 ## Implementation Phases
 
 ### Phase 1: Effect Registry Foundation
 
-- Add typed effect config objects while preserving current string values.
-- Add `effects.py` with edge/node/group/title/icon registries.
-- Add schema support for structured `motion` channel objects.
-- Add tests for legacy string compatibility.
+- Add typed effect config objects while preserving current string values. Done.
+- Add `effects.py` with edge/node/group/title/icon registries. Started.
+- Add schema support for structured `motion` channel objects. Done.
+- Add motion budget policy support for generated complex scenes. Done.
+- Add tests for legacy string compatibility and policy clamping. Started.
 
 ### Phase 2: Edge and Group Effects
 

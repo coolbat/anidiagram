@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anidiagram.dev/schemas/diagram-plan-v0.1.schema.json",
+  "title": "DiagramPlan v0.1",
+  "type": "object",
+  "required": ["version", "title", "layout_strategy"],
+  "properties": {
+    "version": {"const": "0.1"},
+    "title": {"type": "string"},
+    "subtitle": {"type": "string"},
+    "source_summary": {"type": "string"},
+    "style": {"type": "string"},
+    "layout_strategy": {"enum": ["explainer-board"]},
+    "motion_profile": {"enum": ["off", "subtle", "normal", "expressive", "teaching", "runtime-loop"]},
+    "motion_policy": {"$ref": "#/$defs/motion_policy"},
+    "sections": {"type": "array", "items": {"$ref": "#/$defs/section"}},
+    "inputs": {"type": "array", "items": {"$ref": "#/$defs/item"}},
+    "main_flow": {"type": "array", "items": {"$ref": "#/$defs/item"}},
+    "support_panels": {"type": "array", "items": {"$ref": "#/$defs/panel"}},
+    "feedback_paths": {"type": "array", "items": {"$ref": "#/$defs/feedback_path"}},
+    "emphasis": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "role": {"enum": ["actor", "source", "process", "agent", "memory", "tool", "output", "risk", "neutral"]},
+    "icon": {"enum": ["database", "file", "folder", "api", "cloud", "search", "shield", "agent", "token", "memory", "tool", "output"]},
+    "node_shape": {"enum": ["rect", "decision"]},
+    "effect": {
+      "type": "object",
+      "properties": {
+        "preset": {"type": "string"},
+        "line": {"type": "string"},
+        "particle": {"type": "string"},
+        "trail": {"oneOf": [{"type": "string"}, {"type": "boolean"}]},
+        "particle_count": {"type": "integer", "minimum": 0},
+        "trail_count": {"type": "integer", "minimum": 0},
+        "entry": {"type": "string"},
+        "accent": {"type": "string"},
+        "icon": {"type": "string"},
+        "icon_motion": {"type": "string"}
+      }
+    },
+    "motion_policy": {
+      "type": "object",
+      "properties": {
+        "profile": {"enum": ["unrestricted", "readable", "focused", "expressive", "readable-runtime"]},
+        "motion_area": {"enum": ["auto", "micro", "small", "medium", "unrestricted"]},
+        "max_active_flow_edges": {"type": "integer", "minimum": 0},
+        "max_particle_edges": {"type": "integer", "minimum": 0},
+        "particle_count_per_edge": {"type": "integer", "minimum": 0},
+        "flow_trail_count": {"type": "integer", "minimum": 0},
+        "max_active_pulse_nodes": {"type": "integer", "minimum": 0},
+        "pulse_mode": {"enum": ["all", "rotate"]},
+        "max_scanning_groups": {"type": "integer", "minimum": 0}
+      }
+    },
+    "section": {
+      "type": "object",
+      "required": ["id", "label"],
+      "properties": {
+        "id": {"type": "string"},
+        "label": {"type": "string"},
+        "role": {"$ref": "#/$defs/role"}
+      }
+    },
+    "item": {
+      "type": "object",
+      "required": ["id", "label"],
+      "properties": {
+        "id": {"type": "string"},
+        "label": {"type": "string"},
+        "caption": {"type": "string"},
+        "role": {"$ref": "#/$defs/role"},
+        "icon": {"$ref": "#/$defs/icon"},
+        "shape": {"$ref": "#/$defs/node_shape"},
+        "effect": {"$ref": "#/$defs/effect"}
+      }
+    },
+    "panel": {
+      "type": "object",
+      "required": ["id", "items"],
+      "properties": {
+        "id": {"type": "string"},
+        "label": {"type": "string"},
+        "role": {"$ref": "#/$defs/role"},
+        "items": {"type": "array", "items": {"$ref": "#/$defs/item"}}
+      }
+    },
+    "feedback_path": {
+      "type": "object",
+      "required": ["from", "to"],
+      "properties": {
+        "from": {"type": "string"},
+        "to": {"type": "string"},
+        "label": {"type": "string"},
+        "role": {"$ref": "#/$defs/role"}
+      }
+    }
+  }
+}
