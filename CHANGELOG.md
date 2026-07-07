@@ -2,6 +2,27 @@
 
 ## 2026-07-06
 
+- Added the optional `html-runtime` export target for high-fidelity browser
+  animation while preserving the default SVG/SMIL and HTML viewer outputs.
+- Added `--export-renderer browser` so PNG, GIF, PDF, WebP, MP4, APNG, and
+  frame-based Lottie can be captured from the high-fidelity HTML runtime
+  instead of the lightweight Python preview renderer.
+- Added Motion Manifest generation so the HTML runtime selects stable SVG icon
+  parts instead of guessing DOM structure from classes.
+- Added stable semantic icon part IDs and runtime-only parts for the first eight
+  v2 icon performances: `agent-think-act-v2`, `api-request-response-v2`,
+  `search-discover-v2`, `database-write-v2`, `memory-commit-v2`,
+  `tool-run-v2`, `token-intent-v2`, and `output-reveal-v2`.
+- Refined semantic icon styling with softer low-saturation fills, stronger
+  `agent` and `api` semantics, and dedicated static icons for `memory`, `tool`,
+  `token`, and `output` instead of the generic fallback.
+- Refined the `agent` icon into an asymmetric brain/head circuit and updated
+  `agent-think-act-v2` so lines draw outward before node dots grow in.
+- Added `runtime/anidiagram-runtime.js` with GSAP timeline performances plus
+  pause, resume, restart, reduced-motion, zoom, pan, and SVG download handling.
+- Added `examples/high-fidelity-runtime.diagram.json` and regression tests for
+  html-runtime CLI output, valid manifests, matching selectors, and default SVG
+  compatibility.
 - Added a clean-room AniDiagram system architecture DiagramScript example and
   rendered it through the project CLI for SVG, HTML, and quality verification.
 - Refined the system architecture example with a calmer motion profile, fewer

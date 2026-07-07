@@ -1,0 +1,458 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="subtle" data-motion-sequence="step-stagger" data-motion-edge="draw" data-motion-node="fade" data-motion-group="soft-reveal" data-motion-title="fade" data-motion-reduced="subtle">
+<title id="diagram-title">RAG vs Agentic RAG</title>
+<desc id="diagram-desc">compare retrieval-only flow with planning, tools, memory, and evaluation</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .edge-flow { stroke-linecap: round; }
+  .edge-draw, .edge-base { stroke-linecap: round; stroke-linejoin: round; }
+  .edge-particle { filter: url(#particle-glow); }
+  .edge-arrow-particle { filter: url(#particle-glow); }
+  .semantic-icon { vector-effect: non-scaling-stroke; }
+  .semantic-icon-breathe { transform-box: fill-box; transform-origin: center; animation: semanticIconBreathe 2.8s ease-in-out infinite; }
+  .icon-breathe-halo { pointer-events: none; filter: url(#particle-glow); }
+  .node-glow, .node-burst { pointer-events: none; }
+  #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
+  #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
+  @keyframes titlePulse { 0%, 100% { opacity: 0.76; } 50% { opacity: 1; } }
+  @keyframes titleSlide { 0%, 100% { transform: translateX(0); opacity: 0.9; } 50% { transform: translateX(8px); opacity: 1; } }
+  @keyframes semanticIconBreathe { 0%, 100% { transform: scale(0.96); opacity: 0.72; } 50% { transform: scale(1.08); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    #title-accent, #title-highlight, .semantic-icon-breathe { animation: none; }
+  }
+</style>
+<rect width="100%" height="100%" fill="#ffffff" />
+<defs>
+  <filter id="soft-glow" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="5" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <filter id="particle-glow" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="2.6" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#eeeeee" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="1224" height="668" rx="26" fill="none" stroke="#d4d4d4" stroke-width="1.4" opacity="1.00" />
+<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#10a37f" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#f4f7f6" />
+
+<text id="main-title" x="90" y="84" class="title" fill="#111111" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.08s" fill="freeze" />
+  RAG vs Agentic RAG
+</text>
+<text x="74" y="126" class="subtitle" fill="#626262" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />
+  compare retrieval-only flow with planning, tools, memory, and evaluation
+</text>
+
+<g id="group-rag" class="group" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.17s" fill="freeze" />
+  <rect x="110.0" y="170.0" width="380.0" height="430.0" rx="22"
+        fill="#fafafa" fill-opacity="0.34" stroke="#404040" stroke-width="1.6" stroke-dasharray="9 8">
+  </rect>
+
+
+  <text x="128.0" y="200.0" class="group-label" fill="#626262">RAG</text>
+</g>
+
+<g id="group-agentic" class="group" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.29s" fill="freeze" />
+  <rect x="690.0" y="170.0" width="380.0" height="430.0" rx="22"
+        fill="#effcf8" fill-opacity="0.34" stroke="#10a37f" stroke-width="1.6" stroke-dasharray="9 8">
+  </rect>
+
+
+  <text x="708.0" y="200.0" class="group-label" fill="#626262">Agentic RAG</text>
+</g>
+
+<defs>
+  <marker id="arrow-1" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#15803d" />
+  </marker>
+</defs>
+<g class="edge" data-role="memory">
+  <path class="edge-base" d="M 280.0 329.0 L 280.0 390.0" fill="none" stroke="#15803d" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-1)" />
+  <path class="edge-draw" d="M 280.0 329.0 L 280.0 390.0" fill="none" stroke="#15803d" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-1)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.47s" fill="freeze" />
+  </path>
+
+
+
+  <text x="280.0" y="345.5" class="edge-label" fill="#626262" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.61s" fill="freeze" />
+    search
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#16a34a" />
+  </marker>
+</defs>
+<g class="edge" data-role="output">
+  <path class="edge-base" d="M 280.0 474.0 L 280.0 535.0" fill="none" stroke="#16a34a" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-2)" />
+  <path class="edge-draw" d="M 280.0 474.0 L 280.0 535.0" fill="none" stroke="#16a34a" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-2)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.59s" fill="freeze" />
+  </path>
+
+
+
+  <text x="280.0" y="490.5" class="edge-label" fill="#626262" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.73s" fill="freeze" />
+    context
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="tool">
+  <path class="edge-base" d="M 850.0 299.0 L 850.0 360.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-3)" />
+  <path class="edge-draw" d="M 850.0 299.0 L 850.0 360.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-3)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.71s" fill="freeze" />
+  </path>
+
+
+
+  <text x="850.0" y="315.5" class="edge-label" fill="#626262" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.85s" fill="freeze" />
+    invoke
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-4" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#15803d" />
+  </marker>
+</defs>
+<g class="edge" data-role="memory">
+  <path class="edge-base" d="M 850.0 444.0 L 850.0 505.0" fill="none" stroke="#15803d" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-4)" />
+  <path class="edge-draw" d="M 850.0 444.0 L 850.0 505.0" fill="none" stroke="#15803d" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-4)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.83s" fill="freeze" />
+  </path>
+
+
+
+  <text x="850.0" y="460.5" class="edge-label" fill="#626262" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.97s" fill="freeze" />
+    state
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-5" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#16a34a" />
+  </marker>
+</defs>
+<g class="edge" data-role="output">
+  <path class="edge-base" d="M 370.0 577.0 L 500.0 652.0" fill="none" stroke="#16a34a" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-5)" />
+  <path class="edge-draw" d="M 370.0 577.0 L 500.0 652.0" fill="none" stroke="#16a34a" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-5)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.95s" fill="freeze" />
+  </path>
+
+
+
+  <text x="435.0" y="600.5" class="edge-label" fill="#626262" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="1.09s" fill="freeze" />
+    simple
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-6" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#10a37f" />
+  </marker>
+</defs>
+<g class="edge" data-role="agent">
+  <path class="edge-base" d="M 760.0 547.0 L 680.0 652.0" fill="none" stroke="#10a37f" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-6)" />
+  <path class="edge-draw" d="M 760.0 547.0 L 680.0 652.0" fill="none" stroke="#10a37f" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-6)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="1.07s" fill="freeze" />
+  </path>
+
+
+
+  <text x="720.0" y="585.5" class="edge-label" fill="#626262" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="1.21s" fill="freeze" />
+    complex
+  </text>
+</g>
+
+<g id="node-rag-query" class="node motion-node" data-role="actor" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.25s" fill="freeze" />
+
+
+
+  <rect x="190.0" y="245.0" width="180.0" height="84.0" rx="8.0"
+        fill="#fffbe8" stroke="#a16207" stroke-width="1.5" />
+
+<g id="icon-rag-query-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-file" data-icon="file" data-node-id="rag-query" opacity="0.94">
+
+
+
+
+  <g class="semantic-icon-file-page icon-file-page-motion" opacity="0.96">
+
+
+    <g transform="translate(229.6 287.0)">
+      <g>
+
+        <g transform="translate(-229.6 -287.0)">
+          <path class="semantic-icon icon-filled semantic-icon-file icon-file-sheet"
+                d="M 217.4 270.0 H 234.4 L 241.8 277.5 V 304.0 H 217.4 Z"
+                fill="#f0e3c4" stroke="#a16207" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+          <g class="icon-file-fold-motion">
+
+            <path d="M 234.4 270.0 L 241.8 277.5 H 234.4 Z"
+                  fill="#dfc79a" stroke="#a16207" stroke-width="2.2" stroke-linejoin="round" />
+            <path d="M 234.4 270.0 V 277.5 H 241.8"
+                  fill="none" stroke="#a16207" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.88" />
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+
+
+</g>
+
+  <text x="306.4" y="273.0" text-anchor="middle" fill="#111111">
+<tspan x="306.4" dy="18" class="node-title">Query</tspan>
+<tspan x="306.4" dy="17" class="node-caption">ask</tspan>
+</text>
+</g>
+
+<g id="node-rag-retrieve" class="node motion-node" data-role="memory" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.37s" fill="freeze" />
+
+
+
+  <rect x="190.0" y="390.0" width="180.0" height="84.0" rx="8.0"
+        fill="#f0fdf4" stroke="#15803d" stroke-width="1.5" />
+
+<g id="icon-rag-retrieve-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-search" data-icon="search" data-node-id="rag-retrieve" opacity="0.94">
+
+
+
+
+  <circle id="icon-rag-retrieve-lens" cx="226.9" cy="429.3" r="9.2" class="semantic-icon icon-filled semantic-icon-search" stroke="#15803d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#cde9d7" />
+  <path id="icon-rag-retrieve-handle" d="M 234.7 437.1 L 245.2 447.6" class="semantic-icon semantic-icon-search" fill="none" stroke="#15803d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <path id="icon-rag-retrieve-scan" class="icon-runtime-part" d="M 219.1 424.5 L 233.0 436.8"
+        fill="none" stroke="#15803d" stroke-width="2.8" stroke-linecap="round" opacity="0" />
+  <circle id="icon-rag-retrieve-result-1" class="icon-runtime-part" cx="224.0" cy="428.3" r="2.2" fill="#15803d" opacity="0" />
+  <circle id="icon-rag-retrieve-result-2" class="icon-runtime-part" cx="229.9" cy="431.7" r="1.9" fill="#15803d" opacity="0" />
+  <circle id="icon-rag-retrieve-target" class="icon-runtime-part" cx="232.7" cy="428.6" r="3.7" fill="none" stroke="#15803d" stroke-width="2" opacity="0" />
+
+
+</g>
+
+  <text x="306.4" y="418.0" text-anchor="middle" fill="#111111">
+<tspan x="306.4" dy="18" class="node-title">Retrieve</tspan>
+<tspan x="306.4" dy="17" class="node-caption">top-k</tspan>
+</text>
+</g>
+
+<g id="node-rag-answer" class="node motion-node" data-role="output" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.49s" fill="freeze" />
+
+
+
+  <rect x="190.0" y="535.0" width="180.0" height="84.0" rx="8.0"
+        fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5" />
+
+<g id="icon-rag-answer-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-output" data-icon="output" data-node-id="rag-answer" opacity="0.94">
+
+
+
+
+  <rect id="icon-rag-answer-card" x="216.3" y="564.8" width="22.4" height="23.1" rx="3.1"
+        fill="#cdefd9" stroke="#16a34a" stroke-width="2.8" />
+  <path id="icon-rag-answer-line-1" class="icon-output-line" d="M 222.5 572.2 H 233.3"
+        fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
+  <path id="icon-rag-answer-line-2" class="icon-output-line" d="M 222.5 577.0 H 231.3"
+        fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
+  <path id="icon-rag-answer-check" class="icon-output-check" d="M 224.5 582.8 L 228.2 586.2 L 236.4 577.7"
+        fill="none" stroke="#16a34a" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <circle id="icon-rag-answer-flash" class="icon-runtime-part" cx="233.0" cy="580.7" r="10.5" fill="none" stroke="#16a34a" stroke-width="2" opacity="0" />
+
+
+</g>
+
+  <text x="306.4" y="563.0" text-anchor="middle" fill="#111111">
+<tspan x="306.4" dy="18" class="node-title">Answer</tspan>
+<tspan x="306.4" dy="17" class="node-caption">compose</tspan>
+</text>
+</g>
+
+<g id="node-agent-plan" class="node motion-node" data-role="agent" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.61s" fill="freeze" />
+
+
+
+  <rect x="760.0" y="215.0" width="180.0" height="84.0" rx="8.0"
+        fill="#effcf8" stroke="#10a37f" stroke-width="1.5" />
+
+<g id="icon-agent-plan-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-agent" data-icon="agent" data-node-id="agent-plan" opacity="0.94">
+
+
+
+
+  <path id="icon-agent-plan-shell" class="semantic-icon semantic-icon-agent icon-agent-shell"
+        d="M 799.6 240.3
+           L 812.2 247.8
+           V 264.8
+           L 799.6 272.6
+           L 787.0 264.8
+           V 247.8
+           Z"
+        fill="#cbeee5" stroke="#10a37f" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.92" />
+  <path class="semantic-icon semantic-icon-agent icon-agent-circuit"
+        d="M 799.6 247.1 V 263.1
+           M 793.1 253.3 H 797.9
+           M 801.3 256.7 H 806.7
+           M 795.2 262.4 H 803.3"
+        fill="none" stroke="#10a37f" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" opacity="0.50" />
+  <circle id="icon-agent-plan-core" class="icon-runtime-part icon-agent-core" cx="799.6" cy="256.7" r="3.0"
+        fill="#10a37f" stroke="#cbeee5" stroke-width="1.5" opacity="0.78" />
+  <circle id="icon-agent-plan-thought-1" class="icon-runtime-part icon-agent-thought" cx="793.5" cy="249.5" r="2.0"
+        fill="#10a37f" opacity="0.46" />
+  <circle id="icon-agent-plan-thought-2" class="icon-runtime-part icon-agent-thought" cx="805.7" cy="251.6" r="1.9"
+        fill="#10a37f" opacity="0.38" />
+  <circle id="icon-agent-plan-thought-3" class="icon-runtime-part icon-agent-thought" cx="796.5" cy="263.1" r="1.8"
+        fill="#10a37f" opacity="0.42" />
+  <path id="icon-agent-plan-decision-token" class="icon-runtime-part icon-agent-decision-token"
+        d="M 807.8 252.2
+           L 810.2 254.6
+           L 807.8 257.0
+           L 805.4 254.6
+           Z"
+        fill="#10a37f" stroke="#cbeee5" stroke-width="1.2" opacity="0" />
+
+
+</g>
+
+  <text x="876.4" y="243.0" text-anchor="middle" fill="#111111">
+<tspan x="876.4" dy="18" class="node-title">Plan</tspan>
+<tspan x="876.4" dy="17" class="node-caption">decompose</tspan>
+</text>
+</g>
+
+<g id="node-agent-tools" class="node motion-node" data-role="tool" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.73s" fill="freeze" />
+
+
+
+  <rect x="760.0" y="360.0" width="180.0" height="84.0" rx="8.0"
+        fill="#eff6ff" stroke="#2563eb" stroke-width="1.5" />
+
+<g id="icon-agent-tools-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-tool" data-icon="tool" data-node-id="agent-tools" opacity="0.94">
+
+
+
+
+  <rect id="icon-agent-tools-chip" x="784.6" y="392.5" width="24.8" height="19.0" rx="4.4"
+        fill="#cfdefc" stroke="#2563eb" stroke-width="2.8" />
+  <text id="icon-agent-tools-glyph" x="794.5" y="404.9" text-anchor="middle"
+        fill="#2563eb" stroke="none" font-size="10.0" font-weight="800">fx</text>
+  <circle id="icon-agent-tools-connector" cx="806.7" cy="402.0" r="2.2" fill="#2563eb" opacity="0.72" />
+  <path id="icon-agent-tools-spark-1" class="icon-tool-spark" d="M 810.8 394.5 L 813.5 391.5"
+        fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" opacity="0.84" />
+  <path id="icon-agent-tools-spark-2" class="icon-tool-spark" d="M 811.5 408.5 L 814.9 410.8"
+        fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" opacity="0.84" />
+  <circle id="icon-agent-tools-flash" class="icon-runtime-part" cx="811.2" cy="402.0" r="6.8" fill="none" stroke="#2563eb" stroke-width="2" opacity="0" />
+
+
+</g>
+
+  <text x="876.4" y="388.0" text-anchor="middle" fill="#111111">
+<tspan x="876.4" dy="18" class="node-title">Tools</tspan>
+<tspan x="876.4" dy="17" class="node-caption">act</tspan>
+</text>
+</g>
+
+<g id="node-agent-memory" class="node motion-node" data-role="memory" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.85s" fill="freeze" />
+
+
+
+  <rect x="760.0" y="505.0" width="180.0" height="84.0" rx="8.0"
+        fill="#f0fdf4" stroke="#15803d" stroke-width="1.5" />
+
+<g id="icon-agent-memory-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-memory" data-icon="memory" data-node-id="agent-memory" opacity="0.94">
+
+
+
+
+  <rect id="icon-agent-memory-back-card" class="icon-memory-back-card" x="789.7" y="533.7" width="20.1" height="18.7" rx="3.1"
+        fill="#cde9d7" stroke="#15803d" stroke-width="2.5" opacity="0.58" />
+  <rect id="icon-agent-memory-front-card" class="icon-memory-front-card" x="787.0" y="537.5" width="21.8" height="19.7" rx="3.4"
+        fill="#cde9d7" stroke="#15803d" stroke-width="2.7" opacity="0.84" />
+  <path id="icon-agent-memory-trace-1" class="icon-memory-trace" d="M 792.8 543.9 H 804.7"
+        fill="none" stroke="#15803d" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
+  <path id="icon-agent-memory-trace-2" class="icon-memory-trace" d="M 792.8 548.7 H 807.1"
+        fill="none" stroke="#15803d" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
+  <path id="icon-agent-memory-trace-3" class="icon-memory-trace" d="M 792.8 553.5 H 802.7"
+        fill="none" stroke="#15803d" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
+  <circle id="icon-agent-memory-dot" class="icon-memory-dot" cx="808.8" cy="539.9" r="2.2" fill="#15803d" opacity="0.72" />
+  <circle id="icon-agent-memory-commit-token" class="icon-runtime-part" cx="790.8" cy="531.4" r="2.6" fill="#15803d" opacity="0" />
+  <circle id="icon-agent-memory-flash" class="icon-runtime-part" cx="797.9" cy="547.3" r="12.2" fill="none" stroke="#15803d" stroke-width="2" opacity="0" />
+
+
+</g>
+
+  <text x="876.4" y="533.0" text-anchor="middle" fill="#111111">
+<tspan x="876.4" dy="18" class="node-title">Memory</tspan>
+<tspan x="876.4" dy="17" class="node-caption">learn</tspan>
+</text>
+</g>
+
+<g id="node-decision" class="node motion-node" data-role="output" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.97s" fill="freeze" />
+
+
+
+  <rect x="500.0" y="610.0" width="180.0" height="84.0" rx="8.0"
+        fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5" />
+
+<g id="icon-decision-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-shield" data-icon="shield" data-node-id="decision" opacity="0.94">
+
+
+
+
+  <path d="M 539.6 635.0 L 554.2 642.1 V 653.7
+           C 554.2 663.2, 545.4 667.6, 539.6 669.0
+           C 533.8 667.6, 525.0 663.2, 525.0 653.7
+           V 642.1 Z" class="semantic-icon icon-filled semantic-icon-shield" stroke="#16a34a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#cdefd9" />
+  <path d="M 533.8 652.0 L 538.6 657.1 L 546.7 645.5" class="semantic-icon semantic-icon-shield" fill="none" stroke="#16a34a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+
+
+</g>
+
+  <text x="616.4" y="638.0" text-anchor="middle" fill="#111111">
+<tspan x="616.4" dy="18" class="node-title">Choose</tspan>
+<tspan x="616.4" dy="17" class="node-caption">fit by task</tspan>
+</text>
+</g>
+</svg>

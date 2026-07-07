@@ -1,0 +1,179 @@
+{
+  "version": "0.3",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "style": "openai-minimal",
+  "title": {
+    "text": "Agent Memory Data Model",
+    "subtitle": "users, sessions, messages, memories, tool calls, and artifacts"
+  },
+  "motion": {
+    "profile": "subtle",
+    "sequence": "step-stagger",
+    "ease": "calm",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 0.45,
+    "edge": {
+      "preset": "draw",
+      "particle": "soft-dot",
+      "trail": false
+    },
+    "node": {
+      "preset": "fade",
+      "accent": "glow"
+    },
+    "group": {
+      "preset": "soft-reveal"
+    },
+    "title": {
+      "preset": "fade"
+    },
+    "reduced_motion": "subtle"
+  },
+  "groups": [
+    {
+      "id": "model",
+      "label": "Memory Schema",
+      "bounds": [
+        70,
+        165,
+        1080,
+        410
+      ],
+      "role": "neutral"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "user",
+      "label": "User",
+      "caption": "id, plan",
+      "position": [
+        105,
+        225
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "actor",
+      "icon": "agent"
+    },
+    {
+      "id": "session",
+      "label": "Session",
+      "caption": "started_at",
+      "position": [
+        350,
+        225
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "process",
+      "icon": "folder"
+    },
+    {
+      "id": "message",
+      "label": "Message",
+      "caption": "role, text",
+      "position": [
+        595,
+        225
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "source",
+      "icon": "file"
+    },
+    {
+      "id": "memory",
+      "label": "Memory",
+      "caption": "scope, value",
+      "position": [
+        840,
+        225
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "memory",
+      "icon": "database"
+    },
+    {
+      "id": "toolcall",
+      "label": "ToolCall",
+      "caption": "name, status",
+      "position": [
+        470,
+        455
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "tool",
+      "icon": "api"
+    },
+    {
+      "id": "artifact",
+      "label": "Artifact",
+      "caption": "uri, type",
+      "position": [
+        715,
+        455
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "output",
+      "icon": "output"
+    }
+  ],
+  "edges": [
+    {
+      "from": "user",
+      "to": "session",
+      "label": "has",
+      "role": "actor",
+      "route": "straight"
+    },
+    {
+      "from": "session",
+      "to": "message",
+      "label": "contains",
+      "role": "process",
+      "route": "straight"
+    },
+    {
+      "from": "message",
+      "to": "memory",
+      "label": "summarizes",
+      "role": "memory",
+      "route": "straight"
+    },
+    {
+      "from": "message",
+      "to": "toolcall",
+      "label": "invokes",
+      "role": "tool",
+      "route": "vh"
+    },
+    {
+      "from": "toolcall",
+      "to": "artifact",
+      "label": "creates",
+      "role": "output",
+      "route": "straight"
+    }
+  ],
+  "preset": "er"
+}

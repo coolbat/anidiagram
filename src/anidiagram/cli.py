@@ -9,7 +9,9 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 from .exporters import (
+    BROWSER_CAPTURE_FORMATS,
     write_apng,
+    write_browser_capture,
     write_gif,
     write_html,
     write_lottie,
@@ -18,6 +20,7 @@ from .exporters import (
     write_png,
     write_quality,
     write_svg,
+    write_viewer,
     write_webp,
 )
 from .planner import brief_to_plan, compile_plan
@@ -29,6 +32,7 @@ from .styles import load_style
 EXPORTERS = {
     "svg": write_svg,
     "html": write_html,
+    "viewer": write_viewer,
     "png": write_png,
     "gif": write_gif,
     "pdf": write_pdf,
@@ -41,6 +45,7 @@ EXPORTERS = {
 FORMAT_EXTENSIONS = {
     "svg": ".svg",
     "html": ".html",
+    "viewer": ".viewer.html",
     "png": ".png",
     "gif": ".gif",
     "pdf": ".pdf",
@@ -68,9 +73,20 @@ def main(argv: Optional[List[str]] = None) -> None:
     parser.add_argument("--style", help="Optional style profile JSON or bundled style name.")
     parser.add_argument("--outdir", default="outputs", help="Output directory.")
     parser.add_argument("--basename", default="diagram", help="Output basename.")
-    parser.add_argument("--formats", help="Comma-separated formats: svg,html,png,gif,pdf,webp,mp4,apng,lottie,quality.")
+    parser.add_argument("--formats", help="Comma-separated formats: svg,html,viewer,png,gif,pdf,webp,mp4,apng,lottie,quality. html-runtime is accepted as a legacy alias for html.")
+    parser.add_argument("--html-runtime", choices=["gsap"], help="High-fidelity runtime backend for html output.")
+    parser.add_argument(
+        "--export-renderer",
+        choices=["python", "browser"],
+        default="python",
+        help="Renderer for PNG/GIF/PDF/WebP/MP4/APNG/Lottie. 'browser' records the high-fidelity html output.",
+    )
+    parser.add_argument("--export-scale", type=float, default=2.0, help="Browser export device scale factor.")
+    parser.add_argument("--export-fps", type=int, default=24, help="Browser export frame rate for animated formats.")
+    parser.add_argument("--export-frames", type=int, help="Browser export frame count for animated formats.")
     parser.add_argument("--all", action="store_true", help="Write every supported output format.")
-    parser.add_argument("--html", action="store_true", help="Also write a self-contained HTML viewer.")
+    parser.add_argument("--html", action="store_true", help="Also write the high-fidelity HTML runtime output.")
+    parser.add_argument("--viewer", action="store_true", help="Also write the debug HTML viewer output.")
     parser.add_argument("--quality", action="store_true", help="Also write a quality report JSON.")
     parser.add_argument("--result", help="Optional path for the structured CLI result JSON.")
     parser.add_argument("--plan-out", help="Optional path for a generated DiagramPlan JSON when using --brief or --text.")
@@ -120,6 +136,19 @@ def main(argv: Optional[List[str]] = None) -> None:
         output_path = outdir / f"{args.basename}{FORMAT_EXTENSIONS[format_name]}"
         if format_name == "quality":
             outputs[format_name] = write_quality(scene, output_path)
+        elif format_name == "html":
+            outputs[format_name] = write_html(scene, style, output_path, runtime=args.html_runtime or "gsap")
+        elif args.export_renderer == "browser" and format_name in BROWSER_CAPTURE_FORMATS:
+            outputs[format_name] = write_browser_capture(
+                scene,
+                style,
+                output_path,
+                format_name,
+                runtime=args.html_runtime or "gsap",
+                frames=args.export_frames,
+                fps=args.export_fps,
+                scale=args.export_scale,
+            )
         else:
             outputs[format_name] = EXPORTERS[format_name](scene, style, output_path)
 
@@ -181,15 +210,23 @@ def _requested_formats(args: argparse.Namespace) -> List[str]:
         return list(EXPORTERS.keys())
     requested = ["svg"]
     if args.formats:
-        requested = [item.strip() for item in args.formats.split(",") if item.strip()]
+        requested = [_canonical_format(item.strip()) for item in args.formats.split(",") if item.strip()]
     if args.html and "html" not in requested:
         requested.append("html")
+    if args.viewer and "viewer" not in requested:
+        requested.append("viewer")
     if args.quality and "quality" not in requested:
         requested.append("quality")
     unknown = [item for item in requested if item not in EXPORTERS]
     if unknown:
         raise SystemExit(f"unsupported format(s): {', '.join(unknown)}")
     return _dedupe(requested)
+
+
+def _canonical_format(value: str) -> str:
+    if value in {"html-runtime", "runtime-html", "runtime"}:
+        return "html"
+    return value
 
 
 def _dedupe(values: List[str]) -> List[str]:

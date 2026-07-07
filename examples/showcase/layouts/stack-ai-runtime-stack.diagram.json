@@ -1,0 +1,179 @@
+{
+  "version": "0.3",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "style": "dark-terminal",
+  "title": {
+    "text": "AI Runtime Stack",
+    "subtitle": "ui, orchestration, model, tools, memory, and infrastructure layers"
+  },
+  "motion": {
+    "profile": "normal",
+    "sequence": "step-stagger",
+    "ease": "calm",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 1.0,
+    "edge": {
+      "preset": "dynamic-dash",
+      "particle": "soft-dot",
+      "trail": false
+    },
+    "node": {
+      "preset": "status-blink",
+      "accent": "glow"
+    },
+    "group": {
+      "preset": "corner-pulse"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "subtle"
+  },
+  "groups": [
+    {
+      "id": "stack",
+      "label": "Runtime Stack",
+      "bounds": [
+        455,
+        80,
+        350,
+        610
+      ],
+      "role": "neutral"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "ui",
+      "label": "UI",
+      "caption": "surface",
+      "position": [
+        520,
+        105
+      ],
+      "size": [
+        220,
+        72
+      ],
+      "role": "actor",
+      "icon": "file"
+    },
+    {
+      "id": "orch",
+      "label": "Orchestration",
+      "caption": "router",
+      "position": [
+        520,
+        205
+      ],
+      "size": [
+        220,
+        72
+      ],
+      "role": "agent",
+      "icon": "agent"
+    },
+    {
+      "id": "model",
+      "label": "Model",
+      "caption": "inference",
+      "position": [
+        520,
+        305
+      ],
+      "size": [
+        220,
+        72
+      ],
+      "role": "tool",
+      "icon": "api"
+    },
+    {
+      "id": "tools",
+      "label": "Tools",
+      "caption": "actions",
+      "position": [
+        520,
+        405
+      ],
+      "size": [
+        220,
+        72
+      ],
+      "role": "process",
+      "icon": "tool"
+    },
+    {
+      "id": "memory",
+      "label": "Memory",
+      "caption": "state",
+      "position": [
+        520,
+        505
+      ],
+      "size": [
+        220,
+        72
+      ],
+      "role": "memory",
+      "icon": "database"
+    },
+    {
+      "id": "infra",
+      "label": "Infra",
+      "caption": "queue + cache",
+      "position": [
+        520,
+        605
+      ],
+      "size": [
+        220,
+        72
+      ],
+      "role": "source",
+      "icon": "cloud"
+    }
+  ],
+  "edges": [
+    {
+      "from": "ui",
+      "to": "orch",
+      "label": "depends",
+      "role": "process",
+      "route": "vh"
+    },
+    {
+      "from": "orch",
+      "to": "model",
+      "label": "depends",
+      "role": "process",
+      "route": "vh"
+    },
+    {
+      "from": "model",
+      "to": "tools",
+      "label": "depends",
+      "role": "process",
+      "route": "vh"
+    },
+    {
+      "from": "tools",
+      "to": "memory",
+      "label": "depends",
+      "role": "process",
+      "route": "vh"
+    },
+    {
+      "from": "memory",
+      "to": "infra",
+      "label": "depends",
+      "role": "process",
+      "route": "vh"
+    }
+  ],
+  "preset": "stack"
+}

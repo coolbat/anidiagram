@@ -1,0 +1,218 @@
+{
+  "version": "0.3",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "style": "dark-luxury",
+  "title": {
+    "text": "Distributed Agent Runtime Mesh",
+    "subtitle": "workers, queues, caches, routers, and models coordinate across a mesh"
+  },
+  "motion": {
+    "profile": "expressive",
+    "sequence": "step-stagger",
+    "ease": "spring",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 1.05,
+    "edge": {
+      "preset": "signal-arrow",
+      "particle": "soft-dot",
+      "trail": false
+    },
+    "node": {
+      "preset": "pulse",
+      "accent": "ripple"
+    },
+    "group": {
+      "preset": "border-scan"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "subtle"
+  },
+  "groups": [
+    {
+      "id": "mesh",
+      "label": "Runtime Mesh",
+      "bounds": [
+        125,
+        115,
+        980,
+        510
+      ],
+      "role": "agent"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "router",
+      "label": "Router",
+      "caption": "dispatch",
+      "position": [
+        520,
+        300
+      ],
+      "size": [
+        200,
+        92
+      ],
+      "role": "agent",
+      "icon": "agent"
+    },
+    {
+      "id": "worker-a",
+      "label": "Worker A",
+      "caption": "tools",
+      "position": [
+        190,
+        170
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "tool",
+      "icon": "tool"
+    },
+    {
+      "id": "worker-b",
+      "label": "Worker B",
+      "caption": "browser",
+      "position": [
+        850,
+        170
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "tool",
+      "icon": "cloud"
+    },
+    {
+      "id": "queue",
+      "label": "Queue",
+      "caption": "jobs",
+      "position": [
+        190,
+        485
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "source",
+      "icon": "api"
+    },
+    {
+      "id": "cache",
+      "label": "Cache",
+      "caption": "state",
+      "position": [
+        520,
+        520
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "memory",
+      "icon": "database"
+    },
+    {
+      "id": "model",
+      "label": "Model",
+      "caption": "route",
+      "position": [
+        850,
+        485
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "process",
+      "icon": "api"
+    }
+  ],
+  "edges": [
+    {
+      "from": "router",
+      "to": "worker-a",
+      "label": "assign",
+      "role": "tool",
+      "route": "straight",
+      "effect": {
+        "preset": "signal-arrow",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "router",
+      "to": "worker-b",
+      "label": "assign",
+      "role": "tool",
+      "route": "straight",
+      "effect": {
+        "preset": "signal-arrow",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "queue",
+      "to": "router",
+      "label": "jobs",
+      "role": "source",
+      "route": "straight",
+      "effect": {
+        "preset": "signal-dot",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "router",
+      "to": "cache",
+      "label": "state",
+      "role": "memory",
+      "route": "straight",
+      "effect": {
+        "preset": "flow-dot",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "router",
+      "to": "model",
+      "label": "infer",
+      "role": "process",
+      "route": "straight",
+      "effect": {
+        "preset": "signal-arrow",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "worker-a",
+      "to": "cache",
+      "label": "write",
+      "role": "memory",
+      "route": "straight"
+    },
+    {
+      "from": "worker-b",
+      "to": "model",
+      "label": "call",
+      "role": "process",
+      "route": "straight"
+    }
+  ],
+  "preset": "network"
+}

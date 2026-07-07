@@ -1,0 +1,305 @@
+{
+  "version": "0.3",
+  "preset": "high-fidelity-runtime",
+  "canvas": {
+    "width": 1120,
+    "height": 640
+  },
+  "style": "deep-tech",
+  "title": {
+    "text": "Agent Runtime Flow",
+    "subtitle": "High-fidelity icon performances driven by an HTML runtime manifest"
+  },
+  "motion": {
+    "profile": "teaching",
+    "sequence": "staged",
+    "ease": "spring",
+    "stagger": 0.12,
+    "duration_scale": 0.95,
+    "intensity": 1.15,
+    "edge": {
+      "preset": "signal-arrow",
+      "particle_count": 1,
+      "trail_count": 0
+    },
+    "node": {
+      "preset": "icon-performance"
+    },
+    "group": {
+      "preset": "static"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "subtle"
+  },
+  "motion_policy": {
+    "profile": "focused",
+    "motion_area": "small",
+    "max_active_flow_edges": 6,
+    "max_particle_edges": 6,
+    "particle_count_per_edge": 1,
+    "flow_trail_count": 0,
+    "max_active_pulse_nodes": 7,
+    "max_scanning_groups": 0
+  },
+  "groups": [
+    {
+      "id": "runtime",
+      "label": "Runtime",
+      "bounds": [
+        58,
+        170,
+        1005,
+        175
+      ],
+      "role": "agent",
+      "effect": {
+        "preset": "static"
+      }
+    },
+    {
+      "id": "support",
+      "label": "Support",
+      "bounds": [
+        238,
+        405,
+        650,
+        115
+      ],
+      "role": "process",
+      "effect": {
+        "preset": "static"
+      }
+    }
+  ],
+  "nodes": [
+    {
+      "id": "request",
+      "label": "Request",
+      "caption": "intent arrives",
+      "position": [
+        82,
+        220
+      ],
+      "size": [
+        150,
+        82
+      ],
+      "role": "source",
+      "icon": "token",
+      "effect": {
+        "preset": "icon-performance",
+        "icon_motion": "token-intent-v2"
+      }
+    },
+    {
+      "id": "agent",
+      "label": "Agent",
+      "caption": "think and decide",
+      "position": [
+        270,
+        220
+      ],
+      "size": [
+        160,
+        82
+      ],
+      "role": "agent",
+      "icon": "agent",
+      "effect": {
+        "preset": "icon-performance",
+        "icon_motion": "agent-think-act-v2"
+      }
+    },
+    {
+      "id": "search",
+      "label": "Retriever",
+      "caption": "discover context",
+      "position": [
+        470,
+        220
+      ],
+      "size": [
+        170,
+        82
+      ],
+      "role": "source",
+      "icon": "search",
+      "effect": {
+        "preset": "icon-performance",
+        "icon_motion": "search-discover-v2"
+      }
+    },
+    {
+      "id": "tool",
+      "label": "Tool",
+      "caption": "function call",
+      "position": [
+        680,
+        220
+      ],
+      "size": [
+        145,
+        82
+      ],
+      "role": "tool",
+      "icon": "tool",
+      "effect": {
+        "preset": "icon-performance",
+        "icon_motion": "tool-run-v2"
+      }
+    },
+    {
+      "id": "api",
+      "label": "API",
+      "caption": "request response",
+      "position": [
+        865,
+        220
+      ],
+      "size": [
+        160,
+        82
+      ],
+      "role": "tool",
+      "icon": "api",
+      "effect": {
+        "preset": "icon-performance",
+        "icon_motion": "api-request-response-v2"
+      }
+    },
+    {
+      "id": "memory",
+      "label": "Memory",
+      "caption": "commit context",
+      "position": [
+        315,
+        428
+      ],
+      "size": [
+        185,
+        82
+      ],
+      "role": "memory",
+      "icon": "memory",
+      "effect": {
+        "preset": "icon-performance",
+        "icon_motion": "memory-commit-v2"
+      }
+    },
+    {
+      "id": "output",
+      "label": "Output",
+      "caption": "final answer",
+      "position": [
+        670,
+        428
+      ],
+      "size": [
+        185,
+        82
+      ],
+      "role": "output",
+      "icon": "output",
+      "effect": {
+        "preset": "icon-performance",
+        "icon_motion": "output-reveal-v2"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "request",
+      "to": "agent",
+      "label": "start",
+      "role": "source",
+      "effect": {
+        "preset": "signal-dot"
+      }
+    },
+    {
+      "from": "agent",
+      "to": "search",
+      "label": "query",
+      "role": "agent",
+      "effect": {
+        "preset": "signal-arrow"
+      }
+    },
+    {
+      "from": "search",
+      "to": "tool",
+      "label": "select",
+      "role": "tool",
+      "effect": {
+        "preset": "signal-arrow"
+      }
+    },
+    {
+      "from": "tool",
+      "to": "api",
+      "label": "call",
+      "role": "tool",
+      "effect": {
+        "preset": "signal-arrow"
+      }
+    },
+    {
+      "from": "search",
+      "to": "memory",
+      "label": "store",
+      "role": "memory",
+      "route": "points",
+      "points": [
+        [
+          555,
+          302
+        ],
+        [
+          555,
+          375
+        ],
+        [
+          407,
+          375
+        ],
+        [
+          407,
+          428
+        ]
+      ],
+      "effect": {
+        "preset": "signal-dot"
+      }
+    },
+    {
+      "from": "api",
+      "to": "output",
+      "label": "resolve",
+      "role": "output",
+      "route": "points",
+      "points": [
+        [
+          945,
+          302
+        ],
+        [
+          945,
+          382
+        ],
+        [
+          762,
+          382
+        ],
+        [
+          762,
+          428
+        ]
+      ],
+      "effect": {
+        "preset": "signal-arrow"
+      }
+    }
+  ]
+}

@@ -3,29 +3,35 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Creative Agent Studio</title>
+  <title>Creative Agent Studio Runtime</title>
+  <link rel="icon" href="data:,">
   <style>
-    body { margin: 0; background: #111827; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { margin: 0; background: #0b1020; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     main { min-height: 100vh; display: grid; grid-template-rows: auto 1fr; gap: 12px; padding: 16px; box-sizing: border-box; }
     .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-    button, a { border: 1px solid #475569; background: #1f2937; color: #f8fafc; border-radius: 8px; padding: 8px 10px; font: inherit; text-decoration: none; cursor: pointer; }
-    button:hover, a:hover { background: #334155; }
+    button, a { border: 1px solid #475569; background: #111827; color: #f8fafc; border-radius: 8px; padding: 8px 10px; font: inherit; text-decoration: none; cursor: pointer; }
+    button:hover, a:hover { background: #1f2937; }
     button[aria-pressed="true"] { background: #475569; border-color: #94a3b8; }
     .stage { width: 100%; min-height: 0; overflow: hidden; border: 1px solid #334155; border-radius: 12px; background: #020617; cursor: grab; }
     .stage.dragging { cursor: grabbing; }
     .viewport { transform-origin: 0 0; width: max-content; }
     svg { display: block; max-width: none; height: auto; user-select: none; }
     main.motion-subtle .edge-particle,
-    main.motion-subtle .node-burst { display: none; }
+    main.motion-subtle .node-burst,
+    main.motion-subtle .icon-breathe-halo { display: none; }
     main.motion-subtle .edge-flow { opacity: 0.22; }
+    main.motion-subtle .semantic-icon-breathe { animation-duration: 4.2s; }
     main.motion-off .edge-flow,
     main.motion-off .edge-particle,
     main.motion-off .node-burst,
-    main.motion-off .node-glow { display: none; }
+    main.motion-off .node-glow,
+    main.motion-off .icon-breathe-halo,
+    main.motion-off .icon-runtime-part { display: none; }
+    main.motion-off .semantic-icon-breathe { animation: none !important; }
   </style>
 </head>
 <body>
-  <main id="viewer" class="motion-full">
+  <main id="viewer" class="motion-full" data-runtime="gsap">
     <div class="toolbar">
       <button type="button" id="toggle">Pause</button>
       <button type="button" id="restart">Restart</button>
@@ -54,14 +60,17 @@
   .edge-draw, .edge-base { stroke-linecap: round; stroke-linejoin: round; }
   .edge-particle { filter: url(#particle-glow); }
   .edge-arrow-particle { filter: url(#particle-glow); }
-  .semantic-icon { fill: none; vector-effect: non-scaling-stroke; }
+  .semantic-icon { vector-effect: non-scaling-stroke; }
+  .semantic-icon-breathe { transform-box: fill-box; transform-origin: center; animation: semanticIconBreathe 2.8s ease-in-out infinite; }
+  .icon-breathe-halo { pointer-events: none; filter: url(#particle-glow); }
   .node-glow, .node-burst { pointer-events: none; }
   #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
   #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
   @keyframes titlePulse { 0%, 100% { opacity: 0.76; } 50% { opacity: 1; } }
   @keyframes titleSlide { 0%, 100% { transform: translateX(0); opacity: 0.9; } 50% { transform: translateX(8px); opacity: 1; } }
+  @keyframes semanticIconBreathe { 0%, 100% { transform: scale(0.96); opacity: 0.72; } 50% { transform: scale(1.08); opacity: 1; } }
   @media (prefers-reduced-motion: reduce) {
-    #title-accent, #title-highlight { animation: none; }
+    #title-accent, #title-highlight, .semantic-icon-breathe { animation: none; }
   }
 </style>
 <rect width="100%" height="100%" fill="#ffffff" />
@@ -141,12 +150,6 @@
 <rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#ff7f6e" />
 <rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#fff7f1" />
 
-<path class="title-handwrite" d="M 92 98 C 188 108, 310 100, 428 104" fill="none"
-      stroke="#ff7f6e" stroke-width="4" stroke-linecap="round"
-      pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0.78">
-  <animate attributeName="stroke-dashoffset" values="1;0" dur="1.35s" begin="0.18s" fill="freeze" />
-  <animate attributeName="opacity" values="0;0.78;0.42" dur="2.40s" begin="0.18s" fill="freeze" />
-</path>
 <rect class="title-sweep" x="72" y="46" width="0" height="56" rx="16" fill="#ff7f6e" opacity="0.16">
   <animate attributeName="width" values="0;360;0" dur="3.20s" begin="0.34s" repeatCount="indefinite" />
   <animate attributeName="x" values="72;72;432" dur="3.20s" begin="0.34s" repeatCount="indefinite" />
@@ -190,7 +193,7 @@
   <path class="edge-flow edge-flow-ghost-flow" d="M 270.0 357.0 L 520.0 361.0" fill="none" stroke="#ff7a66" stroke-width="1.6"
         stroke-dasharray="2 18" opacity="0.38">
     <animate attributeName="stroke-dashoffset" values="0;-54" dur="4.18s" begin="0.67s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0.17;0.38;0.17" dur="4.18s" begin="0.67s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.27;0.38;0.27" dur="4.18s" begin="0.67s" repeatCount="indefinite" />
   </path>
   <circle class="edge-particle" r="6.6" fill="#ff7a66" opacity="0.92">
     <animateMotion dur="5.80s" repeatCount="indefinite" path="M 270.0 357.0 L 520.0 361.0" begin="0.32s" />
@@ -229,7 +232,7 @@
   <path class="edge-flow edge-flow-ghost-flow" d="M 485.0 252.0 L 485.0 306.5 L 520.0 306.5 L 520.0 361.0" fill="none" stroke="#2468ff" stroke-width="1.6"
         stroke-dasharray="2 18" opacity="0.38">
     <animate attributeName="stroke-dashoffset" values="0;-54" dur="4.18s" begin="0.79s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0.17;0.38;0.17" dur="4.18s" begin="0.79s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.27;0.38;0.27" dur="4.18s" begin="0.79s" repeatCount="indefinite" />
   </path>
   <circle class="edge-particle" r="6.6" fill="#2468ff" opacity="0.92">
     <animateMotion dur="5.80s" repeatCount="indefinite" path="M 485.0 252.0 L 485.0 306.5 L 520.0 306.5 L 520.0 361.0" begin="0.64s" />
@@ -270,14 +273,6 @@
     <animateMotion dur="5.80s" repeatCount="indefinite" path="M 725.0 361.0 L 725.0 306.5 L 765.0 306.5 L 765.0 252.0" begin="0.96s" rotate="auto" />
     <animate attributeName="opacity" values="0;0.92;0" dur="5.80s" begin="0.96s" repeatCount="indefinite" />
   </path>
-  <path class="edge-particle edge-arrow-particle" d="M -9.6 -5.8 L 9.6 0 L -9.6 5.8 Z" fill="#ee5a90" opacity="0.74">
-    <animateMotion dur="5.80s" repeatCount="indefinite" path="M 725.0 361.0 L 725.0 306.5 L 765.0 306.5 L 765.0 252.0" begin="2.89s" rotate="auto" />
-    <animate attributeName="opacity" values="0;0.74;0" dur="5.80s" begin="2.89s" repeatCount="indefinite" />
-  </path>
-  <path class="edge-particle edge-arrow-particle" d="M -9.6 -5.8 L 9.6 0 L -9.6 5.8 Z" fill="#ee5a90" opacity="0.56">
-    <animateMotion dur="5.80s" repeatCount="indefinite" path="M 725.0 361.0 L 725.0 306.5 L 765.0 306.5 L 765.0 252.0" begin="4.83s" rotate="auto" />
-    <animate attributeName="opacity" values="0;0.56;0" dur="5.80s" begin="4.83s" repeatCount="indefinite" />
-  </path>
 
   <text x="745.0" y="292.5" class="edge-label" fill="#6f6877" opacity="0">
     <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.85s" fill="freeze" />
@@ -299,7 +294,7 @@
   <path class="edge-flow edge-flow-ghost-flow" d="M 855.0 294.0 L 855.0 420.0" fill="none" stroke="#5870ff" stroke-width="1.6"
         stroke-dasharray="2 18" opacity="0.38">
     <animate attributeName="stroke-dashoffset" values="0;-54" dur="4.18s" begin="1.03s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0.17;0.38;0.17" dur="4.18s" begin="1.03s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.27;0.38;0.27" dur="4.18s" begin="1.03s" repeatCount="indefinite" />
   </path>
   <circle class="edge-particle" r="6.6" fill="#5870ff" opacity="0.92">
     <animateMotion dur="5.80s" repeatCount="indefinite" path="M 855.0 294.0 L 855.0 420.0" begin="1.28s" />
@@ -396,11 +391,34 @@
   <rect x="90.0" y="315.0" width="180.0" height="84.0" rx="42.0"
         fill="none" stroke="#ff7a66" stroke-width="1.1" opacity="0.58" />
 
-<g class="semantic-icon-wrap" opacity="0.94">
+<g id="icon-brief-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-file" data-icon="file" data-node-id="brief" opacity="0.94">
+
+
     <animate attributeName="opacity" values="0.52;1;0.52" dur="2.80s" begin="0.65s" repeatCount="indefinite" />
 
-  <path d="M 117.4 340.0 H 134.4 L 141.8 347.5 V 374.0 H 117.4 Z" class="semantic-icon semantic-icon-file" stroke="#ff7a66" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#fff1eb" />
-  <path d="M 134.4 340.0 V 347.5 H 141.8" class="semantic-icon semantic-icon-file" stroke="#ff7a66" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <g class="semantic-icon-file-page icon-file-page-motion" opacity="0.96">
+
+
+    <g transform="translate(129.6 357.0)">
+      <g>
+
+        <g transform="translate(-129.6 -357.0)">
+          <path class="semantic-icon icon-filled semantic-icon-file icon-file-sheet"
+                d="M 117.4 340.0 H 134.4 L 141.8 347.5 V 374.0 H 117.4 Z"
+                fill="#ffded6" stroke="#ff7a66" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+          <g class="icon-file-fold-motion">
+
+            <path d="M 134.4 340.0 L 141.8 347.5 H 134.4 Z"
+                  fill="#ffc8bd" stroke="#ff7a66" stroke-width="2.2" stroke-linejoin="round" />
+            <path d="M 134.4 340.0 V 347.5 H 141.8"
+                  fill="none" stroke="#ff7a66" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.88" />
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+
+
 </g>
 
   <text x="206.4" y="343.0" text-anchor="middle" fill="#201826">
@@ -454,10 +472,15 @@
   <rect x="305.0" y="210.0" width="180.0" height="84.0" rx="42.0"
         fill="none" stroke="#2468ff" stroke-width="1.1" opacity="0.58" />
 
-<g class="semantic-icon-wrap" opacity="0.94">
+<g id="icon-mood-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-folder" data-icon="folder" data-node-id="mood" opacity="0.94">
+
+
     <animate attributeName="opacity" values="0.52;1;0.52" dur="2.80s" begin="0.77s" repeatCount="indefinite" />
 
-  <path d="M 327.6 243.8 H 340.9 L 344.6 238.7 H 361.6 V 265.9 H 327.6 Z" class="semantic-icon semantic-icon-folder" stroke="#2468ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#edf7ff" />
+  <path class="semantic-icon icon-filled semantic-icon-folder icon-folder-body" d="M 327.6 243.8 H 340.9 L 344.6 238.7 H 361.6 V 265.9 H 327.6 Z"
+        stroke="#2468ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#cde0ff" />
+
+
 </g>
 
   <text x="421.4" y="238.0" text-anchor="middle" fill="#162038">
@@ -511,11 +534,43 @@
   <rect x="520.0" y="315.0" width="205.0" height="92.0" rx="42.0"
         fill="none" stroke="#ee5a90" stroke-width="1.1" opacity="0.58" />
 
-<g class="semantic-icon-wrap" opacity="0.94">
+<g id="icon-agent-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-agent" data-icon="agent" data-node-id="agent" opacity="0.94">
+
+
     <animate attributeName="opacity" values="0.52;1;0.52" dur="2.80s" begin="0.89s" repeatCount="indefinite" />
 
-  <polygon points="562.0,344.0 576.6,352.5 576.6,369.5 562.0,378.0 547.4,369.5 547.4,352.5" class="semantic-icon semantic-icon-agent" stroke="#ee5a90" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#fff0f6" />
-  <circle cx="562.0" cy="361.0" r="3.7" fill="#ee5a90" />
+  <path id="icon-agent-shell" class="semantic-icon semantic-icon-agent icon-agent-shell"
+        d="M 562.0 344.3
+           L 574.6 351.8
+           V 368.8
+           L 562.0 376.6
+           L 549.4 368.8
+           V 351.8
+           Z"
+        fill="#fcd8e6" stroke="#ee5a90" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.92" />
+  <path class="semantic-icon semantic-icon-agent icon-agent-circuit"
+        d="M 562.0 351.1 V 367.1
+           M 555.5 357.3 H 560.3
+           M 563.7 360.7 H 569.1
+           M 557.6 366.4 H 565.7"
+        fill="none" stroke="#ee5a90" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" opacity="0.50" />
+  <circle id="icon-agent-core" class="icon-runtime-part icon-agent-core" cx="562.0" cy="360.7" r="3.0"
+        fill="#ee5a90" stroke="#fcd8e6" stroke-width="1.5" opacity="0.78" />
+  <circle id="icon-agent-thought-1" class="icon-runtime-part icon-agent-thought" cx="555.9" cy="353.5" r="2.0"
+        fill="#ee5a90" opacity="0.46" />
+  <circle id="icon-agent-thought-2" class="icon-runtime-part icon-agent-thought" cx="568.1" cy="355.6" r="1.9"
+        fill="#ee5a90" opacity="0.38" />
+  <circle id="icon-agent-thought-3" class="icon-runtime-part icon-agent-thought" cx="558.9" cy="367.1" r="1.8"
+        fill="#ee5a90" opacity="0.42" />
+  <path id="icon-agent-decision-token" class="icon-runtime-part icon-agent-decision-token"
+        d="M 570.2 356.2
+           L 572.6 358.6
+           L 570.2 361.0
+           L 567.8 358.6
+           Z"
+        fill="#ee5a90" stroke="#fcd8e6" stroke-width="1.2" opacity="0" />
+
+
 </g>
 
   <text x="650.5" y="347.0" text-anchor="middle" fill="#211729">
@@ -570,12 +625,23 @@
   <rect x="765.0" y="210.0" width="180.0" height="84.0" rx="42.0"
         fill="none" stroke="#5870ff" stroke-width="1.1" opacity="0.58" />
 
-<g class="semantic-icon-wrap" opacity="0.94">
+<g id="icon-variants-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-tool" data-icon="tool" data-node-id="variants" opacity="0.94">
+
+
     <animate attributeName="opacity" values="0.52;1;0.52" dur="2.80s" begin="1.01s" repeatCount="indefinite" />
 
-  <rect x="792.4" y="239.8" width="24.5" height="24.5" rx="3.1" class="semantic-icon semantic-icon-tool" stroke="#5870ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#f5f3ff" />
-  <path d="M 798.5 249.3 H 810.7" class="semantic-icon semantic-icon-tool" stroke="#5870ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-  <path d="M 798.5 255.7 H 810.7" class="semantic-icon semantic-icon-tool" stroke="#5870ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <rect id="icon-variants-chip" x="789.6" y="242.5" width="24.8" height="19.0" rx="4.4"
+        fill="#dcdeff" stroke="#5870ff" stroke-width="2.8" />
+  <text id="icon-variants-glyph" x="799.5" y="254.9" text-anchor="middle"
+        fill="#5870ff" stroke="none" font-size="10.0" font-weight="800">fx</text>
+  <circle id="icon-variants-connector" cx="811.7" cy="252.0" r="2.2" fill="#5870ff" opacity="0.72" />
+  <path id="icon-variants-spark-1" class="icon-tool-spark" d="M 815.8 244.5 L 818.5 241.5"
+        fill="none" stroke="#5870ff" stroke-width="2.2" stroke-linecap="round" opacity="0.84" />
+  <path id="icon-variants-spark-2" class="icon-tool-spark" d="M 816.5 258.5 L 819.9 260.8"
+        fill="none" stroke="#5870ff" stroke-width="2.2" stroke-linecap="round" opacity="0.84" />
+  <circle id="icon-variants-flash" class="icon-runtime-part" cx="816.2" cy="252.0" r="6.8" fill="none" stroke="#5870ff" stroke-width="2" opacity="0" />
+
+
 </g>
 
   <text x="881.4" y="238.0" text-anchor="middle" fill="#1b1d33">
@@ -629,14 +695,18 @@
   <rect x="765.0" y="420.0" width="180.0" height="84.0" rx="42.0"
         fill="none" stroke="#ff4d7f" stroke-width="1.1" opacity="0.58" />
 
-<g class="semantic-icon-wrap" opacity="0.94">
+<g id="icon-review-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-shield" data-icon="shield" data-node-id="review" opacity="0.94">
+
+
     <animate attributeName="opacity" values="0.52;1;0.52" dur="2.80s" begin="1.13s" repeatCount="indefinite" />
 
   <path d="M 804.6 445.0 L 819.2 452.1 V 463.7
            C 819.2 473.2, 810.4 477.6, 804.6 479.0
            C 798.8 477.6, 790.0 473.2, 790.0 463.7
-           V 452.1 Z" class="semantic-icon semantic-icon-shield" stroke="#ff4d7f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#fff0f4" />
-  <path d="M 798.8 462.0 L 803.6 467.1 L 811.7 455.5" class="semantic-icon semantic-icon-shield" stroke="#ff4d7f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+           V 452.1 Z" class="semantic-icon icon-filled semantic-icon-shield" stroke="#ff4d7f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#ffd6e1" />
+  <path d="M 798.8 462.0 L 803.6 467.1 L 811.7 455.5" class="semantic-icon semantic-icon-shield" fill="none" stroke="#ff4d7f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+
+
 </g>
 
   <text x="881.4" y="448.0" text-anchor="middle" fill="#241421">
@@ -690,12 +760,22 @@
   <rect x="1000.0" y="315.0" width="180.0" height="84.0" rx="42.0"
         fill="none" stroke="#18a95e" stroke-width="1.1" opacity="0.58" />
 
-<g class="semantic-icon-wrap" opacity="0.94">
+<g id="icon-publish-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-output" data-icon="output" data-node-id="publish" opacity="0.94">
+
+
     <animate attributeName="opacity" values="0.52;1;0.52" dur="2.80s" begin="1.25s" repeatCount="indefinite" />
 
-  <rect x="1027.4" y="344.8" width="24.5" height="24.5" rx="3.1" class="semantic-icon semantic-icon-output" stroke="#18a95e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#f2fff2" />
-  <path d="M 1033.5 354.3 H 1045.7" class="semantic-icon semantic-icon-output" stroke="#18a95e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-  <path d="M 1033.5 360.7 H 1045.7" class="semantic-icon semantic-icon-output" stroke="#18a95e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <rect id="icon-publish-card" x="1026.3" y="344.8" width="22.4" height="23.1" rx="3.1"
+        fill="#cff1da" stroke="#18a95e" stroke-width="2.8" />
+  <path id="icon-publish-line-1" class="icon-output-line" d="M 1032.5 352.2 H 1043.3"
+        fill="none" stroke="#18a95e" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
+  <path id="icon-publish-line-2" class="icon-output-line" d="M 1032.5 357.0 H 1041.3"
+        fill="none" stroke="#18a95e" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
+  <path id="icon-publish-check" class="icon-output-check" d="M 1034.5 362.8 L 1038.2 366.2 L 1046.4 357.7"
+        fill="none" stroke="#18a95e" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <circle id="icon-publish-flash" class="icon-runtime-part" cx="1043.0" cy="360.7" r="10.5" fill="none" stroke="#18a95e" stroke-width="2" opacity="0" />
+
+
 </g>
 
   <text x="1116.4" y="343.0" text-anchor="middle" fill="#14251c">
@@ -708,12 +788,356 @@
       </div>
     </div>
   </main>
+  <script type="application/json" id="anidiagram-motion-manifest">
+{
+  "version": "motion-manifest-0.1",
+  "runtime": "gsap",
+  "profile": "expressive",
+  "sequence": "step-stagger",
+  "reduced_motion": "subtle",
+  "icons": [
+    {
+      "node_id": "agent",
+      "icon": "agent",
+      "performance": "agent-think-act-v2",
+      "trigger": "on-reveal",
+      "loop": "action-then-idle",
+      "delay": 0.24,
+      "intensity": 1.2,
+      "parts": {
+        "root": "#icon-agent-root",
+        "shell": "#icon-agent-shell",
+        "core": "#icon-agent-core",
+        "thought1": "#icon-agent-thought-1",
+        "thought2": "#icon-agent-thought-2",
+        "thought3": "#icon-agent-thought-3",
+        "decisionToken": "#icon-agent-decision-token"
+      }
+    },
+    {
+      "node_id": "variants",
+      "icon": "tool",
+      "performance": "tool-run-v2",
+      "trigger": "on-reveal",
+      "loop": "action-then-idle",
+      "delay": 0.36,
+      "intensity": 1.2,
+      "parts": {
+        "root": "#icon-variants-root",
+        "chip": "#icon-variants-chip",
+        "glyph": "#icon-variants-glyph",
+        "connector": "#icon-variants-connector",
+        "spark1": "#icon-variants-spark-1",
+        "spark2": "#icon-variants-spark-2",
+        "flash": "#icon-variants-flash"
+      }
+    },
+    {
+      "node_id": "publish",
+      "icon": "output",
+      "performance": "output-reveal-v2",
+      "trigger": "on-reveal",
+      "loop": "action-then-idle",
+      "delay": 0.6,
+      "intensity": 1.2,
+      "parts": {
+        "root": "#icon-publish-root",
+        "card": "#icon-publish-card",
+        "line1": "#icon-publish-line-1",
+        "line2": "#icon-publish-line-2",
+        "check": "#icon-publish-check",
+        "flash": "#icon-publish-flash"
+      }
+    }
+  ]
+}
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
   <script>
-    const stage = document.getElementById('stage');
-    const viewer = document.getElementById('viewer');
-    const viewport = document.getElementById('viewport');
-    const svg = viewport.querySelector('svg');
-    const download = document.getElementById('download');
+(function () {
+  function getManifest() {
+    const el = document.getElementById("anidiagram-motion-manifest");
+    if (!el) return null;
+    try {
+      return JSON.parse(el.textContent || "{}");
+    } catch (error) {
+      console.warn("AniDiagram runtime: invalid motion manifest", error);
+      return null;
+    }
+  }
+
+  function resolveParts(parts) {
+    const resolved = {};
+    Object.entries(parts || {}).forEach(([key, selector]) => {
+      resolved[key] = document.querySelector(selector);
+    });
+    return resolved;
+  }
+
+  function hasParts(parts, required) {
+    return required.every((name) => Boolean(parts[name]));
+  }
+
+  function setInitial(parts, gsap) {
+    Object.values(parts).forEach((part) => {
+      if (part) part.style.transformBox = "";
+    });
+    gsap.set(Object.values(parts).filter(Boolean), { transformOrigin: "center center" });
+  }
+
+  function pathLengths(paths) {
+    return new Map(paths.map((path) => [path, Math.max(1, path.getTotalLength ? path.getTotalLength() : 64)]));
+  }
+
+  function primeStrokeDraw(paths, gsap) {
+    const lengths = pathLengths(paths);
+    paths.forEach((path) => {
+      const length = lengths.get(path);
+      gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
+    });
+    return lengths;
+  }
+
+  function playTokenIntent({ parts, gsap }) {
+    const required = ["shell", "core", "tickLeft", "tickRight", "tickTop", "tickBottom", "halo"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const ticks = [parts.tickLeft, parts.tickRight, parts.tickTop, parts.tickBottom];
+    const lengths = primeStrokeDraw(ticks, gsap);
+    gsap.set(parts.halo, { opacity: 0, scale: 0.6 });
+    gsap.set(parts.core, { scale: 0.55, opacity: 0.35 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.55 });
+    tl.fromTo(parts.shell, { scale: 0.82, rotate: -8, opacity: 0.72 }, { scale: 1, rotate: 0, opacity: 0.96, duration: 0.22, ease: "back.out(3)" })
+      .to(parts.core, { scale: 1.35, opacity: 0.95, duration: 0.16, ease: "power2.out" }, "-=0.08")
+      .to(parts.core, { scale: 1, opacity: 0.72, duration: 0.16, ease: "power2.inOut" })
+      .fromTo(ticks, { strokeDashoffset: (index, target) => lengths.get(target), opacity: 0 }, { strokeDashoffset: 0, opacity: 0.86, duration: 0.18, stagger: 0.035, ease: "power2.out" }, "-=0.08")
+      .fromTo(parts.halo, { opacity: 0.55, scale: 0.55 }, { opacity: 0, scale: 1.55, duration: 0.34, ease: "power2.out" }, "-=0.02")
+      .to(parts.shell, { scale: 0.98, duration: 0.45, ease: "power2.inOut" }, 1.05)
+      .to(ticks, { opacity: 0.56, duration: 0.45 }, 1.05);
+    return tl;
+  }
+
+  function playToolRun({ parts, gsap }) {
+    const required = ["chip", "glyph", "connector", "spark1", "spark2", "flash"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const sparks = [parts.spark1, parts.spark2];
+    const lengths = primeStrokeDraw(sparks, gsap);
+    gsap.set(parts.flash, { opacity: 0, scale: 0.45 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.55 });
+    tl.to(parts.chip, { y: 2, scale: 0.96, duration: 0.12, ease: "power2.in" })
+      .to(parts.chip, { y: -1, scale: 1.04, duration: 0.18, ease: "back.out(3)" })
+      .to(parts.chip, { y: 0, scale: 1, duration: 0.16, ease: "power2.out" })
+      .fromTo(parts.glyph, { scale: 0.82, opacity: 0.6 }, { scale: 1.12, opacity: 1, duration: 0.16, ease: "back.out(3)" }, 0.10)
+      .to(parts.glyph, { scale: 1, opacity: 0.92, duration: 0.18, ease: "power2.out" })
+      .fromTo(parts.connector, { x: -6, opacity: 0.35, scale: 0.55 }, { x: 4, opacity: 0.95, scale: 1.1, duration: 0.22, ease: "power2.out" }, 0.22)
+      .to(parts.connector, { x: 0, scale: 1, opacity: 0.72, duration: 0.18, ease: "power2.out" })
+      .fromTo(sparks, { strokeDashoffset: (index, target) => lengths.get(target), opacity: 0 }, { strokeDashoffset: 0, opacity: 0.95, duration: 0.16, stagger: 0.045, ease: "power2.out" }, 0.42)
+      .fromTo(parts.flash, { opacity: 0.62, scale: 0.45 }, { opacity: 0, scale: 1.6, duration: 0.26, ease: "power2.out" }, 0.48)
+      .to(sparks, { opacity: 0.42, duration: 0.5 }, 0.92);
+    return tl;
+  }
+
+  function playOutputReveal({ parts, gsap }) {
+    const required = ["card", "line1", "line2", "check", "flash"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const paths = [parts.line1, parts.line2, parts.check];
+    const lengths = primeStrokeDraw(paths, gsap);
+    gsap.set(parts.flash, { opacity: 0, scale: 0.45 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.75 });
+    tl.fromTo(parts.card, { y: 5, scale: 0.92, opacity: 0.75 }, { y: 0, scale: 1, opacity: 0.96, duration: 0.22, ease: "back.out(2.5)" })
+      .fromTo([parts.line1, parts.line2], { strokeDashoffset: (index, target) => lengths.get(target), opacity: 0 }, { strokeDashoffset: 0, opacity: 0.86, duration: 0.22, stagger: 0.07, ease: "power2.out" }, 0.14)
+      .fromTo(parts.check, { strokeDashoffset: lengths.get(parts.check), opacity: 0 }, { strokeDashoffset: 0, opacity: 1, duration: 0.26, ease: "power2.out" }, 0.42)
+      .to(parts.card, { scale: 1.04, duration: 0.12, ease: "power2.out" }, 0.62)
+      .to(parts.card, { scale: 1, duration: 0.18, ease: "power2.inOut" })
+      .fromTo(parts.flash, { opacity: 0.65, scale: 0.5 }, { opacity: 0, scale: 1.65, duration: 0.28, ease: "power2.out" }, 0.58)
+      .to([parts.line1, parts.line2, parts.check], { opacity: 0.68, duration: 0.55 }, 1.0);
+    return tl;
+  }
+
+  function playApiRequestResponse({ parts, gsap }) {
+    const required = ["leftEndpoint", "rightEndpoint", "requestToken", "responseToken", "targetRing", "status"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    gsap.set([parts.requestToken, parts.responseToken, parts.targetRing, parts.status], { opacity: 0, scale: 0.4 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.65 });
+    tl.to([parts.leftEndpoint, parts.rightEndpoint], { scaleY: 1.12, duration: 0.14, ease: "back.out(2)" })
+      .fromTo(parts.requestToken, { x: -18, opacity: 0, scale: 0.4 }, { x: 18, opacity: 1, scale: 1, duration: 0.36, ease: "power2.out" }, "<")
+      .to(parts.requestToken, { opacity: 0, scale: 0.35, duration: 0.12 })
+      .fromTo(parts.targetRing, { scale: 0.4, opacity: 0.8 }, { scale: 1.8, opacity: 0, duration: 0.34, ease: "power2.out" }, "-=0.05")
+      .fromTo(parts.responseToken, { x: 18, opacity: 0, scale: 0.4 }, { x: -18, opacity: 1, scale: 0.85, duration: 0.32, ease: "power2.inOut" }, "-=0.08")
+      .to(parts.responseToken, { opacity: 0, scale: 0.35, duration: 0.12 })
+      .fromTo(parts.status, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(2)" })
+      .to(parts.status, { opacity: 0.35, duration: 0.5 })
+      .to([parts.leftEndpoint, parts.rightEndpoint], { scaleY: 1, duration: 0.22, ease: "power2.out" }, "<");
+    return tl;
+  }
+
+  function playSearchDiscover({ parts, gsap }) {
+    const required = ["lens", "handle", "scan", "result1", "result2", "target"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    gsap.set([parts.scan, parts.result1, parts.result2, parts.target], { opacity: 0, scale: 0.35 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.7 });
+    tl.to([parts.lens, parts.handle], { rotate: -8, duration: 0.18, ease: "power2.out" })
+      .fromTo(parts.scan, { opacity: 0, x: -10, y: -7, rotate: -14 }, { opacity: 0.9, x: 12, y: 9, rotate: 12, duration: 0.42, ease: "power2.inOut" })
+      .to(parts.scan, { opacity: 0, duration: 0.12 })
+      .fromTo(parts.result1, { opacity: 0, scale: 0.25, y: 2 }, { opacity: 0.95, scale: 1, y: 0, duration: 0.16, ease: "back.out(3)" }, "-=0.06")
+      .fromTo(parts.result2, { opacity: 0, scale: 0.25, y: 2 }, { opacity: 0.72, scale: 0.82, y: 0, duration: 0.16, ease: "back.out(3)" }, "-=0.02")
+      .fromTo(parts.target, { opacity: 0, scale: 0.45 }, { opacity: 0.88, scale: 1.18, duration: 0.22, ease: "back.out(2.5)" })
+      .to(parts.target, { scale: 1, duration: 0.16, ease: "power2.out" })
+      .to([parts.lens, parts.handle], { rotate: 0, duration: 0.26, ease: "power2.out" }, "<")
+      .to([parts.result1, parts.result2, parts.target], { opacity: 0.28, duration: 0.55 });
+    return tl;
+  }
+
+  function playDatabaseWrite({ parts, gsap }) {
+    const required = ["lid", "body", "layer1", "layer2", "writeToken", "flash"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    gsap.set([parts.writeToken, parts.flash], { opacity: 0, scale: 0.35 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.8 });
+    tl.fromTo(parts.writeToken, { opacity: 0, x: -16, y: -18, scale: 0.35 }, { opacity: 1, x: 0, y: -3, scale: 1, duration: 0.28, ease: "power2.out" })
+      .to(parts.writeToken, { y: 7, scale: 0.82, duration: 0.16, ease: "power2.in" })
+      .to(parts.writeToken, { opacity: 0, scale: 0.25, duration: 0.1 })
+      .to(parts.lid, { scaleY: 0.68, y: 3, duration: 0.14, ease: "power2.in" }, "-=0.14")
+      .to(parts.body, { y: 2, scaleY: 0.96, duration: 0.14, ease: "power2.in" }, "<")
+      .to(parts.lid, { scaleY: 1.1, y: -2, duration: 0.18, ease: "back.out(3)" })
+      .to(parts.body, { y: 0, scaleY: 1, duration: 0.18, ease: "power2.out" }, "<")
+      .fromTo(parts.layer1, { opacity: 0.32 }, { opacity: 1, duration: 0.12, ease: "power1.out" })
+      .fromTo(parts.layer2, { opacity: 0.28 }, { opacity: 0.95, duration: 0.12, ease: "power1.out" }, "-=0.02")
+      .fromTo(parts.flash, { opacity: 0, scale: 0.4 }, { opacity: 0.85, scale: 1.35, duration: 0.18, ease: "power2.out" })
+      .to(parts.flash, { opacity: 0, scale: 1.85, duration: 0.26, ease: "power2.out" })
+      .to([parts.layer1, parts.layer2], { opacity: 0.64, duration: 0.45 });
+    return tl;
+  }
+
+  function playMemoryCommit({ parts, gsap }) {
+    const required = ["backCard", "frontCard", "trace1", "trace2", "trace3", "dot", "commitToken", "flash"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const traces = [parts.trace1, parts.trace2, parts.trace3];
+    gsap.set([parts.commitToken, parts.flash], { opacity: 0, scale: 0.35 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.8 });
+    tl.fromTo(parts.commitToken, { opacity: 0, x: -18, y: -15, scale: 0.35 }, { opacity: 1, x: -3, y: -4, scale: 1, duration: 0.24, ease: "power2.out" })
+      .to(parts.commitToken, { x: 6, y: 10, scale: 0.72, duration: 0.18, ease: "power2.in" })
+      .to(parts.commitToken, { opacity: 0, scale: 0.25, duration: 0.1 })
+      .to(parts.frontCard, { y: 2, scale: 0.98, duration: 0.14, ease: "power2.in" }, "-=0.12")
+      .to(parts.backCard, { x: 2, y: -2, duration: 0.14, ease: "power2.in" }, "<")
+      .to(parts.frontCard, { y: -1, scale: 1.03, duration: 0.18, ease: "back.out(3)" })
+      .to(parts.backCard, { x: 0, y: 0, duration: 0.18, ease: "power2.out" }, "<")
+      .fromTo(traces, { opacity: 0.2, x: -5 }, { opacity: 0.95, x: 0, duration: 0.2, stagger: 0.05, ease: "power2.out" }, "-=0.02")
+      .to(parts.dot, { scale: 1.45, opacity: 0.95, duration: 0.14, ease: "back.out(3)" }, "-=0.04")
+      .to(parts.dot, { scale: 1, opacity: 0.72, duration: 0.18, ease: "power2.out" })
+      .fromTo(parts.flash, { opacity: 0, scale: 0.45 }, { opacity: 0.75, scale: 1.2, duration: 0.16, ease: "power2.out" }, "-=0.12")
+      .to(parts.flash, { opacity: 0, scale: 1.7, duration: 0.24, ease: "power2.out" })
+      .to(traces, { opacity: 0.72, duration: 0.5 });
+    return tl;
+  }
+
+  function playAgentThinkAct({ parts, gsap }) {
+    const required = ["shell", "core", "thought1", "thought2", "thought3", "decisionToken"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const thoughts = [parts.thought1, parts.thought2, parts.thought3];
+    gsap.set(parts.shell, { scale: 1, opacity: 0.92 });
+    gsap.set(parts.core, { scale: 1, opacity: 0.78 });
+    gsap.set(thoughts, { opacity: 0.42, scale: 0.92, x: 0, y: 0 });
+    gsap.set(parts.decisionToken, { opacity: 0, scale: 0.35, x: 0, y: 0 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.9 });
+    tl.to(thoughts, {
+        opacity: (index) => [0.9, 0.72, 0.82][index],
+        x: (index) => [2.5, -3.5, 3][index],
+        y: (index) => [-4, 2.5, -2][index],
+        scale: (index) => [1.08, 0.95, 1.02][index],
+        duration: 0.36,
+        stagger: 0.07,
+        ease: "sine.inOut",
+      })
+      .to(thoughts, {
+        x: (index) => [6, -6, 3][index],
+        y: (index) => [7, 5, -7][index],
+        scale: 0.72,
+        opacity: 0.86,
+        duration: 0.26,
+        stagger: 0.035,
+        ease: "power2.in",
+      })
+      .to(parts.core, { scale: 1.48, opacity: 1, duration: 0.16, ease: "back.out(2.8)" }, "-=0.06")
+      .to(parts.shell, { scale: 1.035, opacity: 1, duration: 0.16, ease: "power2.out" }, "<")
+      .to(parts.core, { scale: 1, opacity: 0.82, duration: 0.22, ease: "power2.out" })
+      .to(parts.shell, { scale: 1, opacity: 0.92, duration: 0.24, ease: "power2.out" }, "<")
+      .fromTo(parts.decisionToken,
+        { opacity: 0, scale: 0.35, x: 0, y: 0 },
+        { opacity: 1, scale: 1.05, x: 13, y: -8, duration: 0.32, ease: "back.out(2.2)" },
+        "-=0.08"
+      )
+      .to(parts.decisionToken, { opacity: 0, scale: 0.55, x: 24, y: -14, duration: 0.26, ease: "power1.in" })
+      .to(thoughts, { x: 0, y: 0, scale: 1, opacity: 0.38, duration: 0.34, stagger: 0.03, ease: "power2.out" }, "-=0.14")
+      .to(parts.core, { opacity: 0.72, duration: 0.42, ease: "sine.inOut" }, "-=0.14");
+    return tl;
+  }
+
+  const performances = {
+    "token-intent-v2": playTokenIntent,
+    "tool-run-v2": playToolRun,
+    "output-reveal-v2": playOutputReveal,
+    "api-request-response-v2": playApiRequestResponse,
+    "search-discover-v2": playSearchDiscover,
+    "database-write-v2": playDatabaseWrite,
+    "memory-commit-v2": playMemoryCommit,
+    "agent-think-act-v2": playAgentThinkAct,
+  };
+
+  function playIcon(iconConfig) {
+    if (!window.gsap) return null;
+    const fn = performances[iconConfig.performance];
+    if (!fn) return null;
+    const parts = resolveParts(iconConfig.parts);
+    const tl = fn({ config: iconConfig, parts, gsap: window.gsap });
+    if (tl && iconConfig.delay) tl.delay(iconConfig.delay);
+    return tl;
+  }
+
+  function play() {
+    const manifest = getManifest();
+    if (!manifest || !Array.isArray(manifest.icons)) return [];
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return [];
+    if (!window.gsap) {
+      console.warn("AniDiagram runtime: GSAP not loaded; high-fidelity motion disabled.");
+      return [];
+    }
+    stop();
+    const timelines = manifest.icons.map(playIcon).filter(Boolean);
+    window.__ANIDIAGRAM_TIMELINES__ = timelines;
+    return timelines;
+  }
+
+  function stop() {
+    (window.__ANIDIAGRAM_TIMELINES__ || []).forEach((tl) => tl.kill());
+    window.__ANIDIAGRAM_TIMELINES__ = [];
+  }
+
+  function pause() {
+    (window.__ANIDIAGRAM_TIMELINES__ || []).forEach((tl) => tl.pause());
+  }
+
+  function resume() {
+    (window.__ANIDIAGRAM_TIMELINES__ || []).forEach((tl) => tl.resume());
+  }
+
+  function restart() {
+    (window.__ANIDIAGRAM_TIMELINES__ || []).forEach((tl) => tl.restart());
+  }
+
+  function wireViewer() {
+    const stage = document.getElementById("stage");
+    const viewer = document.getElementById("viewer");
+    const viewport = document.getElementById("viewport");
+    if (!stage || !viewer || !viewport) return;
+    const svg = viewport.querySelector("svg");
+    const download = document.getElementById("download");
     let scale = 1;
     let x = 0;
     let y = 0;
@@ -724,45 +1148,68 @@
       viewport.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
     }
     function setDownload() {
-      const blob = new Blob([new XMLSerializer().serializeToString(svg)], {type: 'image/svg+xml'});
+      if (!download || !svg) return;
+      const blob = new Blob([new XMLSerializer().serializeToString(svg)], { type: "image/svg+xml" });
       download.href = URL.createObjectURL(blob);
     }
-    document.getElementById('toggle').addEventListener('click', (event) => {
-      if (svg.animationsPaused && svg.animationsPaused()) {
-        svg.unpauseAnimations();
-        event.currentTarget.textContent = 'Pause';
-      } else {
-        svg.pauseAnimations();
-        event.currentTarget.textContent = 'Play';
-      }
-    });
-    document.getElementById('restart').addEventListener('click', () => {
-      svg.setCurrentTime(0);
-      svg.unpauseAnimations();
-      document.getElementById('toggle').textContent = 'Pause';
-    });
-    function setMotionMode(mode) {
-      viewer.classList.remove('motion-full', 'motion-subtle', 'motion-off');
-      viewer.classList.add(`motion-${mode}`);
-      document.querySelectorAll('.motion-choice').forEach((button) => {
-        button.setAttribute('aria-pressed', String(button.dataset.motion === mode));
+    const toggle = document.getElementById("toggle");
+    if (toggle && svg) {
+      toggle.addEventListener("click", (event) => {
+        const paused = svg.animationsPaused && svg.animationsPaused();
+        if (paused) {
+          svg.unpauseAnimations();
+          resume();
+          event.currentTarget.textContent = "Pause";
+        } else {
+          svg.pauseAnimations();
+          pause();
+          event.currentTarget.textContent = "Play";
+        }
       });
-      if (mode === 'off') {
+    }
+    const restartButton = document.getElementById("restart");
+    if (restartButton && svg) {
+      restartButton.addEventListener("click", () => {
+        svg.setCurrentTime(0);
+        svg.unpauseAnimations();
+        restart();
+        if (toggle) toggle.textContent = "Pause";
+      });
+    }
+    function setMotionMode(mode) {
+      viewer.classList.remove("motion-full", "motion-subtle", "motion-off");
+      viewer.classList.add(`motion-${mode}`);
+      document.querySelectorAll(".motion-choice").forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.motion === mode));
+      });
+      if (!svg) return;
+      if (mode === "off") {
         svg.pauseAnimations();
-        document.getElementById('toggle').textContent = 'Play';
+        pause();
+        if (toggle) toggle.textContent = "Play";
       } else {
         svg.unpauseAnimations();
-        document.getElementById('toggle').textContent = 'Pause';
+        resume();
+        if (toggle) toggle.textContent = "Pause";
       }
     }
-    document.querySelectorAll('.motion-choice').forEach((button) => {
-      button.addEventListener('click', () => setMotionMode(button.dataset.motion));
+    document.querySelectorAll(".motion-choice").forEach((button) => {
+      button.addEventListener("click", () => setMotionMode(button.dataset.motion));
     });
-    document.getElementById('zoom-in').addEventListener('click', () => { scale = Math.min(3, scale + 0.15); applyTransform(); });
-    document.getElementById('zoom-out').addEventListener('click', () => { scale = Math.max(0.35, scale - 0.15); applyTransform(); });
-    document.getElementById('reset').addEventListener('click', () => { scale = 1; x = 0; y = 0; applyTransform(); });
-    stage.addEventListener('pointerdown', (event) => { dragging = true; stage.classList.add('dragging'); lastX = event.clientX; lastY = event.clientY; stage.setPointerCapture(event.pointerId); });
-    stage.addEventListener('pointermove', (event) => {
+    const zoomIn = document.getElementById("zoom-in");
+    const zoomOut = document.getElementById("zoom-out");
+    const reset = document.getElementById("reset");
+    if (zoomIn) zoomIn.addEventListener("click", () => { scale = Math.min(3, scale + 0.15); applyTransform(); });
+    if (zoomOut) zoomOut.addEventListener("click", () => { scale = Math.max(0.35, scale - 0.15); applyTransform(); });
+    if (reset) reset.addEventListener("click", () => { scale = 1; x = 0; y = 0; applyTransform(); });
+    stage.addEventListener("pointerdown", (event) => {
+      dragging = true;
+      stage.classList.add("dragging");
+      lastX = event.clientX;
+      lastY = event.clientY;
+      stage.setPointerCapture(event.pointerId);
+    });
+    stage.addEventListener("pointermove", (event) => {
       if (!dragging) return;
       x += event.clientX - lastX;
       y += event.clientY - lastY;
@@ -770,17 +1217,22 @@
       lastY = event.clientY;
       applyTransform();
     });
-    stage.addEventListener('pointerup', () => { dragging = false; stage.classList.remove('dragging'); });
+    stage.addEventListener("pointerup", () => {
+      dragging = false;
+      stage.classList.remove("dragging");
+    });
     setDownload();
-    if (svg.dataset.motionProfile === 'off') {
-      setMotionMode('off');
-    } else if (svg.dataset.motionProfile === 'subtle') {
-      setMotionMode('subtle');
-    }
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      const reduced = svg.dataset.motionReduced || 'subtle';
-      setMotionMode(reduced === 'pause' || reduced === 'static' ? 'off' : 'subtle');
-    }
+    if (svg && svg.dataset.motionProfile === "off") setMotionMode("off");
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) setMotionMode("subtle");
+  }
+
+  window.AniDiagramRuntime = { play, pause, resume, restart, stop };
+  document.addEventListener("DOMContentLoaded", () => {
+    wireViewer();
+    play();
+  });
+})();
+
   </script>
 </body>
 </html>

@@ -8,26 +8,32 @@ This repository is not a GitHub fork and does not copy source code, documents,
 images, generated assets, or repository history from the projects listed in
 [REFERENCES.md](./REFERENCES.md).
 
-## Examples
+## Showcase
 
-| Pipeline | Agent Memory |
-| --- | --- |
-| ![Pipeline preset](./gallery/pipeline.svg) | ![Agent memory preset](./gallery/agent-memory.svg) |
+AniDiagram uses two complementary galleries:
 
-| Swimlane | Network |
-| --- | --- |
-| ![Swimlane preset](./gallery/swimlane.svg) | ![Network preset](./gallery/network.svg) |
+- **Style Showcase**: 12 signature cases, one for every visual style. This
+  answers "how can it look?"
+- **Layout Showcase**: 14 teaching cases, one for every clean-room layout
+  preset. This answers "when should I use this layout?"
 
-Full preset gallery: [gallery/index.html](./gallery/index.html)
+Full gallery home: [gallery/index.html](./gallery/index.html)
+Machine-readable manifest: [gallery/showcase_manifest.json](./gallery/showcase_manifest.json)
 
-## Style Showcase
+### Hero Demo
 
-Each bundled style has a clean-room example spec plus rendered SVG/HTML assets.
-Click a preview to open its animated HTML viewer.
+| Agent Runtime Flow |
+| --- |
+| [![Agent Runtime Flow](./gallery/hero/agent-runtime-flow.svg)](./gallery/hero/agent-runtime-flow.html)<br>High-fidelity runtime demo with agent think-act, search discover, API request/response, and memory commit motion. |
+
+### Style Showcase
+
+Each bundled style has a clean-room signature case plus rendered SVG/HTML
+assets. Click a preview to open its high-fidelity HTML output.
 
 | `minimal-light` | `deep-tech` | `blueprint` |
 | --- | --- | --- |
-| [![minimal-light style showcase](./gallery/styles/minimal-light.svg)](./gallery/styles/minimal-light.html)<br>Customer Support Triage | [![deep-tech style showcase](./gallery/styles/deep-tech.svg)](./gallery/styles/deep-tech.html)<br>Realtime AI Ops Mesh | [![blueprint style showcase](./gallery/styles/blueprint.svg)](./gallery/styles/blueprint.html)<br>Cloud Deployment Blueprint |
+| [![minimal-light style showcase](./gallery/styles/minimal-light.svg)](./gallery/styles/minimal-light.html)<br>Customer Support Triage | [![deep-tech style showcase](./gallery/styles/deep-tech.svg)](./gallery/styles/deep-tech.html)<br>Realtime AI Ops Mesh | [![blueprint style showcase](./gallery/styles/blueprint.svg)](./gallery/styles/blueprint.html)<br>MCP Server Architecture |
 
 | `flat-icon` | `dark-terminal` | `notion-clean` |
 | --- | --- | --- |
@@ -35,7 +41,7 @@ Click a preview to open its animated HTML viewer.
 
 | `glassmorphism` | `claude-warm` | `openai-minimal` |
 | --- | --- | --- |
-| [![glassmorphism style showcase](./gallery/styles/glassmorphism.svg)](./gallery/styles/glassmorphism.html)<br>Revenue Funnel | [![claude-warm style showcase](./gallery/styles/claude-warm.svg)](./gallery/styles/claude-warm.html)<br>Research Reasoning Loop | [![openai-minimal style showcase](./gallery/styles/openai-minimal.svg)](./gallery/styles/openai-minimal.html)<br>Evaluation Pipeline |
+| [![glassmorphism style showcase](./gallery/styles/glassmorphism.svg)](./gallery/styles/glassmorphism.html)<br>AI Growth Funnel | [![claude-warm style showcase](./gallery/styles/claude-warm.svg)](./gallery/styles/claude-warm.html)<br>Research Reasoning Loop | [![openai-minimal style showcase](./gallery/styles/openai-minimal.svg)](./gallery/styles/openai-minimal.html)<br>Evaluation Pipeline |
 
 | `dark-luxury` | `aurora-orb` | `sketch-board` |
 | --- | --- | --- |
@@ -43,13 +49,59 @@ Click a preview to open its animated HTML viewer.
 
 Full style showcase: [gallery/styles/index.html](./gallery/styles/index.html)
 
+### Layout Showcase
+
+Each layout preset has a concrete AI/product case that demonstrates when the
+layout is useful.
+
+| `pipeline` | `loop` |
+| --- | --- |
+| [![pipeline layout showcase](./gallery/layouts/pipeline.svg)](./gallery/layouts/pipeline.html)<br>RAG Ingestion Pipeline | [![loop layout showcase](./gallery/layouts/loop.svg)](./gallery/layouts/loop.html)<br>Agent Reflection Loop |
+
+| `hub-spoke` | `layered` |
+| --- | --- |
+| [![hub-spoke layout showcase](./gallery/layouts/hub-spoke.svg)](./gallery/layouts/hub-spoke.html)<br>Agent Tool Hub | [![layered layout showcase](./gallery/layouts/layered.svg)](./gallery/layouts/layered.html)<br>LLM App Architecture Layers |
+
+| `swimlane` | `compare` |
+| --- | --- |
+| [![swimlane layout showcase](./gallery/layouts/swimlane.svg)](./gallery/layouts/swimlane.html)<br>Human-in-the-loop Approval Flow | [![compare layout showcase](./gallery/layouts/compare.svg)](./gallery/layouts/compare.html)<br>RAG vs Agentic RAG |
+
+| `matrix` | `timeline` |
+| --- | --- |
+| [![matrix layout showcase](./gallery/layouts/matrix.svg)](./gallery/layouts/matrix.html)<br>AI Feature Priority Matrix | [![timeline layout showcase](./gallery/layouts/timeline.svg)](./gallery/layouts/timeline.html)<br>AI Product Launch Roadmap |
+
+| `stack` | `funnel` |
+| --- | --- |
+| [![stack layout showcase](./gallery/layouts/stack.svg)](./gallery/layouts/stack.html)<br>AI Runtime Stack | [![funnel layout showcase](./gallery/layouts/funnel.svg)](./gallery/layouts/funnel.html)<br>Lead-to-Agent Automation Funnel |
+
+| `sequence` | `er` |
+| --- | --- |
+| [![sequence layout showcase](./gallery/layouts/sequence.svg)](./gallery/layouts/sequence.html)<br>API Tool Calling Sequence | [![er layout showcase](./gallery/layouts/er.svg)](./gallery/layouts/er.html)<br>Agent Memory Data Model |
+
+| `network` | `agent-memory` |
+| --- | --- |
+| [![network layout showcase](./gallery/layouts/network.svg)](./gallery/layouts/network.html)<br>Distributed Agent Runtime Mesh | [![agent-memory layout showcase](./gallery/layouts/agent-memory.svg)](./gallery/layouts/agent-memory.html)<br>Personalized Agent Memory Flow |
+
+Full layout showcase: [gallery/layouts/index.html](./gallery/layouts/index.html)
+
+### Runtime Motion Showcase
+
+The P0 high-fidelity runtime demonstrates four semantic icon performances:
+
+| Performance | Semantic beat |
+| --- | --- |
+| `agent-think-act-v2` | think dots gather, core decides, decision token exits |
+| `search-discover-v2` | scan, discover results, lock target |
+| `api-request-response-v2` | request travels out, response returns, status resolves |
+| `database-write-v2` | write token lands, storage reacts, commit flash resolves |
+
 ## What It Does
 
 - Validates DiagramScript `0.1`, `0.2`, and `0.3`.
 - Compiles natural-language briefs into DiagramPlan v0.1 and then freeform
   DiagramScript v0.3.
 - Compiles JSON specs or presets into a typed Scene IR.
-- Renders animated SVG and self-contained HTML viewers.
+- Renders portable animated SVG and high-fidelity HTML runtime output.
 - Uses richer motion layers: staggered entry, line drawing, flow particles,
   node glow, burst rings, and animated group boundaries.
 - Supports scene-level motion profiles for `off`, `subtle`, `normal`,
@@ -62,8 +114,16 @@ Full style showcase: [gallery/styles/index.html](./gallery/styles/index.html)
 - Produces quality reports for bounds, overlaps, text fit, and explicit paths.
 - Includes 14 clean-room preset compilers and 12 visual styles.
 
-SVG, HTML, Lottie, and quality reports use the Python standard library. Raster
-and video exports use optional Pillow support; MP4 also needs `ffmpeg`.
+SVG, debug viewer HTML, Lottie, and quality reports use the Python standard
+library. The primary `html` export writes a high-fidelity runtime page with a
+static SVG stage, named parts, a Motion Manifest, and a browser runtime; its
+GSAP backend loads GSAP from a CDN and does not add a Python dependency. Raster,
+video, PDF, and Lottie exports default to the lightweight Python renderer. For
+highest-fidelity output, pass `--export-renderer browser` so PNG, GIF, PDF,
+WebP, MP4, APNG, and Lottie are captured from the real HTML runtime with
+Playwright/Chromium. Browser-captured Lottie is frame-based, so it is visually
+faithful but larger than the default structured Lottie JSON. GIF/WebP/APNG
+packaging still needs Pillow, and MP4 still needs `ffmpeg`.
 
 ## Quick Start
 
@@ -101,11 +161,52 @@ PYTHONPATH=src python3 -m anidiagram.cli \
   --spec-out outputs/loop-engineering.diagram.json
 ```
 
+Render the high-fidelity HTML runtime demo:
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --spec examples/high-fidelity-runtime.diagram.json \
+  --style styles/deep-tech.json \
+  --outdir outputs \
+  --basename high-fidelity-runtime \
+  --formats svg,html,quality \
+  --html-runtime gsap
+```
+
+Write the legacy debug viewer when needed:
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --spec examples/agent-memory.diagram.json \
+  --outdir outputs \
+  --basename agent-memory \
+  --formats viewer
+```
+
+Export high-fidelity raster, video, PDF, and Lottie from the browser runtime:
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --spec examples/high-fidelity-runtime.diagram.json \
+  --style styles/deep-tech.json \
+  --outdir outputs \
+  --basename high-fidelity-runtime-hq \
+  --formats png,gif,webp,apng,mp4,pdf,lottie,quality \
+  --html-runtime gsap \
+  --export-renderer browser \
+  --export-scale 2 \
+  --export-fps 24 \
+  --export-frames 48
+```
+
 Install optional raster dependencies:
 
 ```bash
 python3 -m pip install ".[raster]"
 ```
+
+Browser-rendered exports also require Node.js plus Playwright with Chromium
+available to Node's module resolver.
 
 ## CLI Result
 
@@ -218,8 +319,7 @@ style provides a compatible default.
 Regenerate the committed gallery assets:
 
 ```bash
-PYTHONPATH=src python3 scripts/batch_render.py --outdir gallery --quality
-PYTHONPATH=src python3 scripts/build_style_showcase.py --quality
+PYTHONPATH=src python3 scripts/build_showcase.py --quality
 ```
 
 ## Motion Design
@@ -305,6 +405,7 @@ Recommended defaults:
 | `icon-pulse` | Pulse focused on the node's semantic icon. |
 | `icon-breathe` | Gentle semantic-icon scale/halo breathing; node frame stays still. |
 | `icon-semantic` | Icon-local motion matched to the semantic icon, such as database writes or shield checks. |
+| `icon-performance` | Runtime-ready semantic icon performance. SVG uses lightweight SMIL fallback; `html` plays the high-fidelity micro-performance from the Motion Manifest. |
 | `micro-icon` | Alias-style micro icon breathing for runtime diagrams. |
 
 ### Edge Motion Types
@@ -359,17 +460,38 @@ DiagramScript v0.3 nodes can set `icon` to one of:
 
 | Icon | Default icon motion |
 | --- | --- |
-| `database`, `memory` | `database-write`: top ellipse compresses/rebounds, a write line scans across, a data point enters, and the lower layer flashes lightly. |
+| `database` | `database-write`: top ellipse compresses/rebounds, a write line scans across, a data point enters, and the lower layer flashes lightly. |
+| `memory` | Stacked memory cards with trace lines for context or agent memory. |
 | `file` | `file-lines`: page enters from lower-left, overshoots scale, folds the corner, then draws content lines quickly. |
 | `folder` | `folder-open`: folder tab opens and exposes a short internal file line. |
 | `api` | `api-ping`: request point travels between brackets. |
 | `cloud` | `cloud-upload`: upload arrow moves inside the cloud with faint transfer dots. |
 | `search` | `search-sweep`: lens sweep highlight plus a small light point. |
 | `shield` | `shield-check`: checkmark draws and a low-opacity protection pulse follows the shield outline. |
-| `agent` | `agent-orbit`: center core glows while a thinking/status dot orbits locally. |
+| `agent` | `agent-orbit`: brain-like circuit icon with a small local status pulse. |
 | `tool` | `tool-tap`: short tool tap motion with a contact spark. |
 | `output` | `output-check`: result lines reveal first, then the checkmark draws. |
 | `token` | `token-pulse`: center pulse plus short outer ticks lighting in sequence. |
+
+The primary `html` runtime currently maps these high-fidelity v2 performances:
+
+| Icon | Runtime performance |
+| --- | --- |
+| `agent` | `agent-think-act-v2`: thought dots gather into the core, the core pulses as a decision, then a decision token exits the agent. |
+| `api` | `api-request-response-v2`: endpoints react, a request token travels out, a response returns, and status pops. |
+| `search` | `search-discover-v2`: lens tilts, scan light sweeps, result dots pop, and a target is selected. |
+| `database` | `database-write-v2`: write token lands, the lid squashes, layers commit, and a success flash settles. |
+| `memory` | `memory-commit-v2`: a context token lands, memory cards settle, trace lines light, and a commit flash resolves. |
+| `tool` | `tool-run-v2`: the function chip presses, connector dot fires, sparks draw, and a flash resolves. |
+| `token` | `token-intent-v2`: the token shell pops in, the core pulses, ticks draw, and a halo releases. |
+| `output` | `output-reveal-v2`: the result card settles, lines reveal, the check draws, and a final flash resolves. |
+
+The runtime is driven by a `<script type="application/json"
+id="anidiagram-motion-manifest">` block. Each entry points to stable SVG part
+IDs such as `#icon-agent-thought-1` or `#icon-api-request-token`; the JavaScript
+runtime does not infer semantics from arbitrary paths or classes.
+See [docs/html-runtime.md](./docs/html-runtime.md) for runtime ownership,
+current performance coverage, and export notes.
 
 ### Effect Object Fields
 
@@ -448,6 +570,34 @@ PYTHONPATH=src python3 -m anidiagram.cli \
   --outdir outputs \
   --basename runtime-loop-motion \
   --formats svg,html,quality
+```
+
+Try the high-fidelity runtime example:
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --spec examples/high-fidelity-runtime.diagram.json \
+  --style styles/deep-tech.json \
+  --outdir outputs \
+  --basename high-fidelity-runtime \
+  --formats svg,html,quality \
+  --html-runtime gsap
+```
+
+Try browser-captured high-fidelity exports:
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --spec examples/high-fidelity-runtime.diagram.json \
+  --style styles/deep-tech.json \
+  --outdir outputs \
+  --basename high-fidelity-runtime-hq \
+  --formats png,gif,webp,apng,mp4,pdf,lottie,quality \
+  --html-runtime gsap \
+  --export-renderer browser \
+  --export-scale 2 \
+  --export-fps 24 \
+  --export-frames 48
 ```
 
 ## Tests

@@ -5,9 +5,12 @@ import tempfile
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
+from unittest.mock import patch
 
 from anidiagram.cli import main
 from anidiagram.exporters import _render_frames
+from anidiagram.exporters import _browser_capture_script
+from anidiagram.exporters import write_browser_capture
 from anidiagram.exporters import write_gif
 from anidiagram.planner import brief_to_plan
 from anidiagram.planner import compile_plan
@@ -17,6 +20,7 @@ from anidiagram.renderer_svg import icon_surface_accent
 from anidiagram.renderer_svg import icon_surface_fill
 from anidiagram.renderer_svg import render_svg
 from anidiagram.renderer_svg import render_html
+from anidiagram.renderer_html_runtime import render_html_runtime
 from anidiagram.schema import DiagramScriptValidationError, compile_scene
 from anidiagram.styles import load_style
 
@@ -42,7 +46,7 @@ class SvgRendererTest(unittest.TestCase):
         self.assertIn("Planner Agent", svg)
         self.assertIn("marker-end", svg)
 
-    def test_cli_writes_svg_and_html(self):
+    def test_cli_writes_svg_and_html_runtime(self):
         with tempfile.TemporaryDirectory() as tmp:
             stdout = io.StringIO()
             with redirect_stdout(stdout):
@@ -65,7 +69,263 @@ class SvgRendererTest(unittest.TestCase):
             self.assertTrue(svg.is_file())
             self.assertTrue(html.is_file())
             self.assertIn("animateMotion", svg.read_text(encoding="utf-8"))
-            self.assertIn("<!doctype html>", html.read_text(encoding="utf-8"))
+            self.assertIn("anidiagram-motion-manifest", html.read_text(encoding="utf-8"))
+            self.assertIn("window.AniDiagramRuntime", html.read_text(encoding="utf-8"))
+
+    def test_cli_writes_debug_viewer(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            stdout = io.StringIO()
+            with redirect_stdout(stdout):
+                main(
+                    [
+                        "--spec",
+                        str(ROOT / "examples" / "agent-memory.diagram.json"),
+                        "--style",
+                        str(ROOT / "styles" / "deep-tech.json"),
+                        "--outdir",
+                        tmp,
+                        "--basename",
+                        "agent-memory",
+                        "--formats",
+                        "viewer",
+                    ]
+                )
+
+            viewer = Path(tmp) / "agent-memory.viewer.html"
+            self.assertTrue(viewer.is_file())
+            viewer_text = viewer.read_text(encoding="utf-8")
+            self.assertIn("<!doctype html>", viewer_text)
+            self.assertIn("setMotionMode", viewer_text)
+            self.assertNotIn("anidiagram-motion-manifest", viewer_text)
+
+    def test_html_runtime_contains_manifest_runtime_and_matching_part_ids(self):
+        spec = json.loads((ROOT / "examples" / "high-fidelity-runtime.diagram.json").read_text(encoding="utf-8"))
+        scene = compile_scene(spec)
+        style = load_style(ROOT / "styles" / "deep-tech.json")
+
+        html = render_html_runtime(scene, style, runtime="gsap")
+        marker = '<script type="application/json" id="anidiagram-motion-manifest">'
+        start = html.index(marker) + len(marker)
+        end = html.index("</script>", start)
+        manifest = json.loads(html[start:end])
+
+        self.assertEqual("motion-manifest-0.1", manifest["version"])
+        self.assertEqual("gsap", manifest["runtime"])
+        self.assertEqual(
+            {
+                "token-intent-v2",
+                "agent-think-act-v2",
+                "api-request-response-v2",
+                "search-discover-v2",
+                "memory-commit-v2",
+                "tool-run-v2",
+                "output-reveal-v2",
+            },
+            {icon["performance"] for icon in manifest["icons"]},
+        )
+        self.assertIn("window.AniDiagramRuntime", html)
+        self.assertIn("https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js", html)
+        self.assertNotIn("data-icon-motion=", html)
+        self.assertNotIn('transformBox = "fill-box"', html)
+        agent_icon = next(icon for icon in manifest["icons"] if icon["performance"] == "agent-think-act-v2")
+        self.assertEqual(
+            {"root", "shell", "core", "thought1", "thought2", "thought3", "decisionToken"},
+            set(agent_icon["parts"]),
+        )
+        self.assertIn("#icon-agent-thought-1", agent_icon["parts"].values())
+        self.assertIn("#icon-agent-decision-token", agent_icon["parts"].values())
+        for icon in manifest["icons"]:
+            for selector in icon["parts"].values():
+                self.assertTrue(selector.startswith("#"))
+                self.assertIn(f'id="{selector[1:]}"', html)
+
+    def test_html_runtime_suppresses_svg_icon_fallbacks(self):
+        spec = {
+            "version": "0.3",
+            "canvas": {"width": 420, "height": 260},
+            "title": {"text": "Runtime Only", "subtitle": "no svg icon fallback"},
+            "motion": {
+                "profile": "teaching",
+                "node": {"preset": "icon-semantic"},
+                "edge": {"preset": "static"},
+            },
+            "nodes": [
+                {"id": "shield", "label": "Shield", "caption": "static in runtime", "position": [120, 130], "size": [170, 78], "role": "risk", "icon": "shield"}
+            ],
+        }
+        scene = compile_scene(spec)
+        html = render_html_runtime(scene, load_style(ROOT / "styles" / "minimal-light.json"), runtime="gsap")
+
+        self.assertIn("semantic-icon-shield", html)
+        self.assertNotIn("data-icon-motion=", html)
+        self.assertNotIn("icon-shield-pulse", html)
+
+    def test_svg_output_uses_lightweight_icon_fallback_without_runtime_manifest(self):
+        spec = json.loads((ROOT / "examples" / "high-fidelity-runtime.diagram.json").read_text(encoding="utf-8"))
+        scene = compile_scene(spec)
+        style = load_style(ROOT / "styles" / "deep-tech.json")
+
+        svg = render_svg(scene, style)
+
+        self.assertNotIn("anidiagram-motion-manifest", svg)
+        self.assertNotIn("title-handwrite", svg)
+        self.assertIn("title-sweep", svg)
+        self.assertIn("data-icon-motion=", svg)
+        self.assertIn('data-icon-motion="token-pulse"', svg)
+        self.assertIn('data-icon-motion="agent-orbit"', svg)
+        self.assertIn('data-icon-motion="search-sweep"', svg)
+        self.assertIn('data-icon-motion="database-write"', svg)
+        self.assertNotIn("token-intent-v2", svg)
+        self.assertNotIn("agent-think-act-v2", svg)
+        self.assertIn('id="icon-agent-shell"', svg)
+        self.assertIn('id="icon-agent-core"', svg)
+        self.assertIn('id="icon-agent-thought-1"', svg)
+        self.assertIn('id="icon-agent-decision-token"', svg)
+        self.assertIn('id="icon-request-core"', svg)
+        self.assertIn('id="icon-tool-connector"', svg)
+        self.assertIn('id="icon-output-check"', svg)
+        self.assertIn('id="icon-api-request-token"', svg)
+        self.assertIn('id="icon-search-result-1"', svg)
+        self.assertIn('id="icon-memory-commit-token"', svg)
+        self.assertIn('id="icon-memory-front-card"', svg)
+
+    def test_render_svg_runtime_stage_suppresses_icon_smil_fallbacks(self):
+        spec = json.loads((ROOT / "examples" / "high-fidelity-runtime.diagram.json").read_text(encoding="utf-8"))
+        scene = compile_scene(spec)
+        style = load_style(ROOT / "styles" / "deep-tech.json")
+
+        svg = render_svg(scene, style, animation_mode="runtime-stage")
+
+        self.assertIn('id="icon-agent-shell"', svg)
+        self.assertIn('id="icon-agent-thought-1"', svg)
+        self.assertIn('id="icon-agent-decision-token"', svg)
+        self.assertNotIn("data-icon-motion=", svg)
+        self.assertNotIn("icon-agent-line-draw", svg)
+        self.assertNotIn("icon-search-light", svg)
+        self.assertNotIn("icon-database-top-bounce", svg)
+
+    def test_cli_writes_html_runtime(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            stdout = io.StringIO()
+            with redirect_stdout(stdout):
+                main(
+                    [
+                        "--spec",
+                        str(ROOT / "examples" / "high-fidelity-runtime.diagram.json"),
+                        "--style",
+                        str(ROOT / "styles" / "deep-tech.json"),
+                        "--outdir",
+                        tmp,
+                        "--basename",
+                        "high-fidelity-runtime",
+                        "--formats",
+                        "svg,html-runtime,quality",
+                        "--html-runtime",
+                        "gsap",
+                    ]
+                )
+
+            result = json.loads(stdout.getvalue())
+            runtime_html = Path(tmp) / "high-fidelity-runtime.html"
+
+            self.assertTrue(result["ok"])
+            self.assertTrue(runtime_html.is_file())
+            self.assertNotIn("html-runtime", result["outputs"])
+            self.assertTrue(Path(result["outputs"]["html"]["path"]).is_file())
+            self.assertIn("anidiagram-motion-manifest", runtime_html.read_text(encoding="utf-8"))
+            self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, result["outputs"]["quality"]["summary"])
+
+    def test_cli_routes_browser_renderer_for_raster_exports(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            stdout = io.StringIO()
+            browser_result = {
+                "format": "png",
+                "path": str(Path(tmp) / "minimal.png"),
+                "status": "written",
+                "renderer": "browser",
+                "fps": 24,
+                "frames": 1,
+                "scale": 2.0,
+            }
+            with patch("anidiagram.cli.write_browser_capture", return_value=browser_result) as capture:
+                with redirect_stdout(stdout):
+                    main(
+                        [
+                            "--spec",
+                            str(ROOT / "tests" / "fixtures" / "minimal.diagram.json"),
+                            "--style",
+                            str(ROOT / "styles" / "minimal-light.json"),
+                            "--outdir",
+                            tmp,
+                            "--basename",
+                            "minimal",
+                            "--formats",
+                            "png,quality",
+                            "--html-runtime",
+                            "gsap",
+                            "--export-renderer",
+                            "browser",
+                            "--export-fps",
+                            "24",
+                            "--export-frames",
+                            "12",
+                            "--export-scale",
+                            "2",
+                        ]
+                    )
+
+            result = json.loads(stdout.getvalue())
+
+            capture.assert_called_once()
+            self.assertEqual("browser", result["outputs"]["png"]["renderer"])
+            self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, result["outputs"]["quality"]["summary"])
+
+    def test_browser_capture_skips_when_playwright_is_unavailable(self):
+        spec = json.loads((ROOT / "tests" / "fixtures" / "minimal.diagram.json").read_text(encoding="utf-8"))
+        scene = compile_scene(spec)
+        style = load_style(ROOT / "styles" / "minimal-light.json")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            with patch(
+                "anidiagram.exporters._playwright_node_env",
+                return_value=("", {}, "Node Playwright is not installed"),
+            ):
+                result = write_browser_capture(scene, style, Path(tmp) / "minimal.png", "png")
+
+        self.assertEqual("skipped", result["status"])
+        self.assertIn("Node Playwright", result["reason"])
+
+    def test_browser_capture_script_seeks_runtime_timelines_per_frame(self):
+        script = _browser_capture_script()
+
+        self.assertIn("const frameSeconds = index / fps;", script)
+        self.assertIn("svgElement.setCurrentTime(seconds)", script)
+        self.assertIn("window.__ANIDIAGRAM_TIMELINES__", script)
+        self.assertIn("tl.totalTime(localSeconds % cycleSeconds, false)", script)
+
+    def test_browser_capture_lottie_packages_captured_frames(self):
+        spec = json.loads((ROOT / "tests" / "fixtures" / "minimal.diagram.json").read_text(encoding="utf-8"))
+        scene = compile_scene(spec)
+        style = load_style(ROOT / "styles" / "minimal-light.json")
+
+        def fake_capture(**kwargs):
+            for index in range(kwargs["frames"]):
+                (kwargs["frames_dir"] / f"frame-{index:04d}.png").write_bytes(b"captured frame")
+            return {"status": "written", "reason": ""}
+
+        with tempfile.TemporaryDirectory() as tmp:
+            lottie_path = Path(tmp) / "minimal.lottie.json"
+            with patch("anidiagram.exporters._capture_browser_runtime", side_effect=fake_capture):
+                result = write_browser_capture(scene, style, lottie_path, "lottie", frames=2, fps=12, scale=1)
+
+            data = json.loads(lottie_path.read_text(encoding="utf-8"))
+
+        self.assertEqual("written", result["status"])
+        self.assertEqual("browser", result["renderer"])
+        self.assertEqual(12, data["fr"])
+        self.assertEqual(2, len(data["assets"]))
+        self.assertEqual(2, len(data["layers"]))
+        self.assertEqual("browser", data["meta"]["renderer"])
 
     def test_cli_prints_structured_result_json(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -361,6 +621,7 @@ class SvgRendererTest(unittest.TestCase):
                 {"id": "tool", "label": "Tool", "caption": "tap", "position": [595, 285], "size": [150, 72], "role": "tool", "icon": "tool"},
                 {"id": "output", "label": "Output", "caption": "check", "position": [770, 285], "size": [150, 72], "role": "output", "icon": "output"},
                 {"id": "token", "label": "Token", "caption": "pulse", "position": [70, 405], "size": [150, 72], "role": "neutral", "icon": "token"},
+                {"id": "memory_stack", "label": "Memory", "caption": "stack", "position": [245, 405], "size": [150, 72], "role": "memory", "icon": "memory", "effect": {"preset": "none"}},
             ],
         }
         scene = compile_scene(spec)
@@ -391,21 +652,29 @@ class SvgRendererTest(unittest.TestCase):
         self.assertIn(".semantic-icon { vector-effect: non-scaling-stroke; }", svg)
         self.assertNotIn(".semantic-icon { fill: none;", svg)
         self.assertNotRegex(svg, r'fill="none"[^>]*fill="#')
-        self.assertIn('fill="#a8dde8"', svg)
+        self.assertIn('fill="#c8edf3"', svg)
         self.assertIn("icon-file-page-motion", svg)
         self.assertIn("icon-file-fold-motion", svg)
         self.assertIn("icon-folder-body", svg)
+        self.assertIn("icon-api-left-endpoint", svg)
+        self.assertIn("icon-api-right-endpoint", svg)
         self.assertIn("icon-database-top-bounce", svg)
         self.assertIn("icon-database-layer-flash", svg)
         self.assertIn("icon-folder-file-line", svg)
         self.assertIn("icon-cloud-dot", svg)
         self.assertIn("icon-search-light", svg)
         self.assertIn("icon-shield-pulse", svg)
-        self.assertIn("icon-agent-core", svg)
+        self.assertIn("icon-agent-shell", svg)
+        self.assertIn("icon-agent-thought", svg)
+        self.assertIn("icon-agent-decision-token", svg)
         self.assertIn("icon-tool-spark", svg)
+        self.assertIn(">fx</text>", svg)
         self.assertIn("icon-output-line", svg)
         self.assertIn("icon-token-core", svg)
         self.assertIn("icon-token-tick", svg)
+        self.assertIn("icon-memory-front-card", svg)
+        self.assertIn("icon-memory-trace", svg)
+        self.assertIn("icon-memory-dot", svg)
         self.assertIn('values="0.78;1.22;1;1"', svg)
         self.assertIn('keyTimes="0;0.08;0.68;1"', svg)
         self.assertIn('dur="1.91s"', svg)
@@ -417,9 +686,9 @@ class SvgRendererTest(unittest.TestCase):
         self.assertNotIn('class="node-glow"', svg)
 
     def test_icon_surface_fill_is_visible_on_light_nodes(self):
-        self.assertEqual("#a8dde8", icon_surface_fill("#ecfeff", "#0891b2"))
-        self.assertEqual("#f4b5b5", icon_surface_fill("#fef2f2", "#dc2626"))
-        self.assertEqual("#75c5d7", icon_surface_accent("#a8dde8", "#0891b2"))
+        self.assertEqual("#c8edf3", icon_surface_fill("#ecfeff", "#0891b2"))
+        self.assertEqual("#f9d1d1", icon_surface_fill("#fef2f2", "#dc2626"))
+        self.assertEqual("#85ccdc", icon_surface_accent("#a8dde8", "#0891b2"))
 
     def test_motion_policy_limits_semantic_icon_motion(self):
         spec = {

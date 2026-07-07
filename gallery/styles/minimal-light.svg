@@ -13,14 +13,17 @@
   .edge-draw, .edge-base { stroke-linecap: round; stroke-linejoin: round; }
   .edge-particle { filter: url(#particle-glow); }
   .edge-arrow-particle { filter: url(#particle-glow); }
-  .semantic-icon { fill: none; vector-effect: non-scaling-stroke; }
+  .semantic-icon { vector-effect: non-scaling-stroke; }
+  .semantic-icon-breathe { transform-box: fill-box; transform-origin: center; animation: semanticIconBreathe 2.8s ease-in-out infinite; }
+  .icon-breathe-halo { pointer-events: none; filter: url(#particle-glow); }
   .node-glow, .node-burst { pointer-events: none; }
   #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
   #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
   @keyframes titlePulse { 0%, 100% { opacity: 0.76; } 50% { opacity: 1; } }
   @keyframes titleSlide { 0%, 100% { transform: translateX(0); opacity: 0.9; } 50% { transform: translateX(8px); opacity: 1; } }
+  @keyframes semanticIconBreathe { 0%, 100% { transform: scale(0.96); opacity: 0.72; } 50% { transform: scale(1.08); opacity: 1; } }
   @media (prefers-reduced-motion: reduce) {
-    #title-accent, #title-highlight { animation: none; }
+    #title-accent, #title-highlight, .semantic-icon-breathe { animation: none; }
   }
 </style>
 <rect width="100%" height="100%" fill="#ffffff" />
@@ -155,11 +158,43 @@
   <rect x="90.0" y="335.0" width="180.0" height="84.0" rx="14.0"
         fill="#fff7ed" stroke="#f97316" stroke-width="2.0" />
 
-<g class="semantic-icon-wrap" opacity="0.94">
+<g id="icon-customer-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-agent" data-icon="agent" data-node-id="customer" opacity="0.94">
 
 
-  <polygon points="129.6,360.0 144.2,368.5 144.2,385.5 129.6,394.0 115.0,385.5 115.0,368.5" class="semantic-icon semantic-icon-agent" stroke="#f97316" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#fff7ed" />
-  <circle cx="129.6" cy="377.0" r="3.7" fill="#f97316" />
+
+
+  <path id="icon-customer-shell" class="semantic-icon semantic-icon-agent icon-agent-shell"
+        d="M 129.6 360.3
+           L 142.2 367.8
+           V 384.8
+           L 129.6 392.6
+           L 117.0 384.8
+           V 367.8
+           Z"
+        fill="#fee2cb" stroke="#f97316" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.92" />
+  <path class="semantic-icon semantic-icon-agent icon-agent-circuit"
+        d="M 129.6 367.1 V 383.1
+           M 123.1 373.3 H 127.9
+           M 131.3 376.7 H 136.7
+           M 125.2 382.4 H 133.3"
+        fill="none" stroke="#f97316" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" opacity="0.50" />
+  <circle id="icon-customer-core" class="icon-runtime-part icon-agent-core" cx="129.6" cy="376.7" r="3.0"
+        fill="#f97316" stroke="#fee2cb" stroke-width="1.5" opacity="0.78" />
+  <circle id="icon-customer-thought-1" class="icon-runtime-part icon-agent-thought" cx="123.5" cy="369.5" r="2.0"
+        fill="#f97316" opacity="0.46" />
+  <circle id="icon-customer-thought-2" class="icon-runtime-part icon-agent-thought" cx="135.7" cy="371.6" r="1.9"
+        fill="#f97316" opacity="0.38" />
+  <circle id="icon-customer-thought-3" class="icon-runtime-part icon-agent-thought" cx="126.5" cy="383.1" r="1.8"
+        fill="#f97316" opacity="0.42" />
+  <path id="icon-customer-decision-token" class="icon-runtime-part icon-agent-decision-token"
+        d="M 137.8 372.2
+           L 140.2 374.6
+           L 137.8 377.0
+           L 135.4 374.6
+           Z"
+        fill="#f97316" stroke="#fee2cb" stroke-width="1.2" opacity="0" />
+
+
 </g>
 
   <text x="206.4" y="363.0" text-anchor="middle" fill="#172033">
@@ -176,10 +211,15 @@
   <rect x="300.0" y="335.0" width="180.0" height="84.0" rx="14.0"
         fill="#ecfeff" stroke="#0891b2" stroke-width="2.0" />
 
-<g class="semantic-icon-wrap" opacity="0.94">
+<g id="icon-inbox-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-folder" data-icon="folder" data-node-id="inbox" opacity="0.94">
 
 
-  <path d="M 322.6 368.8 H 335.9 L 339.6 363.7 H 356.6 V 390.9 H 322.6 Z" class="semantic-icon semantic-icon-folder" stroke="#0891b2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#ecfeff" />
+
+
+  <path class="semantic-icon icon-filled semantic-icon-folder icon-folder-body" d="M 322.6 368.8 H 335.9 L 339.6 363.7 H 356.6 V 390.9 H 322.6 Z"
+        stroke="#0891b2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#c8edf3" />
+
+
 </g>
 
   <text x="416.4" y="363.0" text-anchor="middle" fill="#172033">
@@ -197,11 +237,20 @@
   <rect x="510.0" y="335.0" width="180.0" height="84.0" rx="14.0"
         fill="#eff6ff" stroke="#2563eb" stroke-width="2.0" />
 
-<g class="semantic-icon-wrap" opacity="0.94">
+<g id="icon-triage-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-search" data-icon="search" data-node-id="triage" opacity="0.94">
 
 
-  <circle cx="546.9" cy="374.3" r="9.2" class="semantic-icon semantic-icon-search" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#eff6ff" />
-  <path d="M 554.7 382.1 L 565.2 392.6" class="semantic-icon semantic-icon-search" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+
+
+  <circle id="icon-triage-lens" cx="546.9" cy="374.3" r="9.2" class="semantic-icon icon-filled semantic-icon-search" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#cfdefc" />
+  <path id="icon-triage-handle" d="M 554.7 382.1 L 565.2 392.6" class="semantic-icon semantic-icon-search" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <path id="icon-triage-scan" class="icon-runtime-part" d="M 539.1 369.5 L 553.0 381.8"
+        fill="none" stroke="#2563eb" stroke-width="2.8" stroke-linecap="round" opacity="0" />
+  <circle id="icon-triage-result-1" class="icon-runtime-part" cx="544.0" cy="373.3" r="2.2" fill="#2563eb" opacity="0" />
+  <circle id="icon-triage-result-2" class="icon-runtime-part" cx="549.9" cy="376.7" r="1.9" fill="#2563eb" opacity="0" />
+  <circle id="icon-triage-target" class="icon-runtime-part" cx="552.7" cy="373.6" r="3.7" fill="none" stroke="#2563eb" stroke-width="2" opacity="0" />
+
+
 </g>
 
   <text x="626.4" y="363.0" text-anchor="middle" fill="#172033">
@@ -218,11 +267,34 @@
   <rect x="720.0" y="335.0" width="180.0" height="84.0" rx="14.0"
         fill="#fffbeb" stroke="#d97706" stroke-width="2.0" />
 
-<g class="semantic-icon-wrap" opacity="0.94">
+<g id="icon-reply-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-file" data-icon="file" data-node-id="reply" opacity="0.94">
 
 
-  <path d="M 747.4 360.0 H 764.4 L 771.8 367.5 V 394.0 H 747.4 Z" class="semantic-icon semantic-icon-file" stroke="#d97706" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#fffbeb" />
-  <path d="M 764.4 360.0 V 367.5 H 771.8" class="semantic-icon semantic-icon-file" stroke="#d97706" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+
+
+  <g class="semantic-icon-file-page icon-file-page-motion" opacity="0.96">
+
+
+    <g transform="translate(759.6 377.0)">
+      <g>
+
+        <g transform="translate(-759.6 -377.0)">
+          <path class="semantic-icon icon-filled semantic-icon-file icon-file-sheet"
+                d="M 747.4 360.0 H 764.4 L 771.8 367.5 V 394.0 H 747.4 Z"
+                fill="#f9e6c6" stroke="#d97706" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+          <g class="icon-file-fold-motion">
+
+            <path d="M 764.4 360.0 L 771.8 367.5 H 764.4 Z"
+                  fill="#f2ce9c" stroke="#d97706" stroke-width="2.2" stroke-linejoin="round" />
+            <path d="M 764.4 360.0 V 367.5 H 771.8"
+                  fill="none" stroke="#d97706" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.88" />
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+
+
 </g>
 
   <text x="836.4" y="363.0" text-anchor="middle" fill="#172033">
@@ -240,14 +312,26 @@
   <rect x="930.0" y="335.0" width="180.0" height="84.0" rx="14.0"
         fill="#ecfdf5" stroke="#059669" stroke-width="2.0" />
 
-<g class="semantic-icon-wrap" opacity="0.94">
+<g id="icon-learn-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-memory" data-icon="memory" data-node-id="learn" opacity="0.94">
 
 
-  <ellipse cx="969.6" cy="366.5" rx="13.9" ry="5.8" class="semantic-icon semantic-icon-memory" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#ecfdf5" />
-  <path d="M 955.7 366.5 L 955.7 385.8
-           C 955.7 392.0, 983.5 392.0, 983.5 385.8
-           L 983.5 366.5" class="semantic-icon semantic-icon-memory" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-  <path d="M 955.7 377.0 C 955.7 382.8, 983.5 382.8, 983.5 377.0" class="semantic-icon semantic-icon-memory" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+
+
+  <rect id="icon-learn-back-card" class="icon-memory-back-card" x="959.7" y="363.7" width="20.1" height="18.7" rx="3.1"
+        fill="#c7eddf" stroke="#059669" stroke-width="2.5" opacity="0.58" />
+  <rect id="icon-learn-front-card" class="icon-memory-front-card" x="957.0" y="367.5" width="21.8" height="19.7" rx="3.4"
+        fill="#c7eddf" stroke="#059669" stroke-width="2.7" opacity="0.84" />
+  <path id="icon-learn-trace-1" class="icon-memory-trace" d="M 962.8 373.9 H 974.7"
+        fill="none" stroke="#059669" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
+  <path id="icon-learn-trace-2" class="icon-memory-trace" d="M 962.8 378.7 H 977.1"
+        fill="none" stroke="#059669" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
+  <path id="icon-learn-trace-3" class="icon-memory-trace" d="M 962.8 383.5 H 972.7"
+        fill="none" stroke="#059669" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
+  <circle id="icon-learn-dot" class="icon-memory-dot" cx="978.8" cy="369.9" r="2.2" fill="#059669" opacity="0.72" />
+  <circle id="icon-learn-commit-token" class="icon-runtime-part" cx="960.8" cy="361.4" r="2.6" fill="#059669" opacity="0" />
+  <circle id="icon-learn-flash" class="icon-runtime-part" cx="967.9" cy="377.3" r="12.2" fill="none" stroke="#059669" stroke-width="2" opacity="0" />
+
+
 </g>
 
   <text x="1046.4" y="363.0" text-anchor="middle" fill="#172033">

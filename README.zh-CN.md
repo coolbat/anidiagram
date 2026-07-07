@@ -6,45 +6,95 @@ AniDiagram 是一个 clean-room 的 DiagramScript 渲染器，用来生成可动
 
 本仓库不是 GitHub fork，也不复制 [REFERENCES.md](./REFERENCES.md) 中列出的参考项目的源码、文档、图片、生成资产或 git 历史。旧项目和外部项目只作为产品方向与功能验证参考。
 
-## 案例入口
+## Showcase
 
-| Pipeline | Agent Memory |
-| --- | --- |
-| ![Pipeline preset](./gallery/pipeline.svg) | ![Agent memory preset](./gallery/agent-memory.svg) |
+AniDiagram 的 README 展示分成两套画廊：
 
-| Swimlane | Network |
-| --- | --- |
-| ![Swimlane preset](./gallery/swimlane.svg) | ![Network preset](./gallery/network.svg) |
+- **Style Showcase**：12 个签名案例，每个视觉风格一个，用来回答“它能长成什么气质？”
+- **Layout Showcase**：14 个教学案例，每个布局 preset 一个，用来回答“这个布局适合什么场景？”
 
-- 预设模板画廊：[gallery/index.html](./gallery/index.html)
-- 风格案例画廊：[gallery/styles/index.html](./gallery/styles/index.html)
+完整画廊首页：[gallery/index.html](./gallery/index.html)
+机器可读 manifest：[gallery/showcase_manifest.json](./gallery/showcase_manifest.json)
 
-## 风格案例展示
+### Hero Demo
 
-每个内置风格都有一份独立 DiagramScript 案例、SVG 预览、HTML viewer 和 quality report。点击预览可以打开对应 HTML viewer。
+| Agent Runtime Flow |
+| --- |
+| [![Agent Runtime Flow](./gallery/hero/agent-runtime-flow.svg)](./gallery/hero/agent-runtime-flow.html)<br>高保真 runtime demo，展示 agent think-act、search discover、API request/response、memory commit 动效。 |
+
+### Style Showcase
+
+每个内置风格都有一份签名 DiagramScript 案例、SVG 预览、HTML runtime 和 quality report。点击预览可以打开对应高保真 HTML 输出。
 
 | `minimal-light` | `deep-tech` | `blueprint` |
 | --- | --- | --- |
-| [![minimal-light style showcase](./gallery/styles/minimal-light.svg)](./gallery/styles/minimal-light.html)<br>客服分流 | [![deep-tech style showcase](./gallery/styles/deep-tech.svg)](./gallery/styles/deep-tech.html)<br>Realtime AI Ops Mesh | [![blueprint style showcase](./gallery/styles/blueprint.svg)](./gallery/styles/blueprint.html)<br>云部署蓝图 |
+| [![minimal-light style showcase](./gallery/styles/minimal-light.svg)](./gallery/styles/minimal-light.html)<br>Customer Support Triage | [![deep-tech style showcase](./gallery/styles/deep-tech.svg)](./gallery/styles/deep-tech.html)<br>Realtime AI Ops Mesh | [![blueprint style showcase](./gallery/styles/blueprint.svg)](./gallery/styles/blueprint.html)<br>MCP Server Architecture |
 
 | `flat-icon` | `dark-terminal` | `notion-clean` |
 | --- | --- | --- |
-| [![flat-icon style showcase](./gallery/styles/flat-icon.svg)](./gallery/styles/flat-icon.html)<br>优先级看板 | [![dark-terminal style showcase](./gallery/styles/dark-terminal.svg)](./gallery/styles/dark-terminal.html)<br>故障响应 Runbook | [![notion-clean style showcase](./gallery/styles/notion-clean.svg)](./gallery/styles/notion-clean.html)<br>产品发现流程 |
+| [![flat-icon style showcase](./gallery/styles/flat-icon.svg)](./gallery/styles/flat-icon.html)<br>Feature Priority Board | [![dark-terminal style showcase](./gallery/styles/dark-terminal.svg)](./gallery/styles/dark-terminal.html)<br>Incident Response Runbook | [![notion-clean style showcase](./gallery/styles/notion-clean.svg)](./gallery/styles/notion-clean.html)<br>Product Discovery Workflow |
 
 | `glassmorphism` | `claude-warm` | `openai-minimal` |
 | --- | --- | --- |
-| [![glassmorphism style showcase](./gallery/styles/glassmorphism.svg)](./gallery/styles/glassmorphism.html)<br>收入漏斗 | [![claude-warm style showcase](./gallery/styles/claude-warm.svg)](./gallery/styles/claude-warm.html)<br>研究推理循环 | [![openai-minimal style showcase](./gallery/styles/openai-minimal.svg)](./gallery/styles/openai-minimal.html)<br>评测流水线 |
+| [![glassmorphism style showcase](./gallery/styles/glassmorphism.svg)](./gallery/styles/glassmorphism.html)<br>AI Growth Funnel | [![claude-warm style showcase](./gallery/styles/claude-warm.svg)](./gallery/styles/claude-warm.html)<br>Research Reasoning Loop | [![openai-minimal style showcase](./gallery/styles/openai-minimal.svg)](./gallery/styles/openai-minimal.html)<br>Evaluation Pipeline |
 
 | `dark-luxury` | `aurora-orb` | `sketch-board` |
 | --- | --- | --- |
-| [![dark-luxury style showcase](./gallery/styles/dark-luxury.svg)](./gallery/styles/dark-luxury.html)<br>高层信号网络 | [![aurora-orb style showcase](./gallery/styles/aurora-orb.svg)](./gallery/styles/aurora-orb.html)<br>创意 Agent Studio | [![sketch-board style showcase](./gallery/styles/sketch-board.svg)](./gallery/styles/sketch-board.html)<br>注意力教学流程 |
+| [![dark-luxury style showcase](./gallery/styles/dark-luxury.svg)](./gallery/styles/dark-luxury.html)<br>Executive Signal Network | [![aurora-orb style showcase](./gallery/styles/aurora-orb.svg)](./gallery/styles/aurora-orb.html)<br>Creative Agent Studio | [![sketch-board style showcase](./gallery/styles/sketch-board.svg)](./gallery/styles/sketch-board.html)<br>Attention Teaching Flow |
+
+完整风格画廊：[gallery/styles/index.html](./gallery/styles/index.html)
+
+### Layout Showcase
+
+每个布局 preset 都有一个具体 AI / 产品案例，用来说明什么时候该用这个布局。
+
+| `pipeline` | `loop` |
+| --- | --- |
+| [![pipeline layout showcase](./gallery/layouts/pipeline.svg)](./gallery/layouts/pipeline.html)<br>RAG Ingestion Pipeline | [![loop layout showcase](./gallery/layouts/loop.svg)](./gallery/layouts/loop.html)<br>Agent Reflection Loop |
+
+| `hub-spoke` | `layered` |
+| --- | --- |
+| [![hub-spoke layout showcase](./gallery/layouts/hub-spoke.svg)](./gallery/layouts/hub-spoke.html)<br>Agent Tool Hub | [![layered layout showcase](./gallery/layouts/layered.svg)](./gallery/layouts/layered.html)<br>LLM App Architecture Layers |
+
+| `swimlane` | `compare` |
+| --- | --- |
+| [![swimlane layout showcase](./gallery/layouts/swimlane.svg)](./gallery/layouts/swimlane.html)<br>Human-in-the-loop Approval Flow | [![compare layout showcase](./gallery/layouts/compare.svg)](./gallery/layouts/compare.html)<br>RAG vs Agentic RAG |
+
+| `matrix` | `timeline` |
+| --- | --- |
+| [![matrix layout showcase](./gallery/layouts/matrix.svg)](./gallery/layouts/matrix.html)<br>AI Feature Priority Matrix | [![timeline layout showcase](./gallery/layouts/timeline.svg)](./gallery/layouts/timeline.html)<br>AI Product Launch Roadmap |
+
+| `stack` | `funnel` |
+| --- | --- |
+| [![stack layout showcase](./gallery/layouts/stack.svg)](./gallery/layouts/stack.html)<br>AI Runtime Stack | [![funnel layout showcase](./gallery/layouts/funnel.svg)](./gallery/layouts/funnel.html)<br>Lead-to-Agent Automation Funnel |
+
+| `sequence` | `er` |
+| --- | --- |
+| [![sequence layout showcase](./gallery/layouts/sequence.svg)](./gallery/layouts/sequence.html)<br>API Tool Calling Sequence | [![er layout showcase](./gallery/layouts/er.svg)](./gallery/layouts/er.html)<br>Agent Memory Data Model |
+
+| `network` | `agent-memory` |
+| --- | --- |
+| [![network layout showcase](./gallery/layouts/network.svg)](./gallery/layouts/network.html)<br>Distributed Agent Runtime Mesh | [![agent-memory layout showcase](./gallery/layouts/agent-memory.svg)](./gallery/layouts/agent-memory.html)<br>Personalized Agent Memory Flow |
+
+完整布局画廊：[gallery/layouts/index.html](./gallery/layouts/index.html)
+
+### Runtime Motion Showcase
+
+P0 高保真 runtime 当前重点展示四个语义图标表演：
+
+| Performance | 语义节奏 |
+| --- | --- |
+| `agent-think-act-v2` | thought dots 聚合，core 决策，decision token 输出 |
+| `search-discover-v2` | 扫描，发现结果，锁定目标 |
+| `api-request-response-v2` | request 发出，response 返回，status 完成 |
+| `database-write-v2` | write token 落入，存储结构受力，commit flash 完成 |
 
 ## 能做什么
 
 - 校验 DiagramScript `0.1`、`0.2`、`0.3`。
 - 将自然语言 brief 编译成 DiagramPlan v0.1，再编译成 freeform DiagramScript v0.3。
 - 把 JSON spec 或内置 preset 编译成 typed Scene IR。
-- 输出 animated SVG 和自包含 HTML viewer。
+- 输出 portable animated SVG 和高保真 HTML runtime。
 - 支持分层入场、路径绘制、流动粒子、节点发光、burst ring、动态分组边框等动效。
 - 支持 `off`、`subtle`、`normal`、`expressive`、`teaching` motion profile。
 - 支持结构化 motion effect object，用于连线流动、箭头粒子、动态虚线、边框扫描、icon pulse、标题 reveal。
@@ -53,7 +103,15 @@ AniDiagram 是一个 clean-room 的 DiagramScript 渲染器，用来生成可动
 - 生成 quality report，检查越界、重叠、文本溢出和显式路径碰撞。
 - 内置 14 个 clean-room 布局 preset 和 12 个视觉风格。
 
-SVG、HTML、Lottie 和 quality report 只依赖 Python 标准库。PNG/GIF/PDF/WebP/APNG 依赖可选 Pillow，MP4 还需要 `ffmpeg`。
+SVG、调试 viewer HTML、Lottie 和 quality report 只依赖 Python 标准库。主输出
+`html` 会写入高保真 runtime 页面，包含静态 SVG stage、命名 parts、Motion
+Manifest 和浏览器 runtime；GSAP backend 通过 CDN 加载 GSAP，不增加 Python
+依赖。PNG/GIF/PDF/WebP/APNG/MP4 默认走轻量 Python 导出器，适合快速预览；
+其中 PNG/GIF/PDF/WebP/APNG 依赖可选 Pillow，MP4 还需要 `ffmpeg`。如果要
+最高质量导出，可以使用 `--export-renderer browser`，让 PNG、GIF、PDF、
+WebP、MP4、APNG 和 Lottie 从真实 `html` runtime 页面通过 Playwright/
+Chromium 捕获，完整保留高保真图标动效。browser Lottie 是帧序列型，视觉
+更准，但文件会比默认结构化 Lottie 更大。
 
 ## 快速开始
 
@@ -91,11 +149,51 @@ PYTHONPATH=src python3 -m anidiagram.cli \
   --spec-out outputs/loop-engineering.diagram.json
 ```
 
+渲染高保真 HTML Runtime 示例：
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --spec examples/high-fidelity-runtime.diagram.json \
+  --style styles/deep-tech.json \
+  --outdir outputs \
+  --basename high-fidelity-runtime \
+  --formats svg,html,quality \
+  --html-runtime gsap
+```
+
+需要旧调试 viewer 时显式导出：
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --spec examples/agent-memory.diagram.json \
+  --outdir outputs \
+  --basename agent-memory \
+  --formats viewer
+```
+
+从浏览器 runtime 导出高保真栅格、视频、PDF 和 Lottie：
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --spec examples/high-fidelity-runtime.diagram.json \
+  --style styles/deep-tech.json \
+  --outdir outputs \
+  --basename high-fidelity-runtime-hq \
+  --formats png,gif,webp,apng,mp4,pdf,lottie,quality \
+  --html-runtime gsap \
+  --export-renderer browser \
+  --export-scale 2 \
+  --export-fps 24 \
+  --export-frames 48
+```
+
 安装可选栅格导出依赖：
 
 ```bash
 python3 -m pip install ".[raster]"
 ```
+
+浏览器捕获导出还需要 Node.js，以及 Node 侧可解析的 Playwright/Chromium。
 
 ## CLI 结果
 
@@ -214,7 +312,7 @@ DiagramScript 也支持 freeform 布局字段：
 | `motion.sequence` | `simultaneous`, `step-stagger`, `layered`, `staged`, `loop` |
 | `motion.ease` | `linear`, `calm`, `snappy`, `back-out`, `elastic`, `spring` |
 | `motion.reduced_motion` | `static`, `subtle`, `pause` |
-| `motion.node` | `none`, `fade`, `float`, `glow-breathe`, `pop`, `pulse`, `ripple`, `status-blink`, `icon-pulse`, `icon-breathe`, `icon-semantic`, `micro-icon` |
+| `motion.node` | `none`, `fade`, `float`, `glow-breathe`, `pop`, `pulse`, `ripple`, `status-blink`, `icon-pulse`, `icon-breathe`, `icon-semantic`, `icon-performance`, `micro-icon` |
 | `motion.edge` | `none`, `static`, `draw`, `pulse`, `comet-flow`, `trace`, `dynamic-dash`, `dash-flow`, `flow-dot`, `flow-arrow`, `signal-dot`, `signal-arrow`, `ghost-flow`, `glow-line`, `comet` |
 | `motion.group` | `none`, `static`, `soft-reveal`, `marching-ants`, `border-scan`, `corner-pulse` |
 | `motion.title` | `none`, `fade`, `breathe`, `handwrite-reveal`, `highlight-sweep` |
@@ -287,23 +385,46 @@ DiagramScript `0.3` 支持结构化 effect object：
 
 | icon | 默认动效 |
 | --- | --- |
-| `database`, `memory` | `database-write`：顶部椭圆轻微压缩/回弹，写入线扫过，小数据点进入，底部层线轻闪。 |
+| `database` | `database-write`：顶部椭圆轻微压缩/回弹，写入线扫过，小数据点进入，底部层线轻闪。 |
+| `memory` | 叠放记忆卡片 + trace lines，用于 context memory / agent memory。 |
 | `file` | `file-lines`：页面从左下进入，明显放大回弹，折角动一下，再快速画出内容线。 |
 | `folder` | `folder-open`：文件夹页签轻微打开，并露出一条内部文件线。 |
 | `api` | `api-ping`：请求点在括号间移动。 |
 | `cloud` | `cloud-upload`：云内上传箭头移动，并配合淡入淡出的传输点。 |
 | `search` | `search-sweep`：放大镜扫光，并出现一个小光点。 |
 | `shield` | `shield-check`：勾选线条画入，护盾轮廓出现低透明保护脉冲。 |
-| `agent` | `agent-orbit`：中心点发光，小状态点环绕。 |
+| `agent` | `agent-orbit`：类脑袋线路图标，带轻量局部状态脉冲。 |
 | `tool` | `tool-tap`：工具轻敲，并在接触点出现短促火花。 |
 | `output` | `output-check`：内容线先出现，最后勾选线条画入。 |
 | `token` | `token-pulse`：中心点脉冲，外层短线顺序点亮。 |
 
+当节点使用 `icon-performance` 时，standalone `svg` 会降级为轻量 SVG/SMIL
+图标动效；它不会尝试复刻依赖 JavaScript runtime 的高保真图标表演。
+如果需要高保真，以主输出 `html` 为准；HTML runtime 会屏蔽这套 SVG
+fallback，避免两套动效叠加：
+
+| icon | runtime performance |
+| --- | --- |
+| `agent` | `agent-think-act-v2`：thought dots 向核心聚合，核心脉冲形成决策，随后 decision token 向外输出。 |
+| `api` | `api-request-response-v2`：接口端点反应，请求 token 发出，响应 token 返回，状态码弹出。 |
+| `search` | `search-discover-v2`：镜片偏转，扫光经过，结果点出现，并锁定目标。 |
+| `database` | `database-write-v2`：写入 token 落入，顶部压缩，层级提交，成功闪光。 |
+| `memory` | `memory-commit-v2`：上下文 token 落入，记忆卡片回弹，trace lines 点亮，提交闪光收束。 |
+| `tool` | `tool-run-v2`：函数 chip 下压，connector dot 触发，spark 线条画出，最后闪光收束。 |
+| `token` | `token-intent-v2`：token 外壳弹入，核心脉冲，短 ticks 依次画出，并释放 halo。 |
+| `output` | `output-reveal-v2`：结果卡片落稳，内容线出现，check 画入，最后完成闪光。 |
+
+这个模式会在 HTML 中写入 `anidiagram-motion-manifest`，manifest 指向稳定
+SVG part ID，例如 `#icon-agent-thought-1`、`#icon-api-request-token`。
+`html` runtime 会关闭 SVG 图标 fallback，避免同一个图标同时跑 SMIL 和 GSAP；
+它通过 CDN 加载 GSAP，不把 GSAP 变成 Python 依赖。
+更多 runtime 所有权、当前 performance 覆盖和导出说明见
+[docs/html-runtime.md](./docs/html-runtime.md)。
+
 ## 重新生成 Gallery
 
 ```bash
-PYTHONPATH=src python3 scripts/batch_render.py --outdir gallery --quality
-PYTHONPATH=src python3 scripts/build_style_showcase.py --quality
+PYTHONPATH=src python3 scripts/build_showcase.py --quality
 ```
 
 ## 测试

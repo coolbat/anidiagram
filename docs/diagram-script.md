@@ -117,7 +117,7 @@ Motion channels:
 - `sequence`: `simultaneous`, `step-stagger`, `layered`, `staged`, or `loop`.
 - `node`: `none`, `fade`, `float`, `glow-breathe`, `pop`, `pulse`,
   `ripple`, `status-blink`, `icon-pulse`, `icon-breathe`, `icon-semantic`,
-  or `micro-icon`.
+  `icon-performance`, or `micro-icon`.
 - `edge`: `none`, `static`, `draw`, `pulse`, `comet-flow`, `trace`,
   `dynamic-dash`, `dash-flow`, `flow-dot`, `flow-arrow`, `signal-dot`,
   `signal-arrow`, `ghost-flow`, `glow-line`, or `comet`.
@@ -192,7 +192,8 @@ Default icon motions are:
 
 | Icon | Default motion |
 | --- | --- |
-| `database`, `memory` | `database-write` |
+| `database` | `database-write` |
+| `memory` | stacked memory cards |
 | `file` | `file-lines`: page entrance, scale overshoot, folded-corner motion, and fast content-line reveal |
 | `folder` | `folder-open` |
 | `api` | `api-ping` |
@@ -203,6 +204,34 @@ Default icon motions are:
 | `tool` | `tool-tap` |
 | `output` | `output-check` |
 | `token` | `token-pulse` |
+
+`icon-performance` is a runtime-ready node preset. Standalone SVG cannot play
+the high-fidelity JavaScript runtime performances, so `icon-performance`
+degrades to lightweight SVG/SMIL icon motion in standalone SVG. Use
+`--formats html --html-runtime gsap` for the Motion Manifest and browser
+runtime path. `html-runtime` is accepted as a legacy alias for `html`. When
+those performances need to survive raster, video, PDF, or Lottie export, use
+`--export-renderer browser`; PNG, GIF, PDF, WebP, MP4, APNG, and frame-based
+Lottie are then captured from the real `html` page instead of the lightweight
+Python preview renderer. The first runtime
+performances are:
+
+| Icon | Runtime performance |
+| --- | --- |
+| `agent` | `agent-think-act-v2` |
+| `api` | `api-request-response-v2` |
+| `search` | `search-discover-v2` |
+| `database` | `database-write-v2` |
+| `memory` | `memory-commit-v2` |
+| `tool` | `tool-run-v2` |
+| `token` | `token-intent-v2` |
+| `output` | `output-reveal-v2` |
+
+The runtime manifest maps each performance to stable SVG part IDs such as
+`#icon-agent-thought-1`, `#icon-api-request-token`, and
+`#icon-search-result-1`.
+See [html-runtime.md](./html-runtime.md) for the runtime ownership model and
+current limitations.
 
 The broader feature plan is documented in
 [motion-effects-feature-plan.md](./motion-effects-feature-plan.md).

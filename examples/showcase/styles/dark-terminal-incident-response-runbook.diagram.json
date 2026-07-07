@@ -1,0 +1,188 @@
+{
+  "version": "0.3",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "style": "dark-terminal",
+  "title": {
+    "text": "Incident Response Runbook",
+    "subtitle": "operators isolate, patch, and verify production"
+  },
+  "motion": {
+    "profile": "expressive",
+    "sequence": "step-stagger",
+    "ease": "spring",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 1.2,
+    "edge": {
+      "preset": "dynamic-dash",
+      "particle": "soft-dot",
+      "trail": false
+    },
+    "node": {
+      "preset": "status-blink",
+      "accent": "glow"
+    },
+    "group": {
+      "preset": "corner-pulse"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "subtle"
+  },
+  "groups": [
+    {
+      "id": "terminal",
+      "label": "War Room",
+      "bounds": [
+        70,
+        95,
+        1110,
+        460
+      ],
+      "role": "neutral"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "alert",
+      "label": "Alert",
+      "caption": "page on-call",
+      "position": [
+        110,
+        145
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "risk",
+      "icon": "shield"
+    },
+    {
+      "id": "shell",
+      "label": "Shell",
+      "caption": "inspect",
+      "position": [
+        110,
+        275
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "tool",
+      "icon": "api"
+    },
+    {
+      "id": "isolate",
+      "label": "Isolate",
+      "caption": "contain",
+      "position": [
+        110,
+        405
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "process",
+      "icon": "cloud"
+    },
+    {
+      "id": "patch",
+      "label": "Patch",
+      "caption": "fix",
+      "position": [
+        510,
+        275
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "agent",
+      "icon": "tool"
+    },
+    {
+      "id": "verify",
+      "label": "Verify",
+      "caption": "checks",
+      "position": [
+        810,
+        275
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "source",
+      "icon": "search"
+    },
+    {
+      "id": "notes",
+      "label": "Notes",
+      "caption": "postmortem",
+      "position": [
+        1010,
+        405
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "memory",
+      "icon": "file"
+    }
+  ],
+  "edges": [
+    {
+      "from": "alert",
+      "to": "shell",
+      "label": "open",
+      "role": "risk",
+      "route": "vh",
+      "effect": {
+        "preset": "dynamic-dash",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "shell",
+      "to": "isolate",
+      "label": "lock",
+      "role": "tool",
+      "route": "vh"
+    },
+    {
+      "from": "isolate",
+      "to": "patch",
+      "label": "handoff",
+      "role": "process",
+      "route": "orthogonal"
+    },
+    {
+      "from": "patch",
+      "to": "verify",
+      "label": "test",
+      "role": "agent",
+      "route": "straight",
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "trail": false
+      }
+    },
+    {
+      "from": "verify",
+      "to": "notes",
+      "label": "record",
+      "role": "memory",
+      "route": "vh"
+    }
+  ]
+}

@@ -87,27 +87,27 @@ def style_showcase_specs() -> Dict[str, Spec]:
         ),
         "blueprint": _flow_case(
             "blueprint",
-            "Cloud Deployment Blueprint",
-            "source code becomes a monitored service",
+            "MCP Server Architecture",
+            "client requests route through tools, resources, auth, and transport",
             [
-                _node("repo", "Repo", "source", (90, 250), "source", "folder"),
-                _node("ci", "CI", "build", (310, 250), "tool", "api"),
-                _node("artifact", "Artifact", "versioned", (530, 250), "memory", "file"),
-                _node("deploy", "Deploy", "release", (750, 250), "process", "cloud"),
-                _node("service", "Service", "serve", (970, 250), "output", "output"),
-                _node("monitor", "Monitor", "observe", (750, 455), "agent", "search"),
+                _node("client", "Client", "LLM host", (90, 300), "actor", "agent"),
+                _node("transport", "Transport", "stdio / http", (300, 300), "tool", "api"),
+                _node("server", "MCP Server", "capability router", (520, 300), "agent", "tool", (190, 88)),
+                _node("tools", "Tools", "actions", (775, 205), "process", "tool"),
+                _node("resources", "Resources", "read context", (775, 395), "memory", "folder"),
+                _node("policy", "Policy", "auth + limits", (1000, 300), "risk", "shield"),
             ],
             [
-                _edge("repo", "ci", "commit", "source", "straight"),
-                _edge("ci", "artifact", "package", "tool", "straight"),
-                _edge("artifact", "deploy", "promote", "memory", "straight"),
-                _edge("deploy", "service", "ship", "output", "straight", effect="flow-arrow"),
-                _edge("service", "monitor", "metrics", "agent", "vh", effect="dynamic-dash"),
-                _edge("monitor", "deploy", "rollback", "risk", "vh", effect="ghost-flow"),
+                _edge("client", "transport", "request", "actor", "straight"),
+                _edge("transport", "server", "message", "tool", "straight"),
+                _edge("server", "tools", "invoke", "process", "orthogonal", effect="flow-arrow"),
+                _edge("server", "resources", "read", "memory", "orthogonal", effect="dynamic-dash"),
+                _edge("tools", "policy", "guard", "risk", "orthogonal"),
+                _edge("resources", "policy", "scope", "risk", "orthogonal"),
             ],
             [
-                _group("build", "Build Plane", (60, 185, 690, 190), "process"),
-                _group("run", "Runtime Plane", (720, 185, 420, 380), "agent"),
+                _group("client-plane", "Client Plane", (60, 225, 450, 195), "source"),
+                _group("server-plane", "Server Plane", (490, 140, 655, 365), "agent"),
             ],
             _motion("expressive", "dynamic-dash", "pop", "border-scan", "highlight-sweep", intensity=1.1),
         ),
@@ -175,22 +175,22 @@ def style_showcase_specs() -> Dict[str, Spec]:
         ),
         "glassmorphism": _flow_case(
             "glassmorphism",
-            "Revenue Funnel",
-            "traffic is filtered into qualified expansion",
+            "AI Growth Funnel",
+            "signals become qualified users, activation, and expansion loops",
             [
                 _node("traffic", "Traffic", "visits", (505, 130), "source", "cloud", (230, 78)),
-                _node("qualify", "Qualify", "fit", (525, 245), "process", "search", (190, 78)),
-                _node("score", "Score", "intent", (545, 360), "agent", "agent", (150, 78)),
-                _node("demo", "Demo", "show", (565, 475), "tool", "tool", (130, 78)),
-                _node("close", "Close", "deal", (575, 590), "output", "output", (110, 70)),
-                _node("crm", "CRM", "history", (870, 360), "memory", "database"),
+                _node("qualify", "Qualify", "fit + intent", (525, 245), "process", "search", (190, 78)),
+                _node("activate", "Activate", "first value", (545, 360), "agent", "agent", (150, 78)),
+                _node("expand", "Expand", "next best action", (565, 475), "tool", "tool", (145, 78)),
+                _node("retain", "Retain", "loop", (575, 590), "output", "output", (120, 70)),
+                _node("crm", "Growth DB", "history", (870, 360), "memory", "database"),
             ],
             [
                 _edge("traffic", "qualify", "filter", "source", "vh"),
-                _edge("qualify", "score", "rank", "process", "vh"),
-                _edge("score", "demo", "book", "agent", "vh", effect="ghost-flow"),
-                _edge("demo", "close", "commit", "output", "vh", effect="flow-dot"),
-                _edge("crm", "score", "context", "memory", "straight"),
+                _edge("qualify", "activate", "rank", "process", "vh"),
+                _edge("activate", "expand", "suggest", "agent", "vh", effect="ghost-flow"),
+                _edge("expand", "retain", "commit", "output", "vh", effect="flow-dot"),
+                _edge("crm", "activate", "context", "memory", "straight"),
             ],
             [_group("funnel", "Funnel", (450, 80, 345, 600), "process")],
             _motion("expressive", "ghost-flow", "pulse", "border-scan", "highlight-sweep", intensity=1.0),
@@ -365,7 +365,7 @@ def write_index(outdir: Path, cards: Iterable[Tuple[str, str, str, str, str]]) -
 <body>
   <main>
     <h1>AniDiagram Style Showcase</h1>
-    <p class="intro">One generated clean-room case for every bundled style. Click a card to open the animated HTML viewer.</p>
+    <p class="intro">One generated clean-room case for every bundled style. Click a card to open the high-fidelity HTML output.</p>
     <section class="grid">
 {body}
     </section>

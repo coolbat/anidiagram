@@ -13,6 +13,7 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 from .effects import channel_effect, effect_active
 from .model import Edge, EffectConfig, Group, MotionPolicy, Node, Scene, SceneMotion
+from .motion_manifest import icon_part_id
 from .schema import compile_scene
 from .styles import role_style
 
@@ -56,6 +57,7 @@ CONTINUOUS_NODE_MOTION = {
     "icon-pulse",
     "icon-breathe",
     "icon-semantic",
+    "icon-performance",
     "micro-icon",
 }
 SCANNING_GROUP_MOTION = {"marching-ants", "border-scan", "corner-pulse"}
@@ -234,10 +236,12 @@ def icon_surface_fill(background: str, stroke: str) -> str:
     if bg is None:
         return "#ffffff"
     if color_luminance(bg) < 0.42:
-        return rgb_to_hex(mix_rgb(bg, (255, 255, 255), 0.74))
+        if accent is not None:
+            return rgb_to_hex(mix_rgb(bg, accent, 0.22))
+        return rgb_to_hex(mix_rgb(bg, (255, 255, 255), 0.20))
     if accent is not None:
-        return rgb_to_hex(mix_rgb(bg, accent, 0.30))
-    return rgb_to_hex(mix_rgb(bg, (15, 23, 42), 0.14))
+        return rgb_to_hex(mix_rgb(bg, accent, 0.16))
+    return rgb_to_hex(mix_rgb(bg, (15, 23, 42), 0.10))
 
 
 def icon_surface_accent(surface: str, stroke: str) -> str:
@@ -245,7 +249,7 @@ def icon_surface_accent(surface: str, stroke: str) -> str:
     accent = parse_hex_color(stroke)
     if base is None or accent is None:
         return stroke
-    return rgb_to_hex(mix_rgb(base, accent, 0.32))
+    return rgb_to_hex(mix_rgb(base, accent, 0.22))
 
 
 def aurora_nodes_enabled(style: Dict[str, Any]) -> bool:
@@ -407,7 +411,6 @@ ICON_MOTION_IDS = {
     "status-ping",
 }
 
-
 def default_icon_motion(icon: str) -> str:
     if icon in {"database", "memory"}:
         return "database-write"
@@ -434,8 +437,11 @@ def render_icon_semantic_motion(
     motion: SceneMotion,
     effect: EffectConfig,
     index: int,
+    suppress: bool = False,
 ) -> str:
-    if not effect_active(motion, effect) or effect.preset != "icon-semantic":
+    if suppress:
+        return ""
+    if not effect_active(motion, effect) or effect.preset not in {"icon-semantic", "icon-performance"}:
         return ""
     requested = effect.icon_motion or effect.icon or default_icon_motion(icon)
     motion_id = requested if requested in ICON_MOTION_IDS else default_icon_motion(icon)
@@ -579,13 +585,55 @@ def render_icon_semantic_motion(
     if motion_id == "agent-orbit":
         return f"""
   <g class="{motion_class}" {data}>
-    <circle class="icon-agent-core" cx="{cx:.1f}" cy="{cy:.1f}" r="{half * 0.18:.1f}" fill="{esc(stroke)}" opacity="0.34">
-      <animate attributeName="r" values="{half * 0.14:.1f};{half * 0.28:.1f};{half * 0.14:.1f}" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
-      <animate attributeName="opacity" values="0.24;0.82;0.24" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+    <path class="icon-agent-line-draw" d="M {cx:.1f} {cy - half * 0.86:.1f}
+             L {cx - half * 0.38:.1f} {cy - half * 1.05:.1f}
+             L {cx - half * 0.78:.1f} {cy - half * 0.78:.1f}
+             V {cy - half * 0.48:.1f}
+             H {cx - half * 1.02:.1f}
+             V {cy + half * 0.08:.1f}
+             H {cx - half * 0.72:.1f}
+             V {cy + half * 0.50:.1f}
+             L {cx:.1f} {cy + half * 0.90:.1f}"
+          fill="none" stroke="{esc(stroke)}" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"
+          pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0">
+      <animate attributeName="stroke-dashoffset" values="1;0;0;1" keyTimes="0;0.32;0.70;1" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.96;0.78;0" keyTimes="0;0.12;0.72;1" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+    </path>
+    <path class="icon-agent-line-draw" d="M {cx:.1f} {cy - half * 0.86:.1f}
+             L {cx + half * 0.28:.1f} {cy - half * 1.02:.1f}
+             L {cx + half * 0.74:.1f} {cy - half * 0.74:.1f}
+             V {cy - half * 0.42:.1f}
+             H {cx + half * 1.02:.1f}
+             V {cy - half * 0.02:.1f}
+             H {cx + half * 0.78:.1f}
+             V {cy + half * 0.36:.1f}
+             H {cx + half * 0.52:.1f}
+             V {cy + half * 0.64:.1f}
+             L {cx:.1f} {cy + half * 0.90:.1f}"
+          fill="none" stroke="{esc(stroke)}" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"
+          pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0">
+      <animate attributeName="stroke-dashoffset" values="1;0;0;1" keyTimes="0;0.32;0.70;1" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.96;0.78;0" keyTimes="0;0.12;0.72;1" dur="{seconds(duration)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+    </path>
+    <path class="icon-agent-line-draw" d="M {cx:.1f} {cy - half * 0.28:.1f} H {cx - half * 0.42:.1f} V {cy - half * 0.64:.1f}
+             M {cx:.1f} {cy - half * 0.02:.1f} H {cx + half * 0.44:.1f} V {cy - half * 0.55:.1f}
+             M {cx:.1f} {cy + half * 0.34:.1f} H {cx + half * 0.54:.1f}"
+          fill="none" stroke="{esc(stroke)}" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"
+          pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0">
+      <animate attributeName="stroke-dashoffset" values="1;0;0;1" keyTimes="0;0.26;0.66;1" dur="{seconds(duration)}" begin="{seconds(begin + 0.24)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.90;0.72;0" keyTimes="0;0.18;0.70;1" dur="{seconds(duration)}" begin="{seconds(begin + 0.24)}" repeatCount="indefinite" />
+    </path>
+    <circle class="icon-agent-node-pop" cx="{cx - half * 0.42:.1f}" cy="{cy - half * 0.64:.1f}" r="{half * 0.11:.1f}" fill="{esc(stroke)}" opacity="0">
+      <animate attributeName="r" values="{half * 0.02:.1f};{half * 0.15:.1f};{half * 0.11:.1f}" keyTimes="0;0.28;1" dur="{seconds(duration)}" begin="{seconds(begin + 0.54)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.95;0.20" keyTimes="0;0.24;1" dur="{seconds(duration)}" begin="{seconds(begin + 0.54)}" repeatCount="indefinite" />
     </circle>
-    <circle cx="{cx:.1f}" cy="{cy - half * 0.78:.1f}" r="{max(3.0, half * 0.18):.1f}" fill="{esc(stroke)}" opacity="0.92">
-      <animateTransform attributeName="transform" type="rotate" values="0 {cx:.1f} {cy:.1f};360 {cx:.1f} {cy:.1f}" dur="{seconds(duration * 1.1)}" begin="{seconds(begin)}" repeatCount="indefinite" />
-      <animate attributeName="opacity" values="0.18;0.98;0.18" dur="{seconds(duration * 1.1)}" begin="{seconds(begin)}" repeatCount="indefinite" />
+    <circle class="icon-agent-node-pop" cx="{cx + half * 0.44:.1f}" cy="{cy - half * 0.55:.1f}" r="{half * 0.10:.1f}" fill="{esc(stroke)}" opacity="0">
+      <animate attributeName="r" values="{half * 0.02:.1f};{half * 0.14:.1f};{half * 0.10:.1f}" keyTimes="0;0.28;1" dur="{seconds(duration)}" begin="{seconds(begin + 0.62)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.88;0.18" keyTimes="0;0.24;1" dur="{seconds(duration)}" begin="{seconds(begin + 0.62)}" repeatCount="indefinite" />
+    </circle>
+    <circle class="icon-agent-node-pop" cx="{cx:.1f}" cy="{cy - half * 0.02:.1f}" r="{half * 0.11:.1f}" fill="{esc(stroke)}" opacity="0">
+      <animate attributeName="r" values="{half * 0.02:.1f};{half * 0.15:.1f};{half * 0.11:.1f}" keyTimes="0;0.28;1" dur="{seconds(duration)}" begin="{seconds(begin + 0.70)}" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.92;0.20" keyTimes="0;0.24;1" dur="{seconds(duration)}" begin="{seconds(begin + 0.70)}" repeatCount="indefinite" />
     </circle>
   </g>"""
 
@@ -665,13 +713,23 @@ def render_icon_semantic_motion(
   </g>"""
 
 
-def render_semantic_icon(icon: Optional[str], box: NodeBox, stroke: str, fill: str, text: str, motion: SceneMotion, effect: EffectConfig, index: int) -> str:
+def render_semantic_icon(
+    icon: Optional[str],
+    box: NodeBox,
+    stroke: str,
+    fill: str,
+    text: str,
+    motion: SceneMotion,
+    effect: EffectConfig,
+    index: int,
+    suppress_icon_motion: bool = False,
+) -> str:
     if not icon:
         return ""
     cx = box.x + min(42, max(30, box.w * 0.22))
     cy = box.y + box.h / 2
     size = min(34, max(24, box.h * 0.42))
-    if effect_active(motion, effect) and effect.preset == "icon-semantic":
+    if effect_active(motion, effect) and effect.preset in {"icon-semantic", "icon-performance"}:
         size = min(42, max(30, box.h * 0.54))
     half = size / 2
     delay = motion_delay(index, motion, "node") + 0.4
@@ -680,7 +738,17 @@ def render_semantic_icon(icon: Optional[str], box: NodeBox, stroke: str, fill: s
     wrap_class = "semantic-icon-wrap"
     icon_open = ""
     icon_close = ""
-    semantic_motion = render_icon_semantic_motion(icon, cx, cy, half, stroke, motion, effect, index)
+    semantic_motion = render_icon_semantic_motion(
+        icon,
+        cx,
+        cy,
+        half,
+        stroke,
+        motion,
+        effect,
+        index,
+        suppress=suppress_icon_motion,
+    )
     breathing = effect_active(motion, effect) and effect.preset in BREATHING_NODE_MOTION
     if breathing:
         wrap_class += " semantic-icon-breathe-wrap"
@@ -699,17 +767,43 @@ def render_semantic_icon(icon: Optional[str], box: NodeBox, stroke: str, fill: s
     common = f'class="{icon_class}" fill="none" stroke="{esc(stroke)}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"'
     filled_common = f'class="semantic-icon icon-filled semantic-icon-{esc(icon)}" stroke="{esc(stroke)}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"'
     symbol_fill = icon_surface_fill(fill, stroke)
-    if icon in {"database", "memory"}:
+    root_id = esc(icon_part_id(box.node_id, "root"))
+    part = lambda name: esc(icon_part_id(box.node_id, name))
+    if icon == "database":
         body = f"""
-  <ellipse cx="{cx:.1f}" cy="{cy - half * 0.62:.1f}" rx="{half * 0.82:.1f}" ry="{half * 0.34:.1f}" {filled_common} fill="{esc(symbol_fill)}" />
-  <path d="M {cx - half * 0.82:.1f} {cy - half * 0.62:.1f} L {cx - half * 0.82:.1f} {cy + half * 0.52:.1f}
+  <ellipse id="{part("lid")}" cx="{cx:.1f}" cy="{cy - half * 0.62:.1f}" rx="{half * 0.82:.1f}" ry="{half * 0.34:.1f}" {filled_common} fill="{esc(symbol_fill)}" />
+  <path id="{part("body")}" d="M {cx - half * 0.82:.1f} {cy - half * 0.62:.1f} L {cx - half * 0.82:.1f} {cy + half * 0.52:.1f}
            C {cx - half * 0.82:.1f} {cy + half * 0.88:.1f}, {cx + half * 0.82:.1f} {cy + half * 0.88:.1f}, {cx + half * 0.82:.1f} {cy + half * 0.52:.1f}
            L {cx + half * 0.82:.1f} {cy - half * 0.62:.1f}" {common} />
-  <path d="M {cx - half * 0.82:.1f} {cy:.1f} C {cx - half * 0.82:.1f} {cy + half * 0.34:.1f}, {cx + half * 0.82:.1f} {cy + half * 0.34:.1f}, {cx + half * 0.82:.1f} {cy:.1f}" {common} />"""
+  <path id="{part("layer1")}" d="M {cx - half * 0.82:.1f} {cy:.1f} C {cx - half * 0.82:.1f} {cy + half * 0.34:.1f}, {cx + half * 0.82:.1f} {cy + half * 0.34:.1f}, {cx + half * 0.82:.1f} {cy:.1f}" {common} opacity="0.72" />
+  <path id="{part("layer2")}" d="M {cx - half * 0.72:.1f} {cy + half * 0.42:.1f} C {cx - half * 0.38:.1f} {cy + half * 0.66:.1f}, {cx + half * 0.38:.1f} {cy + half * 0.66:.1f}, {cx + half * 0.72:.1f} {cy + half * 0.42:.1f}" {common} opacity="0.56" />
+  <circle id="{part("writeToken")}" class="icon-runtime-part" cx="{cx - half * 0.45:.1f}" cy="{cy - half * 0.94:.1f}" r="{max(2.8, half * 0.16):.1f}" fill="{esc(stroke)}" opacity="0" />
+  <circle id="{part("flash")}" class="icon-runtime-part" cx="{cx:.1f}" cy="{cy + half * 0.10:.1f}" r="{half * 0.72:.1f}" fill="none" stroke="{esc(stroke)}" stroke-width="2" opacity="0" />"""
+    elif icon == "memory":
+        card_fill = icon_surface_fill(fill, stroke)
+        trace_y = (cy - half * 0.18, cy + half * 0.10, cy + half * 0.38)
+        body = f"""
+  <rect id="{part("backCard")}" class="icon-memory-back-card" x="{cx - half * 0.58:.1f}" y="{cy - half * 0.78:.1f}" width="{half * 1.18:.1f}" height="{half * 1.10:.1f}" rx="{half * 0.18:.1f}"
+        fill="{esc(card_fill)}" stroke="{esc(stroke)}" stroke-width="2.5" opacity="0.58" />
+  <rect id="{part("frontCard")}" class="icon-memory-front-card" x="{cx - half * 0.74:.1f}" y="{cy - half * 0.56:.1f}" width="{half * 1.28:.1f}" height="{half * 1.16:.1f}" rx="{half * 0.20:.1f}"
+        fill="{esc(symbol_fill)}" stroke="{esc(stroke)}" stroke-width="2.7" opacity="0.84" />
+  <path id="{part("trace1")}" class="icon-memory-trace" d="M {cx - half * 0.40:.1f} {trace_y[0]:.1f} H {cx + half * 0.30:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
+  <path id="{part("trace2")}" class="icon-memory-trace" d="M {cx - half * 0.40:.1f} {trace_y[1]:.1f} H {cx + half * 0.44:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
+  <path id="{part("trace3")}" class="icon-memory-trace" d="M {cx - half * 0.40:.1f} {trace_y[2]:.1f} H {cx + half * 0.18:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
+  <circle id="{part("dot")}" class="icon-memory-dot" cx="{cx + half * 0.54:.1f}" cy="{cy - half * 0.42:.1f}" r="{half * 0.13:.1f}" fill="{esc(stroke)}" opacity="0.72" />
+  <circle id="{part("commitToken")}" class="icon-runtime-part" cx="{cx - half * 0.52:.1f}" cy="{cy - half * 0.92:.1f}" r="{max(2.6, half * 0.15):.1f}" fill="{esc(stroke)}" opacity="0" />
+  <circle id="{part("flash")}" class="icon-runtime-part" cx="{cx - half * 0.10:.1f}" cy="{cy + half * 0.02:.1f}" r="{half * 0.72:.1f}" fill="none" stroke="{esc(stroke)}" stroke-width="2" opacity="0" />"""
     elif icon == "file":
         page_fill = icon_surface_fill(fill, stroke)
         fold_fill = icon_surface_accent(page_fill, stroke)
-        file_active = effect_active(motion, effect) and effect.preset == "icon-semantic"
+        file_active = (
+            not suppress_icon_motion
+            and effect_active(motion, effect)
+            and effect.preset in {"icon-semantic", "icon-performance"}
+        )
         file_duration = scaled_duration(1.85 + (index % 3) * 0.10, motion)
         file_begin = motion_delay(index, motion, "node") + 0.38
         file_translate = ""
@@ -755,10 +849,21 @@ def render_semantic_icon(icon: Optional[str], box: NodeBox, stroke: str, fill: s
   <path class="semantic-icon icon-filled semantic-icon-folder icon-folder-body" d="M {cx - half:.1f} {cy - half * 0.48:.1f} H {cx - half * 0.22:.1f} L {cx:.1f} {cy - half * 0.78:.1f} H {cx + half:.1f} V {cy + half * 0.82:.1f} H {cx - half:.1f} Z"
         stroke="{esc(stroke)}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="{esc(symbol_fill)}" />"""
     elif icon == "api":
+        endpoint_fill = icon_surface_fill(fill, stroke)
         body = f"""
-  <path d="M {cx - half:.1f} {cy - half * 0.68:.1f} L {cx - half * 0.34:.1f} {cy:.1f} L {cx - half:.1f} {cy + half * 0.68:.1f}" {common} />
-  <path d="M {cx + half:.1f} {cy - half * 0.68:.1f} L {cx + half * 0.34:.1f} {cy:.1f} L {cx + half:.1f} {cy + half * 0.68:.1f}" {common} />
-  <path d="M {cx - half * 0.08:.1f} {cy + half * 0.82:.1f} L {cx + half * 0.20:.1f} {cy - half * 0.82:.1f}" {common} />"""
+  <rect id="{part("leftEndpoint")}" x="{cx - half * 0.96:.1f}" y="{cy - half * 0.46:.1f}" width="{half * 0.30:.1f}" height="{half * 0.92:.1f}" rx="{half * 0.15:.1f}"
+        fill="{esc(endpoint_fill)}" stroke="{esc(stroke)}" stroke-width="2.7" />
+  <rect id="{part("rightEndpoint")}" x="{cx + half * 0.66:.1f}" y="{cy - half * 0.46:.1f}" width="{half * 0.30:.1f}" height="{half * 0.92:.1f}" rx="{half * 0.15:.1f}"
+        fill="{esc(endpoint_fill)}" stroke="{esc(stroke)}" stroke-width="2.7" />
+  <path d="M {cx - half * 0.50:.1f} {cy:.1f} H {cx + half * 0.50:.1f}" {common} opacity="0.62" />
+  <path d="M {cx - half * 0.16:.1f} {cy - half * 0.20:.1f} L {cx + half * 0.06:.1f} {cy:.1f} L {cx - half * 0.16:.1f} {cy + half * 0.20:.1f}
+           M {cx + half * 0.22:.1f} {cy + half * 0.20:.1f} L {cx:.1f} {cy:.1f} L {cx + half * 0.22:.1f} {cy - half * 0.20:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.86" />
+  <circle id="{part("requestToken")}" class="icon-runtime-part" cx="{cx - half * 0.44:.1f}" cy="{cy:.1f}" r="{max(2.9, half * 0.16):.1f}" fill="{esc(stroke)}" opacity="0" />
+  <circle id="{part("responseToken")}" class="icon-runtime-part" cx="{cx + half * 0.44:.1f}" cy="{cy:.1f}" r="{max(2.4, half * 0.13):.1f}" fill="{esc(stroke)}" opacity="0" />
+  <circle id="{part("targetRing")}" class="icon-runtime-part" cx="{cx + half * 0.46:.1f}" cy="{cy:.1f}" r="{half * 0.22:.1f}" fill="none" stroke="{esc(stroke)}" stroke-width="2" opacity="0" />
+  <text id="{part("status")}" class="icon-runtime-part" x="{cx:.1f}" y="{cy + half * 0.20:.1f}" text-anchor="middle"
+        fill="{esc(stroke)}" stroke="none" font-size="{max(8, half * 0.42):.1f}" font-weight="700" opacity="0">200</text>"""
     elif icon == "cloud":
         body = f"""
   <path d="M {cx - half:.1f} {cy + half * 0.22:.1f}
@@ -768,8 +873,13 @@ def render_semantic_icon(icon: Optional[str], box: NodeBox, stroke: str, fill: s
            H {cx - half * 0.72:.1f}" {filled_common} fill="{esc(symbol_fill)}" />"""
     elif icon == "search":
         body = f"""
-  <circle cx="{cx - half * 0.16:.1f}" cy="{cy - half * 0.16:.1f}" r="{half * 0.54:.1f}" {filled_common} fill="{esc(symbol_fill)}" />
-  <path d="M {cx + half * 0.30:.1f} {cy + half * 0.30:.1f} L {cx + half * 0.92:.1f} {cy + half * 0.92:.1f}" {common} />"""
+  <circle id="{part("lens")}" cx="{cx - half * 0.16:.1f}" cy="{cy - half * 0.16:.1f}" r="{half * 0.54:.1f}" {filled_common} fill="{esc(symbol_fill)}" />
+  <path id="{part("handle")}" d="M {cx + half * 0.30:.1f} {cy + half * 0.30:.1f} L {cx + half * 0.92:.1f} {cy + half * 0.92:.1f}" {common} />
+  <path id="{part("scan")}" class="icon-runtime-part" d="M {cx - half * 0.62:.1f} {cy - half * 0.44:.1f} L {cx + half * 0.20:.1f} {cy + half * 0.28:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2.8" stroke-linecap="round" opacity="0" />
+  <circle id="{part("result1")}" class="icon-runtime-part" cx="{cx - half * 0.33:.1f}" cy="{cy - half * 0.22:.1f}" r="{max(2.2, half * 0.13):.1f}" fill="{esc(stroke)}" opacity="0" />
+  <circle id="{part("result2")}" class="icon-runtime-part" cx="{cx + half * 0.02:.1f}" cy="{cy - half * 0.02:.1f}" r="{max(1.9, half * 0.11):.1f}" fill="{esc(stroke)}" opacity="0" />
+  <circle id="{part("target")}" class="icon-runtime-part" cx="{cx + half * 0.18:.1f}" cy="{cy - half * 0.20:.1f}" r="{half * 0.22:.1f}" fill="none" stroke="{esc(stroke)}" stroke-width="2" opacity="0" />"""
     elif icon == "shield":
         body = f"""
   <path d="M {cx:.1f} {cy - half:.1f} L {cx + half * 0.86:.1f} {cy - half * 0.58:.1f} V {cy + half * 0.10:.1f}
@@ -778,16 +888,85 @@ def render_semantic_icon(icon: Optional[str], box: NodeBox, stroke: str, fill: s
            V {cy - half * 0.58:.1f} Z" {filled_common} fill="{esc(symbol_fill)}" />
   <path d="M {cx - half * 0.34:.1f} {cy:.1f} L {cx - half * 0.06:.1f} {cy + half * 0.30:.1f} L {cx + half * 0.42:.1f} {cy - half * 0.38:.1f}" {common} />"""
     elif icon == "agent":
+        agent_fill = icon_surface_fill(fill, stroke)
+        token_r = max(2.4, half * 0.13)
         body = f"""
-  <polygon points="{cx:.1f},{cy - half:.1f} {cx + half * 0.86:.1f},{cy - half * 0.50:.1f} {cx + half * 0.86:.1f},{cy + half * 0.50:.1f} {cx:.1f},{cy + half:.1f} {cx - half * 0.86:.1f},{cy + half * 0.50:.1f} {cx - half * 0.86:.1f},{cy - half * 0.50:.1f}" {filled_common} fill="{esc(symbol_fill)}" />
-  <circle cx="{cx:.1f}" cy="{cy:.1f}" r="{half * 0.22:.1f}" fill="{esc(stroke)}" />"""
+  <path id="{part("shell")}" class="semantic-icon semantic-icon-agent icon-agent-shell"
+        d="M {cx:.1f} {cy - half * 0.98:.1f}
+           L {cx + half * 0.74:.1f} {cy - half * 0.54:.1f}
+           V {cy + half * 0.46:.1f}
+           L {cx:.1f} {cy + half * 0.92:.1f}
+           L {cx - half * 0.74:.1f} {cy + half * 0.46:.1f}
+           V {cy - half * 0.54:.1f}
+           Z"
+        fill="{esc(agent_fill)}" stroke="{esc(stroke)}" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.92" />
+  <path class="semantic-icon semantic-icon-agent icon-agent-circuit"
+        d="M {cx:.1f} {cy - half * 0.58:.1f} V {cy + half * 0.36:.1f}
+           M {cx - half * 0.38:.1f} {cy - half * 0.22:.1f} H {cx - half * 0.10:.1f}
+           M {cx + half * 0.10:.1f} {cy - half * 0.02:.1f} H {cx + half * 0.42:.1f}
+           M {cx - half * 0.26:.1f} {cy + half * 0.32:.1f} H {cx + half * 0.22:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" opacity="0.50" />
+  <circle id="{part("core")}" class="icon-runtime-part icon-agent-core" cx="{cx:.1f}" cy="{cy - half * 0.02:.1f}" r="{max(3.0, half * 0.17):.1f}"
+        fill="{esc(stroke)}" stroke="{esc(agent_fill)}" stroke-width="1.5" opacity="0.78" />
+  <circle id="{part("thought1")}" class="icon-runtime-part icon-agent-thought" cx="{cx - half * 0.36:.1f}" cy="{cy - half * 0.44:.1f}" r="{max(2.0, half * 0.105):.1f}"
+        fill="{esc(stroke)}" opacity="0.46" />
+  <circle id="{part("thought2")}" class="icon-runtime-part icon-agent-thought" cx="{cx + half * 0.36:.1f}" cy="{cy - half * 0.32:.1f}" r="{max(1.9, half * 0.095):.1f}"
+        fill="{esc(stroke)}" opacity="0.38" />
+  <circle id="{part("thought3")}" class="icon-runtime-part icon-agent-thought" cx="{cx - half * 0.18:.1f}" cy="{cy + half * 0.36:.1f}" r="{max(1.8, half * 0.09):.1f}"
+        fill="{esc(stroke)}" opacity="0.42" />
+  <path id="{part("decisionToken")}" class="icon-runtime-part icon-agent-decision-token"
+        d="M {cx + half * 0.48:.1f} {cy - half * 0.14 - token_r:.1f}
+           L {cx + half * 0.48 + token_r:.1f} {cy - half * 0.14:.1f}
+           L {cx + half * 0.48:.1f} {cy - half * 0.14 + token_r:.1f}
+           L {cx + half * 0.48 - token_r:.1f} {cy - half * 0.14:.1f}
+           Z"
+        fill="{esc(stroke)}" stroke="{esc(agent_fill)}" stroke-width="1.2" opacity="0" />"""
+    elif icon == "tool":
+        chip_fill = icon_surface_fill(fill, stroke)
+        body = f"""
+  <rect id="{part("chip")}" x="{cx - half * 0.88:.1f}" y="{cy - half * 0.56:.1f}" width="{half * 1.46:.1f}" height="{half * 1.12:.1f}" rx="{half * 0.26:.1f}"
+        fill="{esc(chip_fill)}" stroke="{esc(stroke)}" stroke-width="2.8" />
+  <text id="{part("glyph")}" x="{cx - half * 0.30:.1f}" y="{cy + half * 0.17:.1f}" text-anchor="middle"
+        fill="{esc(stroke)}" stroke="none" font-size="{max(10, half * 0.52):.1f}" font-weight="800">fx</text>
+  <circle id="{part("connector")}" cx="{cx + half * 0.42:.1f}" cy="{cy:.1f}" r="{half * 0.13:.1f}" fill="{esc(stroke)}" opacity="0.72" />
+  <path id="{part("spark1")}" class="icon-tool-spark" d="M {cx + half * 0.66:.1f} {cy - half * 0.44:.1f} L {cx + half * 0.82:.1f} {cy - half * 0.62:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2.2" stroke-linecap="round" opacity="0.84" />
+  <path id="{part("spark2")}" class="icon-tool-spark" d="M {cx + half * 0.70:.1f} {cy + half * 0.38:.1f} L {cx + half * 0.90:.1f} {cy + half * 0.52:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2.2" stroke-linecap="round" opacity="0.84" />
+  <circle id="{part("flash")}" class="icon-runtime-part" cx="{cx + half * 0.68:.1f}" cy="{cy:.1f}" r="{half * 0.40:.1f}" fill="none" stroke="{esc(stroke)}" stroke-width="2" opacity="0" />"""
+    elif icon == "token":
+        body = f"""
+  <polygon id="{part("shell")}" points="{cx:.1f},{cy - half * 0.78:.1f} {cx + half * 0.68:.1f},{cy - half * 0.38:.1f} {cx + half * 0.68:.1f},{cy + half * 0.38:.1f} {cx:.1f},{cy + half * 0.78:.1f} {cx - half * 0.68:.1f},{cy + half * 0.38:.1f} {cx - half * 0.68:.1f},{cy - half * 0.38:.1f}"
+        {filled_common} fill="{esc(symbol_fill)}" />
+  <circle id="{part("core")}" class="icon-token-core" cx="{cx:.1f}" cy="{cy:.1f}" r="{half * 0.18:.1f}" fill="{esc(stroke)}" opacity="0.70" />
+  <path id="{part("tickLeft")}" class="icon-token-tick" d="M {cx - half * 0.44:.1f} {cy:.1f} H {cx - half * 0.26:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2" stroke-linecap="round" opacity="0.70" />
+  <path id="{part("tickRight")}" class="icon-token-tick" d="M {cx + half * 0.26:.1f} {cy:.1f} H {cx + half * 0.44:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2" stroke-linecap="round" opacity="0.70" />
+  <path id="{part("tickTop")}" class="icon-token-tick" d="M {cx:.1f} {cy - half * 0.50:.1f} V {cy - half * 0.34:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2" stroke-linecap="round" opacity="0.58" />
+  <path id="{part("tickBottom")}" class="icon-token-tick" d="M {cx:.1f} {cy + half * 0.34:.1f} V {cy + half * 0.50:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2" stroke-linecap="round" opacity="0.58" />
+  <circle id="{part("halo")}" class="icon-runtime-part" cx="{cx:.1f}" cy="{cy:.1f}" r="{half * 0.70:.1f}" fill="none" stroke="{esc(stroke)}" stroke-width="2" opacity="0" />"""
+    elif icon == "output":
+        card_fill = icon_surface_fill(fill, stroke)
+        body = f"""
+  <rect id="{part("card")}" x="{cx - half * 0.78:.1f}" y="{cy - half * 0.72:.1f}" width="{half * 1.32:.1f}" height="{half * 1.36:.1f}" rx="{half * 0.18:.1f}"
+        fill="{esc(card_fill)}" stroke="{esc(stroke)}" stroke-width="2.8" />
+  <path id="{part("line1")}" class="icon-output-line" d="M {cx - half * 0.42:.1f} {cy - half * 0.28:.1f} H {cx + half * 0.22:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
+  <path id="{part("line2")}" class="icon-output-line" d="M {cx - half * 0.42:.1f} {cy:.1f} H {cx + half * 0.10:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
+  <path id="{part("check")}" class="icon-output-check" d="M {cx - half * 0.30:.1f} {cy + half * 0.34:.1f} L {cx - half * 0.08:.1f} {cy + half * 0.54:.1f} L {cx + half * 0.40:.1f} {cy + half * 0.04:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <circle id="{part("flash")}" class="icon-runtime-part" cx="{cx + half * 0.20:.1f}" cy="{cy + half * 0.22:.1f}" r="{half * 0.62:.1f}" fill="none" stroke="{esc(stroke)}" stroke-width="2" opacity="0" />"""
     else:
         body = f"""
   <rect x="{cx - half * 0.72:.1f}" y="{cy - half * 0.72:.1f}" width="{half * 1.44:.1f}" height="{half * 1.44:.1f}" rx="{half * 0.18:.1f}" {filled_common} fill="{esc(symbol_fill)}" />
   <path d="M {cx - half * 0.36:.1f} {cy - half * 0.16:.1f} H {cx + half * 0.36:.1f}" {common} />
   <path d="M {cx - half * 0.36:.1f} {cy + half * 0.22:.1f} H {cx + half * 0.36:.1f}" {common} />"""
     return f"""
-<g class="{wrap_class}" opacity="0.94">
+<g id="{root_id}" class="{wrap_class} semantic-icon-root semantic-icon-{esc(icon)}" data-icon="{esc(icon)}" data-node-id="{esc(box.node_id)}" opacity="0.94">
 {halo}
 {icon_open}
 {accent}
@@ -894,6 +1073,7 @@ def render_node(
     motion: SceneMotion,
     policy: MotionPolicy,
     node_motion_rank: Optional[int],
+    suppress_icon_motion: bool = False,
 ) -> str:
     box = node_box(node)
     node_effect = channel_effect(motion, style, "node", node.effect)
@@ -930,7 +1110,17 @@ def render_node(
     delay = motion_delay(index, motion, "node")
     float_duration = scaled_duration(5.4 + (index % 3) * 0.45, motion)
     burst = render_node_burst(box, node.role, stroke, index, motion, node_effect)
-    icon = render_semantic_icon(node.icon, box, stroke, fill, text, motion, node_effect, index)
+    icon = render_semantic_icon(
+        node.icon,
+        box,
+        stroke,
+        fill,
+        text,
+        motion,
+        node_effect,
+        index,
+        suppress_icon_motion=suppress_icon_motion,
+    )
     enter_markup = ""
     float_markup = ""
     glow_markup = ""
@@ -1208,8 +1398,19 @@ def render_edge(
 </g>"""
 
 
-def render_svg(spec: Any, style: Dict[str, Any]) -> str:
+def render_svg(
+    spec: Any,
+    style: Dict[str, Any],
+    *,
+    animation_mode: str = "smil",
+    suppress_icon_motion_node_ids: Optional[Iterable[str]] = None,
+) -> str:
     scene = spec if isinstance(spec, Scene) else compile_scene(spec)
+    if animation_mode not in {"smil", "runtime-stage"}:
+        raise ValueError('animation_mode must be "smil" or "runtime-stage"')
+    suppress_icon_motion_node_ids = set(suppress_icon_motion_node_ids or ())
+    if animation_mode == "runtime-stage":
+        suppress_icon_motion_node_ids.update(node.node_id for node in scene.nodes)
     width = scene.canvas.width
     height = scene.canvas.height
     canvas_style = style.get("canvas", {})
@@ -1250,7 +1451,15 @@ def render_svg(spec: Any, style: Dict[str, Any]) -> str:
         for index, edge in enumerate(scene.edges, start=1)
     )
     nodes_markup = "\n".join(
-        render_node(node, style, index, motion, policy, node_motion_ranks.get(index))
+        render_node(
+            node,
+            style,
+            index,
+            motion,
+            policy,
+            node_motion_ranks.get(index),
+            suppress_icon_motion=node.node_id in suppress_icon_motion_node_ids,
+        )
         for index, node in enumerate(scene.nodes, start=1)
     )
     defs_markup = render_style_defs(style, grid)
@@ -1273,14 +1482,16 @@ def render_svg(spec: Any, style: Dict[str, Any]) -> str:
     else:
         subtitle_anim = '<animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />'
     title_motion_markup = ""
-    if effect_active(motion, title_effect) and title_effect.preset in {"handwrite-reveal", "highlight-sweep"}:
+    if effect_active(motion, title_effect) and title_effect.preset == "handwrite-reveal":
         title_motion_markup = f"""
 <path class="title-handwrite" d="M 92 98 C 188 108, 310 100, 428 104" fill="none"
       stroke="{esc(title_style.get("accent", "#2563eb"))}" stroke-width="4" stroke-linecap="round"
       pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0.78">
   <animate attributeName="stroke-dashoffset" values="1;0" dur="{seconds(scaled_duration(1.35, motion))}" begin="0.18s" fill="freeze" />
   <animate attributeName="opacity" values="0;0.78;0.42" dur="{seconds(scaled_duration(2.4, motion))}" begin="0.18s" fill="freeze" />
-</path>
+</path>"""
+    elif effect_active(motion, title_effect) and title_effect.preset == "highlight-sweep":
+        title_motion_markup = f"""
 <rect class="title-sweep" x="72" y="46" width="0" height="56" rx="16" fill="{esc(title_style.get("accent", "#2563eb"))}" opacity="0.16">
   <animate attributeName="width" values="0;360;0" dur="{seconds(scaled_duration(3.2, motion))}" begin="0.34s" repeatCount="indefinite" />
   <animate attributeName="x" values="72;72;432" dur="{seconds(scaled_duration(3.2, motion))}" begin="0.34s" repeatCount="indefinite" />

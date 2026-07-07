@@ -1,0 +1,157 @@
+{
+  "version": "0.3",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "style": "blueprint",
+  "title": {
+    "text": "AI Product Launch Roadmap",
+    "subtitle": "alpha, beta, public launch, scale, and learning milestones"
+  },
+  "motion": {
+    "profile": "teaching",
+    "sequence": "step-stagger",
+    "ease": "spring",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 0.9,
+    "edge": {
+      "preset": "signal-arrow",
+      "particle": "soft-dot",
+      "trail": false
+    },
+    "node": {
+      "preset": "pop",
+      "accent": "glow"
+    },
+    "group": {
+      "preset": "soft-reveal"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "subtle"
+  },
+  "groups": [
+    {
+      "id": "roadmap",
+      "label": "Launch Window",
+      "bounds": [
+        55,
+        260,
+        1120,
+        190
+      ],
+      "role": "process"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "alpha",
+      "label": "Alpha",
+      "caption": "internal",
+      "position": [
+        90,
+        325
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "source",
+      "icon": "file"
+    },
+    {
+      "id": "beta",
+      "label": "Beta",
+      "caption": "trusted users",
+      "position": [
+        305,
+        325
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "process",
+      "icon": "agent"
+    },
+    {
+      "id": "public",
+      "label": "Public",
+      "caption": "launch",
+      "position": [
+        520,
+        325
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "output",
+      "icon": "cloud"
+    },
+    {
+      "id": "scale",
+      "label": "Scale",
+      "caption": "automate",
+      "position": [
+        735,
+        325
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "tool",
+      "icon": "api"
+    },
+    {
+      "id": "learn",
+      "label": "Learn",
+      "caption": "feedback",
+      "position": [
+        950,
+        325
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "memory",
+      "icon": "memory"
+    }
+  ],
+  "edges": [
+    {
+      "from": "alpha",
+      "to": "beta",
+      "label": "milestone",
+      "role": "process",
+      "route": "straight"
+    },
+    {
+      "from": "beta",
+      "to": "public",
+      "label": "milestone",
+      "role": "process",
+      "route": "straight"
+    },
+    {
+      "from": "public",
+      "to": "scale",
+      "label": "milestone",
+      "role": "process",
+      "route": "straight"
+    },
+    {
+      "from": "scale",
+      "to": "learn",
+      "label": "milestone",
+      "role": "process",
+      "route": "straight"
+    }
+  ],
+  "preset": "timeline"
+}

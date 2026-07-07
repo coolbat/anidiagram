@@ -1,0 +1,194 @@
+{
+  "version": "0.3",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "style": "notion-clean",
+  "title": {
+    "text": "API Tool Calling Sequence",
+    "subtitle": "user, agent, tool, api, memory, and output exchange ordered messages"
+  },
+  "motion": {
+    "profile": "teaching",
+    "sequence": "step-stagger",
+    "ease": "spring",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 1.0,
+    "edge": {
+      "preset": "signal-arrow",
+      "particle": "soft-dot",
+      "trail": false
+    },
+    "node": {
+      "preset": "icon-performance",
+      "accent": "glow"
+    },
+    "group": {
+      "preset": "soft-reveal"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "subtle"
+  },
+  "groups": [
+    {
+      "id": "sequence",
+      "label": "Call Sequence",
+      "bounds": [
+        45,
+        180,
+        1185,
+        190
+      ],
+      "role": "neutral"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "user",
+      "label": "User",
+      "caption": "asks",
+      "position": [
+        70,
+        245
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "actor",
+      "icon": "agent"
+    },
+    {
+      "id": "agent",
+      "label": "Agent",
+      "caption": "plans",
+      "position": [
+        265,
+        245
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "agent",
+      "icon": "agent"
+    },
+    {
+      "id": "tool",
+      "label": "Tool",
+      "caption": "runs",
+      "position": [
+        460,
+        245
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "tool",
+      "icon": "tool"
+    },
+    {
+      "id": "api",
+      "label": "API",
+      "caption": "responds",
+      "position": [
+        655,
+        245
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "process",
+      "icon": "api"
+    },
+    {
+      "id": "memory",
+      "label": "Memory",
+      "caption": "commit",
+      "position": [
+        850,
+        245
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "memory",
+      "icon": "database"
+    },
+    {
+      "id": "output",
+      "label": "Output",
+      "caption": "answer",
+      "position": [
+        1045,
+        245
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "output",
+      "icon": "output"
+    }
+  ],
+  "edges": [
+    {
+      "from": "user",
+      "to": "agent",
+      "label": "prompt",
+      "role": "actor",
+      "route": "straight"
+    },
+    {
+      "from": "agent",
+      "to": "tool",
+      "label": "call",
+      "role": "tool",
+      "route": "straight",
+      "effect": {
+        "preset": "signal-arrow",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "tool",
+      "to": "api",
+      "label": "request",
+      "role": "process",
+      "route": "straight",
+      "effect": {
+        "preset": "signal-arrow",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "api",
+      "to": "memory",
+      "label": "result",
+      "role": "memory",
+      "route": "straight",
+      "effect": {
+        "preset": "signal-dot",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "memory",
+      "to": "output",
+      "label": "ground",
+      "role": "output",
+      "route": "straight"
+    }
+  ],
+  "preset": "sequence"
+}

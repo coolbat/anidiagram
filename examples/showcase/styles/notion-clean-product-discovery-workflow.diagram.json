@@ -1,0 +1,167 @@
+{
+  "version": "0.3",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "style": "notion-clean",
+  "title": {
+    "text": "Product Discovery Workflow",
+    "subtitle": "research notes become a tested product decision"
+  },
+  "motion": {
+    "profile": "subtle",
+    "sequence": "step-stagger",
+    "ease": "calm",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 0.5,
+    "edge": {
+      "preset": "draw",
+      "particle": "soft-dot",
+      "trail": false
+    },
+    "node": {
+      "preset": "fade",
+      "accent": "glow"
+    },
+    "group": {
+      "preset": "soft-reveal"
+    },
+    "title": {
+      "preset": "fade"
+    },
+    "reduced_motion": "subtle"
+  },
+  "groups": [
+    {
+      "id": "research",
+      "label": "Research",
+      "bounds": [
+        70,
+        215,
+        450,
+        180
+      ],
+      "role": "source"
+    },
+    {
+      "id": "decision",
+      "label": "Decision",
+      "bounds": [
+        520,
+        215,
+        635,
+        180
+      ],
+      "role": "process"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "notes",
+      "label": "Notes",
+      "caption": "interviews",
+      "position": [
+        105,
+        285
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "source",
+      "icon": "file"
+    },
+    {
+      "id": "patterns",
+      "label": "Patterns",
+      "caption": "cluster",
+      "position": [
+        325,
+        285
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "memory",
+      "icon": "folder"
+    },
+    {
+      "id": "prototype",
+      "label": "Prototype",
+      "caption": "try",
+      "position": [
+        545,
+        285
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "tool",
+      "icon": "tool"
+    },
+    {
+      "id": "test",
+      "label": "Test",
+      "caption": "measure",
+      "position": [
+        765,
+        285
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "agent",
+      "icon": "search"
+    },
+    {
+      "id": "decision",
+      "label": "Decision",
+      "caption": "ship or stop",
+      "position": [
+        985,
+        285
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "output",
+      "icon": "output"
+    }
+  ],
+  "edges": [
+    {
+      "from": "notes",
+      "to": "patterns",
+      "label": "next",
+      "role": "process",
+      "route": "straight"
+    },
+    {
+      "from": "patterns",
+      "to": "prototype",
+      "label": "next",
+      "role": "process",
+      "route": "straight"
+    },
+    {
+      "from": "prototype",
+      "to": "test",
+      "label": "next",
+      "role": "process",
+      "route": "straight"
+    },
+    {
+      "from": "test",
+      "to": "decision",
+      "label": "next",
+      "role": "process",
+      "route": "straight"
+    }
+  ]
+}

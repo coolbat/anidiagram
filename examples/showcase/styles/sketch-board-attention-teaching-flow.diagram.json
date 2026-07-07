@@ -1,0 +1,221 @@
+{
+  "version": "0.3",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "style": "sketch-board",
+  "title": {
+    "text": "Attention Teaching Flow",
+    "subtitle": "tokens, attention, alignment, and output as a staged lesson"
+  },
+  "motion": {
+    "profile": "teaching",
+    "sequence": "staged",
+    "ease": "spring",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 1.15,
+    "edge": {
+      "preset": "ghost-flow",
+      "particle": "soft-dot",
+      "trail": true
+    },
+    "node": {
+      "preset": "icon-pulse",
+      "accent": "ripple"
+    },
+    "group": {
+      "preset": "border-scan"
+    },
+    "title": {
+      "preset": "handwrite-reveal"
+    },
+    "reduced_motion": "subtle"
+  },
+  "groups": [
+    {
+      "id": "input",
+      "label": "Source Tokens",
+      "bounds": [
+        65,
+        155,
+        455,
+        175
+      ],
+      "role": "source"
+    },
+    {
+      "id": "core",
+      "label": "Transformer Core",
+      "bounds": [
+        515,
+        155,
+        670,
+        410
+      ],
+      "role": "agent"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "tokens",
+      "label": "Tokens",
+      "caption": "input words",
+      "position": [
+        105,
+        210
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "source",
+      "icon": "token"
+    },
+    {
+      "id": "embed",
+      "label": "Embed",
+      "caption": "meaning",
+      "position": [
+        325,
+        210
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "memory",
+      "icon": "database"
+    },
+    {
+      "id": "attend",
+      "label": "Attend",
+      "caption": "mix signals",
+      "position": [
+        545,
+        315
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "agent",
+      "icon": "agent"
+    },
+    {
+      "id": "align",
+      "label": "Aligned?",
+      "caption": "mask + context",
+      "position": [
+        765,
+        315
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "risk",
+      "icon": "shield"
+    },
+    {
+      "id": "softmax",
+      "label": "Softmax",
+      "caption": "scores",
+      "position": [
+        985,
+        210
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "tool",
+      "icon": "tool"
+    },
+    {
+      "id": "output",
+      "label": "Output",
+      "caption": "next token",
+      "position": [
+        985,
+        430
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "output",
+      "icon": "output"
+    }
+  ],
+  "edges": [
+    {
+      "from": "tokens",
+      "to": "embed",
+      "label": "encode",
+      "role": "source",
+      "route": "straight",
+      "effect": {
+        "preset": "flow-dot",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "embed",
+      "to": "attend",
+      "label": "context",
+      "role": "memory",
+      "route": "orthogonal",
+      "effect": {
+        "preset": "ghost-flow",
+        "particle": "soft-dot",
+        "trail": true
+      }
+    },
+    {
+      "from": "attend",
+      "to": "align",
+      "label": "score",
+      "role": "agent",
+      "route": "straight",
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "trail": false
+      }
+    },
+    {
+      "from": "align",
+      "to": "softmax",
+      "label": "yes",
+      "role": "output",
+      "route": "orthogonal"
+    },
+    {
+      "from": "align",
+      "to": "output",
+      "label": "predict",
+      "role": "output",
+      "route": "orthogonal",
+      "effect": {
+        "preset": "glow-line",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "output",
+      "to": "attend",
+      "label": "feedback",
+      "role": "memory",
+      "route": "orthogonal",
+      "effect": {
+        "preset": "dynamic-dash",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    }
+  ]
+}

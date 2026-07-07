@@ -1,0 +1,204 @@
+{
+  "version": "0.3",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "style": "deep-tech",
+  "title": {
+    "text": "Agent Tool Hub",
+    "subtitle": "one agent coordinates search, browser, api, memory, and code tools"
+  },
+  "motion": {
+    "profile": "teaching",
+    "sequence": "step-stagger",
+    "ease": "spring",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 1.1,
+    "edge": {
+      "preset": "signal-arrow",
+      "particle": "soft-dot",
+      "trail": false
+    },
+    "node": {
+      "preset": "icon-performance",
+      "accent": "glow"
+    },
+    "group": {
+      "preset": "border-scan"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "subtle"
+  },
+  "groups": [
+    {
+      "id": "hub",
+      "label": "Tool Hub",
+      "bounds": [
+        90,
+        95,
+        1050,
+        560
+      ],
+      "role": "agent"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "agent",
+      "label": "Agent",
+      "caption": "route tasks",
+      "position": [
+        535,
+        315
+      ],
+      "size": [
+        200,
+        92
+      ],
+      "role": "agent",
+      "icon": "agent"
+    },
+    {
+      "id": "search",
+      "label": "Search",
+      "caption": "discover",
+      "position": [
+        215,
+        145
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "source",
+      "icon": "search"
+    },
+    {
+      "id": "browser",
+      "label": "Browser",
+      "caption": "inspect",
+      "position": [
+        855,
+        145
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "tool",
+      "icon": "cloud"
+    },
+    {
+      "id": "api",
+      "label": "API",
+      "caption": "call",
+      "position": [
+        930,
+        455
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "tool",
+      "icon": "api"
+    },
+    {
+      "id": "memory",
+      "label": "Memory",
+      "caption": "recall",
+      "position": [
+        515,
+        520
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "memory",
+      "icon": "memory"
+    },
+    {
+      "id": "code",
+      "label": "Code Tool",
+      "caption": "execute",
+      "position": [
+        140,
+        455
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "process",
+      "icon": "tool"
+    }
+  ],
+  "edges": [
+    {
+      "from": "agent",
+      "to": "search",
+      "label": "query",
+      "role": "source",
+      "route": "straight",
+      "effect": {
+        "preset": "signal-arrow",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "agent",
+      "to": "browser",
+      "label": "open",
+      "role": "tool",
+      "route": "straight",
+      "effect": {
+        "preset": "signal-arrow",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "agent",
+      "to": "api",
+      "label": "request",
+      "role": "tool",
+      "route": "straight",
+      "effect": {
+        "preset": "signal-arrow",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "agent",
+      "to": "memory",
+      "label": "store",
+      "role": "memory",
+      "route": "straight",
+      "effect": {
+        "preset": "signal-dot",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "agent",
+      "to": "code",
+      "label": "run",
+      "role": "process",
+      "route": "straight",
+      "effect": {
+        "preset": "signal-arrow",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    }
+  ],
+  "preset": "hub-spoke"
+}

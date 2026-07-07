@@ -1,0 +1,212 @@
+{
+  "version": "0.3",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "style": "openai-minimal",
+  "title": {
+    "text": "RAG vs Agentic RAG",
+    "subtitle": "compare retrieval-only flow with planning, tools, memory, and evaluation"
+  },
+  "motion": {
+    "profile": "subtle",
+    "sequence": "step-stagger",
+    "ease": "calm",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 0.45,
+    "edge": {
+      "preset": "draw",
+      "particle": "soft-dot",
+      "trail": false
+    },
+    "node": {
+      "preset": "fade",
+      "accent": "glow"
+    },
+    "group": {
+      "preset": "soft-reveal"
+    },
+    "title": {
+      "preset": "fade"
+    },
+    "reduced_motion": "subtle"
+  },
+  "groups": [
+    {
+      "id": "rag",
+      "label": "RAG",
+      "bounds": [
+        110,
+        170,
+        380,
+        430
+      ],
+      "role": "process"
+    },
+    {
+      "id": "agentic",
+      "label": "Agentic RAG",
+      "bounds": [
+        690,
+        170,
+        380,
+        430
+      ],
+      "role": "agent"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "rag-query",
+      "label": "Query",
+      "caption": "ask",
+      "position": [
+        190,
+        245
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "actor",
+      "icon": "file"
+    },
+    {
+      "id": "rag-retrieve",
+      "label": "Retrieve",
+      "caption": "top-k",
+      "position": [
+        190,
+        390
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "memory",
+      "icon": "search"
+    },
+    {
+      "id": "rag-answer",
+      "label": "Answer",
+      "caption": "compose",
+      "position": [
+        190,
+        535
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "output",
+      "icon": "output"
+    },
+    {
+      "id": "agent-plan",
+      "label": "Plan",
+      "caption": "decompose",
+      "position": [
+        760,
+        215
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "agent",
+      "icon": "agent"
+    },
+    {
+      "id": "agent-tools",
+      "label": "Tools",
+      "caption": "act",
+      "position": [
+        760,
+        360
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "tool",
+      "icon": "tool"
+    },
+    {
+      "id": "agent-memory",
+      "label": "Memory",
+      "caption": "learn",
+      "position": [
+        760,
+        505
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "memory",
+      "icon": "memory"
+    },
+    {
+      "id": "decision",
+      "label": "Choose",
+      "caption": "fit by task",
+      "position": [
+        500,
+        610
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "output",
+      "icon": "shield"
+    }
+  ],
+  "edges": [
+    {
+      "from": "rag-query",
+      "to": "rag-retrieve",
+      "label": "search",
+      "role": "memory",
+      "route": "vh"
+    },
+    {
+      "from": "rag-retrieve",
+      "to": "rag-answer",
+      "label": "context",
+      "role": "output",
+      "route": "vh"
+    },
+    {
+      "from": "agent-plan",
+      "to": "agent-tools",
+      "label": "invoke",
+      "role": "tool",
+      "route": "vh"
+    },
+    {
+      "from": "agent-tools",
+      "to": "agent-memory",
+      "label": "state",
+      "role": "memory",
+      "route": "vh"
+    },
+    {
+      "from": "rag-answer",
+      "to": "decision",
+      "label": "simple",
+      "role": "output",
+      "route": "straight"
+    },
+    {
+      "from": "agent-memory",
+      "to": "decision",
+      "label": "complex",
+      "role": "agent",
+      "route": "straight"
+    }
+  ],
+  "preset": "compare"
+}

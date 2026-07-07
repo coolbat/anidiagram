@@ -1,0 +1,572 @@
+{
+  "hero": {
+    "id": "agent-runtime-flow",
+    "title": "Agent Runtime Flow",
+    "basename": "agent-runtime-flow",
+    "spec": "examples/showcase/hero/agent-runtime-flow.diagram.json",
+    "style": "deep-tech",
+    "svg": "gallery/hero/agent-runtime-flow.svg",
+    "html": "gallery/hero/agent-runtime-flow.html",
+    "quality": "gallery/hero/agent-runtime-flow.quality.json",
+    "best_for": [
+      "High-fidelity runtime",
+      "Agent flow",
+      "Semantic icon performance"
+    ],
+    "summary": {
+      "errors": 0,
+      "warnings": 0,
+      "issues": 0
+    }
+  },
+  "styles": [
+    {
+      "style": "minimal-light",
+      "title": "Customer Support Triage",
+      "basename": "minimal-light",
+      "spec": "examples/showcase/styles/minimal-light-customer-support-triage.diagram.json",
+      "svg": "gallery/styles/minimal-light.svg",
+      "html": "gallery/styles/minimal-light.html",
+      "quality": "gallery/styles/minimal-light.quality.json",
+      "best_for": [
+        "SaaS",
+        "Operations",
+        "Support flows"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "style": "deep-tech",
+      "title": "Realtime AI Ops Mesh",
+      "basename": "deep-tech",
+      "spec": "examples/showcase/styles/deep-tech-realtime-ai-ops-mesh.diagram.json",
+      "svg": "gallery/styles/deep-tech.svg",
+      "html": "gallery/styles/deep-tech.html",
+      "quality": "gallery/styles/deep-tech.quality.json",
+      "best_for": [
+        "AI ops",
+        "Realtime systems",
+        "Agent meshes"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "style": "blueprint",
+      "title": "MCP Server Architecture",
+      "basename": "blueprint",
+      "spec": "examples/showcase/styles/blueprint-mcp-server-architecture.diagram.json",
+      "svg": "gallery/styles/blueprint.svg",
+      "html": "gallery/styles/blueprint.html",
+      "quality": "gallery/styles/blueprint.quality.json",
+      "best_for": [
+        "Architecture",
+        "Protocols",
+        "Cloud boundaries"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "style": "flat-icon",
+      "title": "Feature Priority Board",
+      "basename": "flat-icon",
+      "spec": "examples/showcase/styles/flat-icon-feature-priority-board.diagram.json",
+      "svg": "gallery/styles/flat-icon.svg",
+      "html": "gallery/styles/flat-icon.html",
+      "quality": "gallery/styles/flat-icon.quality.json",
+      "best_for": [
+        "Roadmaps",
+        "Priority boards",
+        "Product planning"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "style": "dark-terminal",
+      "title": "Incident Response Runbook",
+      "basename": "dark-terminal",
+      "spec": "examples/showcase/styles/dark-terminal-incident-response-runbook.diagram.json",
+      "svg": "gallery/styles/dark-terminal.svg",
+      "html": "gallery/styles/dark-terminal.html",
+      "quality": "gallery/styles/dark-terminal.quality.json",
+      "best_for": [
+        "Incident response",
+        "Debugging",
+        "Runbooks"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "style": "notion-clean",
+      "title": "Product Discovery Workflow",
+      "basename": "notion-clean",
+      "spec": "examples/showcase/styles/notion-clean-product-discovery-workflow.diagram.json",
+      "svg": "gallery/styles/notion-clean.svg",
+      "html": "gallery/styles/notion-clean.html",
+      "quality": "gallery/styles/notion-clean.quality.json",
+      "best_for": [
+        "Product discovery",
+        "Docs",
+        "Workflow notes"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "style": "glassmorphism",
+      "title": "AI Growth Funnel",
+      "basename": "glassmorphism",
+      "spec": "examples/showcase/styles/glassmorphism-ai-growth-funnel.diagram.json",
+      "svg": "gallery/styles/glassmorphism.svg",
+      "html": "gallery/styles/glassmorphism.html",
+      "quality": "gallery/styles/glassmorphism.quality.json",
+      "best_for": [
+        "Growth funnels",
+        "Journeys",
+        "Presentation flows"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "style": "claude-warm",
+      "title": "Research Reasoning Loop",
+      "basename": "claude-warm",
+      "spec": "examples/showcase/styles/claude-warm-research-reasoning-loop.diagram.json",
+      "svg": "gallery/styles/claude-warm.svg",
+      "html": "gallery/styles/claude-warm.html",
+      "quality": "gallery/styles/claude-warm.quality.json",
+      "best_for": [
+        "Reasoning",
+        "Research loops",
+        "Planning"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "style": "openai-minimal",
+      "title": "Evaluation Pipeline",
+      "basename": "openai-minimal",
+      "spec": "examples/showcase/styles/openai-minimal-evaluation-pipeline.diagram.json",
+      "svg": "gallery/styles/openai-minimal.svg",
+      "html": "gallery/styles/openai-minimal.html",
+      "quality": "gallery/styles/openai-minimal.quality.json",
+      "best_for": [
+        "Evaluation",
+        "Benchmarks",
+        "Quality gates"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "style": "dark-luxury",
+      "title": "Executive Signal Network",
+      "basename": "dark-luxury",
+      "spec": "examples/showcase/styles/dark-luxury-executive-signal-network.diagram.json",
+      "svg": "gallery/styles/dark-luxury.svg",
+      "html": "gallery/styles/dark-luxury.html",
+      "quality": "gallery/styles/dark-luxury.quality.json",
+      "best_for": [
+        "Executive views",
+        "Signal maps",
+        "Strategy"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "style": "aurora-orb",
+      "title": "Creative Agent Studio",
+      "basename": "aurora-orb",
+      "spec": "examples/showcase/styles/aurora-orb-creative-agent-studio.diagram.json",
+      "svg": "gallery/styles/aurora-orb.svg",
+      "html": "gallery/styles/aurora-orb.html",
+      "quality": "gallery/styles/aurora-orb.quality.json",
+      "best_for": [
+        "Creative tools",
+        "Multimodal agents",
+        "Studio flows"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "style": "sketch-board",
+      "title": "Attention Teaching Flow",
+      "basename": "sketch-board",
+      "spec": "examples/showcase/styles/sketch-board-attention-teaching-flow.diagram.json",
+      "svg": "gallery/styles/sketch-board.svg",
+      "html": "gallery/styles/sketch-board.html",
+      "quality": "gallery/styles/sketch-board.quality.json",
+      "best_for": [
+        "Teaching",
+        "Attention flows",
+        "Explainers"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    }
+  ],
+  "layouts": [
+    {
+      "preset": "pipeline",
+      "title": "RAG Ingestion Pipeline",
+      "style": "blueprint",
+      "basename": "pipeline",
+      "spec": "examples/showcase/layouts/pipeline-rag-ingestion-pipeline.diagram.json",
+      "svg": "gallery/layouts/pipeline.svg",
+      "html": "gallery/layouts/pipeline.html",
+      "quality": "gallery/layouts/pipeline.quality.json",
+      "best_for": [
+        "ETL",
+        "Build steps",
+        "AI pipelines"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "preset": "loop",
+      "title": "Agent Reflection Loop",
+      "style": "claude-warm",
+      "basename": "loop",
+      "spec": "examples/showcase/layouts/loop-agent-reflection-loop.diagram.json",
+      "svg": "gallery/layouts/loop.svg",
+      "html": "gallery/layouts/loop.html",
+      "quality": "gallery/layouts/loop.quality.json",
+      "best_for": [
+        "Feedback loops",
+        "Agent learning",
+        "Refinement"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "preset": "hub-spoke",
+      "title": "Agent Tool Hub",
+      "style": "deep-tech",
+      "basename": "hub-spoke",
+      "spec": "examples/showcase/layouts/hub-spoke-agent-tool-hub.diagram.json",
+      "svg": "gallery/layouts/hub-spoke.svg",
+      "html": "gallery/layouts/hub-spoke.html",
+      "quality": "gallery/layouts/hub-spoke.quality.json",
+      "best_for": [
+        "Tool routers",
+        "Agent hubs",
+        "Capability maps"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "preset": "layered",
+      "title": "LLM App Architecture Layers",
+      "style": "notion-clean",
+      "basename": "layered",
+      "spec": "examples/showcase/layouts/layered-llm-app-architecture-layers.diagram.json",
+      "svg": "gallery/layouts/layered.svg",
+      "html": "gallery/layouts/layered.html",
+      "quality": "gallery/layouts/layered.quality.json",
+      "best_for": [
+        "System layers",
+        "Architecture",
+        "Ownership"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "preset": "swimlane",
+      "title": "Human-in-the-loop Approval Flow",
+      "style": "minimal-light",
+      "basename": "swimlane",
+      "spec": "examples/showcase/layouts/swimlane-human-in-the-loop-approval-flow.diagram.json",
+      "svg": "gallery/layouts/swimlane.svg",
+      "html": "gallery/layouts/swimlane.html",
+      "quality": "gallery/layouts/swimlane.quality.json",
+      "best_for": [
+        "Handoffs",
+        "Approvals",
+        "Responsibility"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "preset": "compare",
+      "title": "RAG vs Agentic RAG",
+      "style": "openai-minimal",
+      "basename": "compare",
+      "spec": "examples/showcase/layouts/compare-rag-vs-agentic-rag.diagram.json",
+      "svg": "gallery/layouts/compare.svg",
+      "html": "gallery/layouts/compare.html",
+      "quality": "gallery/layouts/compare.quality.json",
+      "best_for": [
+        "Tradeoffs",
+        "Before after",
+        "Architecture decisions"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "preset": "matrix",
+      "title": "AI Feature Priority Matrix",
+      "style": "flat-icon",
+      "basename": "matrix",
+      "spec": "examples/showcase/layouts/matrix-ai-feature-priority-matrix.diagram.json",
+      "svg": "gallery/layouts/matrix.svg",
+      "html": "gallery/layouts/matrix.html",
+      "quality": "gallery/layouts/matrix.quality.json",
+      "best_for": [
+        "Prioritization",
+        "PM planning",
+        "Roadmaps"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "preset": "timeline",
+      "title": "AI Product Launch Roadmap",
+      "style": "blueprint",
+      "basename": "timeline",
+      "spec": "examples/showcase/layouts/timeline-ai-product-launch-roadmap.diagram.json",
+      "svg": "gallery/layouts/timeline.svg",
+      "html": "gallery/layouts/timeline.html",
+      "quality": "gallery/layouts/timeline.quality.json",
+      "best_for": [
+        "Roadmaps",
+        "Milestones",
+        "Release planning"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "preset": "stack",
+      "title": "AI Runtime Stack",
+      "style": "dark-terminal",
+      "basename": "stack",
+      "spec": "examples/showcase/layouts/stack-ai-runtime-stack.diagram.json",
+      "svg": "gallery/layouts/stack.svg",
+      "html": "gallery/layouts/stack.html",
+      "quality": "gallery/layouts/stack.quality.json",
+      "best_for": [
+        "Runtime layers",
+        "Infrastructure",
+        "Dependencies"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "preset": "funnel",
+      "title": "Lead-to-Agent Automation Funnel",
+      "style": "glassmorphism",
+      "basename": "funnel",
+      "spec": "examples/showcase/layouts/funnel-lead-to-agent-automation-funnel.diagram.json",
+      "svg": "gallery/layouts/funnel.svg",
+      "html": "gallery/layouts/funnel.html",
+      "quality": "gallery/layouts/funnel.quality.json",
+      "best_for": [
+        "Qualification",
+        "Conversion",
+        "Automation"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "preset": "sequence",
+      "title": "API Tool Calling Sequence",
+      "style": "notion-clean",
+      "basename": "sequence",
+      "spec": "examples/showcase/layouts/sequence-api-tool-calling-sequence.diagram.json",
+      "svg": "gallery/layouts/sequence.svg",
+      "html": "gallery/layouts/sequence.html",
+      "quality": "gallery/layouts/sequence.quality.json",
+      "best_for": [
+        "Request chains",
+        "Tool calls",
+        "Protocols"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "preset": "er",
+      "title": "Agent Memory Data Model",
+      "style": "openai-minimal",
+      "basename": "er",
+      "spec": "examples/showcase/layouts/er-agent-memory-data-model.diagram.json",
+      "svg": "gallery/layouts/er.svg",
+      "html": "gallery/layouts/er.html",
+      "quality": "gallery/layouts/er.quality.json",
+      "best_for": [
+        "Data models",
+        "Relationships",
+        "Memory schemas"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "preset": "network",
+      "title": "Distributed Agent Runtime Mesh",
+      "style": "dark-luxury",
+      "basename": "network",
+      "spec": "examples/showcase/layouts/network-distributed-agent-runtime-mesh.diagram.json",
+      "svg": "gallery/layouts/network.svg",
+      "html": "gallery/layouts/network.html",
+      "quality": "gallery/layouts/network.quality.json",
+      "best_for": [
+        "Distributed systems",
+        "Runtime meshes",
+        "Routing"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "preset": "agent-memory",
+      "title": "Personalized Agent Memory Flow",
+      "style": "deep-tech",
+      "basename": "agent-memory",
+      "spec": "examples/showcase/layouts/agent-memory-personalized-agent-memory-flow.diagram.json",
+      "svg": "gallery/layouts/agent-memory.svg",
+      "html": "gallery/layouts/agent-memory.html",
+      "quality": "gallery/layouts/agent-memory.quality.json",
+      "best_for": [
+        "Agent memory",
+        "Retrieval",
+        "Grounded output"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    }
+  ],
+  "runtime_motion": [
+    {
+      "id": "agent-think-act-v2",
+      "title": "Agent Think Act",
+      "best_for": [
+        "Think",
+        "Decide",
+        "Act"
+      ]
+    },
+    {
+      "id": "search-discover-v2",
+      "title": "Search Discover",
+      "best_for": [
+        "Scan",
+        "Find",
+        "Lock target"
+      ]
+    },
+    {
+      "id": "api-request-response-v2",
+      "title": "API Request Response",
+      "best_for": [
+        "Request",
+        "Response",
+        "Status"
+      ]
+    },
+    {
+      "id": "database-write-v2",
+      "title": "Database Write",
+      "best_for": [
+        "Write",
+        "Commit",
+        "Confirm"
+      ]
+    }
+  ]
+}

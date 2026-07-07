@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import base64
 import json
 import math
+import os
 import shutil
 import subprocess
 import tempfile
@@ -13,11 +15,15 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple
 from .effects import channel_effect, effect_active
 from .model import Edge, Node, Point, Scene
 from .quality import quality_report
+from .renderer_html_runtime import render_html_runtime
 from .renderer_svg import CONTINUOUS_EDGE_MOTION, PARTICLE_EDGE_MOTION, particle_radii, policy_allows, render_html, render_svg
 from .styles import role_style
 
 
 PointList = List[Point]
+BROWSER_CAPTURE_FORMATS = {"png", "gif", "pdf", "webp", "mp4", "apng", "lottie"}
+DEFAULT_BROWSER_CAPTURE_FPS = 24
+DEFAULT_BROWSER_CAPTURE_FRAMES = 48
 
 
 def write_svg(scene: Scene, style: Dict[str, Any], path: Path) -> Dict[str, str]:
@@ -25,10 +31,19 @@ def write_svg(scene: Scene, style: Dict[str, Any], path: Path) -> Dict[str, str]
     return _done("svg", path)
 
 
-def write_html(scene: Scene, style: Dict[str, Any], path: Path) -> Dict[str, str]:
+def write_viewer(scene: Scene, style: Dict[str, Any], path: Path) -> Dict[str, str]:
     svg = render_svg(scene, style)
     path.write_text(render_html(svg, scene.title.text), encoding="utf-8")
+    return _done("viewer", path)
+
+
+def write_html(scene: Scene, style: Dict[str, Any], path: Path, runtime: str = "gsap") -> Dict[str, str]:
+    path.write_text(render_html_runtime(scene, style, runtime=runtime), encoding="utf-8")
     return _done("html", path)
+
+
+def write_html_runtime(scene: Scene, style: Dict[str, Any], path: Path, runtime: str = "gsap") -> Dict[str, str]:
+    return write_html(scene, style, path, runtime=runtime)
 
 
 def write_quality(scene: Scene, path: Path) -> Dict[str, Any]:
@@ -56,6 +71,70 @@ def write_lottie(scene: Scene, style: Dict[str, Any], path: Path) -> Dict[str, s
     }
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
     return _done("lottie", path)
+
+
+def write_browser_capture(
+    scene: Scene,
+    style: Dict[str, Any],
+    path: Path,
+    format_name: str,
+    runtime: str = "gsap",
+    frames: Optional[int] = None,
+    fps: int = DEFAULT_BROWSER_CAPTURE_FPS,
+    scale: float = 2.0,
+) -> Dict[str, Any]:
+    """Write visual export formats by recording the high-fidelity HTML runtime."""
+
+    if format_name not in BROWSER_CAPTURE_FORMATS:
+        return _skipped(format_name, path, "browser capture does not support this format")
+    frame_count = 1 if format_name in {"png", "pdf"} else max(1, frames or DEFAULT_BROWSER_CAPTURE_FRAMES)
+    fps = max(1, int(fps))
+    scale = max(1.0, float(scale))
+
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp_path = Path(tmp)
+        html_path = tmp_path / "runtime.html"
+        frames_dir = tmp_path / "frames"
+        frames_dir.mkdir()
+        html_path.write_text(render_html_runtime(scene, style, runtime=runtime), encoding="utf-8")
+
+        capture = _capture_browser_runtime(
+            scene=scene,
+            html_path=html_path,
+            frames_dir=frames_dir,
+            pdf_path=path if format_name == "pdf" else None,
+            format_name=format_name,
+            frames=frame_count,
+            fps=fps,
+            scale=scale,
+        )
+        if capture["status"] == "skipped":
+            return _skipped(format_name, path, capture["reason"])
+
+        frame_paths = [frames_dir / f"frame-{index:04d}.png" for index in range(frame_count)]
+        if format_name == "png":
+            shutil.copyfile(frame_paths[0], path)
+        elif format_name == "pdf":
+            pass
+        elif format_name == "mp4":
+            mp4_result = _write_mp4_from_frame_paths(frame_paths, path, fps)
+            if mp4_result["status"] == "skipped":
+                return mp4_result
+        elif format_name == "lottie":
+            lottie_result = _write_browser_lottie(scene, frame_paths, path, fps, scale)
+            if lottie_result["status"] == "skipped":
+                return lottie_result
+        else:
+            packaged = _write_browser_image_sequence(format_name, frame_paths, path, fps, style)
+            if packaged["status"] == "skipped":
+                return packaged
+
+    result = _done(format_name, path)
+    result["renderer"] = "browser"
+    result["fps"] = fps
+    result["frames"] = frame_count
+    result["scale"] = scale
+    return result
 
 
 def write_png(scene: Scene, style: Dict[str, Any], path: Path) -> Dict[str, str]:
@@ -142,6 +221,340 @@ def write_mp4(scene: Scene, style: Dict[str, Any], path: Path, frames: int = 24)
         if completed.returncode != 0:
             return _skipped("mp4", path, completed.stderr.strip() or "ffmpeg failed")
     return _done("mp4", path)
+
+
+def _write_mp4_from_frame_paths(frame_paths: List[Path], path: Path, fps: int) -> Dict[str, str]:
+    ffmpeg = shutil.which("ffmpeg")
+    if not ffmpeg:
+        return _skipped("mp4", path, "ffmpeg is not installed")
+    if not frame_paths:
+        return _skipped("mp4", path, "no browser frames were captured")
+    command = [
+        ffmpeg,
+        "-y",
+        "-loglevel",
+        "error",
+        "-framerate",
+        str(max(1, fps)),
+        "-i",
+        str(frame_paths[0].parent / "frame-%04d.png"),
+        "-pix_fmt",
+        "yuv420p",
+        str(path),
+    ]
+    completed = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    if completed.returncode != 0:
+        return _skipped("mp4", path, completed.stderr.strip() or "ffmpeg failed")
+    return _done("mp4", path)
+
+
+def _write_browser_image_sequence(format_name: str, frame_paths: List[Path], path: Path, fps: int, style: Dict[str, Any]) -> Dict[str, str]:
+    try:
+        from PIL import Image
+    except Exception:
+        return _skipped(format_name, path, "Pillow is not installed")
+    if not frame_paths:
+        return _skipped(format_name, path, "no browser frames were captured")
+    images = [Image.open(frame_path).convert("RGBA") for frame_path in frame_paths]
+    duration_ms = max(1, int(round(1000 / max(1, fps))))
+    try:
+        if format_name == "gif":
+            gif_images = [_flatten_frame_for_gif(image, style) for image in images]
+            gif_images[0].save(
+                path,
+                save_all=True,
+                append_images=gif_images[1:],
+                duration=duration_ms,
+                loop=0,
+                format="GIF",
+                optimize=False,
+                disposal=2,
+            )
+        elif format_name == "apng":
+            images[0].save(path, save_all=True, append_images=images[1:], duration=duration_ms, loop=0, format="PNG")
+        elif format_name == "webp":
+            images[0].save(path, save_all=True, append_images=images[1:], duration=duration_ms, loop=0, format="WEBP")
+        else:
+            return _skipped(format_name, path, "browser image sequence does not support this format")
+    except Exception as exc:
+        return _skipped(format_name, path, str(exc))
+    finally:
+        for image in images:
+            image.close()
+    return _done(format_name, path)
+
+
+def _write_browser_lottie(scene: Scene, frame_paths: List[Path], path: Path, fps: int, scale: float) -> Dict[str, str]:
+    if not frame_paths:
+        return _skipped("lottie", path, "no browser frames were captured")
+    width = max(1, int(round(scene.canvas.width * scale)))
+    height = max(1, int(round(scene.canvas.height * scale)))
+    assets = []
+    layers = []
+    for index, frame_path in enumerate(frame_paths):
+        asset_id = f"frame_{index:04d}"
+        payload = base64.b64encode(frame_path.read_bytes()).decode("ascii")
+        assets.append({"id": asset_id, "w": width, "h": height, "u": "", "p": f"data:image/png;base64,{payload}", "e": 1})
+        layers.append(
+            {
+                "ddd": 0,
+                "ind": index + 1,
+                "ty": 2,
+                "nm": f"browser-frame-{index:04d}",
+                "refId": asset_id,
+                "ks": {
+                    "o": {"k": 100},
+                    "r": {"k": 0},
+                    "p": {"k": [0, 0, 0]},
+                    "a": {"k": [0, 0, 0]},
+                    "s": {"k": [100, 100, 100]},
+                },
+                "ip": index,
+                "op": index + 1,
+                "st": 0,
+                "sr": 1,
+                "bm": 0,
+            }
+        )
+    data = {
+        "v": "5.7.4",
+        "fr": max(1, fps),
+        "ip": 0,
+        "op": len(frame_paths),
+        "w": width,
+        "h": height,
+        "nm": f"{scene.title.text} browser capture",
+        "ddd": 0,
+        "assets": assets,
+        "layers": layers,
+        "meta": {"g": "AniDiagram browser-captured lottie exporter", "renderer": "browser"},
+    }
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    return _done("lottie", path)
+
+
+def _capture_browser_runtime(
+    scene: Scene,
+    html_path: Path,
+    frames_dir: Path,
+    pdf_path: Optional[Path],
+    format_name: str,
+    frames: int,
+    fps: int,
+    scale: float,
+) -> Dict[str, str]:
+    node, env, reason = _playwright_node_env()
+    if reason:
+        return {"status": "skipped", "reason": reason}
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp_path = Path(tmp)
+        script_path = tmp_path / "capture-runtime.js"
+        config_path = tmp_path / "capture-config.json"
+        script_path.write_text(_browser_capture_script(), encoding="utf-8")
+        config = {
+            "htmlPath": str(html_path.resolve()),
+            "outputDir": str(frames_dir.resolve()),
+            "pdfPath": str(pdf_path.resolve()) if pdf_path else "",
+            "format": format_name,
+            "frames": frames,
+            "fps": fps,
+            "scale": scale,
+            "width": scene.canvas.width,
+            "height": scene.canvas.height,
+            "warmupMs": 850,
+            "staticSettleMs": 2400,
+            "timeoutMs": 30000,
+        }
+        config_path.write_text(json.dumps(config), encoding="utf-8")
+        timeout = max(45, int(frames / max(1, fps)) + 45)
+        completed = subprocess.run(
+            [node, str(script_path), str(config_path)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            env=env,
+            timeout=timeout,
+        )
+    if completed.returncode != 0:
+        reason_text = (completed.stderr or completed.stdout).strip() or "browser capture failed"
+        return {"status": "skipped", "reason": reason_text}
+    return {"status": "written", "reason": ""}
+
+
+def _playwright_node_env() -> Tuple[str, Dict[str, str], str]:
+    node = shutil.which("node")
+    if not node:
+        return "", {}, "Node.js is not installed; browser capture requires Node Playwright"
+    env = os.environ.copy()
+    node_paths = [item for item in env.get("NODE_PATH", "").split(os.pathsep) if item]
+    local_node_modules = Path.cwd() / "node_modules"
+    if local_node_modules.is_dir():
+        node_paths.append(str(local_node_modules.resolve()))
+    playwright_bin = shutil.which("playwright")
+    if playwright_bin:
+        resolved = Path(playwright_bin).resolve()
+        if resolved.name == "cli.js" and resolved.parent.name == "playwright":
+            node_paths.append(str(resolved.parent.parent))
+    if node_paths:
+        env["NODE_PATH"] = os.pathsep.join(_dedupe_paths(node_paths))
+    probe = subprocess.run(
+        [node, "-e", "require.resolve('playwright')"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        env=env,
+    )
+    if probe.returncode != 0:
+        return "", {}, "Node Playwright is not installed; install Playwright and Chromium to use --export-renderer browser"
+    return node, env, ""
+
+
+def _dedupe_paths(values: Iterable[str]) -> List[str]:
+    seen = set()
+    result = []
+    for value in values:
+        if value in seen:
+            continue
+        seen.add(value)
+        result.append(value)
+    return result
+
+
+def _browser_capture_script() -> str:
+    return r"""
+const fs = require("fs");
+const path = require("path");
+const { pathToFileURL } = require("url");
+const { chromium } = require("playwright");
+
+async function main() {
+  const config = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await browser.newPage({
+      viewport: { width: config.width, height: config.height },
+      deviceScaleFactor: config.scale
+    });
+    page.setDefaultTimeout(config.timeoutMs || 30000);
+    await page.goto(pathToFileURL(config.htmlPath).href, { waitUntil: "load" });
+    await page.waitForSelector("svg");
+    await page.waitForLoadState("networkidle", { timeout: config.timeoutMs || 30000 }).catch(() => {});
+    await page.waitForTimeout(config.warmupMs || 800);
+    const runtimeState = await page.evaluate(() => {
+      const manifestElement = document.getElementById("anidiagram-motion-manifest");
+      let manifestIcons = 0;
+      try {
+        manifestIcons = manifestElement ? (JSON.parse(manifestElement.textContent || "{}").icons || []).length : 0;
+      } catch (error) {}
+      return {
+        manifestIcons,
+        timelines: (window.__ANIDIAGRAM_TIMELINES__ || []).length,
+        gsapLoaded: Boolean(window.gsap)
+      };
+    });
+    if (runtimeState.manifestIcons > 0 && !runtimeState.gsapLoaded) {
+      throw new Error("GSAP did not load, so high-fidelity runtime capture cannot proceed");
+    }
+    if (runtimeState.manifestIcons > 0 && runtimeState.timelines === 0) {
+      throw new Error("AniDiagram runtime did not start any high-fidelity timelines");
+    }
+    await page.evaluate(() => {
+      const svg = document.querySelector("svg");
+      if (svg && svg.setCurrentTime) {
+        try {
+          svg.setCurrentTime(0);
+          svg.unpauseAnimations();
+        } catch (error) {}
+      }
+      if (window.AniDiagramRuntime && window.AniDiagramRuntime.restart) {
+        window.AniDiagramRuntime.restart();
+      }
+    });
+    if (config.format === "png" || config.format === "pdf") {
+      await page.waitForTimeout(config.staticSettleMs || 2200);
+      await page.addStyleTag({ content: ".title-sweep { display: none !important; }" });
+      await page.evaluate(() => {
+        const svg = document.querySelector("svg");
+        if (svg && svg.pauseAnimations) {
+          try {
+            svg.pauseAnimations();
+          } catch (error) {}
+        }
+        if (window.gsap && window.gsap.globalTimeline) {
+          window.gsap.globalTimeline.pause();
+        }
+      });
+    }
+    if (config.format === "pdf") {
+      await page.addStyleTag({ content: `
+        @page { size: ${config.width}px ${config.height}px; margin: 0; }
+        html, body, main { margin: 0 !important; padding: 0 !important; min-height: 0 !important; background: transparent !important; display: block !important; }
+        .toolbar { display: none !important; }
+        .stage { border: 0 !important; border-radius: 0 !important; overflow: visible !important; width: ${config.width}px !important; min-height: 0 !important; background: transparent !important; }
+        .viewport { transform: none !important; width: ${config.width}px !important; }
+        svg { width: ${config.width}px !important; height: ${config.height}px !important; }
+      `});
+      await page.pdf({
+        path: config.pdfPath,
+        width: `${config.width}px`,
+        height: `${config.height}px`,
+        printBackground: true,
+        margin: { top: 0, right: 0, bottom: 0, left: 0 }
+      });
+      return;
+    }
+    const svg = page.locator("svg").first();
+    const fps = Math.max(1, config.fps || 24);
+    const frameDelay = 1000 / fps;
+    await page.evaluate(() => {
+      const svgElement = document.querySelector("svg");
+      if (svgElement && svgElement.pauseAnimations) {
+        try {
+          svgElement.pauseAnimations();
+        } catch (error) {}
+      }
+      (window.__ANIDIAGRAM_TIMELINES__ || []).forEach((tl) => {
+        if (!tl) return;
+        if (typeof tl.pause === "function") tl.pause();
+      });
+      if (window.gsap && window.gsap.globalTimeline) {
+        window.gsap.globalTimeline.pause();
+      }
+    });
+    for (let index = 0; index < Math.max(1, config.frames || 1); index += 1) {
+      const frameSeconds = index / fps;
+      await page.evaluate((seconds) => {
+        const svgElement = document.querySelector("svg");
+        if (svgElement && svgElement.setCurrentTime) {
+          try {
+            svgElement.setCurrentTime(seconds);
+          } catch (error) {}
+        }
+        (window.__ANIDIAGRAM_TIMELINES__ || []).forEach((tl) => {
+          if (!tl || typeof tl.totalTime !== "function") return;
+          const delaySeconds = typeof tl.delay === "function" ? Number(tl.delay()) || 0 : 0;
+          const durationSeconds = typeof tl.duration === "function" ? Number(tl.duration()) || 0 : 0;
+          const repeatDelaySeconds = typeof tl.repeatDelay === "function" ? Number(tl.repeatDelay()) || 0 : 0;
+          const cycleSeconds = Math.max(0.001, durationSeconds + repeatDelaySeconds);
+          const localSeconds = Math.max(0, seconds - delaySeconds);
+          tl.totalTime(localSeconds % cycleSeconds, false);
+          if (typeof tl.pause === "function") tl.pause();
+        });
+      }, frameSeconds);
+      await page.waitForTimeout(Math.min(40, frameDelay));
+      const file = path.join(config.outputDir, `frame-${String(index).padStart(4, "0")}.png`);
+      await svg.screenshot({ path: file, animations: "allow" });
+    }
+  } finally {
+    await browser.close();
+  }
+}
+
+main().catch((error) => {
+  console.error(error && error.stack ? error.stack : String(error));
+  process.exit(1);
+});
+"""
 
 
 def _render_frames(scene: Scene, style: Dict[str, Any], frames: int) -> List[Any]:

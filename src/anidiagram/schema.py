@@ -37,6 +37,7 @@ KNOWN_NODE_MOTION = {
     "icon-pulse",
     "icon-breathe",
     "icon-semantic",
+    "icon-performance",
     "micro-icon",
 }
 KNOWN_EDGE_MOTION = {

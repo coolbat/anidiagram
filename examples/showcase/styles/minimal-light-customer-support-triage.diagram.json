@@ -1,0 +1,156 @@
+{
+  "version": "0.3",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "style": "minimal-light",
+  "title": {
+    "text": "Customer Support Triage",
+    "subtitle": "intake, classify, answer, and learn"
+  },
+  "motion": {
+    "profile": "subtle",
+    "sequence": "step-stagger",
+    "ease": "calm",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 0.55,
+    "edge": {
+      "preset": "draw",
+      "particle": "soft-dot",
+      "trail": false
+    },
+    "node": {
+      "preset": "fade",
+      "accent": "glow"
+    },
+    "group": {
+      "preset": "soft-reveal"
+    },
+    "title": {
+      "preset": "fade"
+    },
+    "reduced_motion": "subtle"
+  },
+  "groups": [
+    {
+      "id": "ops",
+      "label": "Support Desk",
+      "bounds": [
+        60,
+        250,
+        1080,
+        190
+      ],
+      "role": "neutral"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "customer",
+      "label": "Customer",
+      "caption": "new request",
+      "position": [
+        90,
+        335
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "actor",
+      "icon": "agent"
+    },
+    {
+      "id": "inbox",
+      "label": "Inbox",
+      "caption": "ticket queue",
+      "position": [
+        300,
+        335
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "source",
+      "icon": "folder"
+    },
+    {
+      "id": "triage",
+      "label": "Triage",
+      "caption": "route issue",
+      "position": [
+        510,
+        335
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "process",
+      "icon": "search"
+    },
+    {
+      "id": "reply",
+      "label": "Reply",
+      "caption": "draft answer",
+      "position": [
+        720,
+        335
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "tool",
+      "icon": "file"
+    },
+    {
+      "id": "learn",
+      "label": "Learn",
+      "caption": "update notes",
+      "position": [
+        930,
+        335
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "memory",
+      "icon": "memory"
+    }
+  ],
+  "edges": [
+    {
+      "from": "customer",
+      "to": "inbox",
+      "label": "handoff",
+      "role": "process",
+      "route": "straight"
+    },
+    {
+      "from": "inbox",
+      "to": "triage",
+      "label": "handoff",
+      "role": "process",
+      "route": "straight"
+    },
+    {
+      "from": "triage",
+      "to": "reply",
+      "label": "handoff",
+      "role": "process",
+      "route": "straight"
+    },
+    {
+      "from": "reply",
+      "to": "learn",
+      "label": "handoff",
+      "role": "process",
+      "route": "straight"
+    }
+  ]
+}

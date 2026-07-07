@@ -1,0 +1,157 @@
+{
+  "version": "0.3",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "style": "glassmorphism",
+  "title": {
+    "text": "Lead-to-Agent Automation Funnel",
+    "subtitle": "capture, qualify, enrich, score, and hand off the right lead"
+  },
+  "motion": {
+    "profile": "expressive",
+    "sequence": "step-stagger",
+    "ease": "spring",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 0.95,
+    "edge": {
+      "preset": "ghost-flow",
+      "particle": "soft-dot",
+      "trail": true
+    },
+    "node": {
+      "preset": "pulse",
+      "accent": "ripple"
+    },
+    "group": {
+      "preset": "border-scan"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "subtle"
+  },
+  "groups": [
+    {
+      "id": "funnel",
+      "label": "Automation Funnel",
+      "bounds": [
+        445,
+        80,
+        365,
+        555
+      ],
+      "role": "process"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "capture",
+      "label": "Capture",
+      "caption": "forms + chat",
+      "position": [
+        500,
+        115
+      ],
+      "size": [
+        260,
+        76
+      ],
+      "role": "source",
+      "icon": "cloud"
+    },
+    {
+      "id": "qualify",
+      "label": "Qualify",
+      "caption": "rules",
+      "position": [
+        520,
+        220
+      ],
+      "size": [
+        220,
+        76
+      ],
+      "role": "process",
+      "icon": "search"
+    },
+    {
+      "id": "enrich",
+      "label": "Enrich",
+      "caption": "context",
+      "position": [
+        540,
+        325
+      ],
+      "size": [
+        180,
+        76
+      ],
+      "role": "memory",
+      "icon": "database"
+    },
+    {
+      "id": "score",
+      "label": "Score",
+      "caption": "agent fit",
+      "position": [
+        560,
+        430
+      ],
+      "size": [
+        145,
+        76
+      ],
+      "role": "agent",
+      "icon": "agent"
+    },
+    {
+      "id": "handoff",
+      "label": "Handoff",
+      "caption": "sales task",
+      "position": [
+        570,
+        535
+      ],
+      "size": [
+        125,
+        72
+      ],
+      "role": "output",
+      "icon": "output"
+    }
+  ],
+  "edges": [
+    {
+      "from": "capture",
+      "to": "qualify",
+      "label": "filter",
+      "role": "process",
+      "route": "vh"
+    },
+    {
+      "from": "qualify",
+      "to": "enrich",
+      "label": "filter",
+      "role": "process",
+      "route": "vh"
+    },
+    {
+      "from": "enrich",
+      "to": "score",
+      "label": "filter",
+      "role": "process",
+      "route": "vh"
+    },
+    {
+      "from": "score",
+      "to": "handoff",
+      "label": "filter",
+      "role": "process",
+      "route": "vh"
+    }
+  ],
+  "preset": "funnel"
+}

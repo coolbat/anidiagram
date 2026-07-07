@@ -1,0 +1,217 @@
+{
+  "version": "0.3",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "style": "deep-tech",
+  "title": {
+    "text": "Personalized Agent Memory Flow",
+    "subtitle": "the agent retrieves context, commits memory, and produces a grounded answer"
+  },
+  "motion": {
+    "profile": "teaching",
+    "sequence": "step-stagger",
+    "ease": "spring",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 1.1,
+    "edge": {
+      "preset": "signal-arrow",
+      "particle": "soft-dot",
+      "trail": false
+    },
+    "node": {
+      "preset": "icon-performance",
+      "accent": "glow"
+    },
+    "group": {
+      "preset": "border-scan"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "subtle"
+  },
+  "groups": [
+    {
+      "id": "runtime",
+      "label": "Agent Runtime",
+      "bounds": [
+        55,
+        155,
+        630,
+        410
+      ],
+      "role": "agent"
+    },
+    {
+      "id": "state",
+      "label": "Memory + Output",
+      "bounds": [
+        710,
+        205,
+        430,
+        215
+      ],
+      "role": "memory"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "user",
+      "label": "User",
+      "caption": "preference",
+      "position": [
+        80,
+        315
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "actor",
+      "icon": "token"
+    },
+    {
+      "id": "agent",
+      "label": "Agent",
+      "caption": "think + act",
+      "position": [
+        295,
+        315
+      ],
+      "size": [
+        190,
+        92
+      ],
+      "role": "agent",
+      "icon": "agent"
+    },
+    {
+      "id": "search",
+      "label": "Search",
+      "caption": "retrieve",
+      "position": [
+        525,
+        205
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "source",
+      "icon": "search"
+    },
+    {
+      "id": "memory",
+      "label": "Memory",
+      "caption": "commit",
+      "position": [
+        760,
+        315
+      ],
+      "size": [
+        190,
+        92
+      ],
+      "role": "memory",
+      "icon": "database"
+    },
+    {
+      "id": "tool",
+      "label": "Tool",
+      "caption": "do work",
+      "position": [
+        525,
+        425
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "tool",
+      "icon": "tool"
+    },
+    {
+      "id": "output",
+      "label": "Output",
+      "caption": "answer",
+      "position": [
+        1005,
+        315
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "output",
+      "icon": "output"
+    }
+  ],
+  "edges": [
+    {
+      "from": "user",
+      "to": "agent",
+      "label": "intent",
+      "role": "actor",
+      "route": "straight"
+    },
+    {
+      "from": "agent",
+      "to": "search",
+      "label": "context",
+      "role": "source",
+      "route": "orthogonal",
+      "effect": {
+        "preset": "signal-arrow",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "agent",
+      "to": "tool",
+      "label": "action",
+      "role": "tool",
+      "route": "orthogonal",
+      "effect": {
+        "preset": "signal-arrow",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "search",
+      "to": "memory",
+      "label": "facts",
+      "role": "memory",
+      "route": "orthogonal",
+      "effect": {
+        "preset": "signal-dot",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "tool",
+      "to": "memory",
+      "label": "result",
+      "role": "memory",
+      "route": "orthogonal",
+      "effect": {
+        "preset": "signal-dot",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "memory",
+      "to": "output",
+      "label": "ground",
+      "role": "output",
+      "route": "straight"
+    }
+  ],
+  "preset": "agent-memory"
+}

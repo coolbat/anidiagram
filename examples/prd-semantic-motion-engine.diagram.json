@@ -1,0 +1,106 @@
+{
+  "version": "0.3",
+  "preset": "prd-semantic-motion-engine",
+  "canvas": {"width": 1440, "height": 1100},
+  "style": "sketch-board",
+  "title": {
+    "text": "AniDiagram Semantic Motion Engine",
+    "subtitle": "后续迭代目标：从动态图渲染器升级为能讲清技术系统运行过程的语义动态图解引擎"
+  },
+  "motion": {
+    "profile": "teaching",
+    "sequence": "staged",
+    "ease": "spring",
+    "stagger": 0.1,
+    "duration_scale": 0.92,
+    "intensity": 1.05,
+    "edge": {"preset": "signal-arrow", "particle_count": 1, "trail_count": 0},
+    "node": {"preset": "icon-performance"},
+    "group": {"preset": "soft-reveal"},
+    "title": {"preset": "highlight-sweep"},
+    "reduced_motion": "subtle"
+  },
+  "motion_policy": {
+    "profile": "focused",
+    "motion_area": "small",
+    "max_active_flow_edges": 13,
+    "max_particle_edges": 12,
+    "particle_count_per_edge": 1,
+    "flow_trail_count": 0,
+    "max_active_pulse_nodes": 10,
+    "pulse_mode": "rotate",
+    "max_scanning_groups": 1
+  },
+  "groups": [
+    {"id": "intake", "label": "输入与导入", "bounds": [50, 150, 1340, 130], "role": "source", "effect": {"preset": "soft-reveal"}},
+    {"id": "semantic", "label": "语义规划层", "bounds": [50, 315, 1340, 145], "role": "agent", "effect": {"preset": "soft-reveal"}},
+    {"id": "engine", "label": "动态图解内核", "bounds": [50, 505, 1340, 145], "role": "process", "effect": {"preset": "border-scan"}},
+    {"id": "runtime", "label": "Runtime 与导出", "bounds": [50, 695, 1340, 145], "role": "output", "effect": {"preset": "soft-reveal"}},
+    {"id": "product", "label": "产品化与生态", "bounds": [50, 890, 1340, 150], "role": "tool", "effect": {"preset": "soft-reveal"}}
+  ],
+  "nodes": [
+    {"id": "prompt-prd", "label": "Prompt / PRD", "caption": "自然语言目标", "position": [85, 190], "size": [175, 76], "role": "actor", "icon": "token", "step": 4, "effect": {"preset": "icon-performance", "icon_motion": "token-intent-v2"}},
+    {"id": "mermaid-d2", "label": "Mermaid / D2", "caption": "静态图导入", "position": [310, 190], "size": [175, 76], "role": "source", "icon": "file", "step": 5, "effect": {"preset": "icon-performance"}},
+    {"id": "agent-trace", "label": "Agent Trace", "caption": "真实运行过程", "position": [535, 190], "size": [175, 76], "role": "source", "icon": "search", "step": 8, "effect": {"preset": "icon-performance", "icon_motion": "search-discover-v2"}},
+    {"id": "docs-context", "label": "Docs Context", "caption": "README / MDX", "position": [760, 190], "size": [175, 76], "role": "source", "icon": "folder", "effect": {"preset": "icon-performance"}},
+    {"id": "brand-kit", "label": "Brand Kit", "caption": "品牌色与节奏", "position": [985, 190], "size": [175, 76], "role": "tool", "icon": "cloud", "effect": {"preset": "icon-performance"}},
+
+    {"id": "diagram-plan", "label": "DiagramPlan", "caption": "结构与意图", "position": [85, 360], "size": [175, 78], "role": "memory", "icon": "memory", "effect": {"preset": "icon-performance", "icon_motion": "memory-commit-v2"}},
+    {"id": "semantic-vocab", "label": "Semantic Vocabulary", "caption": "Agent API Memory", "position": [310, 360], "size": [205, 78], "role": "agent", "icon": "agent", "step": 2, "effect": {"preset": "icon-performance", "icon_motion": "agent-think-act-v2"}},
+    {"id": "icon-mapping", "label": "Icon Mapping", "caption": "语义到图标部件", "position": [560, 360], "size": [180, 78], "role": "tool", "icon": "tool", "effect": {"preset": "icon-performance", "icon_motion": "tool-run-v2"}},
+    {"id": "motion-plan", "label": "MotionPlan", "caption": "节奏与讲解模式", "position": [790, 360], "size": [180, 78], "role": "process", "icon": "token", "effect": {"preset": "icon-performance", "icon_motion": "token-intent-v2"}},
+    {"id": "motion-quality", "label": "Motion Quality", "caption": "密度 匹配 顺序", "position": [1020, 355], "size": [190, 88], "shape": "decision", "role": "risk", "icon": "shield", "effect": {"preset": "icon-performance"}},
+
+    {"id": "diagram-script", "label": "DiagramScript", "caption": "稳定 JSON 合约", "position": [85, 550], "size": [180, 78], "role": "source", "icon": "file", "effect": {"preset": "icon-performance"}},
+    {"id": "scene-ir", "label": "Scene IR", "caption": "节点 边 分组", "position": [315, 550], "size": [170, 78], "role": "agent", "icon": "agent", "effect": {"preset": "icon-performance", "icon_motion": "agent-think-act-v2"}},
+    {"id": "choreographer", "label": "Choreographer", "caption": "因果时间线", "position": [535, 550], "size": [190, 78], "role": "process", "icon": "tool", "step": 3, "effect": {"preset": "icon-performance", "icon_motion": "tool-run-v2"}},
+    {"id": "motion-manifest", "label": "Motion Manifest", "caption": "runtime 动画清单", "position": [775, 550], "size": [195, 78], "role": "memory", "icon": "memory", "effect": {"preset": "icon-performance", "icon_motion": "memory-commit-v2"}},
+    {"id": "icon-parts", "label": "Icon Part Library", "caption": "可动 SVG parts", "position": [1020, 550], "size": [195, 78], "role": "output", "icon": "database", "step": 2, "effect": {"preset": "icon-performance", "icon_motion": "database-write-v2"}},
+
+    {"id": "svg-renderer", "label": "SVG Renderer", "caption": "文档轻动效", "position": [85, 740], "size": [180, 78], "role": "output", "icon": "output", "effect": {"preset": "icon-performance", "icon_motion": "output-reveal-v2"}},
+    {"id": "html-runtime", "label": "HTML Runtime", "caption": "GSAP 高保真", "position": [315, 740], "size": [185, 78], "role": "output", "icon": "api", "step": 1, "effect": {"preset": "icon-performance", "icon_motion": "api-request-response-v2"}},
+    {"id": "browser-capture", "label": "Browser Capture", "caption": "真实帧捕获", "position": [545, 740], "size": [190, 78], "role": "tool", "icon": "search", "effect": {"preset": "icon-performance", "icon_motion": "search-discover-v2"}},
+    {"id": "video-lottie", "label": "Video / Lottie", "caption": "MP4 GIF APNG", "position": [785, 740], "size": [185, 78], "role": "output", "icon": "output", "step": 6, "effect": {"preset": "icon-performance", "icon_motion": "output-reveal-v2"}},
+    {"id": "explainer-script", "label": "Explainer Script", "caption": "旁白 SRT / MD", "position": [1020, 740], "size": [195, 78], "role": "output", "icon": "file", "effect": {"preset": "icon-performance"}},
+
+    {"id": "web-studio", "label": "Web Studio", "caption": "Prompt + Preview", "position": [95, 935], "size": [175, 82], "role": "tool", "icon": "tool", "step": 7, "effect": {"preset": "icon-performance", "icon_motion": "tool-run-v2"}},
+    {"id": "docs-embed", "label": "Docs Embed", "caption": "MDX / README", "position": [325, 935], "size": [175, 82], "role": "source", "icon": "file", "effect": {"preset": "icon-performance"}},
+    {"id": "sdk-plugins", "label": "SDK + Plugins", "caption": "React / VS Code", "position": [555, 935], "size": [175, 82], "role": "tool", "icon": "api", "effect": {"preset": "icon-performance", "icon_motion": "api-request-response-v2"}},
+    {"id": "mcp-api", "label": "MCP / API", "caption": "Agent 可调用", "position": [785, 935], "size": [175, 82], "role": "agent", "icon": "agent", "effect": {"preset": "icon-performance", "icon_motion": "agent-think-act-v2"}},
+    {"id": "motion-packs", "label": "Motion Packs", "caption": "模板与品牌包", "position": [1015, 935], "size": [185, 82], "role": "tool", "icon": "folder", "effect": {"preset": "icon-performance"}}
+  ],
+  "edges": [
+    {"from": "prompt-prd", "to": "diagram-plan", "label": "brief", "role": "actor", "route": "points", "points": [[172, 266], [172, 360]], "effect": {"preset": "signal-arrow", "particle_count": 1, "trail_count": 0}},
+    {"from": "mermaid-d2", "to": "diagram-plan", "label": "import", "role": "source", "route": "points", "points": [[397, 266], [397, 300], [172, 300], [172, 360]], "effect": {"preset": "draw"}},
+    {"from": "agent-trace", "to": "motion-plan", "label": "trace", "role": "source", "route": "points", "points": [[622, 266], [622, 300], [880, 300], [880, 360]], "effect": {"preset": "signal-dot", "particle_count": 1, "trail_count": 0}},
+    {"from": "docs-context", "to": "semantic-vocab", "label": "context", "role": "source", "route": "points", "points": [[847, 266], [847, 302], [412, 302], [412, 360]], "effect": {"preset": "draw"}},
+    {"from": "brand-kit", "to": "motion-plan", "label": "theme", "role": "tool", "route": "points", "points": [[1072, 266], [1072, 303], [880, 303], [880, 360]], "effect": {"preset": "draw"}},
+
+    {"from": "diagram-plan", "to": "semantic-vocab", "label": "intent", "role": "memory", "route": "straight", "effect": {"preset": "signal-arrow", "particle_count": 1, "trail_count": 0}},
+    {"from": "semantic-vocab", "to": "icon-mapping", "label": "semantics", "role": "agent", "route": "straight", "effect": {"preset": "signal-arrow", "particle_count": 1, "trail_count": 0}},
+    {"from": "icon-mapping", "to": "motion-plan", "label": "parts", "role": "tool", "route": "straight", "effect": {"preset": "signal-arrow", "particle_count": 1, "trail_count": 0}},
+    {"from": "motion-plan", "to": "motion-quality", "label": "score", "role": "risk", "route": "straight", "effect": {"preset": "dynamic-dash"}},
+    {"from": "motion-quality", "to": "diagram-plan", "label": "refine", "role": "risk", "route": "points", "points": [[1115, 443], [1115, 475], [172, 475], [172, 438]], "effect": {"preset": "draw"}},
+
+    {"from": "diagram-plan", "to": "diagram-script", "label": "compile", "role": "process", "route": "points", "points": [[172, 438], [172, 550]], "effect": {"preset": "signal-dot", "particle_count": 1, "trail_count": 0}},
+    {"from": "diagram-script", "to": "scene-ir", "label": "validate", "role": "risk", "route": "straight", "effect": {"preset": "draw"}},
+    {"from": "scene-ir", "to": "choreographer", "label": "structure", "role": "agent", "route": "straight", "effect": {"preset": "signal-arrow", "particle_count": 1, "trail_count": 0}},
+    {"from": "motion-plan", "to": "choreographer", "label": "timeline", "role": "process", "route": "points", "points": [[880, 438], [880, 475], [630, 475], [630, 550]], "effect": {"preset": "signal-dot", "particle_count": 1, "trail_count": 0}},
+    {"from": "choreographer", "to": "motion-manifest", "label": "beats", "role": "process", "route": "straight", "effect": {"preset": "signal-arrow", "particle_count": 1, "trail_count": 0}},
+    {"from": "icon-mapping", "to": "icon-parts", "label": "stable ids", "role": "tool", "route": "points", "points": [[650, 438], [650, 477], [1117, 477], [1117, 550]], "effect": {"preset": "draw"}},
+    {"from": "icon-parts", "to": "motion-manifest", "label": "part map", "role": "memory", "route": "straight", "effect": {"preset": "draw"}},
+
+    {"from": "scene-ir", "to": "svg-renderer", "label": "render", "role": "output", "route": "points", "points": [[400, 628], [400, 668], [175, 668], [175, 740]], "effect": {"preset": "draw"}},
+    {"from": "motion-manifest", "to": "html-runtime", "label": "runtime", "role": "output", "route": "points", "points": [[872, 628], [872, 670], [408, 670], [408, 740]], "effect": {"preset": "signal-arrow", "particle_count": 1, "trail_count": 0}},
+    {"from": "icon-parts", "to": "html-runtime", "label": "animate", "role": "output", "route": "points", "points": [[1117, 628], [1117, 672], [408, 672], [408, 740]], "effect": {"preset": "draw"}},
+    {"from": "svg-renderer", "to": "docs-embed", "role": "source", "route": "points", "points": [[175, 818], [175, 878], [412, 878], [412, 935]], "effect": {"preset": "draw"}},
+    {"from": "html-runtime", "to": "browser-capture", "label": "record", "role": "tool", "route": "straight", "effect": {"preset": "signal-arrow", "particle_count": 1, "trail_count": 0}},
+    {"from": "browser-capture", "to": "video-lottie", "label": "frames", "role": "output", "route": "straight", "effect": {"preset": "signal-arrow", "particle_count": 1, "trail_count": 0}},
+    {"from": "choreographer", "to": "explainer-script", "label": "voiceover", "role": "output", "route": "points", "points": [[630, 628], [630, 672], [1117, 672], [1117, 740]], "effect": {"preset": "draw"}},
+
+    {"from": "html-runtime", "to": "web-studio", "role": "tool", "route": "points", "points": [[408, 818], [408, 878], [182, 878], [182, 935]], "effect": {"preset": "draw"}},
+    {"from": "html-runtime", "to": "sdk-plugins", "role": "tool", "route": "points", "points": [[408, 818], [408, 878], [642, 878], [642, 935]], "effect": {"preset": "draw"}},
+    {"from": "motion-manifest", "to": "mcp-api", "role": "agent", "route": "points", "points": [[872, 628], [872, 878], [872, 935]], "effect": {"preset": "draw"}},
+    {"from": "brand-kit", "to": "motion-packs", "role": "tool", "route": "points", "points": [[1072, 266], [1245, 266], [1245, 976], [1200, 976]], "effect": {"preset": "draw"}}
+  ]
+}

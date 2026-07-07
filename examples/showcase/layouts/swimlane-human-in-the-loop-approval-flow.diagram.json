@@ -1,0 +1,201 @@
+{
+  "version": "0.3",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "style": "minimal-light",
+  "title": {
+    "text": "Human-in-the-loop Approval Flow",
+    "subtitle": "user, agent, reviewer, and system each own a clear lane"
+  },
+  "motion": {
+    "profile": "subtle",
+    "sequence": "step-stagger",
+    "ease": "calm",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 0.55,
+    "edge": {
+      "preset": "draw",
+      "particle": "soft-dot",
+      "trail": false
+    },
+    "node": {
+      "preset": "fade",
+      "accent": "glow"
+    },
+    "group": {
+      "preset": "soft-reveal"
+    },
+    "title": {
+      "preset": "fade"
+    },
+    "reduced_motion": "subtle"
+  },
+  "groups": [
+    {
+      "id": "user",
+      "label": "User",
+      "bounds": [
+        60,
+        145,
+        1100,
+        100
+      ],
+      "role": "actor"
+    },
+    {
+      "id": "agent",
+      "label": "Agent",
+      "bounds": [
+        60,
+        285,
+        1100,
+        100
+      ],
+      "role": "agent"
+    },
+    {
+      "id": "reviewer",
+      "label": "Reviewer",
+      "bounds": [
+        60,
+        425,
+        1100,
+        100
+      ],
+      "role": "risk"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "request",
+      "label": "Request",
+      "caption": "submit",
+      "position": [
+        110,
+        175
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "actor",
+      "icon": "agent"
+    },
+    {
+      "id": "draft",
+      "label": "Draft",
+      "caption": "agent proposal",
+      "position": [
+        350,
+        315
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "agent",
+      "icon": "file"
+    },
+    {
+      "id": "review",
+      "label": "Review",
+      "caption": "human check",
+      "position": [
+        590,
+        455
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "risk",
+      "icon": "shield"
+    },
+    {
+      "id": "approve",
+      "label": "Approve",
+      "caption": "decision",
+      "position": [
+        830,
+        455
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "output",
+      "icon": "output"
+    },
+    {
+      "id": "execute",
+      "label": "Execute",
+      "caption": "system action",
+      "position": [
+        830,
+        315
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "tool",
+      "icon": "api"
+    },
+    {
+      "id": "notify",
+      "label": "Notify",
+      "caption": "result",
+      "position": [
+        1030,
+        175
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "output",
+      "icon": "output"
+    }
+  ],
+  "edges": [
+    {
+      "from": "request",
+      "to": "draft",
+      "label": "handoff",
+      "role": "process",
+      "route": "orthogonal"
+    },
+    {
+      "from": "draft",
+      "to": "review",
+      "label": "handoff",
+      "role": "process",
+      "route": "orthogonal"
+    },
+    {
+      "from": "review",
+      "to": "approve",
+      "label": "handoff",
+      "role": "process",
+      "route": "orthogonal"
+    },
+    {
+      "from": "approve",
+      "to": "execute",
+      "label": "handoff",
+      "role": "process",
+      "route": "orthogonal"
+    },
+    {
+      "from": "execute",
+      "to": "notify",
+      "label": "handoff",
+      "role": "process",
+      "route": "orthogonal"
+    }
+  ],
+  "preset": "swimlane"
+}

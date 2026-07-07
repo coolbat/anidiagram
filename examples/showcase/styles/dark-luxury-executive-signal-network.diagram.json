@@ -1,0 +1,188 @@
+{
+  "version": "0.3",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "style": "dark-luxury",
+  "title": {
+    "text": "Executive Signal Network",
+    "subtitle": "market, finance, and product signals converge"
+  },
+  "motion": {
+    "profile": "expressive",
+    "sequence": "step-stagger",
+    "ease": "spring",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 1.05,
+    "edge": {
+      "preset": "glow-line",
+      "particle": "soft-dot",
+      "trail": false
+    },
+    "node": {
+      "preset": "pulse",
+      "accent": "ripple"
+    },
+    "group": {
+      "preset": "border-scan"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "subtle"
+  },
+  "groups": [
+    {
+      "id": "signals",
+      "label": "Signal Room",
+      "bounds": [
+        130,
+        110,
+        920,
+        530
+      ],
+      "role": "neutral"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "market",
+      "label": "Market",
+      "caption": "signals",
+      "position": [
+        185,
+        165
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "source",
+      "icon": "cloud"
+    },
+    {
+      "id": "finance",
+      "label": "Finance",
+      "caption": "metrics",
+      "position": [
+        185,
+        465
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "memory",
+      "icon": "database"
+    },
+    {
+      "id": "product",
+      "label": "Product",
+      "caption": "usage",
+      "position": [
+        825,
+        165
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "tool",
+      "icon": "search"
+    },
+    {
+      "id": "board",
+      "label": "Board",
+      "caption": "decision",
+      "position": [
+        505,
+        315
+      ],
+      "size": [
+        205,
+        92
+      ],
+      "role": "agent",
+      "icon": "agent"
+    },
+    {
+      "id": "action",
+      "label": "Action",
+      "caption": "portfolio",
+      "position": [
+        825,
+        465
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "output",
+      "icon": "output"
+    },
+    {
+      "id": "risk",
+      "label": "Risk",
+      "caption": "guardrail",
+      "position": [
+        505,
+        535
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "risk",
+      "icon": "shield"
+    }
+  ],
+  "edges": [
+    {
+      "from": "market",
+      "to": "board",
+      "label": "trend",
+      "role": "source",
+      "route": "straight"
+    },
+    {
+      "from": "finance",
+      "to": "board",
+      "label": "margin",
+      "role": "memory",
+      "route": "straight"
+    },
+    {
+      "from": "product",
+      "to": "board",
+      "label": "usage",
+      "role": "tool",
+      "route": "straight"
+    },
+    {
+      "from": "board",
+      "to": "action",
+      "label": "allocate",
+      "role": "output",
+      "route": "straight",
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "trail": false
+      }
+    },
+    {
+      "from": "risk",
+      "to": "board",
+      "label": "check",
+      "role": "risk",
+      "route": "vh",
+      "effect": {
+        "preset": "glow-line",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    }
+  ]
+}

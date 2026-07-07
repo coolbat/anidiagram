@@ -1,0 +1,419 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="subtle" data-motion-sequence="step-stagger" data-motion-edge="draw" data-motion-node="fade" data-motion-group="soft-reveal" data-motion-title="fade" data-motion-reduced="subtle">
+<title id="diagram-title">Human-in-the-loop Approval Flow</title>
+<desc id="diagram-desc">user, agent, reviewer, and system each own a clear lane</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .edge-flow { stroke-linecap: round; }
+  .edge-draw, .edge-base { stroke-linecap: round; stroke-linejoin: round; }
+  .edge-particle { filter: url(#particle-glow); }
+  .edge-arrow-particle { filter: url(#particle-glow); }
+  .semantic-icon { vector-effect: non-scaling-stroke; }
+  .semantic-icon-breathe { transform-box: fill-box; transform-origin: center; animation: semanticIconBreathe 2.8s ease-in-out infinite; }
+  .icon-breathe-halo { pointer-events: none; filter: url(#particle-glow); }
+  .node-glow, .node-burst { pointer-events: none; }
+  #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
+  #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
+  @keyframes titlePulse { 0%, 100% { opacity: 0.76; } 50% { opacity: 1; } }
+  @keyframes titleSlide { 0%, 100% { transform: translateX(0); opacity: 0.9; } 50% { transform: translateX(8px); opacity: 1; } }
+  @keyframes semanticIconBreathe { 0%, 100% { transform: scale(0.96); opacity: 0.72; } 50% { transform: scale(1.08); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    #title-accent, #title-highlight, .semantic-icon-breathe { animation: none; }
+  }
+</style>
+<rect width="100%" height="100%" fill="#ffffff" />
+<defs>
+  <filter id="soft-glow" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="5" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <filter id="particle-glow" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="2.6" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#edf2f7" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="1224" height="668" rx="26" fill="none" stroke="#94a3b8" stroke-width="1.4" opacity="1.00" />
+<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#2563eb" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#e8f1ff" />
+
+<text id="main-title" x="90" y="84" class="title" fill="#172033" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.08s" fill="freeze" />
+  Human-in-the-loop Approval Flow
+</text>
+<text x="74" y="126" class="subtitle" fill="#5b6778" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />
+  user, agent, reviewer, and system each own a clear lane
+</text>
+
+<g id="group-user" class="group" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.17s" fill="freeze" />
+  <rect x="60.0" y="145.0" width="1100.0" height="100.0" rx="22"
+        fill="#fff7ed" fill-opacity="0.34" stroke="#f97316" stroke-width="1.6" stroke-dasharray="9 8">
+  </rect>
+
+
+  <text x="78.0" y="175.0" class="group-label" fill="#5b6778">User</text>
+</g>
+
+<g id="group-agent" class="group" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.29s" fill="freeze" />
+  <rect x="60.0" y="285.0" width="1100.0" height="100.0" rx="22"
+        fill="#f5f3ff" fill-opacity="0.34" stroke="#7c3aed" stroke-width="1.6" stroke-dasharray="9 8">
+  </rect>
+
+
+  <text x="78.0" y="315.0" class="group-label" fill="#5b6778">Agent</text>
+</g>
+
+<g id="group-reviewer" class="group" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.41s" fill="freeze" />
+  <rect x="60.0" y="425.0" width="1100.0" height="100.0" rx="22"
+        fill="#fef2f2" fill-opacity="0.34" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="9 8">
+  </rect>
+
+
+  <text x="78.0" y="455.0" class="group-label" fill="#5b6778">Reviewer</text>
+</g>
+
+<defs>
+  <marker id="arrow-1" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 290.0 217.0 L 290.0 287.0 L 350.0 287.0 L 350.0 357.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-1)" />
+  <path class="edge-draw" d="M 290.0 217.0 L 290.0 287.0 L 350.0 287.0 L 350.0 357.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-1)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.47s" fill="freeze" />
+  </path>
+
+
+
+  <text x="320.0" y="273.0" class="edge-label" fill="#5b6778" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.61s" fill="freeze" />
+    handoff
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 530.0 357.0 L 530.0 427.0 L 590.0 427.0 L 590.0 497.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-2)" />
+  <path class="edge-draw" d="M 530.0 357.0 L 530.0 427.0 L 590.0 427.0 L 590.0 497.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-2)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.59s" fill="freeze" />
+  </path>
+
+
+
+  <text x="560.0" y="413.0" class="edge-label" fill="#5b6778" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.73s" fill="freeze" />
+    handoff
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 770.0 497.0 L 800.0 497.0 L 830.0 497.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-3)" />
+  <path class="edge-draw" d="M 770.0 497.0 L 800.0 497.0 L 830.0 497.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-3)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.71s" fill="freeze" />
+  </path>
+
+
+
+  <text x="800.0" y="483.0" class="edge-label" fill="#5b6778" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.85s" fill="freeze" />
+    handoff
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-4" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 920.0 455.0 L 920.0 427.0 L 920.0 399.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-4)" />
+  <path class="edge-draw" d="M 920.0 455.0 L 920.0 427.0 L 920.0 399.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-4)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.83s" fill="freeze" />
+  </path>
+
+
+
+  <text x="920.0" y="413.0" class="edge-label" fill="#5b6778" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.97s" fill="freeze" />
+    handoff
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-5" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 1010.0 357.0 L 1010.0 287.0 L 1030.0 287.0 L 1030.0 217.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-5)" />
+  <path class="edge-draw" d="M 1010.0 357.0 L 1010.0 287.0 L 1030.0 287.0 L 1030.0 217.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-5)">
+    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.95s" fill="freeze" />
+  </path>
+
+
+
+  <text x="1020.0" y="273.0" class="edge-label" fill="#5b6778" opacity="0">
+    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="1.09s" fill="freeze" />
+    handoff
+  </text>
+</g>
+
+<g id="node-request" class="node motion-node" data-role="actor" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.25s" fill="freeze" />
+
+
+
+  <rect x="110.0" y="175.0" width="180.0" height="84.0" rx="14.0"
+        fill="#fff7ed" stroke="#f97316" stroke-width="2.0" />
+
+<g id="icon-request-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-agent" data-icon="agent" data-node-id="request" opacity="0.94">
+
+
+
+
+  <path id="icon-request-shell" class="semantic-icon semantic-icon-agent icon-agent-shell"
+        d="M 149.6 200.3
+           L 162.2 207.8
+           V 224.8
+           L 149.6 232.6
+           L 137.0 224.8
+           V 207.8
+           Z"
+        fill="#fee2cb" stroke="#f97316" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.92" />
+  <path class="semantic-icon semantic-icon-agent icon-agent-circuit"
+        d="M 149.6 207.1 V 223.1
+           M 143.1 213.3 H 147.9
+           M 151.3 216.7 H 156.7
+           M 145.2 222.4 H 153.3"
+        fill="none" stroke="#f97316" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" opacity="0.50" />
+  <circle id="icon-request-core" class="icon-runtime-part icon-agent-core" cx="149.6" cy="216.7" r="3.0"
+        fill="#f97316" stroke="#fee2cb" stroke-width="1.5" opacity="0.78" />
+  <circle id="icon-request-thought-1" class="icon-runtime-part icon-agent-thought" cx="143.5" cy="209.5" r="2.0"
+        fill="#f97316" opacity="0.46" />
+  <circle id="icon-request-thought-2" class="icon-runtime-part icon-agent-thought" cx="155.7" cy="211.6" r="1.9"
+        fill="#f97316" opacity="0.38" />
+  <circle id="icon-request-thought-3" class="icon-runtime-part icon-agent-thought" cx="146.5" cy="223.1" r="1.8"
+        fill="#f97316" opacity="0.42" />
+  <path id="icon-request-decision-token" class="icon-runtime-part icon-agent-decision-token"
+        d="M 157.8 212.2
+           L 160.2 214.6
+           L 157.8 217.0
+           L 155.4 214.6
+           Z"
+        fill="#f97316" stroke="#fee2cb" stroke-width="1.2" opacity="0" />
+
+
+</g>
+
+  <text x="226.4" y="203.0" text-anchor="middle" fill="#172033">
+<tspan x="226.4" dy="18" class="node-title">Request</tspan>
+<tspan x="226.4" dy="17" class="node-caption">submit</tspan>
+</text>
+</g>
+
+<g id="node-draft" class="node motion-node" data-role="agent" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.37s" fill="freeze" />
+
+
+
+  <rect x="350.0" y="315.0" width="180.0" height="84.0" rx="14.0"
+        fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.0" />
+
+<g id="icon-draft-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-file" data-icon="file" data-node-id="draft" opacity="0.94">
+
+
+
+
+  <g class="semantic-icon-file-page icon-file-page-motion" opacity="0.96">
+
+
+    <g transform="translate(389.6 357.0)">
+      <g>
+
+        <g transform="translate(-389.6 -357.0)">
+          <path class="semantic-icon icon-filled semantic-icon-file icon-file-sheet"
+                d="M 377.4 340.0 H 394.4 L 401.8 347.5 V 374.0 H 377.4 Z"
+                fill="#e2d5fc" stroke="#7c3aed" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+          <g class="icon-file-fold-motion">
+
+            <path d="M 394.4 340.0 L 401.8 347.5 H 394.4 Z"
+                  fill="#ccb3f9" stroke="#7c3aed" stroke-width="2.2" stroke-linejoin="round" />
+            <path d="M 394.4 340.0 V 347.5 H 401.8"
+                  fill="none" stroke="#7c3aed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.88" />
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+
+
+</g>
+
+  <text x="466.4" y="343.0" text-anchor="middle" fill="#172033">
+<tspan x="466.4" dy="18" class="node-title">Draft</tspan>
+<tspan x="466.4" dy="17" class="node-caption">agent</tspan>
+<tspan x="466.4" dy="17" class="node-caption">proposal</tspan>
+</text>
+</g>
+
+<g id="node-review" class="node motion-node" data-role="risk" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.49s" fill="freeze" />
+
+
+
+  <rect x="590.0" y="455.0" width="180.0" height="84.0" rx="14.0"
+        fill="#fef2f2" stroke="#dc2626" stroke-width="2.0" />
+
+<g id="icon-review-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-shield" data-icon="shield" data-node-id="review" opacity="0.94">
+
+
+
+
+  <path d="M 629.6 480.0 L 644.2 487.1 V 498.7
+           C 644.2 508.2, 635.4 512.6, 629.6 514.0
+           C 623.8 512.6, 615.0 508.2, 615.0 498.7
+           V 487.1 Z" class="semantic-icon icon-filled semantic-icon-shield" stroke="#dc2626" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#f9d1d1" />
+  <path d="M 623.8 497.0 L 628.6 502.1 L 636.7 490.5" class="semantic-icon semantic-icon-shield" fill="none" stroke="#dc2626" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+
+
+</g>
+
+  <text x="706.4" y="483.0" text-anchor="middle" fill="#172033">
+<tspan x="706.4" dy="18" class="node-title">Review</tspan>
+<tspan x="706.4" dy="17" class="node-caption">human check</tspan>
+</text>
+</g>
+
+<g id="node-approve" class="node motion-node" data-role="output" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.61s" fill="freeze" />
+
+
+
+  <rect x="830.0" y="455.0" width="180.0" height="84.0" rx="14.0"
+        fill="#f0fdf4" stroke="#16a34a" stroke-width="2.0" />
+
+<g id="icon-approve-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-output" data-icon="output" data-node-id="approve" opacity="0.94">
+
+
+
+
+  <rect id="icon-approve-card" x="856.3" y="484.8" width="22.4" height="23.1" rx="3.1"
+        fill="#cdefd9" stroke="#16a34a" stroke-width="2.8" />
+  <path id="icon-approve-line-1" class="icon-output-line" d="M 862.5 492.2 H 873.3"
+        fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
+  <path id="icon-approve-line-2" class="icon-output-line" d="M 862.5 497.0 H 871.3"
+        fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
+  <path id="icon-approve-check" class="icon-output-check" d="M 864.5 502.8 L 868.2 506.2 L 876.4 497.7"
+        fill="none" stroke="#16a34a" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <circle id="icon-approve-flash" class="icon-runtime-part" cx="873.0" cy="500.7" r="10.5" fill="none" stroke="#16a34a" stroke-width="2" opacity="0" />
+
+
+</g>
+
+  <text x="946.4" y="483.0" text-anchor="middle" fill="#172033">
+<tspan x="946.4" dy="18" class="node-title">Approve</tspan>
+<tspan x="946.4" dy="17" class="node-caption">decision</tspan>
+</text>
+</g>
+
+<g id="node-execute" class="node motion-node" data-role="tool" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.73s" fill="freeze" />
+
+
+
+  <rect x="830.0" y="315.0" width="180.0" height="84.0" rx="14.0"
+        fill="#fffbeb" stroke="#d97706" stroke-width="2.0" />
+
+<g id="icon-execute-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-api" data-icon="api" data-node-id="execute" opacity="0.94">
+
+
+
+
+  <rect id="icon-execute-left-endpoint" x="853.3" y="349.2" width="5.1" height="15.6" rx="2.5"
+        fill="#f9e6c6" stroke="#d97706" stroke-width="2.7" />
+  <rect id="icon-execute-right-endpoint" x="880.8" y="349.2" width="5.1" height="15.6" rx="2.5"
+        fill="#f9e6c6" stroke="#d97706" stroke-width="2.7" />
+  <path d="M 861.1 357.0 H 878.1" class="semantic-icon semantic-icon-api" fill="none" stroke="#d97706" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.62" />
+  <path d="M 866.9 353.6 L 870.6 357.0 L 866.9 360.4
+           M 873.3 360.4 L 869.6 357.0 L 873.3 353.6"
+        fill="none" stroke="#d97706" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.86" />
+  <circle id="icon-execute-request-token" class="icon-runtime-part" cx="862.1" cy="357.0" r="2.9" fill="#d97706" opacity="0" />
+  <circle id="icon-execute-response-token" class="icon-runtime-part" cx="877.1" cy="357.0" r="2.4" fill="#d97706" opacity="0" />
+  <circle id="icon-execute-target-ring" class="icon-runtime-part" cx="877.4" cy="357.0" r="3.7" fill="none" stroke="#d97706" stroke-width="2" opacity="0" />
+  <text id="icon-execute-status" class="icon-runtime-part" x="869.6" y="360.4" text-anchor="middle"
+        fill="#d97706" stroke="none" font-size="8.0" font-weight="700" opacity="0">200</text>
+
+
+</g>
+
+  <text x="946.4" y="343.0" text-anchor="middle" fill="#172033">
+<tspan x="946.4" dy="18" class="node-title">Execute</tspan>
+<tspan x="946.4" dy="17" class="node-caption">system</tspan>
+<tspan x="946.4" dy="17" class="node-caption">action</tspan>
+</text>
+</g>
+
+<g id="node-notify" class="node motion-node" data-role="output" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.85s" fill="freeze" />
+
+
+
+  <rect x="1030.0" y="175.0" width="180.0" height="84.0" rx="14.0"
+        fill="#f0fdf4" stroke="#16a34a" stroke-width="2.0" />
+
+<g id="icon-notify-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-output" data-icon="output" data-node-id="notify" opacity="0.94">
+
+
+
+
+  <rect id="icon-notify-card" x="1056.3" y="204.8" width="22.4" height="23.1" rx="3.1"
+        fill="#cdefd9" stroke="#16a34a" stroke-width="2.8" />
+  <path id="icon-notify-line-1" class="icon-output-line" d="M 1062.5 212.2 H 1073.3"
+        fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
+  <path id="icon-notify-line-2" class="icon-output-line" d="M 1062.5 217.0 H 1071.3"
+        fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
+  <path id="icon-notify-check" class="icon-output-check" d="M 1064.5 222.8 L 1068.2 226.2 L 1076.4 217.7"
+        fill="none" stroke="#16a34a" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <circle id="icon-notify-flash" class="icon-runtime-part" cx="1073.0" cy="220.7" r="10.5" fill="none" stroke="#16a34a" stroke-width="2" opacity="0" />
+
+
+</g>
+
+  <text x="1146.4" y="203.0" text-anchor="middle" fill="#172033">
+<tspan x="1146.4" dy="18" class="node-title">Notify</tspan>
+<tspan x="1146.4" dy="17" class="node-caption">result</tspan>
+</text>
+</g>
+</svg>

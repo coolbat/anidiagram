@@ -3,39 +3,96 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AniDiagram Gallery</title>
+  <title>AniDiagram Showcase</title>
   <style>
     body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: #f8fafc; color: #111827; }
-    main { max-width: 1180px; margin: 0 auto; padding: 28px; }
-    h1 { font-size: 32px; margin: 0 0 8px; }
-    .intro { color: #4b5563; margin: 0 0 22px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+    main { max-width: 1240px; margin: 0 auto; padding: 28px; }
+    h1 { font-size: 36px; margin: 0 0 8px; letter-spacing: 0; }
+    h2 { font-size: 24px; margin: 34px 0 12px; }
+    h3 { font-size: 16px; margin: 12px 14px 4px; }
+    p { color: #4b5563; }
+    .hero img { width: 100%; display: block; border: 1px solid #e5e7eb; border-radius: 8px; background: #fff; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
     article { border: 1px solid #e5e7eb; border-radius: 8px; background: #ffffff; overflow: hidden; }
-    img { display: block; width: 100%; height: auto; }
-    h2 { font-size: 18px; margin: 12px 14px 4px; }
-    p { margin: 0 14px 14px; color: #4b5563; }
+    article img { display: block; width: 100%; height: auto; }
+    article p { margin: 0 14px 14px; }
+    .actions { display: flex; gap: 8px; margin: 0 14px 14px; }
+    .actions a, .actions button { border: 1px solid #d1d5db; border-radius: 6px; background: #fff; color: #111827; padding: 7px 9px; font: inherit; text-decoration: none; cursor: pointer; }
+    .links a { margin-right: 12px; }
   </style>
 </head>
 <body>
   <main>
-    <h1>AniDiagram Gallery</h1>
-    <p class="intro"><a href="styles/index.html">Open the style showcase</a> for one rendered case per visual style.</p>
-    <section class="grid">
-<article><a href="pipeline.html"><img src="pipeline.svg" alt="pipeline preset"></a><h2>pipeline</h2><p>linear work from input to output</p></article>
-<article><a href="loop.html"><img src="loop.svg" alt="loop preset"></a><h2>loop</h2><p>observe, decide, act, learn</p></article>
-<article><a href="hub-spoke.html"><img src="hub-spoke.svg" alt="hub-spoke preset"></a><h2>hub-spoke</h2><p>central coordinator with connected capabilities</p></article>
-<article><a href="layered.html"><img src="layered.svg" alt="layered preset"></a><h2>layered</h2><p>separate interface, domain, and data layers</p></article>
-<article><a href="swimlane.html"><img src="swimlane.svg" alt="swimlane preset"></a><h2>swimlane</h2><p>handoffs across owners</p></article>
-<article><a href="compare.html"><img src="compare.svg" alt="compare preset"></a><h2>compare</h2><p>two options with shared decision criteria</p></article>
-<article><a href="matrix.html"><img src="matrix.svg" alt="matrix preset"></a><h2>matrix</h2><p>two-by-two prioritization grid</p></article>
-<article><a href="timeline.html"><img src="timeline.svg" alt="timeline preset"></a><h2>timeline</h2><p>milestones across a release window</p></article>
-<article><a href="stack.html"><img src="stack.svg" alt="stack preset"></a><h2>stack</h2><p>vertical dependency layers</p></article>
-<article><a href="funnel.html"><img src="funnel.svg" alt="funnel preset"></a><h2>funnel</h2><p>narrow broad input into qualified output</p></article>
-<article><a href="sequence.html"><img src="sequence.svg" alt="sequence preset"></a><h2>sequence</h2><p>ordered messages between participants</p></article>
-<article><a href="er.html"><img src="er.svg" alt="er preset"></a><h2>er</h2><p>entities and relationships</p></article>
-<article><a href="network.html"><img src="network.svg" alt="network preset"></a><h2>network</h2><p>distributed nodes with cross-links</p></article>
-<article><a href="agent-memory.html"><img src="agent-memory.svg" alt="agent-memory preset"></a><h2>agent-memory</h2><p>planning, tools, memory, and grounded output</p></article>
+    <h1>AniDiagram Showcase</h1>
+    <p>Style Showcase makes diagrams look right. Layout Showcase makes diagram purpose obvious. The hero demonstrates the high-fidelity HTML runtime.</p>
+    <section class="hero">
+      <h2>Hero Demo</h2>
+      <a href="hero/agent-runtime-flow.html"><img src="hero/agent-runtime-flow.svg" alt="Agent Runtime Flow"></a>
+      <p>Agent Runtime Flow - High-fidelity runtime, Agent flow, Semantic icon performance</p>
+      <p class="actions"><a href="hero/agent-runtime-flow.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/hero/agent-runtime-flow.diagram.json --style styles/deep-tech.json --outdir outputs --basename agent-runtime-flow --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p>
+      <p class="links"><a href="hero/index.html">Open hero gallery</a><a href="showcase_manifest.json">View manifest</a></p>
+    </section>
+    <section>
+      <h2>Style Showcase</h2>
+      <p>One signature case for every bundled visual style.</p>
+      <div class="grid">
+<article><a href="styles/minimal-light.html"><img src="styles/minimal-light.svg" alt="minimal-light showcase"></a><h3>minimal-light</h3><p>Customer Support Triage</p><p>SaaS, Operations, Support flows</p><p class="actions"><a href="styles/minimal-light.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/styles/minimal-light-customer-support-triage.diagram.json --style styles/minimal-light.json --outdir outputs --basename minimal-light --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="styles/deep-tech.html"><img src="styles/deep-tech.svg" alt="deep-tech showcase"></a><h3>deep-tech</h3><p>Realtime AI Ops Mesh</p><p>AI ops, Realtime systems, Agent meshes</p><p class="actions"><a href="styles/deep-tech.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/styles/deep-tech-realtime-ai-ops-mesh.diagram.json --style styles/deep-tech.json --outdir outputs --basename deep-tech --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="styles/blueprint.html"><img src="styles/blueprint.svg" alt="blueprint showcase"></a><h3>blueprint</h3><p>MCP Server Architecture</p><p>Architecture, Protocols, Cloud boundaries</p><p class="actions"><a href="styles/blueprint.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/styles/blueprint-mcp-server-architecture.diagram.json --style styles/blueprint.json --outdir outputs --basename blueprint --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="styles/flat-icon.html"><img src="styles/flat-icon.svg" alt="flat-icon showcase"></a><h3>flat-icon</h3><p>Feature Priority Board</p><p>Roadmaps, Priority boards, Product planning</p><p class="actions"><a href="styles/flat-icon.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/styles/flat-icon-feature-priority-board.diagram.json --style styles/flat-icon.json --outdir outputs --basename flat-icon --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="styles/dark-terminal.html"><img src="styles/dark-terminal.svg" alt="dark-terminal showcase"></a><h3>dark-terminal</h3><p>Incident Response Runbook</p><p>Incident response, Debugging, Runbooks</p><p class="actions"><a href="styles/dark-terminal.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/styles/dark-terminal-incident-response-runbook.diagram.json --style styles/dark-terminal.json --outdir outputs --basename dark-terminal --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="styles/notion-clean.html"><img src="styles/notion-clean.svg" alt="notion-clean showcase"></a><h3>notion-clean</h3><p>Product Discovery Workflow</p><p>Product discovery, Docs, Workflow notes</p><p class="actions"><a href="styles/notion-clean.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/styles/notion-clean-product-discovery-workflow.diagram.json --style styles/notion-clean.json --outdir outputs --basename notion-clean --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="styles/glassmorphism.html"><img src="styles/glassmorphism.svg" alt="glassmorphism showcase"></a><h3>glassmorphism</h3><p>AI Growth Funnel</p><p>Growth funnels, Journeys, Presentation flows</p><p class="actions"><a href="styles/glassmorphism.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/styles/glassmorphism-ai-growth-funnel.diagram.json --style styles/glassmorphism.json --outdir outputs --basename glassmorphism --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="styles/claude-warm.html"><img src="styles/claude-warm.svg" alt="claude-warm showcase"></a><h3>claude-warm</h3><p>Research Reasoning Loop</p><p>Reasoning, Research loops, Planning</p><p class="actions"><a href="styles/claude-warm.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/styles/claude-warm-research-reasoning-loop.diagram.json --style styles/claude-warm.json --outdir outputs --basename claude-warm --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="styles/openai-minimal.html"><img src="styles/openai-minimal.svg" alt="openai-minimal showcase"></a><h3>openai-minimal</h3><p>Evaluation Pipeline</p><p>Evaluation, Benchmarks, Quality gates</p><p class="actions"><a href="styles/openai-minimal.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/styles/openai-minimal-evaluation-pipeline.diagram.json --style styles/openai-minimal.json --outdir outputs --basename openai-minimal --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="styles/dark-luxury.html"><img src="styles/dark-luxury.svg" alt="dark-luxury showcase"></a><h3>dark-luxury</h3><p>Executive Signal Network</p><p>Executive views, Signal maps, Strategy</p><p class="actions"><a href="styles/dark-luxury.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/styles/dark-luxury-executive-signal-network.diagram.json --style styles/dark-luxury.json --outdir outputs --basename dark-luxury --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="styles/aurora-orb.html"><img src="styles/aurora-orb.svg" alt="aurora-orb showcase"></a><h3>aurora-orb</h3><p>Creative Agent Studio</p><p>Creative tools, Multimodal agents, Studio flows</p><p class="actions"><a href="styles/aurora-orb.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/styles/aurora-orb-creative-agent-studio.diagram.json --style styles/aurora-orb.json --outdir outputs --basename aurora-orb --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="styles/sketch-board.html"><img src="styles/sketch-board.svg" alt="sketch-board showcase"></a><h3>sketch-board</h3><p>Attention Teaching Flow</p><p>Teaching, Attention flows, Explainers</p><p class="actions"><a href="styles/sketch-board.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/styles/sketch-board-attention-teaching-flow.diagram.json --style styles/sketch-board.json --outdir outputs --basename sketch-board --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+      </div>
+    </section>
+    <section>
+      <h2>Layout Showcase</h2>
+      <p>One standard teaching case for every clean-room layout preset.</p>
+      <div class="grid">
+<article><a href="layouts/pipeline.html"><img src="layouts/pipeline.svg" alt="pipeline showcase"></a><h3>pipeline</h3><p>RAG Ingestion Pipeline</p><p>ETL, Build steps, AI pipelines</p><p class="actions"><a href="layouts/pipeline.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/layouts/pipeline-rag-ingestion-pipeline.diagram.json --style styles/blueprint.json --outdir outputs --basename pipeline --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="layouts/loop.html"><img src="layouts/loop.svg" alt="loop showcase"></a><h3>loop</h3><p>Agent Reflection Loop</p><p>Feedback loops, Agent learning, Refinement</p><p class="actions"><a href="layouts/loop.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/layouts/loop-agent-reflection-loop.diagram.json --style styles/claude-warm.json --outdir outputs --basename loop --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="layouts/hub-spoke.html"><img src="layouts/hub-spoke.svg" alt="hub-spoke showcase"></a><h3>hub-spoke</h3><p>Agent Tool Hub</p><p>Tool routers, Agent hubs, Capability maps</p><p class="actions"><a href="layouts/hub-spoke.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/layouts/hub-spoke-agent-tool-hub.diagram.json --style styles/deep-tech.json --outdir outputs --basename hub-spoke --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="layouts/layered.html"><img src="layouts/layered.svg" alt="layered showcase"></a><h3>layered</h3><p>LLM App Architecture Layers</p><p>System layers, Architecture, Ownership</p><p class="actions"><a href="layouts/layered.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/layouts/layered-llm-app-architecture-layers.diagram.json --style styles/notion-clean.json --outdir outputs --basename layered --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="layouts/swimlane.html"><img src="layouts/swimlane.svg" alt="swimlane showcase"></a><h3>swimlane</h3><p>Human-in-the-loop Approval Flow</p><p>Handoffs, Approvals, Responsibility</p><p class="actions"><a href="layouts/swimlane.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/layouts/swimlane-human-in-the-loop-approval-flow.diagram.json --style styles/minimal-light.json --outdir outputs --basename swimlane --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="layouts/compare.html"><img src="layouts/compare.svg" alt="compare showcase"></a><h3>compare</h3><p>RAG vs Agentic RAG</p><p>Tradeoffs, Before after, Architecture decisions</p><p class="actions"><a href="layouts/compare.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/layouts/compare-rag-vs-agentic-rag.diagram.json --style styles/openai-minimal.json --outdir outputs --basename compare --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="layouts/matrix.html"><img src="layouts/matrix.svg" alt="matrix showcase"></a><h3>matrix</h3><p>AI Feature Priority Matrix</p><p>Prioritization, PM planning, Roadmaps</p><p class="actions"><a href="layouts/matrix.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/layouts/matrix-ai-feature-priority-matrix.diagram.json --style styles/flat-icon.json --outdir outputs --basename matrix --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="layouts/timeline.html"><img src="layouts/timeline.svg" alt="timeline showcase"></a><h3>timeline</h3><p>AI Product Launch Roadmap</p><p>Roadmaps, Milestones, Release planning</p><p class="actions"><a href="layouts/timeline.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/layouts/timeline-ai-product-launch-roadmap.diagram.json --style styles/blueprint.json --outdir outputs --basename timeline --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="layouts/stack.html"><img src="layouts/stack.svg" alt="stack showcase"></a><h3>stack</h3><p>AI Runtime Stack</p><p>Runtime layers, Infrastructure, Dependencies</p><p class="actions"><a href="layouts/stack.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/layouts/stack-ai-runtime-stack.diagram.json --style styles/dark-terminal.json --outdir outputs --basename stack --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="layouts/funnel.html"><img src="layouts/funnel.svg" alt="funnel showcase"></a><h3>funnel</h3><p>Lead-to-Agent Automation Funnel</p><p>Qualification, Conversion, Automation</p><p class="actions"><a href="layouts/funnel.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/layouts/funnel-lead-to-agent-automation-funnel.diagram.json --style styles/glassmorphism.json --outdir outputs --basename funnel --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="layouts/sequence.html"><img src="layouts/sequence.svg" alt="sequence showcase"></a><h3>sequence</h3><p>API Tool Calling Sequence</p><p>Request chains, Tool calls, Protocols</p><p class="actions"><a href="layouts/sequence.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/layouts/sequence-api-tool-calling-sequence.diagram.json --style styles/notion-clean.json --outdir outputs --basename sequence --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="layouts/er.html"><img src="layouts/er.svg" alt="er showcase"></a><h3>er</h3><p>Agent Memory Data Model</p><p>Data models, Relationships, Memory schemas</p><p class="actions"><a href="layouts/er.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/layouts/er-agent-memory-data-model.diagram.json --style styles/openai-minimal.json --outdir outputs --basename er --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="layouts/network.html"><img src="layouts/network.svg" alt="network showcase"></a><h3>network</h3><p>Distributed Agent Runtime Mesh</p><p>Distributed systems, Runtime meshes, Routing</p><p class="actions"><a href="layouts/network.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/layouts/network-distributed-agent-runtime-mesh.diagram.json --style styles/dark-luxury.json --outdir outputs --basename network --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+<article><a href="layouts/agent-memory.html"><img src="layouts/agent-memory.svg" alt="agent-memory showcase"></a><h3>agent-memory</h3><p>Personalized Agent Memory Flow</p><p>Agent memory, Retrieval, Grounded output</p><p class="actions"><a href="layouts/agent-memory.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/layouts/agent-memory-personalized-agent-memory-flow.diagram.json --style styles/deep-tech.json --outdir outputs --basename agent-memory --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
+      </div>
+    </section>
+    <section>
+      <h2>Runtime Motion Showcase</h2>
+      <p>The current P0 high-fidelity icon performances used by the runtime HTML output.</p>
+      <div class="grid">
+<article><h3>agent-think-act-v2</h3><p>Agent Think Act</p><p>Think, Decide, Act</p></article>
+<article><h3>search-discover-v2</h3><p>Search Discover</p><p>Scan, Find, Lock target</p></article>
+<article><h3>api-request-response-v2</h3><p>API Request Response</p><p>Request, Response, Status</p></article>
+<article><h3>database-write-v2</h3><p>Database Write</p><p>Write, Commit, Confirm</p></article>
+      </div>
     </section>
   </main>
+  <script>
+    document.querySelectorAll("[data-copy]").forEach((button) => {
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(button.dataset.copy || "");
+          button.textContent = "Copied";
+          setTimeout(() => { button.textContent = "Copy CLI"; }, 1400);
+        } catch (error) {
+          button.textContent = "Copy failed";
+        }
+      });
+    });
+  </script>
 </body>
 </html>
