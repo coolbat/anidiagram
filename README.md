@@ -20,6 +20,10 @@ AniDiagram uses two complementary galleries:
 Full gallery home: [gallery/index.html](./gallery/index.html)
 Machine-readable manifest: [gallery/showcase_manifest.json](./gallery/showcase_manifest.json)
 
+README images are portable SVG fallback previews. Open the linked `.html` files
+for the high-fidelity GSAP runtime; HTML runtime pages use a static SVG stage
+and do not include SVG/SMIL animation tags.
+
 ### Hero Demo
 
 | Agent Runtime Flow |
@@ -29,7 +33,7 @@ Machine-readable manifest: [gallery/showcase_manifest.json](./gallery/showcase_m
 ### Style Showcase
 
 Each bundled style has a clean-room signature case plus rendered SVG/HTML
-assets. Click a preview to open its high-fidelity HTML output.
+assets. The visible preview is SVG fallback; click it to open high-fidelity HTML.
 
 | `minimal-light` | `deep-tech` | `blueprint` |
 | --- | --- | --- |

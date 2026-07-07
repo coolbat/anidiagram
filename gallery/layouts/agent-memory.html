@@ -45,7 +45,7 @@
     </div>
     <div class="stage" id="stage">
       <div class="viewport" id="viewport">
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="teaching" data-motion-sequence="step-stagger" data-motion-edge="signal-arrow" data-motion-node="icon-performance" data-motion-group="border-scan" data-motion-title="highlight-sweep" data-motion-reduced="subtle">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="off" data-motion-sequence="step-stagger" data-motion-edge="none" data-motion-node="none" data-motion-group="none" data-motion-title="static" data-motion-reduced="static">
 <title id="diagram-title">Personalized Agent Memory Flow</title>
 <desc id="diagram-desc">the agent retrieves context, commits memory, and produces a grounded answer</desc>
 <style>
@@ -95,50 +95,30 @@
 </defs>
 <rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
 <rect x="28" y="26" width="1224" height="668" rx="26" fill="none" stroke="#64748b" stroke-width="1.4" opacity="1.00" />
-<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#22d3ee" />
-<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#0f2742" />
+<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#22d3ee" style="animation:none" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#0f2742" style="animation:none" />
 
-<rect class="title-sweep" x="72" y="46" width="0" height="56" rx="16" fill="#22d3ee" opacity="0.16">
-  <animate attributeName="width" values="0;360;0" dur="3.20s" begin="0.34s" repeatCount="indefinite" />
-  <animate attributeName="x" values="72;72;432" dur="3.20s" begin="0.34s" repeatCount="indefinite" />
-</rect>
-<text id="main-title" x="90" y="84" class="title" fill="#f8fafc" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.08s" fill="freeze" />
+<text id="main-title" x="90" y="84" class="title" fill="#f8fafc" opacity="1">
   Personalized Agent Memory Flow
 </text>
-<text x="74" y="126" class="subtitle" fill="#cbd5e1" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />
+<text x="74" y="126" class="subtitle" fill="#cbd5e1" opacity="1">
   the agent retrieves context, commits memory, and produces a grounded answer
 </text>
 
-<g id="group-runtime" class="group" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.17s" fill="freeze" />
+<g id="group-runtime" class="group" opacity="1">
   <rect x="55.0" y="155.0" width="630.0" height="410.0" rx="22"
         fill="#1e1b4b" fill-opacity="0.34" stroke="#a78bfa" stroke-width="1.6" stroke-dasharray="9 8">
-    <animate attributeName="stroke-dashoffset" values="0;-34" dur="5.60s" begin="0.17s" repeatCount="indefinite" />
   </rect>
 
-  <rect class="group-border-scan" x="55.0" y="155.0" width="630.0" height="410.0" rx="22"
-        fill="none" stroke="#a78bfa" stroke-width="3.4" stroke-linecap="round"
-        stroke-dasharray="124.8 728.0" opacity="0.72" filter="url(#soft-glow)">
-    <animate attributeName="stroke-dashoffset" values="0;-2080.0" dur="7.15s" begin="0.27s" repeatCount="indefinite" />
-  </rect>
 
   <text x="73.0" y="185.0" class="group-label" fill="#cbd5e1">Agent Runtime</text>
 </g>
 
-<g id="group-state" class="group" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.29s" fill="freeze" />
+<g id="group-state" class="group" opacity="1">
   <rect x="710.0" y="205.0" width="430.0" height="215.0" rx="22"
         fill="#052e24" fill-opacity="0.34" stroke="#34d399" stroke-width="1.6" stroke-dasharray="9 8">
-    <animate attributeName="stroke-dashoffset" values="0;-34" dur="6.00s" begin="0.29s" repeatCount="indefinite" />
   </rect>
 
-  <rect class="group-border-scan" x="710.0" y="205.0" width="430.0" height="215.0" rx="22"
-        fill="none" stroke="#34d399" stroke-width="3.4" stroke-linecap="round"
-        stroke-dasharray="80.0 451.5" opacity="0.72" filter="url(#soft-glow)">
-    <animate attributeName="stroke-dashoffset" values="0;-1290.0" dur="7.50s" begin="0.39s" repeatCount="indefinite" />
-  </rect>
 
   <text x="728.0" y="235.0" class="group-label" fill="#cbd5e1">Memory + Output</text>
 </g>
@@ -153,10 +133,7 @@
   <path class="edge-draw" d="M 260.0 357.0 L 295.0 361.0" fill="none" stroke="#fbbf24" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-1)" />
 
-  <circle class="edge-particle" r="5.5" fill="#fbbf24" opacity="0.92">
-    <animateMotion dur="2.05s" repeatCount="indefinite" path="M 260.0 357.0 L 295.0 361.0" begin="-0.19s" />
-    <animate attributeName="opacity" values="0;0.92;0" dur="2.05s" begin="-0.19s" repeatCount="indefinite" />
-  </circle>
+
 
   <text x="277.5" y="345.0" class="edge-label" fill="#cbd5e1" opacity="1">
     intent
@@ -173,10 +150,7 @@
   <path class="edge-draw" d="M 485.0 361.0 L 485.0 304.0 L 525.0 304.0 L 525.0 247.0" fill="none" stroke="#22d3ee" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-2)" />
 
-  <circle class="edge-particle" r="5.5" fill="#22d3ee" opacity="0.92">
-    <animateMotion dur="2.05s" repeatCount="indefinite" path="M 485.0 361.0 L 485.0 304.0 L 525.0 304.0 L 525.0 247.0" begin="-0.38s" />
-    <animate attributeName="opacity" values="0;0.92;0" dur="2.05s" begin="-0.38s" repeatCount="indefinite" />
-  </circle>
+
 
   <text x="505.0" y="290.0" class="edge-label" fill="#cbd5e1" opacity="1">
     context
@@ -193,10 +167,7 @@
   <path class="edge-draw" d="M 485.0 361.0 L 485.0 414.0 L 525.0 414.0 L 525.0 467.0" fill="none" stroke="#f59e0b" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-3)" />
 
-  <circle class="edge-particle" r="5.5" fill="#f59e0b" opacity="0.92">
-    <animateMotion dur="2.05s" repeatCount="indefinite" path="M 485.0 361.0 L 485.0 414.0 L 525.0 414.0 L 525.0 467.0" begin="-0.57s" />
-    <animate attributeName="opacity" values="0;0.92;0" dur="2.05s" begin="-0.57s" repeatCount="indefinite" />
-  </circle>
+
 
   <text x="505.0" y="400.0" class="edge-label" fill="#cbd5e1" opacity="1">
     action
@@ -213,10 +184,7 @@
   <path class="edge-draw" d="M 705.0 247.0 L 705.0 304.0 L 760.0 304.0 L 760.0 361.0" fill="none" stroke="#34d399" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-4)" />
 
-  <circle class="edge-particle" r="4.6" fill="#34d399" opacity="0.92">
-    <animateMotion dur="2.05s" repeatCount="indefinite" path="M 705.0 247.0 L 705.0 304.0 L 760.0 304.0 L 760.0 361.0" begin="-0.76s" />
-    <animate attributeName="opacity" values="0;0.92;0" dur="2.05s" begin="-0.76s" repeatCount="indefinite" />
-  </circle>
+
 
   <text x="732.5" y="290.0" class="edge-label" fill="#cbd5e1" opacity="1">
     facts
@@ -233,10 +201,7 @@
   <path class="edge-draw" d="M 705.0 467.0 L 705.0 414.0 L 760.0 414.0 L 760.0 361.0" fill="none" stroke="#34d399" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-5)" />
 
-  <circle class="edge-particle" r="4.6" fill="#34d399" opacity="0.92">
-    <animateMotion dur="2.05s" repeatCount="indefinite" path="M 705.0 467.0 L 705.0 414.0 L 760.0 414.0 L 760.0 361.0" begin="-0.95s" />
-    <animate attributeName="opacity" values="0;0.92;0" dur="2.05s" begin="-0.95s" repeatCount="indefinite" />
-  </circle>
+
 
   <text x="732.5" y="400.0" class="edge-label" fill="#cbd5e1" opacity="1">
     result
@@ -253,18 +218,15 @@
   <path class="edge-draw" d="M 950.0 361.0 L 1005.0 357.0" fill="none" stroke="#4ade80" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-6)" />
 
-  <circle class="edge-particle" r="5.5" fill="#4ade80" opacity="0.92">
-    <animateMotion dur="2.05s" repeatCount="indefinite" path="M 950.0 361.0 L 1005.0 357.0" begin="-1.14s" />
-    <animate attributeName="opacity" values="0;0.92;0" dur="2.05s" begin="-1.14s" repeatCount="indefinite" />
-  </circle>
+
 
   <text x="977.5" y="345.0" class="edge-label" fill="#cbd5e1" opacity="1">
     ground
   </text>
 </g>
 
-<g id="node-user" class="node motion-node" data-role="actor" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.25s" fill="freeze" />
+<g id="node-user" class="node motion-node" data-role="actor" opacity="1">
+
 
 
 
@@ -276,18 +238,18 @@
 
 
 
-  <polygon id="icon-user-shell" points="119.6,340.6 133.9,349.0 133.9,365.0 119.6,373.4 105.3,365.0 105.3,349.0"
+  <polygon id="icon-user-shell" points="119.6,343.7 131.2,350.5 131.2,363.5 119.6,370.3 108.0,363.5 108.0,350.5"
         class="semantic-icon icon-filled semantic-icon-token" stroke="#fbbf24" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#4f3e12" />
-  <circle id="icon-user-core" class="icon-token-core" cx="119.6" cy="357.0" r="3.8" fill="#fbbf24" opacity="0.70" />
-  <path id="icon-user-tick-left" class="icon-token-tick" d="M 110.4 357.0 H 114.1"
+  <circle id="icon-user-core" class="icon-token-core" cx="119.6" cy="357.0" r="3.1" fill="#fbbf24" opacity="0.70" />
+  <path id="icon-user-tick-left" class="icon-token-tick" d="M 112.1 357.0 H 115.2"
         fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" opacity="0.70" />
-  <path id="icon-user-tick-right" class="icon-token-tick" d="M 125.1 357.0 H 128.8"
+  <path id="icon-user-tick-right" class="icon-token-tick" d="M 124.0 357.0 H 127.1"
         fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" opacity="0.70" />
-  <path id="icon-user-tick-top" class="icon-token-tick" d="M 119.6 346.5 V 349.9"
+  <path id="icon-user-tick-top" class="icon-token-tick" d="M 119.6 348.5 V 351.2"
         fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" opacity="0.58" />
-  <path id="icon-user-tick-bottom" class="icon-token-tick" d="M 119.6 364.1 V 367.5"
+  <path id="icon-user-tick-bottom" class="icon-token-tick" d="M 119.6 362.8 V 365.5"
         fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" opacity="0.58" />
-  <circle id="icon-user-halo" class="icon-runtime-part" cx="119.6" cy="357.0" r="14.7" fill="none" stroke="#fbbf24" stroke-width="2" opacity="0" />
+  <circle id="icon-user-halo" class="icon-runtime-part" cx="119.6" cy="357.0" r="11.9" fill="none" stroke="#fbbf24" stroke-width="2" opacity="0" />
 
 
 </g>
@@ -298,8 +260,8 @@
 </text>
 </g>
 
-<g id="node-agent" class="node motion-node" data-role="agent" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.37s" fill="freeze" />
+<g id="node-agent" class="node motion-node" data-role="agent" opacity="1">
+
 
 
 
@@ -312,33 +274,33 @@
 
 
   <path id="icon-agent-shell" class="semantic-icon semantic-icon-agent icon-agent-shell"
-        d="M 336.8 340.4
-           L 352.3 349.7
-           V 370.7
-           L 336.8 380.3
-           L 321.3 370.7
-           V 349.7
+        d="M 336.8 344.3
+           L 349.4 351.8
+           V 368.8
+           L 336.8 376.6
+           L 324.2 368.8
+           V 351.8
            Z"
         fill="#3c3472" stroke="#a78bfa" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.92" />
   <path class="semantic-icon semantic-icon-agent icon-agent-circuit"
-        d="M 336.8 348.8 V 368.6
-           M 328.8 356.4 H 334.7
-           M 338.9 360.6 H 345.6
-           M 331.3 367.7 H 341.4"
+        d="M 336.8 351.1 V 367.1
+           M 330.3 357.3 H 335.1
+           M 338.5 360.7 H 343.9
+           M 332.4 366.4 H 340.5"
         fill="none" stroke="#a78bfa" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" opacity="0.50" />
-  <circle id="icon-agent-core" class="icon-runtime-part icon-agent-core" cx="336.8" cy="360.6" r="3.6"
+  <circle id="icon-agent-core" class="icon-runtime-part icon-agent-core" cx="336.8" cy="360.7" r="3.0"
         fill="#a78bfa" stroke="#3c3472" stroke-width="1.5" opacity="0.78" />
-  <circle id="icon-agent-thought-1" class="icon-runtime-part icon-agent-thought" cx="329.2" cy="351.8" r="2.2"
+  <circle id="icon-agent-thought-1" class="icon-runtime-part icon-agent-thought" cx="330.7" cy="353.5" r="2.0"
         fill="#a78bfa" opacity="0.46" />
-  <circle id="icon-agent-thought-2" class="icon-runtime-part icon-agent-thought" cx="344.4" cy="354.3" r="2.0"
+  <circle id="icon-agent-thought-2" class="icon-runtime-part icon-agent-thought" cx="342.9" cy="355.6" r="1.9"
         fill="#a78bfa" opacity="0.38" />
-  <circle id="icon-agent-thought-3" class="icon-runtime-part icon-agent-thought" cx="333.0" cy="368.6" r="1.9"
+  <circle id="icon-agent-thought-3" class="icon-runtime-part icon-agent-thought" cx="333.7" cy="367.1" r="1.8"
         fill="#a78bfa" opacity="0.42" />
   <path id="icon-agent-decision-token" class="icon-runtime-part icon-agent-decision-token"
-        d="M 346.9 355.3
-           L 349.6 358.1
-           L 346.9 360.8
-           L 344.1 358.1
+        d="M 345.0 356.2
+           L 347.4 358.6
+           L 345.0 361.0
+           L 342.6 358.6
            Z"
         fill="#a78bfa" stroke="#3c3472" stroke-width="1.2" opacity="0" />
 
@@ -351,8 +313,8 @@
 </text>
 </g>
 
-<g id="node-search" class="node motion-node" data-role="source" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.49s" fill="freeze" />
+<g id="node-search" class="node motion-node" data-role="source" opacity="1">
+
 
 
 
@@ -364,13 +326,13 @@
 
 
 
-  <circle id="icon-search-lens" cx="561.2" cy="243.6" r="11.3" class="semantic-icon icon-filled semantic-icon-search" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#0d4759" />
-  <path id="icon-search-handle" d="M 570.9 253.3 L 583.9 266.3" class="semantic-icon semantic-icon-search" fill="none" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-  <path id="icon-search-scan" class="icon-runtime-part" d="M 551.6 237.8 L 568.8 252.9"
+  <circle id="icon-search-lens" cx="561.9" cy="244.3" r="9.2" class="semantic-icon icon-filled semantic-icon-search" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#0d4759" />
+  <path id="icon-search-handle" d="M 569.7 252.1 L 580.2 262.6" class="semantic-icon semantic-icon-search" fill="none" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <path id="icon-search-scan" class="icon-runtime-part" d="M 554.1 239.5 L 568.0 251.8"
         fill="none" stroke="#22d3ee" stroke-width="2.8" stroke-linecap="round" opacity="0" />
-  <circle id="icon-search-result-1" class="icon-runtime-part" cx="557.7" cy="242.4" r="2.7" fill="#22d3ee" opacity="0" />
-  <circle id="icon-search-result-2" class="icon-runtime-part" cx="565.0" cy="246.6" r="2.3" fill="#22d3ee" opacity="0" />
-  <circle id="icon-search-target" class="icon-runtime-part" cx="568.4" cy="242.8" r="4.6" fill="none" stroke="#22d3ee" stroke-width="2" opacity="0" />
+  <circle id="icon-search-result-1" class="icon-runtime-part" cx="559.0" cy="243.3" r="2.2" fill="#22d3ee" opacity="0" />
+  <circle id="icon-search-result-2" class="icon-runtime-part" cx="564.9" cy="246.7" r="1.9" fill="#22d3ee" opacity="0" />
+  <circle id="icon-search-target" class="icon-runtime-part" cx="567.7" cy="243.6" r="3.7" fill="none" stroke="#22d3ee" stroke-width="2" opacity="0" />
 
 
 </g>
@@ -381,8 +343,8 @@
 </text>
 </g>
 
-<g id="node-memory" class="node motion-node" data-role="memory" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.61s" fill="freeze" />
+<g id="node-memory" class="node motion-node" data-role="memory" opacity="1">
+
 
 
 
@@ -394,14 +356,14 @@
 
 
 
-  <ellipse id="icon-memory-lid" cx="801.8" cy="348.0" rx="17.2" ry="7.1" class="semantic-icon icon-filled semantic-icon-database" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#0f523e" />
-  <path id="icon-memory-body" d="M 784.6 348.0 L 784.6 371.9
-           C 784.6 379.5, 819.0 379.5, 819.0 371.9
-           L 819.0 348.0" class="semantic-icon semantic-icon-database" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-  <path id="icon-memory-layer-1" d="M 784.6 361.0 C 784.6 368.1, 819.0 368.1, 819.0 361.0" class="semantic-icon semantic-icon-database" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.72" />
-  <path id="icon-memory-layer-2" d="M 786.7 369.8 C 793.8 374.9, 809.8 374.9, 816.9 369.8" class="semantic-icon semantic-icon-database" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.56" />
-  <circle id="icon-memory-write-token" class="icon-runtime-part" cx="792.3" cy="341.3" r="3.4" fill="#34d399" opacity="0" />
-  <circle id="icon-memory-flash" class="icon-runtime-part" cx="801.8" cy="363.1" r="15.1" fill="none" stroke="#34d399" stroke-width="2" opacity="0" />
+  <ellipse id="icon-memory-lid" cx="801.8" cy="350.5" rx="13.9" ry="5.8" class="semantic-icon icon-filled semantic-icon-database" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#0f523e" />
+  <path id="icon-memory-body" d="M 787.9 350.5 L 787.9 369.8
+           C 787.9 376.0, 815.7 376.0, 815.7 369.8
+           L 815.7 350.5" class="semantic-icon semantic-icon-database" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <path id="icon-memory-layer-1" d="M 787.9 361.0 C 787.9 366.8, 815.7 366.8, 815.7 361.0" class="semantic-icon semantic-icon-database" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.72" />
+  <path id="icon-memory-layer-2" d="M 789.6 368.1 C 795.3 372.2, 808.3 372.2, 814.0 368.1" class="semantic-icon semantic-icon-database" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.56" />
+  <circle id="icon-memory-write-token" class="icon-runtime-part" cx="794.1" cy="345.0" r="2.8" fill="#34d399" opacity="0" />
+  <circle id="icon-memory-flash" class="icon-runtime-part" cx="801.8" cy="362.7" r="12.2" fill="none" stroke="#34d399" stroke-width="2" opacity="0" />
 
 
 </g>
@@ -412,8 +374,8 @@
 </text>
 </g>
 
-<g id="node-tool" class="node motion-node" data-role="tool" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.73s" fill="freeze" />
+<g id="node-tool" class="node motion-node" data-role="tool" opacity="1">
+
 
 
 
@@ -425,16 +387,16 @@
 
 
 
-  <rect id="icon-tool-chip" x="546.1" y="455.2" width="30.7" height="23.5" rx="5.5"
+  <rect id="icon-tool-chip" x="549.6" y="457.5" width="24.8" height="19.0" rx="4.4"
         fill="#50340a" stroke="#f59e0b" stroke-width="2.8" />
-  <text id="icon-tool-glyph" x="558.3" y="470.6" text-anchor="middle"
-        fill="#f59e0b" stroke="none" font-size="10.9" font-weight="800">fx</text>
-  <circle id="icon-tool-connector" cx="573.4" cy="467.0" r="2.7" fill="#f59e0b" opacity="0.72" />
-  <path id="icon-tool-spark-1" class="icon-tool-spark" d="M 578.5 457.8 L 581.8 454.0"
+  <text id="icon-tool-glyph" x="559.5" y="469.9" text-anchor="middle"
+        fill="#f59e0b" stroke="none" font-size="10.0" font-weight="800">fx</text>
+  <circle id="icon-tool-connector" cx="571.7" cy="467.0" r="2.2" fill="#f59e0b" opacity="0.72" />
+  <path id="icon-tool-spark-1" class="icon-tool-spark" d="M 575.8 459.5 L 578.5 456.5"
         fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" opacity="0.84" />
-  <path id="icon-tool-spark-2" class="icon-tool-spark" d="M 579.3 475.0 L 583.5 477.9"
+  <path id="icon-tool-spark-2" class="icon-tool-spark" d="M 576.5 473.5 L 579.9 475.8"
         fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" opacity="0.84" />
-  <circle id="icon-tool-flash" class="icon-runtime-part" cx="578.9" cy="467.0" r="8.4" fill="none" stroke="#f59e0b" stroke-width="2" opacity="0" />
+  <circle id="icon-tool-flash" class="icon-runtime-part" cx="576.2" cy="467.0" r="6.8" fill="none" stroke="#f59e0b" stroke-width="2" opacity="0" />
 
 
 </g>
@@ -445,8 +407,8 @@
 </text>
 </g>
 
-<g id="node-output" class="node motion-node" data-role="output" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.85s" fill="freeze" />
+<g id="node-output" class="node motion-node" data-role="output" opacity="1">
+
 
 
 
@@ -458,15 +420,15 @@
 
 
 
-  <rect id="icon-output-card" x="1028.2" y="341.9" width="27.7" height="28.6" rx="3.8"
+  <rect id="icon-output-card" x="1031.3" y="344.8" width="22.4" height="23.1" rx="3.1"
         fill="#14552d" stroke="#4ade80" stroke-width="2.8" />
-  <path id="icon-output-line-1" class="icon-output-line" d="M 1035.8 351.1 H 1049.2"
+  <path id="icon-output-line-1" class="icon-output-line" d="M 1037.5 352.2 H 1048.3"
         fill="none" stroke="#4ade80" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
-  <path id="icon-output-line-2" class="icon-output-line" d="M 1035.8 357.0 H 1046.7"
+  <path id="icon-output-line-2" class="icon-output-line" d="M 1037.5 357.0 H 1046.3"
         fill="none" stroke="#4ade80" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
-  <path id="icon-output-check" class="icon-output-check" d="M 1038.3 364.1 L 1042.9 368.3 L 1053.0 357.8"
+  <path id="icon-output-check" class="icon-output-check" d="M 1039.5 362.8 L 1043.2 366.2 L 1051.4 357.7"
         fill="none" stroke="#4ade80" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
-  <circle id="icon-output-flash" class="icon-runtime-part" cx="1048.8" cy="361.6" r="13.0" fill="none" stroke="#4ade80" stroke-width="2" opacity="0" />
+  <circle id="icon-output-flash" class="icon-runtime-part" cx="1048.0" cy="360.7" r="10.5" fill="none" stroke="#4ade80" stroke-width="2" opacity="0" />
 
 
 </g>

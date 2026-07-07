@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import html
 import math
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 from .effects import channel_effect, effect_active
@@ -1124,6 +1124,7 @@ def render_node(
     enter_markup = ""
     float_markup = ""
     glow_markup = ""
+    node_opacity = "1" if motion.profile == "off" else "0"
     if effect_active(motion, node_effect):
         if runtime_loop_active(motion):
             enter_markup = '  <set attributeName="opacity" to="1" />'
@@ -1148,9 +1149,9 @@ def render_node(
     <animate attributeName="stroke-width" values="1.0;{1.0 + 1.4 * clamp(motion.intensity, 0.25, 1.7):.1f};1.0" dur="{seconds(scaled_duration(3.9 + (index % 4) * 0.35, motion))}" begin="{seconds(delay + 0.2)}" repeatCount="indefinite" />
   </rect>"""
     else:
-        enter_markup = '  <set attributeName="opacity" to="1" />'
+        enter_markup = "" if motion.profile == "off" else '  <set attributeName="opacity" to="1" />'
     return f"""
-<g id="node-{esc(box.node_id)}" class="node motion-node" data-role="{esc(node.role)}" opacity="0">
+<g id="node-{esc(box.node_id)}" class="node motion-node" data-role="{esc(node.role)}" opacity="{node_opacity}">
 {enter_markup}
 {float_markup}
 {burst}
@@ -1185,7 +1186,8 @@ def render_group(
     label = group.label
     muted = style.get("canvas", {}).get("muted", "#5b6778")
     delay = motion_delay(index, motion, "group")
-    enter_markup = '<set attributeName="opacity" to="1" />'
+    group_opacity = "1" if motion.profile == "off" else "0"
+    enter_markup = "" if motion.profile == "off" else '<set attributeName="opacity" to="1" />'
     dash_markup = ""
     scan_markup = ""
     corner_markup = ""
@@ -1211,10 +1213,10 @@ def render_group(
     <animate attributeName="opacity" values="0.22;0.86;0.22" dur="{seconds(scaled_duration(3.2, motion))}" begin="{seconds(delay + 0.25)}" repeatCount="indefinite" />
   </path>"""
     dash_line = f"    {dash_markup}\n" if dash_markup else ""
+    enter_line = f"  {enter_markup}\n" if enter_markup else ""
     return f"""
-<g id="group-{esc(group.group_id)}" class="group" opacity="0">
-  {enter_markup}
-  <rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="22"
+<g id="group-{esc(group.group_id)}" class="group" opacity="{group_opacity}">
+{enter_line}  <rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="22"
         fill="{esc(fill)}" fill-opacity="0.34" stroke="{esc(stroke)}" stroke-width="1.6" stroke-dasharray="9 8">
 {dash_line}  </rect>
 {scan_markup}
@@ -1408,8 +1410,9 @@ def render_svg(
     scene = spec if isinstance(spec, Scene) else compile_scene(spec)
     if animation_mode not in {"smil", "runtime-stage"}:
         raise ValueError('animation_mode must be "smil" or "runtime-stage"')
+    runtime_stage = animation_mode == "runtime-stage"
     suppress_icon_motion_node_ids = set(suppress_icon_motion_node_ids or ())
-    if animation_mode == "runtime-stage":
+    if runtime_stage:
         suppress_icon_motion_node_ids.update(node.node_id for node in scene.nodes)
     width = scene.canvas.width
     height = scene.canvas.height
@@ -1423,6 +1426,20 @@ def render_svg(
     subtitle = scene.title.subtitle
     nodes = {node.node_id: node_box(node) for node in scene.nodes}
     motion = scene.motion
+    if runtime_stage:
+        motion = replace(
+            motion,
+            profile="off",
+            intensity=0.0,
+            node="none",
+            edge="none",
+            group="none",
+            reduced_motion="static",
+            edge_effect=EffectConfig("static"),
+            node_effect=EffectConfig("static"),
+            group_effect=EffectConfig("static"),
+            title_effect=EffectConfig("static"),
+        )
     policy = scene.motion_policy
     title_effect = channel_effect(motion, style, "title")
     edge_modes = []
@@ -1496,6 +1513,8 @@ def render_svg(
   <animate attributeName="width" values="0;360;0" dur="{seconds(scaled_duration(3.2, motion))}" begin="0.34s" repeatCount="indefinite" />
   <animate attributeName="x" values="72;72;432" dur="{seconds(scaled_duration(3.2, motion))}" begin="0.34s" repeatCount="indefinite" />
 </rect>"""
+    title_text_anim_line = f"  {title_text_anim}\n" if title_text_anim else ""
+    subtitle_anim_line = f"  {subtitle_anim}\n" if subtitle_anim else ""
 
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="{esc(motion.profile)}" data-motion-sequence="{esc(motion.sequence)}" data-motion-edge="{esc(motion.edge)}" data-motion-node="{esc(motion.node)}" data-motion-group="{esc(motion.group)}" data-motion-title="{esc(title_effect.preset)}" data-motion-reduced="{esc(motion.reduced_motion)}">
 <title id="diagram-title">{esc(title_text)}</title>
@@ -1533,12 +1552,10 @@ def render_svg(
 <rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="{esc(title_style.get("highlight", "#e8f1ff"))}"{title_style_attr} />
 {title_motion_markup}
 <text id="main-title" x="90" y="84" class="title" fill="{esc(text)}" opacity="{title_text_opacity}">
-  {title_text_anim}
-  {esc(title_text)}
+{title_text_anim_line}  {esc(title_text)}
 </text>
 <text x="74" y="126" class="subtitle" fill="{esc(muted)}" opacity="{title_text_opacity}">
-  {subtitle_anim}
-  {esc(subtitle)}
+{subtitle_anim_line}  {esc(subtitle)}
 </text>
 {groups_markup}
 {edges_markup}

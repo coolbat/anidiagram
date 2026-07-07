@@ -574,7 +574,7 @@ def _write_gallery_index(
 <body>
   <main>
     <h1>AniDiagram Showcase</h1>
-    <p>Style Showcase makes diagrams look right. Layout Showcase makes diagram purpose obvious. The hero demonstrates the high-fidelity HTML runtime.</p>
+    <p>Style Showcase makes diagrams look right. Layout Showcase makes diagram purpose obvious. Card images are SVG fallback previews; use Open HTML for the high-fidelity GSAP runtime.</p>
     <section class="hero">
       <h2>Hero Demo</h2>
       <a href="{_path_for_html(hero['html'])}"><img src="{_path_for_html(hero['svg'])}" alt="{hero['title']}"></a>

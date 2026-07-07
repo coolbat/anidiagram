@@ -16,6 +16,10 @@ AniDiagram 的 README 展示分成两套画廊：
 完整画廊首页：[gallery/index.html](./gallery/index.html)
 机器可读 manifest：[gallery/showcase_manifest.json](./gallery/showcase_manifest.json)
 
+README 里的图片是便携 SVG fallback 预览。真正的高保真 GSAP runtime
+在链接到的 `.html` 文件里；HTML runtime 使用静态 SVG stage，不包含
+SVG/SMIL 动画标签。
+
 ### Hero Demo
 
 | Agent Runtime Flow |
@@ -24,7 +28,7 @@ AniDiagram 的 README 展示分成两套画廊：
 
 ### Style Showcase
 
-每个内置风格都有一份签名 DiagramScript 案例、SVG 预览、HTML runtime 和 quality report。点击预览可以打开对应高保真 HTML 输出。
+每个内置风格都有一份签名 DiagramScript 案例、SVG 预览、HTML runtime 和 quality report。可见预览是 SVG fallback；点击预览可以打开对应高保真 HTML 输出。
 
 | `minimal-light` | `deep-tech` | `blueprint` |
 | --- | --- | --- |

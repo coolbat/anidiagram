@@ -45,7 +45,7 @@
     </div>
     <div class="stage" id="stage">
       <div class="viewport" id="viewport">
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="expressive" data-motion-sequence="step-stagger" data-motion-edge="ghost-flow" data-motion-node="pulse" data-motion-group="border-scan" data-motion-title="highlight-sweep" data-motion-reduced="subtle">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="off" data-motion-sequence="step-stagger" data-motion-edge="none" data-motion-node="none" data-motion-group="none" data-motion-title="static" data-motion-reduced="static">
 <title id="diagram-title">AI Growth Funnel</title>
 <desc id="diagram-desc">signals become qualified users, activation, and expansion loops</desc>
 <style>
@@ -95,34 +95,21 @@
 </defs>
 <rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
 <rect x="28" y="26" width="1224" height="668" rx="26" fill="none" stroke="#94a3b8" stroke-width="1.4" opacity="1.00" />
-<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#06b6d4" />
-<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#ffffff" />
+<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#06b6d4" style="animation:none" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#ffffff" style="animation:none" />
 
-<rect class="title-sweep" x="72" y="46" width="0" height="56" rx="16" fill="#06b6d4" opacity="0.16">
-  <animate attributeName="width" values="0;360;0" dur="3.20s" begin="0.34s" repeatCount="indefinite" />
-  <animate attributeName="x" values="72;72;432" dur="3.20s" begin="0.34s" repeatCount="indefinite" />
-</rect>
-<text id="main-title" x="90" y="84" class="title" fill="#172033" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.08s" fill="freeze" />
+<text id="main-title" x="90" y="84" class="title" fill="#172033" opacity="1">
   AI Growth Funnel
 </text>
-<text x="74" y="126" class="subtitle" fill="#475569" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />
+<text x="74" y="126" class="subtitle" fill="#475569" opacity="1">
   signals become qualified users, activation, and expansion loops
 </text>
 
-<g id="group-funnel" class="group" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.17s" fill="freeze" />
+<g id="group-funnel" class="group" opacity="1">
   <rect x="450.0" y="80.0" width="345.0" height="600.0" rx="22"
         fill="#f8fbff" fill-opacity="0.34" stroke="#2563eb" stroke-width="1.6" stroke-dasharray="9 8">
-    <animate attributeName="stroke-dashoffset" values="0;-34" dur="5.60s" begin="0.17s" repeatCount="indefinite" />
   </rect>
 
-  <rect class="group-border-scan" x="450.0" y="80.0" width="345.0" height="600.0" rx="22"
-        fill="none" stroke="#2563eb" stroke-width="3.4" stroke-linecap="round"
-        stroke-dasharray="113.4 661.5" opacity="0.72" filter="url(#soft-glow)">
-    <animate attributeName="stroke-dashoffset" values="0;-1890.0" dur="7.15s" begin="0.27s" repeatCount="indefinite" />
-  </rect>
 
   <text x="468.0" y="110.0" class="group-label" fill="#475569">Funnel</text>
 </g>
@@ -135,33 +122,11 @@
 <g class="edge" data-role="source">
   <path class="edge-base" d="M 620.0 208.0 L 620.0 245.0" fill="none" stroke="#0891b2" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-1)" />
   <path class="edge-draw" d="M 620.0 208.0 L 620.0 245.0" fill="none" stroke="#0891b2" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-1)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.47s" fill="freeze" />
-  </path>
-  <path class="edge-flow edge-flow-ghost-flow" d="M 620.0 208.0 L 620.0 245.0" fill="none" stroke="#0891b2" stroke-width="1.7"
-        stroke-dasharray="2 18" opacity="0.38">
-    <animate attributeName="stroke-dashoffset" values="0;-54" dur="3.02s" begin="0.67s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0.27;0.38;0.27" dur="3.02s" begin="0.67s" repeatCount="indefinite" />
-  </path>
-  <circle class="edge-particle" r="5.5" fill="#0891b2" opacity="0.92">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 620.0 208.0 L 620.0 245.0" begin="0.32s" />
-    <animate attributeName="opacity" values="0;0.92;0" dur="4.20s" begin="0.32s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="3.5" fill="#0891b2" opacity="0.74">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 620.0 208.0 L 620.0 245.0" begin="1.72s" />
-    <animate attributeName="opacity" values="0;0.74;0" dur="4.20s" begin="1.72s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="2.4" fill="#0891b2" opacity="0.56">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 620.0 208.0 L 620.0 245.0" begin="3.12s" />
-    <animate attributeName="opacity" values="0;0.56;0" dur="4.20s" begin="3.12s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="1.8" fill="#0891b2" opacity="0.38">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 620.0 208.0 L 620.0 245.0" begin="4.52s" />
-    <animate attributeName="opacity" values="0;0.38;0" dur="4.20s" begin="4.52s" repeatCount="indefinite" />
-  </circle>
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-1)" />
 
-  <text x="620.0" y="212.5" class="edge-label" fill="#475569" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.61s" fill="freeze" />
+
+
+  <text x="620.0" y="212.5" class="edge-label" fill="#475569" opacity="1">
     filter
   </text>
 </g>
@@ -174,33 +139,11 @@
 <g class="edge" data-role="process">
   <path class="edge-base" d="M 620.0 323.0 L 620.0 360.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-2)" />
   <path class="edge-draw" d="M 620.0 323.0 L 620.0 360.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-2)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.59s" fill="freeze" />
-  </path>
-  <path class="edge-flow edge-flow-ghost-flow" d="M 620.0 323.0 L 620.0 360.0" fill="none" stroke="#2563eb" stroke-width="1.7"
-        stroke-dasharray="2 18" opacity="0.38">
-    <animate attributeName="stroke-dashoffset" values="0;-54" dur="3.02s" begin="0.79s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0.27;0.38;0.27" dur="3.02s" begin="0.79s" repeatCount="indefinite" />
-  </path>
-  <circle class="edge-particle" r="5.5" fill="#2563eb" opacity="0.92">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 620.0 323.0 L 620.0 360.0" begin="0.64s" />
-    <animate attributeName="opacity" values="0;0.92;0" dur="4.20s" begin="0.64s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="3.5" fill="#2563eb" opacity="0.74">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 620.0 323.0 L 620.0 360.0" begin="2.04s" />
-    <animate attributeName="opacity" values="0;0.74;0" dur="4.20s" begin="2.04s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="2.4" fill="#2563eb" opacity="0.56">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 620.0 323.0 L 620.0 360.0" begin="3.44s" />
-    <animate attributeName="opacity" values="0;0.56;0" dur="4.20s" begin="3.44s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="1.8" fill="#2563eb" opacity="0.38">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 620.0 323.0 L 620.0 360.0" begin="4.84s" />
-    <animate attributeName="opacity" values="0;0.38;0" dur="4.20s" begin="4.84s" repeatCount="indefinite" />
-  </circle>
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-2)" />
 
-  <text x="620.0" y="327.5" class="edge-label" fill="#475569" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.73s" fill="freeze" />
+
+
+  <text x="620.0" y="327.5" class="edge-label" fill="#475569" opacity="1">
     rank
   </text>
 </g>
@@ -213,33 +156,11 @@
 <g class="edge" data-role="agent">
   <path class="edge-base" d="M 620.0 438.0 L 620.0 475.0 L 637.5 475.0" fill="none" stroke="#8b5cf6" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-3)" />
   <path class="edge-draw" d="M 620.0 438.0 L 620.0 475.0 L 637.5 475.0" fill="none" stroke="#8b5cf6" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-3)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.71s" fill="freeze" />
-  </path>
-  <path class="edge-flow edge-flow-ghost-flow" d="M 620.0 438.0 L 620.0 475.0 L 637.5 475.0" fill="none" stroke="#8b5cf6" stroke-width="1.7"
-        stroke-dasharray="2 18" opacity="0.38">
-    <animate attributeName="stroke-dashoffset" values="0;-54" dur="3.02s" begin="0.91s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0.27;0.38;0.27" dur="3.02s" begin="0.91s" repeatCount="indefinite" />
-  </path>
-  <circle class="edge-particle" r="5.5" fill="#8b5cf6" opacity="0.92">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 620.0 438.0 L 620.0 475.0 L 637.5 475.0" begin="0.96s" />
-    <animate attributeName="opacity" values="0;0.92;0" dur="4.20s" begin="0.96s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="3.5" fill="#8b5cf6" opacity="0.74">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 620.0 438.0 L 620.0 475.0 L 637.5 475.0" begin="2.36s" />
-    <animate attributeName="opacity" values="0;0.74;0" dur="4.20s" begin="2.36s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="2.4" fill="#8b5cf6" opacity="0.56">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 620.0 438.0 L 620.0 475.0 L 637.5 475.0" begin="3.76s" />
-    <animate attributeName="opacity" values="0;0.56;0" dur="4.20s" begin="3.76s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="1.8" fill="#8b5cf6" opacity="0.38">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 620.0 438.0 L 620.0 475.0 L 637.5 475.0" begin="5.16s" />
-    <animate attributeName="opacity" values="0;0.38;0" dur="4.20s" begin="5.16s" repeatCount="indefinite" />
-  </circle>
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-3)" />
 
-  <text x="628.8" y="442.5" class="edge-label" fill="#475569" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.85s" fill="freeze" />
+
+
+  <text x="628.8" y="442.5" class="edge-label" fill="#475569" opacity="1">
     suggest
   </text>
 </g>
@@ -252,21 +173,11 @@
 <g class="edge" data-role="output">
   <path class="edge-base" d="M 637.5 553.0 L 637.5 590.0 L 635.0 590.0" fill="none" stroke="#22c55e" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-4)" />
   <path class="edge-draw" d="M 637.5 553.0 L 637.5 590.0 L 635.0 590.0" fill="none" stroke="#22c55e" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-4)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.83s" fill="freeze" />
-  </path>
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-4)" />
 
-  <circle class="edge-particle" r="6.0" fill="#22c55e" opacity="0.92">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 637.5 553.0 L 637.5 590.0 L 635.0 590.0" begin="1.28s" />
-    <animate attributeName="opacity" values="0;0.92;0" dur="4.20s" begin="1.28s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="3.8" fill="#22c55e" opacity="0.74">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 637.5 553.0 L 637.5 590.0 L 635.0 590.0" begin="2.68s" />
-    <animate attributeName="opacity" values="0;0.74;0" dur="4.20s" begin="2.68s" repeatCount="indefinite" />
-  </circle>
 
-  <text x="636.2" y="557.5" class="edge-label" fill="#475569" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.97s" fill="freeze" />
+
+  <text x="636.2" y="557.5" class="edge-label" fill="#475569" opacity="1">
     commit
   </text>
 </g>
@@ -279,55 +190,27 @@
 <g class="edge" data-role="memory">
   <path class="edge-base" d="M 870.0 402.0 L 695.0 399.0" fill="none" stroke="#10b981" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-5)" />
   <path class="edge-draw" d="M 870.0 402.0 L 695.0 399.0" fill="none" stroke="#10b981" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-5)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.95s" fill="freeze" />
-  </path>
-  <path class="edge-flow edge-flow-ghost-flow" d="M 870.0 402.0 L 695.0 399.0" fill="none" stroke="#10b981" stroke-width="1.7"
-        stroke-dasharray="2 18" opacity="0.38">
-    <animate attributeName="stroke-dashoffset" values="0;-54" dur="3.02s" begin="1.15s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0.27;0.38;0.27" dur="3.02s" begin="1.15s" repeatCount="indefinite" />
-  </path>
-  <circle class="edge-particle" r="5.5" fill="#10b981" opacity="0.92">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 870.0 402.0 L 695.0 399.0" begin="1.60s" />
-    <animate attributeName="opacity" values="0;0.92;0" dur="4.20s" begin="1.60s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="3.5" fill="#10b981" opacity="0.74">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 870.0 402.0 L 695.0 399.0" begin="3.00s" />
-    <animate attributeName="opacity" values="0;0.74;0" dur="4.20s" begin="3.00s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="2.4" fill="#10b981" opacity="0.56">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 870.0 402.0 L 695.0 399.0" begin="4.40s" />
-    <animate attributeName="opacity" values="0;0.56;0" dur="4.20s" begin="4.40s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="1.8" fill="#10b981" opacity="0.38">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 870.0 402.0 L 695.0 399.0" begin="5.80s" />
-    <animate attributeName="opacity" values="0;0.38;0" dur="4.20s" begin="5.80s" repeatCount="indefinite" />
-  </circle>
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-5)" />
 
-  <text x="782.5" y="386.5" class="edge-label" fill="#475569" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="1.09s" fill="freeze" />
+
+
+  <text x="782.5" y="386.5" class="edge-label" fill="#475569" opacity="1">
     context
   </text>
 </g>
 
-<g id="node-traffic" class="node motion-node" data-role="source" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.25s" fill="freeze" />
-  <animateTransform attributeName="transform" type="translate"
-        values="0 0;0 -3.0;0 0;0 2.0;0 0" dur="5.85s" begin="0.95s"
-        repeatCount="indefinite" additive="sum" />
+<g id="node-traffic" class="node motion-node" data-role="source" opacity="1">
 
-  <rect class="node-glow" x="501.0" y="126.0" width="238.0" height="86.0" rx="22.0"
-        fill="none" stroke="#0891b2" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
-    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="4.25s" begin="0.45s" repeatCount="indefinite" />
-    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="4.25s" begin="0.45s" repeatCount="indefinite" />
-  </rect>
+
+
+
   <rect x="505.0" y="130.0" width="230.0" height="78.0" rx="18.0"
         fill="#f0fdff" stroke="#0891b2" stroke-width="1.5" />
 
 <g id="icon-traffic-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-cloud" data-icon="cloud" data-node-id="traffic" opacity="0.94">
 
 
-    <animate attributeName="opacity" values="0.52;1;0.52" dur="2.80s" begin="0.65s" repeatCount="indefinite" />
+
 
   <path d="M 530.6 172.6
            C 530.6 166.1, 537.8 163.4, 542.4 163.1
@@ -344,24 +227,18 @@
 </text>
 </g>
 
-<g id="node-qualify" class="node motion-node" data-role="process" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.37s" fill="freeze" />
-  <animateTransform attributeName="transform" type="translate"
-        values="0 0;0 -3.0;0 0;0 2.0;0 0" dur="6.30s" begin="1.07s"
-        repeatCount="indefinite" additive="sum" />
+<g id="node-qualify" class="node motion-node" data-role="process" opacity="1">
 
-  <rect class="node-glow" x="521.0" y="241.0" width="198.0" height="86.0" rx="22.0"
-        fill="none" stroke="#2563eb" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
-    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="4.60s" begin="0.57s" repeatCount="indefinite" />
-    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="4.60s" begin="0.57s" repeatCount="indefinite" />
-  </rect>
+
+
+
   <rect x="525.0" y="245.0" width="190.0" height="78.0" rx="18.0"
         fill="#f8fbff" stroke="#2563eb" stroke-width="1.5" />
 
 <g id="icon-qualify-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-search" data-icon="search" data-node-id="qualify" opacity="0.94">
 
 
-    <animate attributeName="opacity" values="0.52;1;0.52" dur="2.80s" begin="0.77s" repeatCount="indefinite" />
+
 
   <circle id="icon-qualify-lens" cx="564.2" cy="281.4" r="8.8" class="semantic-icon icon-filled semantic-icon-search" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#d6e3fc" />
   <path id="icon-qualify-handle" d="M 571.7 288.9 L 581.9 299.1" class="semantic-icon semantic-icon-search" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
@@ -380,24 +257,18 @@
 </text>
 </g>
 
-<g id="node-activate" class="node motion-node" data-role="agent" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.49s" fill="freeze" />
-  <animateTransform attributeName="transform" type="translate"
-        values="0 0;0 -3.0;0 0;0 2.0;0 0" dur="5.40s" begin="1.19s"
-        repeatCount="indefinite" additive="sum" />
+<g id="node-activate" class="node motion-node" data-role="agent" opacity="1">
 
-  <rect class="node-glow" x="541.0" y="356.0" width="158.0" height="86.0" rx="22.0"
-        fill="none" stroke="#8b5cf6" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
-    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="4.95s" begin="0.69s" repeatCount="indefinite" />
-    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="4.95s" begin="0.69s" repeatCount="indefinite" />
-  </rect>
+
+
+
   <rect x="545.0" y="360.0" width="150.0" height="78.0" rx="18.0"
         fill="#fbfaff" stroke="#8b5cf6" stroke-width="1.5" />
 
 <g id="icon-activate-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-agent" data-icon="agent" data-node-id="activate" opacity="0.94">
 
 
-    <animate attributeName="opacity" values="0.52;1;0.52" dur="2.80s" begin="0.89s" repeatCount="indefinite" />
+
 
   <path id="icon-activate-shell" class="semantic-icon semantic-icon-agent icon-agent-shell"
         d="M 578.0 382.9
@@ -440,24 +311,18 @@
 </text>
 </g>
 
-<g id="node-expand" class="node motion-node" data-role="tool" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.61s" fill="freeze" />
-  <animateTransform attributeName="transform" type="translate"
-        values="0 0;0 -3.0;0 0;0 2.0;0 0" dur="5.85s" begin="1.31s"
-        repeatCount="indefinite" additive="sum" />
+<g id="node-expand" class="node motion-node" data-role="tool" opacity="1">
 
-  <rect class="node-glow" x="561.0" y="471.0" width="153.0" height="86.0" rx="22.0"
-        fill="none" stroke="#f59e0b" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
-    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="3.90s" begin="0.81s" repeatCount="indefinite" />
-    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="3.90s" begin="0.81s" repeatCount="indefinite" />
-  </rect>
+
+
+
   <rect x="565.0" y="475.0" width="145.0" height="78.0" rx="18.0"
         fill="#fffaf0" stroke="#f59e0b" stroke-width="1.5" />
 
 <g id="icon-expand-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-tool" data-icon="tool" data-node-id="expand" opacity="0.94">
 
 
-    <animate attributeName="opacity" values="0.52;1;0.52" dur="2.80s" begin="1.01s" repeatCount="indefinite" />
+
 
   <rect id="icon-expand-chip" x="582.5" y="504.8" width="23.9" height="18.3" rx="4.3"
         fill="#fdebcb" stroke="#f59e0b" stroke-width="2.8" />
@@ -480,24 +345,18 @@
 </text>
 </g>
 
-<g id="node-retain" class="node motion-node" data-role="output" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.73s" fill="freeze" />
-  <animateTransform attributeName="transform" type="translate"
-        values="0 0;0 -3.0;0 0;0 2.0;0 0" dur="6.30s" begin="1.43s"
-        repeatCount="indefinite" additive="sum" />
+<g id="node-retain" class="node motion-node" data-role="output" opacity="1">
 
-  <rect class="node-glow" x="571.0" y="586.0" width="128.0" height="78.0" rx="22.0"
-        fill="none" stroke="#22c55e" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
-    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="4.25s" begin="0.93s" repeatCount="indefinite" />
-    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="4.25s" begin="0.93s" repeatCount="indefinite" />
-  </rect>
+
+
+
   <rect x="575.0" y="590.0" width="120.0" height="70.0" rx="18.0"
         fill="#f4fff8" stroke="#22c55e" stroke-width="1.5" />
 
 <g id="icon-retain-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-output" data-icon="output" data-node-id="retain" opacity="0.94">
 
 
-    <animate attributeName="opacity" values="0.52;1;0.52" dur="2.80s" begin="1.13s" repeatCount="indefinite" />
+
 
   <rect id="icon-retain-card" x="593.5" y="614.4" width="19.4" height="20.0" rx="2.6"
         fill="#d2f6df" stroke="#22c55e" stroke-width="2.8" />
@@ -518,24 +377,18 @@
 </text>
 </g>
 
-<g id="node-crm" class="node motion-node" data-role="memory" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.85s" fill="freeze" />
-  <animateTransform attributeName="transform" type="translate"
-        values="0 0;0 -3.0;0 0;0 2.0;0 0" dur="5.40s" begin="1.55s"
-        repeatCount="indefinite" additive="sum" />
+<g id="node-crm" class="node motion-node" data-role="memory" opacity="1">
 
-  <rect class="node-glow" x="866.0" y="356.0" width="188.0" height="92.0" rx="22.0"
-        fill="none" stroke="#10b981" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
-    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="4.60s" begin="1.05s" repeatCount="indefinite" />
-    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="4.60s" begin="1.05s" repeatCount="indefinite" />
-  </rect>
+
+
+
   <rect x="870.0" y="360.0" width="180.0" height="84.0" rx="18.0"
         fill="#f1fff8" stroke="#10b981" stroke-width="1.5" />
 
 <g id="icon-crm-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-database" data-icon="database" data-node-id="crm" opacity="0.94">
 
 
-    <animate attributeName="opacity" values="0.52;1;0.52" dur="2.80s" begin="1.25s" repeatCount="indefinite" />
+
 
   <ellipse id="icon-crm-lid" cx="909.6" cy="391.5" rx="13.9" ry="5.8" class="semantic-icon icon-filled semantic-icon-database" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#cdf4e5" />
   <path id="icon-crm-body" d="M 895.7 391.5 L 895.7 410.8

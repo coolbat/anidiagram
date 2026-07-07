@@ -45,7 +45,7 @@
     </div>
     <div class="stage" id="stage">
       <div class="viewport" id="viewport">
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="subtle" data-motion-sequence="step-stagger" data-motion-edge="draw" data-motion-node="fade" data-motion-group="soft-reveal" data-motion-title="fade" data-motion-reduced="subtle">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="off" data-motion-sequence="step-stagger" data-motion-edge="none" data-motion-node="none" data-motion-group="none" data-motion-title="static" data-motion-reduced="static">
 <title id="diagram-title">LLM App Architecture Layers</title>
 <desc id="diagram-desc">interface, orchestration, tools, data, and observability stay separated</desc>
 <style>
@@ -95,20 +95,17 @@
 </defs>
 <rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
 <rect x="28" y="26" width="1224" height="668" rx="26" fill="none" stroke="#d1d5db" stroke-width="1.4" opacity="1.00" />
-<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#111827" />
-<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#f5f5f4" />
+<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#111827" style="animation:none" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#f5f5f4" style="animation:none" />
 
-<text id="main-title" x="90" y="84" class="title" fill="#1f2937" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.08s" fill="freeze" />
+<text id="main-title" x="90" y="84" class="title" fill="#1f2937" opacity="1">
   LLM App Architecture Layers
 </text>
-<text x="74" y="126" class="subtitle" fill="#6b7280" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />
+<text x="74" y="126" class="subtitle" fill="#6b7280" opacity="1">
   interface, orchestration, tools, data, and observability stay separated
 </text>
 
-<g id="group-interface" class="group" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.17s" fill="freeze" />
+<g id="group-interface" class="group" opacity="1">
   <rect x="70.0" y="150.0" width="1080.0" height="100.0" rx="22"
         fill="#fff7ed" fill-opacity="0.34" stroke="#d97706" stroke-width="1.6" stroke-dasharray="9 8">
   </rect>
@@ -117,8 +114,7 @@
   <text x="88.0" y="180.0" class="group-label" fill="#6b7280">Interface</text>
 </g>
 
-<g id="group-runtime" class="group" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.29s" fill="freeze" />
+<g id="group-runtime" class="group" opacity="1">
   <rect x="70.0" y="285.0" width="1080.0" height="125.0" rx="22"
         fill="#faf5ff" fill-opacity="0.34" stroke="#7c3aed" stroke-width="1.6" stroke-dasharray="9 8">
   </rect>
@@ -127,8 +123,7 @@
   <text x="88.0" y="315.0" class="group-label" fill="#6b7280">Runtime</text>
 </g>
 
-<g id="group-foundation" class="group" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.41s" fill="freeze" />
+<g id="group-foundation" class="group" opacity="1">
   <rect x="70.0" y="440.0" width="1080.0" height="125.0" rx="22"
         fill="#f0fdf4" fill-opacity="0.34" stroke="#15803d" stroke-width="1.6" stroke-dasharray="9 8">
   </rect>
@@ -145,14 +140,11 @@
 <g class="edge" data-role="actor">
   <path class="edge-base" d="M 330.0 222.0 L 500.0 342.0" fill="none" stroke="#d97706" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-1)" />
   <path class="edge-draw" d="M 330.0 222.0 L 500.0 342.0" fill="none" stroke="#d97706" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-1)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.47s" fill="freeze" />
-  </path>
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-1)" />
 
 
 
-  <text x="415.0" y="268.0" class="edge-label" fill="#6b7280" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.61s" fill="freeze" />
+  <text x="415.0" y="268.0" class="edge-label" fill="#6b7280" opacity="1">
     intent
   </text>
 </g>
@@ -165,14 +157,11 @@
 <g class="edge" data-role="tool">
   <path class="edge-base" d="M 710.0 342.0 L 845.0 342.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-2)" />
   <path class="edge-draw" d="M 710.0 342.0 L 845.0 342.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-2)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.59s" fill="freeze" />
-  </path>
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-2)" />
 
 
 
-  <text x="777.5" y="328.0" class="edge-label" fill="#6b7280" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.73s" fill="freeze" />
+  <text x="777.5" y="328.0" class="edge-label" fill="#6b7280" opacity="1">
     invoke
   </text>
 </g>
@@ -185,14 +174,11 @@
 <g class="edge" data-role="memory">
   <path class="edge-base" d="M 605.0 384.0 L 605.0 455.0" fill="none" stroke="#15803d" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-3)" />
   <path class="edge-draw" d="M 605.0 384.0 L 605.0 455.0" fill="none" stroke="#15803d" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-3)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.71s" fill="freeze" />
-  </path>
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-3)" />
 
 
 
-  <text x="605.0" y="405.5" class="edge-label" fill="#6b7280" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.85s" fill="freeze" />
+  <text x="605.0" y="405.5" class="edge-label" fill="#6b7280" opacity="1">
     context
   </text>
 </g>
@@ -205,14 +191,11 @@
 <g class="edge" data-role="source">
   <path class="edge-base" d="M 935.0 384.0 L 935.0 455.0 L 950.0 455.0" fill="none" stroke="#0f766e" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-4)" />
   <path class="edge-draw" d="M 935.0 384.0 L 935.0 455.0 L 950.0 455.0" fill="none" stroke="#0f766e" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-4)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.83s" fill="freeze" />
-  </path>
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-4)" />
 
 
 
-  <text x="942.5" y="405.5" class="edge-label" fill="#6b7280" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.97s" fill="freeze" />
+  <text x="942.5" y="405.5" class="edge-label" fill="#6b7280" opacity="1">
     events
   </text>
 </g>
@@ -225,20 +208,17 @@
 <g class="edge" data-role="source">
   <path class="edge-base" d="M 710.0 497.0 L 845.0 497.0" fill="none" stroke="#0f766e" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-5)" />
   <path class="edge-draw" d="M 710.0 497.0 L 845.0 497.0" fill="none" stroke="#0f766e" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-5)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.95s" fill="freeze" />
-  </path>
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-5)" />
 
 
 
-  <text x="777.5" y="483.0" class="edge-label" fill="#6b7280" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="1.09s" fill="freeze" />
+  <text x="777.5" y="483.0" class="edge-label" fill="#6b7280" opacity="1">
     metrics
   </text>
 </g>
 
-<g id="node-ui" class="node motion-node" data-role="actor" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.25s" fill="freeze" />
+<g id="node-ui" class="node motion-node" data-role="actor" opacity="1">
+
 
 
 
@@ -282,8 +262,8 @@
 </text>
 </g>
 
-<g id="node-agent" class="node motion-node" data-role="agent" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.37s" fill="freeze" />
+<g id="node-agent" class="node motion-node" data-role="agent" opacity="1">
+
 
 
 
@@ -336,8 +316,8 @@
 </text>
 </g>
 
-<g id="node-tools" class="node motion-node" data-role="tool" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.49s" fill="freeze" />
+<g id="node-tools" class="node motion-node" data-role="tool" opacity="1">
+
 
 
 
@@ -370,8 +350,8 @@
 </text>
 </g>
 
-<g id="node-data" class="node motion-node" data-role="memory" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.61s" fill="freeze" />
+<g id="node-data" class="node motion-node" data-role="memory" opacity="1">
+
 
 
 
@@ -401,8 +381,8 @@
 </text>
 </g>
 
-<g id="node-observe" class="node motion-node" data-role="source" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.73s" fill="freeze" />
+<g id="node-observe" class="node motion-node" data-role="source" opacity="1">
+
 
 
 

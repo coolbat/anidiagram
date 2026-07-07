@@ -28,12 +28,16 @@ The runtime renderer builds:
 2. A Motion Manifest in `#anidiagram-motion-manifest`.
 3. A GSAP-powered JavaScript runtime from `runtime/anidiagram-runtime.js`.
 
-In runtime-stage mode, SVG icon fallback animation is suppressed for the
-runtime-controlled nodes. This avoids mixed ownership where SMIL, CSS keyframes,
-and GSAP all try to animate the same icon parts.
+In runtime-stage mode, the SVG stage is static. It keeps geometry and stable
+part IDs, but it does not emit SVG/SMIL animation tags such as `<animate>`,
+`<animateMotion>`, or `<animateTransform>`. This avoids mixed ownership where
+SMIL, CSS keyframes, and GSAP all try to animate the same visual surface.
 
 Unsupported runtime icons stay static in the HTML runtime. Static is preferable
 to mixing a SMIL fallback with a GSAP performance.
+
+Gallery and README thumbnails are SVG fallback previews. Open the linked
+`.html` output to see the high-fidelity runtime.
 
 ## Current Performances
 

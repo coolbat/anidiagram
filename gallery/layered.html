@@ -3,29 +3,35 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Layered</title>
+  <title>Layered Runtime</title>
+  <link rel="icon" href="data:,">
   <style>
-    body { margin: 0; background: #111827; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { margin: 0; background: #0b1020; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     main { min-height: 100vh; display: grid; grid-template-rows: auto 1fr; gap: 12px; padding: 16px; box-sizing: border-box; }
     .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-    button, a { border: 1px solid #475569; background: #1f2937; color: #f8fafc; border-radius: 8px; padding: 8px 10px; font: inherit; text-decoration: none; cursor: pointer; }
-    button:hover, a:hover { background: #334155; }
+    button, a { border: 1px solid #475569; background: #111827; color: #f8fafc; border-radius: 8px; padding: 8px 10px; font: inherit; text-decoration: none; cursor: pointer; }
+    button:hover, a:hover { background: #1f2937; }
     button[aria-pressed="true"] { background: #475569; border-color: #94a3b8; }
     .stage { width: 100%; min-height: 0; overflow: hidden; border: 1px solid #334155; border-radius: 12px; background: #020617; cursor: grab; }
     .stage.dragging { cursor: grabbing; }
     .viewport { transform-origin: 0 0; width: max-content; }
     svg { display: block; max-width: none; height: auto; user-select: none; }
     main.motion-subtle .edge-particle,
-    main.motion-subtle .node-burst { display: none; }
+    main.motion-subtle .node-burst,
+    main.motion-subtle .icon-breathe-halo { display: none; }
     main.motion-subtle .edge-flow { opacity: 0.22; }
+    main.motion-subtle .semantic-icon-breathe { animation-duration: 4.2s; }
     main.motion-off .edge-flow,
     main.motion-off .edge-particle,
     main.motion-off .node-burst,
-    main.motion-off .node-glow { display: none; }
+    main.motion-off .node-glow,
+    main.motion-off .icon-breathe-halo,
+    main.motion-off .icon-runtime-part { display: none; }
+    main.motion-off .semantic-icon-breathe { animation: none !important; }
   </style>
 </head>
 <body>
-  <main id="viewer" class="motion-full">
+  <main id="viewer" class="motion-full" data-runtime="gsap">
     <div class="toolbar">
       <button type="button" id="toggle">Pause</button>
       <button type="button" id="restart">Restart</button>
@@ -39,7 +45,7 @@
     </div>
     <div class="stage" id="stage">
       <div class="viewport" id="viewport">
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="normal" data-motion-sequence="step-stagger" data-motion-edge="comet-flow" data-motion-node="glow-breathe" data-motion-group="marching-ants" data-motion-title="fade" data-motion-reduced="subtle">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="off" data-motion-sequence="step-stagger" data-motion-edge="none" data-motion-node="none" data-motion-group="none" data-motion-title="static" data-motion-reduced="static">
 <title id="diagram-title">Layered</title>
 <desc id="diagram-desc">separate interface, domain, and data layers</desc>
 <style>
@@ -54,14 +60,17 @@
   .edge-draw, .edge-base { stroke-linecap: round; stroke-linejoin: round; }
   .edge-particle { filter: url(#particle-glow); }
   .edge-arrow-particle { filter: url(#particle-glow); }
-  .semantic-icon { fill: none; vector-effect: non-scaling-stroke; }
+  .semantic-icon { vector-effect: non-scaling-stroke; }
+  .semantic-icon-breathe { transform-box: fill-box; transform-origin: center; animation: semanticIconBreathe 2.8s ease-in-out infinite; }
+  .icon-breathe-halo { pointer-events: none; filter: url(#particle-glow); }
   .node-glow, .node-burst { pointer-events: none; }
   #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
   #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
   @keyframes titlePulse { 0%, 100% { opacity: 0.76; } 50% { opacity: 1; } }
   @keyframes titleSlide { 0%, 100% { transform: translateX(0); opacity: 0.9; } 50% { transform: translateX(8px); opacity: 1; } }
+  @keyframes semanticIconBreathe { 0%, 100% { transform: scale(0.96); opacity: 0.72; } 50% { transform: scale(1.08); opacity: 1; } }
   @media (prefers-reduced-motion: reduce) {
-    #title-accent, #title-highlight { animation: none; }
+    #title-accent, #title-highlight, .semantic-icon-breathe { animation: none; }
   }
 </style>
 <rect width="100%" height="100%" fill="#ffffff" />
@@ -86,45 +95,37 @@
 </defs>
 <rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
 <rect x="28" y="26" width="1144" height="668" rx="26" fill="none" stroke="#d1d5db" stroke-width="1.4" opacity="1.00" />
-<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#111827" />
-<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#f5f5f4" />
+<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#111827" style="animation:none" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#f5f5f4" style="animation:none" />
 
-<text id="main-title" x="90" y="84" class="title" fill="#1f2937" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.08s" fill="freeze" />
+<text id="main-title" x="90" y="84" class="title" fill="#1f2937" opacity="1">
   Layered
 </text>
-<text x="74" y="126" class="subtitle" fill="#6b7280" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />
+<text x="74" y="126" class="subtitle" fill="#6b7280" opacity="1">
   separate interface, domain, and data layers
 </text>
 
-<g id="group-ui" class="group" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.17s" fill="freeze" />
+<g id="group-ui" class="group" opacity="1">
   <rect x="60.0" y="170.0" width="1080.0" height="110.0" rx="22"
         fill="#fff7ed" fill-opacity="0.34" stroke="#d97706" stroke-width="1.6" stroke-dasharray="9 8">
-    <animate attributeName="stroke-dashoffset" values="0;-34" dur="5.60s" begin="0.17s" repeatCount="indefinite" />
   </rect>
 
 
   <text x="78.0" y="200.0" class="group-label" fill="#6b7280">Interface</text>
 </g>
 
-<g id="group-domain" class="group" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.29s" fill="freeze" />
+<g id="group-domain" class="group" opacity="1">
   <rect x="60.0" y="310.0" width="1080.0" height="110.0" rx="22"
         fill="#f9fafb" fill-opacity="0.34" stroke="#4b5563" stroke-width="1.6" stroke-dasharray="9 8">
-    <animate attributeName="stroke-dashoffset" values="0;-34" dur="6.00s" begin="0.29s" repeatCount="indefinite" />
   </rect>
 
 
   <text x="78.0" y="340.0" class="group-label" fill="#6b7280">Domain</text>
 </g>
 
-<g id="group-data" class="group" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.41s" fill="freeze" />
+<g id="group-data" class="group" opacity="1">
   <rect x="60.0" y="450.0" width="1080.0" height="110.0" rx="22"
         fill="#f0fdf4" fill-opacity="0.34" stroke="#15803d" stroke-width="1.6" stroke-dasharray="9 8">
-    <animate attributeName="stroke-dashoffset" values="0;-34" dur="6.40s" begin="0.41s" repeatCount="indefinite" />
   </rect>
 
 
@@ -139,29 +140,11 @@
 <g class="edge" data-role="tool">
   <path class="edge-base" d="M 330.0 231.0 L 520.0 231.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-1)" />
   <path class="edge-draw" d="M 330.0 231.0 L 520.0 231.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-1)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.47s" fill="freeze" />
-  </path>
-  <path class="edge-flow edge-flow-comet-flow" d="M 330.0 231.0 L 520.0 231.0" fill="none" stroke="#2563eb" stroke-width="1.7"
-        stroke-dasharray="9 18" opacity="0.55">
-    <animate attributeName="stroke-dashoffset" values="0;-54" dur="3.02s" begin="0.67s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0.25;0.55;0.25" dur="3.02s" begin="0.67s" repeatCount="indefinite" />
-  </path>
-  <circle class="edge-particle" r="5.5" fill="#2563eb" opacity="0.92">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 330.0 231.0 L 520.0 231.0" begin="0.32s" />
-    <animate attributeName="opacity" values="0;0.92;0" dur="4.20s" begin="0.32s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="3.5" fill="#2563eb" opacity="0.74">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 330.0 231.0 L 520.0 231.0" begin="1.72s" />
-    <animate attributeName="opacity" values="0;0.74;0" dur="4.20s" begin="1.72s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="2.4" fill="#2563eb" opacity="0.56">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 330.0 231.0 L 520.0 231.0" begin="3.12s" />
-    <animate attributeName="opacity" values="0;0.56;0" dur="4.20s" begin="3.12s" repeatCount="indefinite" />
-  </circle>
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-1)" />
 
-  <text x="425.0" y="217.0" class="edge-label" fill="#6b7280" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.61s" fill="freeze" />
+
+
+  <text x="425.0" y="217.0" class="edge-label" fill="#6b7280" opacity="1">
     call
   </text>
 </g>
@@ -174,29 +157,11 @@
 <g class="edge" data-role="process">
   <path class="edge-base" d="M 520.0 231.0 L 520.0 371.0 L 510.0 371.0" fill="none" stroke="#4b5563" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-2)" />
   <path class="edge-draw" d="M 520.0 231.0 L 520.0 371.0 L 510.0 371.0" fill="none" stroke="#4b5563" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-2)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.59s" fill="freeze" />
-  </path>
-  <path class="edge-flow edge-flow-comet-flow" d="M 520.0 231.0 L 520.0 371.0 L 510.0 371.0" fill="none" stroke="#4b5563" stroke-width="1.7"
-        stroke-dasharray="9 18" opacity="0.55">
-    <animate attributeName="stroke-dashoffset" values="0;-54" dur="3.02s" begin="0.79s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0.25;0.55;0.25" dur="3.02s" begin="0.79s" repeatCount="indefinite" />
-  </path>
-  <circle class="edge-particle" r="5.5" fill="#4b5563" opacity="0.92">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 520.0 231.0 L 520.0 371.0 L 510.0 371.0" begin="0.64s" />
-    <animate attributeName="opacity" values="0;0.92;0" dur="4.20s" begin="0.64s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="3.5" fill="#4b5563" opacity="0.74">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 520.0 231.0 L 520.0 371.0 L 510.0 371.0" begin="2.04s" />
-    <animate attributeName="opacity" values="0;0.74;0" dur="4.20s" begin="2.04s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="2.4" fill="#4b5563" opacity="0.56">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 520.0 231.0 L 520.0 371.0 L 510.0 371.0" begin="3.44s" />
-    <animate attributeName="opacity" values="0;0.56;0" dur="4.20s" begin="3.44s" repeatCount="indefinite" />
-  </circle>
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-2)" />
 
-  <text x="515.0" y="287.0" class="edge-label" fill="#6b7280" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.73s" fill="freeze" />
+
+
+  <text x="515.0" y="287.0" class="edge-label" fill="#6b7280" opacity="1">
     validate
   </text>
 </g>
@@ -209,29 +174,11 @@
 <g class="edge" data-role="memory">
   <path class="edge-base" d="M 430.0 412.0 L 430.0 470.0" fill="none" stroke="#15803d" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-3)" />
   <path class="edge-draw" d="M 430.0 412.0 L 430.0 470.0" fill="none" stroke="#15803d" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-3)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.71s" fill="freeze" />
-  </path>
-  <path class="edge-flow edge-flow-comet-flow" d="M 430.0 412.0 L 430.0 470.0" fill="none" stroke="#15803d" stroke-width="1.7"
-        stroke-dasharray="9 18" opacity="0.55">
-    <animate attributeName="stroke-dashoffset" values="0;-54" dur="3.02s" begin="0.91s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0.25;0.55;0.25" dur="3.02s" begin="0.91s" repeatCount="indefinite" />
-  </path>
-  <circle class="edge-particle" r="5.5" fill="#15803d" opacity="0.92">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 430.0 412.0 L 430.0 470.0" begin="0.96s" />
-    <animate attributeName="opacity" values="0;0.92;0" dur="4.20s" begin="0.96s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="3.5" fill="#15803d" opacity="0.74">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 430.0 412.0 L 430.0 470.0" begin="2.36s" />
-    <animate attributeName="opacity" values="0;0.74;0" dur="4.20s" begin="2.36s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="2.4" fill="#15803d" opacity="0.56">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 430.0 412.0 L 430.0 470.0" begin="3.76s" />
-    <animate attributeName="opacity" values="0;0.56;0" dur="4.20s" begin="3.76s" repeatCount="indefinite" />
-  </circle>
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-3)" />
 
-  <text x="430.0" y="427.0" class="edge-label" fill="#6b7280" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.85s" fill="freeze" />
+
+
+  <text x="430.0" y="427.0" class="edge-label" fill="#6b7280" opacity="1">
     persist
   </text>
 </g>
@@ -244,44 +191,20 @@
 <g class="edge" data-role="source">
   <path class="edge-base" d="M 770.0 412.0 L 770.0 470.0" fill="none" stroke="#0f766e" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-4)" />
   <path class="edge-draw" d="M 770.0 412.0 L 770.0 470.0" fill="none" stroke="#0f766e" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-4)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.83s" fill="freeze" />
-  </path>
-  <path class="edge-flow edge-flow-comet-flow" d="M 770.0 412.0 L 770.0 470.0" fill="none" stroke="#0f766e" stroke-width="1.7"
-        stroke-dasharray="9 18" opacity="0.55">
-    <animate attributeName="stroke-dashoffset" values="0;-54" dur="3.02s" begin="1.03s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0.25;0.55;0.25" dur="3.02s" begin="1.03s" repeatCount="indefinite" />
-  </path>
-  <circle class="edge-particle" r="5.5" fill="#0f766e" opacity="0.92">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 770.0 412.0 L 770.0 470.0" begin="1.28s" />
-    <animate attributeName="opacity" values="0;0.92;0" dur="4.20s" begin="1.28s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="3.5" fill="#0f766e" opacity="0.74">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 770.0 412.0 L 770.0 470.0" begin="2.68s" />
-    <animate attributeName="opacity" values="0;0.74;0" dur="4.20s" begin="2.68s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="2.4" fill="#0f766e" opacity="0.56">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 770.0 412.0 L 770.0 470.0" begin="4.08s" />
-    <animate attributeName="opacity" values="0;0.56;0" dur="4.20s" begin="4.08s" repeatCount="indefinite" />
-  </circle>
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-4)" />
 
-  <text x="770.0" y="427.0" class="edge-label" fill="#6b7280" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.97s" fill="freeze" />
+
+
+  <text x="770.0" y="427.0" class="edge-label" fill="#6b7280" opacity="1">
     consume
   </text>
 </g>
 
-<g id="node-app" class="node motion-node" data-role="actor" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.25s" fill="freeze" />
-  <animateTransform attributeName="transform" type="translate"
-        values="0 0;0 -3.0;0 0;0 2.0;0 0" dur="5.85s" begin="0.95s"
-        repeatCount="indefinite" additive="sum" />
+<g id="node-app" class="node motion-node" data-role="actor" opacity="1">
 
-  <rect class="node-glow" x="166.0" y="186.0" width="168.0" height="90.0" rx="11.0"
-        fill="none" stroke="#d97706" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
-    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="4.25s" begin="0.45s" repeatCount="indefinite" />
-    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="4.25s" begin="0.45s" repeatCount="indefinite" />
-  </rect>
+
+
+
   <rect x="170.0" y="190.0" width="160.0" height="82.0" rx="7.0"
         fill="#fff7ed" stroke="#d97706" stroke-width="1.4" />
 
@@ -293,17 +216,11 @@
 </text>
 </g>
 
-<g id="node-api" class="node motion-node" data-role="tool" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.37s" fill="freeze" />
-  <animateTransform attributeName="transform" type="translate"
-        values="0 0;0 -3.0;0 0;0 2.0;0 0" dur="6.30s" begin="1.07s"
-        repeatCount="indefinite" additive="sum" />
+<g id="node-api" class="node motion-node" data-role="tool" opacity="1">
 
-  <rect class="node-glow" x="516.0" y="186.0" width="168.0" height="90.0" rx="11.0"
-        fill="none" stroke="#2563eb" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
-    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="4.60s" begin="0.57s" repeatCount="indefinite" />
-    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="4.60s" begin="0.57s" repeatCount="indefinite" />
-  </rect>
+
+
+
   <rect x="520.0" y="190.0" width="160.0" height="82.0" rx="7.0"
         fill="#eff6ff" stroke="#2563eb" stroke-width="1.4" />
 
@@ -315,17 +232,11 @@
 </text>
 </g>
 
-<g id="node-rules" class="node motion-node" data-role="process" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.49s" fill="freeze" />
-  <animateTransform attributeName="transform" type="translate"
-        values="0 0;0 -3.0;0 0;0 2.0;0 0" dur="5.40s" begin="1.19s"
-        repeatCount="indefinite" additive="sum" />
+<g id="node-rules" class="node motion-node" data-role="process" opacity="1">
 
-  <rect class="node-glow" x="346.0" y="326.0" width="168.0" height="90.0" rx="11.0"
-        fill="none" stroke="#4b5563" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
-    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="4.95s" begin="0.69s" repeatCount="indefinite" />
-    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="4.95s" begin="0.69s" repeatCount="indefinite" />
-  </rect>
+
+
+
   <rect x="350.0" y="330.0" width="160.0" height="82.0" rx="7.0"
         fill="#f9fafb" stroke="#4b5563" stroke-width="1.4" />
 
@@ -337,27 +248,11 @@
 </text>
 </g>
 
-<g id="node-worker" class="node motion-node" data-role="agent" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.61s" fill="freeze" />
-  <animateTransform attributeName="transform" type="translate"
-        values="0 0;0 -3.0;0 0;0 2.0;0 0" dur="5.85s" begin="1.31s"
-        repeatCount="indefinite" additive="sum" />
+<g id="node-worker" class="node motion-node" data-role="agent" opacity="1">
 
-  <circle class="node-burst" cx="770.0" cy="371.0" r="80.0" fill="none"
-          stroke="#7c3aed" stroke-width="1.6" opacity="0">
-    <animate attributeName="r" values="80.0;115.2" dur="3.40s" begin="1.06s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0;0.28;0" dur="3.40s" begin="1.06s" repeatCount="indefinite" />
-  </circle>
-  <circle class="node-burst" cx="770.0" cy="371.0" r="80.0" fill="none"
-          stroke="#7c3aed" stroke-width="1" opacity="0">
-    <animate attributeName="r" values="80.0;134.4" dur="4.60s" begin="1.96s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0;0.18;0" dur="4.60s" begin="1.96s" repeatCount="indefinite" />
-  </circle>
-  <rect class="node-glow" x="686.0" y="326.0" width="168.0" height="90.0" rx="11.0"
-        fill="none" stroke="#7c3aed" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
-    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="3.90s" begin="0.81s" repeatCount="indefinite" />
-    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="3.90s" begin="0.81s" repeatCount="indefinite" />
-  </rect>
+
+
+
   <rect x="690.0" y="330.0" width="160.0" height="82.0" rx="7.0"
         fill="#faf5ff" stroke="#7c3aed" stroke-width="1.4" />
 
@@ -369,17 +264,11 @@
 </text>
 </g>
 
-<g id="node-db" class="node motion-node" data-role="memory" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.73s" fill="freeze" />
-  <animateTransform attributeName="transform" type="translate"
-        values="0 0;0 -3.0;0 0;0 2.0;0 0" dur="6.30s" begin="1.43s"
-        repeatCount="indefinite" additive="sum" />
+<g id="node-db" class="node motion-node" data-role="memory" opacity="1">
 
-  <rect class="node-glow" x="346.0" y="466.0" width="168.0" height="90.0" rx="11.0"
-        fill="none" stroke="#15803d" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
-    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="4.25s" begin="0.93s" repeatCount="indefinite" />
-    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="4.25s" begin="0.93s" repeatCount="indefinite" />
-  </rect>
+
+
+
   <rect x="350.0" y="470.0" width="160.0" height="82.0" rx="7.0"
         fill="#f0fdf4" stroke="#15803d" stroke-width="1.4" />
 
@@ -391,17 +280,11 @@
 </text>
 </g>
 
-<g id="node-queue" class="node motion-node" data-role="source" opacity="0">
-  <animate attributeName="opacity" values="0;1" dur="0.55s" begin="0.85s" fill="freeze" />
-  <animateTransform attributeName="transform" type="translate"
-        values="0 0;0 -3.0;0 0;0 2.0;0 0" dur="5.40s" begin="1.55s"
-        repeatCount="indefinite" additive="sum" />
+<g id="node-queue" class="node motion-node" data-role="source" opacity="1">
 
-  <rect class="node-glow" x="686.0" y="466.0" width="168.0" height="90.0" rx="11.0"
-        fill="none" stroke="#0f766e" stroke-width="1.2" opacity="0.12" filter="url(#soft-glow)">
-    <animate attributeName="opacity" values="0.08;0.24;0.08" dur="4.60s" begin="1.05s" repeatCount="indefinite" />
-    <animate attributeName="stroke-width" values="1.0;2.4;1.0" dur="4.60s" begin="1.05s" repeatCount="indefinite" />
-  </rect>
+
+
+
   <rect x="690.0" y="470.0" width="160.0" height="82.0" rx="7.0"
         fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4" />
 
@@ -417,12 +300,302 @@
       </div>
     </div>
   </main>
+  <script type="application/json" id="anidiagram-motion-manifest">
+{
+  "version": "motion-manifest-0.1",
+  "runtime": "gsap",
+  "profile": "normal",
+  "sequence": "step-stagger",
+  "reduced_motion": "subtle",
+  "icons": []
+}
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
   <script>
-    const stage = document.getElementById('stage');
-    const viewer = document.getElementById('viewer');
-    const viewport = document.getElementById('viewport');
-    const svg = viewport.querySelector('svg');
-    const download = document.getElementById('download');
+(function () {
+  function getManifest() {
+    const el = document.getElementById("anidiagram-motion-manifest");
+    if (!el) return null;
+    try {
+      return JSON.parse(el.textContent || "{}");
+    } catch (error) {
+      console.warn("AniDiagram runtime: invalid motion manifest", error);
+      return null;
+    }
+  }
+
+  function resolveParts(parts) {
+    const resolved = {};
+    Object.entries(parts || {}).forEach(([key, selector]) => {
+      resolved[key] = document.querySelector(selector);
+    });
+    return resolved;
+  }
+
+  function hasParts(parts, required) {
+    return required.every((name) => Boolean(parts[name]));
+  }
+
+  function setInitial(parts, gsap) {
+    Object.values(parts).forEach((part) => {
+      if (part) part.style.transformBox = "";
+    });
+    gsap.set(Object.values(parts).filter(Boolean), { transformOrigin: "center center" });
+  }
+
+  function pathLengths(paths) {
+    return new Map(paths.map((path) => [path, Math.max(1, path.getTotalLength ? path.getTotalLength() : 64)]));
+  }
+
+  function primeStrokeDraw(paths, gsap) {
+    const lengths = pathLengths(paths);
+    paths.forEach((path) => {
+      const length = lengths.get(path);
+      gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
+    });
+    return lengths;
+  }
+
+  function playTokenIntent({ parts, gsap }) {
+    const required = ["shell", "core", "tickLeft", "tickRight", "tickTop", "tickBottom", "halo"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const ticks = [parts.tickLeft, parts.tickRight, parts.tickTop, parts.tickBottom];
+    const lengths = primeStrokeDraw(ticks, gsap);
+    gsap.set(parts.halo, { opacity: 0, scale: 0.6 });
+    gsap.set(parts.core, { scale: 0.55, opacity: 0.35 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.55 });
+    tl.fromTo(parts.shell, { scale: 0.82, rotate: -8, opacity: 0.72 }, { scale: 1, rotate: 0, opacity: 0.96, duration: 0.22, ease: "back.out(3)" })
+      .to(parts.core, { scale: 1.35, opacity: 0.95, duration: 0.16, ease: "power2.out" }, "-=0.08")
+      .to(parts.core, { scale: 1, opacity: 0.72, duration: 0.16, ease: "power2.inOut" })
+      .fromTo(ticks, { strokeDashoffset: (index, target) => lengths.get(target), opacity: 0 }, { strokeDashoffset: 0, opacity: 0.86, duration: 0.18, stagger: 0.035, ease: "power2.out" }, "-=0.08")
+      .fromTo(parts.halo, { opacity: 0.55, scale: 0.55 }, { opacity: 0, scale: 1.55, duration: 0.34, ease: "power2.out" }, "-=0.02")
+      .to(parts.shell, { scale: 0.98, duration: 0.45, ease: "power2.inOut" }, 1.05)
+      .to(ticks, { opacity: 0.56, duration: 0.45 }, 1.05);
+    return tl;
+  }
+
+  function playToolRun({ parts, gsap }) {
+    const required = ["chip", "glyph", "connector", "spark1", "spark2", "flash"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const sparks = [parts.spark1, parts.spark2];
+    const lengths = primeStrokeDraw(sparks, gsap);
+    gsap.set(parts.flash, { opacity: 0, scale: 0.45 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.55 });
+    tl.to(parts.chip, { y: 2, scale: 0.96, duration: 0.12, ease: "power2.in" })
+      .to(parts.chip, { y: -1, scale: 1.04, duration: 0.18, ease: "back.out(3)" })
+      .to(parts.chip, { y: 0, scale: 1, duration: 0.16, ease: "power2.out" })
+      .fromTo(parts.glyph, { scale: 0.82, opacity: 0.6 }, { scale: 1.12, opacity: 1, duration: 0.16, ease: "back.out(3)" }, 0.10)
+      .to(parts.glyph, { scale: 1, opacity: 0.92, duration: 0.18, ease: "power2.out" })
+      .fromTo(parts.connector, { x: -6, opacity: 0.35, scale: 0.55 }, { x: 4, opacity: 0.95, scale: 1.1, duration: 0.22, ease: "power2.out" }, 0.22)
+      .to(parts.connector, { x: 0, scale: 1, opacity: 0.72, duration: 0.18, ease: "power2.out" })
+      .fromTo(sparks, { strokeDashoffset: (index, target) => lengths.get(target), opacity: 0 }, { strokeDashoffset: 0, opacity: 0.95, duration: 0.16, stagger: 0.045, ease: "power2.out" }, 0.42)
+      .fromTo(parts.flash, { opacity: 0.62, scale: 0.45 }, { opacity: 0, scale: 1.6, duration: 0.26, ease: "power2.out" }, 0.48)
+      .to(sparks, { opacity: 0.42, duration: 0.5 }, 0.92);
+    return tl;
+  }
+
+  function playOutputReveal({ parts, gsap }) {
+    const required = ["card", "line1", "line2", "check", "flash"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const paths = [parts.line1, parts.line2, parts.check];
+    const lengths = primeStrokeDraw(paths, gsap);
+    gsap.set(parts.flash, { opacity: 0, scale: 0.45 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.75 });
+    tl.fromTo(parts.card, { y: 5, scale: 0.92, opacity: 0.75 }, { y: 0, scale: 1, opacity: 0.96, duration: 0.22, ease: "back.out(2.5)" })
+      .fromTo([parts.line1, parts.line2], { strokeDashoffset: (index, target) => lengths.get(target), opacity: 0 }, { strokeDashoffset: 0, opacity: 0.86, duration: 0.22, stagger: 0.07, ease: "power2.out" }, 0.14)
+      .fromTo(parts.check, { strokeDashoffset: lengths.get(parts.check), opacity: 0 }, { strokeDashoffset: 0, opacity: 1, duration: 0.26, ease: "power2.out" }, 0.42)
+      .to(parts.card, { scale: 1.04, duration: 0.12, ease: "power2.out" }, 0.62)
+      .to(parts.card, { scale: 1, duration: 0.18, ease: "power2.inOut" })
+      .fromTo(parts.flash, { opacity: 0.65, scale: 0.5 }, { opacity: 0, scale: 1.65, duration: 0.28, ease: "power2.out" }, 0.58)
+      .to([parts.line1, parts.line2, parts.check], { opacity: 0.68, duration: 0.55 }, 1.0);
+    return tl;
+  }
+
+  function playApiRequestResponse({ parts, gsap }) {
+    const required = ["leftEndpoint", "rightEndpoint", "requestToken", "responseToken", "targetRing", "status"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    gsap.set([parts.requestToken, parts.responseToken, parts.targetRing, parts.status], { opacity: 0, scale: 0.4 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.65 });
+    tl.to([parts.leftEndpoint, parts.rightEndpoint], { scaleY: 1.12, duration: 0.14, ease: "back.out(2)" })
+      .fromTo(parts.requestToken, { x: -18, opacity: 0, scale: 0.4 }, { x: 18, opacity: 1, scale: 1, duration: 0.36, ease: "power2.out" }, "<")
+      .to(parts.requestToken, { opacity: 0, scale: 0.35, duration: 0.12 })
+      .fromTo(parts.targetRing, { scale: 0.4, opacity: 0.8 }, { scale: 1.8, opacity: 0, duration: 0.34, ease: "power2.out" }, "-=0.05")
+      .fromTo(parts.responseToken, { x: 18, opacity: 0, scale: 0.4 }, { x: -18, opacity: 1, scale: 0.85, duration: 0.32, ease: "power2.inOut" }, "-=0.08")
+      .to(parts.responseToken, { opacity: 0, scale: 0.35, duration: 0.12 })
+      .fromTo(parts.status, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(2)" })
+      .to(parts.status, { opacity: 0.35, duration: 0.5 })
+      .to([parts.leftEndpoint, parts.rightEndpoint], { scaleY: 1, duration: 0.22, ease: "power2.out" }, "<");
+    return tl;
+  }
+
+  function playSearchDiscover({ parts, gsap }) {
+    const required = ["lens", "handle", "scan", "result1", "result2", "target"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    gsap.set([parts.scan, parts.result1, parts.result2, parts.target], { opacity: 0, scale: 0.35 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.7 });
+    tl.to([parts.lens, parts.handle], { rotate: -8, duration: 0.18, ease: "power2.out" })
+      .fromTo(parts.scan, { opacity: 0, x: -10, y: -7, rotate: -14 }, { opacity: 0.9, x: 12, y: 9, rotate: 12, duration: 0.42, ease: "power2.inOut" })
+      .to(parts.scan, { opacity: 0, duration: 0.12 })
+      .fromTo(parts.result1, { opacity: 0, scale: 0.25, y: 2 }, { opacity: 0.95, scale: 1, y: 0, duration: 0.16, ease: "back.out(3)" }, "-=0.06")
+      .fromTo(parts.result2, { opacity: 0, scale: 0.25, y: 2 }, { opacity: 0.72, scale: 0.82, y: 0, duration: 0.16, ease: "back.out(3)" }, "-=0.02")
+      .fromTo(parts.target, { opacity: 0, scale: 0.45 }, { opacity: 0.88, scale: 1.18, duration: 0.22, ease: "back.out(2.5)" })
+      .to(parts.target, { scale: 1, duration: 0.16, ease: "power2.out" })
+      .to([parts.lens, parts.handle], { rotate: 0, duration: 0.26, ease: "power2.out" }, "<")
+      .to([parts.result1, parts.result2, parts.target], { opacity: 0.28, duration: 0.55 });
+    return tl;
+  }
+
+  function playDatabaseWrite({ parts, gsap }) {
+    const required = ["lid", "body", "layer1", "layer2", "writeToken", "flash"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    gsap.set([parts.writeToken, parts.flash], { opacity: 0, scale: 0.35 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.8 });
+    tl.fromTo(parts.writeToken, { opacity: 0, x: -16, y: -18, scale: 0.35 }, { opacity: 1, x: 0, y: -3, scale: 1, duration: 0.28, ease: "power2.out" })
+      .to(parts.writeToken, { y: 7, scale: 0.82, duration: 0.16, ease: "power2.in" })
+      .to(parts.writeToken, { opacity: 0, scale: 0.25, duration: 0.1 })
+      .to(parts.lid, { scaleY: 0.68, y: 3, duration: 0.14, ease: "power2.in" }, "-=0.14")
+      .to(parts.body, { y: 2, scaleY: 0.96, duration: 0.14, ease: "power2.in" }, "<")
+      .to(parts.lid, { scaleY: 1.1, y: -2, duration: 0.18, ease: "back.out(3)" })
+      .to(parts.body, { y: 0, scaleY: 1, duration: 0.18, ease: "power2.out" }, "<")
+      .fromTo(parts.layer1, { opacity: 0.32 }, { opacity: 1, duration: 0.12, ease: "power1.out" })
+      .fromTo(parts.layer2, { opacity: 0.28 }, { opacity: 0.95, duration: 0.12, ease: "power1.out" }, "-=0.02")
+      .fromTo(parts.flash, { opacity: 0, scale: 0.4 }, { opacity: 0.85, scale: 1.35, duration: 0.18, ease: "power2.out" })
+      .to(parts.flash, { opacity: 0, scale: 1.85, duration: 0.26, ease: "power2.out" })
+      .to([parts.layer1, parts.layer2], { opacity: 0.64, duration: 0.45 });
+    return tl;
+  }
+
+  function playMemoryCommit({ parts, gsap }) {
+    const required = ["backCard", "frontCard", "trace1", "trace2", "trace3", "dot", "commitToken", "flash"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const traces = [parts.trace1, parts.trace2, parts.trace3];
+    gsap.set([parts.commitToken, parts.flash], { opacity: 0, scale: 0.35 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.8 });
+    tl.fromTo(parts.commitToken, { opacity: 0, x: -18, y: -15, scale: 0.35 }, { opacity: 1, x: -3, y: -4, scale: 1, duration: 0.24, ease: "power2.out" })
+      .to(parts.commitToken, { x: 6, y: 10, scale: 0.72, duration: 0.18, ease: "power2.in" })
+      .to(parts.commitToken, { opacity: 0, scale: 0.25, duration: 0.1 })
+      .to(parts.frontCard, { y: 2, scale: 0.98, duration: 0.14, ease: "power2.in" }, "-=0.12")
+      .to(parts.backCard, { x: 2, y: -2, duration: 0.14, ease: "power2.in" }, "<")
+      .to(parts.frontCard, { y: -1, scale: 1.03, duration: 0.18, ease: "back.out(3)" })
+      .to(parts.backCard, { x: 0, y: 0, duration: 0.18, ease: "power2.out" }, "<")
+      .fromTo(traces, { opacity: 0.2, x: -5 }, { opacity: 0.95, x: 0, duration: 0.2, stagger: 0.05, ease: "power2.out" }, "-=0.02")
+      .to(parts.dot, { scale: 1.45, opacity: 0.95, duration: 0.14, ease: "back.out(3)" }, "-=0.04")
+      .to(parts.dot, { scale: 1, opacity: 0.72, duration: 0.18, ease: "power2.out" })
+      .fromTo(parts.flash, { opacity: 0, scale: 0.45 }, { opacity: 0.75, scale: 1.2, duration: 0.16, ease: "power2.out" }, "-=0.12")
+      .to(parts.flash, { opacity: 0, scale: 1.7, duration: 0.24, ease: "power2.out" })
+      .to(traces, { opacity: 0.72, duration: 0.5 });
+    return tl;
+  }
+
+  function playAgentThinkAct({ parts, gsap }) {
+    const required = ["shell", "core", "thought1", "thought2", "thought3", "decisionToken"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const thoughts = [parts.thought1, parts.thought2, parts.thought3];
+    gsap.set(parts.shell, { scale: 1, opacity: 0.92 });
+    gsap.set(parts.core, { scale: 1, opacity: 0.78 });
+    gsap.set(thoughts, { opacity: 0.42, scale: 0.92, x: 0, y: 0 });
+    gsap.set(parts.decisionToken, { opacity: 0, scale: 0.35, x: 0, y: 0 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.9 });
+    tl.to(thoughts, {
+        opacity: (index) => [0.9, 0.72, 0.82][index],
+        x: (index) => [2.5, -3.5, 3][index],
+        y: (index) => [-4, 2.5, -2][index],
+        scale: (index) => [1.08, 0.95, 1.02][index],
+        duration: 0.36,
+        stagger: 0.07,
+        ease: "sine.inOut",
+      })
+      .to(thoughts, {
+        x: (index) => [6, -6, 3][index],
+        y: (index) => [7, 5, -7][index],
+        scale: 0.72,
+        opacity: 0.86,
+        duration: 0.26,
+        stagger: 0.035,
+        ease: "power2.in",
+      })
+      .to(parts.core, { scale: 1.48, opacity: 1, duration: 0.16, ease: "back.out(2.8)" }, "-=0.06")
+      .to(parts.shell, { scale: 1.035, opacity: 1, duration: 0.16, ease: "power2.out" }, "<")
+      .to(parts.core, { scale: 1, opacity: 0.82, duration: 0.22, ease: "power2.out" })
+      .to(parts.shell, { scale: 1, opacity: 0.92, duration: 0.24, ease: "power2.out" }, "<")
+      .fromTo(parts.decisionToken,
+        { opacity: 0, scale: 0.35, x: 0, y: 0 },
+        { opacity: 1, scale: 1.05, x: 13, y: -8, duration: 0.32, ease: "back.out(2.2)" },
+        "-=0.08"
+      )
+      .to(parts.decisionToken, { opacity: 0, scale: 0.55, x: 24, y: -14, duration: 0.26, ease: "power1.in" })
+      .to(thoughts, { x: 0, y: 0, scale: 1, opacity: 0.38, duration: 0.34, stagger: 0.03, ease: "power2.out" }, "-=0.14")
+      .to(parts.core, { opacity: 0.72, duration: 0.42, ease: "sine.inOut" }, "-=0.14");
+    return tl;
+  }
+
+  const performances = {
+    "token-intent-v2": playTokenIntent,
+    "tool-run-v2": playToolRun,
+    "output-reveal-v2": playOutputReveal,
+    "api-request-response-v2": playApiRequestResponse,
+    "search-discover-v2": playSearchDiscover,
+    "database-write-v2": playDatabaseWrite,
+    "memory-commit-v2": playMemoryCommit,
+    "agent-think-act-v2": playAgentThinkAct,
+  };
+
+  function playIcon(iconConfig) {
+    if (!window.gsap) return null;
+    const fn = performances[iconConfig.performance];
+    if (!fn) return null;
+    const parts = resolveParts(iconConfig.parts);
+    const tl = fn({ config: iconConfig, parts, gsap: window.gsap });
+    if (tl && iconConfig.delay) tl.delay(iconConfig.delay);
+    return tl;
+  }
+
+  function play() {
+    const manifest = getManifest();
+    if (!manifest || !Array.isArray(manifest.icons)) return [];
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return [];
+    if (!window.gsap) {
+      console.warn("AniDiagram runtime: GSAP not loaded; high-fidelity motion disabled.");
+      return [];
+    }
+    stop();
+    const timelines = manifest.icons.map(playIcon).filter(Boolean);
+    window.__ANIDIAGRAM_TIMELINES__ = timelines;
+    return timelines;
+  }
+
+  function stop() {
+    (window.__ANIDIAGRAM_TIMELINES__ || []).forEach((tl) => tl.kill());
+    window.__ANIDIAGRAM_TIMELINES__ = [];
+  }
+
+  function pause() {
+    (window.__ANIDIAGRAM_TIMELINES__ || []).forEach((tl) => tl.pause());
+  }
+
+  function resume() {
+    (window.__ANIDIAGRAM_TIMELINES__ || []).forEach((tl) => tl.resume());
+  }
+
+  function restart() {
+    (window.__ANIDIAGRAM_TIMELINES__ || []).forEach((tl) => tl.restart());
+  }
+
+  function wireViewer() {
+    const stage = document.getElementById("stage");
+    const viewer = document.getElementById("viewer");
+    const viewport = document.getElementById("viewport");
+    if (!stage || !viewer || !viewport) return;
+    const svg = viewport.querySelector("svg");
+    const download = document.getElementById("download");
     let scale = 1;
     let x = 0;
     let y = 0;
@@ -433,45 +606,68 @@
       viewport.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
     }
     function setDownload() {
-      const blob = new Blob([new XMLSerializer().serializeToString(svg)], {type: 'image/svg+xml'});
+      if (!download || !svg) return;
+      const blob = new Blob([new XMLSerializer().serializeToString(svg)], { type: "image/svg+xml" });
       download.href = URL.createObjectURL(blob);
     }
-    document.getElementById('toggle').addEventListener('click', (event) => {
-      if (svg.animationsPaused && svg.animationsPaused()) {
-        svg.unpauseAnimations();
-        event.currentTarget.textContent = 'Pause';
-      } else {
-        svg.pauseAnimations();
-        event.currentTarget.textContent = 'Play';
-      }
-    });
-    document.getElementById('restart').addEventListener('click', () => {
-      svg.setCurrentTime(0);
-      svg.unpauseAnimations();
-      document.getElementById('toggle').textContent = 'Pause';
-    });
-    function setMotionMode(mode) {
-      viewer.classList.remove('motion-full', 'motion-subtle', 'motion-off');
-      viewer.classList.add(`motion-${mode}`);
-      document.querySelectorAll('.motion-choice').forEach((button) => {
-        button.setAttribute('aria-pressed', String(button.dataset.motion === mode));
+    const toggle = document.getElementById("toggle");
+    if (toggle && svg) {
+      toggle.addEventListener("click", (event) => {
+        const paused = svg.animationsPaused && svg.animationsPaused();
+        if (paused) {
+          svg.unpauseAnimations();
+          resume();
+          event.currentTarget.textContent = "Pause";
+        } else {
+          svg.pauseAnimations();
+          pause();
+          event.currentTarget.textContent = "Play";
+        }
       });
-      if (mode === 'off') {
+    }
+    const restartButton = document.getElementById("restart");
+    if (restartButton && svg) {
+      restartButton.addEventListener("click", () => {
+        svg.setCurrentTime(0);
+        svg.unpauseAnimations();
+        restart();
+        if (toggle) toggle.textContent = "Pause";
+      });
+    }
+    function setMotionMode(mode) {
+      viewer.classList.remove("motion-full", "motion-subtle", "motion-off");
+      viewer.classList.add(`motion-${mode}`);
+      document.querySelectorAll(".motion-choice").forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.motion === mode));
+      });
+      if (!svg) return;
+      if (mode === "off") {
         svg.pauseAnimations();
-        document.getElementById('toggle').textContent = 'Play';
+        pause();
+        if (toggle) toggle.textContent = "Play";
       } else {
         svg.unpauseAnimations();
-        document.getElementById('toggle').textContent = 'Pause';
+        resume();
+        if (toggle) toggle.textContent = "Pause";
       }
     }
-    document.querySelectorAll('.motion-choice').forEach((button) => {
-      button.addEventListener('click', () => setMotionMode(button.dataset.motion));
+    document.querySelectorAll(".motion-choice").forEach((button) => {
+      button.addEventListener("click", () => setMotionMode(button.dataset.motion));
     });
-    document.getElementById('zoom-in').addEventListener('click', () => { scale = Math.min(3, scale + 0.15); applyTransform(); });
-    document.getElementById('zoom-out').addEventListener('click', () => { scale = Math.max(0.35, scale - 0.15); applyTransform(); });
-    document.getElementById('reset').addEventListener('click', () => { scale = 1; x = 0; y = 0; applyTransform(); });
-    stage.addEventListener('pointerdown', (event) => { dragging = true; stage.classList.add('dragging'); lastX = event.clientX; lastY = event.clientY; stage.setPointerCapture(event.pointerId); });
-    stage.addEventListener('pointermove', (event) => {
+    const zoomIn = document.getElementById("zoom-in");
+    const zoomOut = document.getElementById("zoom-out");
+    const reset = document.getElementById("reset");
+    if (zoomIn) zoomIn.addEventListener("click", () => { scale = Math.min(3, scale + 0.15); applyTransform(); });
+    if (zoomOut) zoomOut.addEventListener("click", () => { scale = Math.max(0.35, scale - 0.15); applyTransform(); });
+    if (reset) reset.addEventListener("click", () => { scale = 1; x = 0; y = 0; applyTransform(); });
+    stage.addEventListener("pointerdown", (event) => {
+      dragging = true;
+      stage.classList.add("dragging");
+      lastX = event.clientX;
+      lastY = event.clientY;
+      stage.setPointerCapture(event.pointerId);
+    });
+    stage.addEventListener("pointermove", (event) => {
       if (!dragging) return;
       x += event.clientX - lastX;
       y += event.clientY - lastY;
@@ -479,17 +675,22 @@
       lastY = event.clientY;
       applyTransform();
     });
-    stage.addEventListener('pointerup', () => { dragging = false; stage.classList.remove('dragging'); });
+    stage.addEventListener("pointerup", () => {
+      dragging = false;
+      stage.classList.remove("dragging");
+    });
     setDownload();
-    if (svg.dataset.motionProfile === 'off') {
-      setMotionMode('off');
-    } else if (svg.dataset.motionProfile === 'subtle') {
-      setMotionMode('subtle');
-    }
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      const reduced = svg.dataset.motionReduced || 'subtle';
-      setMotionMode(reduced === 'pause' || reduced === 'static' ? 'off' : 'subtle');
-    }
+    if (svg && svg.dataset.motionProfile === "off") setMotionMode("off");
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) setMotionMode("subtle");
+  }
+
+  window.AniDiagramRuntime = { play, pause, resume, restart, stop };
+  document.addEventListener("DOMContentLoaded", () => {
+    wireViewer();
+    play();
+  });
+})();
+
   </script>
 </body>
 </html>
