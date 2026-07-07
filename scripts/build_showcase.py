@@ -425,6 +425,13 @@ def _build_hero(spec_dir: Path, outdir: Path, quality: bool) -> Dict[str, Any]:
     svg_path = outdir / "agent-runtime-flow.svg"
     html_path = outdir / "agent-runtime-flow.html"
     quality_path = outdir / "agent-runtime-flow.quality.json"
+    preview_dir = outdir.parent / "previews"
+    preview_paths = {
+        "preview_webp": preview_dir / "agent-runtime-flow.webp",
+        "preview_gif": preview_dir / "agent-runtime-flow.gif",
+        "preview_apng": preview_dir / "agent-runtime-flow.apng",
+        "preview_mp4": preview_dir / "agent-runtime-flow.mp4",
+    }
     write_svg(scene, style, svg_path)
     write_html(scene, style, html_path)
     summary = quality_report(scene)["summary"]
@@ -442,6 +449,7 @@ def _build_hero(spec_dir: Path, outdir: Path, quality: bool) -> Dict[str, Any]:
         "quality": _rel(quality_path),
         "best_for": ["High-fidelity runtime", "Agent flow", "Semantic icon performance"],
         "summary": summary,
+        **{key: _rel(path) for key, path in preview_paths.items() if path.exists()},
     }
 
 
@@ -543,6 +551,8 @@ def _write_gallery_index(
     style_cards = "\n".join(_entry_card_html(entry["style"], entry) for entry in styles)
     layout_cards = "\n".join(_entry_card_html(entry["preset"], entry) for entry in layouts)
     hero_cli = _cli_command(hero)
+    hero_preview = hero.get("preview_webp") or hero["svg"]
+    hero_link = hero.get("preview_mp4") or hero["html"]
     motion_cards = "\n".join(
         f"<article><h3>{entry['id']}</h3><p>{entry['title']}</p><p>{', '.join(entry['best_for'])}</p></article>"
         for entry in runtime_motion
@@ -574,10 +584,10 @@ def _write_gallery_index(
 <body>
   <main>
     <h1>AniDiagram Showcase</h1>
-    <p>Style Showcase makes diagrams look right. Layout Showcase makes diagram purpose obvious. Card images are SVG fallback previews; use Open HTML for the high-fidelity GSAP runtime.</p>
+    <p>Style Showcase makes diagrams look right. Layout Showcase makes diagram purpose obvious. The hero preview is browser-captured runtime media when available; card images stay lightweight SVG previews.</p>
     <section class="hero">
       <h2>Hero Demo</h2>
-      <a href="{_path_for_html(hero['html'])}"><img src="{_path_for_html(hero['svg'])}" alt="{hero['title']}"></a>
+      <a href="{_path_for_html(hero_link)}"><img src="{_path_for_html(hero_preview)}" alt="{hero['title']}"></a>
       <p>{hero['title']} - {', '.join(hero['best_for'])}</p>
       <p class="actions"><a href="{_path_for_html(hero['html'])}">Open HTML</a><button type="button" data-copy="{html_escape(hero_cli, quote=True)}">Copy CLI</button></p>
       <p class="links"><a href="hero/index.html">Open hero gallery</a><a href="showcase_manifest.json">View manifest</a></p>

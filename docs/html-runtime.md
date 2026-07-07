@@ -36,8 +36,16 @@ SMIL, CSS keyframes, and GSAP all try to animate the same visual surface.
 Unsupported runtime icons stay static in the HTML runtime. Static is preferable
 to mixing a SMIL fallback with a GSAP performance.
 
-Gallery and README thumbnails are SVG fallback previews. Open the linked
-`.html` output to see the high-fidelity runtime.
+Gallery cards can use SVG fallback previews, but a README hero should use
+browser-captured runtime media. GitHub repository file views show `.html` files
+as source code; they do not execute the GSAP runtime. For GitHub README
+presentation, use an animated WebP or GIF captured from `diagram.html`, and link
+the preview to an MP4 or to a hosted runtime page.
+
+For interactive HTML links, serve the generated gallery through a static host
+such as GitHub Pages. A repository link like
+`https://github.com/.../blob/main/gallery/hero/agent-runtime-flow.html` is a code
+view, not the runtime experience.
 
 ## Current Performances
 
@@ -113,6 +121,37 @@ PYTHONPATH=src python3 -m anidiagram.cli \
   --export-scale 2 \
   --export-fps 24 \
   --export-frames 48
+```
+
+For a README hero preview, keep the asset lighter:
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --spec examples/showcase/hero/agent-runtime-flow.diagram.json \
+  --style styles/deep-tech.json \
+  --outdir gallery/previews \
+  --basename agent-runtime-flow \
+  --formats gif,webp,mp4,apng \
+  --html-runtime gsap \
+  --export-renderer browser \
+  --export-scale 1 \
+  --export-fps 12 \
+  --export-frames 36
+```
+
+Use the animated WebP or GIF as the inline README image. Use MP4 as the click
+target when GitHub Pages is not enabled.
+
+To preview the runtime HTML locally:
+
+```bash
+python3 -m http.server 8765
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8765/gallery/hero/agent-runtime-flow.html
 ```
 
 ## Limits

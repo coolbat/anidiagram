@@ -17,7 +17,11 @@
       "errors": 0,
       "warnings": 0,
       "issues": 0
-    }
+    },
+    "preview_webp": "gallery/previews/agent-runtime-flow.webp",
+    "preview_gif": "gallery/previews/agent-runtime-flow.gif",
+    "preview_apng": "gallery/previews/agent-runtime-flow.apng",
+    "preview_mp4": "gallery/previews/agent-runtime-flow.mp4"
   },
   "styles": [
     {

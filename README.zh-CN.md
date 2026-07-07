@@ -13,40 +13,51 @@ AniDiagram 的 README 展示分成两套画廊：
 - **Style Showcase**：12 个签名案例，每个视觉风格一个，用来回答“它能长成什么气质？”
 - **Layout Showcase**：14 个教学案例，每个布局 preset 一个，用来回答“这个布局适合什么场景？”
 
-完整画廊首页：[gallery/index.html](./gallery/index.html)
+画廊源文件：`gallery/index.html`
 机器可读 manifest：[gallery/showcase_manifest.json](./gallery/showcase_manifest.json)
 
-README 里的图片是便携 SVG fallback 预览。真正的高保真 GSAP runtime
-在链接到的 `.html` 文件里；HTML runtime 使用静态 SVG stage，不包含
-SVG/SMIL 动画标签。
+README 首屏使用从 GSAP runtime 真实录制出来的 animated preview，所以在
+GitHub README 里也能直接看到高保真动效。Style / Layout 的大量卡片继续用
+轻量 SVG 预览，保证页面足够轻、足够好扫。可交互的 `.html` runtime 页面
+需要通过 GitHub Pages 这类静态站点承载，或者用本地静态服务器打开。
 
 ### Hero Demo
 
 | Agent Runtime Flow |
 | --- |
-| [![Agent Runtime Flow](./gallery/hero/agent-runtime-flow.svg)](./gallery/hero/agent-runtime-flow.html)<br>高保真 runtime demo，展示 agent think-act、search discover、API request/response、memory commit 动效。 |
+| [![Agent Runtime Flow](./gallery/previews/agent-runtime-flow.webp)](./gallery/previews/agent-runtime-flow.mp4)<br>从浏览器 runtime 录制的高保真预览，展示 agent think-act、search discover、API request/response、memory commit 动效。<br>[GIF](./gallery/previews/agent-runtime-flow.gif) · [APNG](./gallery/previews/agent-runtime-flow.apng) · Runtime HTML：`gallery/hero/agent-runtime-flow.html` |
+
+本地打开可交互 runtime：
+
+```bash
+python3 -m http.server 8765
+```
+
+然后访问 `http://127.0.0.1:8765/gallery/hero/agent-runtime-flow.html`。如果用
+GitHub Pages 发布，README 按钮应链接到 Pages URL，而不是 GitHub 的 `blob`
+源码页。
 
 ### Style Showcase
 
-每个内置风格都有一份签名 DiagramScript 案例、SVG 预览、HTML runtime 和 quality report。可见预览是 SVG fallback；点击预览可以打开对应高保真 HTML 输出。
+每个内置风格都有一份签名 DiagramScript 案例、SVG 预览、HTML runtime 和 quality report。README 卡片链接到便携 SVG 预览；如果要打开高保真 HTML runtime，需要本地 serve `gallery/`，或启用 GitHub Pages。
 
 | `minimal-light` | `deep-tech` | `blueprint` |
 | --- | --- | --- |
-| [![minimal-light style showcase](./gallery/styles/minimal-light.svg)](./gallery/styles/minimal-light.html)<br>Customer Support Triage | [![deep-tech style showcase](./gallery/styles/deep-tech.svg)](./gallery/styles/deep-tech.html)<br>Realtime AI Ops Mesh | [![blueprint style showcase](./gallery/styles/blueprint.svg)](./gallery/styles/blueprint.html)<br>MCP Server Architecture |
+| [![minimal-light style showcase](./gallery/styles/minimal-light.svg)](./gallery/styles/minimal-light.svg)<br>Customer Support Triage | [![deep-tech style showcase](./gallery/styles/deep-tech.svg)](./gallery/styles/deep-tech.svg)<br>Realtime AI Ops Mesh | [![blueprint style showcase](./gallery/styles/blueprint.svg)](./gallery/styles/blueprint.svg)<br>MCP Server Architecture |
 
 | `flat-icon` | `dark-terminal` | `notion-clean` |
 | --- | --- | --- |
-| [![flat-icon style showcase](./gallery/styles/flat-icon.svg)](./gallery/styles/flat-icon.html)<br>Feature Priority Board | [![dark-terminal style showcase](./gallery/styles/dark-terminal.svg)](./gallery/styles/dark-terminal.html)<br>Incident Response Runbook | [![notion-clean style showcase](./gallery/styles/notion-clean.svg)](./gallery/styles/notion-clean.html)<br>Product Discovery Workflow |
+| [![flat-icon style showcase](./gallery/styles/flat-icon.svg)](./gallery/styles/flat-icon.svg)<br>Feature Priority Board | [![dark-terminal style showcase](./gallery/styles/dark-terminal.svg)](./gallery/styles/dark-terminal.svg)<br>Incident Response Runbook | [![notion-clean style showcase](./gallery/styles/notion-clean.svg)](./gallery/styles/notion-clean.svg)<br>Product Discovery Workflow |
 
 | `glassmorphism` | `claude-warm` | `openai-minimal` |
 | --- | --- | --- |
-| [![glassmorphism style showcase](./gallery/styles/glassmorphism.svg)](./gallery/styles/glassmorphism.html)<br>AI Growth Funnel | [![claude-warm style showcase](./gallery/styles/claude-warm.svg)](./gallery/styles/claude-warm.html)<br>Research Reasoning Loop | [![openai-minimal style showcase](./gallery/styles/openai-minimal.svg)](./gallery/styles/openai-minimal.html)<br>Evaluation Pipeline |
+| [![glassmorphism style showcase](./gallery/styles/glassmorphism.svg)](./gallery/styles/glassmorphism.svg)<br>AI Growth Funnel | [![claude-warm style showcase](./gallery/styles/claude-warm.svg)](./gallery/styles/claude-warm.svg)<br>Research Reasoning Loop | [![openai-minimal style showcase](./gallery/styles/openai-minimal.svg)](./gallery/styles/openai-minimal.svg)<br>Evaluation Pipeline |
 
 | `dark-luxury` | `aurora-orb` | `sketch-board` |
 | --- | --- | --- |
-| [![dark-luxury style showcase](./gallery/styles/dark-luxury.svg)](./gallery/styles/dark-luxury.html)<br>Executive Signal Network | [![aurora-orb style showcase](./gallery/styles/aurora-orb.svg)](./gallery/styles/aurora-orb.html)<br>Creative Agent Studio | [![sketch-board style showcase](./gallery/styles/sketch-board.svg)](./gallery/styles/sketch-board.html)<br>Attention Teaching Flow |
+| [![dark-luxury style showcase](./gallery/styles/dark-luxury.svg)](./gallery/styles/dark-luxury.svg)<br>Executive Signal Network | [![aurora-orb style showcase](./gallery/styles/aurora-orb.svg)](./gallery/styles/aurora-orb.svg)<br>Creative Agent Studio | [![sketch-board style showcase](./gallery/styles/sketch-board.svg)](./gallery/styles/sketch-board.svg)<br>Attention Teaching Flow |
 
-完整风格画廊：[gallery/styles/index.html](./gallery/styles/index.html)
+完整风格画廊源文件：`gallery/styles/index.html`
 
 ### Layout Showcase
 
@@ -54,33 +65,33 @@ SVG/SMIL 动画标签。
 
 | `pipeline` | `loop` |
 | --- | --- |
-| [![pipeline layout showcase](./gallery/layouts/pipeline.svg)](./gallery/layouts/pipeline.html)<br>RAG Ingestion Pipeline | [![loop layout showcase](./gallery/layouts/loop.svg)](./gallery/layouts/loop.html)<br>Agent Reflection Loop |
+| [![pipeline layout showcase](./gallery/layouts/pipeline.svg)](./gallery/layouts/pipeline.svg)<br>RAG Ingestion Pipeline | [![loop layout showcase](./gallery/layouts/loop.svg)](./gallery/layouts/loop.svg)<br>Agent Reflection Loop |
 
 | `hub-spoke` | `layered` |
 | --- | --- |
-| [![hub-spoke layout showcase](./gallery/layouts/hub-spoke.svg)](./gallery/layouts/hub-spoke.html)<br>Agent Tool Hub | [![layered layout showcase](./gallery/layouts/layered.svg)](./gallery/layouts/layered.html)<br>LLM App Architecture Layers |
+| [![hub-spoke layout showcase](./gallery/layouts/hub-spoke.svg)](./gallery/layouts/hub-spoke.svg)<br>Agent Tool Hub | [![layered layout showcase](./gallery/layouts/layered.svg)](./gallery/layouts/layered.svg)<br>LLM App Architecture Layers |
 
 | `swimlane` | `compare` |
 | --- | --- |
-| [![swimlane layout showcase](./gallery/layouts/swimlane.svg)](./gallery/layouts/swimlane.html)<br>Human-in-the-loop Approval Flow | [![compare layout showcase](./gallery/layouts/compare.svg)](./gallery/layouts/compare.html)<br>RAG vs Agentic RAG |
+| [![swimlane layout showcase](./gallery/layouts/swimlane.svg)](./gallery/layouts/swimlane.svg)<br>Human-in-the-loop Approval Flow | [![compare layout showcase](./gallery/layouts/compare.svg)](./gallery/layouts/compare.svg)<br>RAG vs Agentic RAG |
 
 | `matrix` | `timeline` |
 | --- | --- |
-| [![matrix layout showcase](./gallery/layouts/matrix.svg)](./gallery/layouts/matrix.html)<br>AI Feature Priority Matrix | [![timeline layout showcase](./gallery/layouts/timeline.svg)](./gallery/layouts/timeline.html)<br>AI Product Launch Roadmap |
+| [![matrix layout showcase](./gallery/layouts/matrix.svg)](./gallery/layouts/matrix.svg)<br>AI Feature Priority Matrix | [![timeline layout showcase](./gallery/layouts/timeline.svg)](./gallery/layouts/timeline.svg)<br>AI Product Launch Roadmap |
 
 | `stack` | `funnel` |
 | --- | --- |
-| [![stack layout showcase](./gallery/layouts/stack.svg)](./gallery/layouts/stack.html)<br>AI Runtime Stack | [![funnel layout showcase](./gallery/layouts/funnel.svg)](./gallery/layouts/funnel.html)<br>Lead-to-Agent Automation Funnel |
+| [![stack layout showcase](./gallery/layouts/stack.svg)](./gallery/layouts/stack.svg)<br>AI Runtime Stack | [![funnel layout showcase](./gallery/layouts/funnel.svg)](./gallery/layouts/funnel.svg)<br>Lead-to-Agent Automation Funnel |
 
 | `sequence` | `er` |
 | --- | --- |
-| [![sequence layout showcase](./gallery/layouts/sequence.svg)](./gallery/layouts/sequence.html)<br>API Tool Calling Sequence | [![er layout showcase](./gallery/layouts/er.svg)](./gallery/layouts/er.html)<br>Agent Memory Data Model |
+| [![sequence layout showcase](./gallery/layouts/sequence.svg)](./gallery/layouts/sequence.svg)<br>API Tool Calling Sequence | [![er layout showcase](./gallery/layouts/er.svg)](./gallery/layouts/er.svg)<br>Agent Memory Data Model |
 
 | `network` | `agent-memory` |
 | --- | --- |
-| [![network layout showcase](./gallery/layouts/network.svg)](./gallery/layouts/network.html)<br>Distributed Agent Runtime Mesh | [![agent-memory layout showcase](./gallery/layouts/agent-memory.svg)](./gallery/layouts/agent-memory.html)<br>Personalized Agent Memory Flow |
+| [![network layout showcase](./gallery/layouts/network.svg)](./gallery/layouts/network.svg)<br>Distributed Agent Runtime Mesh | [![agent-memory layout showcase](./gallery/layouts/agent-memory.svg)](./gallery/layouts/agent-memory.svg)<br>Personalized Agent Memory Flow |
 
-完整布局画廊：[gallery/layouts/index.html](./gallery/layouts/index.html)
+完整布局画廊源文件：`gallery/layouts/index.html`
 
 ### Runtime Motion Showcase
 
