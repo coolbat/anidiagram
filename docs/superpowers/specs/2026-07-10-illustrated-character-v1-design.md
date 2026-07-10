@@ -44,19 +44,21 @@ is added to the canonical `KNOWN_ICONS`/JSON-schema icon enum and gets a small
 person-and-laptop `semantic-line-v1` implementation so explicit line mode has
 defined behavior.
 
-Any other valid semantic icon resolves to `semantic-line-v1` for that icon only.
-A missing character definition must never make a scene fail to render. The
-quality API becomes `quality_report(scene, style=None)` and `write_quality`
-passes the resolved style through it. When the resolved icon system is
-`illustrated-character-v1`, it adds exactly one warning per unsupported node:
+Any other **valid semantic icon that is not covered by the character registry**
+(for example, `api`) resolves to `semantic-line-v1` for that icon only. Invalid
+icon ids remain schema errors and never enter fallback rendering. A missing
+character definition must never make a valid scene fail to render. The quality
+API becomes `quality_report(scene, style=None)` and `write_quality` passes the
+resolved style through it. When the resolved icon system is
+`illustrated-character-v1`, it adds exactly one established `QualityIssue`
+warning per uncovered valid-icon node:
 
 ```json
 {
-  "path": "nodes.<node_id>.icon",
+  "code": "character_icon_fallback",
   "severity": "warning",
-  "rule": "character_icon_fallback",
-  "requested_icon_system": "illustrated-character-v1",
-  "resolved_icon_system": "semantic-line-v1"
+  "path": "$.nodes[<index>].icon",
+  "message": "icon '<icon>' is not covered by illustrated-character-v1; rendered with semantic-line-v1"
 }
 ```
 
@@ -143,14 +145,17 @@ Tests are written first and must prove:
 - explicit `semantic-line-v1` renders the new `operator` line icon;
 - the three character definitions expose their expected stable part ids and
   named performances;
-- an unsupported icon renders as a line icon and emits exactly one
-  `character_icon_fallback` quality warning;
+- a valid but uncovered icon (`api`) renders as a line icon and emits exactly one
+  `character_icon_fallback` `QualityIssue` with the specified code, severity,
+  JSON path, and message;
 - the HTML manifest contains the matching performance and selectors;
 - reduced-motion HTML does not start character timelines.
 
 The regression matrix covers every bundled style with omitted, explicit
 `illustrated-v1`, and explicit `semantic-line-v1` systems; covered and
-unsupported icons; SVG, runtime HTML, and reduced-motion output.
+uncovered-valid icons; SVG, runtime HTML, and reduced-motion output. It also
+asserts matching `data-icon-system` values in SVG and `icon_system` values in the
+Motion Manifest.
 
 Verification also renders both examples, runs the entire Python test suite,
 checks JavaScript syntax, runs `git diff --check`, and captures browser previews
@@ -164,6 +169,6 @@ readability at node scale, no clipped motion, and a quiet end state.
 - The three v1 icons read as intentionally drawn characters rather than generic
   line icons on a bubble background.
 - Each icon performs one semantic micro-performance and returns to rest.
-- Existing scenes with unsupported icon ids still render deterministically and
-  report their fallback.
+- Existing scenes with valid semantic icons not yet covered by the character
+  registry still render deterministically and report their fallback.
 - No third-party runtime, source code, or visual asset is added.
