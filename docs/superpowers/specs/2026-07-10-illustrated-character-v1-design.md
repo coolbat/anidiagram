@@ -23,22 +23,45 @@ third-party art or runtime code. The motion contract is the approved B direction
 
 ## Icon System Resolution
 
-`style.icon_system` resolves as follows:
+`resolve_icon_system(style)` is the single resolver used by SVG rendering,
+Motion Manifest generation, and quality reporting. It resolves as follows:
 
 | Requested value | Result |
 | --- | --- |
-| omitted | `illustrated-character-v1` |
+| both fields omitted | `illustrated-character-v1` |
 | `illustrated-character-v1` | new layered character icon registry |
 | `illustrated-v1` | existing bubble/backplate icon system |
 | `semantic-line-v1` | existing line-icon rendering without illustrated treatment |
 
-`styles/illustrated-bubble.json` keeps its explicit `illustrated-v1` value.
+Resolution precedence is: `style.icon_system`, then the legacy
+`style.effects.icon_system`, then the default. Any present non-string value or
+unknown string is a `ValueError` that names its style path; it must not silently
+fall back to a different visual system. `styles/illustrated-bubble.json` keeps
+its explicit `illustrated-v1` value.
 
-The v1 character registry covers `agent`, `operator`, and `database`. Any other
-semantic icon resolves to `semantic-line-v1` for that icon only. The quality
-report records a `character_icon_fallback` warning with the node id and icon,
-so mixed output is visible rather than silent. A missing character definition
-must never make a scene fail to render.
+The v1 character registry covers `agent`, `operator`, and `database`. `operator`
+is added to the canonical `KNOWN_ICONS`/JSON-schema icon enum and gets a small
+person-and-laptop `semantic-line-v1` implementation so explicit line mode has
+defined behavior.
+
+Any other valid semantic icon resolves to `semantic-line-v1` for that icon only.
+A missing character definition must never make a scene fail to render. The
+quality API becomes `quality_report(scene, style=None)` and `write_quality`
+passes the resolved style through it. When the resolved icon system is
+`illustrated-character-v1`, it adds exactly one warning per unsupported node:
+
+```json
+{
+  "path": "nodes.<node_id>.icon",
+  "severity": "warning",
+  "rule": "character_icon_fallback",
+  "requested_icon_system": "illustrated-character-v1",
+  "resolved_icon_system": "semantic-line-v1"
+}
+```
+
+The warning is not emitted for explicit `semantic-line-v1`, explicit
+`illustrated-v1`, or a covered character icon.
 
 ## Data Model
 
@@ -85,6 +108,15 @@ performance; standalone SVG receives a small compatible fallback only.
 5. Keep the runtime stage static. Existing ambient edge flow and title effects
    continue to work unchanged.
 
+For a covered character icon, the existing performance-selection contract still
+applies: in the default expressive or teaching runtime (or with an explicit
+`icon-performance` effect), its manifest contains the new performance id and all
+character part selectors. Unsupported icons retain the existing line-icon
+performance when one exists; otherwise their manifest has no character
+performance. In standalone SVG, character outer geometry is always rendered;
+`icon-semantic`/`icon-performance` adds only a lightweight SMIL pulse or signal
+fallback. In reduced-motion HTML, `play()` starts no character timeline.
+
 ## Style and Demonstrations
 
 Add `styles/illustrated-character.json` to encode the approved C direction.
@@ -104,14 +136,21 @@ review artifact, not a committed dependency on a new runtime.
 
 Tests are written first and must prove:
 
-- omitted `icon_system` resolves to `illustrated-character-v1`;
+- omitted `icon_system` resolves to `illustrated-character-v1`, while top-level
+  style settings override legacy `effects.icon_system` settings;
+- an invalid icon-system value fails with a named, actionable error;
 - explicit `illustrated-v1` keeps the current bubble treatment;
+- explicit `semantic-line-v1` renders the new `operator` line icon;
 - the three character definitions expose their expected stable part ids and
   named performances;
 - an unsupported icon renders as a line icon and emits exactly one
   `character_icon_fallback` quality warning;
 - the HTML manifest contains the matching performance and selectors;
 - reduced-motion HTML does not start character timelines.
+
+The regression matrix covers every bundled style with omitted, explicit
+`illustrated-v1`, and explicit `semantic-line-v1` systems; covered and
+unsupported icons; SVG, runtime HTML, and reduced-motion output.
 
 Verification also renders both examples, runs the entire Python test suite,
 checks JavaScript syntax, runs `git diff --check`, and captures browser previews
