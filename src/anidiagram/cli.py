@@ -135,7 +135,7 @@ def main(argv: Optional[List[str]] = None) -> None:
     for format_name in formats:
         output_path = outdir / f"{args.basename}{FORMAT_EXTENSIONS[format_name]}"
         if format_name == "quality":
-            outputs[format_name] = write_quality(scene, output_path)
+            outputs[format_name] = write_quality(scene, style, output_path)
         elif format_name == "html":
             outputs[format_name] = write_html(scene, style, output_path, runtime=args.html_runtime or "gsap")
         elif args.export_renderer == "browser" and format_name in BROWSER_CAPTURE_FORMATS:

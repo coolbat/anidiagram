@@ -7,10 +7,12 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
 from .schema import KNOWN_ROLES, ValidationIssue
+from .icon_system import DEFAULT_ICON_SYSTEM, SUPPORTED_ICON_SYSTEMS, resolve_icon_system
 
 
 DEFAULT_STYLE: Dict[str, Any] = {
     "name": "minimal-light",
+    "icon_system": DEFAULT_ICON_SYSTEM,
     "canvas": {
         "background": "#ffffff",
         "text": "#172033",
@@ -62,7 +64,9 @@ def load_style(path: Optional[Union[str, Path]] = None) -> Dict[str, Any]:
     if issues:
         messages = "; ".join(f"{issue.path}: {issue.message}" for issue in issues)
         raise ValueError(f"style profile validation failed: {messages}")
-    return deep_merge(DEFAULT_STYLE, data)
+    merged = deep_merge(DEFAULT_STYLE, data)
+    merged["icon_system"] = resolve_icon_system(data)
+    return merged
 
 
 def role_style(style: Dict[str, Any], role: Optional[str]) -> Dict[str, str]:
@@ -76,6 +80,8 @@ def validate_style_profile(data: Dict[str, Any]) -> list:
         return [ValidationIssue("$", "expected an object", "type")]
     if "name" in data and not isinstance(data["name"], str):
         issues.append(ValidationIssue("$.name", "expected a string", "type"))
+    if "icon_system" in data:
+        _validate_icon_system(data["icon_system"], "$.icon_system", issues)
     node = data.get("node", {})
     if node and not isinstance(node, dict):
         issues.append(ValidationIssue("$.node", "expected an object", "type"))
@@ -87,6 +93,8 @@ def validate_style_profile(data: Dict[str, Any]) -> list:
     if effects and not isinstance(effects, dict):
         issues.append(ValidationIssue("$.effects", "expected an object", "type"))
     elif isinstance(effects, dict):
+        if "icon_system" in effects:
+            _validate_icon_system(effects["icon_system"], "$.effects.icon_system", issues)
         node_fill = effects.get("node_fill")
         if node_fill is not None and node_fill not in {"solid", "aurora"}:
             issues.append(ValidationIssue("$.effects.node_fill", "expected 'solid' or 'aurora'", "enum"))
@@ -131,3 +139,10 @@ def validate_style_profile(data: Dict[str, Any]) -> list:
 
 def _is_opacity(value: Any) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool) and 0 <= value <= 1
+
+
+def _validate_icon_system(value: Any, path: str, issues: list) -> None:
+    if not isinstance(value, str):
+        issues.append(ValidationIssue(path, "expected a string", "type"))
+    elif value not in SUPPORTED_ICON_SYSTEMS:
+        issues.append(ValidationIssue(path, f"expected one of: {', '.join(sorted(SUPPORTED_ICON_SYSTEMS))}", "enum"))

@@ -37,6 +37,7 @@ class Motion:
 @dataclass(frozen=True)
 class EffectConfig:
     preset: str = "none"
+    explicit: bool = False
     line: Optional[str] = None
     particle: Optional[str] = None
     trail: Optional[str] = None
@@ -63,20 +64,20 @@ class MotionPolicy:
 
 @dataclass(frozen=True)
 class SceneMotion:
-    profile: str = "normal"
-    sequence: str = "step-stagger"
-    ease: str = "calm"
-    stagger: float = 0.12
-    duration_scale: float = 1.0
-    intensity: float = 1.0
-    node: str = "glow-breathe"
+    profile: str = "expressive"
+    sequence: str = "layered"
+    ease: str = "spring"
+    stagger: float = 0.16
+    duration_scale: float = 0.9
+    intensity: float = 1.25
+    node: str = "pop"
     edge: str = "comet-flow"
     group: str = "marching-ants"
     reduced_motion: str = "subtle"
     edge_effect: EffectConfig = field(default_factory=lambda: EffectConfig("comet-flow"))
-    node_effect: EffectConfig = field(default_factory=lambda: EffectConfig("glow-breathe"))
+    node_effect: EffectConfig = field(default_factory=lambda: EffectConfig("pop"))
     group_effect: EffectConfig = field(default_factory=lambda: EffectConfig("marching-ants"))
-    title_effect: EffectConfig = field(default_factory=lambda: EffectConfig("fade"))
+    title_effect: EffectConfig = field(default_factory=lambda: EffectConfig("highlight-sweep"))
 
 
 @dataclass(frozen=True)

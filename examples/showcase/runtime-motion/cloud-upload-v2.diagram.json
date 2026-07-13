@@ -1,0 +1,68 @@
+{
+  "version": "0.3",
+  "preset": "cloud-upload-v2",
+  "canvas": {
+    "width": 560,
+    "height": 360
+  },
+  "style": "deep-tech",
+  "title": {
+    "text": "Cloud Upload",
+    "subtitle": "cloud-upload-v2"
+  },
+  "motion": {
+    "profile": "expressive",
+    "sequence": "simultaneous",
+    "ease": "spring",
+    "stagger": 0.08,
+    "duration_scale": 0.95,
+    "intensity": 1.1,
+    "edge": {
+      "preset": "static",
+      "particle_count": 1,
+      "trail_count": 0
+    },
+    "node": {
+      "preset": "icon-performance"
+    },
+    "group": {
+      "preset": "static"
+    },
+    "title": {
+      "preset": "none"
+    },
+    "reduced_motion": "subtle"
+  },
+  "motion_policy": {
+    "profile": "expressive",
+    "motion_area": "small",
+    "max_active_flow_edges": 4,
+    "max_particle_edges": 4,
+    "particle_count_per_edge": 1,
+    "flow_trail_count": 0,
+    "max_active_pulse_nodes": 4,
+    "max_scanning_groups": 0
+  },
+  "nodes": [
+    {
+      "id": "cloud",
+      "label": "Cloud Upload",
+      "caption": "Upload / Sync / Deploy",
+      "position": [
+        170,
+        190
+      ],
+      "size": [
+        220,
+        96
+      ],
+      "role": "tool",
+      "icon": "cloud",
+      "effect": {
+        "preset": "icon-performance",
+        "icon_motion": "cloud-upload-v2"
+      }
+    }
+  ],
+  "edges": []
+}

@@ -1,0 +1,20 @@
+{
+  "name": "illustrated-character",
+  "icon_system": "illustrated-character-v1",
+  "canvas": {"background": "#fffdf6", "text": "#283047", "muted": "#687086", "grid": "#efe9dc"},
+  "title": {"accent": "#8265d6", "highlight": "#eee8ff"},
+  "node": {"radius": 24, "stroke_width": 2.4, "fill_mode": "solid"},
+  "edge": {"width": 2.5, "duration": "3.6s"},
+  "effects": {"grid_opacity": 0.34, "frame_opacity": 0.28},
+  "roles": {
+    "actor": {"stroke": "#ef875d", "fill": "#fff0e7", "text": "#283047"},
+    "source": {"stroke": "#42aeb5", "fill": "#e5f8f6", "text": "#283047"},
+    "process": {"stroke": "#6a78cf", "fill": "#eeefff", "text": "#283047"},
+    "agent": {"stroke": "#8265d6", "fill": "#f1edff", "text": "#283047"},
+    "memory": {"stroke": "#2e9b91", "fill": "#e5f6f1", "text": "#283047"},
+    "tool": {"stroke": "#e69a38", "fill": "#fff4df", "text": "#283047"},
+    "output": {"stroke": "#57a874", "fill": "#ebf8ee", "text": "#283047"},
+    "risk": {"stroke": "#df7585", "fill": "#fff0f2", "text": "#283047"},
+    "neutral": {"stroke": "#7d8494", "fill": "#fbfaf5", "text": "#283047"}
+  }
+}

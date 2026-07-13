@@ -16,27 +16,25 @@
     .stage.dragging { cursor: grabbing; }
     .viewport { transform-origin: 0 0; width: max-content; }
     svg { display: block; max-width: none; height: auto; user-select: none; }
-    main.motion-subtle .edge-particle,
-    main.motion-subtle .node-burst,
-    main.motion-subtle .icon-breathe-halo { display: none; }
-    main.motion-subtle .edge-flow { opacity: 0.22; }
-    main.motion-subtle .semantic-icon-breathe { animation-duration: 4.2s; }
+    main.motion-readable .node-burst,
+    main.motion-readable .icon-breathe-halo { display: none; }
+    main.motion-readable .edge-flow { opacity: 0.08; }
+    main.motion-readable .semantic-icon-breathe { animation-duration: 4.2s; }
     main.motion-off .edge-flow,
     main.motion-off .edge-particle,
     main.motion-off .node-burst,
     main.motion-off .node-glow,
-    main.motion-off .icon-breathe-halo,
-    main.motion-off .icon-runtime-part { display: none; }
+    main.motion-off .icon-breathe-halo { display: none; }
     main.motion-off .semantic-icon-breathe { animation: none !important; }
   </style>
 </head>
 <body>
-  <main id="viewer" class="motion-full" data-runtime="gsap">
+  <main id="viewer" class="motion-expressive" data-runtime="gsap">
     <div class="toolbar">
       <button type="button" id="toggle">Pause</button>
       <button type="button" id="restart">Restart</button>
-      <button type="button" class="motion-choice" data-motion="full" aria-pressed="true">Full Motion</button>
-      <button type="button" class="motion-choice" data-motion="subtle" aria-pressed="false">Subtle</button>
+      <button type="button" class="motion-choice" data-motion="expressive" aria-pressed="true">Expressive</button>
+      <button type="button" class="motion-choice" data-motion="readable" aria-pressed="false">Readable</button>
       <button type="button" class="motion-choice" data-motion="off" aria-pressed="false">Off</button>
       <button type="button" id="zoom-in">Zoom In</button>
       <button type="button" id="zoom-out">Zoom Out</button>
@@ -45,7 +43,7 @@
     </div>
     <div class="stage" id="stage">
       <div class="viewport" id="viewport">
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="off" data-motion-sequence="step-stagger" data-motion-edge="none" data-motion-node="none" data-motion-group="none" data-motion-title="static" data-motion-reduced="static">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="expressive" data-motion-sequence="step-stagger" data-motion-edge="ghost-flow" data-motion-node="pulse" data-motion-group="border-scan" data-motion-title="highlight-sweep" data-motion-reduced="subtle" data-icon-system="illustrated-character-v1">
 <title id="diagram-title">AI Growth Funnel</title>
 <desc id="diagram-desc">signals become qualified users, activation, and expansion loops</desc>
 <style>
@@ -120,8 +118,8 @@
   </marker>
 </defs>
 <g class="edge" data-role="source">
-  <path class="edge-base" d="M 620.0 208.0 L 620.0 245.0" fill="none" stroke="#0891b2" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-1)" />
-  <path class="edge-draw" d="M 620.0 208.0 L 620.0 245.0" fill="none" stroke="#0891b2" stroke-width="2.4" pathLength="1"
+  <path class="edge-base" d="M 620.0 220.0 L 620.0 233.0" fill="none" stroke="#0891b2" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-1)" />
+  <path class="edge-draw" d="M 620.0 220.0 L 620.0 233.0" fill="none" stroke="#0891b2" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-1)" />
 
 
@@ -137,8 +135,8 @@
   </marker>
 </defs>
 <g class="edge" data-role="process">
-  <path class="edge-base" d="M 620.0 323.0 L 620.0 360.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-2)" />
-  <path class="edge-draw" d="M 620.0 323.0 L 620.0 360.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+  <path class="edge-base" d="M 620.0 335.0 L 620.0 348.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-2)" />
+  <path class="edge-draw" d="M 620.0 335.0 L 620.0 348.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-2)" />
 
 
@@ -154,8 +152,8 @@
   </marker>
 </defs>
 <g class="edge" data-role="agent">
-  <path class="edge-base" d="M 620.0 438.0 L 620.0 475.0 L 637.5 475.0" fill="none" stroke="#8b5cf6" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-3)" />
-  <path class="edge-draw" d="M 620.0 438.0 L 620.0 475.0 L 637.5 475.0" fill="none" stroke="#8b5cf6" stroke-width="2.4" pathLength="1"
+  <path class="edge-base" d="M 625.1 448.8 L 625.1 464.2 L 632.4 464.2" fill="none" stroke="#8b5cf6" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-3)" />
+  <path class="edge-draw" d="M 625.1 448.8 L 625.1 464.2 L 632.4 464.2" fill="none" stroke="#8b5cf6" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-3)" />
 
 
@@ -171,8 +169,8 @@
   </marker>
 </defs>
 <g class="edge" data-role="output">
-  <path class="edge-base" d="M 637.5 553.0 L 637.5 590.0 L 635.0 590.0" fill="none" stroke="#22c55e" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-4)" />
-  <path class="edge-draw" d="M 637.5 553.0 L 637.5 590.0 L 635.0 590.0" fill="none" stroke="#22c55e" stroke-width="2.4" pathLength="1"
+  <path class="edge-base" d="M 636.7 565.0 L 636.7 578.0 L 635.8 578.0" fill="none" stroke="#22c55e" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-4)" />
+  <path class="edge-draw" d="M 636.7 565.0 L 636.7 578.0 L 635.8 578.0" fill="none" stroke="#22c55e" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-4)" />
 
 
@@ -188,8 +186,8 @@
   </marker>
 </defs>
 <g class="edge" data-role="memory">
-  <path class="edge-base" d="M 870.0 402.0 L 695.0 399.0" fill="none" stroke="#10b981" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-5)" />
-  <path class="edge-draw" d="M 870.0 402.0 L 695.0 399.0" fill="none" stroke="#10b981" stroke-width="2.4" pathLength="1"
+  <path class="edge-base" d="M 858.0 401.8 L 707.0 399.2" fill="none" stroke="#10b981" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-5)" />
+  <path class="edge-draw" d="M 858.0 401.8 L 707.0 399.2" fill="none" stroke="#10b981" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-5)" />
 
 
@@ -206,19 +204,16 @@
 
   <rect x="505.0" y="130.0" width="230.0" height="78.0" rx="18.0"
         fill="#f0fdff" stroke="#0891b2" stroke-width="1.5" />
-
-<g id="icon-traffic-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-cloud" data-icon="cloud" data-node-id="traffic" opacity="0.94">
-
-
-
-
-  <path d="M 530.6 172.6
-           C 530.6 166.1, 537.8 163.4, 542.4 163.1
-           C 545.0 154.3, 557.2 157.2, 556.2 166.4
-           C 564.7 167.4, 564.4 179.2, 555.8 179.2
-           H 535.2" class="semantic-icon icon-filled semantic-icon-cloud" stroke="#0891b2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#cbecf3" />
-
-
+<g class="semantic-icon-wrap semantic-icon-character-wrap" data-icon="cloud" data-node-id="traffic" opacity="0.98">
+  <g id="icon-traffic-root" class="semantic-icon semantic-icon-illustrated-character-v1" data-semantic-role="uplink-send-ready" data-rest-opacity="1" transform="translate(535.0 145.0) scale(0.4800)">
+    <g class="illustrated-character-motion-shell">
+      <path id="icon-traffic-cloud" class="illustrated-character-part illustrated-character-cloud" data-rest-opacity="1" d="M25 70c-13 0-16-18-3-22 1-14 20-18 27-7 10-8 27-1 25 12 12 4 8 17-3 17z" fill="#83d9ed" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-traffic-kite" class="illustrated-character-part illustrated-character-kite" data-rest-opacity="1" d="M53 24l13 13-13 13-13-13z" fill="#c5b8f2" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-traffic-kite-tail" class="illustrated-character-part illustrated-character-kite-tail" data-rest-opacity="1" d="M53 50c3 5-4 8 0 13" fill="none" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-traffic-data-dot" class="illustrated-character-part illustrated-character-data-dot" data-rest-opacity="1" cx="53" cy="61" r="4" fill="#ffd45e" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-traffic-ready-light" class="illustrated-character-part illustrated-character-ready-light" data-rest-opacity="1" cx="73" cy="42" r="6" fill="#49c99a" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
 </g>
 
   <text x="648.0" y="156.0" text-anchor="middle" fill="#172033">
@@ -234,21 +229,18 @@
 
   <rect x="525.0" y="245.0" width="190.0" height="78.0" rx="18.0"
         fill="#f8fbff" stroke="#2563eb" stroke-width="1.5" />
-
-<g id="icon-qualify-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-search" data-icon="search" data-node-id="qualify" opacity="0.94">
-
-
-
-
-  <circle id="icon-qualify-lens" cx="564.2" cy="281.4" r="8.8" class="semantic-icon icon-filled semantic-icon-search" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#d6e3fc" />
-  <path id="icon-qualify-handle" d="M 571.7 288.9 L 581.9 299.1" class="semantic-icon semantic-icon-search" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-  <path id="icon-qualify-scan" class="icon-runtime-part" d="M 556.6 276.8 L 570.1 288.6"
-        fill="none" stroke="#2563eb" stroke-width="2.8" stroke-linecap="round" opacity="0" />
-  <circle id="icon-qualify-result-1" class="icon-runtime-part" cx="561.4" cy="280.4" r="2.2" fill="#2563eb" opacity="0" />
-  <circle id="icon-qualify-result-2" class="icon-runtime-part" cx="567.1" cy="283.7" r="1.9" fill="#2563eb" opacity="0" />
-  <circle id="icon-qualify-target" class="icon-runtime-part" cx="569.7" cy="280.7" r="3.6" fill="none" stroke="#2563eb" stroke-width="2" opacity="0" />
-
-
+<g class="semantic-icon-wrap semantic-icon-character-wrap" data-icon="search" data-node-id="qualify" opacity="0.98">
+  <g id="icon-qualify-root" class="semantic-icon semantic-icon-illustrated-character-v1" data-semantic-role="scout-scan-find" data-rest-opacity="1" transform="translate(546.6 260.0) scale(0.4800)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-qualify-lens" class="illustrated-character-part illustrated-character-lens" data-rest-opacity="1" cx="45" cy="46" r="23" fill="#83d9ed" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-qualify-lens-shine" class="illustrated-character-part illustrated-character-lens-shine" data-rest-opacity="1" d="M31 40c4-9 13-14 23-12" fill="none" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-qualify-scan" class="illustrated-character-part illustrated-character-scan" data-rest-opacity="1" d="M25 46h40" fill="none" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-qualify-handle" class="illustrated-character-part illustrated-character-handle" data-rest-opacity="1" d="M61 62l16 16" fill="none" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-qualify-marker" class="illustrated-character-part illustrated-character-marker" data-rest-opacity="1" d="M45 33c-6 0-10 4-10 10 0 8 10 17 10 17s10-9 10-17c0-6-4-10-10-10z" fill="#ffd2b8" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-qualify-marker-dot" class="illustrated-character-part illustrated-character-marker-dot" data-rest-opacity="1" cx="45" cy="43" r="3" fill="#fffdf6" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-qualify-spark" class="illustrated-character-part illustrated-character-spark" data-rest-opacity="1" d="M77 22l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#ffd45e" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
 </g>
 
   <text x="648.0" y="271.0" text-anchor="middle" fill="#172033">
@@ -264,44 +256,18 @@
 
   <rect x="545.0" y="360.0" width="150.0" height="78.0" rx="18.0"
         fill="#fbfaff" stroke="#8b5cf6" stroke-width="1.5" />
-
-<g id="icon-activate-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-agent" data-icon="agent" data-node-id="activate" opacity="0.94">
-
-
-
-
-  <path id="icon-activate-shell" class="semantic-icon semantic-icon-agent icon-agent-shell"
-        d="M 578.0 382.9
-           L 590.1 390.2
-           V 406.5
-           L 578.0 414.1
-           L 565.9 406.5
-           V 390.2
-           Z"
-        fill="#e9e1fe" stroke="#8b5cf6" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.92" />
-  <path class="semantic-icon semantic-icon-agent icon-agent-circuit"
-        d="M 578.0 389.5 V 404.9
-           M 571.8 395.4 H 576.4
-           M 579.6 398.7 H 584.9
-           M 573.7 404.2 H 581.6"
-        fill="none" stroke="#8b5cf6" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" opacity="0.50" />
-  <circle id="icon-activate-core" class="icon-runtime-part icon-agent-core" cx="578.0" cy="398.7" r="3.0"
-        fill="#8b5cf6" stroke="#e9e1fe" stroke-width="1.5" opacity="0.78" />
-  <circle id="icon-activate-thought-1" class="icon-runtime-part icon-agent-thought" cx="572.1" cy="391.8" r="2.0"
-        fill="#8b5cf6" opacity="0.46" />
-  <circle id="icon-activate-thought-2" class="icon-runtime-part icon-agent-thought" cx="583.9" cy="393.8" r="1.9"
-        fill="#8b5cf6" opacity="0.38" />
-  <circle id="icon-activate-thought-3" class="icon-runtime-part icon-agent-thought" cx="575.1" cy="404.9" r="1.8"
-        fill="#8b5cf6" opacity="0.42" />
-  <path id="icon-activate-decision-token" class="icon-runtime-part icon-agent-decision-token"
-        d="M 585.9 394.3
-           L 588.3 396.7
-           L 585.9 399.1
-           L 583.5 396.7
-           Z"
-        fill="#8b5cf6" stroke="#e9e1fe" stroke-width="1.2" opacity="0" />
-
-
+<g class="semantic-icon-wrap semantic-icon-character-wrap" data-icon="agent" data-node-id="activate" opacity="0.98">
+  <g id="icon-activate-root" class="semantic-icon semantic-icon-illustrated-character-v1" data-semantic-role="think-decide-confirm" data-rest-opacity="1" transform="translate(561.0 375.0) scale(0.4800)">
+    <g class="illustrated-character-motion-shell">
+      <path id="icon-activate-brain-left" class="illustrated-character-part illustrated-character-brain-left" data-rest-opacity="1" d="M48 18C31 10 13 23 18 39C4 48 10 67 25 70C26 86 44 91 52 78L52 30C51 25 50 21 48 18Z" fill="#49c99a" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-activate-brain-right" class="illustrated-character-part illustrated-character-brain-right" data-rest-opacity="1" d="M52 18C69 10 87 23 82 39C96 48 90 67 75 70C74 86 56 91 48 78L48 30C49 25 50 21 52 18Z" fill="#c5b8f2" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-activate-brain-veins" class="illustrated-character-part illustrated-character-brain-veins" data-rest-opacity="1" d="M34 27c-5 6 4 9 1 16m-8 12c8-1 5 9 11 11m28-39c5 6-4 9-1 16m8 12c-8-1-5 9-11 11" fill="none" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-activate-chip" class="illustrated-character-part illustrated-character-chip" data-rest-opacity="1" x="31" y="33" width="38" height="32" rx="4" fill="#fffdf6" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <text id="icon-activate-chip-label" class="illustrated-character-part illustrated-character-chip-label" data-rest-opacity="1" x="50" y="54" fill="#283047" text-anchor="middle" font-family="ui-sans-serif, system-ui" font-size="20" font-weight="700">AI</text>
+      <path id="icon-activate-signal" class="illustrated-character-part illustrated-character-signal" data-rest-opacity="1" d="M73 39h7m-7 7h10m-10 7h7" fill="none" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-activate-spark" class="illustrated-character-part illustrated-character-spark" data-rest-opacity="1" d="M21 20l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#ffd45e" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
 </g>
 
   <text x="641.0" y="386.0" text-anchor="middle" fill="#172033">
@@ -318,24 +284,17 @@
 
   <rect x="565.0" y="475.0" width="145.0" height="78.0" rx="18.0"
         fill="#fffaf0" stroke="#f59e0b" stroke-width="1.5" />
-
-<g id="icon-expand-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-tool" data-icon="tool" data-node-id="expand" opacity="0.94">
-
-
-
-
-  <rect id="icon-expand-chip" x="582.5" y="504.8" width="23.9" height="18.3" rx="4.3"
-        fill="#fdebcb" stroke="#f59e0b" stroke-width="2.8" />
-  <text id="icon-expand-glyph" x="592.0" y="516.8" text-anchor="middle"
-        fill="#f59e0b" stroke="none" font-size="10.0" font-weight="800">fx</text>
-  <circle id="icon-expand-connector" cx="603.8" cy="514.0" r="2.1" fill="#f59e0b" opacity="0.72" />
-  <path id="icon-expand-spark-1" class="icon-tool-spark" d="M 607.7 506.8 L 610.3 503.8"
-        fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" opacity="0.84" />
-  <path id="icon-expand-spark-2" class="icon-tool-spark" d="M 608.4 520.2 L 611.6 522.5"
-        fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" opacity="0.84" />
-  <circle id="icon-expand-flash" class="icon-runtime-part" cx="608.0" cy="514.0" r="6.6" fill="none" stroke="#f59e0b" stroke-width="2" opacity="0" />
-
-
+<g class="semantic-icon-wrap semantic-icon-character-wrap" data-icon="tool" data-node-id="expand" opacity="0.98">
+  <g id="icon-expand-root" class="semantic-icon semantic-icon-illustrated-character-v1" data-semantic-role="kit-act-confirm" data-rest-opacity="1" transform="translate(581.0 490.0) scale(0.4800)">
+    <g class="illustrated-character-motion-shell">
+      <path id="icon-expand-bucket" class="illustrated-character-part illustrated-character-bucket" data-rest-opacity="1" d="M25 40h50l-5 43H30z" fill="#39b8b5" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-expand-lid" class="illustrated-character-part illustrated-character-lid" data-rest-opacity="1" d="M29 39c5-12 37-12 42 0z" fill="#c5b8f2" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-expand-handle" class="illustrated-character-part illustrated-character-handle" data-rest-opacity="1" d="M35 41c0-17 30-17 30 0" fill="none" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-expand-wrench" class="illustrated-character-part illustrated-character-wrench" data-rest-opacity="1" d="M55 28c6-5 13-2 15 3l-7 4 6 7-8 8-7-6-4 7c-6-2-9-9-5-15l5 4 6-6z" fill="#ffd45e" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-expand-wrench-hole" class="illustrated-character-part illustrated-character-wrench-hole" data-rest-opacity="1" cx="65" cy="31" r="3" fill="#fffdf6" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-expand-spark" class="illustrated-character-part illustrated-character-spark" data-rest-opacity="1" d="M27 66l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#ffd2b8" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
 </g>
 
   <text x="658.5" y="501.0" text-anchor="middle" fill="#172033">
@@ -352,23 +311,17 @@
 
   <rect x="575.0" y="590.0" width="120.0" height="70.0" rx="18.0"
         fill="#f4fff8" stroke="#22c55e" stroke-width="1.5" />
-
-<g id="icon-retain-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-output" data-icon="output" data-node-id="retain" opacity="0.94">
-
-
-
-
-  <rect id="icon-retain-card" x="593.5" y="614.4" width="19.4" height="20.0" rx="2.6"
-        fill="#d2f6df" stroke="#22c55e" stroke-width="2.8" />
-  <path id="icon-retain-line-1" class="icon-output-line" d="M 598.8 620.9 H 608.2"
-        fill="none" stroke="#22c55e" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
-  <path id="icon-retain-line-2" class="icon-output-line" d="M 598.8 625.0 H 606.5"
-        fill="none" stroke="#22c55e" stroke-width="2.2" stroke-linecap="round" opacity="0.82" />
-  <path id="icon-retain-check" class="icon-output-check" d="M 600.6 630.0 L 603.8 632.9 L 610.9 625.6"
-        fill="none" stroke="#22c55e" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
-  <circle id="icon-retain-flash" class="icon-runtime-part" cx="607.9" cy="628.2" r="9.1" fill="none" stroke="#22c55e" stroke-width="2" opacity="0" />
-
-
+<g class="semantic-icon-wrap semantic-icon-character-wrap" data-icon="output" data-node-id="retain" opacity="0.98">
+  <g id="icon-retain-root" class="semantic-icon semantic-icon-illustrated-character-v1" data-semantic-role="reveal-deliver-confirm" data-rest-opacity="1" transform="translate(591.0 601.0) scale(0.4800)">
+    <g class="illustrated-character-motion-shell">
+      <path id="icon-retain-envelope" class="illustrated-character-part illustrated-character-envelope" data-rest-opacity="1" d="M19 34h62v42H19z" fill="#83d9ed" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-retain-envelope-fold" class="illustrated-character-part illustrated-character-envelope-fold" data-rest-opacity="1" d="M20 36l30 23 30-23M20 75l19-19m42 19L62 56" fill="none" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-retain-card" class="illustrated-character-part illustrated-character-card" data-rest-opacity="1" x="35" y="22" width="31" height="34" rx="4" fill="#fffdf6" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-retain-card-line" class="illustrated-character-part illustrated-character-card-line" data-rest-opacity="1" d="M41 32h18m-18 7h12" fill="none" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-retain-check" class="illustrated-character-part illustrated-character-check" data-rest-opacity="1" d="M43 46l5 5 10-11" fill="none" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-retain-spark" class="illustrated-character-part illustrated-character-spark" data-rest-opacity="1" d="M77 22l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#ffd45e" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
 </g>
 
   <text x="656.0" y="616.0" text-anchor="middle" fill="#172033">
@@ -384,22 +337,19 @@
 
   <rect x="870.0" y="360.0" width="180.0" height="84.0" rx="18.0"
         fill="#f1fff8" stroke="#10b981" stroke-width="1.5" />
-
-<g id="icon-crm-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-database" data-icon="database" data-node-id="crm" opacity="0.94">
-
-
-
-
-  <ellipse id="icon-crm-lid" cx="909.6" cy="391.5" rx="13.9" ry="5.8" class="semantic-icon icon-filled semantic-icon-database" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#cdf4e5" />
-  <path id="icon-crm-body" d="M 895.7 391.5 L 895.7 410.8
-           C 895.7 417.0, 923.5 417.0, 923.5 410.8
-           L 923.5 391.5" class="semantic-icon semantic-icon-database" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-  <path id="icon-crm-layer-1" d="M 895.7 402.0 C 895.7 407.8, 923.5 407.8, 923.5 402.0" class="semantic-icon semantic-icon-database" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.72" />
-  <path id="icon-crm-layer-2" d="M 897.4 409.1 C 903.1 413.2, 916.1 413.2, 921.8 409.1" class="semantic-icon semantic-icon-database" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.56" />
-  <circle id="icon-crm-write-token" class="icon-runtime-part" cx="902.0" cy="386.0" r="2.8" fill="#10b981" opacity="0" />
-  <circle id="icon-crm-flash" class="icon-runtime-part" cx="909.6" cy="403.7" r="12.2" fill="none" stroke="#10b981" stroke-width="2" opacity="0" />
-
-
+<g class="semantic-icon-wrap semantic-icon-character-wrap" data-icon="database" data-node-id="crm" opacity="0.98">
+  <g id="icon-crm-root" class="semantic-icon semantic-icon-illustrated-character-v1" data-semantic-role="ingest-settle-confirm" data-rest-opacity="1" transform="translate(888.8 377.6) scale(0.4872)">
+    <g class="illustrated-character-motion-shell">
+      <path id="icon-crm-hat" class="illustrated-character-part illustrated-character-hat" data-rest-opacity="1" d="M31 29c8-15 30-15 38 0l-4 8H35z" fill="#ff9e42" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-crm-hat-band" class="illustrated-character-part illustrated-character-hat-band" data-rest-opacity="1" d="M34 35h32" fill="none" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-crm-bucket" class="illustrated-character-part illustrated-character-bucket" data-rest-opacity="1" d="M27 43h47l-5 43H32z" fill="#39b8b5" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-crm-handle" class="illustrated-character-part illustrated-character-handle" data-rest-opacity="1" d="M34 45c0-18 33-18 33 0" fill="none" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-crm-liquid" class="illustrated-character-part illustrated-character-liquid" data-rest-opacity="1" d="M31 71c9-6 16 5 25 0 7-4 12 0 15 2l-2 13H32z" fill="#ff9e42" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-crm-bead" class="illustrated-character-part illustrated-character-bead" data-rest-opacity="1" cx="51" cy="24" r="4" fill="#ffd45e" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-crm-check" class="illustrated-character-part illustrated-character-check" data-rest-opacity="1" d="M47 56l5 5 10-11" fill="none" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-crm-spill" class="illustrated-character-part illustrated-character-spill" data-rest-opacity="1" d="M25 86c8-2 15 2 23 0 9-2 17 4 29 1-2 10-14 11-25 9-14 3-27 0-27-10z" fill="#ff9e42" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
 </g>
 
   <text x="986.4" y="388.0" text-anchor="middle" fill="#172033">
@@ -417,100 +367,130 @@
 {
   "version": "motion-manifest-0.1",
   "runtime": "gsap",
+  "mode": "ambient",
   "profile": "expressive",
-  "sequence": "step-stagger",
+  "sequence": "independent-icon-loops",
+  "scene_sequence": "step-stagger",
   "reduced_motion": "subtle",
+  "stage": {
+    "edge_flow": true,
+    "title_sweep": true,
+    "edge_limit": null,
+    "readable_edge_limit": 2
+  },
   "icons": [
+    {
+      "node_id": "traffic",
+      "icon": "cloud",
+      "performance": "cloud-uplink-ready-v1",
+      "trigger": "on-load",
+      "loop": "action-then-idle",
+      "delay": 0.0,
+      "intensity": 1.0,
+      "parts": {
+        "root": "#icon-traffic-root",
+        "cloud": "#icon-traffic-cloud",
+        "kite": "#icon-traffic-kite",
+        "data-dot": "#icon-traffic-data-dot",
+        "ready-light": "#icon-traffic-ready-light"
+      },
+      "semantic_role": "uplink-send-ready",
+      "rest_at": 1.4
+    },
     {
       "node_id": "qualify",
       "icon": "search",
-      "performance": "search-discover-v2",
-      "trigger": "on-reveal",
+      "performance": "search-scout-find-v1",
+      "trigger": "on-load",
       "loop": "action-then-idle",
       "delay": 0.12,
       "intensity": 1.0,
       "parts": {
         "root": "#icon-qualify-root",
         "lens": "#icon-qualify-lens",
-        "handle": "#icon-qualify-handle",
         "scan": "#icon-qualify-scan",
-        "result1": "#icon-qualify-result-1",
-        "result2": "#icon-qualify-result-2",
-        "target": "#icon-qualify-target"
-      }
+        "marker": "#icon-qualify-marker",
+        "spark": "#icon-qualify-spark"
+      },
+      "semantic_role": "scout-scan-find",
+      "rest_at": 1.3
     },
     {
       "node_id": "activate",
       "icon": "agent",
-      "performance": "agent-think-act-v2",
-      "trigger": "on-reveal",
+      "performance": "brain-think-pulse-v1",
+      "trigger": "on-load",
       "loop": "action-then-idle",
       "delay": 0.24,
       "intensity": 1.0,
       "parts": {
         "root": "#icon-activate-root",
-        "shell": "#icon-activate-shell",
-        "core": "#icon-activate-core",
-        "thought1": "#icon-activate-thought-1",
-        "thought2": "#icon-activate-thought-2",
-        "thought3": "#icon-activate-thought-3",
-        "decisionToken": "#icon-activate-decision-token"
-      }
+        "brain-left": "#icon-activate-brain-left",
+        "brain-right": "#icon-activate-brain-right",
+        "chip": "#icon-activate-chip",
+        "signal": "#icon-activate-signal",
+        "spark": "#icon-activate-spark"
+      },
+      "semantic_role": "think-decide-confirm",
+      "rest_at": 1.5
     },
     {
       "node_id": "expand",
       "icon": "tool",
-      "performance": "tool-run-v2",
-      "trigger": "on-reveal",
+      "performance": "tool-kit-action-v1",
+      "trigger": "on-load",
       "loop": "action-then-idle",
       "delay": 0.36,
       "intensity": 1.0,
       "parts": {
         "root": "#icon-expand-root",
-        "chip": "#icon-expand-chip",
-        "glyph": "#icon-expand-glyph",
-        "connector": "#icon-expand-connector",
-        "spark1": "#icon-expand-spark-1",
-        "spark2": "#icon-expand-spark-2",
-        "flash": "#icon-expand-flash"
-      }
+        "bucket": "#icon-expand-bucket",
+        "lid": "#icon-expand-lid",
+        "wrench": "#icon-expand-wrench",
+        "spark": "#icon-expand-spark"
+      },
+      "semantic_role": "kit-act-confirm",
+      "rest_at": 1.4
     },
     {
       "node_id": "retain",
       "icon": "output",
-      "performance": "output-reveal-v2",
-      "trigger": "on-reveal",
+      "performance": "output-envelope-reveal-v1",
+      "trigger": "on-load",
       "loop": "action-then-idle",
       "delay": 0.48,
       "intensity": 1.0,
       "parts": {
         "root": "#icon-retain-root",
+        "envelope": "#icon-retain-envelope",
         "card": "#icon-retain-card",
-        "line1": "#icon-retain-line-1",
-        "line2": "#icon-retain-line-2",
         "check": "#icon-retain-check",
-        "flash": "#icon-retain-flash"
-      }
+        "spark": "#icon-retain-spark"
+      },
+      "semantic_role": "reveal-deliver-confirm",
+      "rest_at": 1.4
     },
     {
       "node_id": "crm",
       "icon": "database",
-      "performance": "database-write-v2",
-      "trigger": "on-reveal",
+      "performance": "bucket-ingest-confirm-v1",
+      "trigger": "on-load",
       "loop": "action-then-idle",
       "delay": 0.6,
       "intensity": 1.0,
       "parts": {
         "root": "#icon-crm-root",
-        "lid": "#icon-crm-lid",
-        "body": "#icon-crm-body",
-        "layer1": "#icon-crm-layer-1",
-        "layer2": "#icon-crm-layer-2",
-        "writeToken": "#icon-crm-write-token",
-        "flash": "#icon-crm-flash"
-      }
+        "hat": "#icon-crm-hat",
+        "bucket": "#icon-crm-bucket",
+        "liquid": "#icon-crm-liquid",
+        "bead": "#icon-crm-bead",
+        "check": "#icon-crm-check"
+      },
+      "semantic_role": "ingest-settle-confirm",
+      "rest_at": 1.55
     }
-  ]
+  ],
+  "icon_system": "illustrated-character-v1"
 }
   </script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
@@ -557,6 +537,58 @@
       gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
     });
     return lengths;
+  }
+
+  function playIllustratedCommon(iconConfig, parts, gsap) {
+    if (iconConfig.icon_system !== "illustrated-v1" && !parts.bubble) return null;
+    const elements = [
+      parts.bubble,
+      parts.bubbleHalo,
+      parts.wash,
+      parts.accentMark,
+      parts.sparkle,
+      parts.orbitDot,
+    ].filter(Boolean);
+    if (!elements.length) return null;
+    setInitial(parts, gsap);
+    if (parts.accentMark && parts.accentMark.getTotalLength) {
+      primeStrokeDraw([parts.accentMark], gsap);
+    }
+    gsap.set([parts.bubble, parts.wash].filter(Boolean), { transformOrigin: "center center" });
+    gsap.set([parts.sparkle, parts.orbitDot].filter(Boolean), { transformOrigin: "center center" });
+    if (parts.bubbleHalo) gsap.set(parts.bubbleHalo, { opacity: 0.16, scale: 0.84 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.25 });
+    if (parts.bubble) {
+      tl.to(parts.bubble, { scale: 1.045, duration: 0.28, ease: "sine.inOut" }, 0)
+        .to(parts.bubble, { scale: 1, duration: 0.38, ease: "sine.inOut" }, 0.30);
+    }
+    if (parts.bubbleHalo) {
+      tl.fromTo(parts.bubbleHalo, { opacity: 0.20, scale: 0.82 }, { opacity: 0, scale: 1.42, duration: 0.68, ease: "power2.out" }, 0.08);
+    }
+    if (parts.wash) {
+      tl.to(parts.wash, { x: 1.5, y: -1.2, rotate: -2, duration: 0.46, ease: "sine.inOut" }, 0.12)
+        .to(parts.wash, { x: 0, y: 0, rotate: 0, duration: 0.52, ease: "sine.inOut" }, 0.60);
+    }
+    if (parts.accentMark) {
+      const length = parts.accentMark.getTotalLength ? parts.accentMark.getTotalLength() : 24;
+      tl.fromTo(parts.accentMark, { strokeDashoffset: length, opacity: 0.1 }, { strokeDashoffset: 0, opacity: 0.62, duration: 0.28, ease: "power2.out" }, 0.18)
+        .to(parts.accentMark, { opacity: 0.36, duration: 0.38 }, 0.88);
+    }
+    if (parts.sparkle) {
+      tl.fromTo(parts.sparkle, { scale: 0.45, opacity: 0.2 }, { scale: 1.18, opacity: 0.95, duration: 0.18, ease: "back.out(3)" }, 0.34)
+        .to(parts.sparkle, { scale: 0.86, opacity: 0.62, duration: 0.36, ease: "power2.out" }, 0.58);
+    }
+    if (parts.orbitDot) {
+      tl.to(parts.orbitDot, {
+        keyframes: [
+          { x: 6, y: -3, duration: 0.24 },
+          { x: 10, y: 5, duration: 0.24 },
+          { x: 0, y: 0, duration: 0.32 },
+        ],
+        ease: "sine.inOut",
+      }, 0.16);
+    }
+    return tl;
   }
 
   function playTokenIntent({ parts, gsap }) {
@@ -698,46 +730,649 @@
   }
 
   function playAgentThinkAct({ parts, gsap }) {
-    const required = ["shell", "core", "thought1", "thought2", "thought3", "decisionToken"];
+    const required = [
+      "outlineLeft",
+      "outlineRight",
+      "centerLine",
+      "branchLeft",
+      "branchRight",
+      "branchLower",
+      "nodeTopLeft",
+      "nodeTopRight",
+      "nodeLeft",
+      "nodeRight",
+      "nodeCenter",
+      "decisionToken",
+      "pulse",
+    ];
     if (!hasParts(parts, required)) return null;
     setInitial(parts, gsap);
-    const thoughts = [parts.thought1, parts.thought2, parts.thought3];
-    gsap.set(parts.shell, { scale: 1, opacity: 0.92 });
-    gsap.set(parts.core, { scale: 1, opacity: 0.78 });
-    gsap.set(thoughts, { opacity: 0.42, scale: 0.92, x: 0, y: 0 });
+    const paths = [
+      parts.outlineLeft,
+      parts.outlineRight,
+      parts.centerLine,
+      parts.branchLeft,
+      parts.branchRight,
+      parts.branchLower,
+    ];
+    const nodes = [
+      parts.nodeTopLeft,
+      parts.nodeTopRight,
+      parts.nodeLeft,
+      parts.nodeRight,
+      parts.nodeCenter,
+    ];
+    const lengths = primeStrokeDraw(paths, gsap);
+    gsap.set(paths, { opacity: 0.92 });
+    gsap.set(nodes, { opacity: 0.18, scale: 0.28 });
+    gsap.set(parts.pulse, { opacity: 0, scale: 0.55 });
     gsap.set(parts.decisionToken, { opacity: 0, scale: 0.35, x: 0, y: 0 });
     const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.9 });
-    tl.to(thoughts, {
-        opacity: (index) => [0.9, 0.72, 0.82][index],
-        x: (index) => [2.5, -3.5, 3][index],
-        y: (index) => [-4, 2.5, -2][index],
-        scale: (index) => [1.08, 0.95, 1.02][index],
-        duration: 0.36,
-        stagger: 0.07,
-        ease: "sine.inOut",
-      })
-      .to(thoughts, {
-        x: (index) => [6, -6, 3][index],
-        y: (index) => [7, 5, -7][index],
-        scale: 0.72,
-        opacity: 0.86,
-        duration: 0.26,
-        stagger: 0.035,
-        ease: "power2.in",
-      })
-      .to(parts.core, { scale: 1.48, opacity: 1, duration: 0.16, ease: "back.out(2.8)" }, "-=0.06")
-      .to(parts.shell, { scale: 1.035, opacity: 1, duration: 0.16, ease: "power2.out" }, "<")
-      .to(parts.core, { scale: 1, opacity: 0.82, duration: 0.22, ease: "power2.out" })
-      .to(parts.shell, { scale: 1, opacity: 0.92, duration: 0.24, ease: "power2.out" }, "<")
+    tl.fromTo([parts.outlineLeft, parts.outlineRight],
+        { strokeDashoffset: (index, target) => lengths.get(target) },
+        { strokeDashoffset: 0, duration: 0.46, ease: "power2.out" },
+        0
+      )
+      .fromTo(parts.centerLine,
+        { strokeDashoffset: lengths.get(parts.centerLine) },
+        { strokeDashoffset: 0, duration: 0.32, ease: "power2.out" },
+        0.08
+      )
+      .fromTo([parts.branchLeft, parts.branchRight, parts.branchLower],
+        { strokeDashoffset: (index, target) => lengths.get(target) },
+        { strokeDashoffset: 0, duration: 0.24, stagger: 0.045, ease: "power2.out" },
+        0.30
+      )
+      .fromTo(nodes,
+        { opacity: 0.12, scale: 0.25 },
+        { opacity: 0.9, scale: 1, duration: 0.18, stagger: 0.04, ease: "back.out(3)" },
+        0.56
+      )
+      .to(parts.nodeCenter, { scale: 1.45, opacity: 1, duration: 0.15, ease: "back.out(3)" }, 0.88)
+      .fromTo(parts.pulse,
+        { opacity: 0.68, scale: 0.62 },
+        { opacity: 0, scale: 1.55, duration: 0.34, ease: "power2.out" },
+        0.90
+      )
+      .to(parts.nodeCenter, { scale: 1, opacity: 0.88, duration: 0.20, ease: "power2.out" }, 1.04)
       .fromTo(parts.decisionToken,
         { opacity: 0, scale: 0.35, x: 0, y: 0 },
-        { opacity: 1, scale: 1.05, x: 13, y: -8, duration: 0.32, ease: "back.out(2.2)" },
+        { opacity: 1, scale: 1.08, x: 14, y: -8, duration: 0.24, ease: "back.out(2.4)" },
+        1.08
+      )
+      .to(parts.decisionToken, { opacity: 0, scale: 0.52, x: 32, y: -18, duration: 0.22, ease: "power1.in" }, 1.34)
+      .to(paths, { opacity: 0.78, duration: 0.42 }, 1.38)
+      .to(nodes, { opacity: 0.68, scale: 0.92, duration: 0.42 }, 1.38);
+    return tl;
+  }
+
+  function playFileLines({ parts, gsap }) {
+    const required = ["sheet", "fold", "line1", "line2", "line3", "flash"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const lines = [parts.line1, parts.line2, parts.line3];
+    const lengths = primeStrokeDraw(lines, gsap);
+    gsap.set(lines, { opacity: 0 });
+    gsap.set(parts.flash, { opacity: 0, scale: 0.45 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.55 });
+    tl.fromTo(parts.sheet,
+        { x: -10, y: 10, scale: 0.84, opacity: 0.72 },
+        { x: 0, y: 0, scale: 1, opacity: 0.96, duration: 0.24, ease: "back.out(2.8)" }
+      )
+      .fromTo(parts.fold,
+        { rotate: -28, opacity: 0.55 },
+        { rotate: 0, opacity: 1, duration: 0.2, ease: "back.out(2.2)" },
         "-=0.08"
       )
-      .to(parts.decisionToken, { opacity: 0, scale: 0.55, x: 24, y: -14, duration: 0.26, ease: "power1.in" })
-      .to(thoughts, { x: 0, y: 0, scale: 1, opacity: 0.38, duration: 0.34, stagger: 0.03, ease: "power2.out" }, "-=0.14")
-      .to(parts.core, { opacity: 0.72, duration: 0.42, ease: "sine.inOut" }, "-=0.14");
+      .fromTo(lines,
+        { strokeDashoffset: (index, target) => lengths.get(target), opacity: 0 },
+        { strokeDashoffset: 0, opacity: 0.9, duration: 0.2, stagger: 0.055, ease: "power2.out" },
+        "-=0.02"
+      )
+      .fromTo(parts.flash, { opacity: 0.6, scale: 0.55 }, { opacity: 0, scale: 1.55, duration: 0.28, ease: "power2.out" }, 0.58)
+      .to(lines, { opacity: 0.62, duration: 0.55 }, 1.02)
+      .to(parts.sheet, { scale: 0.99, duration: 0.35, ease: "sine.inOut" }, 1.02);
     return tl;
+  }
+
+  function playFolderOpen({ parts, gsap }) {
+    const required = ["body", "tab", "fileLine", "openToken", "flash"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const lengths = primeStrokeDraw([parts.fileLine], gsap);
+    gsap.set([parts.fileLine, parts.openToken, parts.flash], { opacity: 0 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.65 });
+    tl.to(parts.body, { y: 2, scaleY: 0.96, duration: 0.14, ease: "power2.in" })
+      .to(parts.tab, { rotate: -13, y: -3, opacity: 1, duration: 0.24, ease: "back.out(2.4)" }, "-=0.06")
+      .fromTo(parts.openToken,
+        { x: -12, y: -4, scale: 0.35, opacity: 0 },
+        { x: 2, y: 2, scale: 1, opacity: 0.92, duration: 0.22, ease: "power2.out" },
+        "-=0.14"
+      )
+      .to(parts.openToken, { opacity: 0, scale: 0.4, duration: 0.12, ease: "power1.in" })
+      .fromTo(parts.fileLine,
+        { strokeDashoffset: lengths.get(parts.fileLine), opacity: 0 },
+        { strokeDashoffset: 0, opacity: 0.86, duration: 0.22, ease: "power2.out" },
+        "-=0.04"
+      )
+      .fromTo(parts.flash, { opacity: 0.55, scale: 0.45 }, { opacity: 0, scale: 1.5, duration: 0.25, ease: "power2.out" }, "-=0.02")
+      .to(parts.tab, { rotate: 0, y: 0, duration: 0.3, ease: "power2.inOut" }, 0.92)
+      .to(parts.body, { y: 0, scaleY: 1, duration: 0.24, ease: "power2.out" }, "<")
+      .to(parts.fileLine, { opacity: 0.42, duration: 0.5 }, 0.95);
+    return tl;
+  }
+
+  function playCloudUpload({ parts, gsap }) {
+    const required = ["shell", "uploadArrow", "dot1", "dot2", "dot3", "statusRing"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const dots = [parts.dot1, parts.dot2, parts.dot3];
+    gsap.set([parts.uploadArrow, parts.statusRing, ...dots], { opacity: 0, scale: 0.45 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.6 });
+    tl.to(parts.shell, { scale: 1.04, y: -1, duration: 0.18, ease: "power2.out" })
+      .fromTo(parts.uploadArrow,
+        { y: 12, opacity: 0, scale: 0.72 },
+        { y: -8, opacity: 0.96, scale: 1, duration: 0.34, ease: "power2.out" },
+        "-=0.04"
+      )
+      .to(parts.uploadArrow, { y: -16, opacity: 0, scale: 0.82, duration: 0.18, ease: "power1.in" })
+      .fromTo(dots,
+        { y: 7, opacity: 0, scale: 0.35 },
+        { y: 0, opacity: 0.78, scale: 1, duration: 0.2, stagger: 0.055, ease: "back.out(2.4)" },
+        "-=0.12"
+      )
+      .fromTo(parts.statusRing,
+        { opacity: 0.7, scale: 0.45 },
+        { opacity: 0, scale: 1.75, duration: 0.32, ease: "power2.out" },
+        "-=0.02"
+      )
+      .to(parts.shell, { scale: 1, y: 0, duration: 0.28, ease: "power2.out" }, "-=0.18")
+      .to(dots, { opacity: 0.24, scale: 0.75, duration: 0.55 }, 0.95);
+    return tl;
+  }
+
+  function playShieldCheck({ parts, gsap }) {
+    const required = ["shell", "check", "pulse", "scan"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const lengths = primeStrokeDraw([parts.check, parts.scan], gsap);
+    gsap.set([parts.pulse, parts.scan], { opacity: 0, scale: 0.72 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.75 });
+    tl.to(parts.shell, { scale: 1.04, opacity: 1, duration: 0.16, ease: "power2.out" })
+      .fromTo(parts.scan,
+        { strokeDashoffset: lengths.get(parts.scan), opacity: 0, x: -8, y: -5 },
+        { strokeDashoffset: 0, opacity: 0.82, x: 7, y: 5, duration: 0.26, ease: "power2.inOut" },
+        "-=0.02"
+      )
+      .to(parts.scan, { opacity: 0, duration: 0.1 })
+      .fromTo(parts.check,
+        { strokeDashoffset: lengths.get(parts.check), opacity: 0 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.24, ease: "power2.out" },
+        "-=0.02"
+      )
+      .fromTo(parts.pulse,
+        { opacity: 0.45, scale: 0.84 },
+        { opacity: 0, scale: 1.42, duration: 0.34, ease: "power2.out" },
+        "-=0.04"
+      )
+      .to(parts.shell, { scale: 1, duration: 0.25, ease: "power2.out" }, "-=0.16")
+      .to(parts.check, { opacity: 0.72, duration: 0.55 }, 0.95);
+    return tl;
+  }
+
+  const CHARACTER_REPEAT_DELAY = 0.8;
+  const CHARACTER_IDLE_BREATHE_SCALE = 1.012;
+
+  function finishCharacterAtRest(tl, parts, restAt) {
+    const targets = Object.entries(parts)
+      .filter(([name, part]) => name !== "root" && Boolean(part))
+      .map(([, part]) => part);
+    const motionShell = parts.root && parts.root.querySelector(".illustrated-character-motion-shell");
+    tl.set(targets, {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      rotation: 0,
+      scaleX: 1,
+      scaleY: 1,
+    }, restAt);
+    if (motionShell) {
+      tl.set(motionShell, { scale: 1, transformOrigin: "center center" }, restAt)
+        .to(motionShell, { scale: CHARACTER_IDLE_BREATHE_SCALE, duration: 0.22, ease: "sine.inOut" }, restAt + 0.04)
+        .to(motionShell, { scale: 1, duration: 0.22, ease: "sine.inOut" }, restAt + 0.26);
+    } else {
+      tl.to({}, { duration: 0.01 }, restAt);
+    }
+    return tl;
+  }
+
+  function playBrainThinkPulse({ config, parts, gsap }) {
+    const required = ["brain-left", "brain-right", "chip", "signal", "spark"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const signalLength = primeStrokeDraw([parts.signal], gsap).get(parts.signal);
+    gsap.set([parts.signal, parts.spark], { opacity: 0 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to([parts["brain-left"], parts["brain-right"]], { scale: 1.045, duration: 0.18, ease: "sine.inOut" })
+      .to(parts.chip, { scale: 1.08, y: -1, duration: 0.18, ease: "back.out(2.4)" }, "<")
+      .fromTo(parts.signal, { strokeDashoffset: signalLength, opacity: 0 }, { strokeDashoffset: 0, opacity: 0.88, duration: 0.26, ease: "power2.out" })
+      .fromTo(parts.spark, { scale: 0.35, opacity: 0 }, { scale: 1.2, opacity: 1, duration: 0.16, ease: "back.out(3)" }, "-=0.04")
+      .to([parts["brain-left"], parts["brain-right"]], { scale: 1, duration: 0.26, ease: "sine.inOut" })
+      .to(parts.chip, { scale: 1, y: 0, duration: 0.2, ease: "power2.out" }, "<")
+      .to([parts.signal, parts.spark], { opacity: 0.62, duration: 0.18, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playOperatorTypeFocus({ config, parts, gsap }) {
+    const required = ["hair", "face", "glasses", "hands", "laptop", "cursor"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    gsap.set(parts.cursor, { opacity: 0, scale: 0.4 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to(parts.glasses, { scale: 1.08, duration: 0.16, ease: "back.out(2.4)" })
+      .to(parts.hands, { y: 2, duration: 0.12, ease: "power2.in" })
+      .to(parts.laptop, { y: 1, scaleY: 0.97, duration: 0.12, ease: "power2.in" }, "<")
+      .to(parts.hands, { y: -1, duration: 0.16, ease: "back.out(2.4)" })
+      .to(parts.laptop, { y: 0, scaleY: 1, duration: 0.16, ease: "power2.out" }, "<")
+      .fromTo(parts.cursor, { x: -5, y: 4, opacity: 0, scale: 0.4 }, { x: 0, y: 0, opacity: 1, scale: 1, duration: 0.2, ease: "back.out(3)" })
+      .to(parts.glasses, { scale: 1, duration: 0.2, ease: "power2.out" }, "<")
+      .to(parts.cursor, { opacity: 0.55, duration: 0.14, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playBucketIngestConfirm({ config, parts, gsap }) {
+    const required = ["hat", "bucket", "liquid", "bead", "check"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const checkLength = primeStrokeDraw([parts.check], gsap).get(parts.check);
+    gsap.set([parts.bead, parts.check], { opacity: 0 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to(parts.hat, { rotate: -8, y: -3, duration: 0.18, ease: "power2.out" })
+      .fromTo(parts.bead, { y: -16, opacity: 0, scale: 0.4 }, { y: 0, opacity: 1, scale: 1, duration: 0.28, ease: "power2.in" })
+      .to(parts.bead, { opacity: 0, scale: 0.25, duration: 0.1 })
+      .to(parts.liquid, { y: -3, scaleY: 1.08, duration: 0.16, ease: "power2.out" }, "-=0.06")
+      .fromTo(parts.check, { strokeDashoffset: checkLength, opacity: 0 }, { strokeDashoffset: 0, opacity: 1, duration: 0.22, ease: "power2.out" }, "-=0.04")
+      .to(parts.hat, { rotate: 0, y: 0, duration: 0.24, ease: "power2.out" })
+      .to(parts.liquid, { y: 0, scaleY: 1, duration: 0.22, ease: "sine.inOut" }, "<")
+      .to(parts.check, { opacity: 0.68, duration: 0.16, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playSearchScoutFind({ config, parts, gsap }) {
+    const required = ["lens", "scan", "marker", "spark"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    gsap.set([parts.marker, parts.spark], { opacity: 0, scale: 0.5 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to(parts.lens, { scale: 1.05, duration: 0.16, ease: "sine.inOut" })
+      .fromTo(parts.scan, { x: -10, opacity: 0.2 }, { x: 8, opacity: 1, duration: 0.28, ease: "power1.inOut" })
+      .fromTo(parts.marker, { y: -8, opacity: 0, scale: 0.5 }, { y: 0, opacity: 1, scale: 1, duration: 0.2, ease: "back.out(2.8)" })
+      .fromTo(parts.spark, { scale: 0.3, opacity: 0 }, { scale: 1.16, opacity: 1, duration: 0.16, ease: "back.out(3)" }, "-=0.04")
+      .to(parts.lens, { scale: 1, duration: 0.18, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playToolKitAction({ config, parts, gsap }) {
+    const required = ["bucket", "lid", "wrench", "spark"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    gsap.set(parts.spark, { opacity: 0, scale: 0.4 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to(parts.lid, { y: -4, rotation: -4, duration: 0.18, ease: "power2.out" })
+      .to(parts.wrench, { rotation: 14, scale: 1.08, duration: 0.2, ease: "back.out(2.4)" }, "<")
+      .to(parts.bucket, { scale: 1.035, duration: 0.16, ease: "sine.inOut" })
+      .fromTo(parts.spark, { scale: 0.3, opacity: 0 }, { scale: 1.18, opacity: 1, duration: 0.16, ease: "back.out(3)" }, "-=0.04")
+      .to(parts.bucket, { scale: 1, duration: 0.18, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playApiSignalReturn({ config, parts, gsap }) {
+    const required = ["interface", "request", "receipt", "status"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    gsap.set([parts.request, parts.receipt, parts.status], { opacity: 0, scale: 0.5 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to(parts.interface, { scale: 1.025, duration: 0.15, ease: "sine.inOut" })
+      .fromTo(parts.request, { x: -12, opacity: 0, scale: 0.5 }, { x: 0, opacity: 1, scale: 1, duration: 0.22, ease: "power2.out" })
+      .fromTo(parts.receipt, { x: 12, opacity: 0, scale: 0.5 }, { x: 0, opacity: 1, scale: 1, duration: 0.22, ease: "power2.out" })
+      .fromTo(parts.status, { scale: 0.35, opacity: 0 }, { scale: 1.2, opacity: 1, duration: 0.16, ease: "back.out(3)" }, "-=0.05")
+      .to(parts.interface, { scale: 1, duration: 0.18, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playMemoryIndexCommit({ config, parts, gsap }) {
+    const required = ["back-card", "front-card", "bookmark", "key-line"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    gsap.set([parts.bookmark, parts["key-line"]], { opacity: 0, scale: 0.6 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to(parts["back-card"], { x: -3, y: -2, duration: 0.16, ease: "power2.out" })
+      .to(parts["front-card"], { y: -4, scale: 1.04, duration: 0.2, ease: "back.out(2.4)" }, "<")
+      .fromTo(parts.bookmark, { y: -6, opacity: 0, scale: 0.6 }, { y: 0, opacity: 1, scale: 1, duration: 0.18, ease: "power2.out" })
+      .fromTo(parts["key-line"], { x: -8, opacity: 0 }, { x: 0, opacity: 1, duration: 0.2, ease: "power2.out" })
+      .to(parts["front-card"], { scale: 1, duration: 0.16, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playOutputEnvelopeReveal({ config, parts, gsap }) {
+    const required = ["envelope", "card", "check", "spark"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    gsap.set([parts.card, parts.check, parts.spark], { opacity: 0, scale: 0.5 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to(parts.envelope, { scale: 1.035, duration: 0.16, ease: "sine.inOut" })
+      .fromTo(parts.card, { y: 12, opacity: 0, scale: 0.5 }, { y: 0, opacity: 1, scale: 1, duration: 0.24, ease: "back.out(2.6)" })
+      .fromTo(parts.check, { scale: 0.3, opacity: 0 }, { scale: 1.16, opacity: 1, duration: 0.16, ease: "back.out(3)" }, "-=0.04")
+      .fromTo(parts.spark, { scale: 0.3, opacity: 0 }, { scale: 1.14, opacity: 1, duration: 0.14, ease: "back.out(3)" }, "-=0.05")
+      .to(parts.envelope, { scale: 1, duration: 0.18, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playFileNoteWrite({ config, parts, gsap }) {
+    const required = ["page", "corner", "line-1", "line-2", "line-3", "dot"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const lines = [parts["line-1"], parts["line-2"], parts["line-3"]];
+    gsap.set([...lines, parts.dot], { opacity: 0, x: -6 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to(parts.page, { scale: 1.03, duration: 0.16, ease: "sine.inOut" })
+      .to(parts.corner, { rotation: 8, duration: 0.15, ease: "power2.out" }, "<")
+      .to(lines, { x: 0, opacity: 1, duration: 0.16, stagger: 0.06, ease: "power2.out" })
+      .fromTo(parts.dot, { scale: 0.3, opacity: 0, x: -6 }, { scale: 1.15, opacity: 1, x: 0, duration: 0.16, ease: "back.out(3)" })
+      .to(parts.page, { scale: 1, duration: 0.16, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playFolderFileStore({ config, parts, gsap }) {
+    const required = ["folder", "tab", "sheet", "seal"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    gsap.set([parts.sheet, parts.seal], { opacity: 0, scale: 0.5 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to(parts.tab, { y: -3, duration: 0.16, ease: "power2.out" })
+      .to(parts.folder, { scale: 1.035, duration: 0.16, ease: "sine.inOut" }, "<")
+      .fromTo(parts.sheet, { y: -10, opacity: 0, scale: 0.5 }, { y: 0, opacity: 1, scale: 1, duration: 0.2, ease: "back.out(2.6)" })
+      .fromTo(parts.seal, { scale: 0.3, opacity: 0 }, { scale: 1.16, opacity: 1, duration: 0.16, ease: "back.out(3)" }, "-=0.04")
+      .to(parts.folder, { scale: 1, duration: 0.16, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playCloudUplinkReady({ config, parts, gsap }) {
+    const required = ["cloud", "kite", "data-dot", "ready-light"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    gsap.set([parts["data-dot"], parts["ready-light"]], { opacity: 0, scale: 0.4 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to(parts.kite, { y: -7, rotation: 8, duration: 0.18, ease: "power2.out" })
+      .to(parts.cloud, { scale: 1.04, duration: 0.18, ease: "sine.inOut" }, "<")
+      .fromTo(parts["data-dot"], { y: 9, opacity: 0, scale: 0.4 }, { y: 0, opacity: 1, scale: 1, duration: 0.2, ease: "power2.out" })
+      .fromTo(parts["ready-light"], { scale: 0.3, opacity: 0 }, { scale: 1.18, opacity: 1, duration: 0.16, ease: "back.out(3)" }, "-=0.04")
+      .to(parts.cloud, { scale: 1, duration: 0.16, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playShieldGuardConfirm({ config, parts, gsap }) {
+    const required = ["shell", "core", "scan", "check"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    gsap.set([parts.scan, parts.check], { opacity: 0, scale: 0.5 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to(parts.shell, { scale: 1.05, duration: 0.16, ease: "sine.inOut" })
+      .to(parts.core, { scale: 1.1, duration: 0.16, ease: "back.out(2.4)" }, "<")
+      .fromTo(parts.scan, { x: -10, opacity: 0, scale: 0.5 }, { x: 8, opacity: 1, scale: 1, duration: 0.24, ease: "power1.inOut" })
+      .fromTo(parts.check, { scale: 0.3, opacity: 0 }, { scale: 1.15, opacity: 1, duration: 0.16, ease: "back.out(3)" }, "-=0.04")
+      .to(parts.shell, { scale: 1, duration: 0.16, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playTokenIntentReady({ config, parts, gsap }) {
+    const required = ["shell", "core", "tick-left", "tick-right", "tick-top", "tick-bottom"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const ticks = [parts["tick-left"], parts["tick-right"], parts["tick-top"], parts["tick-bottom"]];
+    gsap.set([...ticks, parts.core], { opacity: 0, scale: 0.5 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to(parts.shell, { rotation: 12, scale: 1.045, duration: 0.18, ease: "power2.out" })
+      .fromTo(parts.core, { scale: 0.4, opacity: 0 }, { scale: 1.16, opacity: 1, duration: 0.18, ease: "back.out(2.8)" })
+      .to(ticks, { opacity: 1, scale: 1, duration: 0.14, stagger: 0.04, ease: "power2.out" })
+      .to(parts.shell, { scale: 1, duration: 0.16, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function createSvgElement(name, attrs) {
+    const el = document.createElementNS("http://www.w3.org/2000/svg", name);
+    Object.entries(attrs || {}).forEach(([key, value]) => {
+      el.setAttribute(key, String(value));
+    });
+    return el;
+  }
+
+  function numberAttr(el, name, fallback) {
+    const value = Number.parseFloat(el.getAttribute(name) || "");
+    return Number.isFinite(value) ? value : fallback;
+  }
+
+  const EDGE_PACKET_COUNT = 1;
+  const EDGE_PACKET_REPEAT_DELAY = 0.7;
+  let currentMotionMode = "expressive";
+
+  function clearRuntimeStageEffects() {
+    document.querySelectorAll(".runtime-generated").forEach((el) => el.remove());
+    const highlight = document.querySelector("#viewport svg #title-highlight");
+    if (highlight && highlight.dataset.runtimeTitleWidth) {
+      highlight.setAttribute("x", highlight.dataset.runtimeTitleX || highlight.getAttribute("x") || "72");
+      highlight.setAttribute("width", highlight.dataset.runtimeTitleWidth);
+      highlight.style.removeProperty("opacity");
+      highlight.style.removeProperty("transform");
+      highlight.style.removeProperty("transform-origin");
+    }
+  }
+
+  function playTitleSweep(svg, manifest, gsap) {
+    if (!manifest.stage || !manifest.stage.title_sweep) return [];
+    const highlight = svg.querySelector("#title-highlight");
+    if (!highlight) return [];
+    const x = numberAttr(highlight, "x", 72);
+    const width = Math.max(120, numberAttr(highlight, "width", 360));
+    highlight.dataset.runtimeTitleX = String(x);
+    highlight.dataset.runtimeTitleWidth = String(width);
+    gsap.set(highlight, { attr: { x, width }, scaleX: 0, opacity: 0.08, transformOrigin: "left center" });
+    const tl = gsap.timeline();
+    tl.to(highlight, { scaleX: 1, opacity: 0.16, duration: 0.92, ease: "power2.out" });
+    tl.__anidiagramStage = "title-entry";
+    return [tl];
+  }
+
+  function playRuntimeEdgeFlow(svg, manifest, gsap, motionMode = "expressive") {
+    if (!manifest.stage || !manifest.stage.edge_flow) return [];
+    const edgeGroups = Array.from(svg.querySelectorAll("g.edge"));
+    const requestedLimit = motionMode === "readable" ? manifest.stage.readable_edge_limit : manifest.stage.edge_limit;
+    const activeEdgeGroups = Number.isInteger(requestedLimit) ? edgeGroups.slice(0, Math.max(0, requestedLimit)) : edgeGroups;
+    const timelines = [];
+    activeEdgeGroups.forEach((group, edgeIndex) => {
+      const base = group.querySelector("path.edge-base");
+      if (!base || !base.getTotalLength) return;
+      const length = Math.max(1, base.getTotalLength());
+      const path = base.getAttribute("d");
+      if (!path) return;
+      const stroke = base.getAttribute("stroke") || "#38bdf8";
+      const width = Math.max(1, numberAttr(base, "stroke-width", 2.4));
+      const label = group.querySelector(".edge-label");
+      const flow = createSvgElement("path", {
+        class: "edge-flow runtime-edge-flow runtime-generated",
+        d: path,
+        fill: "none",
+        stroke,
+        "stroke-width": Math.max(1.2, width * 0.86).toFixed(1),
+        "stroke-linecap": "round",
+        "stroke-dasharray": `${Math.max(2.4, width * 1.4).toFixed(1)} ${Math.max(12, width * 7).toFixed(1)}`,
+        "stroke-dashoffset": "0",
+        opacity: motionMode === "readable" ? "0.07" : "0.11",
+        "pointer-events": "none",
+      });
+      if (label) group.insertBefore(flow, label);
+      else group.appendChild(flow);
+      for (let particleIndex = 0; particleIndex < EDGE_PACKET_COUNT; particleIndex += 1) {
+        const packetLength = Math.max(13, Math.min(34, length * 0.42));
+        const packetGap = Math.max(52, length + packetLength * 2.8);
+        const packet = createSvgElement("path", {
+          class: "edge-particle runtime-edge-particle runtime-edge-packet runtime-generated",
+          d: path,
+          fill: "none",
+          stroke: "#ffffff",
+          "stroke-width": Math.max(4.2, width * (2.35 - particleIndex * 0.22)).toFixed(1),
+          "stroke-linecap": "round",
+          "stroke-linejoin": "round",
+          "stroke-dasharray": `${packetLength.toFixed(1)} ${packetGap.toFixed(1)}`,
+          "stroke-dashoffset": packetGap.toFixed(1),
+          opacity: "0",
+          "pointer-events": "none",
+        });
+        const core = createSvgElement("path", {
+          class: "edge-particle runtime-edge-particle runtime-edge-packet-core runtime-generated",
+          d: path,
+          fill: "none",
+          stroke,
+          "stroke-width": Math.max(2.6, width * (1.48 - particleIndex * 0.14)).toFixed(1),
+          "stroke-linecap": "round",
+          "stroke-linejoin": "round",
+          "stroke-dasharray": `${Math.max(8, packetLength * 0.62).toFixed(1)} ${packetGap.toFixed(1)}`,
+          "stroke-dashoffset": packetGap.toFixed(1),
+          opacity: "0",
+          "pointer-events": "none",
+        });
+        if (label) {
+          group.insertBefore(packet, label);
+          group.insertBefore(core, label);
+        } else {
+          group.appendChild(packet);
+          group.appendChild(core);
+        }
+        const duration = 2.05 + ((edgeIndex + particleIndex) % 5) * 0.13;
+        const delay = (edgeIndex % 7) * 0.07 + particleIndex * 0.46;
+        const tl = gsap.timeline({ repeat: -1, repeatDelay: EDGE_PACKET_REPEAT_DELAY, delay });
+        tl.fromTo(
+          [packet, core],
+          { attr: { "stroke-dashoffset": packetGap + packetLength } },
+          { attr: { "stroke-dashoffset": -(length + packetLength) }, duration, ease: "none" },
+          0
+        )
+          .to(packet, { opacity: motionMode === "readable" ? 0.52 : 0.72, duration: 0.18, ease: "power1.out" }, 0)
+          .to(core, { opacity: motionMode === "readable" ? 0.72 : 0.94, duration: 0.18, ease: "power1.out" }, 0)
+          .to([packet, core], { opacity: 0, duration: 0.18, ease: "power1.in" }, Math.max(0, duration - 0.18));
+        tl.__anidiagramStage = "edge-packet";
+        tl.__anidiagramEdgeIndex = edgeIndex;
+        timelines.push(tl);
+      }
+    });
+    return timelines;
+  }
+
+  function playRuntimeRelationCircles(svg, manifest, gsap) {
+    if (!manifest.stage || !manifest.stage.relation_circles) return [];
+    const timelines = [];
+    const edgeGroups = Array.from(svg.querySelectorAll("g.edge"));
+    const firstEdge = edgeGroups[0] || null;
+    edgeGroups.forEach((group, edgeIndex) => {
+      if (edgeIndex % 2 !== 0) return;
+      const base = group.querySelector("path.edge-base");
+      if (!base || !base.getBBox) return;
+      const box = base.getBBox();
+      const width = Math.max(44, box.width + 24);
+      const height = Math.max(32, box.height + 20);
+      if (width > 520 || height > 320) return;
+      const stroke = base.getAttribute("stroke") || "#7aa8ff";
+      const ring = createSvgElement("ellipse", {
+        class: "runtime-relation-circle runtime-generated",
+        cx: (box.x + box.width / 2).toFixed(1),
+        cy: (box.y + box.height / 2).toFixed(1),
+        rx: (width / 2).toFixed(1),
+        ry: (height / 2).toFixed(1),
+        fill: "none",
+        stroke,
+        "stroke-width": "1.5",
+        "stroke-dasharray": "7 8",
+        "stroke-dashoffset": "0",
+        opacity: "0.18",
+        "pointer-events": "none",
+      });
+      if (firstEdge) svg.insertBefore(ring, firstEdge);
+      else svg.appendChild(ring);
+      timelines.push(
+        gsap.to(ring, {
+          attr: { "stroke-dashoffset": -48 },
+          opacity: 0.34,
+          duration: 4.8 + (edgeIndex % 3) * 0.35,
+          yoyo: true,
+          repeat: -1,
+          ease: "sine.inOut",
+        })
+      );
+    });
+    return timelines;
+  }
+
+  function playRuntimeGroupFields(svg, manifest, gsap) {
+    if (!manifest.stage || !manifest.stage.group_fields) return [];
+    const timelines = [];
+    const groups = Array.from(svg.querySelectorAll("g.group"));
+    groups.forEach((group, groupIndex) => {
+      const rect = group.querySelector("rect");
+      if (!rect) return;
+      const stroke = rect.getAttribute("stroke") || "#7aa8ff";
+      const field = createSvgElement("rect", {
+        class: "runtime-group-field runtime-generated",
+        x: rect.getAttribute("x") || "0",
+        y: rect.getAttribute("y") || "0",
+        width: rect.getAttribute("width") || "0",
+        height: rect.getAttribute("height") || "0",
+        rx: rect.getAttribute("rx") || "22",
+        fill: stroke,
+        opacity: "0.045",
+        filter: "url(#soft-glow)",
+        "pointer-events": "none",
+      });
+      group.insertBefore(field, rect);
+      timelines.push(
+        gsap.to(field, {
+          opacity: 0.11,
+          x: groupIndex % 2 === 0 ? 3 : -3,
+          y: groupIndex % 2 === 0 ? -2 : 2,
+          duration: 3.8 + groupIndex * 0.28,
+          yoyo: true,
+          repeat: -1,
+          ease: "sine.inOut",
+        })
+      );
+    });
+    return timelines;
+  }
+
+  function playStageEffects(manifest, motionMode = "expressive") {
+    if (!window.gsap) return [];
+    const svg = document.querySelector("#viewport svg");
+    if (!svg) return [];
+    clearRuntimeStageEffects();
+    if (motionMode === "off") return [];
+    return [
+      ...(motionMode === "expressive" ? playTitleSweep(svg, manifest, window.gsap) : []),
+      ...playRuntimeEdgeFlow(svg, manifest, window.gsap, motionMode),
+      ...(motionMode === "expressive" ? playRuntimeRelationCircles(svg, manifest, window.gsap) : []),
+      ...(motionMode === "expressive" ? playRuntimeGroupFields(svg, manifest, window.gsap) : []),
+    ];
   }
 
   const performances = {
@@ -749,35 +1384,145 @@
     "database-write-v2": playDatabaseWrite,
     "memory-commit-v2": playMemoryCommit,
     "agent-think-act-v2": playAgentThinkAct,
+    "file-lines-v2": playFileLines,
+    "folder-open-v2": playFolderOpen,
+    "cloud-upload-v2": playCloudUpload,
+    "shield-check-v2": playShieldCheck,
+    "brain-think-pulse-v1": playBrainThinkPulse,
+    "operator-type-focus-v1": playOperatorTypeFocus,
+    "bucket-ingest-confirm-v1": playBucketIngestConfirm,
+    "search-scout-find-v1": playSearchScoutFind,
+    "tool-kit-action-v1": playToolKitAction,
+    "api-signal-return-v1": playApiSignalReturn,
+    "memory-index-commit-v1": playMemoryIndexCommit,
+    "output-envelope-reveal-v1": playOutputEnvelopeReveal,
+    "file-note-write-v1": playFileNoteWrite,
+    "folder-file-store-v1": playFolderFileStore,
+    "cloud-uplink-ready-v1": playCloudUplinkReady,
+    "shield-guard-confirm-v1": playShieldGuardConfirm,
+    "token-intent-ready-v1": playTokenIntentReady,
   };
+
+  const characterPerformanceIds = new Set([
+    "brain-think-pulse-v1",
+    "operator-type-focus-v1",
+    "bucket-ingest-confirm-v1",
+    "search-scout-find-v1",
+    "tool-kit-action-v1",
+    "api-signal-return-v1",
+    "memory-index-commit-v1",
+    "output-envelope-reveal-v1",
+    "file-note-write-v1",
+    "folder-file-store-v1",
+    "cloud-uplink-ready-v1",
+    "shield-guard-confirm-v1",
+    "token-intent-ready-v1",
+  ]);
 
   function playIcon(iconConfig) {
     if (!window.gsap) return null;
     const fn = performances[iconConfig.performance];
-    if (!fn) return null;
     const parts = resolveParts(iconConfig.parts);
-    const tl = fn({ config: iconConfig, parts, gsap: window.gsap });
-    if (tl && iconConfig.delay) tl.delay(iconConfig.delay);
-    return tl;
+    const timelines = [];
+    const illustrated = playIllustratedCommon(iconConfig, parts, window.gsap);
+    if (illustrated) timelines.push(illustrated);
+    if (fn) {
+      const tl = fn({ config: iconConfig, parts, gsap: window.gsap });
+      if (tl) {
+        if (characterPerformanceIds.has(iconConfig.performance)) {
+          tl.__anidiagramCharacter = {
+            nodeId: iconConfig.node_id,
+            performance: iconConfig.performance,
+            restAt: iconConfig.rest_at,
+          };
+        }
+        timelines.push(tl);
+      }
+    }
+    timelines.forEach((tl) => {
+      if (iconConfig.delay) tl.delay(iconConfig.delay);
+    });
+    return timelines;
   }
 
   function play() {
+    window.__ANIDIAGRAM_TIMELINES__ = window.__ANIDIAGRAM_TIMELINES__ || [];
+    window.__ANIDIAGRAM_STAGE_TIMELINES__ = window.__ANIDIAGRAM_STAGE_TIMELINES__ || [];
+    window.__ANIDIAGRAM_ICON_TIMELINES__ = window.__ANIDIAGRAM_ICON_TIMELINES__ || [];
     const manifest = getManifest();
     if (!manifest || !Array.isArray(manifest.icons)) return [];
-    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return [];
+    const mode = manifest.mode || "ambient";
+    if (mode !== "ambient") {
+      console.warn(`AniDiagram runtime: unsupported runtime mode "${mode}"; only ambient mode is available.`);
+      return [];
+    }
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      stop();
+      return [];
+    }
     if (!window.gsap) {
       console.warn("AniDiagram runtime: GSAP not loaded; high-fidelity motion disabled.");
       return [];
     }
     stop();
-    const timelines = manifest.icons.map(playIcon).filter(Boolean);
-    window.__ANIDIAGRAM_TIMELINES__ = timelines;
-    return timelines;
+    if (currentMotionMode === "off") return [];
+    window.__ANIDIAGRAM_STAGE_TIMELINES__ = playStageEffects(manifest, currentMotionMode);
+    window.__ANIDIAGRAM_ICON_TIMELINES__ = manifest.icons.flatMap((iconConfig) => playIcon(iconConfig) || []);
+    return syncTimelineStore();
+  }
+
+  function syncTimelineStore() {
+    window.__ANIDIAGRAM_STAGE_TIMELINES__ = window.__ANIDIAGRAM_STAGE_TIMELINES__ || [];
+    window.__ANIDIAGRAM_ICON_TIMELINES__ = window.__ANIDIAGRAM_ICON_TIMELINES__ || [];
+    window.__ANIDIAGRAM_TIMELINES__ = [
+      ...window.__ANIDIAGRAM_STAGE_TIMELINES__,
+      ...window.__ANIDIAGRAM_ICON_TIMELINES__,
+    ];
+    return window.__ANIDIAGRAM_TIMELINES__;
+  }
+
+  function settleCharacterTimelines(timelines) {
+    (timelines || []).forEach((tl) => {
+      if (tl.__anidiagramCharacter && Number.isFinite(tl.__anidiagramCharacter.restAt)) {
+        tl.pause();
+        tl.seek(tl.__anidiagramCharacter.restAt, false);
+      }
+    });
+  }
+
+  function stopStageTimelines() {
+    (window.__ANIDIAGRAM_STAGE_TIMELINES__ || []).forEach((tl) => tl.kill());
+    window.__ANIDIAGRAM_STAGE_TIMELINES__ = [];
+    clearRuntimeStageEffects();
+    syncTimelineStore();
+  }
+
+  function setRuntimeMotionMode(mode) {
+    currentMotionMode = mode;
+    const manifest = getManifest();
+    const reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!manifest || !window.gsap || reduced || mode === "off") {
+      stop();
+      return [];
+    }
+    if (!(window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length) {
+      window.__ANIDIAGRAM_ICON_TIMELINES__ = manifest.icons.flatMap((iconConfig) => playIcon(iconConfig) || []);
+    }
+    stopStageTimelines();
+    window.__ANIDIAGRAM_STAGE_TIMELINES__ = mode === "readable"
+      ? playStageEffects(manifest, "readable")
+      : playStageEffects(manifest, "expressive");
+    return syncTimelineStore();
   }
 
   function stop() {
-    (window.__ANIDIAGRAM_TIMELINES__ || []).forEach((tl) => tl.kill());
+    settleCharacterTimelines(window.__ANIDIAGRAM_ICON_TIMELINES__ || []);
+    (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).forEach((tl) => tl.kill());
+    (window.__ANIDIAGRAM_STAGE_TIMELINES__ || []).forEach((tl) => tl.kill());
+    window.__ANIDIAGRAM_ICON_TIMELINES__ = [];
+    window.__ANIDIAGRAM_STAGE_TIMELINES__ = [];
     window.__ANIDIAGRAM_TIMELINES__ = [];
+    clearRuntimeStageEffects();
   }
 
   function pause() {
@@ -838,7 +1583,7 @@
       });
     }
     function setMotionMode(mode) {
-      viewer.classList.remove("motion-full", "motion-subtle", "motion-off");
+      viewer.classList.remove("motion-expressive", "motion-readable", "motion-off");
       viewer.classList.add(`motion-${mode}`);
       document.querySelectorAll(".motion-choice").forEach((button) => {
         button.setAttribute("aria-pressed", String(button.dataset.motion === mode));
@@ -846,11 +1591,11 @@
       if (!svg) return;
       if (mode === "off") {
         svg.pauseAnimations();
-        pause();
+        setRuntimeMotionMode("off");
         if (toggle) toggle.textContent = "Play";
       } else {
         svg.unpauseAnimations();
-        resume();
+        setRuntimeMotionMode(mode);
         if (toggle) toggle.textContent = "Pause";
       }
     }
@@ -884,7 +1629,7 @@
     });
     setDownload();
     if (svg && svg.dataset.motionProfile === "off") setMotionMode("off");
-    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) setMotionMode("subtle");
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) setMotionMode("readable");
   }
 
   window.AniDiagramRuntime = { play, pause, resume, restart, stop };

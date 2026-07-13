@@ -38,7 +38,7 @@ def main() -> None:
         write_svg(scene, style, svg_path)
         write_html(scene, style, html_path)
         if args.quality:
-            write_quality(scene, outdir / f"{name}.quality.json")
+            write_quality(scene, style, outdir / f"{name}.quality.json")
         cards.append((name, svg_path.name, html_path.name, scene.title.subtitle))
     write_index(outdir, cards)
     print(json.dumps({"ok": True, "outdir": str(outdir.resolve()), "count": len(cards)}, indent=2))

@@ -1,0 +1,51 @@
+{
+  "name": "illustrated-bubble",
+  "icon_system": "illustrated-v1",
+  "canvas": {
+    "background": "#fbfcff",
+    "text": "#172033",
+    "muted": "#596778",
+    "grid": "#e8eef6"
+  },
+  "title": {
+    "accent": "#5b8cff",
+    "highlight": "#e9f0ff"
+  },
+  "node": {
+    "radius": 22,
+    "stroke_width": 2.5,
+    "fill_mode": "solid"
+  },
+  "edge": {
+    "width": 2.8,
+    "duration": "3.8s"
+  },
+  "effects": {
+    "grid_opacity": 0.48,
+    "frame_opacity": 0.38
+  },
+  "illustration": {
+    "bubble": "#ffffff",
+    "wash": "#eef6ff",
+    "sparkle": "#ffd166",
+    "icons": {
+      "agent": {"primary": "#8b6fe8", "secondary": "#39c7b0", "tertiary": "#ffd166"},
+      "api": {"primary": "#3f7bd9", "secondary": "#ff7a90", "tertiary": "#35c9a9"},
+      "search": {"primary": "#e3972b", "secondary": "#35b9a5", "tertiary": "#6e8efb"},
+      "database": {"primary": "#2fac75", "secondary": "#61d394", "tertiary": "#f6bd60"},
+      "memory": {"primary": "#35a86b", "secondary": "#76d5a3", "tertiary": "#7aa8ff"},
+      "shield": {"primary": "#df6a86", "secondary": "#8b6fe8", "tertiary": "#ffd166"}
+    }
+  },
+  "roles": {
+    "actor": {"stroke": "#e9775c", "fill": "#fff3ee", "text": "#172033", "glow": "#ffd9cc"},
+    "source": {"stroke": "#5b8cff", "fill": "#eff5ff", "text": "#172033", "glow": "#d5e3ff"},
+    "process": {"stroke": "#3f7bd9", "fill": "#edf4ff", "text": "#172033", "glow": "#cfe0ff"},
+    "agent": {"stroke": "#8b6fe8", "fill": "#f4f0ff", "text": "#172033", "glow": "#dfd5ff"},
+    "memory": {"stroke": "#35a86b", "fill": "#edf9f1", "text": "#172033", "glow": "#c9f0d8"},
+    "tool": {"stroke": "#df9b32", "fill": "#fff7e6", "text": "#172033", "glow": "#ffe4ac"},
+    "output": {"stroke": "#2da36d", "fill": "#edf9f1", "text": "#172033", "glow": "#c9f0d8"},
+    "risk": {"stroke": "#df6a86", "fill": "#fff0f4", "text": "#172033", "glow": "#ffd3de"},
+    "neutral": {"stroke": "#7b8794", "fill": "#ffffff", "text": "#172033", "glow": "#dce3ea"}
+  }
+}

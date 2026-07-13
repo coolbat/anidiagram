@@ -12,6 +12,9 @@ from anidiagram.exporters import _render_frames
 from anidiagram.exporters import _browser_capture_script
 from anidiagram.exporters import write_browser_capture
 from anidiagram.exporters import write_gif
+from anidiagram.illustrated_character_icons import character_definition, character_icon_ids
+from anidiagram.icon_system import resolve_icon_system
+from anidiagram.motion_manifest import CHARACTER_ICON_PERFORMANCES, CHARACTER_REST_AT
 from anidiagram.planner import brief_to_plan
 from anidiagram.planner import compile_plan
 from anidiagram.presets import preset_names
@@ -21,14 +24,376 @@ from anidiagram.renderer_svg import icon_surface_fill
 from anidiagram.renderer_svg import render_svg
 from anidiagram.renderer_svg import render_html
 from anidiagram.renderer_html_runtime import render_html_runtime
-from anidiagram.schema import DiagramScriptValidationError, compile_scene
-from anidiagram.styles import load_style
+from anidiagram.schema import KNOWN_ICONS, DiagramScriptValidationError, compile_scene
+from anidiagram.styles import deep_merge, load_style, validate_style_profile
 
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class SvgRendererTest(unittest.TestCase):
+    def _scene_with_icons(self):
+        icons = sorted(KNOWN_ICONS)
+        return compile_scene(
+            {
+                "version": "0.3",
+                "canvas": {"width": 1180, "height": 520},
+                "title": {"text": "Illustrated character icon registry"},
+                "motion": {"profile": "expressive", "node": {"preset": "icon-performance"}},
+                "nodes": [
+                    {
+                        "id": icon,
+                        "label": icon.title(),
+                        "caption": "character registry",
+                        "position": [70 + (index % 6) * 180, 125 + (index // 6) * 150],
+                        "size": [145, 78],
+                        "role": "neutral",
+                        "icon": icon,
+                    }
+                    for index, icon in enumerate(icons)
+                ],
+            }
+        )
+
+    def _scene_with_icon(self, icon, *, motion=None, node_effect=None):
+        node = {
+            "id": icon,
+            "label": icon.title(),
+            "caption": "semantic icon",
+            "position": [180, 150],
+            "size": [240, 100],
+            "role": "agent",
+            "icon": icon,
+        }
+        if node_effect is not None:
+            node["effect"] = node_effect
+        return compile_scene(
+            {
+                "version": "0.3",
+                "canvas": {"width": 640, "height": 360},
+                "title": {"text": "Character icon", "subtitle": "clean-room test"},
+                "motion": motion or {"profile": "expressive", "node": {"preset": "icon-performance"}},
+                "nodes": [node],
+            }
+        )
+
+    def _manifest_from_html(self, html):
+        marker = '<script type="application/json" id="anidiagram-motion-manifest">'
+        start = html.index(marker) + len(marker)
+        return json.loads(html[start:html.index("</script>", start)])
+
+    def test_default_icon_system_is_illustrated_character_v1(self):
+        self.assertEqual("illustrated-character-v1", load_style()["icon_system"])
+        svg = render_svg(self._scene_with_icon("agent"), load_style())
+        self.assertIn('data-icon-system="illustrated-character-v1"', svg)
+        self.assertIn('id="icon-agent-chip"', svg)
+
+    def test_character_registry_and_manifest_cover_every_known_icon(self):
+        self.assertEqual(set(character_icon_ids()), KNOWN_ICONS)
+        for icon in KNOWN_ICONS:
+            definition = character_definition(icon)
+            self.assertIsNotNone(definition, icon)
+            self.assertEqual("root", definition.parts[0], icon)
+            self.assertEqual(len(definition.parts), len(set(definition.parts)), icon)
+
+        html = render_html_runtime(self._scene_with_icons(), load_style(), runtime="gsap")
+        manifest = self._manifest_from_html(html)
+
+        self.assertEqual("illustrated-character-v1", manifest["icon_system"])
+        self.assertEqual(KNOWN_ICONS, {entry["icon"] for entry in manifest["icons"]})
+        for entry in manifest["icons"]:
+            definition = character_definition(entry["icon"])
+            self.assertEqual(CHARACTER_ICON_PERFORMANCES[entry["icon"]], entry["performance"])
+            self.assertEqual(set(definition.parts), set(entry["parts"]))
+            for selector in entry["parts"].values():
+                self.assertEqual(1, html.count(f'id="{selector[1:]}"'), selector)
+
+    def test_icon_system_resolution_prefers_top_level_then_legacy_effects(self):
+        self.assertEqual("illustrated-v1", resolve_icon_system({"icon_system": "illustrated-v1"}))
+        self.assertEqual("semantic-line-v1", resolve_icon_system({"effects": {"icon_system": "semantic-line-v1"}}))
+        self.assertEqual(
+            "semantic-line-v1",
+            resolve_icon_system({"icon_system": "semantic-line-v1", "effects": {"icon_system": "illustrated-v1"}}),
+        )
+
+    def test_icon_system_rejects_unknown_values_with_precise_paths(self):
+        issues = validate_style_profile({"icon_system": "unknown-v1", "effects": {"icon_system": "also-unknown"}})
+        self.assertEqual(["$.icon_system", "$.effects.icon_system"], [issue.path for issue in issues])
+
+    def test_operator_is_a_valid_schema_icon_and_has_line_fallback(self):
+        scene = self._scene_with_icon("operator")
+        self.assertEqual("operator", scene.nodes[0].icon)
+        svg = render_svg(scene, deep_merge(load_style(), {"icon_system": "semantic-line-v1"}))
+        self.assertIn('semantic-icon-operator', svg)
+        self.assertIn('id="icon-operator-laptop"', svg)
+
+    def test_character_default_covers_api_without_a_line_fallback(self):
+        report = quality_report(self._scene_with_icon("api"), load_style())
+        warnings = [issue for issue in report["issues"] if issue["code"] == "character_icon_fallback"]
+        self.assertEqual([], warnings)
+
+    def test_character_manifests_use_their_performances_and_parts(self):
+        for icon, performance, part_id in (
+            ("agent", "brain-think-pulse-v1", "#icon-agent-chip"),
+            ("operator", "operator-type-focus-v1", "#icon-operator-laptop"),
+            ("database", "bucket-ingest-confirm-v1", "#icon-database-liquid"),
+        ):
+            manifest = self._manifest_from_html(render_html_runtime(self._scene_with_icon(icon), load_style(), runtime="gsap"))
+            entry = manifest["icons"][0]
+            self.assertEqual("illustrated-character-v1", manifest["icon_system"])
+            self.assertEqual(performance, entry["performance"])
+            self.assertIn(part_id, entry["parts"].values())
+
+    def test_character_manifest_inherits_motion_for_omitted_or_empty_node_effect(self):
+        for node_effect in (None, {}):
+            scene = self._scene_with_icon("search", node_effect=node_effect)
+            manifest = self._manifest_from_html(render_html_runtime(scene, load_style(), runtime="gsap"))
+
+            self.assertEqual(["search-scout-find-v1"], [entry["performance"] for entry in manifest["icons"]])
+
+    def test_character_manifest_has_no_runtime_icon_when_profile_is_off(self):
+        scene = self._scene_with_icon("search", motion={"profile": "off", "node": {"preset": "icon-performance"}})
+        manifest = self._manifest_from_html(render_html_runtime(scene, load_style(), runtime="gsap"))
+
+        self.assertEqual("illustrated-character-v1", manifest["icon_system"])
+        self.assertEqual([], manifest["icons"])
+
+    def test_character_manifest_honors_explicit_node_effect_none(self):
+        scene = self._scene_with_icon("search", node_effect={"preset": "none"})
+        manifest = self._manifest_from_html(render_html_runtime(scene, load_style(), runtime="gsap"))
+
+        self.assertEqual("illustrated-character-v1", manifest["icon_system"])
+        self.assertEqual([], manifest["icons"])
+
+    def test_manifest_serializes_explicit_legacy_icon_systems(self):
+        for icon_system in ("illustrated-v1", "semantic-line-v1"):
+            manifest = self._manifest_from_html(
+                render_html_runtime(self._scene_with_icon("agent"), deep_merge(load_style(), {"icon_system": icon_system}), runtime="gsap")
+            )
+            self.assertEqual(icon_system, manifest["icon_system"])
+
+    def test_character_runtime_contract_covers_all_icons_with_exact_parts_and_dispatch(self):
+        source = (ROOT / "runtime" / "anidiagram-runtime.js").read_text(encoding="utf-8")
+        contract = {
+            "brain-think-pulse-v1": ("playBrainThinkPulse", ["brain-left", "brain-right", "chip", "signal", "spark"]),
+            "operator-type-focus-v1": ("playOperatorTypeFocus", ["hair", "face", "glasses", "hands", "laptop", "cursor"]),
+            "bucket-ingest-confirm-v1": ("playBucketIngestConfirm", ["hat", "bucket", "liquid", "bead", "check"]),
+            "search-scout-find-v1": ("playSearchScoutFind", ["lens", "scan", "marker", "spark"]),
+            "tool-kit-action-v1": ("playToolKitAction", ["bucket", "lid", "wrench", "spark"]),
+            "api-signal-return-v1": ("playApiSignalReturn", ["interface", "request", "receipt", "status"]),
+            "memory-index-commit-v1": ("playMemoryIndexCommit", ["back-card", "front-card", "bookmark", "key-line"]),
+            "output-envelope-reveal-v1": ("playOutputEnvelopeReveal", ["envelope", "card", "check", "spark"]),
+            "file-note-write-v1": ("playFileNoteWrite", ["page", "corner", "line-1", "line-2", "line-3", "dot"]),
+            "folder-file-store-v1": ("playFolderFileStore", ["folder", "tab", "sheet", "seal"]),
+            "cloud-uplink-ready-v1": ("playCloudUplinkReady", ["cloud", "kite", "data-dot", "ready-light"]),
+            "shield-guard-confirm-v1": ("playShieldGuardConfirm", ["shell", "core", "scan", "check"]),
+            "token-intent-ready-v1": ("playTokenIntentReady", ["shell", "core", "tick-left", "tick-right", "tick-top", "tick-bottom"]),
+        }
+
+        self.assertEqual(set(CHARACTER_ICON_PERFORMANCES.values()), set(contract))
+        for performance, (function_name, expected_parts) in contract.items():
+            icon = next(icon for icon, name in CHARACTER_ICON_PERFORMANCES.items() if name == performance)
+            self.assertEqual(list(character_definition(icon).parts[1:]), expected_parts)
+            body = self._javascript_function_body(source, function_name)
+            actual_parts = self._javascript_required_parts(body)
+            self.assertEqual(expected_parts, actual_parts, performance)
+            self.assertIn("hasParts(parts, required)", body)
+            self.assertIn("setInitial(parts, gsap)", body)
+            self.assertIn(f'"{performance}": {function_name}', source)
+
+    def test_character_runtime_uses_compact_idle_gap_and_subtle_breath_shell(self):
+        runtime_source = (ROOT / "runtime" / "anidiagram-runtime.js").read_text(encoding="utf-8")
+        renderer_source = (ROOT / "src" / "anidiagram" / "renderer_illustrated_character.py").read_text(encoding="utf-8")
+        performer_names = (
+            "playBrainThinkPulse",
+            "playOperatorTypeFocus",
+            "playBucketIngestConfirm",
+            "playSearchScoutFind",
+            "playToolKitAction",
+            "playApiSignalReturn",
+            "playMemoryIndexCommit",
+            "playOutputEnvelopeReveal",
+            "playFileNoteWrite",
+            "playFolderFileStore",
+            "playCloudUplinkReady",
+            "playShieldGuardConfirm",
+            "playTokenIntentReady",
+        )
+
+        self.assertIn("const CHARACTER_REPEAT_DELAY = 0.8;", runtime_source)
+        self.assertIn("const CHARACTER_IDLE_BREATHE_SCALE = 1.012;", runtime_source)
+        self.assertIn('class="illustrated-character-motion-shell"', renderer_source)
+        rest_body = self._javascript_function_body(runtime_source, "finishCharacterAtRest")
+        self.assertIn('querySelector(".illustrated-character-motion-shell")', rest_body)
+        self.assertIn("CHARACTER_IDLE_BREATHE_SCALE", rest_body)
+        self.assertIn("duration: 0.22", rest_body)
+        for function_name in performer_names:
+            body = self._javascript_function_body(runtime_source, function_name)
+            self.assertIn("repeatDelay: CHARACTER_REPEAT_DELAY", body, function_name)
+            self.assertNotRegex(body, r"repeatDelay:\s*1\.")
+
+    def test_stage_runtime_contract_has_distinct_modes_and_quiet_packet_rhythm(self):
+        runtime_source = (ROOT / "runtime" / "anidiagram-runtime.js").read_text(encoding="utf-8")
+        manifest_source = (ROOT / "src" / "anidiagram" / "motion_manifest.py").read_text(encoding="utf-8")
+        verifier_source = (ROOT / "scripts" / "verify_stage_motion_modes.mjs").read_text(encoding="utf-8")
+
+        self.assertIn("const EDGE_PACKET_COUNT = 1;", runtime_source)
+        self.assertIn("const EDGE_PACKET_REPEAT_DELAY = 0.7;", runtime_source)
+        self.assertIn("repeatDelay: EDGE_PACKET_REPEAT_DELAY", runtime_source)
+        self.assertIn('__anidiagramStage = "edge-packet"', runtime_source)
+        self.assertIn('__anidiagramStage = "title-entry"', runtime_source)
+        self.assertIn('playStageEffects(manifest, "readable")', runtime_source)
+        self.assertIn("settleCharacterTimelines", runtime_source)
+        title_body = self._javascript_function_body(runtime_source, "playTitleSweep")
+        self.assertNotIn("repeat: -1", title_body)
+        self.assertIn("scaleX", title_body)
+        edge_body = self._javascript_function_body(runtime_source, "playRuntimeEdgeFlow")
+        self.assertIn("EDGE_PACKET_COUNT", edge_body)
+        self.assertIn("readable_edge_limit", edge_body)
+        self.assertNotIn('filter: "url(#particle-glow)"', edge_body)
+        self.assertIn('"edge_limit"', manifest_source)
+        self.assertIn('"readable_edge_limit"', manifest_source)
+        self.assertIn('require("playwright")', verifier_source)
+        self.assertIn("Expressive -> Readable -> Off -> Expressive", verifier_source)
+        self.assertIn("duplicate runtime-generated stage elements", verifier_source)
+
+    def test_character_theme_defaults_keep_frames_stable_and_group_reveal_soft(self):
+        flow = json.loads((ROOT / "examples" / "illustrated-character-v1-flow.diagram.json").read_text(encoding="utf-8"))
+        gallery = json.loads((ROOT / "examples" / "illustrated-character-v1-icons.diagram.json").read_text(encoding="utf-8"))
+
+        self.assertEqual("icon-performance", flow["motion"]["node"]["preset"])
+        self.assertEqual("soft-reveal", flow["motion"]["group"]["preset"])
+        self.assertEqual("icon-performance", gallery["motion"]["node"]["preset"])
+        self.assertEqual("static", gallery["motion"]["group"]["preset"])
+        source = (ROOT / "src" / "anidiagram" / "renderer_svg.py").read_text(encoding="utf-8")
+        self.assertNotIn('node_mode in {"float", "glow-breathe", "pop", "icon-pulse", "pulse", "ripple", "icon-performance"}', source)
+
+    def test_character_rest_reset_preserves_svg_root_anchor(self):
+        runtime_source = (ROOT / "runtime" / "anidiagram-runtime.js").read_text(encoding="utf-8")
+        verifier_source = (ROOT / "scripts" / "verify_character_motion_rest.mjs").read_text(encoding="utf-8")
+        reset_body = self._javascript_function_body(runtime_source, "finishCharacterAtRest")
+
+        self.assertIn('name !== "root"', reset_body)
+        self.assertIn("getScreenCTM()", verifier_source)
+        self.assertIn("root anchor changed", verifier_source)
+
+    def test_character_browser_verifiers_resolve_local_then_global_playwright_portably(self):
+        for name in ("verify_character_motion_rest.mjs", "verify_character_reduced_motion.mjs"):
+            source = (ROOT / "scripts" / name).read_text(encoding="utf-8")
+            self.assertIn('require("playwright")', source)
+            self.assertIn('execFileSync("npm", ["root", "-g"]', source)
+            self.assertIn('createRequire(path.join(globalRoot, "package.json"))', source)
+            self.assertIn("Unable to resolve Playwright", source)
+
+    def test_character_browser_verifiers_require_valid_character_manifests(self):
+        rest_source = (ROOT / "scripts" / "verify_character_motion_rest.mjs").read_text(encoding="utf-8")
+        reduced_source = (ROOT / "scripts" / "verify_character_reduced_motion.mjs").read_text(encoding="utf-8")
+
+        self.assertIn("readCharacterManifest", rest_source)
+        self.assertIn('manifest.icon_system !== "illustrated-character-v1"', rest_source)
+        self.assertIn("FULL_GALLERY_CHARACTER_COUNT = 13", rest_source)
+        self.assertNotIn("CHARACTER_PERFORMANCE_IDS", rest_source)
+        self.assertIn("readCharacterManifest", reduced_source)
+        self.assertIn('manifest.icon_system !== "illustrated-character-v1"', reduced_source)
+        self.assertIn("expected-character-icon-count", reduced_source)
+        self.assertIn("verified reduced motion for", reduced_source)
+
+    def test_html_runtime_docs_show_direct_character_verification_commands(self):
+        source = (ROOT / "docs" / "html-runtime.md").read_text(encoding="utf-8")
+        self.assertIn("verify_character_motion_rest.mjs outputs/illustrated-character-v1-icons/illustrated-character-v1-icons.html", source)
+        self.assertIn("verify_character_reduced_motion.mjs outputs/illustrated-character-v1-icons/illustrated-character-v1-icons.html 13", source)
+        self.assertIn("verify_character_reduced_motion.mjs outputs/illustrated-character-v1-flow/illustrated-character-v1-flow.html 8", source)
+        self.assertIn("local project dependency first, then `npm root -g`", source)
+
+    def test_character_manifest_serializes_deterministic_rest_times(self):
+        manifest = self._manifest_from_html(render_html_runtime(self._scene_with_icons(), load_style(), runtime="gsap"))
+        self.assertEqual(set(CHARACTER_ICON_PERFORMANCES), set(CHARACTER_REST_AT))
+        for entry in manifest["icons"]:
+            self.assertEqual(CHARACTER_REST_AT[entry["icon"]], entry["rest_at"])
+
+    def test_legacy_illustrated_manifest_does_not_serialize_character_rest_times(self):
+        manifest = self._manifest_from_html(
+            render_html_runtime(
+                self._scene_with_icon("search"),
+                deep_merge(load_style(), {"icon_system": "illustrated-v1"}),
+                runtime="gsap",
+            )
+        )
+        self.assertEqual("illustrated-v1", manifest["icon_system"])
+        self.assertNotIn("rest_at", manifest["icons"][0])
+
+    def test_character_svg_emits_source_opacity_for_every_rest_checked_part(self):
+        svg = render_svg(self._scene_with_icons(), load_style())
+        expected_elements = 0
+        for icon in character_icon_ids():
+            definition = character_definition(icon)
+            expected_elements += 1 + len(definition.primitives)
+            for part in definition.parts:
+                self.assertIn(f'id="icon-{icon}-{part}"', svg)
+        self.assertEqual(expected_elements, svg.count('data-rest-opacity="1"'))
+
+    def test_character_default_ignores_legacy_icon_motion_but_semantic_line_honors_it(self):
+        scene = self._scene_with_icon("search", node_effect={"preset": "icon-performance", "icon_motion": "api-request-response-v2"})
+        character_manifest = self._manifest_from_html(render_html_runtime(scene, load_style(), runtime="gsap"))
+        line_manifest = self._manifest_from_html(
+            render_html_runtime(scene, deep_merge(load_style(), {"icon_system": "semantic-line-v1"}), runtime="gsap")
+        )
+        self.assertEqual("search-scout-find-v1", character_manifest["icons"][0]["performance"])
+        self.assertEqual("api-request-response-v2", line_manifest["icons"][0]["performance"])
+
+    def test_semantic_line_rejects_character_v1_request_and_falls_back_to_line_v2(self):
+        scene = self._scene_with_icon("search", node_effect={"preset": "icon-performance", "icon_motion": "search-scout-find-v1"})
+        manifest = self._manifest_from_html(
+            render_html_runtime(scene, deep_merge(load_style(), {"icon_system": "semantic-line-v1"}), runtime="gsap")
+        )
+        self.assertEqual("search-discover-v2", manifest["icons"][0]["performance"])
+
+    @staticmethod
+    def _javascript_function_body(source, function_name):
+        marker = f"function {function_name}("
+        start = source.index(marker)
+        open_brace = source.index("{", source.index(")", start))
+        depth = 0
+        for index in range(open_brace, len(source)):
+            if source[index] == "{":
+                depth += 1
+            elif source[index] == "}":
+                depth -= 1
+                if depth == 0:
+                    return source[open_brace + 1:index]
+        raise AssertionError(f"unterminated JavaScript function: {function_name}")
+
+    @staticmethod
+    def _javascript_required_parts(body):
+        import re
+
+        match = re.search(r'const required = \[(.*?)\];', body, re.DOTALL)
+        if match is None:
+            raise AssertionError("character performer must declare const required")
+        return re.findall(r'[\"\']([^\"\']+)[\"\']', match.group(1))
+
+    def test_illustrated_character_gallery_covers_every_known_icon_once(self):
+        style = load_style(ROOT / "styles" / "illustrated-character.json")
+        spec = json.loads((ROOT / "examples" / "illustrated-character-v1-icons.diagram.json").read_text(encoding="utf-8"))
+        scene = compile_scene(spec)
+        manifest = self._manifest_from_html(render_html_runtime(scene, style, runtime="gsap"))
+
+        self.assertEqual(KNOWN_ICONS, {node["icon"] for node in spec["nodes"]})
+        self.assertEqual(len(KNOWN_ICONS), len(spec["nodes"]))
+        self.assertEqual(len(KNOWN_ICONS), len(manifest["icons"]))
+        self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, quality_report(scene, style)["summary"])
+
+    def test_illustrated_character_flow_uses_covered_icons_without_fallback_copy(self):
+        style = load_style(ROOT / "styles" / "illustrated-character.json")
+        path = ROOT / "examples" / "illustrated-character-v1-flow.diagram.json"
+        source = path.read_text(encoding="utf-8")
+        spec = json.loads(source)
+        scene = compile_scene(spec)
+
+        self.assertTrue({node["icon"] for node in spec["nodes"]}.issubset(KNOWN_ICONS))
+        self.assertNotIn("fallback", source.lower())
+        self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, quality_report(scene, style)["summary"])
+
     def test_render_svg_contains_animation_and_labels(self):
         spec = json.loads((ROOT / "examples" / "agent-memory.diagram.json").read_text(encoding="utf-8"))
         style = load_style(ROOT / "styles" / "blueprint.json")
@@ -43,7 +408,8 @@ class SvgRendererTest(unittest.TestCase):
         self.assertIn("node-glow", svg)
         self.assertIn("node-burst", svg)
         self.assertIn("Agent Memory System", svg)
-        self.assertIn("Planner Agent", svg)
+        self.assertIn('class="node-title">Planner</tspan>', svg)
+        self.assertIn('class="node-title">Agent</tspan>', svg)
         self.assertIn("marker-end", svg)
 
     def test_cli_writes_svg_and_html_runtime(self):
@@ -111,15 +477,22 @@ class SvgRendererTest(unittest.TestCase):
 
         self.assertEqual("motion-manifest-0.1", manifest["version"])
         self.assertEqual("gsap", manifest["runtime"])
+        self.assertEqual("ambient", manifest["mode"])
+        self.assertEqual("independent-icon-loops", manifest["sequence"])
+        self.assertEqual("layered", manifest["scene_sequence"])
+        self.assertEqual(
+            {"edge_flow": True, "title_sweep": True, "edge_limit": 4, "readable_edge_limit": 2},
+            manifest["stage"],
+        )
         self.assertEqual(
             {
-                "token-intent-v2",
-                "agent-think-act-v2",
-                "api-request-response-v2",
-                "search-discover-v2",
-                "memory-commit-v2",
-                "tool-run-v2",
-                "output-reveal-v2",
+                "token-intent-ready-v1",
+                "brain-think-pulse-v1",
+                "api-signal-return-v1",
+                "search-scout-find-v1",
+                "memory-index-commit-v1",
+                "tool-kit-action-v1",
+                "output-envelope-reveal-v1",
             },
             {icon["performance"] for icon in manifest["icons"]},
         )
@@ -131,13 +504,123 @@ class SvgRendererTest(unittest.TestCase):
         self.assertNotIn("animateMotion", html)
         self.assertNotIn("animateTransform", html)
         self.assertNotIn('transformBox = "fill-box"', html)
-        agent_icon = next(icon for icon in manifest["icons"] if icon["performance"] == "agent-think-act-v2")
+        self.assertIn('data-motion-profile="expressive"', html)
+        self.assertNotIn('data-motion-profile="off"', html)
+        agent_icon = next(icon for icon in manifest["icons"] if icon["performance"] == "brain-think-pulse-v1")
         self.assertEqual(
-            {"root", "shell", "core", "thought1", "thought2", "thought3", "decisionToken"},
+            {
+                "root",
+                "brain-left",
+                "brain-right",
+                "chip",
+                "signal",
+                "spark",
+            },
             set(agent_icon["parts"]),
         )
-        self.assertIn("#icon-agent-thought-1", agent_icon["parts"].values())
-        self.assertIn("#icon-agent-decision-token", agent_icon["parts"].values())
+        self.assertIn("#icon-agent-brain-left", agent_icon["parts"].values())
+        self.assertIn("#icon-agent-chip", agent_icon["parts"].values())
+        self.assertIn("#icon-agent-spark", agent_icon["parts"].values())
+        for icon in manifest["icons"]:
+            for selector in icon["parts"].values():
+                self.assertTrue(selector.startswith("#"))
+                self.assertIn(f'id="{selector[1:]}"', html)
+
+    def test_html_runtime_default_expressive_covers_builtin_icon_performances(self):
+        icons = ["agent", "operator", "api", "search", "database", "memory", "tool", "token", "output", "file", "folder", "cloud", "shield"]
+        spec = {
+            "version": "0.3",
+            "canvas": {"width": 1180, "height": 520},
+            "title": {"text": "All Runtime Icons"},
+            "nodes": [
+                {
+                    "id": icon,
+                    "label": icon.title(),
+                    "caption": "runtime",
+                    "position": [70 + (index % 6) * 180, 125 + (index // 6) * 150],
+                    "size": [145, 78],
+                    "role": "neutral",
+                    "icon": icon,
+                }
+                for index, icon in enumerate(icons)
+            ],
+        }
+        scene = compile_scene(spec)
+        html = render_html_runtime(scene, load_style(ROOT / "styles" / "deep-tech.json"), runtime="gsap")
+        marker = '<script type="application/json" id="anidiagram-motion-manifest">'
+        start = html.index(marker) + len(marker)
+        end = html.index("</script>", start)
+        manifest = json.loads(html[start:end])
+
+        self.assertEqual("expressive", scene.motion.profile)
+        self.assertEqual("expressive", manifest["profile"])
+        self.assertEqual(
+            {"edge_flow": True, "title_sweep": True, "edge_limit": None, "readable_edge_limit": 2},
+            manifest["stage"],
+        )
+        self.assertEqual(
+            {
+                "brain-think-pulse-v1",
+                "operator-type-focus-v1",
+                "api-signal-return-v1",
+                "search-scout-find-v1",
+                "bucket-ingest-confirm-v1",
+                "memory-index-commit-v1",
+                "tool-kit-action-v1",
+                "token-intent-ready-v1",
+                "output-envelope-reveal-v1",
+                "file-note-write-v1",
+                "folder-file-store-v1",
+                "cloud-uplink-ready-v1",
+                "shield-guard-confirm-v1",
+            },
+            {icon["performance"] for icon in manifest["icons"]},
+        )
+        for performance in [
+            "file-note-write-v1",
+            "folder-file-store-v1",
+            "cloud-uplink-ready-v1",
+            "shield-guard-confirm-v1",
+        ]:
+            self.assertIn(performance, html)
+        self.assertIn("playStageEffects", html)
+        self.assertIn("runtime-edge-flow", html)
+        self.assertIn("runtime-edge-packet", html)
+        for icon in manifest["icons"]:
+            for selector in icon["parts"].values():
+                self.assertTrue(selector.startswith("#"))
+                self.assertIn(f'id="{selector[1:]}"', html)
+
+    def test_illustrated_bubble_runtime_exposes_registry_parts_and_stage_effects(self):
+        spec = json.loads((ROOT / "examples" / "illustrated-bubble-runtime.diagram.json").read_text(encoding="utf-8"))
+        scene = compile_scene(spec)
+        html = render_html_runtime(scene, load_style(ROOT / "styles" / "illustrated-bubble.json"), runtime="gsap")
+        marker = '<script type="application/json" id="anidiagram-motion-manifest">'
+        start = html.index(marker) + len(marker)
+        end = html.index("</script>", start)
+        manifest = json.loads(html[start:end])
+
+        self.assertEqual("illustrated-v1", manifest["icon_system"])
+        self.assertEqual("expressive", manifest["profile"])
+        self.assertEqual(True, manifest["stage"]["edge_flow"])
+        self.assertEqual(True, manifest["stage"]["relation_circles"])
+        self.assertEqual(True, manifest["stage"]["group_fields"])
+        self.assertEqual(True, manifest["stage"]["data_particles"])
+        self.assertIn('data-icon-system="illustrated-v1"', html)
+        self.assertIn("playIllustratedCommon", html)
+        self.assertIn("playRuntimeRelationCircles", html)
+        self.assertIn("playRuntimeGroupFields", html)
+        self.assertIn("runtime-relation-circle", html)
+        self.assertIn("runtime-group-field", html)
+        self.assertEqual(12, len(manifest["icons"]))
+        agent_icon = next(icon for icon in manifest["icons"] if icon["node_id"] == "agent")
+        self.assertEqual("think-decide-act", agent_icon["semantic_role"])
+        self.assertIn("primary", agent_icon["colors"])
+        for common_part in ["bubble", "bubbleHalo", "wash", "accentMark", "sparkle", "orbitDot"]:
+            self.assertIn(common_part, agent_icon["parts"])
+            selector = agent_icon["parts"][common_part]
+            self.assertTrue(selector.startswith("#"))
+            self.assertIn(f'id="{selector[1:]}"', html)
         for icon in manifest["icons"]:
             for selector in icon["parts"].values():
                 self.assertTrue(selector.startswith("#"))
@@ -158,16 +641,30 @@ class SvgRendererTest(unittest.TestCase):
             ],
         }
         scene = compile_scene(spec)
-        html = render_html_runtime(scene, load_style(ROOT / "styles" / "minimal-light.json"), runtime="gsap")
+        html = render_html_runtime(
+            scene,
+            deep_merge(load_style(ROOT / "styles" / "minimal-light.json"), {"icon_system": "semantic-line-v1"}),
+            runtime="gsap",
+        )
+        marker = '<script type="application/json" id="anidiagram-motion-manifest">'
+        start = html.index(marker) + len(marker)
+        end = html.index("</script>", start)
+        manifest = json.loads(html[start:end])
 
         self.assertIn("semantic-icon-shield", html)
+        self.assertIn("shield-check-v2", {icon["performance"] for icon in manifest["icons"]})
+        self.assertIn('id="icon-shield-pulse"', html)
+        self.assertIn('id="icon-shield-scan"', html)
         self.assertNotIn("data-icon-motion=", html)
-        self.assertNotIn("icon-shield-pulse", html)
+        self.assertNotIn("<animate", html)
+        self.assertNotIn("<set", html)
+        self.assertNotIn("animateMotion", html)
+        self.assertNotIn("animateTransform", html)
 
     def test_svg_output_uses_lightweight_icon_fallback_without_runtime_manifest(self):
         spec = json.loads((ROOT / "examples" / "high-fidelity-runtime.diagram.json").read_text(encoding="utf-8"))
         scene = compile_scene(spec)
-        style = load_style(ROOT / "styles" / "deep-tech.json")
+        style = deep_merge(load_style(ROOT / "styles" / "deep-tech.json"), {"icon_system": "semantic-line-v1"})
 
         svg = render_svg(scene, style)
 
@@ -178,12 +675,12 @@ class SvgRendererTest(unittest.TestCase):
         self.assertIn('data-icon-motion="token-pulse"', svg)
         self.assertIn('data-icon-motion="agent-orbit"', svg)
         self.assertIn('data-icon-motion="search-sweep"', svg)
-        self.assertIn('data-icon-motion="database-write"', svg)
+        self.assertNotIn('data-icon-motion="database-write"', svg)
         self.assertNotIn("token-intent-v2", svg)
         self.assertNotIn("agent-think-act-v2", svg)
-        self.assertIn('id="icon-agent-shell"', svg)
-        self.assertIn('id="icon-agent-core"', svg)
-        self.assertIn('id="icon-agent-thought-1"', svg)
+        self.assertIn('id="icon-agent-outline-left"', svg)
+        self.assertIn('id="icon-agent-branch-right"', svg)
+        self.assertIn('id="icon-agent-node-center"', svg)
         self.assertIn('id="icon-agent-decision-token"', svg)
         self.assertIn('id="icon-request-core"', svg)
         self.assertIn('id="icon-tool-connector"', svg)
@@ -196,12 +693,12 @@ class SvgRendererTest(unittest.TestCase):
     def test_render_svg_runtime_stage_suppresses_icon_smil_fallbacks(self):
         spec = json.loads((ROOT / "examples" / "high-fidelity-runtime.diagram.json").read_text(encoding="utf-8"))
         scene = compile_scene(spec)
-        style = load_style(ROOT / "styles" / "deep-tech.json")
+        style = deep_merge(load_style(ROOT / "styles" / "deep-tech.json"), {"icon_system": "semantic-line-v1"})
 
         svg = render_svg(scene, style, animation_mode="runtime-stage")
 
-        self.assertIn('id="icon-agent-shell"', svg)
-        self.assertIn('id="icon-agent-thought-1"', svg)
+        self.assertIn('id="icon-agent-outline-left"', svg)
+        self.assertIn('id="icon-agent-node-center"', svg)
         self.assertIn('id="icon-agent-decision-token"', svg)
         self.assertNotIn("data-icon-motion=", svg)
         self.assertNotIn("<animate", svg)
@@ -241,7 +738,8 @@ class SvgRendererTest(unittest.TestCase):
             self.assertNotIn("html-runtime", result["outputs"])
             self.assertTrue(Path(result["outputs"]["html"]["path"]).is_file())
             self.assertIn("anidiagram-motion-manifest", runtime_html.read_text(encoding="utf-8"))
-            self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, result["outputs"]["quality"]["summary"])
+            self.assertEqual(0, result["outputs"]["quality"]["summary"]["errors"])
+            self.assertEqual(0, result["outputs"]["quality"]["summary"]["warnings"])
 
     def test_cli_routes_browser_renderer_for_raster_exports(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -400,7 +898,7 @@ class SvgRendererTest(unittest.TestCase):
         svg = render_svg(scene, load_style(ROOT / "styles" / "minimal-light.json"))
 
         self.assertEqual(
-            "ea7ca75496ed55477d7d17d231d32ac35e0ed184fe8967199161b5af2b57f9f5",
+            "44b4673059951bc2143ed182c4fa829c65b7fce6d93249a827b088bdbbefb133",
             hashlib.sha256(svg.encode("utf-8")).hexdigest(),
         )
 
@@ -409,7 +907,7 @@ class SvgRendererTest(unittest.TestCase):
         spec["version"] = "0.2"
         spec["motion"] = {"profile": "off"}
         scene = compile_scene(spec)
-        svg = render_svg(scene, load_style(ROOT / "styles" / "minimal-light.json"))
+        svg = render_svg(scene, deep_merge(load_style(ROOT / "styles" / "minimal-light.json"), {"icon_system": "semantic-line-v1"}))
 
         self.assertEqual("off", scene.motion.profile)
         self.assertIn('data-motion-profile="off"', svg)
@@ -463,7 +961,10 @@ class SvgRendererTest(unittest.TestCase):
             ],
         }
         scene = compile_scene(spec)
-        svg = render_svg(scene, load_style(ROOT / "styles" / "sketch-board.json"))
+        svg = render_svg(
+            scene,
+            deep_merge(load_style(ROOT / "styles" / "sketch-board.json"), {"icon_system": "semantic-line-v1"}),
+        )
 
         self.assertEqual("0.3", scene.version)
         self.assertEqual("flow-arrow", scene.motion.edge_effect.preset)
@@ -634,7 +1135,7 @@ class SvgRendererTest(unittest.TestCase):
         }
         scene = compile_scene(spec)
         report = quality_report(scene)
-        svg = render_svg(scene, load_style(ROOT / "styles" / "minimal-light.json"))
+        svg = render_svg(scene, deep_merge(load_style(ROOT / "styles" / "minimal-light.json"), {"icon_system": "semantic-line-v1"}))
 
         self.assertEqual("icon-semantic", scene.motion.node_effect.preset)
         self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, report["summary"])
@@ -672,8 +1173,8 @@ class SvgRendererTest(unittest.TestCase):
         self.assertIn("icon-cloud-dot", svg)
         self.assertIn("icon-search-light", svg)
         self.assertIn("icon-shield-pulse", svg)
-        self.assertIn("icon-agent-shell", svg)
-        self.assertIn("icon-agent-thought", svg)
+        self.assertIn("icon-agent-line", svg)
+        self.assertIn("icon-agent-node", svg)
         self.assertIn("icon-agent-decision-token", svg)
         self.assertIn("icon-tool-spark", svg)
         self.assertIn(">fx</text>", svg)
@@ -715,7 +1216,7 @@ class SvgRendererTest(unittest.TestCase):
                 {"id": "c", "label": "Shield", "caption": "check", "position": [420, 160], "size": [150, 72], "role": "risk", "icon": "shield"},
             ],
         }
-        svg = render_svg(compile_scene(spec), load_style(ROOT / "styles" / "minimal-light.json"))
+        svg = render_svg(compile_scene(spec), deep_merge(load_style(ROOT / "styles" / "minimal-light.json"), {"icon_system": "semantic-line-v1"}))
 
         self.assertEqual(1, svg.count("icon-semantic-motion"))
         self.assertIn('data-icon-motion="database-write"', svg)
@@ -793,7 +1294,8 @@ class SvgRendererTest(unittest.TestCase):
             self.assertEqual("explainer-board", plan["layout_strategy"])
             self.assertEqual("0.3", spec["version"])
             self.assertTrue(Path(result["outputs"]["svg"]["path"]).is_file())
-            self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, result["outputs"]["quality"]["summary"])
+            self.assertEqual(0, result["outputs"]["quality"]["summary"]["errors"])
+            self.assertEqual(0, result["outputs"]["quality"]["summary"]["warnings"])
 
     def test_cli_renders_preset_lottie_and_quality(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -907,7 +1409,7 @@ class SvgRendererTest(unittest.TestCase):
 
         self.assertTrue(report["ok"])
         self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, report["summary"])
-        self.assertIn("semantic-icon-database", svg)
+        self.assertIn("semantic-icon-illustrated-character-v1", svg)
         self.assertIn("edge-flow-ghost-flow", svg)
         self.assertIn("edge-flow-dynamic-dash", svg)
         self.assertIn("edge-flow-glow-line", svg)

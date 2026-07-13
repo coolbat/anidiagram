@@ -1,0 +1,23 @@
+{
+  "version": "0.3",
+  "preset": "illustrated-character-v1-icons",
+  "canvas": {"width": 1400, "height": 700},
+  "style": "illustrated-character",
+  "title": {"text": "Illustrated Character Icon Gallery", "subtitle": "Thirteen clean-room semantic objects with quiet, purposeful performances"},
+  "motion": {"profile": "expressive", "sequence": "simultaneous", "stagger": 0.08, "node": {"preset": "icon-performance"}, "edge": {"preset": "static"}, "group": {"preset": "static"}, "title": {"preset": "highlight-sweep"}, "reduced_motion": "subtle"},
+  "nodes": [
+    {"id": "agent", "label": "AI Brain", "caption": "think • decide • confirm", "position": [65, 175], "size": [230, 120], "role": "agent", "icon": "agent"},
+    {"id": "operator", "label": "Operator", "caption": "focus • type • resolve", "position": [330, 175], "size": [230, 120], "role": "source", "icon": "operator"},
+    {"id": "search", "label": "Search", "caption": "scout • scan • find", "position": [595, 175], "size": [230, 120], "role": "process", "icon": "search"},
+    {"id": "tool", "label": "Tool Kit", "caption": "ready • act • confirm", "position": [860, 175], "size": [230, 120], "role": "tool", "icon": "tool"},
+    {"id": "api", "label": "API", "caption": "request • return • settle", "position": [1125, 175], "size": [230, 120], "role": "process", "icon": "api"},
+    {"id": "memory", "label": "Memory", "caption": "index • commit • recall", "position": [65, 350], "size": [230, 120], "role": "memory", "icon": "memory"},
+    {"id": "output", "label": "Output", "caption": "reveal • deliver • confirm", "position": [330, 350], "size": [230, 120], "role": "output", "icon": "output"},
+    {"id": "file", "label": "File", "caption": "note • write • settle", "position": [595, 350], "size": [230, 120], "role": "neutral", "icon": "file"},
+    {"id": "folder", "label": "Folder", "caption": "file • store • ready", "position": [860, 350], "size": [230, 120], "role": "tool", "icon": "folder"},
+    {"id": "cloud", "label": "Cloud", "caption": "uplink • send • ready", "position": [1125, 350], "size": [230, 120], "role": "source", "icon": "cloud"},
+    {"id": "shield", "label": "Shield", "caption": "guard • scan • confirm", "position": [330, 525], "size": [230, 120], "role": "risk", "icon": "shield"},
+    {"id": "token", "label": "Token", "caption": "intent • orient • ready", "position": [595, 525], "size": [230, 120], "role": "agent", "icon": "token"},
+    {"id": "database", "label": "Data Bucket", "caption": "ingest • settle • confirm", "position": [860, 525], "size": [230, 120], "role": "memory", "icon": "database"}
+  ]
+}

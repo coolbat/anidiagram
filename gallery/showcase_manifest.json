@@ -5,6 +5,7 @@
     "basename": "agent-runtime-flow",
     "spec": "examples/showcase/hero/agent-runtime-flow.diagram.json",
     "style": "deep-tech",
+    "icon_system": "illustrated-character-v1",
     "svg": "gallery/hero/agent-runtime-flow.svg",
     "html": "gallery/hero/agent-runtime-flow.html",
     "quality": "gallery/hero/agent-runtime-flow.quality.json",
@@ -26,6 +27,7 @@
   "styles": [
     {
       "style": "minimal-light",
+      "icon_system": "illustrated-character-v1",
       "title": "Customer Support Triage",
       "basename": "minimal-light",
       "spec": "examples/showcase/styles/minimal-light-customer-support-triage.diagram.json",
@@ -45,6 +47,7 @@
     },
     {
       "style": "deep-tech",
+      "icon_system": "illustrated-character-v1",
       "title": "Realtime AI Ops Mesh",
       "basename": "deep-tech",
       "spec": "examples/showcase/styles/deep-tech-realtime-ai-ops-mesh.diagram.json",
@@ -64,6 +67,7 @@
     },
     {
       "style": "blueprint",
+      "icon_system": "illustrated-character-v1",
       "title": "MCP Server Architecture",
       "basename": "blueprint",
       "spec": "examples/showcase/styles/blueprint-mcp-server-architecture.diagram.json",
@@ -83,6 +87,7 @@
     },
     {
       "style": "flat-icon",
+      "icon_system": "illustrated-character-v1",
       "title": "Feature Priority Board",
       "basename": "flat-icon",
       "spec": "examples/showcase/styles/flat-icon-feature-priority-board.diagram.json",
@@ -102,6 +107,7 @@
     },
     {
       "style": "dark-terminal",
+      "icon_system": "illustrated-character-v1",
       "title": "Incident Response Runbook",
       "basename": "dark-terminal",
       "spec": "examples/showcase/styles/dark-terminal-incident-response-runbook.diagram.json",
@@ -121,6 +127,7 @@
     },
     {
       "style": "notion-clean",
+      "icon_system": "illustrated-character-v1",
       "title": "Product Discovery Workflow",
       "basename": "notion-clean",
       "spec": "examples/showcase/styles/notion-clean-product-discovery-workflow.diagram.json",
@@ -140,6 +147,7 @@
     },
     {
       "style": "glassmorphism",
+      "icon_system": "illustrated-character-v1",
       "title": "AI Growth Funnel",
       "basename": "glassmorphism",
       "spec": "examples/showcase/styles/glassmorphism-ai-growth-funnel.diagram.json",
@@ -159,6 +167,7 @@
     },
     {
       "style": "claude-warm",
+      "icon_system": "illustrated-character-v1",
       "title": "Research Reasoning Loop",
       "basename": "claude-warm",
       "spec": "examples/showcase/styles/claude-warm-research-reasoning-loop.diagram.json",
@@ -178,6 +187,7 @@
     },
     {
       "style": "openai-minimal",
+      "icon_system": "illustrated-character-v1",
       "title": "Evaluation Pipeline",
       "basename": "openai-minimal",
       "spec": "examples/showcase/styles/openai-minimal-evaluation-pipeline.diagram.json",
@@ -197,6 +207,7 @@
     },
     {
       "style": "dark-luxury",
+      "icon_system": "illustrated-character-v1",
       "title": "Executive Signal Network",
       "basename": "dark-luxury",
       "spec": "examples/showcase/styles/dark-luxury-executive-signal-network.diagram.json",
@@ -216,6 +227,7 @@
     },
     {
       "style": "aurora-orb",
+      "icon_system": "illustrated-character-v1",
       "title": "Creative Agent Studio",
       "basename": "aurora-orb",
       "spec": "examples/showcase/styles/aurora-orb-creative-agent-studio.diagram.json",
@@ -235,6 +247,7 @@
     },
     {
       "style": "sketch-board",
+      "icon_system": "illustrated-character-v1",
       "title": "Attention Teaching Flow",
       "basename": "sketch-board",
       "spec": "examples/showcase/styles/sketch-board-attention-teaching-flow.diagram.json",
@@ -258,6 +271,7 @@
       "preset": "pipeline",
       "title": "RAG Ingestion Pipeline",
       "style": "blueprint",
+      "icon_system": "illustrated-character-v1",
       "basename": "pipeline",
       "spec": "examples/showcase/layouts/pipeline-rag-ingestion-pipeline.diagram.json",
       "svg": "gallery/layouts/pipeline.svg",
@@ -278,6 +292,7 @@
       "preset": "loop",
       "title": "Agent Reflection Loop",
       "style": "claude-warm",
+      "icon_system": "illustrated-character-v1",
       "basename": "loop",
       "spec": "examples/showcase/layouts/loop-agent-reflection-loop.diagram.json",
       "svg": "gallery/layouts/loop.svg",
@@ -298,6 +313,7 @@
       "preset": "hub-spoke",
       "title": "Agent Tool Hub",
       "style": "deep-tech",
+      "icon_system": "illustrated-character-v1",
       "basename": "hub-spoke",
       "spec": "examples/showcase/layouts/hub-spoke-agent-tool-hub.diagram.json",
       "svg": "gallery/layouts/hub-spoke.svg",
@@ -318,6 +334,7 @@
       "preset": "layered",
       "title": "LLM App Architecture Layers",
       "style": "notion-clean",
+      "icon_system": "illustrated-character-v1",
       "basename": "layered",
       "spec": "examples/showcase/layouts/layered-llm-app-architecture-layers.diagram.json",
       "svg": "gallery/layouts/layered.svg",
@@ -338,6 +355,7 @@
       "preset": "swimlane",
       "title": "Human-in-the-loop Approval Flow",
       "style": "minimal-light",
+      "icon_system": "illustrated-character-v1",
       "basename": "swimlane",
       "spec": "examples/showcase/layouts/swimlane-human-in-the-loop-approval-flow.diagram.json",
       "svg": "gallery/layouts/swimlane.svg",
@@ -358,6 +376,7 @@
       "preset": "compare",
       "title": "RAG vs Agentic RAG",
       "style": "openai-minimal",
+      "icon_system": "illustrated-character-v1",
       "basename": "compare",
       "spec": "examples/showcase/layouts/compare-rag-vs-agentic-rag.diagram.json",
       "svg": "gallery/layouts/compare.svg",
@@ -378,6 +397,7 @@
       "preset": "matrix",
       "title": "AI Feature Priority Matrix",
       "style": "flat-icon",
+      "icon_system": "illustrated-character-v1",
       "basename": "matrix",
       "spec": "examples/showcase/layouts/matrix-ai-feature-priority-matrix.diagram.json",
       "svg": "gallery/layouts/matrix.svg",
@@ -398,6 +418,7 @@
       "preset": "timeline",
       "title": "AI Product Launch Roadmap",
       "style": "blueprint",
+      "icon_system": "illustrated-character-v1",
       "basename": "timeline",
       "spec": "examples/showcase/layouts/timeline-ai-product-launch-roadmap.diagram.json",
       "svg": "gallery/layouts/timeline.svg",
@@ -418,6 +439,7 @@
       "preset": "stack",
       "title": "AI Runtime Stack",
       "style": "dark-terminal",
+      "icon_system": "illustrated-character-v1",
       "basename": "stack",
       "spec": "examples/showcase/layouts/stack-ai-runtime-stack.diagram.json",
       "svg": "gallery/layouts/stack.svg",
@@ -438,6 +460,7 @@
       "preset": "funnel",
       "title": "Lead-to-Agent Automation Funnel",
       "style": "glassmorphism",
+      "icon_system": "illustrated-character-v1",
       "basename": "funnel",
       "spec": "examples/showcase/layouts/funnel-lead-to-agent-automation-funnel.diagram.json",
       "svg": "gallery/layouts/funnel.svg",
@@ -458,6 +481,7 @@
       "preset": "sequence",
       "title": "API Tool Calling Sequence",
       "style": "notion-clean",
+      "icon_system": "illustrated-character-v1",
       "basename": "sequence",
       "spec": "examples/showcase/layouts/sequence-api-tool-calling-sequence.diagram.json",
       "svg": "gallery/layouts/sequence.svg",
@@ -478,6 +502,7 @@
       "preset": "er",
       "title": "Agent Memory Data Model",
       "style": "openai-minimal",
+      "icon_system": "illustrated-character-v1",
       "basename": "er",
       "spec": "examples/showcase/layouts/er-agent-memory-data-model.diagram.json",
       "svg": "gallery/layouts/er.svg",
@@ -498,6 +523,7 @@
       "preset": "network",
       "title": "Distributed Agent Runtime Mesh",
       "style": "dark-luxury",
+      "icon_system": "illustrated-character-v1",
       "basename": "network",
       "spec": "examples/showcase/layouts/network-distributed-agent-runtime-mesh.diagram.json",
       "svg": "gallery/layouts/network.svg",
@@ -518,6 +544,7 @@
       "preset": "agent-memory",
       "title": "Personalized Agent Memory Flow",
       "style": "deep-tech",
+      "icon_system": "illustrated-character-v1",
       "basename": "agent-memory",
       "spec": "examples/showcase/layouts/agent-memory-personalized-agent-memory-flow.diagram.json",
       "svg": "gallery/layouts/agent-memory.svg",
@@ -535,42 +562,1734 @@
       }
     }
   ],
-  "runtime_motion": [
+  "runtime_motion_page": "gallery/runtime-motion.html",
+  "runtime_motion_catalog": "runtime/motion-catalog.json",
+  "runtime_motion_overview": {
+    "id": "runtime-motion-catalog",
+    "title": "Legacy v2 Runtime Motion Overview",
+    "style": "deep-tech",
+    "icon_system": "semantic-line-v1",
+    "basename": "runtime-motion-catalog",
+    "spec": "examples/runtime-motion-catalog.diagram.json",
+    "svg": "gallery/runtime-motion/overview.svg",
+    "html": "gallery/runtime-motion/overview.html",
+    "quality": "gallery/runtime-motion/overview.quality.json",
+    "best_for": [
+      "Motion QA",
+      "Runtime review",
+      "Baseline management"
+    ],
+    "summary": {
+      "errors": 0,
+      "warnings": 0,
+      "issues": 0
+    }
+  },
+  "runtime_motion_demos": [
+    {
+      "id": "runtime-edge-packet-flow",
+      "kind": "stage-effect",
+      "title": "Edge Packet Flow",
+      "icon": null,
+      "icon_system": null,
+      "spec": "examples/showcase/runtime-motion/runtime-edge-packet-flow.diagram.json",
+      "svg": "gallery/runtime-motion/items/runtime-edge-packet-flow.svg",
+      "html": "gallery/runtime-motion/items/runtime-edge-packet-flow.html",
+      "quality": "gallery/runtime-motion/items/runtime-edge-packet-flow.quality.json",
+      "phases": [
+        "edge track stays quiet",
+        "one packet enters source side",
+        "bright core travels along path",
+        "packet exits near target",
+        "0.7 s quiet pause",
+        "loop restarts"
+      ],
+      "parts": [],
+      "selectors": [
+        ".runtime-edge-flow",
+        ".runtime-edge-packet",
+        ".runtime-edge-packet-core"
+      ],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "runtime-title-sweep",
+      "kind": "stage-effect",
+      "title": "Title Sweep",
+      "icon": null,
+      "icon_system": null,
+      "spec": "examples/showcase/runtime-motion/runtime-title-sweep.diagram.json",
+      "svg": "gallery/runtime-motion/items/runtime-title-sweep.svg",
+      "html": "gallery/runtime-motion/items/runtime-title-sweep.html",
+      "quality": "gallery/runtime-motion/items/runtime-title-sweep.quality.json",
+      "phases": [
+        "highlight starts collapsed",
+        "sweep expands across title",
+        "authored title highlight settles"
+      ],
+      "parts": [],
+      "selectors": [
+        "#title-highlight"
+      ],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "brain-think-pulse-v1",
+      "kind": "icon-performance-character",
+      "title": "Brain Think Pulse",
+      "icon": "agent",
+      "icon_system": "illustrated-character-v1",
+      "spec": "examples/showcase/runtime-motion/brain-think-pulse-v1.diagram.json",
+      "svg": "gallery/runtime-motion/items/brain-think-pulse-v1.svg",
+      "html": "gallery/runtime-motion/items/brain-think-pulse-v1.html",
+      "quality": "gallery/runtime-motion/items/brain-think-pulse-v1.quality.json",
+      "phases": [
+        "brain prepares",
+        "signal draws",
+        "spark confirms",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "brain-left",
+        "brain-right",
+        "chip",
+        "signal",
+        "spark"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "operator-type-focus-v1",
+      "kind": "icon-performance-character",
+      "title": "Operator Type Focus",
+      "icon": "operator",
+      "icon_system": "illustrated-character-v1",
+      "spec": "examples/showcase/runtime-motion/operator-type-focus-v1.diagram.json",
+      "svg": "gallery/runtime-motion/items/operator-type-focus-v1.svg",
+      "html": "gallery/runtime-motion/items/operator-type-focus-v1.html",
+      "quality": "gallery/runtime-motion/items/operator-type-focus-v1.quality.json",
+      "phases": [
+        "glasses focus",
+        "hands type",
+        "cursor confirms",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "hair",
+        "face",
+        "glasses",
+        "hands",
+        "laptop",
+        "cursor"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "search-scout-find-v1",
+      "kind": "icon-performance-character",
+      "title": "Search Scout Find",
+      "icon": "search",
+      "icon_system": "illustrated-character-v1",
+      "spec": "examples/showcase/runtime-motion/search-scout-find-v1.diagram.json",
+      "svg": "gallery/runtime-motion/items/search-scout-find-v1.svg",
+      "html": "gallery/runtime-motion/items/search-scout-find-v1.html",
+      "quality": "gallery/runtime-motion/items/search-scout-find-v1.quality.json",
+      "phases": [
+        "lens prepares",
+        "scan crosses",
+        "marker and spark confirm",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "lens",
+        "scan",
+        "marker",
+        "spark"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "tool-kit-action-v1",
+      "kind": "icon-performance-character",
+      "title": "Tool Kit Action",
+      "icon": "tool",
+      "icon_system": "illustrated-character-v1",
+      "spec": "examples/showcase/runtime-motion/tool-kit-action-v1.diagram.json",
+      "svg": "gallery/runtime-motion/items/tool-kit-action-v1.svg",
+      "html": "gallery/runtime-motion/items/tool-kit-action-v1.html",
+      "quality": "gallery/runtime-motion/items/tool-kit-action-v1.quality.json",
+      "phases": [
+        "lid opens",
+        "wrench acts",
+        "spark confirms",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "bucket",
+        "lid",
+        "wrench",
+        "spark"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "api-signal-return-v1",
+      "kind": "icon-performance-character",
+      "title": "API Signal Return",
+      "icon": "api",
+      "icon_system": "illustrated-character-v1",
+      "spec": "examples/showcase/runtime-motion/api-signal-return-v1.diagram.json",
+      "svg": "gallery/runtime-motion/items/api-signal-return-v1.svg",
+      "html": "gallery/runtime-motion/items/api-signal-return-v1.html",
+      "quality": "gallery/runtime-motion/items/api-signal-return-v1.quality.json",
+      "phases": [
+        "interface prepares",
+        "request travels",
+        "receipt returns",
+        "status confirms",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "interface",
+        "request",
+        "receipt",
+        "status"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "memory-index-commit-v1",
+      "kind": "icon-performance-character",
+      "title": "Memory Index Commit",
+      "icon": "memory",
+      "icon_system": "illustrated-character-v1",
+      "spec": "examples/showcase/runtime-motion/memory-index-commit-v1.diagram.json",
+      "svg": "gallery/runtime-motion/items/memory-index-commit-v1.svg",
+      "html": "gallery/runtime-motion/items/memory-index-commit-v1.html",
+      "quality": "gallery/runtime-motion/items/memory-index-commit-v1.quality.json",
+      "phases": [
+        "cards prepare",
+        "bookmark commits",
+        "key line confirms",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "back-card",
+        "front-card",
+        "bookmark",
+        "key-line"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "output-envelope-reveal-v1",
+      "kind": "icon-performance-character",
+      "title": "Output Envelope Reveal",
+      "icon": "output",
+      "icon_system": "illustrated-character-v1",
+      "spec": "examples/showcase/runtime-motion/output-envelope-reveal-v1.diagram.json",
+      "svg": "gallery/runtime-motion/items/output-envelope-reveal-v1.svg",
+      "html": "gallery/runtime-motion/items/output-envelope-reveal-v1.html",
+      "quality": "gallery/runtime-motion/items/output-envelope-reveal-v1.quality.json",
+      "phases": [
+        "envelope prepares",
+        "card reveals",
+        "check and spark confirm",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "envelope",
+        "card",
+        "check",
+        "spark"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "file-note-write-v1",
+      "kind": "icon-performance-character",
+      "title": "File Note Write",
+      "icon": "file",
+      "icon_system": "illustrated-character-v1",
+      "spec": "examples/showcase/runtime-motion/file-note-write-v1.diagram.json",
+      "svg": "gallery/runtime-motion/items/file-note-write-v1.svg",
+      "html": "gallery/runtime-motion/items/file-note-write-v1.html",
+      "quality": "gallery/runtime-motion/items/file-note-write-v1.quality.json",
+      "phases": [
+        "page prepares",
+        "lines write",
+        "dot confirms",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "page",
+        "corner",
+        "line-1",
+        "line-2",
+        "line-3",
+        "dot"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "folder-file-store-v1",
+      "kind": "icon-performance-character",
+      "title": "Folder File Store",
+      "icon": "folder",
+      "icon_system": "illustrated-character-v1",
+      "spec": "examples/showcase/runtime-motion/folder-file-store-v1.diagram.json",
+      "svg": "gallery/runtime-motion/items/folder-file-store-v1.svg",
+      "html": "gallery/runtime-motion/items/folder-file-store-v1.html",
+      "quality": "gallery/runtime-motion/items/folder-file-store-v1.quality.json",
+      "phases": [
+        "folder prepares",
+        "sheet stores",
+        "seal confirms",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "folder",
+        "tab",
+        "sheet",
+        "seal"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "cloud-uplink-ready-v1",
+      "kind": "icon-performance-character",
+      "title": "Cloud Uplink Ready",
+      "icon": "cloud",
+      "icon_system": "illustrated-character-v1",
+      "spec": "examples/showcase/runtime-motion/cloud-uplink-ready-v1.diagram.json",
+      "svg": "gallery/runtime-motion/items/cloud-uplink-ready-v1.svg",
+      "html": "gallery/runtime-motion/items/cloud-uplink-ready-v1.html",
+      "quality": "gallery/runtime-motion/items/cloud-uplink-ready-v1.quality.json",
+      "phases": [
+        "cloud prepares",
+        "kite uplinks",
+        "data and ready light confirm",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "cloud",
+        "kite",
+        "data-dot",
+        "ready-light"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "shield-guard-confirm-v1",
+      "kind": "icon-performance-character",
+      "title": "Shield Guard Confirm",
+      "icon": "shield",
+      "icon_system": "illustrated-character-v1",
+      "spec": "examples/showcase/runtime-motion/shield-guard-confirm-v1.diagram.json",
+      "svg": "gallery/runtime-motion/items/shield-guard-confirm-v1.svg",
+      "html": "gallery/runtime-motion/items/shield-guard-confirm-v1.html",
+      "quality": "gallery/runtime-motion/items/shield-guard-confirm-v1.quality.json",
+      "phases": [
+        "shield prepares",
+        "scan passes",
+        "check confirms",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "shell",
+        "core",
+        "scan",
+        "check"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "token-intent-ready-v1",
+      "kind": "icon-performance-character",
+      "title": "Token Intent Ready",
+      "icon": "token",
+      "icon_system": "illustrated-character-v1",
+      "spec": "examples/showcase/runtime-motion/token-intent-ready-v1.diagram.json",
+      "svg": "gallery/runtime-motion/items/token-intent-ready-v1.svg",
+      "html": "gallery/runtime-motion/items/token-intent-ready-v1.html",
+      "quality": "gallery/runtime-motion/items/token-intent-ready-v1.quality.json",
+      "phases": [
+        "shell orients",
+        "core wakes",
+        "ticks confirm",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "shell",
+        "core",
+        "tick-left",
+        "tick-right",
+        "tick-top",
+        "tick-bottom"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "bucket-ingest-confirm-v1",
+      "kind": "icon-performance-character",
+      "title": "Bucket Ingest Confirm",
+      "icon": "database",
+      "icon_system": "illustrated-character-v1",
+      "spec": "examples/showcase/runtime-motion/bucket-ingest-confirm-v1.diagram.json",
+      "svg": "gallery/runtime-motion/items/bucket-ingest-confirm-v1.svg",
+      "html": "gallery/runtime-motion/items/bucket-ingest-confirm-v1.html",
+      "quality": "gallery/runtime-motion/items/bucket-ingest-confirm-v1.quality.json",
+      "phases": [
+        "hat prepares",
+        "bead ingests",
+        "liquid settles",
+        "check confirms",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "hat",
+        "bucket",
+        "liquid",
+        "bead",
+        "check"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
     {
       "id": "agent-think-act-v2",
+      "kind": "icon-performance",
+      "title": "Agent Think Act",
+      "icon": "agent",
+      "icon_system": "semantic-line-v1",
+      "spec": "examples/showcase/runtime-motion/agent-think-act-v2.diagram.json",
+      "svg": "gallery/runtime-motion/items/agent-think-act-v2.svg",
+      "html": "gallery/runtime-motion/items/agent-think-act-v2.html",
+      "quality": "gallery/runtime-motion/items/agent-think-act-v2.quality.json",
+      "phases": [
+        "brain outline draw",
+        "circuit nodes light",
+        "center decision pulse",
+        "decision token exits",
+        "quiet idle pause"
+      ],
+      "parts": [
+        "root",
+        "outlineLeft",
+        "outlineRight",
+        "centerLine",
+        "branchLeft",
+        "branchRight",
+        "branchLower",
+        "nodeTopLeft",
+        "nodeTopRight",
+        "nodeLeft",
+        "nodeRight",
+        "nodeCenter",
+        "decisionToken",
+        "pulse"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "search-discover-v2",
+      "kind": "icon-performance",
+      "title": "Search Discover",
+      "icon": "search",
+      "icon_system": "semantic-line-v1",
+      "spec": "examples/showcase/runtime-motion/search-discover-v2.diagram.json",
+      "svg": "gallery/runtime-motion/items/search-discover-v2.svg",
+      "html": "gallery/runtime-motion/items/search-discover-v2.html",
+      "quality": "gallery/runtime-motion/items/search-discover-v2.quality.json",
+      "phases": [
+        "lens tilts",
+        "scan crosses lens",
+        "results pop",
+        "target locks",
+        "quiet idle pause"
+      ],
+      "parts": [
+        "root",
+        "lens",
+        "handle",
+        "scan",
+        "result1",
+        "result2",
+        "target"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "api-request-response-v2",
+      "kind": "icon-performance",
+      "title": "API Request Response",
+      "icon": "api",
+      "icon_system": "semantic-line-v1",
+      "spec": "examples/showcase/runtime-motion/api-request-response-v2.diagram.json",
+      "svg": "gallery/runtime-motion/items/api-request-response-v2.svg",
+      "html": "gallery/runtime-motion/items/api-request-response-v2.html",
+      "quality": "gallery/runtime-motion/items/api-request-response-v2.quality.json",
+      "phases": [
+        "endpoints open",
+        "request token travels",
+        "target ring expands",
+        "response token returns",
+        "status appears"
+      ],
+      "parts": [
+        "root",
+        "leftEndpoint",
+        "rightEndpoint",
+        "requestToken",
+        "responseToken",
+        "targetRing",
+        "status"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "database-write-v2",
+      "kind": "icon-performance",
+      "title": "Database Write",
+      "icon": "database",
+      "icon_system": "semantic-line-v1",
+      "spec": "examples/showcase/runtime-motion/database-write-v2.diagram.json",
+      "svg": "gallery/runtime-motion/items/database-write-v2.svg",
+      "html": "gallery/runtime-motion/items/database-write-v2.html",
+      "quality": "gallery/runtime-motion/items/database-write-v2.quality.json",
+      "phases": [
+        "write token enters",
+        "lid and body compress",
+        "layers flash",
+        "commit flash",
+        "quiet idle pause"
+      ],
+      "parts": [
+        "root",
+        "lid",
+        "body",
+        "layer1",
+        "layer2",
+        "writeToken",
+        "flash"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "memory-commit-v2",
+      "kind": "icon-performance",
+      "title": "Memory Commit",
+      "icon": "memory",
+      "icon_system": "semantic-line-v1",
+      "spec": "examples/showcase/runtime-motion/memory-commit-v2.diagram.json",
+      "svg": "gallery/runtime-motion/items/memory-commit-v2.svg",
+      "html": "gallery/runtime-motion/items/memory-commit-v2.html",
+      "quality": "gallery/runtime-motion/items/memory-commit-v2.quality.json",
+      "phases": [
+        "memory cards settle",
+        "trace lines write",
+        "dot recalls",
+        "commit token lands",
+        "flash confirms"
+      ],
+      "parts": [
+        "root",
+        "backCard",
+        "frontCard",
+        "trace1",
+        "trace2",
+        "trace3",
+        "dot",
+        "commitToken",
+        "flash"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "tool-run-v2",
+      "kind": "icon-performance",
+      "title": "Tool Run",
+      "icon": "tool",
+      "icon_system": "semantic-line-v1",
+      "spec": "examples/showcase/runtime-motion/tool-run-v2.diagram.json",
+      "svg": "gallery/runtime-motion/items/tool-run-v2.svg",
+      "html": "gallery/runtime-motion/items/tool-run-v2.html",
+      "quality": "gallery/runtime-motion/items/tool-run-v2.quality.json",
+      "phases": [
+        "chip wakes",
+        "connector draws",
+        "glyph pulses",
+        "sparks fire",
+        "flash confirms"
+      ],
+      "parts": [
+        "root",
+        "chip",
+        "glyph",
+        "connector",
+        "spark1",
+        "spark2",
+        "flash"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "token-intent-v2",
+      "kind": "icon-performance",
+      "title": "Token Intent",
+      "icon": "token",
+      "icon_system": "semantic-line-v1",
+      "spec": "examples/showcase/runtime-motion/token-intent-v2.diagram.json",
+      "svg": "gallery/runtime-motion/items/token-intent-v2.svg",
+      "html": "gallery/runtime-motion/items/token-intent-v2.html",
+      "quality": "gallery/runtime-motion/items/token-intent-v2.quality.json",
+      "phases": [
+        "shell wakes",
+        "core pulses",
+        "ticks align",
+        "halo expands",
+        "quiet idle pause"
+      ],
+      "parts": [
+        "root",
+        "shell",
+        "core",
+        "tickLeft",
+        "tickRight",
+        "tickTop",
+        "tickBottom",
+        "halo"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "output-reveal-v2",
+      "kind": "icon-performance",
+      "title": "Output Reveal",
+      "icon": "output",
+      "icon_system": "semantic-line-v1",
+      "spec": "examples/showcase/runtime-motion/output-reveal-v2.diagram.json",
+      "svg": "gallery/runtime-motion/items/output-reveal-v2.svg",
+      "html": "gallery/runtime-motion/items/output-reveal-v2.html",
+      "quality": "gallery/runtime-motion/items/output-reveal-v2.quality.json",
+      "phases": [
+        "card appears",
+        "lines reveal",
+        "check draws",
+        "flash confirms",
+        "quiet idle pause"
+      ],
+      "parts": [
+        "root",
+        "card",
+        "line1",
+        "line2",
+        "check",
+        "flash"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "file-lines-v2",
+      "kind": "icon-performance",
+      "title": "File Lines",
+      "icon": "file",
+      "icon_system": "semantic-line-v1",
+      "spec": "examples/showcase/runtime-motion/file-lines-v2.diagram.json",
+      "svg": "gallery/runtime-motion/items/file-lines-v2.svg",
+      "html": "gallery/runtime-motion/items/file-lines-v2.html",
+      "quality": "gallery/runtime-motion/items/file-lines-v2.quality.json",
+      "phases": [
+        "sheet appears",
+        "fold settles",
+        "lines draw",
+        "flash confirms",
+        "quiet idle pause"
+      ],
+      "parts": [
+        "root",
+        "sheet",
+        "fold",
+        "line1",
+        "line2",
+        "line3",
+        "flash"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "folder-open-v2",
+      "kind": "icon-performance",
+      "title": "Folder Open",
+      "icon": "folder",
+      "icon_system": "semantic-line-v1",
+      "spec": "examples/showcase/runtime-motion/folder-open-v2.diagram.json",
+      "svg": "gallery/runtime-motion/items/folder-open-v2.svg",
+      "html": "gallery/runtime-motion/items/folder-open-v2.html",
+      "quality": "gallery/runtime-motion/items/folder-open-v2.quality.json",
+      "phases": [
+        "body presses",
+        "tab opens",
+        "open token enters",
+        "file line appears",
+        "flash confirms"
+      ],
+      "parts": [
+        "root",
+        "body",
+        "tab",
+        "fileLine",
+        "openToken",
+        "flash"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "cloud-upload-v2",
+      "kind": "icon-performance",
+      "title": "Cloud Upload",
+      "icon": "cloud",
+      "icon_system": "semantic-line-v1",
+      "spec": "examples/showcase/runtime-motion/cloud-upload-v2.diagram.json",
+      "svg": "gallery/runtime-motion/items/cloud-upload-v2.svg",
+      "html": "gallery/runtime-motion/items/cloud-upload-v2.html",
+      "quality": "gallery/runtime-motion/items/cloud-upload-v2.quality.json",
+      "phases": [
+        "cloud lifts",
+        "upload arrow rises",
+        "sync dots appear",
+        "status ring expands",
+        "quiet idle pause"
+      ],
+      "parts": [
+        "root",
+        "shell",
+        "uploadArrow",
+        "dot1",
+        "dot2",
+        "dot3",
+        "statusRing"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "shield-check-v2",
+      "kind": "icon-performance",
+      "title": "Shield Check",
+      "icon": "shield",
+      "icon_system": "semantic-line-v1",
+      "spec": "examples/showcase/runtime-motion/shield-check-v2.diagram.json",
+      "svg": "gallery/runtime-motion/items/shield-check-v2.svg",
+      "html": "gallery/runtime-motion/items/shield-check-v2.html",
+      "quality": "gallery/runtime-motion/items/shield-check-v2.quality.json",
+      "phases": [
+        "shield wakes",
+        "scan passes",
+        "check draws",
+        "pulse expands",
+        "quiet idle pause"
+      ],
+      "parts": [
+        "root",
+        "shell",
+        "check",
+        "pulse",
+        "scan"
+      ],
+      "selectors": [],
+      "status": "frozen",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    }
+  ],
+  "runtime_motion": [
+    {
+      "id": "brain-think-pulse-v1",
+      "icon": "agent",
+      "icon_system": "illustrated-character-v1",
+      "title": "Brain Think Pulse",
+      "best_for": [
+        "Think",
+        "Decide",
+        "Confirm"
+      ],
+      "phases": [
+        "brain prepares",
+        "signal draws",
+        "spark confirms",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "brain-left",
+        "brain-right",
+        "chip",
+        "signal",
+        "spark"
+      ],
+      "rest_at": 1.5,
+      "repeat_delay": 0.8,
+      "idle_breathe": {
+        "duration": 0.44,
+        "scale": 1.012
+      },
+      "status": "frozen"
+    },
+    {
+      "id": "operator-type-focus-v1",
+      "icon": "operator",
+      "icon_system": "illustrated-character-v1",
+      "title": "Operator Type Focus",
+      "best_for": [
+        "Focus",
+        "Type",
+        "Resolve"
+      ],
+      "phases": [
+        "glasses focus",
+        "hands type",
+        "cursor confirms",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "hair",
+        "face",
+        "glasses",
+        "hands",
+        "laptop",
+        "cursor"
+      ],
+      "rest_at": 1.35,
+      "repeat_delay": 0.8,
+      "idle_breathe": {
+        "duration": 0.44,
+        "scale": 1.012
+      },
+      "status": "frozen"
+    },
+    {
+      "id": "search-scout-find-v1",
+      "icon": "search",
+      "icon_system": "illustrated-character-v1",
+      "title": "Search Scout Find",
+      "best_for": [
+        "Scout",
+        "Scan",
+        "Find"
+      ],
+      "phases": [
+        "lens prepares",
+        "scan crosses",
+        "marker and spark confirm",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "lens",
+        "scan",
+        "marker",
+        "spark"
+      ],
+      "rest_at": 1.3,
+      "repeat_delay": 0.8,
+      "idle_breathe": {
+        "duration": 0.44,
+        "scale": 1.012
+      },
+      "status": "frozen"
+    },
+    {
+      "id": "tool-kit-action-v1",
+      "icon": "tool",
+      "icon_system": "illustrated-character-v1",
+      "title": "Tool Kit Action",
+      "best_for": [
+        "Ready",
+        "Act",
+        "Confirm"
+      ],
+      "phases": [
+        "lid opens",
+        "wrench acts",
+        "spark confirms",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "bucket",
+        "lid",
+        "wrench",
+        "spark"
+      ],
+      "rest_at": 1.4,
+      "repeat_delay": 0.8,
+      "idle_breathe": {
+        "duration": 0.44,
+        "scale": 1.012
+      },
+      "status": "frozen"
+    },
+    {
+      "id": "api-signal-return-v1",
+      "icon": "api",
+      "icon_system": "illustrated-character-v1",
+      "title": "API Signal Return",
+      "best_for": [
+        "Request",
+        "Return",
+        "Settle"
+      ],
+      "phases": [
+        "interface prepares",
+        "request travels",
+        "receipt returns",
+        "status confirms",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "interface",
+        "request",
+        "receipt",
+        "status"
+      ],
+      "rest_at": 1.35,
+      "repeat_delay": 0.8,
+      "idle_breathe": {
+        "duration": 0.44,
+        "scale": 1.012
+      },
+      "status": "frozen"
+    },
+    {
+      "id": "memory-index-commit-v1",
+      "icon": "memory",
+      "icon_system": "illustrated-character-v1",
+      "title": "Memory Index Commit",
+      "best_for": [
+        "Index",
+        "Commit",
+        "Recall"
+      ],
+      "phases": [
+        "cards prepare",
+        "bookmark commits",
+        "key line confirms",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "back-card",
+        "front-card",
+        "bookmark",
+        "key-line"
+      ],
+      "rest_at": 1.45,
+      "repeat_delay": 0.8,
+      "idle_breathe": {
+        "duration": 0.44,
+        "scale": 1.012
+      },
+      "status": "frozen"
+    },
+    {
+      "id": "output-envelope-reveal-v1",
+      "icon": "output",
+      "icon_system": "illustrated-character-v1",
+      "title": "Output Envelope Reveal",
+      "best_for": [
+        "Reveal",
+        "Deliver",
+        "Confirm"
+      ],
+      "phases": [
+        "envelope prepares",
+        "card reveals",
+        "check and spark confirm",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "envelope",
+        "card",
+        "check",
+        "spark"
+      ],
+      "rest_at": 1.4,
+      "repeat_delay": 0.8,
+      "idle_breathe": {
+        "duration": 0.44,
+        "scale": 1.012
+      },
+      "status": "frozen"
+    },
+    {
+      "id": "file-note-write-v1",
+      "icon": "file",
+      "icon_system": "illustrated-character-v1",
+      "title": "File Note Write",
+      "best_for": [
+        "Note",
+        "Write",
+        "Settle"
+      ],
+      "phases": [
+        "page prepares",
+        "lines write",
+        "dot confirms",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "page",
+        "corner",
+        "line-1",
+        "line-2",
+        "line-3",
+        "dot"
+      ],
+      "rest_at": 1.35,
+      "repeat_delay": 0.8,
+      "idle_breathe": {
+        "duration": 0.44,
+        "scale": 1.012
+      },
+      "status": "frozen"
+    },
+    {
+      "id": "folder-file-store-v1",
+      "icon": "folder",
+      "icon_system": "illustrated-character-v1",
+      "title": "Folder File Store",
+      "best_for": [
+        "File",
+        "Store",
+        "Ready"
+      ],
+      "phases": [
+        "folder prepares",
+        "sheet stores",
+        "seal confirms",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "folder",
+        "tab",
+        "sheet",
+        "seal"
+      ],
+      "rest_at": 1.35,
+      "repeat_delay": 0.8,
+      "idle_breathe": {
+        "duration": 0.44,
+        "scale": 1.012
+      },
+      "status": "frozen"
+    },
+    {
+      "id": "cloud-uplink-ready-v1",
+      "icon": "cloud",
+      "icon_system": "illustrated-character-v1",
+      "title": "Cloud Uplink Ready",
+      "best_for": [
+        "Uplink",
+        "Send",
+        "Ready"
+      ],
+      "phases": [
+        "cloud prepares",
+        "kite uplinks",
+        "data and ready light confirm",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "cloud",
+        "kite",
+        "data-dot",
+        "ready-light"
+      ],
+      "rest_at": 1.4,
+      "repeat_delay": 0.8,
+      "idle_breathe": {
+        "duration": 0.44,
+        "scale": 1.012
+      },
+      "status": "frozen"
+    },
+    {
+      "id": "shield-guard-confirm-v1",
+      "icon": "shield",
+      "icon_system": "illustrated-character-v1",
+      "title": "Shield Guard Confirm",
+      "best_for": [
+        "Guard",
+        "Scan",
+        "Confirm"
+      ],
+      "phases": [
+        "shield prepares",
+        "scan passes",
+        "check confirms",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "shell",
+        "core",
+        "scan",
+        "check"
+      ],
+      "rest_at": 1.35,
+      "repeat_delay": 0.8,
+      "idle_breathe": {
+        "duration": 0.44,
+        "scale": 1.012
+      },
+      "status": "frozen"
+    },
+    {
+      "id": "token-intent-ready-v1",
+      "icon": "token",
+      "icon_system": "illustrated-character-v1",
+      "title": "Token Intent Ready",
+      "best_for": [
+        "Intent",
+        "Orient",
+        "Ready"
+      ],
+      "phases": [
+        "shell orients",
+        "core wakes",
+        "ticks confirm",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "shell",
+        "core",
+        "tick-left",
+        "tick-right",
+        "tick-top",
+        "tick-bottom"
+      ],
+      "rest_at": 1.35,
+      "repeat_delay": 0.8,
+      "idle_breathe": {
+        "duration": 0.44,
+        "scale": 1.012
+      },
+      "status": "frozen"
+    },
+    {
+      "id": "bucket-ingest-confirm-v1",
+      "icon": "database",
+      "icon_system": "illustrated-character-v1",
+      "title": "Bucket Ingest Confirm",
+      "best_for": [
+        "Ingest",
+        "Settle",
+        "Confirm"
+      ],
+      "phases": [
+        "hat prepares",
+        "bead ingests",
+        "liquid settles",
+        "check confirms",
+        "canonical rest",
+        "idle breath"
+      ],
+      "parts": [
+        "root",
+        "hat",
+        "bucket",
+        "liquid",
+        "bead",
+        "check"
+      ],
+      "rest_at": 1.55,
+      "repeat_delay": 0.8,
+      "idle_breathe": {
+        "duration": 0.44,
+        "scale": 1.012
+      },
+      "status": "frozen"
+    },
+    {
+      "id": "agent-think-act-v2",
+      "icon": "agent",
+      "icon_system": "semantic-line-v1",
       "title": "Agent Think Act",
       "best_for": [
         "Think",
         "Decide",
         "Act"
-      ]
+      ],
+      "phases": [
+        "brain outline draw",
+        "circuit nodes light",
+        "center decision pulse",
+        "decision token exits",
+        "quiet idle pause"
+      ],
+      "parts": [
+        "root",
+        "outlineLeft",
+        "outlineRight",
+        "centerLine",
+        "branchLeft",
+        "branchRight",
+        "branchLower",
+        "nodeTopLeft",
+        "nodeTopRight",
+        "nodeLeft",
+        "nodeRight",
+        "nodeCenter",
+        "decisionToken",
+        "pulse"
+      ],
+      "status": "frozen"
     },
     {
       "id": "search-discover-v2",
+      "icon": "search",
+      "icon_system": "semantic-line-v1",
       "title": "Search Discover",
       "best_for": [
         "Scan",
         "Find",
         "Lock target"
-      ]
+      ],
+      "phases": [
+        "lens tilts",
+        "scan crosses lens",
+        "results pop",
+        "target locks",
+        "quiet idle pause"
+      ],
+      "parts": [
+        "root",
+        "lens",
+        "handle",
+        "scan",
+        "result1",
+        "result2",
+        "target"
+      ],
+      "status": "frozen"
     },
     {
       "id": "api-request-response-v2",
+      "icon": "api",
+      "icon_system": "semantic-line-v1",
       "title": "API Request Response",
       "best_for": [
         "Request",
         "Response",
         "Status"
-      ]
+      ],
+      "phases": [
+        "endpoints open",
+        "request token travels",
+        "target ring expands",
+        "response token returns",
+        "status appears"
+      ],
+      "parts": [
+        "root",
+        "leftEndpoint",
+        "rightEndpoint",
+        "requestToken",
+        "responseToken",
+        "targetRing",
+        "status"
+      ],
+      "status": "frozen"
     },
     {
       "id": "database-write-v2",
+      "icon": "database",
+      "icon_system": "semantic-line-v1",
       "title": "Database Write",
       "best_for": [
         "Write",
         "Commit",
         "Confirm"
-      ]
+      ],
+      "phases": [
+        "write token enters",
+        "lid and body compress",
+        "layers flash",
+        "commit flash",
+        "quiet idle pause"
+      ],
+      "parts": [
+        "root",
+        "lid",
+        "body",
+        "layer1",
+        "layer2",
+        "writeToken",
+        "flash"
+      ],
+      "status": "frozen"
+    },
+    {
+      "id": "memory-commit-v2",
+      "icon": "memory",
+      "icon_system": "semantic-line-v1",
+      "title": "Memory Commit",
+      "best_for": [
+        "Context",
+        "Recall",
+        "Commit"
+      ],
+      "phases": [
+        "memory cards settle",
+        "trace lines write",
+        "dot recalls",
+        "commit token lands",
+        "flash confirms"
+      ],
+      "parts": [
+        "root",
+        "backCard",
+        "frontCard",
+        "trace1",
+        "trace2",
+        "trace3",
+        "dot",
+        "commitToken",
+        "flash"
+      ],
+      "status": "frozen"
+    },
+    {
+      "id": "tool-run-v2",
+      "icon": "tool",
+      "icon_system": "semantic-line-v1",
+      "title": "Tool Run",
+      "best_for": [
+        "Invoke",
+        "Execute",
+        "Resolve"
+      ],
+      "phases": [
+        "chip wakes",
+        "connector draws",
+        "glyph pulses",
+        "sparks fire",
+        "flash confirms"
+      ],
+      "parts": [
+        "root",
+        "chip",
+        "glyph",
+        "connector",
+        "spark1",
+        "spark2",
+        "flash"
+      ],
+      "status": "frozen"
+    },
+    {
+      "id": "token-intent-v2",
+      "icon": "token",
+      "icon_system": "semantic-line-v1",
+      "title": "Token Intent",
+      "best_for": [
+        "Intent",
+        "Signal",
+        "Classify"
+      ],
+      "phases": [
+        "shell wakes",
+        "core pulses",
+        "ticks align",
+        "halo expands",
+        "quiet idle pause"
+      ],
+      "parts": [
+        "root",
+        "shell",
+        "core",
+        "tickLeft",
+        "tickRight",
+        "tickTop",
+        "tickBottom",
+        "halo"
+      ],
+      "status": "frozen"
+    },
+    {
+      "id": "output-reveal-v2",
+      "icon": "output",
+      "icon_system": "semantic-line-v1",
+      "title": "Output Reveal",
+      "best_for": [
+        "Result",
+        "Confirm",
+        "Complete"
+      ],
+      "phases": [
+        "card appears",
+        "lines reveal",
+        "check draws",
+        "flash confirms",
+        "quiet idle pause"
+      ],
+      "parts": [
+        "root",
+        "card",
+        "line1",
+        "line2",
+        "check",
+        "flash"
+      ],
+      "status": "frozen"
+    },
+    {
+      "id": "file-lines-v2",
+      "icon": "file",
+      "icon_system": "semantic-line-v1",
+      "title": "File Lines",
+      "best_for": [
+        "Document",
+        "Parse",
+        "Extract"
+      ],
+      "phases": [
+        "sheet appears",
+        "fold settles",
+        "lines draw",
+        "flash confirms",
+        "quiet idle pause"
+      ],
+      "parts": [
+        "root",
+        "sheet",
+        "fold",
+        "line1",
+        "line2",
+        "line3",
+        "flash"
+      ],
+      "status": "frozen"
+    },
+    {
+      "id": "folder-open-v2",
+      "icon": "folder",
+      "icon_system": "semantic-line-v1",
+      "title": "Folder Open",
+      "best_for": [
+        "Collection",
+        "Open",
+        "Load"
+      ],
+      "phases": [
+        "body presses",
+        "tab opens",
+        "open token enters",
+        "file line appears",
+        "flash confirms"
+      ],
+      "parts": [
+        "root",
+        "body",
+        "tab",
+        "fileLine",
+        "openToken",
+        "flash"
+      ],
+      "status": "frozen"
+    },
+    {
+      "id": "cloud-upload-v2",
+      "icon": "cloud",
+      "icon_system": "semantic-line-v1",
+      "title": "Cloud Upload",
+      "best_for": [
+        "Upload",
+        "Sync",
+        "Deploy"
+      ],
+      "phases": [
+        "cloud lifts",
+        "upload arrow rises",
+        "sync dots appear",
+        "status ring expands",
+        "quiet idle pause"
+      ],
+      "parts": [
+        "root",
+        "shell",
+        "uploadArrow",
+        "dot1",
+        "dot2",
+        "dot3",
+        "statusRing"
+      ],
+      "status": "frozen"
+    },
+    {
+      "id": "shield-check-v2",
+      "icon": "shield",
+      "icon_system": "semantic-line-v1",
+      "title": "Shield Check",
+      "best_for": [
+        "Validate",
+        "Guard",
+        "Approve"
+      ],
+      "phases": [
+        "shield wakes",
+        "scan passes",
+        "check draws",
+        "pulse expands",
+        "quiet idle pause"
+      ],
+      "parts": [
+        "root",
+        "shell",
+        "check",
+        "pulse",
+        "scan"
+      ],
+      "status": "frozen"
     }
-  ]
+  ],
+  "character_theme_comparison": {
+    "page": "gallery/character-themes.html",
+    "themes": [
+      {
+        "style": "illustrated-character",
+        "label": "Default Character",
+        "spec": "examples/illustrated-character-v1-flow.diagram.json",
+        "svg": "gallery/character-themes/illustrated-character.svg",
+        "html": "gallery/character-themes/illustrated-character.html",
+        "webp": "outputs/illustrated-character-theme-comparison/illustrated-character.webp",
+        "quality": "gallery/character-themes/illustrated-character.quality.json",
+        "icon_system": "illustrated-character-v1",
+        "motion_mode": "ambient / expressive"
+      },
+      {
+        "style": "deep-tech",
+        "label": "Deep Tech",
+        "spec": "examples/illustrated-character-v1-flow.diagram.json",
+        "svg": "gallery/character-themes/deep-tech.svg",
+        "html": "gallery/character-themes/deep-tech.html",
+        "webp": "outputs/illustrated-character-theme-comparison/deep-tech.webp",
+        "quality": "gallery/character-themes/deep-tech.quality.json",
+        "icon_system": "illustrated-character-v1",
+        "motion_mode": "ambient / expressive"
+      },
+      {
+        "style": "teaching-sketch-character",
+        "label": "Teaching Sketch Character",
+        "spec": "examples/illustrated-character-v1-flow.diagram.json",
+        "svg": "gallery/character-themes/teaching-sketch-character.svg",
+        "html": "gallery/character-themes/teaching-sketch-character.html",
+        "webp": "outputs/illustrated-character-theme-comparison/teaching-sketch-character.webp",
+        "quality": "gallery/character-themes/teaching-sketch-character.quality.json",
+        "icon_system": "illustrated-character-v1",
+        "motion_mode": "ambient / expressive"
+      }
+    ]
+  }
 }

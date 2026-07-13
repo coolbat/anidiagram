@@ -1,28 +1,51 @@
 {
-  "version": "0.1",
+  "version": "0.3",
   "canvas": {"width": 1200, "height": 720},
   "style": "blueprint",
   "title": {
     "text": "Agent Memory System",
     "subtitle": "request, planning, tools, memory, and response"
   },
+  "motion": {
+    "profile": "teaching",
+    "sequence": "step-stagger",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 1.0,
+    "edge": {"preset": "signal-arrow", "particle_count": 1, "trail_count": 0},
+    "node": {"preset": "icon-performance"},
+    "group": {"preset": "soft-reveal"},
+    "title": {"preset": "highlight-sweep"},
+    "reduced_motion": "subtle"
+  },
+  "motion_policy": {
+    "profile": "focused",
+    "motion_area": "small",
+    "max_active_flow_edges": 4,
+    "max_particle_edges": 4,
+    "particle_count_per_edge": 1,
+    "flow_trail_count": 0,
+    "max_active_pulse_nodes": 3,
+    "pulse_mode": "rotate",
+    "max_scanning_groups": 0
+  },
   "groups": [
     {"id": "runtime", "label": "Runtime", "bounds": [285, 150, 365, 390], "role": "process"},
     {"id": "knowledge", "label": "Knowledge", "bounds": [700, 150, 310, 390], "role": "memory"}
   ],
   "nodes": [
-    {"id": "user", "label": "User", "caption": "asks a task", "position": [80, 310], "size": [150, 82], "role": "actor"},
-    {"id": "agent", "label": "Planner Agent", "caption": "routes work", "position": [360, 230], "size": [190, 92], "role": "agent"},
-    {"id": "tools", "label": "Tool Layer", "caption": "search and APIs", "position": [360, 400], "size": [190, 92], "role": "tool"},
-    {"id": "memory", "label": "Memory", "caption": "facts and traces", "position": [760, 230], "size": [180, 92], "role": "memory"},
-    {"id": "store", "label": "Vector Store", "caption": "retrieval index", "position": [760, 400], "size": [180, 92], "role": "source"},
-    {"id": "response", "label": "Response", "caption": "grounded answer", "position": [1030, 310], "size": [145, 82], "role": "output"}
+    {"id": "user", "label": "User", "caption": "asks a task", "position": [80, 310], "size": [150, 82], "role": "actor", "icon": "operator"},
+    {"id": "agent", "label": "Planner Agent", "caption": "routes work", "position": [360, 230], "size": [190, 92], "role": "agent", "icon": "agent"},
+    {"id": "tools", "label": "Tool Layer", "caption": "search and APIs", "position": [360, 400], "size": [190, 92], "role": "tool", "icon": "tool"},
+    {"id": "memory", "label": "Memory", "caption": "facts and traces", "position": [760, 230], "size": [180, 92], "role": "memory", "icon": "memory"},
+    {"id": "store", "label": "Vector Store", "caption": "retrieval index", "position": [760, 400], "size": [180, 92], "role": "source", "icon": "database"},
+    {"id": "response", "label": "Response", "caption": "grounded answer", "position": [1030, 310], "size": [145, 82], "role": "output", "icon": "output"}
   ],
   "edges": [
     {"from": "user", "to": "agent", "label": "request", "role": "actor"},
-    {"from": "agent", "to": "tools", "label": "invoke", "role": "tool"},
+    {"from": "agent", "to": "tools", "label": "invoke", "role": "tool", "animated": false},
     {"from": "agent", "to": "memory", "label": "read", "role": "memory"},
-    {"from": "tools", "to": "store", "label": "retrieve", "role": "source"},
+    {"from": "tools", "to": "store", "label": "retrieve", "role": "source", "animated": false},
     {"from": "memory", "to": "response", "label": "context", "role": "memory"},
     {"from": "store", "to": "response", "label": "evidence", "role": "source"}
   ]

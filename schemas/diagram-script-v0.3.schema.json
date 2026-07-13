@@ -31,7 +31,7 @@
     "$defs": {
     "role": {"enum": ["actor", "source", "process", "agent", "memory", "tool", "output", "risk", "neutral"]},
     "route": {"enum": ["curved", "straight", "hv", "vh", "orthogonal", "points"]},
-    "icon": {"enum": ["database", "file", "folder", "api", "cloud", "search", "shield", "agent", "token", "memory", "tool", "output"]},
+    "icon": {"enum": ["database", "file", "folder", "api", "cloud", "search", "shield", "agent", "operator", "token", "memory", "tool", "output"]},
     "node_shape": {"enum": ["rect", "decision"]},
     "point": {
       "type": "array",

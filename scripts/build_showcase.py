@@ -19,9 +19,10 @@ for path in (SRC, SCRIPTS):
         sys.path.insert(0, str(path))
 
 from anidiagram.exporters import write_html, write_quality, write_svg
+from anidiagram.icon_system import resolve_icon_system
 from anidiagram.quality import quality_report
 from anidiagram.schema import compile_scene
-from anidiagram.styles import load_style
+from anidiagram.styles import deep_merge, load_style
 from build_style_showcase import _catalog_styles, _chain, _edge, _flow_case, _group, _motion, _node, style_showcase_specs
 
 
@@ -59,6 +60,14 @@ LAYOUT_CASES = (
     ("agent-memory", "Personalized Agent Memory Flow", "deep-tech", ["Agent memory", "Retrieval", "Grounded output"]),
 )
 
+MOTION_CATALOG_PATH = ROOT / "runtime" / "motion-catalog.json"
+RUNTIME_MOTION_SPEC_PATH = ROOT / "examples" / "runtime-motion-catalog.diagram.json"
+CHARACTER_THEME_CASES = (
+    ("illustrated-character", "Default Character"),
+    ("deep-tech", "Deep Tech"),
+    ("teaching-sketch-character", "Teaching Sketch Character"),
+)
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Generate AniDiagram hero, style, and layout showcases.")
@@ -78,47 +87,44 @@ def build_showcase(spec_root: Path, outdir: Path, quality: bool = True) -> Dict[
     hero_entry = _build_hero(spec_root / "hero", outdir / "hero", quality)
     style_entries = _build_styles(spec_root / "styles", outdir / "styles", quality)
     layout_entries = _build_layouts(spec_root / "layouts", outdir / "layouts", quality)
-    runtime_entries = [
-        {
-            "id": "agent-think-act-v2",
-            "title": "Agent Think Act",
-            "best_for": ["Think", "Decide", "Act"],
-        },
-        {
-            "id": "search-discover-v2",
-            "title": "Search Discover",
-            "best_for": ["Scan", "Find", "Lock target"],
-        },
-        {
-            "id": "api-request-response-v2",
-            "title": "API Request Response",
-            "best_for": ["Request", "Response", "Status"],
-        },
-        {
-            "id": "database-write-v2",
-            "title": "Database Write",
-            "best_for": ["Write", "Commit", "Confirm"],
-        },
-    ]
+    runtime_catalog = load_runtime_motion_catalog()
+    runtime_entries = [*runtime_catalog.get("character_performances", []), *runtime_catalog["performances"]]
+    runtime_bundle = _build_runtime_motion(spec_root / "runtime-motion", outdir / "runtime-motion", runtime_catalog, quality)
+    runtime_overview = runtime_bundle["overview"]
+    runtime_demos = runtime_bundle["demos"]
+    character_theme_comparison = _build_character_theme_comparison(outdir, quality)
     manifest = {
         "hero": hero_entry,
         "styles": style_entries,
         "layouts": layout_entries,
+        "runtime_motion_page": _rel(outdir / "runtime-motion.html"),
+        "runtime_motion_catalog": _rel(MOTION_CATALOG_PATH),
+        "runtime_motion_overview": runtime_overview,
+        "runtime_motion_demos": runtime_demos,
         "runtime_motion": runtime_entries,
+        "character_theme_comparison": character_theme_comparison,
     }
     (outdir / "showcase_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    _write_gallery_index(outdir, hero_entry, style_entries, layout_entries, runtime_entries)
+    _write_runtime_motion_index(outdir, runtime_catalog, runtime_entries, runtime_overview, runtime_demos)
+    _write_gallery_index(outdir, hero_entry, style_entries, layout_entries, runtime_entries, runtime_overview)
     return {
         "ok": True,
         "hero": hero_entry["id"],
         "styles": len(style_entries),
         "layouts": len(layout_entries),
+        "runtime_motion": len(runtime_entries),
+        "character_themes": len(character_theme_comparison["themes"]),
+        "runtime_motion_page": str((outdir / "runtime-motion.html").resolve()),
         "manifest": str((outdir / "showcase_manifest.json").resolve()),
     }
 
 
+def load_runtime_motion_catalog(path: Path = MOTION_CATALOG_PATH) -> Dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def layout_showcase_specs() -> Dict[str, Spec]:
-    return {
+    specs = {
         "pipeline": _flow_case(
             "blueprint",
             "RAG Ingestion Pipeline",
@@ -409,9 +415,32 @@ def layout_showcase_specs() -> Dict[str, Spec]:
                 _group("runtime", "Agent Runtime", (55, 155, 630, 410), "agent"),
                 _group("state", "Memory + Output", (710, 205, 430, 215), "memory"),
             ],
-            _motion("teaching", "signal-arrow", "icon-performance", "border-scan", "highlight-sweep", intensity=1.1),
+            _motion("teaching", "signal-arrow", "icon-performance", "soft-reveal", "highlight-sweep", intensity=1.1),
         ),
     }
+    focused_policy = {
+        "profile": "focused",
+        "motion_area": "small",
+        "max_active_flow_edges": 4,
+        "max_particle_edges": 4,
+        "particle_count_per_edge": 1,
+        "flow_trail_count": 0,
+        "max_active_pulse_nodes": 3,
+        "pulse_mode": "rotate",
+        "max_scanning_groups": 0,
+    }
+    for preset in ("pipeline", "sequence", "agent-memory"):
+        specs[preset]["motion_policy"] = dict(focused_policy)
+    intentionally_static_edges = {
+        "pipeline": {("retrieve", "answer")},
+        "sequence": {("memory", "output")},
+        "agent-memory": {("agent", "tool"), ("tool", "memory")},
+    }
+    for preset, edge_pairs in intentionally_static_edges.items():
+        for edge in specs[preset]["edges"]:
+            if (edge["from"], edge["to"]) in edge_pairs:
+                edge["animated"] = False
+    return specs
 
 
 def _build_hero(spec_dir: Path, outdir: Path, quality: bool) -> Dict[str, Any]:
@@ -436,7 +465,7 @@ def _build_hero(spec_dir: Path, outdir: Path, quality: bool) -> Dict[str, Any]:
     write_html(scene, style, html_path)
     summary = quality_report(scene)["summary"]
     if quality:
-        write_quality(scene, quality_path)
+        write_quality(scene, style, quality_path)
     _write_section_index(outdir, "Hero Demo", [("agent-runtime-flow", spec["title"]["text"], spec["title"]["subtitle"], svg_path.name, html_path.name)])
     return {
         "id": "agent-runtime-flow",
@@ -444,6 +473,7 @@ def _build_hero(spec_dir: Path, outdir: Path, quality: bool) -> Dict[str, Any]:
         "basename": "agent-runtime-flow",
         "spec": _rel(spec_path),
         "style": "deep-tech",
+        "icon_system": resolve_icon_system(style),
         "svg": _rel(svg_path),
         "html": _rel(html_path),
         "quality": _rel(quality_path),
@@ -478,9 +508,10 @@ def _build_styles(spec_dir: Path, outdir: Path, quality: bool) -> List[Dict[str,
         write_html(scene, style, html_path)
         summary = quality_report(scene)["summary"]
         if quality:
-            write_quality(scene, quality_path)
+            write_quality(scene, style, quality_path)
         entry = {
             "style": style_name,
+            "icon_system": resolve_icon_system(style),
             "title": spec["title"]["text"],
             "basename": style_name,
             "spec": _rel(spec_path),
@@ -522,11 +553,12 @@ def _build_layouts(spec_dir: Path, outdir: Path, quality: bool) -> List[Dict[str
         write_html(scene, style, html_path)
         summary = quality_report(scene)["summary"]
         if quality:
-            write_quality(scene, quality_path)
+            write_quality(scene, style, quality_path)
         entry = {
             "preset": preset,
             "title": title,
             "style": style_name,
+            "icon_system": resolve_icon_system(style),
             "basename": preset,
             "spec": _rel(spec_path),
             "svg": _rel(svg_path),
@@ -541,22 +573,508 @@ def _build_layouts(spec_dir: Path, outdir: Path, quality: bool) -> List[Dict[str
     return entries
 
 
+def _build_runtime_motion(
+    spec_dir: Path,
+    outdir: Path,
+    catalog: Dict[str, Any],
+    quality: bool,
+) -> Dict[str, Any]:
+    spec_dir.mkdir(parents=True, exist_ok=True)
+    outdir.mkdir(parents=True, exist_ok=True)
+    spec = json.loads(RUNTIME_MOTION_SPEC_PATH.read_text(encoding="utf-8"))
+    scene = compile_scene(spec)
+    style_name = "deep-tech"
+    style = deep_merge(load_style(ROOT / "styles" / f"{style_name}.json"), {"icon_system": "semantic-line-v1"})
+    svg_path = outdir / "overview.svg"
+    html_path = outdir / "overview.html"
+    quality_path = outdir / "overview.quality.json"
+    write_svg(scene, style, svg_path)
+    write_html(scene, style, html_path)
+    summary = quality_report(scene)["summary"]
+    if quality:
+        write_quality(scene, style, quality_path)
+    overview = {
+        "id": "runtime-motion-catalog",
+        "title": "Legacy v2 Runtime Motion Overview",
+        "style": style_name,
+        "icon_system": resolve_icon_system(style),
+        "basename": "runtime-motion-catalog",
+        "spec": _rel(RUNTIME_MOTION_SPEC_PATH),
+        "svg": _rel(svg_path),
+        "html": _rel(html_path),
+        "quality": _rel(quality_path),
+        "best_for": ["Motion QA", "Runtime review", "Baseline management"],
+        "summary": summary,
+    }
+    demos = []
+    items_dir = outdir / "items"
+    items_dir.mkdir(parents=True, exist_ok=True)
+    for effect in catalog.get("stage_effects", []):
+        demo_spec = _runtime_stage_demo_spec(effect)
+        demos.append(_write_runtime_motion_demo(spec_dir, items_dir, demo_spec, effect, "stage-effect", quality))
+    for performance in catalog.get("character_performances", []):
+        demo_spec = _runtime_performance_demo_spec(performance)
+        demos.append(_write_runtime_motion_demo(spec_dir, items_dir, demo_spec, performance, "icon-performance-character", quality))
+    for performance in catalog.get("performances", []):
+        demo_spec = _runtime_performance_demo_spec(performance)
+        demos.append(_write_runtime_motion_demo(spec_dir, items_dir, demo_spec, performance, "icon-performance", quality))
+    return {"overview": overview, "demos": demos}
+
+
+def _write_runtime_motion_demo(
+    spec_dir: Path,
+    outdir: Path,
+    spec: Spec,
+    catalog_entry: Dict[str, Any],
+    kind: str,
+    quality: bool,
+) -> Dict[str, Any]:
+    item_id = catalog_entry["id"]
+    spec_path = spec_dir / f"{item_id}.diagram.json"
+    svg_path = outdir / f"{item_id}.svg"
+    html_path = outdir / f"{item_id}.html"
+    quality_path = outdir / f"{item_id}.quality.json"
+    spec_path.write_text(json.dumps(spec, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    scene = compile_scene(spec)
+    style = deep_merge(
+        load_style(ROOT / "styles" / "deep-tech.json"),
+        {"icon_system": catalog_entry.get("icon_system", "illustrated-character-v1")},
+    )
+    write_svg(scene, style, svg_path)
+    write_html(scene, style, html_path)
+    summary = quality_report(scene)["summary"]
+    if quality:
+        write_quality(scene, style, quality_path)
+    return {
+        "id": item_id,
+        "kind": kind,
+        "title": catalog_entry["title"],
+        "icon": catalog_entry.get("icon"),
+        "icon_system": catalog_entry.get("icon_system"),
+        "spec": _rel(spec_path),
+        "svg": _rel(svg_path),
+        "html": _rel(html_path),
+        "quality": _rel(quality_path),
+        "phases": catalog_entry.get("phases", []),
+        "parts": catalog_entry.get("parts", []),
+        "selectors": catalog_entry.get("selectors", []),
+        "status": catalog_entry.get("status", ""),
+        "summary": summary,
+    }
+
+
+def _build_character_theme_comparison(outdir: Path, quality: bool) -> Dict[str, Any]:
+    source_path = ROOT / "examples" / "illustrated-character-v1-flow.diagram.json"
+    spec = json.loads(source_path.read_text(encoding="utf-8"))
+    comparison_dir = outdir / "character-themes"
+    comparison_dir.mkdir(parents=True, exist_ok=True)
+    entries: List[Dict[str, Any]] = []
+    for style_name, label in CHARACTER_THEME_CASES:
+        scene = compile_scene(spec)
+        style = load_style(ROOT / "styles" / f"{style_name}.json")
+        svg_path = comparison_dir / f"{style_name}.svg"
+        html_path = comparison_dir / f"{style_name}.html"
+        quality_path = comparison_dir / f"{style_name}.quality.json"
+        write_svg(scene, style, svg_path)
+        write_html(scene, style, html_path)
+        if quality:
+            write_quality(scene, style, quality_path)
+        webp_path = ROOT / "outputs" / "illustrated-character-theme-comparison" / f"{style_name}.webp"
+        entries.append(
+            {
+                "style": style_name,
+                "label": label,
+                "spec": _rel(source_path),
+                "svg": _rel(svg_path),
+                "html": _rel(html_path),
+                "webp": _rel(webp_path),
+                "quality": _rel(quality_path),
+                "icon_system": "illustrated-character-v1",
+                "motion_mode": "ambient / expressive",
+            }
+        )
+    page_path = outdir / "character-themes.html"
+    cards = "\n".join(
+        f'<article><h2>{html_escape(entry["label"])}</h2>'
+        f'<p><code>{html_escape(entry["style"])}</code> · <code>{entry["icon_system"]}</code> · <code>{entry["motion_mode"]}</code></p>'
+        f'<a href="{_path_for_html(entry["html"])}"><img src="{_path_from_gallery(entry["webp"])}" alt="{html_escape(entry["label"])} animated preview"></a>'
+        f'<p><a href="{_path_for_html(entry["html"])}">HTML</a> · <a href="{_path_for_html(entry["svg"])}">SVG</a> · '
+        f'<a href="{_path_from_gallery(entry["webp"])}">WebP</a> · <a href="{_path_for_html(entry["quality"])}">Quality</a></p></article>'
+        for entry in entries
+    )
+    page_path.write_text(
+        f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Illustrated Character Theme Comparison</title>
+  <style>
+    body {{ margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: #f6f7fb; color: #182033; }}
+    main {{ max-width: 1320px; margin: 0 auto; padding: 28px; }}
+    .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 18px; }}
+    article {{ background: #fff; border: 1px solid #dfe3ec; border-radius: 12px; padding: 16px; }}
+    img {{ display: block; width: 100%; border-radius: 8px; background: #0b1020; }}
+    code {{ color: #5b48ae; }}
+    a {{ color: #315ac7; }}
+  </style>
+</head>
+<body><main>
+  <p><a href="index.html">Back to gallery</a></p>
+  <h1>Illustrated Character Theme Comparison</h1>
+  <p>The same eight-icon flow rendered with the three supported Character v1 themes.</p>
+  <section class="grid">{cards}</section>
+</main></body>
+</html>
+""",
+        encoding="utf-8",
+    )
+    return {"page": _rel(page_path), "themes": entries}
+
+
+def _runtime_performance_demo_spec(entry: Dict[str, Any]) -> Spec:
+    icon = entry.get("icon") or "agent"
+    role = _role_for_icon(icon)
+    return {
+        "version": "0.3",
+        "preset": entry["id"],
+        "canvas": {"width": 560, "height": 360},
+        "style": "deep-tech",
+        "title": {
+            "text": entry["title"],
+            "subtitle": entry["id"],
+        },
+        "motion": _runtime_demo_motion(edge="static", node="icon-performance", title="none", group="static"),
+        "motion_policy": _runtime_demo_policy(),
+        "nodes": [
+            {
+                "id": icon,
+                "label": entry["title"],
+                "caption": " / ".join(entry.get("best_for", [])),
+                "position": [170, 190],
+                "size": [220, 96],
+                "role": role,
+                "icon": icon,
+                "effect": {"preset": "icon-performance", "icon_motion": entry["id"]},
+            }
+        ],
+        "edges": [],
+    }
+
+
+def _runtime_stage_demo_spec(effect: Dict[str, Any]) -> Spec:
+    if effect["id"] == "runtime-title-sweep":
+        return {
+            "version": "0.3",
+            "preset": effect["id"],
+            "canvas": {"width": 560, "height": 360},
+            "style": "deep-tech",
+            "title": {
+                "text": effect["title"],
+                "subtitle": effect["meaning"],
+            },
+            "motion": _runtime_demo_motion(edge="static", node="none", title="highlight-sweep", group="static"),
+            "motion_policy": _runtime_demo_policy(),
+            "nodes": [
+                {
+                    "id": "marker",
+                    "label": "Title Layer",
+                    "caption": "highlight sweep",
+                    "position": [170, 210],
+                    "size": [220, 88],
+                    "role": "process",
+                    "effect": {"preset": "fade"},
+                }
+            ],
+            "edges": [],
+        }
+    return {
+        "version": "0.3",
+        "preset": effect["id"],
+        "canvas": {"width": 560, "height": 360},
+        "style": "deep-tech",
+        "title": {
+            "text": effect["title"],
+            "subtitle": effect["meaning"],
+        },
+        "motion": _runtime_demo_motion(edge="signal-arrow", node="none", title="none", group="static"),
+        "motion_policy": _runtime_demo_policy(),
+        "nodes": [
+            {
+                "id": "source",
+                "label": "Source",
+                "caption": "packet enters",
+                "position": [70, 205],
+                "size": [160, 84],
+                "role": "source",
+                "effect": {"preset": "fade"},
+            },
+            {
+                "id": "target",
+                "label": "Target",
+                "caption": "packet exits",
+                "position": [330, 205],
+                "size": [160, 84],
+                "role": "memory",
+                "effect": {"preset": "fade"},
+            },
+        ],
+        "edges": [
+            {"from": "source", "to": "target", "label": "data flow", "role": "source", "effect": {"preset": "signal-arrow"}}
+        ],
+    }
+
+
+def _runtime_demo_motion(edge: str, node: str, title: str, group: str) -> Dict[str, Any]:
+    return {
+        "profile": "expressive",
+        "sequence": "simultaneous",
+        "ease": "spring",
+        "stagger": 0.08,
+        "duration_scale": 0.95,
+        "intensity": 1.1,
+        "edge": {"preset": edge, "particle_count": 1, "trail_count": 0},
+        "node": {"preset": node},
+        "group": {"preset": group},
+        "title": {"preset": title},
+        "reduced_motion": "subtle",
+    }
+
+
+def _runtime_demo_policy() -> Dict[str, Any]:
+    return {
+        "profile": "expressive",
+        "motion_area": "small",
+        "max_active_flow_edges": 4,
+        "max_particle_edges": 4,
+        "particle_count_per_edge": 1,
+        "flow_trail_count": 0,
+        "max_active_pulse_nodes": 4,
+        "max_scanning_groups": 0,
+    }
+
+
+def _role_for_icon(icon: str) -> str:
+    return {
+        "agent": "agent",
+        "api": "tool",
+        "search": "source",
+        "database": "memory",
+        "memory": "memory",
+        "tool": "tool",
+        "token": "source",
+        "output": "output",
+        "file": "source",
+        "folder": "source",
+        "cloud": "tool",
+        "shield": "risk",
+    }.get(icon, "neutral")
+
+
+def _write_runtime_motion_index(
+    outdir: Path,
+    catalog: Dict[str, Any],
+    runtime_motion: List[Dict[str, Any]],
+    overview: Dict[str, Any],
+    demos: List[Dict[str, Any]],
+) -> None:
+    stage_visual_cards = "\n".join(_motion_visual_card(demo) for demo in demos if demo["kind"] == "stage-effect")
+    character_visual_cards = "\n".join(_motion_visual_card(demo) for demo in demos if demo["kind"] == "icon-performance-character")
+    legacy_visual_cards = "\n".join(_motion_visual_card(demo) for demo in demos if demo["kind"] == "icon-performance")
+    stage_cards = "\n".join(
+        _motion_detail_card(
+            effect["id"],
+            effect["title"],
+            " -> ".join(effect.get("phases", [])) or effect.get("meaning", ""),
+            effect.get("selectors", []),
+            effect.get("status", ""),
+        )
+        for effect in catalog.get("stage_effects", [])
+    )
+    character_cards = "\n".join(
+        _motion_detail_card(
+            entry["id"],
+            entry["title"],
+            " -> ".join(entry.get("phases", [])),
+            entry.get("parts", []),
+            entry.get("status", ""),
+            icon=entry.get("icon", ""),
+        )
+        for entry in runtime_motion
+        if entry.get("icon_system") == "illustrated-character-v1"
+    )
+    legacy_cards = "\n".join(
+        _motion_detail_card(
+            entry["id"],
+            entry["title"],
+            " -> ".join(entry.get("phases", [])),
+            entry.get("parts", []),
+            entry.get("status", ""),
+            icon=entry.get("icon", ""),
+        )
+        for entry in runtime_motion
+        if entry.get("icon_system") == "semantic-line-v1"
+    )
+    default_runtime = catalog.get("default_runtime", {})
+    change_control = catalog.get("change_control", {})
+    allowed_changes = ", ".join(change_control.get("allowed_without_confirmation", []))
+    (outdir / "runtime-motion.html").write_text(
+        f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AniDiagram Runtime Motion Catalog</title>
+  <link rel="icon" href="data:,">
+  <style>
+    body {{ margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: #0b1020; color: #f8fafc; }}
+    main {{ max-width: 1240px; margin: 0 auto; padding: 28px; }}
+    h1 {{ font-size: 34px; margin: 0 0 8px; letter-spacing: 0; }}
+    h2 {{ font-size: 22px; margin: 30px 0 12px; }}
+    h3 {{ font-size: 15px; margin: 0 0 8px; }}
+    p {{ color: #cbd5e1; line-height: 1.55; }}
+    a {{ color: #67e8f9; }}
+    code {{ color: #fef3c7; }}
+    .topbar {{ display: flex; flex-wrap: wrap; gap: 12px; margin: 18px 0 22px; }}
+    .topbar a {{ border: 1px solid #334155; border-radius: 7px; padding: 8px 10px; color: #f8fafc; text-decoration: none; background: #111827; }}
+    .notice {{ border: 1px solid #f59e0b; background: rgba(245, 158, 11, 0.10); border-radius: 8px; padding: 14px 16px; }}
+    .meta {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 16px 0; }}
+    .meta div, article {{ border: 1px solid #243244; border-radius: 8px; background: #111827; padding: 14px; }}
+    iframe {{ width: 100%; height: 620px; border: 1px solid #334155; border-radius: 10px; background: #020617; }}
+    .visual-card iframe {{ height: 360px; margin: 10px 0 12px; }}
+    .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }}
+    .visual-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 16px; }}
+    .phase-list {{ margin: 8px 0 0 20px; padding: 0; color: #cbd5e1; }}
+    .phase-list li {{ margin: 4px 0; }}
+    .small {{ font-size: 13px; color: #94a3b8; }}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Runtime Motion Catalog</h1>
+    <p>Frozen baseline for the current high-fidelity HTML runtime effects. This page is the review surface for semantic icon performances, edge packet flow, and title sweep.</p>
+    <nav class="topbar">
+      <a href="index.html">Gallery Home</a>
+      <a href="{_path_for_html(overview['html'])}">Open Overview Runtime</a>
+      <a href="{_path_for_html(overview['svg'])}">Open SVG Fallback</a>
+      <a href="../runtime/motion-catalog.json">View Catalog JSON</a>
+      <a href="../docs/html-runtime.md">Runtime Docs</a>
+    </nav>
+    <section class="notice">
+      <h2>Change Control</h2>
+      <p>{html_escape(change_control.get("rule", ""))}</p>
+      <p class="small">Allowed without confirmation: {html_escape(allowed_changes)}.</p>
+    </section>
+    <section class="meta">
+      <div><h3>Status</h3><p><code>{html_escape(catalog.get("status", ""))}</code></p></div>
+      <div><h3>Baseline Date</h3><p><code>{html_escape(catalog.get("baseline_date", ""))}</code></p></div>
+      <div><h3>Runtime</h3><p><code>{html_escape(default_runtime.get("runtime", ""))}</code> / <code>{html_escape(default_runtime.get("mode", ""))}</code></p></div>
+      <div><h3>Profile</h3><p><code>{html_escape(default_runtime.get("profile", ""))}</code> / <code>{html_escape(default_runtime.get("sequence", ""))}</code></p></div>
+    </section>
+    <section>
+      <h2>Legacy v2 Live Overview</h2>
+      <p>The overview preserves the explicit <code>semantic-line-v1</code> compatibility baseline; Character v1 is reviewed in the individual cards below.</p>
+      <iframe src="{_path_for_html(overview['html'])}" title="Legacy v2 Runtime Motion Catalog Overview"></iframe>
+    </section>
+    <section>
+      <h2>Individual Stage Effect Visuals</h2>
+      <p>Each stage effect is isolated in its own runtime page so it can be reviewed without changing the baseline implementation.</p>
+      <div class="visual-grid">
+{stage_visual_cards}
+      </div>
+    </section>
+    <section>
+      <h2>Character v1 Performance Visuals</h2>
+      <p>The default Character v1 performances use the frozen repeat gap, canonical rest, and idle-breath contract.</p>
+      <div class="visual-grid">
+{character_visual_cards}
+      </div>
+    </section>
+    <section>
+      <h2>Legacy v2 Performance Visuals</h2>
+      <p>Compatibility demos explicitly request <code>semantic-line-v1</code>; they do not replace the Character v1 default.</p>
+      <div class="visual-grid">
+{legacy_visual_cards}
+      </div>
+    </section>
+    <section>
+      <h2>Stage Effects</h2>
+      <div class="grid">
+{stage_cards}
+      </div>
+    </section>
+    <section>
+      <h2>Character v1 Performances</h2>
+      <div class="grid">
+{character_cards}
+      </div>
+    </section>
+    <section>
+      <h2>Legacy v2 Performances</h2>
+      <div class="grid">
+{legacy_cards}
+      </div>
+    </section>
+  </main>
+</body>
+</html>
+""",
+        encoding="utf-8",
+    )
+
+
+def _motion_visual_card(demo: Dict[str, Any]) -> str:
+    phases = "".join(f"<li>{html_escape(str(phase))}</li>" for phase in demo.get("phases", []))
+    detail_items = demo.get("parts") or demo.get("selectors") or []
+    detail_text = ", ".join(f"<code>{html_escape(str(item))}</code>" for item in detail_items)
+    icon = demo.get("icon")
+    icon_line = f'<p class="small">Icon: <code>{html_escape(str(icon))}</code></p>' if icon else ""
+    return (
+        f'<article class="visual-card" id="{html_escape(demo["id"])}">'
+        f"<h3>{html_escape(demo['id'])}</h3>"
+        f"<p>{html_escape(demo['title'])}</p>{icon_line}"
+        f'<iframe src="{_path_for_html(demo["html"])}" title="{html_escape(demo["title"])}"></iframe>'
+        f"<p class=\"small\">Semantic phases</p><ol class=\"phase-list\">{phases}</ol>"
+        f'<p class="small">Parts/selectors: {detail_text}</p>'
+        f'<p class="small"><a href="{_path_from_gallery(demo["html"])}">Open demo</a> · <a href="{_path_from_gallery(demo["spec"])}">Spec</a> · <a href="{_path_from_gallery(demo["svg"])}">SVG</a></p>'
+        "</article>"
+    )
+
+
+def _motion_detail_card(
+    item_id: str,
+    title: str,
+    description: str,
+    items: Iterable[str],
+    status: str,
+    *,
+    icon: str = "",
+) -> str:
+    item_text = ", ".join(f"<code>{html_escape(str(item))}</code>" for item in items)
+    icon_line = f'<p class="small">Icon: <code>{html_escape(icon)}</code></p>' if icon else ""
+    return (
+        f"<article><h3>{html_escape(item_id)}</h3>"
+        f"<p>{html_escape(title)}</p>{icon_line}"
+        f'<p class="small">{html_escape(description)}</p>'
+        f'<p class="small">Parts/selectors: {item_text}</p>'
+        f'<p class="small">Status: <code>{html_escape(status)}</code></p></article>'
+    )
+
+
 def _write_gallery_index(
     outdir: Path,
     hero: Dict[str, Any],
     styles: List[Dict[str, Any]],
     layouts: List[Dict[str, Any]],
     runtime_motion: List[Dict[str, Any]],
+    runtime_overview: Dict[str, Any],
 ) -> None:
     style_cards = "\n".join(_entry_card_html(entry["style"], entry) for entry in styles)
     layout_cards = "\n".join(_entry_card_html(entry["preset"], entry) for entry in layouts)
     hero_cli = _cli_command(hero)
     hero_preview = hero.get("preview_webp") or hero["svg"]
     hero_link = hero.get("preview_mp4") or hero["html"]
-    motion_cards = "\n".join(
-        f"<article><h3>{entry['id']}</h3><p>{entry['title']}</p><p>{', '.join(entry['best_for'])}</p></article>"
-        for entry in runtime_motion
-    )
+    motion_cards = "\n".join(_motion_card_html(entry) for entry in runtime_motion)
     (outdir / "index.html").write_text(
         f"""<!doctype html>
 <html lang="en">
@@ -564,6 +1082,7 @@ def _write_gallery_index(
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AniDiagram Showcase</title>
+  <link rel="icon" href="data:,">
   <style>
     body {{ margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: #f8fafc; color: #111827; }}
     main {{ max-width: 1240px; margin: 0 auto; padding: 28px; }}
@@ -608,10 +1127,16 @@ def _write_gallery_index(
     </section>
     <section>
       <h2>Runtime Motion Showcase</h2>
-      <p>The current P0 high-fidelity icon performances used by the runtime HTML output.</p>
+      <p>The frozen high-fidelity runtime baseline. Open the catalog to review current semantics, part IDs, stage effects, and change-control rules.</p>
+      <p class="links"><a href="runtime-motion.html">Open runtime motion catalog</a><a href="{_path_for_html(runtime_overview['html'])}">Open live overview</a></p>
       <div class="grid">
 {motion_cards}
       </div>
+    </section>
+    <section>
+      <h2>Illustrated Character Themes</h2>
+      <p>Compare the same Character v1 flow in Default Character, Deep Tech, and Teaching Sketch Character.</p>
+      <p class="links"><a href="character-themes.html">Open three-theme comparison</a></p>
     </section>
   </main>
   <script>
@@ -688,6 +1213,18 @@ def _entry_card_html(label: str, entry: Dict[str, Any]) -> str:
     )
 
 
+def _motion_card_html(entry: Dict[str, Any]) -> str:
+    best_for = ", ".join(entry.get("best_for", []))
+    icon = entry.get("icon", "")
+    icon_line = f"<p>Icon: {html_escape(icon)}</p>" if icon else ""
+    return (
+        f"<article><h3>{html_escape(entry['id'])}</h3>"
+        f"<p>{html_escape(entry['title'])}</p>{icon_line}"
+        f"<p>{html_escape(best_for)}</p>"
+        f'<p class="actions"><a href="runtime-motion.html">Review</a></p></article>'
+    )
+
+
 def _cli_command(entry: Dict[str, Any]) -> str:
     basename = entry.get("basename") or entry.get("preset") or entry.get("style") or entry["id"]
     return (
@@ -717,6 +1254,12 @@ def _path_for_html(path: str) -> str:
     if path.startswith("gallery/"):
         return path[len("gallery/") :]
     return path
+
+
+def _path_from_gallery(path: str) -> str:
+    if path.startswith("gallery/"):
+        return path[len("gallery/") :]
+    return f"../{path}"
 
 
 if __name__ == "__main__":

@@ -1,0 +1,225 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="360" viewBox="0 0 560 360" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="expressive" data-motion-sequence="simultaneous" data-motion-edge="static" data-motion-node="icon-performance" data-motion-group="static" data-motion-title="none" data-motion-reduced="subtle" data-icon-system="semantic-line-v1">
+<title id="diagram-title">Agent Think Act</title>
+<desc id="diagram-desc">agent-think-act-v2</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .edge-flow { stroke-linecap: round; }
+  .edge-draw, .edge-base { stroke-linecap: round; stroke-linejoin: round; }
+  .edge-particle { filter: url(#particle-glow); }
+  .edge-arrow-particle { filter: url(#particle-glow); }
+  .semantic-icon { vector-effect: non-scaling-stroke; }
+  .semantic-icon-breathe { transform-box: fill-box; transform-origin: center; animation: semanticIconBreathe 2.8s ease-in-out infinite; }
+  .icon-breathe-halo { pointer-events: none; filter: url(#particle-glow); }
+  .node-glow, .node-burst { pointer-events: none; }
+  #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
+  #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
+  @keyframes titlePulse { 0%, 100% { opacity: 0.76; } 50% { opacity: 1; } }
+  @keyframes titleSlide { 0%, 100% { transform: translateX(0); opacity: 0.9; } 50% { transform: translateX(8px); opacity: 1; } }
+  @keyframes semanticIconBreathe { 0%, 100% { transform: scale(0.96); opacity: 0.72; } 50% { transform: scale(1.08); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    #title-accent, #title-highlight, .semantic-icon-breathe { animation: none; }
+  }
+</style>
+<rect width="100%" height="100%" fill="#050816" />
+<defs>
+  <filter id="soft-glow" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="5" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <filter id="particle-glow" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="2.6" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#111c36" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="504" height="308" rx="26" fill="none" stroke="#64748b" stroke-width="1.4" opacity="1.00" />
+<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#22d3ee" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#0f2742" />
+
+<text id="main-title" x="90" y="84" class="title" fill="#f8fafc" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.08s" fill="freeze" />
+  Agent Think Act
+</text>
+<text x="74" y="126" class="subtitle" fill="#cbd5e1" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />
+  agent-think-act-v2
+</text>
+
+
+
+<g id="node-agent" class="node motion-node" data-role="agent" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.52s" begin="0.32s" fill="freeze" />
+
+
+
+  <rect x="170.0" y="190.0" width="220.0" height="96.0" rx="14.0"
+        fill="#1e1b4b" stroke="#a78bfa" stroke-width="2.0" />
+
+<g id="icon-agent-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-agent" data-icon="agent" data-node-id="agent" opacity="0.94">
+
+
+
+
+
+  <g class="semantic-icon semantic-icon-agent icon-agent-ghost" opacity="0.24">
+    <path d="M 212.0 219.9
+           L 204.0 215.9
+           L 195.6 221.6
+           V 227.9
+           H 190.6
+           V 239.7
+           H 196.9
+           V 248.5
+           L 212.0 256.9"
+        fill="none" stroke="#a78bfa" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 212.0 219.9
+           L 217.9 216.6
+           L 227.5 222.5
+           V 229.2
+           H 233.4
+           V 237.6
+           H 228.4
+           V 245.6
+           H 222.9
+           V 251.4
+           L 212.0 256.9"
+        fill="none" stroke="#a78bfa" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 212.0 223.3 V 251.9
+           M 212.0 232.1 H 203.2 V 224.6
+           M 212.0 237.6 H 221.2 V 226.4
+           M 212.0 245.1 H 223.3"
+        fill="none" stroke="#a78bfa" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <path id="icon-agent-outline-left" class="semantic-icon semantic-icon-agent icon-agent-line"
+        d="M 212.0 219.9
+           L 204.0 215.9
+           L 195.6 221.6
+           V 227.9
+           H 190.6
+           V 239.7
+           H 196.9
+           V 248.5
+           L 212.0 256.9"
+        fill="none" stroke="#a78bfa" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.92" />
+  <path id="icon-agent-outline-right" class="semantic-icon semantic-icon-agent icon-agent-line"
+        d="M 212.0 219.9
+           L 217.9 216.6
+           L 227.5 222.5
+           V 229.2
+           H 233.4
+           V 237.6
+           H 228.4
+           V 245.6
+           H 222.9
+           V 251.4
+           L 212.0 256.9"
+        fill="none" stroke="#a78bfa" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.92" />
+  <path id="icon-agent-center-line" class="semantic-icon semantic-icon-agent icon-agent-line"
+        d="M 212.0 223.3 V 251.9"
+        fill="none" stroke="#a78bfa" stroke-width="2.2" stroke-linecap="round" opacity="0.78" />
+  <path id="icon-agent-branch-left" class="semantic-icon semantic-icon-agent icon-agent-line"
+        d="M 212.0 232.1 H 203.2 V 224.6"
+        fill="none" stroke="#a78bfa" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.78" />
+  <path id="icon-agent-branch-right" class="semantic-icon semantic-icon-agent icon-agent-line"
+        d="M 212.0 237.6 H 221.2 V 226.4"
+        fill="none" stroke="#a78bfa" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.78" />
+  <path id="icon-agent-branch-lower" class="semantic-icon semantic-icon-agent icon-agent-line"
+        d="M 212.0 245.1 H 223.3"
+        fill="none" stroke="#a78bfa" stroke-width="2.1" stroke-linecap="round" opacity="0.74" />
+  <circle id="icon-agent-node-top-left" class="icon-runtime-part icon-agent-node" cx="203.2" cy="224.6" r="2.5"
+        fill="#3c3472" stroke="#a78bfa" stroke-width="1.6" opacity="0.82" />
+  <circle id="icon-agent-node-top-right" class="icon-runtime-part icon-agent-node" cx="221.2" cy="226.4" r="2.3"
+        fill="#3c3472" stroke="#a78bfa" stroke-width="1.6" opacity="0.80" />
+  <circle id="icon-agent-node-left" class="icon-runtime-part icon-agent-node" cx="196.9" cy="239.7" r="2.1"
+        fill="#3c3472" stroke="#a78bfa" stroke-width="1.5" opacity="0.74" />
+  <circle id="icon-agent-node-right" class="icon-runtime-part icon-agent-node" cx="223.3" cy="245.1" r="2.1"
+        fill="#3c3472" stroke="#a78bfa" stroke-width="1.5" opacity="0.74" />
+  <circle id="icon-agent-node-center" class="icon-runtime-part icon-agent-node" cx="212.0" cy="237.6" r="2.7"
+        fill="#3c3472" stroke="#a78bfa" stroke-width="1.7" opacity="0.88" />
+  <circle id="icon-agent-pulse" class="icon-runtime-part" cx="212.0" cy="237.6" r="13.0" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0" />
+  <path id="icon-agent-decision-token" class="icon-runtime-part icon-agent-decision-token"
+        d="M 226.7 231.5
+           L 229.4 234.2
+           L 226.7 236.9
+           L 224.0 234.2
+           Z"
+        fill="#a78bfa" stroke="#3c3472" stroke-width="1.2" opacity="0" />
+
+  <g class="icon-semantic-motion icon-motion-agent-orbit" data-icon-motion="agent-orbit">
+    <path class="icon-agent-line-draw" d="M 212.0 219.9
+             L 204.0 215.9
+             L 195.6 221.6
+             V 227.9
+             H 190.6
+             V 239.7
+             H 196.9
+             V 248.5
+             L 212.0 256.9"
+          fill="none" stroke="#a78bfa" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"
+          pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0">
+      <animate attributeName="stroke-dashoffset" values="1;0;0;1" keyTimes="0;0.32;0.70;1" dur="2.16s" begin="0.84s" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.96;0.78;0" keyTimes="0;0.12;0.72;1" dur="2.16s" begin="0.84s" repeatCount="indefinite" />
+    </path>
+    <path class="icon-agent-line-draw" d="M 212.0 219.9
+             L 217.9 216.6
+             L 227.5 222.5
+             V 229.2
+             H 233.4
+             V 237.6
+             H 228.4
+             V 245.6
+             H 222.9
+             V 251.4
+             L 212.0 256.9"
+          fill="none" stroke="#a78bfa" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"
+          pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0">
+      <animate attributeName="stroke-dashoffset" values="1;0;0;1" keyTimes="0;0.32;0.70;1" dur="2.16s" begin="0.84s" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.96;0.78;0" keyTimes="0;0.12;0.72;1" dur="2.16s" begin="0.84s" repeatCount="indefinite" />
+    </path>
+    <path class="icon-agent-line-draw" d="M 212.0 232.1 H 203.2 V 224.6
+             M 212.0 237.6 H 221.2 V 226.4
+             M 212.0 245.1 H 223.3"
+          fill="none" stroke="#a78bfa" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"
+          pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0">
+      <animate attributeName="stroke-dashoffset" values="1;0;0;1" keyTimes="0;0.26;0.66;1" dur="2.16s" begin="1.08s" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.90;0.72;0" keyTimes="0;0.18;0.70;1" dur="2.16s" begin="1.08s" repeatCount="indefinite" />
+    </path>
+    <circle class="icon-agent-node-pop" cx="203.2" cy="224.6" r="2.3" fill="#a78bfa" opacity="0">
+      <animate attributeName="r" values="0.4;3.1;2.3" keyTimes="0;0.28;1" dur="2.16s" begin="1.38s" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.95;0.20" keyTimes="0;0.24;1" dur="2.16s" begin="1.38s" repeatCount="indefinite" />
+    </circle>
+    <circle class="icon-agent-node-pop" cx="221.2" cy="226.4" r="2.1" fill="#a78bfa" opacity="0">
+      <animate attributeName="r" values="0.4;2.9;2.1" keyTimes="0;0.28;1" dur="2.16s" begin="1.46s" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.88;0.18" keyTimes="0;0.24;1" dur="2.16s" begin="1.46s" repeatCount="indefinite" />
+    </circle>
+    <circle class="icon-agent-node-pop" cx="212.0" cy="237.6" r="2.3" fill="#a78bfa" opacity="0">
+      <animate attributeName="r" values="0.4;3.1;2.3" keyTimes="0;0.28;1" dur="2.16s" begin="1.54s" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.92;0.20" keyTimes="0;0.24;1" dur="2.16s" begin="1.54s" repeatCount="indefinite" />
+    </circle>
+  </g>
+
+</g>
+
+  <text x="308.0" y="224.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="308.0" dy="18" class="node-title">Agent Think</tspan>
+<tspan x="308.0" dy="18" class="node-title">Act</tspan>
+<tspan x="308.0" dy="17" class="node-caption">Think / Decide</tspan>
+<tspan x="308.0" dy="17" class="node-caption">/ Act</tspan>
+</text>
+</g>
+</svg>

@@ -27,14 +27,60 @@ The runtime renderer builds:
 1. A runtime-stage SVG with stable IDs on semantic icon parts.
 2. A Motion Manifest in `#anidiagram-motion-manifest`.
 3. A GSAP-powered JavaScript runtime from `runtime/anidiagram-runtime.js`.
+4. Runtime-generated stage effects for expressive edge flow and title sweep.
+
+The default runtime mode is `ambient`, and the default high-fidelity motion
+profile is `expressive`. In this mode, each supported semantic icon plays its
+own local micro-performance loop with a small staggered delay. Expressive
+runtime pages also generate GSAP-owned edge flow particles and title sweep in
+the browser.
+
+The runtime does not choreograph the whole diagram as a causal timeline by
+default.
+
+## Motion Coordination v1.1 controls
+
+The toolbar exposes three behaviorally distinct modes:
+
+- `Expressive` runs the local character performances and policy-approved stage
+  effects. Each active edge owns one logical packet (a white halo and colored
+  core), and every packet cycle ends with a `0.7 s` quiet interval. The title
+  highlight is an entry-only accent. Character-theme group frames default to
+  `soft-reveal`; scanning borders require an explicit, budgeted preset.
+- `Readable` preserves semantic character performances but removes the
+  decorative title treatment, relation fields, and scanning group effects. It
+  limits edge packets to the policy-approved key paths, with a runtime ceiling
+  of two.
+- `Off` removes all GSAP-owned icon and stage timelines and restores every local
+  part to its canonical rest state. `prefers-reduced-motion: reduce` starts in
+  the same canonical state and creates no GSAP timelines.
+
+Switching Expressive -> Readable -> Off -> Expressive rebuilds only the owned
+stage effects, without duplicating generated elements or restarting characters
+from an invalid pose. Verify this contract with:
+
+```bash
+node scripts/verify_stage_motion_modes.mjs \
+  outputs/illustrated-character-v1-flow/illustrated-character-v1-flow.html
+```
+
+Default Character, Deep Tech, and Teaching Sketch Character are the supported
+Character v1 theme combinations. Their shared review surface is
+[`gallery/character-themes.html`](../gallery/character-themes.html).
 
 In runtime-stage mode, the SVG stage is static. It keeps geometry and stable
 part IDs, but it does not emit SVG/SMIL animation tags such as `<animate>`,
 `<animateMotion>`, or `<animateTransform>`. This avoids mixed ownership where
 SMIL, CSS keyframes, and GSAP all try to animate the same visual surface.
 
-Unsupported runtime icons stay static in the HTML runtime. Static is preferable
-to mixing a SMIL fallback with a GSAP performance.
+All built-in semantic icons currently have runtime performances. Unsupported
+future or custom icons stay static in the HTML runtime. Static is preferable to
+mixing a SMIL fallback with a GSAP performance.
+
+Timeline/choreographer, event-driven, state-machine, interactive, and hybrid
+runtime modes are future roadmap items. They must be explicitly requested when
+implemented and should not change the default `html` behavior. See
+[runtime-motion-roadmap.md](./runtime-motion-roadmap.md).
 
 Gallery cards can use SVG fallback previews, but a README hero should use
 browser-captured runtime media. GitHub repository file views show `.html` files
@@ -49,7 +95,7 @@ view, not the runtime experience.
 
 ## Current Performances
 
-P0 runtime performances:
+Built-in runtime performances:
 
 | Icon | Performance |
 | --- | --- |
@@ -57,34 +103,64 @@ P0 runtime performances:
 | `api` | `api-request-response-v2` |
 | `search` | `search-discover-v2` |
 | `database` | `database-write-v2` |
-
-Additional experimental runtime performances:
-
-| Icon | Performance |
-| --- | --- |
 | `memory` | `memory-commit-v2` |
 | `tool` | `tool-run-v2` |
 | `token` | `token-intent-v2` |
 | `output` | `output-reveal-v2` |
+| `file` | `file-lines-v2` |
+| `folder` | `folder-open-v2` |
+| `cloud` | `cloud-upload-v2` |
+| `shield` | `shield-check-v2` |
+
+## Runtime Motion Catalog
+
+Current high-fidelity runtime effects are managed in:
+
+- `runtime/motion-catalog.json`
+- `examples/runtime-motion-catalog.diagram.json`
+- `gallery/runtime-motion.html`
+- `gallery/runtime-motion/overview.html`
+
+`runtime/motion-catalog.json` is the source of truth for the frozen expressive
+ambient runtime baseline. It lists the supported icon performances, stage
+effects, stable parts/selectors, semantic phases, and change-control rule.
+
+Use `gallery/runtime-motion.html` when reviewing or comparing the current
+effects. It embeds a live overview runtime page and links back to the catalog
+JSON.
+
+Any future change that alters visual timing, intensity, icon semantics, stable
+part IDs, stage effects, default profile/mode, or runtime scheduling must be
+confirmed before implementation. Documentation-only typo fixes, tests that do
+not change runtime behavior, and gallery regeneration from the same specs/code
+can proceed without changing the baseline.
 
 The agent performance uses these stable parts:
 
 ```text
 #icon-agent-root
-#icon-agent-shell
-#icon-agent-core
-#icon-agent-thought-1
-#icon-agent-thought-2
-#icon-agent-thought-3
+#icon-agent-outline-left
+#icon-agent-outline-right
+#icon-agent-center-line
+#icon-agent-branch-left
+#icon-agent-branch-right
+#icon-agent-branch-lower
+#icon-agent-node-top-left
+#icon-agent-node-top-right
+#icon-agent-node-left
+#icon-agent-node-right
+#icon-agent-node-center
 #icon-agent-decision-token
+#icon-agent-pulse
 ```
 
 The performance rhythm is:
 
 ```text
-thought dots idle
--> thought dots gather into the core
--> core pulses as a decision
+brain/head outline draws outward
+-> branch circuits draw in
+-> circuit nodes light up
+-> center node pulses as a decision
 -> decision token exits the agent
 -> quiet idle pause
 ```
@@ -154,13 +230,54 @@ Then open:
 http://127.0.0.1:8765/gallery/hero/agent-runtime-flow.html
 ```
 
+## Illustrated character performances
+
+When `icon_system` resolves to `illustrated-character-v1`, the runtime covers
+all 13 schema icons: `agent`, `operator`, `search`, `tool`, `api`, `memory`,
+`output`, `file`, `folder`, `cloud`, `shield`, `token`, and `database`. Their
+performances are `brain-think-pulse-v1`, `operator-type-focus-v1`,
+`search-scout-find-v1`, `tool-kit-action-v1`, `api-signal-return-v1`,
+`memory-index-commit-v1`, `output-envelope-reveal-v1`, `file-note-write-v1`,
+`folder-file-store-v1`, `cloud-uplink-ready-v1`, `shield-guard-confirm-v1`,
+`token-intent-ready-v1`, and `bucket-ingest-confirm-v1`. Each loop prepares,
+performs one semantic action, confirms it, and settles back to rest. Browsers
+that request reduced motion register no GSAP timelines. `illustrated-v1` and
+`semantic-line-v1` remain explicit legacy icon-system modes.
+
+Character loops use a compact `0.8 s` repeat gap. During the handoff from the
+semantic action to that gap, a dedicated inner shell performs a restrained
+`1.2%` idle breath, so the icon stays alive without moving its authored anchor.
+
+## Verify illustrated character runtime
+
+After generating the illustrated-character examples, verify that the full
+gallery returns every character timeline to its declared rest state, then verify
+the reduced-motion contract for the 13-icon gallery and 8-icon flow:
+
+```bash
+node scripts/verify_character_motion_rest.mjs outputs/illustrated-character-v1-icons/illustrated-character-v1-icons.html
+node scripts/verify_character_reduced_motion.mjs outputs/illustrated-character-v1-icons/illustrated-character-v1-icons.html 13
+node scripts/verify_character_reduced_motion.mjs outputs/illustrated-character-v1-flow/illustrated-character-v1-flow.html 8
+```
+
+Both scripts validate the embedded Motion Manifest, require
+`illustrated-character-v1`, and fail if the declared character count or rendered
+roots are wrong. They resolve Playwright from a local project dependency first, then `npm root -g`; `NODE_PATH` is not required. The rest-state verifier is for
+the full 13-icon gallery and intentionally rejects any other count.
+
 ## Limits
 
 - Standalone SVG cannot display GSAP high-fidelity runtime motion.
 - The runtime currently loads GSAP from the CDN.
-- The Motion Manifest is icon-performance focused; it does not yet model camera
-  choreography, edge-triggered node performances, or step mode.
+- The Motion Manifest currently covers icon performances plus ambient stage
+  edge flow and title sweep; it does not yet model camera choreography,
+  edge-triggered node performances, or step mode.
 - Video and animated image export require browser capture. MP4 also requires
   ffmpeg.
+- Browser-captured PNG/PDF use a settled runtime frame; GIF, WebP, APNG, MP4,
+  and frame-based Lottie seek the GSAP-owned timelines at the requested FPS.
+  Each written browser export reports `renderer`, `status`, `frames`, `fps`,
+  `scale`, and `path` in the CLI result JSON. Optional tooling failures are
+  returned as `status: skipped` with a reason.
 - The legacy viewer remains useful for SVG fallback debugging, but it is not the
   main product experience.

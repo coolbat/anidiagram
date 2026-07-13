@@ -1,0 +1,65 @@
+{
+  "version": "0.3",
+  "preset": "illustrated-bubble-runtime",
+  "canvas": {"width": 1280, "height": 820},
+  "style": "illustrated-bubble",
+  "title": {
+    "text": "Illustrated Bubble Runtime",
+    "subtitle": "Illustrated icon registry, local semantic performances, and expressive ambient stage effects"
+  },
+  "motion": {
+    "profile": "expressive",
+    "sequence": "simultaneous",
+    "ease": "spring",
+    "stagger": 0.08,
+    "duration_scale": 0.94,
+    "intensity": 1.18,
+    "edge": {"preset": "signal-arrow", "particle": "soft-arrow", "particle_count": 2, "trail_count": 0},
+    "node": {"preset": "icon-performance"},
+    "group": {"preset": "border-scan"},
+    "title": {"preset": "highlight-sweep"},
+    "reduced_motion": "subtle"
+  },
+  "motion_policy": {
+    "profile": "expressive",
+    "motion_area": "unrestricted",
+    "max_active_flow_edges": 18,
+    "max_particle_edges": 18,
+    "particle_count_per_edge": 2,
+    "flow_trail_count": 0,
+    "max_active_pulse_nodes": 18,
+    "max_scanning_groups": 3
+  },
+  "groups": [
+    {"id": "reasoning", "label": "Reasoning + Tool Use", "bounds": [55, 155, 1170, 230], "role": "agent", "fill": "#f4f0ff", "stroke": "#8b6fe8"},
+    {"id": "knowledge", "label": "Knowledge + Persistence", "bounds": [55, 435, 1170, 250], "role": "memory", "fill": "#edf9f1", "stroke": "#35a86b"}
+  ],
+  "nodes": [
+    {"id": "token", "label": "Token", "caption": "intent carrier", "position": [88, 218], "size": [165, 92], "role": "source", "icon": "token", "step": 1},
+    {"id": "agent", "label": "Agent", "caption": "think decide act", "position": [286, 218], "size": [165, 92], "role": "agent", "icon": "agent", "step": 2},
+    {"id": "search", "label": "Search", "caption": "scan discover", "position": [484, 218], "size": [165, 92], "role": "source", "icon": "search", "step": 3},
+    {"id": "tool", "label": "Tool", "caption": "execute", "position": [682, 218], "size": [165, 92], "role": "tool", "icon": "tool", "step": 4},
+    {"id": "api", "label": "API", "caption": "request response", "position": [880, 218], "size": [165, 92], "role": "process", "icon": "api", "step": 5},
+    {"id": "output", "label": "Output", "caption": "verify reveal", "position": [1078, 218], "size": [140, 92], "role": "output", "icon": "output", "step": 6},
+    {"id": "file", "label": "File", "caption": "parse lines", "position": [88, 510], "size": [165, 92], "role": "actor", "icon": "file", "step": 7},
+    {"id": "folder", "label": "Folder", "caption": "open select", "position": [286, 510], "size": [165, 92], "role": "tool", "icon": "folder", "step": 8},
+    {"id": "cloud", "label": "Cloud", "caption": "sync upload", "position": [484, 510], "size": [165, 92], "role": "process", "icon": "cloud", "step": 9},
+    {"id": "database", "label": "Database", "caption": "write commit", "position": [682, 510], "size": [165, 92], "role": "memory", "icon": "database", "step": 10},
+    {"id": "memory", "label": "Memory", "caption": "record recall", "position": [880, 510], "size": [165, 92], "role": "memory", "icon": "memory", "step": 11},
+    {"id": "shield", "label": "Shield", "caption": "scan guard", "position": [1078, 510], "size": [140, 92], "role": "risk", "icon": "shield", "step": 12}
+  ],
+  "edges": [
+    {"from": "token", "to": "agent", "label": "", "role": "source", "route": "curved"},
+    {"from": "agent", "to": "search", "label": "", "role": "agent", "route": "curved"},
+    {"from": "search", "to": "tool", "label": "", "role": "tool", "route": "curved"},
+    {"from": "tool", "to": "api", "label": "", "role": "process", "route": "curved"},
+    {"from": "api", "to": "output", "label": "", "role": "output", "route": "curved"},
+    {"from": "file", "to": "folder", "label": "", "role": "actor", "route": "curved"},
+    {"from": "folder", "to": "cloud", "label": "", "role": "tool", "route": "curved"},
+    {"from": "cloud", "to": "database", "label": "", "role": "memory", "route": "curved"},
+    {"from": "database", "to": "memory", "label": "", "role": "memory", "route": "curved"},
+    {"from": "memory", "to": "shield", "label": "", "role": "risk", "route": "curved"},
+    {"from": "agent", "to": "database", "label": "", "role": "memory", "route": "points", "points": [[368, 310], [368, 408], [764, 408], [764, 510]]},
+    {"from": "shield", "to": "output", "label": "", "role": "risk", "route": "points", "points": [[1148, 510], [1148, 408], [1148, 310]]}
+  ]
+}

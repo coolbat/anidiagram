@@ -46,8 +46,8 @@ def write_html_runtime(scene: Scene, style: Dict[str, Any], path: Path, runtime:
     return write_html(scene, style, path, runtime=runtime)
 
 
-def write_quality(scene: Scene, path: Path) -> Dict[str, Any]:
-    report = quality_report(scene)
+def write_quality(scene: Scene, style: Dict[str, Any], path: Path) -> Dict[str, Any]:
+    report = quality_report(scene, style)
     path.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     result = _done("quality", path)
     result["summary"] = report["summary"]

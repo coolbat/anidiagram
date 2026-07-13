@@ -37,27 +37,25 @@ def render_html_runtime(scene: Scene, style: Dict[str, Any], runtime: str = "gsa
     .stage.dragging {{ cursor: grabbing; }}
     .viewport {{ transform-origin: 0 0; width: max-content; }}
     svg {{ display: block; max-width: none; height: auto; user-select: none; }}
-    main.motion-subtle .edge-particle,
-    main.motion-subtle .node-burst,
-    main.motion-subtle .icon-breathe-halo {{ display: none; }}
-    main.motion-subtle .edge-flow {{ opacity: 0.22; }}
-    main.motion-subtle .semantic-icon-breathe {{ animation-duration: 4.2s; }}
+    main.motion-readable .node-burst,
+    main.motion-readable .icon-breathe-halo {{ display: none; }}
+    main.motion-readable .edge-flow {{ opacity: 0.08; }}
+    main.motion-readable .semantic-icon-breathe {{ animation-duration: 4.2s; }}
     main.motion-off .edge-flow,
     main.motion-off .edge-particle,
     main.motion-off .node-burst,
     main.motion-off .node-glow,
-    main.motion-off .icon-breathe-halo,
-    main.motion-off .icon-runtime-part {{ display: none; }}
+    main.motion-off .icon-breathe-halo {{ display: none; }}
     main.motion-off .semantic-icon-breathe {{ animation: none !important; }}
   </style>
 </head>
 <body>
-  <main id="viewer" class="motion-full" data-runtime="{esc(runtime)}">
+  <main id="viewer" class="motion-expressive" data-runtime="{esc(runtime)}">
     <div class="toolbar">
       <button type="button" id="toggle">Pause</button>
       <button type="button" id="restart">Restart</button>
-      <button type="button" class="motion-choice" data-motion="full" aria-pressed="true">Full Motion</button>
-      <button type="button" class="motion-choice" data-motion="subtle" aria-pressed="false">Subtle</button>
+      <button type="button" class="motion-choice" data-motion="expressive" aria-pressed="true">Expressive</button>
+      <button type="button" class="motion-choice" data-motion="readable" aria-pressed="false">Readable</button>
       <button type="button" class="motion-choice" data-motion="off" aria-pressed="false">Off</button>
       <button type="button" id="zoom-in">Zoom In</button>
       <button type="button" id="zoom-out">Zoom Out</button>

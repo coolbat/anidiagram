@@ -12,13 +12,18 @@ from dataclasses import dataclass, replace
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 from .effects import channel_effect, effect_active
+from .illustrated_icons import illustrated_definition, illustrated_palette, is_illustrated_style
+from .illustrated_character_icons import character_definition
 from .model import Edge, EffectConfig, Group, MotionPolicy, Node, Scene, SceneMotion
 from .motion_manifest import icon_part_id
+from .renderer_illustrated_character import render_character_icon
 from .schema import compile_scene
 from .styles import role_style
+from .icon_system import resolve_icon_system
 
 
 Point = Tuple[float, float]
+EDGE_NODE_GAP = 12.0
 
 CONTINUOUS_EDGE_MOTION = {
     "pulse",
@@ -257,6 +262,54 @@ def aurora_nodes_enabled(style: Dict[str, Any]) -> bool:
     return node_style.get("fill_mode") == "aurora" or style_effect(style, "node_fill", "") == "aurora"
 
 
+def illustrated_icons_enabled(style: Dict[str, Any]) -> bool:
+    return resolve_icon_system(style) == "illustrated-v1"
+
+
+def render_illustrated_icon_backplate(
+    icon: str,
+    part: Any,
+    cx: float,
+    cy: float,
+    half: float,
+    stroke: str,
+    fill: str,
+    style: Dict[str, Any],
+    index: int,
+) -> str:
+    palette = illustrated_palette(icon, style, fallback_stroke=stroke, fallback_fill=fill)
+    bubble = palette["bubble"]
+    wash = palette["wash"]
+    sparkle = palette["sparkle"]
+    primary = palette["primary"]
+    secondary = palette["secondary"]
+    tertiary = palette["tertiary"]
+    offset = (index % 3 - 1) * half * 0.05
+    relation = illustrated_definition(icon).semantic_role
+    return f"""
+  <g class="illustrated-icon-backplate" data-semantic-role="{esc(relation)}" opacity="0.96">
+    <circle id="{part("bubbleHalo")}" class="illustrated-icon-bubble-halo icon-runtime-part" cx="{cx + offset:.1f}" cy="{cy + half * 0.05:.1f}" r="{half * 1.48:.1f}"
+          fill="none" stroke="{esc(secondary)}" stroke-width="2.0" opacity="0.18" />
+    <ellipse id="{part("bubble")}" class="illustrated-icon-bubble icon-runtime-part" cx="{cx + offset:.1f}" cy="{cy + half * 0.05:.1f}" rx="{half * 1.42:.1f}" ry="{half * 1.16:.1f}"
+          fill="{esc(bubble)}" stroke="{esc(primary)}" stroke-width="1.3" stroke-opacity="0.24" />
+    <path id="{part("wash")}" class="illustrated-icon-wash icon-runtime-part" d="M {cx - half * 1.20:.1f} {cy + half * 0.28:.1f}
+             C {cx - half * 0.58:.1f} {cy - half * 0.86:.1f},
+               {cx + half * 0.58:.1f} {cy - half * 0.78:.1f},
+               {cx + half * 1.14:.1f} {cy + half * 0.12:.1f}
+             C {cx + half * 0.70:.1f} {cy + half * 0.84:.1f},
+               {cx - half * 0.42:.1f} {cy + half * 0.94:.1f},
+               {cx - half * 1.20:.1f} {cy + half * 0.28:.1f} Z"
+          fill="{esc(wash)}" opacity="0.44" />
+    <circle id="{part("sparkle")}" class="illustrated-icon-dot icon-runtime-part" cx="{cx + half * 0.96:.1f}" cy="{cy - half * 0.82:.1f}" r="{max(1.8, half * 0.10):.1f}"
+          fill="{esc(sparkle)}" opacity="0.78" />
+    <circle id="{part("orbitDot")}" class="illustrated-icon-orbit-dot icon-runtime-part" cx="{cx - half * 1.04:.1f}" cy="{cy + half * 0.68:.1f}" r="{max(1.7, half * 0.09):.1f}"
+          fill="{esc(secondary)}" opacity="0.68" />
+    <path id="{part("accentMark")}" class="illustrated-icon-mark icon-runtime-part" d="M {cx - half * 1.04:.1f} {cy - half * 0.82:.1f} L {cx - half * 0.84:.1f} {cy - half * 0.62:.1f}
+             M {cx - half * 0.76:.1f} {cy - half * 0.90:.1f} L {cx - half * 0.56:.1f} {cy - half * 0.70:.1f}"
+          fill="none" stroke="{esc(tertiary)}" stroke-width="1.7" stroke-linecap="round" opacity="0.52" />
+  </g>"""
+
+
 def role_gradient_id(role: str) -> str:
     return f"aurora-node-{svg_fragment_id(role)}"
 
@@ -360,7 +413,32 @@ def anchor_between(source: NodeBox, target: NodeBox) -> Tuple[Point, Point]:
     else:
         start = (sx, source.y + source.h if dy >= 0 else source.y)
         end = (tx, target.y if dy >= 0 else target.y + target.h)
-    return start, end
+    return trim_segment_endpoints(start, end, EDGE_NODE_GAP)
+
+
+def point_towards(start: Point, end: Point, distance: float) -> Point:
+    sx, sy = start
+    ex, ey = end
+    dx = ex - sx
+    dy = ey - sy
+    length = math.hypot(dx, dy)
+    if length <= 0 or distance <= 0:
+        return start
+    amount = min(distance, length / 2)
+    return (sx + dx / length * amount, sy + dy / length * amount)
+
+
+def trim_segment_endpoints(start: Point, end: Point, gap: float) -> Tuple[Point, Point]:
+    return point_towards(start, end, gap), point_towards(end, start, gap)
+
+
+def trim_route_endpoints(points: List[Point], gap: float = EDGE_NODE_GAP) -> List[Point]:
+    if len(points) < 2:
+        return points
+    trimmed = list(points)
+    trimmed[0] = point_towards(trimmed[0], trimmed[1], gap)
+    trimmed[-1] = point_towards(trimmed[-1], trimmed[-2], gap)
+    return compact_points(trimmed)
 
 
 def curve_path(start: Point, end: Point) -> str:
@@ -723,19 +801,40 @@ def render_semantic_icon(
     effect: EffectConfig,
     index: int,
     suppress_icon_motion: bool = False,
+    style: Optional[Dict[str, Any]] = None,
 ) -> str:
     if not icon:
         return ""
+    style = style or {}
+    icon_system = resolve_icon_system(style)
+    character = character_definition(icon) if icon_system == "illustrated-character-v1" else None
+    illustrated = illustrated_icons_enabled(style)
     cx = box.x + min(42, max(30, box.w * 0.22))
     cy = box.y + box.h / 2
     size = min(34, max(24, box.h * 0.42))
     if effect_active(motion, effect) and effect.preset in {"icon-semantic", "icon-performance"}:
         size = min(42, max(30, box.h * 0.54))
+    if illustrated:
+        cx = box.x + min(48, max(34, box.w * 0.22))
+        size = min(46, max(32, box.h * 0.56))
+    if character:
+        cx = box.x + min(54, max(40, box.w * 0.24))
+        size = min(84, max(48, box.h * 0.58))
+        return f'''<g class="semantic-icon-wrap semantic-icon-character-wrap" data-icon="{esc(icon)}" data-node-id="{esc(box.node_id)}" opacity="0.98">
+  {render_character_icon(character, box.node_id, cx, cy, size)}
+</g>'''
     half = size / 2
+    symbol_fill = icon_surface_fill(fill, stroke)
+    if illustrated:
+        palette = illustrated_palette(icon, style, fallback_stroke=stroke, fallback_fill=symbol_fill)
+        stroke = palette["primary"]
+        symbol_fill = palette["surface"]
     delay = motion_delay(index, motion, "node") + 0.4
     accent = ""
     halo = ""
     wrap_class = "semantic-icon-wrap"
+    if illustrated:
+        wrap_class += " semantic-icon-illustrated-v1"
     icon_open = ""
     icon_close = ""
     semantic_motion = render_icon_semantic_motion(
@@ -766,10 +865,17 @@ def render_semantic_icon(
     icon_class = f"semantic-icon semantic-icon-{esc(icon)}"
     common = f'class="{icon_class}" fill="none" stroke="{esc(stroke)}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"'
     filled_common = f'class="semantic-icon icon-filled semantic-icon-{esc(icon)}" stroke="{esc(stroke)}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"'
-    symbol_fill = icon_surface_fill(fill, stroke)
     root_id = esc(icon_part_id(box.node_id, "root"))
     part = lambda name: esc(icon_part_id(box.node_id, name))
-    if icon == "database":
+    illustration = render_illustrated_icon_backplate(icon, part, cx, cy, half, stroke, fill, style, index) if illustrated else ""
+    if icon == "operator":
+        body = f"""
+  <circle id="{part("face")}" cx="{cx:.1f}" cy="{cy - half * 0.38:.1f}" r="{half * 0.36:.1f}" {filled_common} fill="{esc(symbol_fill)}" />
+  <path id="{part("glasses")}" d="M {cx - half * 0.52:.1f} {cy - half * 0.40:.1f} h {half * 0.34:.1f} m {half * 0.36:.1f} 0 h {half * 0.34:.1f} m {-half * 0.70:.1f} 0 h {half * 0.36:.1f}" {common} stroke-width="2.2" />
+  <path id="{part("body")}" d="M {cx - half * 0.68:.1f} {cy + half * 0.36:.1f} C {cx - half * 0.44:.1f} {cy - half * 0.02:.1f}, {cx + half * 0.44:.1f} {cy - half * 0.02:.1f}, {cx + half * 0.68:.1f} {cy + half * 0.36:.1f}" {common} />
+  <rect id="{part("laptop")}" x="{cx - half * 0.76:.1f}" y="{cy + half * 0.20:.1f}" width="{half * 1.52:.1f}" height="{half * 0.70:.1f}" rx="{half * 0.10:.1f}" {filled_common} fill="{esc(symbol_fill)}" />
+  <path d="M {cx - half * 0.92:.1f} {cy + half * 0.98:.1f} H {cx + half * 0.92:.1f}" {common} stroke-width="2.3" />"""
+    elif icon == "database":
         body = f"""
   <ellipse id="{part("lid")}" cx="{cx:.1f}" cy="{cy - half * 0.62:.1f}" rx="{half * 0.82:.1f}" ry="{half * 0.34:.1f}" {filled_common} fill="{esc(symbol_fill)}" />
   <path id="{part("body")}" d="M {cx - half * 0.82:.1f} {cy - half * 0.62:.1f} L {cx - half * 0.82:.1f} {cy + half * 0.52:.1f}
@@ -830,24 +936,38 @@ def render_semantic_icon(
       <g>
 {file_scale}
         <g transform="translate({-cx:.1f} {-cy:.1f})">
-          <path class="semantic-icon icon-filled semantic-icon-file icon-file-sheet"
+          <path id="{part("sheet")}" class="semantic-icon icon-filled semantic-icon-file icon-file-sheet"
                 d="M {cx - half * 0.72:.1f} {cy - half:.1f} H {cx + half * 0.28:.1f} L {cx + half * 0.72:.1f} {cy - half * 0.56:.1f} V {cy + half:.1f} H {cx - half * 0.72:.1f} Z"
                 fill="{esc(page_fill)}" stroke="{esc(stroke)}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-          <g class="icon-file-fold-motion">
+          <g id="{part("fold")}" class="icon-file-fold-motion">
 {fold_motion}
             <path d="M {cx + half * 0.28:.1f} {cy - half:.1f} L {cx + half * 0.72:.1f} {cy - half * 0.56:.1f} H {cx + half * 0.28:.1f} Z"
                   fill="{esc(fold_fill)}" stroke="{esc(stroke)}" stroke-width="2.2" stroke-linejoin="round" />
             <path d="M {cx + half * 0.28:.1f} {cy - half:.1f} V {cy - half * 0.56:.1f} H {cx + half * 0.72:.1f}"
                   fill="none" stroke="{esc(stroke)}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.88" />
           </g>
+          <path id="{part("line1")}" class="icon-runtime-part icon-file-line" d="M {cx - half * 0.42:.1f} {cy - half * 0.20:.1f} H {cx + half * 0.38:.1f}"
+                fill="none" stroke="{esc(stroke)}" stroke-width="2.2" stroke-linecap="round" opacity="0" />
+          <path id="{part("line2")}" class="icon-runtime-part icon-file-line" d="M {cx - half * 0.42:.1f} {cy + half * 0.12:.1f} H {cx + half * 0.28:.1f}"
+                fill="none" stroke="{esc(stroke)}" stroke-width="2.2" stroke-linecap="round" opacity="0" />
+          <path id="{part("line3")}" class="icon-runtime-part icon-file-line" d="M {cx - half * 0.42:.1f} {cy + half * 0.44:.1f} H {cx + half * 0.16:.1f}"
+                fill="none" stroke="{esc(stroke)}" stroke-width="2.2" stroke-linecap="round" opacity="0" />
+          <circle id="{part("flash")}" class="icon-runtime-part" cx="{cx + half * 0.18:.1f}" cy="{cy + half * 0.10:.1f}" r="{half * 0.62:.1f}"
+                fill="none" stroke="{esc(stroke)}" stroke-width="2" opacity="0" />
         </g>
       </g>
     </g>
   </g>"""
     elif icon == "folder":
         body = f"""
-  <path class="semantic-icon icon-filled semantic-icon-folder icon-folder-body" d="M {cx - half:.1f} {cy - half * 0.48:.1f} H {cx - half * 0.22:.1f} L {cx:.1f} {cy - half * 0.78:.1f} H {cx + half:.1f} V {cy + half * 0.82:.1f} H {cx - half:.1f} Z"
-        stroke="{esc(stroke)}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="{esc(symbol_fill)}" />"""
+  <path id="{part("body")}" class="semantic-icon icon-filled semantic-icon-folder icon-folder-body" d="M {cx - half:.1f} {cy - half * 0.48:.1f} H {cx - half * 0.22:.1f} L {cx:.1f} {cy - half * 0.78:.1f} H {cx + half:.1f} V {cy + half * 0.82:.1f} H {cx - half:.1f} Z"
+        stroke="{esc(stroke)}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="{esc(symbol_fill)}" />
+  <path id="{part("tab")}" class="icon-folder-tab" d="M {cx - half * 0.92:.1f} {cy - half * 0.48:.1f} H {cx - half * 0.24:.1f} L {cx:.1f} {cy - half * 0.78:.1f} H {cx + half * 0.88:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.92" />
+  <path id="{part("fileLine")}" class="icon-runtime-part icon-folder-file-line" d="M {cx - half * 0.52:.1f} {cy + half * 0.16:.1f} H {cx + half * 0.52:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2.4" stroke-linecap="round" opacity="0" />
+  <circle id="{part("openToken")}" class="icon-runtime-part" cx="{cx - half * 0.48:.1f}" cy="{cy - half * 0.08:.1f}" r="{max(2.3, half * 0.13):.1f}" fill="{esc(stroke)}" opacity="0" />
+  <circle id="{part("flash")}" class="icon-runtime-part" cx="{cx:.1f}" cy="{cy + half * 0.20:.1f}" r="{half * 0.68:.1f}" fill="none" stroke="{esc(stroke)}" stroke-width="2" opacity="0" />"""
     elif icon == "api":
         endpoint_fill = icon_surface_fill(fill, stroke)
         body = f"""
@@ -866,11 +986,18 @@ def render_semantic_icon(
         fill="{esc(stroke)}" stroke="none" font-size="{max(8, half * 0.42):.1f}" font-weight="700" opacity="0">200</text>"""
     elif icon == "cloud":
         body = f"""
-  <path d="M {cx - half:.1f} {cy + half * 0.22:.1f}
+  <path id="{part("shell")}" d="M {cx - half:.1f} {cy + half * 0.22:.1f}
            C {cx - half:.1f} {cy - half * 0.18:.1f}, {cx - half * 0.56:.1f} {cy - half * 0.34:.1f}, {cx - half * 0.28:.1f} {cy - half * 0.36:.1f}
            C {cx - half * 0.12:.1f} {cy - half * 0.90:.1f}, {cx + half * 0.62:.1f} {cy - half * 0.72:.1f}, {cx + half * 0.56:.1f} {cy - half * 0.16:.1f}
            C {cx + half * 1.08:.1f} {cy - half * 0.10:.1f}, {cx + half * 1.06:.1f} {cy + half * 0.62:.1f}, {cx + half * 0.54:.1f} {cy + half * 0.62:.1f}
-           H {cx - half * 0.72:.1f}" {filled_common} fill="{esc(symbol_fill)}" />"""
+           H {cx - half * 0.72:.1f}" {filled_common} fill="{esc(symbol_fill)}" />
+  <path id="{part("uploadArrow")}" class="icon-runtime-part" d="M {cx:.1f} {cy + half * 0.48:.1f} V {cy - half * 0.10:.1f}
+           M {cx - half * 0.24:.1f} {cy + half * 0.12:.1f} L {cx:.1f} {cy - half * 0.14:.1f} L {cx + half * 0.24:.1f} {cy + half * 0.12:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" opacity="0" />
+  <circle id="{part("dot1")}" class="icon-runtime-part icon-cloud-dot" cx="{cx - half * 0.42:.1f}" cy="{cy + half * 0.34:.1f}" r="{max(1.9, half * 0.10):.1f}" fill="{esc(stroke)}" opacity="0" />
+  <circle id="{part("dot2")}" class="icon-runtime-part icon-cloud-dot" cx="{cx:.1f}" cy="{cy + half * 0.38:.1f}" r="{max(1.9, half * 0.10):.1f}" fill="{esc(stroke)}" opacity="0" />
+  <circle id="{part("dot3")}" class="icon-runtime-part icon-cloud-dot" cx="{cx + half * 0.42:.1f}" cy="{cy + half * 0.34:.1f}" r="{max(1.9, half * 0.10):.1f}" fill="{esc(stroke)}" opacity="0" />
+  <circle id="{part("statusRing")}" class="icon-runtime-part" cx="{cx + half * 0.46:.1f}" cy="{cy - half * 0.06:.1f}" r="{half * 0.26:.1f}" fill="none" stroke="{esc(stroke)}" stroke-width="2" opacity="0" />"""
     elif icon == "search":
         body = f"""
   <circle id="{part("lens")}" cx="{cx - half * 0.16:.1f}" cy="{cy - half * 0.16:.1f}" r="{half * 0.54:.1f}" {filled_common} fill="{esc(symbol_fill)}" />
@@ -882,43 +1009,102 @@ def render_semantic_icon(
   <circle id="{part("target")}" class="icon-runtime-part" cx="{cx + half * 0.18:.1f}" cy="{cy - half * 0.20:.1f}" r="{half * 0.22:.1f}" fill="none" stroke="{esc(stroke)}" stroke-width="2" opacity="0" />"""
     elif icon == "shield":
         body = f"""
-  <path d="M {cx:.1f} {cy - half:.1f} L {cx + half * 0.86:.1f} {cy - half * 0.58:.1f} V {cy + half * 0.10:.1f}
+  <path id="{part("pulse")}" class="icon-runtime-part" d="M {cx:.1f} {cy - half:.1f} L {cx + half * 0.86:.1f} {cy - half * 0.58:.1f} V {cy + half * 0.10:.1f}
+           C {cx + half * 0.86:.1f} {cy + half * 0.66:.1f}, {cx + half * 0.34:.1f} {cy + half * 0.92:.1f}, {cx:.1f} {cy + half:.1f}
+           C {cx - half * 0.34:.1f} {cy + half * 0.92:.1f}, {cx - half * 0.86:.1f} {cy + half * 0.66:.1f}, {cx - half * 0.86:.1f} {cy + half * 0.10:.1f}
+           V {cy - half * 0.58:.1f} Z" fill="none" stroke="{esc(stroke)}" stroke-width="1.6" stroke-linejoin="round" opacity="0" />
+  <path id="{part("shell")}" d="M {cx:.1f} {cy - half:.1f} L {cx + half * 0.86:.1f} {cy - half * 0.58:.1f} V {cy + half * 0.10:.1f}
            C {cx + half * 0.86:.1f} {cy + half * 0.66:.1f}, {cx + half * 0.34:.1f} {cy + half * 0.92:.1f}, {cx:.1f} {cy + half:.1f}
            C {cx - half * 0.34:.1f} {cy + half * 0.92:.1f}, {cx - half * 0.86:.1f} {cy + half * 0.66:.1f}, {cx - half * 0.86:.1f} {cy + half * 0.10:.1f}
            V {cy - half * 0.58:.1f} Z" {filled_common} fill="{esc(symbol_fill)}" />
-  <path d="M {cx - half * 0.34:.1f} {cy:.1f} L {cx - half * 0.06:.1f} {cy + half * 0.30:.1f} L {cx + half * 0.42:.1f} {cy - half * 0.38:.1f}" {common} />"""
+  <path id="{part("scan")}" class="icon-runtime-part" d="M {cx - half * 0.62:.1f} {cy - half * 0.40:.1f} L {cx + half * 0.56:.1f} {cy + half * 0.42:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2.4" stroke-linecap="round" opacity="0" />
+  <path id="{part("check")}" d="M {cx - half * 0.34:.1f} {cy:.1f} L {cx - half * 0.06:.1f} {cy + half * 0.30:.1f} L {cx + half * 0.42:.1f} {cy - half * 0.38:.1f}" {common} />"""
     elif icon == "agent":
         agent_fill = icon_surface_fill(fill, stroke)
         token_r = max(2.4, half * 0.13)
         body = f"""
-  <path id="{part("shell")}" class="semantic-icon semantic-icon-agent icon-agent-shell"
-        d="M {cx:.1f} {cy - half * 0.98:.1f}
-           L {cx + half * 0.74:.1f} {cy - half * 0.54:.1f}
-           V {cy + half * 0.46:.1f}
-           L {cx:.1f} {cy + half * 0.92:.1f}
-           L {cx - half * 0.74:.1f} {cy + half * 0.46:.1f}
-           V {cy - half * 0.54:.1f}
-           Z"
-        fill="{esc(agent_fill)}" stroke="{esc(stroke)}" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.92" />
-  <path class="semantic-icon semantic-icon-agent icon-agent-circuit"
-        d="M {cx:.1f} {cy - half * 0.58:.1f} V {cy + half * 0.36:.1f}
-           M {cx - half * 0.38:.1f} {cy - half * 0.22:.1f} H {cx - half * 0.10:.1f}
-           M {cx + half * 0.10:.1f} {cy - half * 0.02:.1f} H {cx + half * 0.42:.1f}
-           M {cx - half * 0.26:.1f} {cy + half * 0.32:.1f} H {cx + half * 0.22:.1f}"
-        fill="none" stroke="{esc(stroke)}" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" opacity="0.50" />
-  <circle id="{part("core")}" class="icon-runtime-part icon-agent-core" cx="{cx:.1f}" cy="{cy - half * 0.02:.1f}" r="{max(3.0, half * 0.17):.1f}"
-        fill="{esc(stroke)}" stroke="{esc(agent_fill)}" stroke-width="1.5" opacity="0.78" />
-  <circle id="{part("thought1")}" class="icon-runtime-part icon-agent-thought" cx="{cx - half * 0.36:.1f}" cy="{cy - half * 0.44:.1f}" r="{max(2.0, half * 0.105):.1f}"
-        fill="{esc(stroke)}" opacity="0.46" />
-  <circle id="{part("thought2")}" class="icon-runtime-part icon-agent-thought" cx="{cx + half * 0.36:.1f}" cy="{cy - half * 0.32:.1f}" r="{max(1.9, half * 0.095):.1f}"
-        fill="{esc(stroke)}" opacity="0.38" />
-  <circle id="{part("thought3")}" class="icon-runtime-part icon-agent-thought" cx="{cx - half * 0.18:.1f}" cy="{cy + half * 0.36:.1f}" r="{max(1.8, half * 0.09):.1f}"
-        fill="{esc(stroke)}" opacity="0.42" />
+  <g class="semantic-icon semantic-icon-agent icon-agent-ghost" opacity="0.24">
+    <path d="M {cx:.1f} {cy - half * 0.86:.1f}
+           L {cx - half * 0.38:.1f} {cy - half * 1.05:.1f}
+           L {cx - half * 0.78:.1f} {cy - half * 0.78:.1f}
+           V {cy - half * 0.48:.1f}
+           H {cx - half * 1.02:.1f}
+           V {cy + half * 0.08:.1f}
+           H {cx - half * 0.72:.1f}
+           V {cy + half * 0.50:.1f}
+           L {cx:.1f} {cy + half * 0.90:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M {cx:.1f} {cy - half * 0.86:.1f}
+           L {cx + half * 0.28:.1f} {cy - half * 1.02:.1f}
+           L {cx + half * 0.74:.1f} {cy - half * 0.74:.1f}
+           V {cy - half * 0.42:.1f}
+           H {cx + half * 1.02:.1f}
+           V {cy - half * 0.02:.1f}
+           H {cx + half * 0.78:.1f}
+           V {cy + half * 0.36:.1f}
+           H {cx + half * 0.52:.1f}
+           V {cy + half * 0.64:.1f}
+           L {cx:.1f} {cy + half * 0.90:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M {cx:.1f} {cy - half * 0.70:.1f} V {cy + half * 0.66:.1f}
+           M {cx:.1f} {cy - half * 0.28:.1f} H {cx - half * 0.42:.1f} V {cy - half * 0.64:.1f}
+           M {cx:.1f} {cy - half * 0.02:.1f} H {cx + half * 0.44:.1f} V {cy - half * 0.55:.1f}
+           M {cx:.1f} {cy + half * 0.34:.1f} H {cx + half * 0.54:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <path id="{part("outlineLeft")}" class="semantic-icon semantic-icon-agent icon-agent-line"
+        d="M {cx:.1f} {cy - half * 0.86:.1f}
+           L {cx - half * 0.38:.1f} {cy - half * 1.05:.1f}
+           L {cx - half * 0.78:.1f} {cy - half * 0.78:.1f}
+           V {cy - half * 0.48:.1f}
+           H {cx - half * 1.02:.1f}
+           V {cy + half * 0.08:.1f}
+           H {cx - half * 0.72:.1f}
+           V {cy + half * 0.50:.1f}
+           L {cx:.1f} {cy + half * 0.90:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.92" />
+  <path id="{part("outlineRight")}" class="semantic-icon semantic-icon-agent icon-agent-line"
+        d="M {cx:.1f} {cy - half * 0.86:.1f}
+           L {cx + half * 0.28:.1f} {cy - half * 1.02:.1f}
+           L {cx + half * 0.74:.1f} {cy - half * 0.74:.1f}
+           V {cy - half * 0.42:.1f}
+           H {cx + half * 1.02:.1f}
+           V {cy - half * 0.02:.1f}
+           H {cx + half * 0.78:.1f}
+           V {cy + half * 0.36:.1f}
+           H {cx + half * 0.52:.1f}
+           V {cy + half * 0.64:.1f}
+           L {cx:.1f} {cy + half * 0.90:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.92" />
+  <path id="{part("centerLine")}" class="semantic-icon semantic-icon-agent icon-agent-line"
+        d="M {cx:.1f} {cy - half * 0.70:.1f} V {cy + half * 0.66:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2.2" stroke-linecap="round" opacity="0.78" />
+  <path id="{part("branchLeft")}" class="semantic-icon semantic-icon-agent icon-agent-line"
+        d="M {cx:.1f} {cy - half * 0.28:.1f} H {cx - half * 0.42:.1f} V {cy - half * 0.64:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.78" />
+  <path id="{part("branchRight")}" class="semantic-icon semantic-icon-agent icon-agent-line"
+        d="M {cx:.1f} {cy - half * 0.02:.1f} H {cx + half * 0.44:.1f} V {cy - half * 0.55:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.78" />
+  <path id="{part("branchLower")}" class="semantic-icon semantic-icon-agent icon-agent-line"
+        d="M {cx:.1f} {cy + half * 0.34:.1f} H {cx + half * 0.54:.1f}"
+        fill="none" stroke="{esc(stroke)}" stroke-width="2.1" stroke-linecap="round" opacity="0.74" />
+  <circle id="{part("nodeTopLeft")}" class="icon-runtime-part icon-agent-node" cx="{cx - half * 0.42:.1f}" cy="{cy - half * 0.64:.1f}" r="{max(2.1, half * 0.12):.1f}"
+        fill="{esc(agent_fill)}" stroke="{esc(stroke)}" stroke-width="1.6" opacity="0.82" />
+  <circle id="{part("nodeTopRight")}" class="icon-runtime-part icon-agent-node" cx="{cx + half * 0.44:.1f}" cy="{cy - half * 0.55:.1f}" r="{max(2.0, half * 0.11):.1f}"
+        fill="{esc(agent_fill)}" stroke="{esc(stroke)}" stroke-width="1.6" opacity="0.80" />
+  <circle id="{part("nodeLeft")}" class="icon-runtime-part icon-agent-node" cx="{cx - half * 0.72:.1f}" cy="{cy + half * 0.08:.1f}" r="{max(1.9, half * 0.10):.1f}"
+        fill="{esc(agent_fill)}" stroke="{esc(stroke)}" stroke-width="1.5" opacity="0.74" />
+  <circle id="{part("nodeRight")}" class="icon-runtime-part icon-agent-node" cx="{cx + half * 0.54:.1f}" cy="{cy + half * 0.34:.1f}" r="{max(1.9, half * 0.10):.1f}"
+        fill="{esc(agent_fill)}" stroke="{esc(stroke)}" stroke-width="1.5" opacity="0.74" />
+  <circle id="{part("nodeCenter")}" class="icon-runtime-part icon-agent-node" cx="{cx:.1f}" cy="{cy - half * 0.02:.1f}" r="{max(2.4, half * 0.13):.1f}"
+        fill="{esc(agent_fill)}" stroke="{esc(stroke)}" stroke-width="1.7" opacity="0.88" />
+  <circle id="{part("pulse")}" class="icon-runtime-part" cx="{cx:.1f}" cy="{cy - half * 0.02:.1f}" r="{half * 0.62:.1f}" fill="none" stroke="{esc(stroke)}" stroke-width="2" opacity="0" />
   <path id="{part("decisionToken")}" class="icon-runtime-part icon-agent-decision-token"
-        d="M {cx + half * 0.48:.1f} {cy - half * 0.14 - token_r:.1f}
-           L {cx + half * 0.48 + token_r:.1f} {cy - half * 0.14:.1f}
-           L {cx + half * 0.48:.1f} {cy - half * 0.14 + token_r:.1f}
-           L {cx + half * 0.48 - token_r:.1f} {cy - half * 0.14:.1f}
+        d="M {cx + half * 0.70:.1f} {cy - half * 0.18 - token_r:.1f}
+           L {cx + half * 0.70 + token_r:.1f} {cy - half * 0.18:.1f}
+           L {cx + half * 0.70:.1f} {cy - half * 0.18 + token_r:.1f}
+           L {cx + half * 0.70 - token_r:.1f} {cy - half * 0.18:.1f}
            Z"
         fill="{esc(stroke)}" stroke="{esc(agent_fill)}" stroke-width="1.2" opacity="0" />"""
     elif icon == "tool":
@@ -970,6 +1156,7 @@ def render_semantic_icon(
 {halo}
 {icon_open}
 {accent}
+{illustration}
 {body}
 {semantic_motion}
 {icon_close}
@@ -1098,7 +1285,10 @@ def render_node(
     text_x = box.x + 12
     text_width = box.w - 24
     if node.icon:
-        text_x = box.x + min(68, max(54, box.w * 0.36))
+        if illustrated_icons_enabled(style):
+            text_x = box.x + min(86, max(68, box.w * 0.40))
+        else:
+            text_x = box.x + min(68, max(54, box.w * 0.36))
         text_width = max(42, box.w - (text_x - box.x) - 12)
     if node.shape == "decision":
         content_y = box.y + box.h / 2 - 14
@@ -1120,6 +1310,7 @@ def render_node(
         node_effect,
         index,
         suppress_icon_motion=suppress_icon_motion,
+        style=style,
     )
     enter_markup = ""
     float_markup = ""
@@ -1227,7 +1418,8 @@ def render_group(
 
 def edge_points(edge: Edge, nodes: Dict[str, NodeBox]) -> Tuple[Point, Point]:
     if len(edge.points) >= 2:
-        return edge.points[0], edge.points[-1]
+        points = trim_route_endpoints(compact_points(list(edge.points)))
+        return points[0], points[-1]
     source = nodes.get(edge.source)
     target = nodes.get(edge.target)
     if not source or not target:
@@ -1237,7 +1429,7 @@ def edge_points(edge: Edge, nodes: Dict[str, NodeBox]) -> Tuple[Point, Point]:
 
 def route_points(edge: Edge, nodes: Dict[str, NodeBox]) -> List[Point]:
     if len(edge.points) >= 2:
-        return compact_points(list(edge.points))
+        return trim_route_endpoints(compact_points(list(edge.points)))
     start, end = edge_points(edge, nodes)
     sx, sy = start
     ex, ey = end
@@ -1498,6 +1690,15 @@ def render_svg(
         subtitle_anim = ""
     else:
         subtitle_anim = '<animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />'
+    illustrated_css = ""
+    if illustrated_icons_enabled(style):
+        illustrated_css = """  .semantic-icon-illustrated-v1 .illustrated-icon-backplate { pointer-events: none; }
+  .semantic-icon-illustrated-v1 .illustrated-icon-wash { mix-blend-mode: multiply; }
+  .semantic-icon-illustrated-v1 .illustrated-icon-bubble-halo,
+  .semantic-icon-illustrated-v1 .illustrated-icon-dot,
+  .semantic-icon-illustrated-v1 .illustrated-icon-orbit-dot,
+  .semantic-icon-illustrated-v1 .illustrated-icon-mark { vector-effect: non-scaling-stroke; }
+"""
     title_motion_markup = ""
     if effect_active(motion, title_effect) and title_effect.preset == "handwrite-reveal":
         title_motion_markup = f"""
@@ -1516,7 +1717,11 @@ def render_svg(
     title_text_anim_line = f"  {title_text_anim}\n" if title_text_anim else ""
     subtitle_anim_line = f"  {subtitle_anim}\n" if subtitle_anim else ""
 
-    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="{esc(motion.profile)}" data-motion-sequence="{esc(motion.sequence)}" data-motion-edge="{esc(motion.edge)}" data-motion-node="{esc(motion.node)}" data-motion-group="{esc(motion.group)}" data-motion-title="{esc(title_effect.preset)}" data-motion-reduced="{esc(motion.reduced_motion)}">
+    data_motion = scene.motion if runtime_stage else motion
+    data_title_effect = channel_effect(data_motion, style, "title")
+    icon_system_attr = f' data-icon-system="{esc(resolve_icon_system(style))}"'
+
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="{esc(data_motion.profile)}" data-motion-sequence="{esc(data_motion.sequence)}" data-motion-edge="{esc(data_motion.edge)}" data-motion-node="{esc(data_motion.node)}" data-motion-group="{esc(data_motion.group)}" data-motion-title="{esc(data_title_effect.preset)}" data-motion-reduced="{esc(data_motion.reduced_motion)}"{icon_system_attr}>
 <title id="diagram-title">{esc(title_text)}</title>
 <desc id="diagram-desc">{esc(subtitle)}</desc>
 <style>
@@ -1532,7 +1737,7 @@ def render_svg(
   .edge-particle {{ filter: url(#particle-glow); }}
   .edge-arrow-particle {{ filter: url(#particle-glow); }}
   .semantic-icon {{ vector-effect: non-scaling-stroke; }}
-  .semantic-icon-breathe {{ transform-box: fill-box; transform-origin: center; animation: semanticIconBreathe 2.8s ease-in-out infinite; }}
+{illustrated_css}  .semantic-icon-breathe {{ transform-box: fill-box; transform-origin: center; animation: semanticIconBreathe 2.8s ease-in-out infinite; }}
   .icon-breathe-halo {{ pointer-events: none; filter: url(#particle-glow); }}
   .node-glow, .node-burst {{ pointer-events: none; }}
   #title-accent {{ transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }}
