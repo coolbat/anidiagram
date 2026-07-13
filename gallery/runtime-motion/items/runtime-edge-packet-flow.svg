@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="360" viewBox="0 0 560 360" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="expressive" data-motion-sequence="simultaneous" data-motion-edge="signal-arrow" data-motion-node="none" data-motion-group="static" data-motion-title="none" data-motion-reduced="subtle" data-icon-system="illustrated-character-v1">
+<title id="diagram-title">Edge Packet Flow</title>
+<desc id="diagram-desc">Bright packet segments travel along each edge path to show data or signal flow.</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .edge-flow { stroke-linecap: round; }
+  .edge-draw, .edge-base { stroke-linecap: round; stroke-linejoin: round; }
+  .edge-particle { filter: url(#particle-glow); }
+  .edge-arrow-particle { filter: url(#particle-glow); }
+  .semantic-icon { vector-effect: non-scaling-stroke; }
+  .semantic-icon-breathe { transform-box: fill-box; transform-origin: center; animation: semanticIconBreathe 2.8s ease-in-out infinite; }
+  .icon-breathe-halo { pointer-events: none; filter: url(#particle-glow); }
+  .node-glow, .node-burst { pointer-events: none; }
+  #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
+  #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
+  @keyframes titlePulse { 0%, 100% { opacity: 0.76; } 50% { opacity: 1; } }
+  @keyframes titleSlide { 0%, 100% { transform: translateX(0); opacity: 0.9; } 50% { transform: translateX(8px); opacity: 1; } }
+  @keyframes semanticIconBreathe { 0%, 100% { transform: scale(0.96); opacity: 0.72; } 50% { transform: scale(1.08); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    #title-accent, #title-highlight, .semantic-icon-breathe { animation: none; }
+  }
+</style>
+<rect width="100%" height="100%" fill="#050816" />
+<defs>
+  <filter id="soft-glow" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="5" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <filter id="particle-glow" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="2.6" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#111c36" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="504" height="308" rx="26" fill="none" stroke="#64748b" stroke-width="1.4" opacity="1.00" />
+<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#22d3ee" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#0f2742" />
+
+<text id="main-title" x="90" y="84" class="title" fill="#f8fafc" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.08s" fill="freeze" />
+  Edge Packet Flow
+</text>
+<text x="74" y="126" class="subtitle" fill="#cbd5e1" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />
+  Bright packet segments travel along each edge path to show data or signal flow.
+</text>
+
+
+<defs>
+  <marker id="arrow-1" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M 0 0 L 7 3 L 0 6 z" fill="#22d3ee" />
+  </marker>
+</defs>
+<g class="edge" data-role="source">
+  <path class="edge-base" d="M 242.0 247.0 C 282.0 247.0, 278.0 247.0, 318.0 247.0" fill="none" stroke="#22d3ee" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-1)" />
+  <path class="edge-draw" d="M 242.0 247.0 C 282.0 247.0, 278.0 247.0, 318.0 247.0" fill="none" stroke="#22d3ee" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-1)" />
+
+  <path class="edge-particle edge-arrow-particle" d="M -7.6 -4.5 L 7.6 0 L -7.6 4.5 Z" fill="#22d3ee" opacity="0.92">
+    <animateMotion dur="1.95s" repeatCount="indefinite" path="M 242.0 247.0 C 282.0 247.0, 278.0 247.0, 318.0 247.0" begin="-0.19s" rotate="auto" />
+    <animate attributeName="opacity" values="0;0.92;0" dur="1.95s" begin="-0.19s" repeatCount="indefinite" />
+  </path>
+
+  <text x="280.0" y="233.0" class="edge-label" fill="#cbd5e1" opacity="1">
+    data flow
+  </text>
+</g>
+
+<g id="node-source" class="node motion-node" data-role="source" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.52s" begin="0.32s" fill="freeze" />
+
+
+
+  <rect x="70.0" y="205.0" width="160.0" height="84.0" rx="14.0"
+        fill="#071f2f" stroke="#22d3ee" stroke-width="2.0" />
+
+
+  <text x="150.0" y="233.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="150.0" dy="18" class="node-title">Source</tspan>
+<tspan x="150.0" dy="17" class="node-caption">packet enters</tspan>
+</text>
+</g>
+
+<g id="node-target" class="node motion-node" data-role="memory" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.52s" begin="0.32s" fill="freeze" />
+
+
+
+  <rect x="330.0" y="205.0" width="160.0" height="84.0" rx="14.0"
+        fill="#052e24" stroke="#34d399" stroke-width="2.0" />
+
+
+  <text x="410.0" y="233.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="410.0" dy="18" class="node-title">Target</tspan>
+<tspan x="410.0" dy="17" class="node-caption">packet exits</tspan>
+</text>
+</g>
+</svg>

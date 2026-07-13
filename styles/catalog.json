@@ -1,4 +1,9 @@
 {
+  "character_themes": [
+    "illustrated-character",
+    "deep-tech",
+    "teaching-sketch-character"
+  ],
   "styles": [
     "minimal-light",
     "deep-tech",

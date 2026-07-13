@@ -1,0 +1,166 @@
+{
+  "version": "0.3",
+  "preset": "schema-guided-agent-memory",
+  "canvas": {"width": 1280, "height": 940},
+  "style": "teaching-sketch",
+  "title": {
+    "text": "Schema Guided Agent Memory",
+    "subtitle": "A typed extraction loop turns conversation into durable temporal knowledge"
+  },
+  "motion": {
+    "profile": "expressive",
+    "sequence": "simultaneous",
+    "ease": "spring",
+    "stagger": 0.08,
+    "duration_scale": 0.94,
+    "intensity": 1.18,
+    "edge": {"preset": "signal-arrow", "particle": "soft-arrow", "particle_count": 2, "trail_count": 0},
+    "node": {"preset": "icon-performance"},
+    "group": {"preset": "border-scan"},
+    "title": {"preset": "highlight-sweep"},
+    "reduced_motion": "subtle"
+  },
+  "motion_policy": {
+    "profile": "expressive",
+    "motion_area": "unrestricted",
+    "max_active_flow_edges": 16,
+    "max_particle_edges": 16,
+    "particle_count_per_edge": 2,
+    "flow_trail_count": 0,
+    "max_active_pulse_nodes": 16,
+    "max_scanning_groups": 2
+  },
+  "groups": [
+    {
+      "id": "agent-loop",
+      "label": "Agent Memory Loop",
+      "bounds": [40, 152, 1200, 310],
+      "role": "agent",
+      "fill": "#f4f0ff",
+      "stroke": "#8e6ad8"
+    },
+    {
+      "id": "schema-pipeline",
+      "label": "Pydantic Schema Guided Extraction",
+      "bounds": [40, 502, 1200, 370],
+      "role": "source",
+      "fill": "#eefaf6",
+      "stroke": "#2a9d8f"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "query",
+      "label": "User Query",
+      "caption": "memory signal",
+      "position": [78, 254],
+      "size": [225, 112],
+      "role": "actor",
+      "icon": "file",
+      "step": 1
+    },
+    {
+      "id": "agent",
+      "label": "Memory Agent",
+      "caption": "decide persistence",
+      "position": [382, 238],
+      "size": [245, 132],
+      "role": "agent",
+      "icon": "agent",
+      "step": 2
+    },
+    {
+      "id": "temporal_graph",
+      "label": "Temporal Knowledge Graph",
+      "caption": "facts with valid time",
+      "position": [696, 232],
+      "size": [270, 142],
+      "role": "memory",
+      "icon": "memory",
+      "step": 3
+    },
+    {
+      "id": "response",
+      "label": "Final Response",
+      "caption": "grounded context",
+      "position": [1015, 254],
+      "size": [225, 112],
+      "role": "output",
+      "icon": "output",
+      "step": 4
+    },
+    {
+      "id": "schema",
+      "label": "Pydantic Schema",
+      "caption": "typed contract",
+      "position": [78, 602],
+      "size": [270, 130],
+      "role": "source",
+      "icon": "file",
+      "step": 5
+    },
+    {
+      "id": "entities",
+      "label": "Entity Model",
+      "caption": "entities and tools",
+      "position": [392, 552],
+      "size": [230, 118],
+      "role": "process",
+      "icon": "token",
+      "step": 6
+    },
+    {
+      "id": "relations",
+      "label": "Relation Model",
+      "caption": "typed constraints",
+      "position": [392, 712],
+      "size": [230, 118],
+      "role": "process",
+      "icon": "api",
+      "step": 7
+    },
+    {
+      "id": "extractor",
+      "label": "Extraction Skill",
+      "caption": "extract typed facts",
+      "position": [688, 552],
+      "size": [235, 118],
+      "role": "tool",
+      "icon": "search",
+      "step": 8
+    },
+    {
+      "id": "resolver",
+      "label": "Resolution Skill",
+      "caption": "merge duplicates",
+      "position": [688, 712],
+      "size": [235, 118],
+      "role": "tool",
+      "icon": "tool",
+      "step": 9
+    },
+    {
+      "id": "typed_store",
+      "label": "Typed Memory Store",
+      "caption": "schema-valid commit",
+      "position": [990, 630],
+      "size": [240, 128],
+      "role": "memory",
+      "icon": "database",
+      "step": 10
+    }
+  ],
+  "edges": [
+    {"from": "query", "to": "agent", "label": "", "role": "actor", "route": "curved"},
+    {"from": "agent", "to": "temporal_graph", "label": "", "role": "memory", "route": "points", "points": [[638, 282], [666, 252], [684, 282]]},
+    {"from": "temporal_graph", "to": "agent", "label": "", "role": "agent", "route": "points", "points": [[684, 334], [666, 364], [638, 334]]},
+    {"from": "temporal_graph", "to": "response", "label": "", "role": "memory", "route": "curved"},
+    {"from": "schema", "to": "entities", "label": "", "role": "source", "route": "curved"},
+    {"from": "schema", "to": "relations", "label": "", "role": "source", "route": "curved"},
+    {"from": "entities", "to": "extractor", "label": "", "role": "tool", "route": "curved"},
+    {"from": "relations", "to": "resolver", "label": "", "role": "tool", "route": "curved"},
+    {"from": "extractor", "to": "typed_store", "label": "", "role": "memory", "route": "curved"},
+    {"from": "resolver", "to": "typed_store", "label": "", "role": "memory", "route": "curved"},
+    {"from": "typed_store", "to": "temporal_graph", "label": "", "role": "memory", "route": "curved"}
+  ]
+}

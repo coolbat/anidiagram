@@ -46,7 +46,7 @@ All character performances use the same quiet, semantic loop:
 prepare (0.12–0.20 s)
 → one semantic action (0.18–0.38 s)
 → confirmation (0.14–0.26 s)
-→ canonical resting pose + 1.45–1.85 s pause
+→ canonical resting pose → 0.44 s / 1.2% idle breath → 0.8 s pause
 ```
 
 Only one primary action happens in each loop. Motion changes only opacity,

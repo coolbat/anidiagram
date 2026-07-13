@@ -1,0 +1,68 @@
+{
+  "version": "0.3",
+  "preset": "runtime-motion-catalog",
+  "canvas": {"width": 1280, "height": 760},
+  "style": "deep-tech",
+  "title": {
+    "text": "Runtime Motion Catalog",
+    "subtitle": "Frozen expressive ambient runtime baseline for semantic icon and edge-flow effects"
+  },
+  "motion": {
+    "profile": "expressive",
+    "sequence": "simultaneous",
+    "ease": "spring",
+    "stagger": 0.1,
+    "duration_scale": 0.95,
+    "intensity": 1.12,
+    "edge": {"preset": "signal-arrow", "particle_count": 1, "trail_count": 0},
+    "node": {"preset": "icon-performance"},
+    "group": {"preset": "soft-reveal"},
+    "title": {"preset": "highlight-sweep"},
+    "reduced_motion": "subtle"
+  },
+  "motion_policy": {
+    "profile": "expressive",
+    "motion_area": "unrestricted",
+    "max_active_flow_edges": 16,
+    "max_particle_edges": 16,
+    "particle_count_per_edge": 1,
+    "flow_trail_count": 0,
+    "max_active_pulse_nodes": 16,
+    "max_scanning_groups": 2
+  },
+  "groups": [
+    {"id": "runtime-icons", "label": "Semantic Icon Performances", "bounds": [55, 145, 1170, 285], "role": "agent"},
+    {"id": "runtime-stage", "label": "Stage Effects + Data Flow", "bounds": [55, 485, 1170, 165], "role": "process"}
+  ],
+  "nodes": [
+    {"id": "token", "label": "Token", "caption": "intent", "position": [80, 210], "size": [150, 84], "role": "source", "icon": "token", "effect": {"preset": "icon-performance", "icon_motion": "token-intent-v2"}},
+    {"id": "agent", "label": "Agent", "caption": "think act", "position": [265, 210], "size": [150, 84], "role": "agent", "icon": "agent", "effect": {"preset": "icon-performance", "icon_motion": "agent-think-act-v2"}},
+    {"id": "search", "label": "Search", "caption": "discover", "position": [450, 210], "size": [150, 84], "role": "source", "icon": "search", "effect": {"preset": "icon-performance", "icon_motion": "search-discover-v2"}},
+    {"id": "tool", "label": "Tool", "caption": "execute", "position": [635, 210], "size": [150, 84], "role": "tool", "icon": "tool", "effect": {"preset": "icon-performance", "icon_motion": "tool-run-v2"}},
+    {"id": "api", "label": "API", "caption": "response", "position": [820, 210], "size": [150, 84], "role": "tool", "icon": "api", "effect": {"preset": "icon-performance", "icon_motion": "api-request-response-v2"}},
+    {"id": "output", "label": "Output", "caption": "complete", "position": [1005, 210], "size": [150, 84], "role": "output", "icon": "output", "effect": {"preset": "icon-performance", "icon_motion": "output-reveal-v2"}},
+    {"id": "file", "label": "File", "caption": "parse", "position": [80, 330], "size": [150, 84], "role": "source", "icon": "file", "effect": {"preset": "icon-performance", "icon_motion": "file-lines-v2"}},
+    {"id": "folder", "label": "Folder", "caption": "open", "position": [265, 330], "size": [150, 84], "role": "source", "icon": "folder", "effect": {"preset": "icon-performance", "icon_motion": "folder-open-v2"}},
+    {"id": "cloud", "label": "Cloud", "caption": "sync", "position": [450, 330], "size": [150, 84], "role": "tool", "icon": "cloud", "effect": {"preset": "icon-performance", "icon_motion": "cloud-upload-v2"}},
+    {"id": "database", "label": "Database", "caption": "write", "position": [635, 330], "size": [150, 84], "role": "memory", "icon": "database", "effect": {"preset": "icon-performance", "icon_motion": "database-write-v2"}},
+    {"id": "memory", "label": "Memory", "caption": "commit", "position": [820, 330], "size": [150, 84], "role": "memory", "icon": "memory", "effect": {"preset": "icon-performance", "icon_motion": "memory-commit-v2"}},
+    {"id": "shield", "label": "Shield", "caption": "guard", "position": [1005, 330], "size": [150, 84], "role": "risk", "icon": "shield", "effect": {"preset": "icon-performance", "icon_motion": "shield-check-v2"}},
+    {"id": "source", "label": "Source", "caption": "data packet", "position": [120, 545], "size": [180, 84], "role": "source", "icon": "token"},
+    {"id": "processor", "label": "Processor", "caption": "edge packet flow", "position": [520, 545], "size": [200, 84], "role": "agent", "icon": "agent"},
+    {"id": "sink", "label": "Sink", "caption": "commit", "position": [930, 545], "size": [180, 84], "role": "memory", "icon": "database"}
+  ],
+  "edges": [
+    {"from": "token", "to": "agent", "label": "intent", "role": "source", "effect": {"preset": "signal-arrow"}},
+    {"from": "agent", "to": "search", "label": "query", "role": "agent", "effect": {"preset": "signal-arrow"}},
+    {"from": "search", "to": "tool", "label": "select", "role": "tool", "effect": {"preset": "signal-arrow"}},
+    {"from": "tool", "to": "api", "label": "call", "role": "tool", "effect": {"preset": "signal-arrow"}},
+    {"from": "api", "to": "output", "label": "resolve", "role": "output", "effect": {"preset": "signal-arrow"}},
+    {"from": "file", "to": "folder", "label": "load", "role": "source", "effect": {"preset": "signal-arrow"}},
+    {"from": "folder", "to": "cloud", "label": "sync", "role": "tool", "effect": {"preset": "signal-arrow"}},
+    {"from": "cloud", "to": "database", "label": "write", "role": "memory", "effect": {"preset": "signal-arrow"}},
+    {"from": "database", "to": "memory", "label": "commit", "role": "memory", "effect": {"preset": "signal-arrow"}},
+    {"from": "memory", "to": "shield", "label": "guard", "role": "risk", "effect": {"preset": "signal-arrow"}},
+    {"from": "source", "to": "processor", "label": "packet", "role": "source", "effect": {"preset": "signal-arrow"}},
+    {"from": "processor", "to": "sink", "label": "flow", "role": "memory", "effect": {"preset": "signal-arrow"}}
+  ]
+}

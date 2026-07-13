@@ -1,0 +1,20 @@
+{
+  "name": "teaching-sketch-character",
+  "icon_system": "illustrated-character-v1",
+  "canvas": {"background": "#f8fbfa", "text": "#172033", "muted": "#51606f", "grid": "#e5eeea"},
+  "title": {"accent": "#35b9a5", "highlight": "#dff7ef"},
+  "node": {"radius": 18, "stroke_width": 2.4, "fill_mode": "solid"},
+  "edge": {"width": 2.8, "duration": "4.0s"},
+  "effects": {"grid_opacity": 0.54, "frame_opacity": 0.42},
+  "roles": {
+    "actor": {"stroke": "#e66f51", "fill": "#fff1eb", "text": "#172033", "glow": "#ffd8c9"},
+    "source": {"stroke": "#2a9d8f", "fill": "#e8f8f4", "text": "#172033", "glow": "#bfece3"},
+    "process": {"stroke": "#3f7bd9", "fill": "#edf4ff", "text": "#172033", "glow": "#cfe0ff"},
+    "agent": {"stroke": "#8e6ad8", "fill": "#f2edff", "text": "#172033", "glow": "#ddd1ff"},
+    "memory": {"stroke": "#35a86b", "fill": "#eaf8ef", "text": "#172033", "glow": "#c6efd5"},
+    "tool": {"stroke": "#d9902f", "fill": "#fff6df", "text": "#172033", "glow": "#ffe2a6"},
+    "output": {"stroke": "#2da36d", "fill": "#edf9f1", "text": "#172033", "glow": "#c9f0d8"},
+    "risk": {"stroke": "#dc6381", "fill": "#fff0f4", "text": "#172033", "glow": "#ffd3de"},
+    "neutral": {"stroke": "#7b8794", "fill": "#ffffff", "text": "#172033", "glow": "#dce3ea"}
+  }
+}

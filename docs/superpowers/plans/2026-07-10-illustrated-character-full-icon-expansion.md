@@ -218,7 +218,6 @@ and restoration occurs before the timeline's `repeatDelay`.
 Run the source test and, after rendering the current gallery HTML, run:
 
 ```bash
-NODE_PATH="$(dirname "$(dirname "$(readlink -f "$(which playwright)")")")" \
 node scripts/verify_character_motion_rest.mjs outputs/illustrated-character-v1-icons/illustrated-character-v1-icons.html
 ```
 
@@ -256,7 +255,7 @@ function playExample({ parts, gsap }) {
   const required = ["..."];
   if (!hasParts(parts, required)) return null;
   setInitial(parts, gsap);
-  const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.6 });
+  const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
   // prepare → semantic action → confirmation
   // final tween restores opacity: 1 and x/y/scale/rotate to canonical rest
   return tl;
@@ -291,8 +290,8 @@ Run:
 node --check runtime/anidiagram-runtime.js
 node --check scripts/verify_character_motion_rest.mjs
 PYTHONPATH=src python3 -m unittest tests.test_render_svg.SvgRendererTest.test_all_character_runtime_performances_are_registered
-NODE_PATH="$(dirname "$(dirname "$(readlink -f "$(which playwright)")")")" node scripts/verify_character_motion_rest.mjs outputs/illustrated-character-v1-icons/illustrated-character-v1-icons.html
-NODE_PATH="$(dirname "$(dirname "$(readlink -f "$(which playwright)")")")" node scripts/verify_character_reduced_motion.mjs outputs/illustrated-character-v1-icons/illustrated-character-v1-icons.html
+node scripts/verify_character_motion_rest.mjs outputs/illustrated-character-v1-icons/illustrated-character-v1-icons.html
+node scripts/verify_character_reduced_motion.mjs outputs/illustrated-character-v1-icons/illustrated-character-v1-icons.html 13
 ```
 
 Expected: all commands exit 0.
@@ -346,9 +345,9 @@ Run:
 PYTHONPATH=src python3 -m unittest tests.test_render_svg.SvgRendererTest.test_illustrated_character_examples_cover_all_icons_without_fallback
 PYTHONPATH=src python3 -m anidiagram.cli --spec examples/illustrated-character-v1-icons.diagram.json --style styles/illustrated-character.json --outdir outputs/illustrated-character-v1-icons --basename illustrated-character-v1-icons --formats svg,html,webp,quality --export-renderer browser --export-fps 20 --export-frames 60 --result outputs/illustrated-character-v1-icons/result.json
 PYTHONPATH=src python3 -m anidiagram.cli --spec examples/illustrated-character-v1-flow.diagram.json --style styles/illustrated-character.json --outdir outputs/illustrated-character-v1-flow --basename illustrated-character-v1-flow --formats svg,html,webp,quality --export-renderer browser --export-fps 20 --export-frames 60 --result outputs/illustrated-character-v1-flow/result.json
-NODE_PATH="$(dirname "$(dirname "$(readlink -f "$(which playwright)")")")" node scripts/verify_character_motion_rest.mjs outputs/illustrated-character-v1-icons/illustrated-character-v1-icons.html
-NODE_PATH="$(dirname "$(dirname "$(readlink -f "$(which playwright)")")")" node scripts/verify_character_reduced_motion.mjs outputs/illustrated-character-v1-icons/illustrated-character-v1-icons.html
-NODE_PATH="$(dirname "$(dirname "$(readlink -f "$(which playwright)")")")" node scripts/verify_character_reduced_motion.mjs outputs/illustrated-character-v1-flow/illustrated-character-v1-flow.html
+node scripts/verify_character_motion_rest.mjs outputs/illustrated-character-v1-icons/illustrated-character-v1-icons.html
+node scripts/verify_character_reduced_motion.mjs outputs/illustrated-character-v1-icons/illustrated-character-v1-icons.html 13
+node scripts/verify_character_reduced_motion.mjs outputs/illustrated-character-v1-flow/illustrated-character-v1-flow.html 8
 test -s outputs/illustrated-character-v1-icons/illustrated-character-v1-icons.svg
 test -s outputs/illustrated-character-v1-icons/illustrated-character-v1-icons.html
 test -s outputs/illustrated-character-v1-icons/illustrated-character-v1-icons.webp

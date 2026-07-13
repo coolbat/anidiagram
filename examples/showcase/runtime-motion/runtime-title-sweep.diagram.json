@@ -1,0 +1,66 @@
+{
+  "version": "0.3",
+  "preset": "runtime-title-sweep",
+  "canvas": {
+    "width": 560,
+    "height": 360
+  },
+  "style": "deep-tech",
+  "title": {
+    "text": "Title Sweep",
+    "subtitle": "A one-shot highlight introduces the title without becoming a competing ambient loop."
+  },
+  "motion": {
+    "profile": "expressive",
+    "sequence": "simultaneous",
+    "ease": "spring",
+    "stagger": 0.08,
+    "duration_scale": 0.95,
+    "intensity": 1.1,
+    "edge": {
+      "preset": "static",
+      "particle_count": 1,
+      "trail_count": 0
+    },
+    "node": {
+      "preset": "none"
+    },
+    "group": {
+      "preset": "static"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "subtle"
+  },
+  "motion_policy": {
+    "profile": "expressive",
+    "motion_area": "small",
+    "max_active_flow_edges": 4,
+    "max_particle_edges": 4,
+    "particle_count_per_edge": 1,
+    "flow_trail_count": 0,
+    "max_active_pulse_nodes": 4,
+    "max_scanning_groups": 0
+  },
+  "nodes": [
+    {
+      "id": "marker",
+      "label": "Title Layer",
+      "caption": "highlight sweep",
+      "position": [
+        170,
+        210
+      ],
+      "size": [
+        220,
+        88
+      ],
+      "role": "process",
+      "effect": {
+        "preset": "fade"
+      }
+    }
+  ],
+  "edges": []
+}

@@ -1,0 +1,30 @@
+{
+  "version": "0.3",
+  "preset": "illustrated-character-v1-flow",
+  "canvas": {"width": 1300, "height": 690},
+  "style": "illustrated-character",
+  "title": {"text": "Illustrated Character Flow", "subtitle": "A complete request moves from reasoning through delivery and durable memory"},
+  "motion": {"profile": "expressive", "sequence": "layered", "stagger": 0.12, "node": {"preset": "icon-performance"}, "edge": {"preset": "signal-arrow", "particle": "soft-arrow"}, "group": {"preset": "soft-reveal"}, "title": {"preset": "highlight-sweep"}, "reduced_motion": "subtle"},
+  "groups": [
+    {"id": "character-flow", "label": "Character-driven request lifecycle", "bounds": [50, 165, 1200, 420], "role": "agent"}
+  ],
+  "nodes": [
+    {"id": "agent", "label": "AI Brain", "caption": "frames the request", "position": [85, 225], "size": [220, 105], "role": "agent", "icon": "agent"},
+    {"id": "operator", "label": "Operator", "caption": "sets the intent", "position": [365, 225], "size": [220, 105], "role": "source", "icon": "operator"},
+    {"id": "search", "label": "Search", "caption": "finds context", "position": [645, 225], "size": [220, 105], "role": "process", "icon": "search"},
+    {"id": "tool", "label": "Tool Kit", "caption": "performs work", "position": [925, 225], "size": [220, 105], "role": "tool", "icon": "tool"},
+    {"id": "database", "label": "Data Bucket", "caption": "keeps it durable", "position": [85, 435], "size": [220, 105], "role": "memory", "icon": "database"},
+    {"id": "memory", "label": "Memory", "caption": "records the learning", "position": [365, 435], "size": [220, 105], "role": "memory", "icon": "memory"},
+    {"id": "output", "label": "Output", "caption": "delivers the result", "position": [645, 435], "size": [220, 105], "role": "output", "icon": "output"},
+    {"id": "api", "label": "API", "caption": "connects services", "position": [925, 435], "size": [220, 105], "role": "process", "icon": "api"}
+  ],
+  "edges": [
+    {"from": "agent", "to": "operator", "label": "draft", "role": "agent"},
+    {"from": "operator", "to": "search", "label": "query", "role": "process"},
+    {"from": "search", "to": "tool", "label": "context", "role": "tool"},
+    {"from": "tool", "to": "api", "label": "request", "role": "process"},
+    {"from": "api", "to": "output", "label": "response", "role": "output"},
+    {"from": "output", "to": "memory", "label": "retain", "role": "memory"},
+    {"from": "memory", "to": "database", "label": "persist", "role": "memory"}
+  ]
+}

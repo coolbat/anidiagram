@@ -431,7 +431,8 @@ All functions call `setInitial`, check required parts, use a repeat delay, and
 end at canonical rest before the next cycle. Do not add GSAP plugins.
 
 Create `scripts/verify_character_reduced_motion.mjs` using the already-required
-Node Playwright. It receives an HTML file path, launches Chromium, calls
+Node Playwright. It receives an HTML file path and expected character-icon count,
+launches Chromium, calls
 `page.emulateMedia({ reducedMotion: "reduce" })` before navigation, waits for the
 runtime script, then exits non-zero unless
 `(window.__ANIDIAGRAM_TIMELINES__ || []).length === 0`. It must close the browser in a
@@ -499,8 +500,8 @@ Run:
 ```bash
 PYTHONPATH=src python3 -m anidiagram.cli --spec examples/illustrated-character-v1-icons.diagram.json --style styles/illustrated-character.json --outdir outputs/illustrated-character-v1-icons --basename illustrated-character-v1-icons --formats svg,html,webp,quality --export-renderer browser --export-fps 20 --export-frames 60
 PYTHONPATH=src python3 -m anidiagram.cli --spec examples/illustrated-character-v1-flow.diagram.json --style styles/illustrated-character.json --outdir outputs/illustrated-character-v1-flow --basename illustrated-character-v1-flow --formats svg,html,webp,quality --export-renderer browser --export-fps 20 --export-frames 60
-node scripts/verify_character_reduced_motion.mjs outputs/illustrated-character-v1-icons/illustrated-character-v1-icons.html
-node scripts/verify_character_reduced_motion.mjs outputs/illustrated-character-v1-flow/illustrated-character-v1-flow.html
+node scripts/verify_character_reduced_motion.mjs outputs/illustrated-character-v1-icons/illustrated-character-v1-icons.html 13
+node scripts/verify_character_reduced_motion.mjs outputs/illustrated-character-v1-flow/illustrated-character-v1-flow.html 8
 node --check runtime/anidiagram-runtime.js
 PYTHONPATH=src python3 -m unittest discover -s tests
 git diff --check

@@ -1,0 +1,68 @@
+{
+  "version": "0.3",
+  "preset": "database-write-v2",
+  "canvas": {
+    "width": 560,
+    "height": 360
+  },
+  "style": "deep-tech",
+  "title": {
+    "text": "Database Write",
+    "subtitle": "database-write-v2"
+  },
+  "motion": {
+    "profile": "expressive",
+    "sequence": "simultaneous",
+    "ease": "spring",
+    "stagger": 0.08,
+    "duration_scale": 0.95,
+    "intensity": 1.1,
+    "edge": {
+      "preset": "static",
+      "particle_count": 1,
+      "trail_count": 0
+    },
+    "node": {
+      "preset": "icon-performance"
+    },
+    "group": {
+      "preset": "static"
+    },
+    "title": {
+      "preset": "none"
+    },
+    "reduced_motion": "subtle"
+  },
+  "motion_policy": {
+    "profile": "expressive",
+    "motion_area": "small",
+    "max_active_flow_edges": 4,
+    "max_particle_edges": 4,
+    "particle_count_per_edge": 1,
+    "flow_trail_count": 0,
+    "max_active_pulse_nodes": 4,
+    "max_scanning_groups": 0
+  },
+  "nodes": [
+    {
+      "id": "database",
+      "label": "Database Write",
+      "caption": "Write / Commit / Confirm",
+      "position": [
+        170,
+        190
+      ],
+      "size": [
+        220,
+        96
+      ],
+      "role": "memory",
+      "icon": "database",
+      "effect": {
+        "preset": "icon-performance",
+        "icon_motion": "database-write-v2"
+      }
+    }
+  ],
+  "edges": []
+}

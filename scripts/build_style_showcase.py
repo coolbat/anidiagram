@@ -329,7 +329,7 @@ def build_showcase(spec_dir: Path, outdir: Path, quality: bool) -> Dict[str, Any
         write_html(scene, style, html_path)
         report = quality_report(scene)
         if quality:
-            write_quality(scene, outdir / f"{style_name}.quality.json")
+            write_quality(scene, style, outdir / f"{style_name}.quality.json")
         cards.append((style_name, spec["title"]["text"], spec["title"]["subtitle"], svg_path.name, html_path.name))
         summaries[style_name] = report["summary"]
     write_index(outdir, cards)

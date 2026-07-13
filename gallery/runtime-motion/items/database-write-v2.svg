@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="360" viewBox="0 0 560 360" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="expressive" data-motion-sequence="simultaneous" data-motion-edge="static" data-motion-node="icon-performance" data-motion-group="static" data-motion-title="none" data-motion-reduced="subtle" data-icon-system="semantic-line-v1">
+<title id="diagram-title">Database Write</title>
+<desc id="diagram-desc">database-write-v2</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .edge-flow { stroke-linecap: round; }
+  .edge-draw, .edge-base { stroke-linecap: round; stroke-linejoin: round; }
+  .edge-particle { filter: url(#particle-glow); }
+  .edge-arrow-particle { filter: url(#particle-glow); }
+  .semantic-icon { vector-effect: non-scaling-stroke; }
+  .semantic-icon-breathe { transform-box: fill-box; transform-origin: center; animation: semanticIconBreathe 2.8s ease-in-out infinite; }
+  .icon-breathe-halo { pointer-events: none; filter: url(#particle-glow); }
+  .node-glow, .node-burst { pointer-events: none; }
+  #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
+  #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
+  @keyframes titlePulse { 0%, 100% { opacity: 0.76; } 50% { opacity: 1; } }
+  @keyframes titleSlide { 0%, 100% { transform: translateX(0); opacity: 0.9; } 50% { transform: translateX(8px); opacity: 1; } }
+  @keyframes semanticIconBreathe { 0%, 100% { transform: scale(0.96); opacity: 0.72; } 50% { transform: scale(1.08); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    #title-accent, #title-highlight, .semantic-icon-breathe { animation: none; }
+  }
+</style>
+<rect width="100%" height="100%" fill="#050816" />
+<defs>
+  <filter id="soft-glow" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="5" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <filter id="particle-glow" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="2.6" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#111c36" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="504" height="308" rx="26" fill="none" stroke="#64748b" stroke-width="1.4" opacity="1.00" />
+<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#22d3ee" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#0f2742" />
+
+<text id="main-title" x="90" y="84" class="title" fill="#f8fafc" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.08s" fill="freeze" />
+  Database Write
+</text>
+<text x="74" y="126" class="subtitle" fill="#cbd5e1" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />
+  database-write-v2
+</text>
+
+
+
+<g id="node-database" class="node motion-node" data-role="memory" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.52s" begin="0.32s" fill="freeze" />
+
+
+
+  <rect x="170.0" y="190.0" width="220.0" height="96.0" rx="14.0"
+        fill="#052e24" stroke="#34d399" stroke-width="2.0" />
+
+<g id="icon-database-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-database" data-icon="database" data-node-id="database" opacity="0.94">
+
+
+
+
+
+  <ellipse id="icon-database-lid" cx="212.0" cy="225.0" rx="17.2" ry="7.1" class="semantic-icon icon-filled semantic-icon-database" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#0f523e" />
+  <path id="icon-database-body" d="M 194.8 225.0 L 194.8 248.9
+           C 194.8 256.5, 229.2 256.5, 229.2 248.9
+           L 229.2 225.0" class="semantic-icon semantic-icon-database" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <path id="icon-database-layer-1" d="M 194.8 238.0 C 194.8 245.1, 229.2 245.1, 229.2 238.0" class="semantic-icon semantic-icon-database" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.72" />
+  <path id="icon-database-layer-2" d="M 196.9 246.8 C 204.0 251.9, 220.0 251.9, 227.1 246.8" class="semantic-icon semantic-icon-database" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.56" />
+  <circle id="icon-database-write-token" class="icon-runtime-part" cx="202.6" cy="218.3" r="3.4" fill="#34d399" opacity="0" />
+  <circle id="icon-database-flash" class="icon-runtime-part" cx="212.0" cy="240.1" r="15.1" fill="none" stroke="#34d399" stroke-width="2" opacity="0" />
+
+  <g class="icon-semantic-motion icon-motion-database-write" data-icon-motion="database-write">
+    <ellipse class="icon-database-top-bounce" cx="212.0" cy="225.0" rx="17.6" ry="5.9"
+          fill="none" stroke="#34d399" stroke-width="2.4" opacity="0.74">
+      <animate attributeName="ry" values="5.9;3.6;8.2;5.9" keyTimes="0;0.18;0.34;1" dur="2.16s" begin="0.84s" repeatCount="indefinite" />
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 2.1;0 -1.3;0 0" keyTimes="0;0.18;0.34;1" dur="2.16s" begin="0.84s" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0.36;0.88;0.64;0.36" keyTimes="0;0.18;0.34;1" dur="2.16s" begin="0.84s" repeatCount="indefinite" />
+    </ellipse>
+    <path d="M 196.5 223.7 H 227.5" fill="none" stroke="#34d399" stroke-width="3"
+          stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0.95">
+      <animate attributeName="stroke-dashoffset" values="1;0;0;1" keyTimes="0;0.22;0.68;1" dur="2.16s" begin="0.84s" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.95;0.95;0" keyTimes="0;0.12;0.72;1" dur="2.16s" begin="0.84s" repeatCount="indefinite" />
+    </path>
+    <circle r="4.6" fill="#34d399" opacity="0">
+      <animateMotion dur="2.16s" begin="0.92s" repeatCount="indefinite" path="M 196.5 240.5 H 227.5" />
+      <animate attributeName="opacity" values="0;0.92;0" dur="2.16s" begin="0.92s" repeatCount="indefinite" />
+    </circle>
+    <path class="icon-database-layer-flash" d="M 195.6 248.9 C 203.2 253.5, 220.8 253.5, 228.4 248.9"
+          fill="none" stroke="#34d399" stroke-width="2.3" stroke-linecap="round" opacity="0">
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 3.8;0 -1.7;0 0" keyTimes="0;0.18;0.34;1" dur="2.16s" begin="1.00s" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.74;0.32;0" keyTimes="0;0.18;0.44;1" dur="2.16s" begin="1.00s" repeatCount="indefinite" />
+    </path>
+  </g>
+
+</g>
+
+  <text x="308.0" y="224.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="308.0" dy="18" class="node-title">Database</tspan>
+<tspan x="308.0" dy="18" class="node-title">Write</tspan>
+<tspan x="308.0" dy="17" class="node-caption">Write / Commit</tspan>
+<tspan x="308.0" dy="17" class="node-caption">/ Confirm</tspan>
+</text>
+</g>
+</svg>

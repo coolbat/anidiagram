@@ -19,6 +19,8 @@ AniDiagram uses two complementary galleries:
 
 Gallery source: `gallery/index.html`
 Machine-readable manifest: [gallery/showcase_manifest.json](./gallery/showcase_manifest.json)
+Runtime motion management: [gallery/runtime-motion.html](./gallery/runtime-motion.html)
+Catalog source of truth: [runtime/motion-catalog.json](./runtime/motion-catalog.json)
 
 The README hero uses a browser-captured animated preview from the GSAP runtime,
 so the first viewport can show the high-fidelity motion directly on GitHub.
@@ -103,14 +105,29 @@ Full layout showcase source: `gallery/layouts/index.html`
 
 ### Runtime Motion Showcase
 
-The P0 high-fidelity runtime demonstrates four semantic icon performances:
+The high-fidelity runtime now covers every built-in semantic icon. The core
+performances are:
+
+Review the frozen baseline through [gallery/runtime-motion.html](./gallery/runtime-motion.html).
+It embeds a live runtime overview, lists the stage effects and stable icon
+parts, and links to the machine-readable catalog. Changes to visual timing,
+intensity, icon semantics, stable part IDs, stage effects, default mode/profile,
+or runtime scheduling must be confirmed before implementation.
 
 | Performance | Semantic beat |
 | --- | --- |
-| `agent-think-act-v2` | think dots gather, core decides, decision token exits |
+| `agent-think-act-v2` | brain circuit draws, nodes light, decision token exits |
 | `search-discover-v2` | scan, discover results, lock target |
 | `api-request-response-v2` | request travels out, response returns, status resolves |
 | `database-write-v2` | write token lands, storage reacts, commit flash resolves |
+| `memory-commit-v2` | context token lands, memory cards settle, traces commit |
+| `tool-run-v2` | tool chip presses, connector fires, sparks resolve |
+| `token-intent-v2` | token shell pops, intent ticks draw, halo releases |
+| `output-reveal-v2` | output card settles, lines reveal, check completes |
+| `file-lines-v2` | document lands, fold reacts, lines draw in |
+| `folder-open-v2` | folder opens, token enters, file line reveals |
+| `cloud-upload-v2` | upload arrow rises, transfer dots pulse, status ring resolves |
+| `shield-check-v2` | shield scans, check draws, protection pulse resolves |
 
 ## What It Does
 
@@ -121,8 +138,9 @@ The P0 high-fidelity runtime demonstrates four semantic icon performances:
 - Renders portable animated SVG and high-fidelity HTML runtime output.
 - Uses richer motion layers: staggered entry, line drawing, flow particles,
   node glow, burst rings, and animated group boundaries.
-- Supports scene-level motion profiles for `off`, `subtle`, `normal`,
-  `expressive`, and `teaching` animation behavior.
+- Defaults high-fidelity HTML runtime output to the `expressive` motion profile.
+  Lower-motion SVG profiles such as `off`, `subtle`, and `normal` remain
+  available for compatibility and fallback exports.
 - Supports structured motion effect objects for line flow, arrow particles,
   dynamic dashes, border scans, icon pulses, and title reveal effects.
 - Supports `motion_policy` budgets so generated diagrams can keep a few focused
@@ -359,8 +377,8 @@ also supports structured effect objects.
 | --- | --- |
 | `off` | Static output with inactive motion channels. |
 | `subtle` | Step-staggered, calm motion with fade nodes, draw-on edges, and soft group reveal. |
-| `normal` | Balanced default motion with glow-breathe nodes, comet-flow edges, and marching group boundaries. |
-| `expressive` | Stronger layered motion with pop nodes, comet-flow edges, and animated group borders. |
+| `normal` | Balanced compatibility motion with glow-breathe nodes, comet-flow edges, and marching group boundaries. |
+| `expressive` | Default high-fidelity motion with pop nodes, comet-flow edges, title sweep, and animated group borders. |
 | `teaching` | Staged teaching motion with icon pulses, ghost-flow edges, border scans, and title reveal. |
 | `runtime-loop` | Static structure with looping signal flow, icon breathing, static groups, and breathing title. |
 
@@ -405,7 +423,7 @@ Recommended defaults:
 | --- | --- |
 | `readable` | Dense architecture diagrams where motion should be sparse. |
 | `focused` | Teaching/explainer diagrams with a small number of active paths. |
-| `expressive` | Showcase diagrams that can tolerate more visible motion. |
+| `expressive` | Default high-fidelity runtime/showcase diagrams. |
 
 ### Node Motion Types
 
@@ -494,7 +512,7 @@ The primary `html` runtime currently maps these high-fidelity v2 performances:
 
 | Icon | Runtime performance |
 | --- | --- |
-| `agent` | `agent-think-act-v2`: thought dots gather into the core, the core pulses as a decision, then a decision token exits the agent. |
+| `agent` | `agent-think-act-v2`: brain-circuit lines draw outward, nodes light up, a decision pulse resolves, then a decision token exits the agent. |
 | `api` | `api-request-response-v2`: endpoints react, a request token travels out, a response returns, and status pops. |
 | `search` | `search-discover-v2`: lens tilts, scan light sweeps, result dots pop, and a target is selected. |
 | `database` | `database-write-v2`: write token lands, the lid squashes, layers commit, and a success flash settles. |
@@ -502,13 +520,22 @@ The primary `html` runtime currently maps these high-fidelity v2 performances:
 | `tool` | `tool-run-v2`: the function chip presses, connector dot fires, sparks draw, and a flash resolves. |
 | `token` | `token-intent-v2`: the token shell pops in, the core pulses, ticks draw, and a halo releases. |
 | `output` | `output-reveal-v2`: the result card settles, lines reveal, the check draws, and a final flash resolves. |
+| `file` | `file-lines-v2`: the document lands, the folded corner reacts, lines draw in, and a flash resolves. |
+| `folder` | `folder-open-v2`: the folder opens, an input token enters, a file line reveals, and a flash resolves. |
+| `cloud` | `cloud-upload-v2`: the upload arrow rises, transfer dots pulse, and the status ring resolves. |
+| `shield` | `shield-check-v2`: the shield scans, the check draws in, and a protection pulse resolves. |
 
 The runtime is driven by a `<script type="application/json"
 id="anidiagram-motion-manifest">` block. Each entry points to stable SVG part
-IDs such as `#icon-agent-thought-1` or `#icon-api-request-token`; the JavaScript
+IDs such as `#icon-agent-outline-left` or `#icon-api-request-token`; the JavaScript
 runtime does not infer semantics from arbitrary paths or classes.
-See [docs/html-runtime.md](./docs/html-runtime.md) for runtime ownership,
-current performance coverage, and export notes.
+The current default runtime mode is `ambient`, with `expressive` as the default
+high-fidelity motion profile: icon performances loop independently with small
+staggered delays, while the browser runtime generates GSAP-owned edge flow
+particles and title sweep. Whole-diagram timeline,
+event-driven, state-machine, interactive, and hybrid modes are future roadmap
+items, not default behavior. See [docs/html-runtime.md](./docs/html-runtime.md)
+and [docs/runtime-motion-roadmap.md](./docs/runtime-motion-roadmap.md).
 
 ### Effect Object Fields
 
@@ -549,20 +576,20 @@ Structured motion example:
 ```json
 {
   "motion": {
-    "profile": "teaching",
-    "edge": {"preset": "ghost-flow", "particle": "soft-dot", "trail": true, "particle_count": 1},
-    "node": {"preset": "icon-semantic", "icon_motion": "database-write"},
+    "profile": "expressive",
+    "edge": {"preset": "signal-arrow", "particle": "soft-dot", "trail": true, "particle_count": 1},
+    "node": {"preset": "icon-performance", "icon_motion": "database-write-v2"},
     "group": {"preset": "border-scan"},
-    "title": {"preset": "handwrite-reveal"}
+    "title": {"preset": "highlight-sweep"}
   },
   "motion_policy": {
-    "profile": "focused",
-    "max_active_flow_edges": 4,
-    "max_particle_edges": 3,
+    "profile": "expressive",
+    "max_active_flow_edges": 8,
+    "max_particle_edges": 8,
     "particle_count_per_edge": 1,
     "flow_trail_count": 1,
-    "max_active_pulse_nodes": 1,
-    "max_scanning_groups": 1
+    "max_active_pulse_nodes": 8,
+    "max_scanning_groups": 2
   }
 }
 ```
@@ -630,3 +657,37 @@ schema, assets, examples, and documentation are authored independently.
 
 If code or assets are ever copied from MIT-licensed references, this project
 must add their original license notices before release.
+
+## Illustrated Character v1
+
+The default semantic icon system is `illustrated-character-v1`: a clean-room
+set covering all 13 schema icons (`agent`, `operator`, `search`, `tool`, `api`,
+`memory`, `output`, `file`, `folder`, `cloud`, `shield`, `token`, and
+`database`). Its quiet GSAP performances are `brain-think-pulse-v1`,
+`operator-type-focus-v1`, `search-scout-find-v1`, `tool-kit-action-v1`,
+`api-signal-return-v1`, `memory-index-commit-v1`, `output-envelope-reveal-v1`,
+`file-note-write-v1`, `folder-file-store-v1`, `cloud-uplink-ready-v1`,
+`shield-guard-confirm-v1`, `token-intent-ready-v1`, and
+`bucket-ingest-confirm-v1`. Use `styles/illustrated-character.json` with the
+`icons` and `flow` examples to preview it. `illustrated-v1` and
+`semantic-line-v1` remain explicit compatibility modes.
+
+Character v1 uses Motion Coordination v1.1 in HTML. `Expressive` keeps the
+character performances primary, limits each active edge to one logical packet,
+adds a `0.7 s` quiet gap between packet cycles, plays the title highlight once
+on entry, and keeps group frames on `soft-reveal` unless a scanning preset is
+explicitly requested. `Readable` keeps the semantic character actions but
+reduces stage motion to at most two key edges and removes decorative title and
+group effects. `Off` and operating-system reduced motion show the canonical
+static scene with no GSAP timelines.
+
+The supported Character v1 themes are `illustrated-character`, `deep-tech`, and
+`teaching-sketch-character`. Review identical content across all three in
+[gallery/character-themes.html](./gallery/character-themes.html). Canonical
+architecture examples include [Agent Memory](./examples/agent-memory.diagram.json),
+[High Fidelity Runtime](./examples/high-fidelity-runtime.diagram.json), and
+[Loop Engineering](./outputs/loop-engineering-architecture/loop-engineering-architecture.diagram.json).
+
+Release evidence for the browser-owned SVG, HTML, PNG, WebP, GIF, APNG, MP4,
+PDF, and frame-based Lottie matrix is under
+[`outputs/release-evidence/character-v1/`](./outputs/release-evidence/character-v1/).

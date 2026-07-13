@@ -228,10 +228,40 @@ performances are:
 | `output` | `output-reveal-v2` |
 
 The runtime manifest maps each performance to stable SVG part IDs such as
-`#icon-agent-thought-1`, `#icon-api-request-token`, and
+`#icon-agent-outline-left`, `#icon-api-request-token`, and
 `#icon-search-result-1`.
 See [html-runtime.md](./html-runtime.md) for the runtime ownership model and
 current limitations.
+
+## Illustrated character icons
+
+`illustrated-character-v1` is the default icon system when a style omits
+`icon_system`. It clean-room covers all 13 schema icons: `agent`, `operator`,
+`search`, `tool`, `api`, `memory`, `output`, `file`, `folder`, `cloud`,
+`shield`, `token`, and `database`. Set `icon_system` explicitly to
+`illustrated-v1` for the previous bubble treatment or `semantic-line-v1` for
+the original line-icon system.
+
+The 13 quiet semantic performances are `brain-think-pulse-v1`,
+`operator-type-focus-v1`, `search-scout-find-v1`, `tool-kit-action-v1`,
+`api-signal-return-v1`, `memory-index-commit-v1`,
+`output-envelope-reveal-v1`, `file-note-write-v1`, `folder-file-store-v1`,
+`cloud-uplink-ready-v1`, `shield-guard-confirm-v1`, `token-intent-ready-v1`,
+and `bucket-ingest-confirm-v1`. Each valid schema icon is covered by the
+default system; invalid icon names remain schema errors.
+
+For Character v1 diagrams, use a `focused`, `readable`, or `readable-runtime`
+motion policy when the scene is dense. Author only the primary paths as
+animated; set non-key edges to `"animated": false` instead of depending on
+runtime clamping to hide an overloaded source specification. HTML Readable mode
+then narrows the stage further to at most two key edge packets.
+
+The supported theme combinations are `illustrated-character`, `deep-tech`, and
+`teaching-sketch-character`. See
+[the three-theme comparison](../gallery/character-themes.html) and the
+representative `agent-memory`, `high-fidelity-runtime`, pipeline, layered, and
+sequence examples for current default behavior. Explicit legacy demonstrations
+must set `icon_system` to `illustrated-v1` or `semantic-line-v1`.
 
 The broader feature plan is documented in
 [motion-effects-feature-plan.md](./motion-effects-feature-plan.md).

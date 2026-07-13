@@ -60,7 +60,7 @@ KNOWN_EDGE_MOTION = {
 KNOWN_GROUP_MOTION = {"none", "static", "soft-reveal", "marching-ants", "border-scan", "corner-pulse"}
 KNOWN_REDUCED_MOTION = {"static", "subtle", "pause"}
 KNOWN_TITLE_MOTION = {"none", "fade", "breathe", "handwrite-reveal", "highlight-sweep"}
-KNOWN_ICONS = {"database", "file", "folder", "api", "cloud", "search", "shield", "agent", "token", "memory", "tool", "output"}
+KNOWN_ICONS = {"database", "file", "folder", "api", "cloud", "search", "shield", "agent", "operator", "token", "memory", "tool", "output"}
 KNOWN_NODE_SHAPES = {"rect", "decision"}
 KNOWN_MOTION_POLICY_PROFILES = {"unrestricted", "readable", "focused", "expressive", "readable-runtime"}
 KNOWN_PULSE_MODES = {"all", "rotate"}
@@ -178,11 +178,11 @@ def _parse_title(value: Any, path: str, issues: List[ValidationIssue]) -> Title:
 
 def _parse_scene_motion(value: Any, path: str, issues: List[ValidationIssue]) -> SceneMotion:
     if value is None:
-        return SceneMotion()
+        return _motion_defaults("expressive")
     if not isinstance(value, dict):
         issues.append(ValidationIssue(path, "expected an object", "type"))
-        return SceneMotion()
-    profile = _enum(value, "profile", f"{path}.profile", KNOWN_MOTION_PROFILES, issues, default="normal")
+        return _motion_defaults("expressive")
+    profile = _enum(value, "profile", f"{path}.profile", KNOWN_MOTION_PROFILES, issues, default="expressive")
     defaults = _motion_defaults(profile)
     edge_effect = _effect_config(value.get("edge"), f"{path}.edge", KNOWN_EDGE_MOTION, issues, defaults.edge_effect)
     node_effect = _effect_config(value.get("node"), f"{path}.node", KNOWN_NODE_MOTION, issues, defaults.node_effect)
@@ -225,6 +225,8 @@ def _motion_defaults(profile: str) -> SceneMotion:
         return _scene_motion("off", "simultaneous", "linear", 0.0, 1.0, 0.0, "none", "none", "none", "none", "static")
     if profile == "subtle":
         return _scene_motion("subtle", "step-stagger", "calm", 0.08, 1.2, 0.55, "fade", "draw", "soft-reveal", "fade", "static")
+    if profile == "normal":
+        return _scene_motion("normal", "step-stagger", "calm", 0.12, 1.0, 1.0, "glow-breathe", "comet-flow", "marching-ants", "fade", "subtle")
     if profile == "expressive":
         return _scene_motion("expressive", "layered", "spring", 0.16, 0.9, 1.25, "pop", "comet-flow", "marching-ants", "highlight-sweep", "subtle")
     if profile == "teaching":
@@ -363,7 +365,7 @@ def _effect_config(
         if value not in allowed_presets:
             issues.append(ValidationIssue(path, f"expected one of: {', '.join(sorted(allowed_presets))}", "enum"))
             return default
-        return EffectConfig(preset=value)
+        return EffectConfig(preset=value, explicit=True)
     if not isinstance(value, dict):
         issues.append(ValidationIssue(path, "expected a string or object", "type"))
         return default
@@ -380,6 +382,7 @@ def _effect_config(
     trail = value.get("trail")
     return EffectConfig(
         preset=preset,
+        explicit=bool(value),
         line=_optional_string_token(value, "line"),
         particle=_optional_string_token(value, "particle"),
         trail=str(trail).lower() if isinstance(trail, bool) else _optional_string_token(value, "trail"),

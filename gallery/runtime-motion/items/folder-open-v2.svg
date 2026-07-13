@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="360" viewBox="0 0 560 360" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="expressive" data-motion-sequence="simultaneous" data-motion-edge="static" data-motion-node="icon-performance" data-motion-group="static" data-motion-title="none" data-motion-reduced="subtle" data-icon-system="semantic-line-v1">
+<title id="diagram-title">Folder Open</title>
+<desc id="diagram-desc">folder-open-v2</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .edge-flow { stroke-linecap: round; }
+  .edge-draw, .edge-base { stroke-linecap: round; stroke-linejoin: round; }
+  .edge-particle { filter: url(#particle-glow); }
+  .edge-arrow-particle { filter: url(#particle-glow); }
+  .semantic-icon { vector-effect: non-scaling-stroke; }
+  .semantic-icon-breathe { transform-box: fill-box; transform-origin: center; animation: semanticIconBreathe 2.8s ease-in-out infinite; }
+  .icon-breathe-halo { pointer-events: none; filter: url(#particle-glow); }
+  .node-glow, .node-burst { pointer-events: none; }
+  #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
+  #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
+  @keyframes titlePulse { 0%, 100% { opacity: 0.76; } 50% { opacity: 1; } }
+  @keyframes titleSlide { 0%, 100% { transform: translateX(0); opacity: 0.9; } 50% { transform: translateX(8px); opacity: 1; } }
+  @keyframes semanticIconBreathe { 0%, 100% { transform: scale(0.96); opacity: 0.72; } 50% { transform: scale(1.08); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    #title-accent, #title-highlight, .semantic-icon-breathe { animation: none; }
+  }
+</style>
+<rect width="100%" height="100%" fill="#050816" />
+<defs>
+  <filter id="soft-glow" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="5" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <filter id="particle-glow" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="2.6" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#111c36" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="504" height="308" rx="26" fill="none" stroke="#64748b" stroke-width="1.4" opacity="1.00" />
+<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#22d3ee" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#0f2742" />
+
+<text id="main-title" x="90" y="84" class="title" fill="#f8fafc" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.08s" fill="freeze" />
+  Folder Open
+</text>
+<text x="74" y="126" class="subtitle" fill="#cbd5e1" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />
+  folder-open-v2
+</text>
+
+
+
+<g id="node-folder" class="node motion-node" data-role="source" opacity="0">
+  <animate attributeName="opacity" values="0;1" dur="0.52s" begin="0.32s" fill="freeze" />
+
+
+
+  <rect x="170.0" y="190.0" width="220.0" height="96.0" rx="14.0"
+        fill="#071f2f" stroke="#22d3ee" stroke-width="2.0" />
+
+<g id="icon-folder-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-folder" data-icon="folder" data-node-id="folder" opacity="0.94">
+
+
+
+
+
+  <path id="icon-folder-body" class="semantic-icon icon-filled semantic-icon-folder icon-folder-body" d="M 191.0 227.9 H 207.4 L 212.0 221.6 H 233.0 V 255.2 H 191.0 Z"
+        stroke="#22d3ee" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#0d4759" />
+  <path id="icon-folder-tab" class="icon-folder-tab" d="M 192.7 227.9 H 207.0 L 212.0 221.6 H 230.5"
+        fill="none" stroke="#22d3ee" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.92" />
+  <path id="icon-folder-file-line" class="icon-runtime-part icon-folder-file-line" d="M 201.1 241.4 H 222.9"
+        fill="none" stroke="#22d3ee" stroke-width="2.4" stroke-linecap="round" opacity="0" />
+  <circle id="icon-folder-open-token" class="icon-runtime-part" cx="201.9" cy="236.3" r="2.7" fill="#22d3ee" opacity="0" />
+  <circle id="icon-folder-flash" class="icon-runtime-part" cx="212.0" cy="242.2" r="14.3" fill="none" stroke="#22d3ee" stroke-width="2" opacity="0" />
+
+  <g class="icon-semantic-motion icon-motion-folder-open" data-icon-motion="folder-open">
+    <path d="M 192.7 227.9 H 207.8 L 212.4 221.6 H 231.9"
+          fill="none" stroke="#22d3ee" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.92">
+      <animateTransform attributeName="transform" type="rotate" values="3 192.7 227.9;-20 192.7 227.9;3 192.7 227.9" dur="2.16s" begin="0.84s" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0.36;0.96;0.36" dur="2.16s" begin="0.84s" repeatCount="indefinite" />
+    </path>
+    <path class="icon-folder-file-line" d="M 201.1 241.4 H 223.3"
+          fill="none" stroke="#22d3ee" stroke-width="2.5" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0">
+      <animate attributeName="stroke-dashoffset" values="1;0;0;1" keyTimes="0;0.16;0.52;1" dur="2.16s" begin="1.00s" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.86;0.72;0" keyTimes="0;0.12;0.58;1" dur="2.16s" begin="1.00s" repeatCount="indefinite" />
+    </path>
+  </g>
+
+</g>
+
+  <text x="308.0" y="224.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="308.0" dy="18" class="node-title">Folder Open</tspan>
+<tspan x="308.0" dy="17" class="node-caption">Collection /</tspan>
+<tspan x="308.0" dy="17" class="node-caption">Open / Load</tspan>
+</text>
+</g>
+</svg>

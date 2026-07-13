@@ -172,8 +172,20 @@
       "to": "answer",
       "label": "flow",
       "role": "process",
-      "route": "straight"
+      "route": "straight",
+      "animated": false
     }
   ],
+  "motion_policy": {
+    "profile": "focused",
+    "motion_area": "small",
+    "max_active_flow_edges": 4,
+    "max_particle_edges": 4,
+    "particle_count_per_edge": 1,
+    "flow_trail_count": 0,
+    "max_active_pulse_nodes": 3,
+    "pulse_mode": "rotate",
+    "max_scanning_groups": 0
+  },
   "preset": "pipeline"
 }
