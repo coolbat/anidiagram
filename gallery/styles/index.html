@@ -4,12 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AniDiagram Style Showcase</title>
+  <link rel="icon" href="data:,">
   <style>
     body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: #f8fafc; color: #111827; }
     main { max-width: 1220px; margin: 0 auto; padding: 28px; }
     h1 { font-size: 32px; margin: 0 0 8px; }
     .intro { color: #4b5563; margin: 0 0 24px; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; }
+    .style-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (max-width: 760px) { .style-grid { grid-template-columns: 1fr; } }
     article { border: 1px solid #e5e7eb; border-radius: 8px; background: #ffffff; overflow: hidden; }
     img { display: block; width: 100%; height: auto; }
     h2 { font-size: 18px; margin: 12px 14px 2px; }
@@ -21,7 +24,7 @@
   <main>
     <h1>AniDiagram Style Showcase</h1>
     <p class="intro"><a href="../index.html">Back to gallery home</a></p>
-    <section class="grid">
+    <section class="grid style-grid">
       <article><a href="minimal-light.html"><img src="minimal-light.svg" alt="minimal-light showcase"></a><h2>minimal-light</h2><h3>Customer Support Triage</h3><p>intake, classify, answer, and learn</p></article>
       <article><a href="deep-tech.html"><img src="deep-tech.svg" alt="deep-tech showcase"></a><h2>deep-tech</h2><h3>Realtime AI Ops Mesh</h3><p>signals move through policy, model, and action loops</p></article>
       <article><a href="blueprint.html"><img src="blueprint.svg" alt="blueprint showcase"></a><h2>blueprint</h2><h3>MCP Server Architecture</h3><p>client requests route through tools, resources, auth, and transport</p></article>

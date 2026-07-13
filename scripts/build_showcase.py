@@ -1092,12 +1092,14 @@ def _write_gallery_index(
     p {{ color: #4b5563; }}
     .hero img {{ width: 100%; display: block; border: 1px solid #e5e7eb; border-radius: 8px; background: #fff; }}
     .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }}
+    .style-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
     article {{ border: 1px solid #e5e7eb; border-radius: 8px; background: #ffffff; overflow: hidden; }}
     article img {{ display: block; width: 100%; height: auto; }}
     article p {{ margin: 0 14px 14px; }}
     .actions {{ display: flex; gap: 8px; margin: 0 14px 14px; }}
     .actions a, .actions button {{ border: 1px solid #d1d5db; border-radius: 6px; background: #fff; color: #111827; padding: 7px 9px; font: inherit; text-decoration: none; cursor: pointer; }}
     .links a {{ margin-right: 12px; }}
+    @media (max-width: 760px) {{ .style-grid {{ grid-template-columns: 1fr; }} }}
   </style>
 </head>
 <body>
@@ -1114,7 +1116,7 @@ def _write_gallery_index(
     <section>
       <h2>Style Showcase</h2>
       <p>One signature case for every bundled visual style.</p>
-      <div class="grid">
+      <div class="grid style-grid">
 {style_cards}
       </div>
     </section>
@@ -1160,6 +1162,13 @@ def _write_gallery_index(
 
 
 def _write_section_index(outdir: Path, title: str, cards: Iterable[Tuple[str, str, str, str, str]]) -> None:
+    grid_class = "grid style-grid" if title == "Style Showcase" else "grid"
+    style_grid_css = (
+        "    .style-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }\n"
+        "    @media (max-width: 760px) { .style-grid { grid-template-columns: 1fr; } }\n"
+        if title == "Style Showcase"
+        else ""
+    )
     body = "\n".join(
         f'      <article><a href="{html}"><img src="{svg}" alt="{label} showcase"></a>'
         f"<h2>{label}</h2><h3>{case_title}</h3><p>{subtitle}</p></article>"
@@ -1172,12 +1181,14 @@ def _write_section_index(outdir: Path, title: str, cards: Iterable[Tuple[str, st
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AniDiagram {title}</title>
+  <link rel="icon" href="data:,">
   <style>
     body {{ margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: #f8fafc; color: #111827; }}
     main {{ max-width: 1220px; margin: 0 auto; padding: 28px; }}
     h1 {{ font-size: 32px; margin: 0 0 8px; }}
     .intro {{ color: #4b5563; margin: 0 0 24px; }}
     .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; }}
+{style_grid_css.rstrip()}
     article {{ border: 1px solid #e5e7eb; border-radius: 8px; background: #ffffff; overflow: hidden; }}
     img {{ display: block; width: 100%; height: auto; }}
     h2 {{ font-size: 18px; margin: 12px 14px 2px; }}
@@ -1189,7 +1200,7 @@ def _write_section_index(outdir: Path, title: str, cards: Iterable[Tuple[str, st
   <main>
     <h1>AniDiagram {title}</h1>
     <p class="intro"><a href="../index.html">Back to gallery home</a></p>
-    <section class="grid">
+    <section class="{grid_class}">
 {body}
     </section>
   </main>

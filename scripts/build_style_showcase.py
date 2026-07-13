@@ -349,17 +349,19 @@ def write_index(outdir: Path, cards: Iterable[Tuple[str, str, str, str, str]]) -
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AniDiagram Style Showcase</title>
+  <link rel="icon" href="data:,">
   <style>
     body {{ margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: #f8fafc; color: #111827; }}
     main {{ max-width: 1220px; margin: 0 auto; padding: 28px; }}
     h1 {{ font-size: 32px; margin: 0 0 8px; }}
     .intro {{ color: #4b5563; margin: 0 0 24px; }}
-    .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; }}
+    .grid {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }}
     article {{ border: 1px solid #e5e7eb; border-radius: 8px; background: #ffffff; overflow: hidden; }}
     img {{ display: block; width: 100%; height: auto; }}
     h2 {{ font-size: 18px; margin: 12px 14px 2px; }}
     h3 {{ font-size: 15px; margin: 0 14px 4px; font-weight: 600; color: #1f2937; }}
     p {{ margin: 0 14px 14px; color: #4b5563; }}
+    @media (max-width: 760px) {{ .grid {{ grid-template-columns: 1fr; }} }}
   </style>
 </head>
 <body>
