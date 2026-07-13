@@ -176,8 +176,30 @@ class ShowcaseGalleryTest(unittest.TestCase):
             with self.subTest(entry=entry["title"]):
                 for key in ("spec", "svg", "html", "quality"):
                     self.assertTrue((ROOT / entry[key]).is_file(), entry[key])
+                for key in ("svg", "html"):
+                    rendered = (ROOT / entry[key]).read_text(encoding="utf-8")
+                    self.assertIn('data-icon-system="illustrated-character-v1"', rendered, entry[key])
+                    self.assertIn("semantic-icon-illustrated-character-v1", rendered, entry[key])
                 summary = json.loads((ROOT / entry["quality"]).read_text(encoding="utf-8"))["summary"]
                 self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, summary)
+
+    def test_style_showcases_use_two_column_readme_and_gallery_grids(self):
+        for relative in ("README.md", "README.zh-CN.md"):
+            source = (ROOT / relative).read_text(encoding="utf-8")
+            style_section = source.split("### Style Showcase", 1)[1].split("### Layout Showcase", 1)[0]
+            header_rows = [
+                line
+                for line in style_section.splitlines()
+                if line.startswith("| `") and line.endswith(" |")
+            ]
+            self.assertEqual(6, len(header_rows), relative)
+            self.assertTrue(all(row.count("|") == 3 for row in header_rows), relative)
+
+        build_showcase = (ROOT / "scripts" / "build_showcase.py").read_text(encoding="utf-8")
+        style_builder = (ROOT / "scripts" / "build_style_showcase.py").read_text(encoding="utf-8")
+        self.assertIn('class="grid style-grid"', build_showcase)
+        self.assertIn(".style-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }", build_showcase)
+        self.assertIn("grid-template-columns: repeat(2, minmax(0, 1fr));", style_builder)
 
     def test_gallery_pages_have_no_broken_local_asset_links(self):
         for page in (ROOT / "gallery").rglob("*.html"):

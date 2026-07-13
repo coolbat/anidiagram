@@ -14,12 +14,14 @@
     p { color: #4b5563; }
     .hero img { width: 100%; display: block; border: 1px solid #e5e7eb; border-radius: 8px; background: #fff; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .style-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     article { border: 1px solid #e5e7eb; border-radius: 8px; background: #ffffff; overflow: hidden; }
     article img { display: block; width: 100%; height: auto; }
     article p { margin: 0 14px 14px; }
     .actions { display: flex; gap: 8px; margin: 0 14px 14px; }
     .actions a, .actions button { border: 1px solid #d1d5db; border-radius: 6px; background: #fff; color: #111827; padding: 7px 9px; font: inherit; text-decoration: none; cursor: pointer; }
     .links a { margin-right: 12px; }
+    @media (max-width: 760px) { .style-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -36,7 +38,7 @@
     <section>
       <h2>Style Showcase</h2>
       <p>One signature case for every bundled visual style.</p>
-      <div class="grid">
+      <div class="grid style-grid">
 <article><a href="styles/minimal-light.html"><img src="styles/minimal-light.svg" alt="minimal-light showcase"></a><h3>minimal-light</h3><p>Customer Support Triage</p><p>SaaS, Operations, Support flows</p><p class="actions"><a href="styles/minimal-light.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/styles/minimal-light-customer-support-triage.diagram.json --style styles/minimal-light.json --outdir outputs --basename minimal-light --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
 <article><a href="styles/deep-tech.html"><img src="styles/deep-tech.svg" alt="deep-tech showcase"></a><h3>deep-tech</h3><p>Realtime AI Ops Mesh</p><p>AI ops, Realtime systems, Agent meshes</p><p class="actions"><a href="styles/deep-tech.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/styles/deep-tech-realtime-ai-ops-mesh.diagram.json --style styles/deep-tech.json --outdir outputs --basename deep-tech --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
 <article><a href="styles/blueprint.html"><img src="styles/blueprint.svg" alt="blueprint showcase"></a><h3>blueprint</h3><p>MCP Server Architecture</p><p>Architecture, Protocols, Cloud boundaries</p><p class="actions"><a href="styles/blueprint.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/styles/blueprint-mcp-server-architecture.diagram.json --style styles/blueprint.json --outdir outputs --basename blueprint --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
