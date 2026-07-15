@@ -40,6 +40,7 @@ STYLE_BEST_FOR = {
     "openai-minimal": ["Evaluation", "Benchmarks", "Quality gates"],
     "dark-luxury": ["Executive views", "Signal maps", "Strategy"],
     "aurora-orb": ["Creative tools", "Multimodal agents", "Studio flows"],
+    "illustrated-semantic": ["Technical explainers", "Semantic workflows", "Warm presentations"],
     "sketch-board": ["Teaching", "Attention flows", "Explainers"],
 }
 

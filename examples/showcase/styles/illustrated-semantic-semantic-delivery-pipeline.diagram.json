@@ -1,0 +1,156 @@
+{
+  "version": "0.3",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "style": "illustrated-semantic",
+  "title": {
+    "text": "Semantic Delivery Pipeline",
+    "subtitle": "clear illustrated roles on a warm, low-noise canvas"
+  },
+  "motion": {
+    "profile": "subtle",
+    "sequence": "step-stagger",
+    "ease": "calm",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 0.65,
+    "edge": {
+      "preset": "draw",
+      "particle": "soft-dot",
+      "trail": false
+    },
+    "node": {
+      "preset": "fade",
+      "accent": "glow"
+    },
+    "group": {
+      "preset": "soft-reveal"
+    },
+    "title": {
+      "preset": "fade"
+    },
+    "reduced_motion": "subtle"
+  },
+  "groups": [
+    {
+      "id": "semantic-flow",
+      "label": "Structured Semantic Flow",
+      "bounds": [
+        55,
+        245,
+        1095,
+        210
+      ],
+      "role": "neutral"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "brief",
+      "label": "Brief",
+      "caption": "input",
+      "position": [
+        90,
+        315
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "actor",
+      "icon": "file"
+    },
+    {
+      "id": "think",
+      "label": "Think",
+      "caption": "reason",
+      "position": [
+        300,
+        315
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "agent",
+      "icon": "agent"
+    },
+    {
+      "id": "operate",
+      "label": "Operate",
+      "caption": "review",
+      "position": [
+        510,
+        315
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "source",
+      "icon": "operator"
+    },
+    {
+      "id": "execute",
+      "label": "Execute",
+      "caption": "run",
+      "position": [
+        720,
+        315
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "tool",
+      "icon": "tool"
+    },
+    {
+      "id": "deliver",
+      "label": "Deliver",
+      "caption": "confirm",
+      "position": [
+        930,
+        315
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "role": "output",
+      "icon": "output"
+    }
+  ],
+  "edges": [
+    {
+      "from": "brief",
+      "to": "think",
+      "label": "handoff",
+      "role": "process",
+      "route": "straight"
+    },
+    {
+      "from": "think",
+      "to": "operate",
+      "label": "handoff",
+      "role": "process",
+      "route": "straight"
+    },
+    {
+      "from": "operate",
+      "to": "execute",
+      "label": "handoff",
+      "role": "process",
+      "route": "straight"
+    },
+    {
+      "from": "execute",
+      "to": "deliver",
+      "label": "handoff",
+      "role": "process",
+      "route": "straight"
+    }
+  ]
+}

@@ -8,6 +8,7 @@ from typing import Any, Dict, Tuple
 DEFAULT_ICON_SYSTEM = "illustrated-character-v1"
 SUPPORTED_ICON_SYSTEMS = {
     "illustrated-character-v1",
+    "illustrated-character-v2",
     "illustrated-v1",
     "semantic-line-v1",
 }

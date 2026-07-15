@@ -55,7 +55,7 @@
   .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
   .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
   .edge-flow { stroke-linecap: round; }
-  .edge-draw, .edge-base { stroke-linecap: round; stroke-linejoin: round; }
+  .edge-draw, .edge-base { stroke-linecap: butt; stroke-linejoin: round; }
   .edge-particle { filter: url(#particle-glow); }
   .edge-arrow-particle { filter: url(#particle-glow); }
   .semantic-icon { vector-effect: non-scaling-stroke; }
@@ -113,12 +113,12 @@
 </g>
 
 <defs>
-  <marker id="arrow-1" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-    <path d="M 0 0 L 7 3 L 0 6 z" fill="#22c55e" />
+  <marker id="arrow-1" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#22c55e" />
   </marker>
 </defs>
 <g class="edge" data-role="process">
-  <path class="edge-base" d="M 630.0 189.0 L 630.0 193.0" fill="none" stroke="#22c55e" stroke-width="1.3" opacity="0.24" marker-end="url(#arrow-1)" />
+  <path class="edge-base" d="M 630.0 189.0 L 630.0 193.0" fill="none" stroke="#22c55e" stroke-width="1.3" opacity="0.24" />
   <path class="edge-draw" d="M 630.0 189.0 L 630.0 193.0" fill="none" stroke="#22c55e" stroke-width="2.0" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-1)" />
 
@@ -130,12 +130,12 @@
 </g>
 
 <defs>
-  <marker id="arrow-2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-    <path d="M 0 0 L 7 3 L 0 6 z" fill="#22c55e" />
+  <marker id="arrow-2" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#22c55e" />
   </marker>
 </defs>
 <g class="edge" data-role="process">
-  <path class="edge-base" d="M 630.0 289.0 L 630.0 293.0" fill="none" stroke="#22c55e" stroke-width="1.3" opacity="0.24" marker-end="url(#arrow-2)" />
+  <path class="edge-base" d="M 630.0 289.0 L 630.0 293.0" fill="none" stroke="#22c55e" stroke-width="1.3" opacity="0.24" />
   <path class="edge-draw" d="M 630.0 289.0 L 630.0 293.0" fill="none" stroke="#22c55e" stroke-width="2.0" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-2)" />
 
@@ -147,12 +147,12 @@
 </g>
 
 <defs>
-  <marker id="arrow-3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-    <path d="M 0 0 L 7 3 L 0 6 z" fill="#22c55e" />
+  <marker id="arrow-3" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#22c55e" />
   </marker>
 </defs>
 <g class="edge" data-role="process">
-  <path class="edge-base" d="M 630.0 389.0 L 630.0 393.0" fill="none" stroke="#22c55e" stroke-width="1.3" opacity="0.24" marker-end="url(#arrow-3)" />
+  <path class="edge-base" d="M 630.0 389.0 L 630.0 393.0" fill="none" stroke="#22c55e" stroke-width="1.3" opacity="0.24" />
   <path class="edge-draw" d="M 630.0 389.0 L 630.0 393.0" fill="none" stroke="#22c55e" stroke-width="2.0" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-3)" />
 
@@ -164,12 +164,12 @@
 </g>
 
 <defs>
-  <marker id="arrow-4" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-    <path d="M 0 0 L 7 3 L 0 6 z" fill="#22c55e" />
+  <marker id="arrow-4" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#22c55e" />
   </marker>
 </defs>
 <g class="edge" data-role="process">
-  <path class="edge-base" d="M 630.0 489.0 L 630.0 493.0" fill="none" stroke="#22c55e" stroke-width="1.3" opacity="0.24" marker-end="url(#arrow-4)" />
+  <path class="edge-base" d="M 630.0 489.0 L 630.0 493.0" fill="none" stroke="#22c55e" stroke-width="1.3" opacity="0.24" />
   <path class="edge-draw" d="M 630.0 489.0 L 630.0 493.0" fill="none" stroke="#22c55e" stroke-width="2.0" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-4)" />
 
@@ -181,12 +181,12 @@
 </g>
 
 <defs>
-  <marker id="arrow-5" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-    <path d="M 0 0 L 7 3 L 0 6 z" fill="#22c55e" />
+  <marker id="arrow-5" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#22c55e" />
   </marker>
 </defs>
 <g class="edge" data-role="process">
-  <path class="edge-base" d="M 630.0 589.0 L 630.0 593.0" fill="none" stroke="#22c55e" stroke-width="1.3" opacity="0.24" marker-end="url(#arrow-5)" />
+  <path class="edge-base" d="M 630.0 589.0 L 630.0 593.0" fill="none" stroke="#22c55e" stroke-width="1.3" opacity="0.24" />
   <path class="edge-draw" d="M 630.0 589.0 L 630.0 593.0" fill="none" stroke="#22c55e" stroke-width="2.0" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-5)" />
 
@@ -372,7 +372,9 @@
     "edge_flow": false,
     "title_sweep": false,
     "edge_limit": null,
-    "readable_edge_limit": 2
+    "readable_edge_limit": 2,
+    "active_edge_indices": [],
+    "readable_edge_indices": []
   },
   "icons": [
     {
@@ -486,6 +488,63 @@
       },
       "semantic_role": "uplink-send-ready",
       "rest_at": 1.4
+    }
+  ],
+  "edges": [
+    {
+      "index": 0,
+      "source": "ui",
+      "target": "orch",
+      "animated": true,
+      "active": false,
+      "effect": "dynamic-dash",
+      "delay": 0.0,
+      "particle": "soft-dot",
+      "trail": "false"
+    },
+    {
+      "index": 1,
+      "source": "orch",
+      "target": "model",
+      "animated": true,
+      "active": false,
+      "effect": "dynamic-dash",
+      "delay": 0.0,
+      "particle": "soft-dot",
+      "trail": "false"
+    },
+    {
+      "index": 2,
+      "source": "model",
+      "target": "tools",
+      "animated": true,
+      "active": false,
+      "effect": "dynamic-dash",
+      "delay": 0.0,
+      "particle": "soft-dot",
+      "trail": "false"
+    },
+    {
+      "index": 3,
+      "source": "tools",
+      "target": "memory",
+      "animated": true,
+      "active": false,
+      "effect": "dynamic-dash",
+      "delay": 0.0,
+      "particle": "soft-dot",
+      "trail": "false"
+    },
+    {
+      "index": 4,
+      "source": "memory",
+      "target": "infra",
+      "animated": true,
+      "active": false,
+      "effect": "dynamic-dash",
+      "delay": 0.0,
+      "particle": "soft-dot",
+      "trail": "false"
     }
   ],
   "icon_system": "illustrated-character-v1"
@@ -920,8 +979,18 @@
 
   const CHARACTER_REPEAT_DELAY = 0.8;
   const CHARACTER_IDLE_BREATHE_SCALE = 1.012;
+  const STRONG_CHARACTER_REPEAT_DELAY = 0.28;
+  const STRONG_CHARACTER_IDLE_BREATHE_SCALE = 1.028;
 
-  function finishCharacterAtRest(tl, parts, restAt) {
+  function isStrongCharacter(config) {
+    return config && config.performance_tier === "strong-loop";
+  }
+
+  function characterRepeatDelay(config) {
+    return isStrongCharacter(config) ? STRONG_CHARACTER_REPEAT_DELAY : CHARACTER_REPEAT_DELAY;
+  }
+
+  function finishCharacterAtRest(tl, parts, restAt, config = null) {
     const targets = Object.entries(parts)
       .filter(([name, part]) => name !== "root" && Boolean(part))
       .map(([, part]) => part);
@@ -935,9 +1004,13 @@
       scaleY: 1,
     }, restAt);
     if (motionShell) {
+      const strong = isStrongCharacter(config);
+      const breatheScale = strong ? STRONG_CHARACTER_IDLE_BREATHE_SCALE : CHARACTER_IDLE_BREATHE_SCALE;
+      const breatheDuration = strong ? 0.15 : 0.22;
+      const breatheStart = restAt + (strong ? 0.02 : 0.04);
       tl.set(motionShell, { scale: 1, transformOrigin: "center center" }, restAt)
-        .to(motionShell, { scale: CHARACTER_IDLE_BREATHE_SCALE, duration: 0.22, ease: "sine.inOut" }, restAt + 0.04)
-        .to(motionShell, { scale: 1, duration: 0.22, ease: "sine.inOut" }, restAt + 0.26);
+        .to(motionShell, { scale: breatheScale, duration: breatheDuration, ease: "sine.inOut" }, breatheStart)
+        .to(motionShell, { scale: 1, duration: breatheDuration, ease: "sine.inOut" }, breatheStart + breatheDuration);
     } else {
       tl.to({}, { duration: 0.01 }, restAt);
     }
@@ -949,9 +1022,22 @@
     if (!hasParts(parts, required)) return null;
     setInitial(parts, gsap);
     const restAt = config.rest_at;
+    const strong = isStrongCharacter(config);
     const signalLength = primeStrokeDraw([parts.signal], gsap).get(parts.signal);
     gsap.set([parts.signal, parts.spark], { opacity: 0 });
-    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: characterRepeatDelay(config) });
+    if (strong) {
+      tl.to(parts["brain-left"], { rotation: -4, scaleX: 1.09, scaleY: 0.96, duration: 0.16, ease: "back.out(2.6)" })
+        .to(parts["brain-right"], { rotation: 4, scaleX: 1.09, scaleY: 0.96, duration: 0.16, ease: "back.out(2.6)" }, "<")
+        .to(parts.chip, { scale: 1.16, y: -6, rotation: 3, duration: 0.16, ease: "back.out(2.8)" }, "<")
+        .fromTo(parts.signal, { x: -12, strokeDashoffset: signalLength, opacity: 0 }, { x: 8, strokeDashoffset: 0, opacity: 1, duration: 0.22, ease: "power2.out" })
+        .fromTo(parts.spark, { scale: 0.25, rotation: 0, opacity: 0 }, { scale: 1.45, rotation: 60, opacity: 1, duration: 0.14, ease: "back.out(3.2)" }, "-=0.04")
+        .to([parts["brain-left"], parts["brain-right"]], { rotation: 0, scaleX: 0.98, scaleY: 1.04, duration: 0.14, ease: "power2.inOut" })
+        .to([parts["brain-left"], parts["brain-right"]], { scaleX: 1, scaleY: 1, duration: 0.16, ease: "power2.out" })
+        .to(parts.chip, { scale: 1, y: 0, rotation: 0, duration: 0.16, ease: "power2.out" }, "<")
+        .to([parts.signal, parts.spark], { opacity: 0.7, duration: 0.12, ease: "sine.inOut" });
+      return finishCharacterAtRest(tl, parts, restAt, config);
+    }
     tl.to([parts["brain-left"], parts["brain-right"]], { scale: 1.045, duration: 0.18, ease: "sine.inOut" })
       .to(parts.chip, { scale: 1.08, y: -1, duration: 0.18, ease: "back.out(2.4)" }, "<")
       .fromTo(parts.signal, { strokeDashoffset: signalLength, opacity: 0 }, { strokeDashoffset: 0, opacity: 0.88, duration: 0.26, ease: "power2.out" })
@@ -967,8 +1053,25 @@
     if (!hasParts(parts, required)) return null;
     setInitial(parts, gsap);
     const restAt = config.rest_at;
+    const strong = isStrongCharacter(config);
     gsap.set(parts.cursor, { opacity: 0, scale: 0.4 });
-    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: characterRepeatDelay(config) });
+    if (strong) {
+      tl.to(parts.hair, { y: -4, rotation: -3, duration: 0.15, ease: "back.out(2.6)" })
+        .to(parts.face, { y: -2, rotation: 2, duration: 0.15, ease: "back.out(2.6)" }, "<")
+        .to(parts.glasses, { scale: 1.16, y: -2, duration: 0.15, ease: "back.out(3)" }, "<")
+        .to(parts.hands, { y: 4, scaleY: 0.9, duration: 0.09, ease: "power2.in" })
+        .to(parts.laptop, { y: 2, scaleY: 0.93, duration: 0.09, ease: "power2.in" }, "<")
+        .to(parts.hands, { y: -3, scaleY: 1.08, duration: 0.11, ease: "power2.out" })
+        .to(parts.hands, { y: 3, scaleY: 0.92, duration: 0.09, ease: "power2.in" })
+        .to(parts.hands, { y: -1, scaleY: 1, duration: 0.11, ease: "power2.out" })
+        .to(parts.laptop, { y: 0, scaleY: 1, duration: 0.13, ease: "power2.out" }, "<")
+        .fromTo(parts.cursor, { x: -12, y: 9, opacity: 0, scale: 0.25 }, { x: 1, y: -1, opacity: 1, scale: 1.3, duration: 0.18, ease: "back.out(3.2)" })
+        .to([parts.hair, parts.face], { y: 0, rotation: 0, duration: 0.16, ease: "power2.out" })
+        .to(parts.glasses, { scale: 1, y: 0, duration: 0.16, ease: "power2.out" }, "<")
+        .to(parts.cursor, { scale: 1, opacity: 0.62, duration: 0.12, ease: "sine.inOut" });
+      return finishCharacterAtRest(tl, parts, restAt, config);
+    }
     tl.to(parts.glasses, { scale: 1.08, duration: 0.16, ease: "back.out(2.4)" })
       .to(parts.hands, { y: 2, duration: 0.12, ease: "power2.in" })
       .to(parts.laptop, { y: 1, scaleY: 0.97, duration: 0.12, ease: "power2.in" }, "<")
@@ -1019,8 +1122,21 @@
     if (!hasParts(parts, required)) return null;
     setInitial(parts, gsap);
     const restAt = config.rest_at;
+    const strong = isStrongCharacter(config);
     gsap.set(parts.spark, { opacity: 0, scale: 0.4 });
-    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: characterRepeatDelay(config) });
+    if (strong) {
+      tl.to(parts.lid, { y: -8, rotation: -10, duration: 0.16, ease: "back.out(2.8)" })
+        .to(parts.wrench, { y: -3, rotation: 28, scale: 1.18, duration: 0.16, ease: "back.out(3)" }, "<")
+        .to(parts.wrench, { rotation: -12, duration: 0.14, ease: "power2.inOut" })
+        .to(parts.wrench, { rotation: 10, duration: 0.12, ease: "power2.inOut" })
+        .to(parts.bucket, { scaleX: 1.07, scaleY: 0.96, duration: 0.14, ease: "back.out(2.6)" }, "-=0.08")
+        .fromTo(parts.spark, { scale: 0.25, rotation: 0, opacity: 0 }, { scale: 1.45, rotation: 55, opacity: 1, duration: 0.14, ease: "back.out(3.2)" }, "-=0.04")
+        .to(parts.bucket, { scaleX: 1, scaleY: 1, duration: 0.16, ease: "power2.out" })
+        .to(parts.lid, { y: 0, rotation: 0, duration: 0.16, ease: "power2.out" }, "<")
+        .to(parts.wrench, { y: 0, rotation: 0, scale: 1, duration: 0.16, ease: "power2.out" }, "<");
+      return finishCharacterAtRest(tl, parts, restAt, config);
+    }
     tl.to(parts.lid, { y: -4, rotation: -4, duration: 0.18, ease: "power2.out" })
       .to(parts.wrench, { rotation: 14, scale: 1.08, duration: 0.2, ease: "back.out(2.4)" }, "<")
       .to(parts.bucket, { scale: 1.035, duration: 0.16, ease: "sine.inOut" })
@@ -1064,8 +1180,19 @@
     if (!hasParts(parts, required)) return null;
     setInitial(parts, gsap);
     const restAt = config.rest_at;
+    const strong = isStrongCharacter(config);
     gsap.set([parts.card, parts.check, parts.spark], { opacity: 0, scale: 0.5 });
-    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: characterRepeatDelay(config) });
+    if (strong) {
+      tl.to(parts.envelope, { y: 3, scaleX: 1.08, scaleY: 0.94, duration: 0.15, ease: "power2.in" })
+        .fromTo(parts.card, { y: 20, opacity: 0, scale: 0.3 }, { y: -5, opacity: 1, scale: 1.12, duration: 0.22, ease: "back.out(3.2)" })
+        .to(parts.card, { y: 0, scale: 1, duration: 0.14, ease: "power2.out" })
+        .fromTo(parts.check, { scale: 0.2, rotation: -20, opacity: 0 }, { scale: 1.4, rotation: 8, opacity: 1, duration: 0.14, ease: "back.out(3.2)" }, "-=0.04")
+        .fromTo(parts.spark, { scale: 0.2, rotation: 0, opacity: 0 }, { scale: 1.42, rotation: 65, opacity: 1, duration: 0.14, ease: "back.out(3.2)" }, "-=0.08")
+        .to(parts.envelope, { y: 0, scaleX: 1, scaleY: 1, duration: 0.16, ease: "power2.out" })
+        .to([parts.check, parts.spark], { scale: 1, rotation: 0, opacity: 0.72, duration: 0.14, ease: "power2.out" }, "<");
+      return finishCharacterAtRest(tl, parts, restAt, config);
+    }
     tl.to(parts.envelope, { scale: 1.035, duration: 0.16, ease: "sine.inOut" })
       .fromTo(parts.card, { y: 12, opacity: 0, scale: 0.5 }, { y: 0, opacity: 1, scale: 1, duration: 0.24, ease: "back.out(2.6)" })
       .fromTo(parts.check, { scale: 0.3, opacity: 0 }, { scale: 1.16, opacity: 1, duration: 0.16, ease: "back.out(3)" }, "-=0.04")
@@ -1197,10 +1324,23 @@
   function playRuntimeEdgeFlow(svg, manifest, gsap, motionMode = "expressive") {
     if (!manifest.stage || !manifest.stage.edge_flow) return [];
     const edgeGroups = Array.from(svg.querySelectorAll("g.edge"));
-    const requestedLimit = motionMode === "readable" ? manifest.stage.readable_edge_limit : manifest.stage.edge_limit;
-    const activeEdgeGroups = Number.isInteger(requestedLimit) ? edgeGroups.slice(0, Math.max(0, requestedLimit)) : edgeGroups;
+    const edgeEntries = Array.isArray(manifest.edges) ? manifest.edges : [];
+    const configuredIndices = motionMode === "readable"
+      ? manifest.stage.readable_edge_indices
+      : manifest.stage.active_edge_indices;
+    let activeEdges;
+    if (Array.isArray(configuredIndices)) {
+      activeEdges = configuredIndices
+        .filter((edgeIndex) => Number.isInteger(edgeIndex) && edgeIndex >= 0 && edgeGroups[edgeIndex])
+        .map((edgeIndex) => ({ group: edgeGroups[edgeIndex], edgeIndex, entry: edgeEntries[edgeIndex] || {} }));
+    } else {
+      const requestedLimit = motionMode === "readable" ? manifest.stage.readable_edge_limit : manifest.stage.edge_limit;
+      activeEdges = edgeGroups
+        .map((group, edgeIndex) => ({ group, edgeIndex, entry: edgeEntries[edgeIndex] || {} }))
+        .filter((item) => !Number.isInteger(requestedLimit) || item.edgeIndex < Math.max(0, requestedLimit));
+    }
     const timelines = [];
-    activeEdgeGroups.forEach((group, edgeIndex) => {
+    activeEdges.forEach(({ group, edgeIndex, entry }) => {
       const base = group.querySelector("path.edge-base");
       if (!base || !base.getTotalLength) return;
       const length = Math.max(1, base.getTotalLength());
@@ -1209,8 +1349,12 @@
       const stroke = base.getAttribute("stroke") || "#38bdf8";
       const width = Math.max(1, numberAttr(base, "stroke-width", 2.4));
       const label = group.querySelector(".edge-label");
+      const effect = String(entry.effect || "signal-arrow").replace(/[^a-z0-9-]/gi, "-").toLowerCase();
+      const dotEffect = effect === "signal-dot" || effect === "flow-dot";
+      const dashEffect = effect === "dynamic-dash" || effect === "dash-flow" || effect === "trace" || effect === "draw";
+      group.dataset.runtimeEdgeEffect = effect;
       const flow = createSvgElement("path", {
-        class: "edge-flow runtime-edge-flow runtime-generated",
+        class: `edge-flow runtime-edge-flow runtime-edge-effect-${effect} runtime-generated`,
         d: path,
         fill: "none",
         stroke,
@@ -1224,10 +1368,14 @@
       if (label) group.insertBefore(flow, label);
       else group.appendChild(flow);
       for (let particleIndex = 0; particleIndex < EDGE_PACKET_COUNT; particleIndex += 1) {
-        const packetLength = Math.max(13, Math.min(34, length * 0.42));
+        const packetLength = dotEffect
+          ? Math.max(1.8, width * 0.55)
+          : dashEffect
+            ? Math.max(8, Math.min(20, length * 0.18))
+            : Math.max(13, Math.min(34, length * 0.42));
         const packetGap = Math.max(52, length + packetLength * 2.8);
         const packet = createSvgElement("path", {
-          class: "edge-particle runtime-edge-particle runtime-edge-packet runtime-generated",
+          class: `edge-particle runtime-edge-particle runtime-edge-packet runtime-edge-effect-${effect} runtime-generated`,
           d: path,
           fill: "none",
           stroke: "#ffffff",
@@ -1240,14 +1388,14 @@
           "pointer-events": "none",
         });
         const core = createSvgElement("path", {
-          class: "edge-particle runtime-edge-particle runtime-edge-packet-core runtime-generated",
+          class: `edge-particle runtime-edge-particle runtime-edge-packet-core runtime-edge-effect-${effect} runtime-generated`,
           d: path,
           fill: "none",
           stroke,
           "stroke-width": Math.max(2.6, width * (1.48 - particleIndex * 0.14)).toFixed(1),
           "stroke-linecap": "round",
           "stroke-linejoin": "round",
-          "stroke-dasharray": `${Math.max(8, packetLength * 0.62).toFixed(1)} ${packetGap.toFixed(1)}`,
+          "stroke-dasharray": `${(dotEffect ? Math.max(1.2, width * 0.35) : Math.max(6, packetLength * 0.62)).toFixed(1)} ${packetGap.toFixed(1)}`,
           "stroke-dashoffset": packetGap.toFixed(1),
           opacity: "0",
           "pointer-events": "none",
@@ -1260,7 +1408,8 @@
           group.appendChild(core);
         }
         const duration = 2.05 + ((edgeIndex + particleIndex) % 5) * 0.13;
-        const delay = (edgeIndex % 7) * 0.07 + particleIndex * 0.46;
+        const semanticDelay = Number.isFinite(Number(entry.delay)) ? Number(entry.delay) : 0;
+        const delay = semanticDelay + (edgeIndex % 7) * 0.07 + particleIndex * 0.46;
         const tl = gsap.timeline({ repeat: -1, repeatDelay: EDGE_PACKET_REPEAT_DELAY, delay });
         tl.fromTo(
           [packet, core],
@@ -1273,6 +1422,7 @@
           .to([packet, core], { opacity: 0, duration: 0.18, ease: "power1.in" }, Math.max(0, duration - 0.18));
         tl.__anidiagramStage = "edge-packet";
         tl.__anidiagramEdgeIndex = edgeIndex;
+        tl.__anidiagramEdgeEffect = effect;
         timelines.push(tl);
       }
     });

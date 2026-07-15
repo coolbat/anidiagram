@@ -1,0 +1,65 @@
+{
+  "version": "0.3",
+  "preset": "illustrated-character-v2-concepts",
+  "canvas": {"width": 1440, "height": 840},
+  "style": "illustrated-character-v2-concept",
+  "title": {
+    "text": "Illustrated Character v2",
+    "subtitle": "Character-led micro-scenes with a readable rest pose before motion is added"
+  },
+  "motion": {
+    "profile": "off",
+    "sequence": "simultaneous",
+    "node": {"preset": "none"},
+    "edge": {"preset": "none"},
+    "group": {"preset": "none"},
+    "title": {"preset": "none"},
+    "reduced_motion": "static"
+  },
+  "motion_policy": {
+    "profile": "focused",
+    "motion_area": "small",
+    "max_active_flow_edges": 0,
+    "max_particle_edges": 0,
+    "max_active_pulse_nodes": 0,
+    "max_scanning_groups": 0
+  },
+  "nodes": [
+    {
+      "id": "think-v2",
+      "label": "Think",
+      "caption": "receive • process • resolve",
+      "position": [70, 190],
+      "size": [620, 240],
+      "role": "agent",
+      "icon": "agent"
+    },
+    {
+      "id": "operate-v2",
+      "label": "Operate",
+      "caption": "focus • type • confirm",
+      "position": [750, 190],
+      "size": [620, 240],
+      "role": "source",
+      "icon": "operator"
+    },
+    {
+      "id": "execute-v2",
+      "label": "Execute",
+      "caption": "prepare • act • complete",
+      "position": [70, 500],
+      "size": [620, 240],
+      "role": "tool",
+      "icon": "tool"
+    },
+    {
+      "id": "deliver-v2",
+      "label": "Deliver",
+      "caption": "carry • reveal • confirm",
+      "position": [750, 500],
+      "size": [620, 240],
+      "role": "output",
+      "icon": "output"
+    }
+  ]
+}

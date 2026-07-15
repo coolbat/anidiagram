@@ -28,6 +28,15 @@ function loadPlaywright() {
 
 const FULL_GALLERY_CHARACTER_COUNT = 13;
 
+function expectedCharacterCount(value) {
+  if (value === undefined) return FULL_GALLERY_CHARACTER_COUNT;
+  const count = Number.parseInt(value, 10);
+  if (!Number.isInteger(count) || count < 1) {
+    throw new Error("expected-character-icon-count must be a positive integer");
+  }
+  return count;
+}
+
 async function readCharacterManifest(page) {
   const source = await page.evaluate(() => document.getElementById("anidiagram-motion-manifest")?.textContent);
   if (!source) throw new Error("missing Motion Manifest: #anidiagram-motion-manifest");
@@ -81,8 +90,9 @@ function characterEntries(manifest, expectedCount) {
 async function main() {
   const htmlPath = process.argv[2];
   if (!htmlPath || !fs.existsSync(htmlPath)) {
-    throw new Error("usage: verify_character_motion_rest.mjs <runtime.html>");
+    throw new Error("usage: verify_character_motion_rest.mjs <runtime.html> [expected-character-icon-count]");
   }
+  const expectedCount = expectedCharacterCount(process.argv[3]);
 
   const { chromium } = loadPlaywright();
   const browser = await chromium.launch({ headless: true });
@@ -92,11 +102,12 @@ async function main() {
     await page.waitForSelector("svg");
     await page.waitForFunction(() => Boolean(window.AniDiagramRuntime) && Boolean(window.gsap) && Array.isArray(window.__ANIDIAGRAM_TIMELINES__));
     const manifest = await readCharacterManifest(page);
-    const expectedEntries = characterEntries(manifest, FULL_GALLERY_CHARACTER_COUNT);
+    const expectedEntries = characterEntries(manifest, expectedCount);
 
     const result = await page.evaluate((characterEntries) => {
       const timelines = (window.__ANIDIAGRAM_TIMELINES__ || []).filter((timeline) => timeline.__anidiagramCharacter);
       const failures = [];
+      const strongCycles = [];
 
       if (timelines.length !== characterEntries.length) {
         failures.push(`expected ${characterEntries.length} character timelines; received ${timelines.length}`);
@@ -123,6 +134,13 @@ async function main() {
         if (!(metadata.restAt > 0) || !(metadata.restAt < timeline.duration())) {
           failures.push(`invalid restAt for ${metadata.nodeId}: ${metadata.restAt} / ${timeline.duration()}`);
           continue;
+        }
+        if (entry.performance_tier === "strong-loop") {
+          const cycle = timeline.duration() + timeline.repeatDelay();
+          strongCycles.push(cycle);
+          if (cycle < 1.72 || cycle > 1.88) {
+            failures.push(`strong-loop cycle out of range for ${metadata.nodeId}: ${cycle}`);
+          }
         }
 
         const root = document.querySelector(entry.parts.root);
@@ -165,13 +183,14 @@ async function main() {
           }
         }
       }
-      return { failures, expected: characterEntries.length, actual: timelines.length };
+      return { failures, expected: characterEntries.length, actual: timelines.length, strongCycles };
     }, expectedEntries);
 
     if (result.failures.length) {
       throw new Error(result.failures.join("\n"));
     }
-    process.stdout.write(`verified character rest state for ${result.actual}/${result.expected} timelines\n`);
+    const strongSummary = result.strongCycles.length ? `; strong-loop cycles=${result.strongCycles.map((value) => value.toFixed(2)).join(",")}` : "";
+    process.stdout.write(`verified character rest state for ${result.actual}/${result.expected} timelines${strongSummary}\n`);
   } finally {
     await browser.close();
   }

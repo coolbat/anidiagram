@@ -246,6 +246,26 @@
       }
     },
     {
+      "style": "illustrated-semantic",
+      "icon_system": "illustrated-character-v1",
+      "title": "Semantic Delivery Pipeline",
+      "basename": "illustrated-semantic",
+      "spec": "examples/showcase/styles/illustrated-semantic-semantic-delivery-pipeline.diagram.json",
+      "svg": "gallery/styles/illustrated-semantic.svg",
+      "html": "gallery/styles/illustrated-semantic.html",
+      "quality": "gallery/styles/illustrated-semantic.quality.json",
+      "best_for": [
+        "Technical explainers",
+        "Semantic workflows",
+        "Warm presentations"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
       "style": "sketch-board",
       "icon_system": "illustrated-character-v1",
       "title": "Attention Teaching Flow",

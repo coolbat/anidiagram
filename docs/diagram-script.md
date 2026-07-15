@@ -242,6 +242,14 @@ current limitations.
 `illustrated-v1` for the previous bubble treatment or `semantic-line-v1` for
 the original line-icon system.
 
+`illustrated-character-v2` is an explicit experimental system for static visual
+review. Its Draft B concept slice covers `agent`, `operator`, `tool`, and
+`output` as structured semantic illustrations without anthropomorphic objects.
+It is not the default and does not emit runtime icon performances yet;
+uncovered icons use the existing fallback and produce a quality warning. Review
+[`illustrated-semantic-v2-structured.diagram.json`](../examples/illustrated-semantic-v2-structured.diagram.json)
+with the `illustrated-semantic-v2-structured` style before adopting the direction.
+
 The 13 quiet semantic performances are `brain-think-pulse-v1`,
 `operator-type-focus-v1`, `search-scout-find-v1`, `tool-kit-action-v1`,
 `api-signal-return-v1`, `memory-index-commit-v1`,

@@ -211,8 +211,9 @@ PYTHONPATH=src python3 -m anidiagram.cli \
   --html-runtime gsap \
   --export-renderer browser \
   --export-scale 1 \
-  --export-fps 12 \
-  --export-frames 36
+  --export-fps 24 \
+  --export-frames 72 \
+  --export-loop-blend-frames 8
 ```
 
 Use the animated WebP or GIF as the inline README image. Use MP4 as the click
@@ -244,6 +245,12 @@ performs one semantic action, confirms it, and settles back to rest. Browsers
 that request reduced motion register no GSAP timelines. `illustrated-v1` and
 `semantic-line-v1` remain explicit legacy icon-system modes.
 
+`illustrated-character-v2` is currently a static concept mode. It renders the
+four redesigned `agent`, `operator`, `tool`, and `output` structured semantic
+illustrations but
+intentionally contributes no icon entries to the Motion Manifest. This keeps
+the visual review separate from the later v2 animation contract.
+
 Character loops use a compact `0.8 s` repeat gap. During the handoff from the
 semantic action to that gap, a dedicated inner shell performs a restrained
 `1.2%` idle breath, so the icon stays alive without moving its authored anchor.
@@ -272,6 +279,8 @@ the full 13-icon gallery and intentionally rejects any other count.
 - The Motion Manifest currently covers icon performances plus ambient stage
   edge flow and title sweep; it does not yet model camera choreography,
   edge-triggered node performances, or step mode.
+- The experimental `illustrated-character-v2` slice is static until its
+  silhouettes and family consistency are approved.
 - Video and animated image export require browser capture. MP4 also requires
   ffmpeg.
 - Browser-captured PNG/PDF use a settled runtime frame; GIF, WebP, APNG, MP4,

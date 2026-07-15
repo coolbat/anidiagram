@@ -10,7 +10,7 @@
   .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
   .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
   .edge-flow { stroke-linecap: round; }
-  .edge-draw, .edge-base { stroke-linecap: round; stroke-linejoin: round; }
+  .edge-draw, .edge-base { stroke-linecap: butt; stroke-linejoin: round; }
   .edge-particle { filter: url(#particle-glow); }
   .edge-arrow-particle { filter: url(#particle-glow); }
   .semantic-icon { vector-effect: non-scaling-stroke; }

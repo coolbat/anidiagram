@@ -27,7 +27,7 @@ GitHub README 里也能直接看到高保真动效。Style / Layout 的大量卡
 
 | Agent Runtime Flow |
 | --- |
-| [![Agent Runtime Flow](./gallery/previews/agent-runtime-flow.webp)](./gallery/previews/agent-runtime-flow.mp4)<br>从浏览器 runtime 录制的 `illustrated-character-v1` 高保真预览，展示 agent think-act、search discover、API request/response、memory commit 动效。<br>[GIF](./gallery/previews/agent-runtime-flow.gif) · [APNG](./gallery/previews/agent-runtime-flow.apng) · Runtime HTML：`gallery/hero/agent-runtime-flow.html` |
+| [![Agent Runtime Flow](./gallery/previews/agent-runtime-flow.webp)](./gallery/previews/agent-runtime-flow.mp4)<br>从浏览器 runtime 录制的 `illustrated-character-v1` 高保真预览：以 Agent 为视觉中心，分出检索/记忆、策略校验和工具/API 三条路径，最后汇聚到输出。<br>[GIF](./gallery/previews/agent-runtime-flow.gif) · [APNG](./gallery/previews/agent-runtime-flow.apng) · Runtime HTML：`gallery/hero/agent-runtime-flow.html` |
 
 本地打开可交互 runtime：
 
@@ -324,6 +324,7 @@ DiagramScript 也支持 freeform 布局字段：
 | `openai-minimal` | 黑白极简 | 清爽产品图和系统图 |
 | `dark-luxury` | 黑底、高级感克制强调 | 高层网络图和战略图 |
 | `aurora-orb` | 圆角 aurora 色块、柔和光感 | 展示型、创意型图 |
+| `illustrated-semantic` | 暖米白画布、低饱和语义色、弱化网格与外框 | 清晰插画流程和技术说明图 |
 | `sketch-board` | 教学白板感、语义 icon、默认动效 | 教学拆解和复杂概念说明 |
 
 风格目录：[styles/](./styles/)

@@ -8,3 +8,4 @@ dist/
 build/
 outputs/
 .superpowers/
+.playwright-mcp/

@@ -82,6 +82,7 @@ def write_browser_capture(
     frames: Optional[int] = None,
     fps: int = DEFAULT_BROWSER_CAPTURE_FPS,
     scale: float = 2.0,
+    loop_blend_frames: int = 0,
 ) -> Dict[str, Any]:
     """Write visual export formats by recording the high-fidelity HTML runtime."""
 
@@ -112,6 +113,9 @@ def write_browser_capture(
             return _skipped(format_name, path, capture["reason"])
 
         frame_paths = [frames_dir / f"frame-{index:04d}.png" for index in range(frame_count)]
+        applied_loop_blend = 0
+        if format_name not in {"png", "pdf"}:
+            applied_loop_blend = _blend_loop_seam(frame_paths, loop_blend_frames)
         if format_name == "png":
             shutil.copyfile(frame_paths[0], path)
         elif format_name == "pdf":
@@ -134,6 +138,7 @@ def write_browser_capture(
     result["fps"] = fps
     result["frames"] = frame_count
     result["scale"] = scale
+    result["loop_blend_frames"] = applied_loop_blend
     return result
 
 
@@ -246,6 +251,36 @@ def _write_mp4_from_frame_paths(frame_paths: List[Path], path: Path, fps: int) -
     if completed.returncode != 0:
         return _skipped("mp4", path, completed.stderr.strip() or "ffmpeg failed")
     return _done("mp4", path)
+
+
+def _blend_loop_seam(frame_paths: List[Path], blend_frames: int) -> int:
+    """Crossfade the tail into frame zero so looping media has no hard cut."""
+
+    try:
+        from PIL import Image
+    except Exception:
+        return 0
+    applied = min(max(0, int(blend_frames)), max(0, len(frame_paths) - 1))
+    if applied == 0:
+        return 0
+    with Image.open(frame_paths[0]) as source:
+        first = source.convert("RGBA")
+    try:
+        for offset, frame_path in enumerate(frame_paths[-applied:]):
+            with Image.open(frame_path) as source:
+                current = source.convert("RGBA")
+            try:
+                alpha = (offset + 1) / applied
+                blended = Image.blend(current, first, alpha)
+                try:
+                    blended.save(frame_path, format="PNG")
+                finally:
+                    blended.close()
+            finally:
+                current.close()
+    finally:
+        first.close()
+    return applied
 
 
 def _write_browser_image_sequence(format_name: str, frame_paths: List[Path], path: Path, fps: int, style: Dict[str, Any]) -> Dict[str, str]:

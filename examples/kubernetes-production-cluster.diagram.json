@@ -1,0 +1,81 @@
+{
+  "version": "0.3",
+  "preset": "kubernetes-production-cluster",
+  "canvas": {"width": 1280, "height": 740},
+  "style": "deep-tech",
+  "title": {
+    "text": "Kubernetes Production Cluster",
+    "subtitle": "Deploy, schedule, reconcile, serve, and observe across three operating planes"
+  },
+  "motion": {
+    "profile": "expressive",
+    "sequence": "staged",
+    "ease": "spring",
+    "stagger": 0.08,
+    "duration_scale": 0.95,
+    "intensity": 1.0,
+    "edge": {"preset": "signal-arrow", "particle_count": 1, "trail_count": 0},
+    "node": {"preset": "icon-performance"},
+    "group": {"preset": "static"},
+    "title": {"preset": "highlight-sweep"},
+    "reduced_motion": "subtle"
+  },
+  "motion_policy": {
+    "profile": "focused",
+    "motion_area": "small",
+    "max_active_flow_edges": 4,
+    "max_particle_edges": 4,
+    "particle_count_per_edge": 1,
+    "flow_trail_count": 0,
+    "max_active_pulse_nodes": 3,
+    "max_scanning_groups": 0
+  },
+  "groups": [
+    {"id": "access", "label": "01  ACCESS & TRAFFIC", "bounds": [40, 140, 1200, 140], "role": "source", "effect": {"preset": "static"}},
+    {"id": "control-plane", "label": "02  CONTROL PLANE", "bounds": [40, 295, 1200, 165], "role": "agent", "effect": {"preset": "static"}},
+    {"id": "workload-plane", "label": "03  WORKLOAD PLANE", "bounds": [40, 475, 1200, 235], "role": "process", "effect": {"preset": "static"}},
+    {"id": "worker-a", "label": "WORKER NODE A", "bounds": [60, 530, 330, 150], "role": "tool", "effect": {"preset": "static"}},
+    {"id": "worker-b", "label": "WORKER NODE B", "bounds": [410, 530, 330, 150], "role": "tool", "effect": {"preset": "static"}},
+    {"id": "platform-services", "label": "PLATFORM SERVICES", "bounds": [770, 530, 450, 150], "role": "memory", "effect": {"preset": "static"}}
+  ],
+  "nodes": [
+    {"id": "developer", "label": "Dev / CI", "caption": "deploy", "position": [70, 185], "size": [190, 78], "role": "actor", "icon": "operator", "effect": {"preset": "icon-performance"}},
+    {"id": "kubectl", "label": "kubectl", "caption": "manifest", "position": [330, 185], "size": [175, 78], "role": "source", "icon": "token", "effect": {"preset": "icon-performance"}},
+    {"id": "external-users", "label": "Users", "caption": "requests", "position": [805, 185], "size": [185, 78], "role": "actor", "icon": "operator", "effect": {"preset": "icon-performance"}},
+    {"id": "ingress", "label": "Ingress", "caption": "route", "position": [1060, 185], "size": [160, 78], "role": "source", "icon": "cloud", "effect": {"preset": "icon-performance"}},
+
+    {"id": "admission", "label": "Admission", "caption": "policy gate", "position": [60, 345], "size": [170, 82], "role": "risk", "icon": "shield", "effect": {"preset": "icon-performance"}},
+    {"id": "api-server", "label": "API Server", "caption": "cluster hub", "position": [290, 330], "size": [220, 110], "role": "agent", "icon": "api", "effect": {"preset": "icon-performance"}},
+    {"id": "scheduler", "label": "Scheduler", "caption": "select node", "position": [570, 345], "size": [165, 82], "role": "source", "icon": "search", "effect": {"preset": "icon-performance"}},
+    {"id": "controllers", "label": "Controllers", "caption": "reconcile state", "position": [780, 345], "size": [180, 82], "role": "agent", "icon": "agent", "effect": {"preset": "icon-performance"}},
+    {"id": "etcd", "label": "etcd", "caption": "cluster state", "position": [1010, 345], "size": [170, 82], "role": "memory", "icon": "database", "effect": {"preset": "icon-performance"}},
+
+    {"id": "kubelet-a", "label": "kubelet", "caption": "ensure pods", "position": [75, 580], "size": [125, 78], "role": "tool", "icon": "tool", "effect": {"preset": "icon-performance"}},
+    {"id": "pod-a", "label": "Pod A", "caption": "app replica", "position": [250, 580], "size": [125, 78], "role": "process", "icon": "cloud", "effect": {"preset": "icon-performance"}},
+    {"id": "kubelet-b", "label": "kubelet", "caption": "ensure pods", "position": [425, 580], "size": [125, 78], "role": "tool", "icon": "tool", "effect": {"preset": "icon-performance"}},
+    {"id": "pod-b", "label": "Pod B", "caption": "app replica", "position": [600, 580], "size": [125, 78], "role": "process", "icon": "cloud", "effect": {"preset": "icon-performance"}},
+    {"id": "service", "label": "Service", "caption": "balance traffic", "position": [790, 580], "size": [135, 78], "role": "source", "icon": "api", "effect": {"preset": "icon-performance"}},
+    {"id": "storage", "label": "Storage", "caption": "persistent data", "position": [945, 580], "size": [135, 78], "role": "memory", "icon": "database", "effect": {"preset": "icon-performance"}},
+    {"id": "metrics", "label": "Metrics", "caption": "health signals", "position": [1100, 580], "size": [130, 78], "role": "output", "icon": "search", "effect": {"preset": "icon-performance"}}
+  ],
+  "edges": [
+    {"from": "developer", "to": "kubectl", "role": "actor", "route": "straight", "effect": {"preset": "signal-dot"}, "animated": false},
+    {"from": "kubectl", "to": "api-server", "label": "apply", "role": "source", "route": "points", "points": [[418, 263], [418, 300], [370, 300], [370, 330]], "effect": {"preset": "signal-arrow"}},
+    {"from": "external-users", "to": "ingress", "role": "actor", "route": "straight", "effect": {"preset": "signal-dot"}, "animated": false},
+    {"from": "ingress", "to": "service", "role": "source", "route": "points", "points": [[1140, 263], [1190, 263], [1190, 475], [858, 475], [858, 580]], "effect": {"preset": "signal-arrow"}},
+
+    {"from": "api-server", "to": "admission", "role": "risk", "route": "straight", "effect": {"preset": "dynamic-dash"}, "animated": false},
+    {"from": "api-server", "to": "scheduler", "role": "source", "route": "straight", "effect": {"preset": "signal-arrow"}},
+    {"from": "api-server", "to": "controllers", "role": "agent", "route": "points", "points": [[400, 440], [400, 450], [870, 450], [870, 427]], "effect": {"preset": "signal-dot"}, "animated": false},
+    {"from": "api-server", "to": "etcd", "role": "memory", "route": "points", "points": [[440, 330], [440, 285], [1095, 285], [1095, 345]], "effect": {"preset": "signal-dot"}, "animated": false},
+    {"from": "api-server", "to": "kubelet-a", "label": "PodSpec", "role": "tool", "route": "points", "points": [[340, 440], [340, 490], [138, 490], [138, 580]], "effect": {"preset": "signal-arrow"}},
+    {"from": "api-server", "to": "kubelet-b", "role": "tool", "route": "points", "points": [[460, 440], [460, 510], [488, 510], [488, 580]], "effect": {"preset": "signal-arrow"}, "animated": false},
+
+    {"from": "kubelet-a", "to": "pod-a", "role": "process", "route": "straight", "effect": {"preset": "signal-dot"}, "animated": false},
+    {"from": "kubelet-b", "to": "pod-b", "role": "process", "route": "straight", "effect": {"preset": "signal-dot"}, "animated": false},
+    {"from": "service", "to": "pod-a", "role": "source", "route": "points", "points": [[820, 580], [820, 500], [313, 500], [313, 580]], "effect": {"preset": "signal-arrow"}, "animated": false},
+    {"from": "service", "to": "pod-b", "role": "source", "route": "points", "points": [[895, 580], [895, 520], [663, 520], [663, 580]], "effect": {"preset": "signal-arrow"}, "animated": false},
+    {"from": "pod-a", "to": "storage", "role": "memory", "route": "points", "points": [[313, 658], [313, 695], [1013, 695], [1013, 658]], "effect": {"preset": "signal-dot"}, "animated": false},
+    {"from": "pod-b", "to": "metrics", "role": "output", "route": "points", "points": [[663, 658], [663, 680], [1165, 680], [1165, 658]], "effect": {"preset": "signal-dot"}, "animated": false}
+  ]
+}

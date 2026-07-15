@@ -8,15 +8,15 @@
   "style": "deep-tech",
   "title": {
     "text": "Agent Runtime Flow",
-    "subtitle": "High-fidelity icon performances driven by an HTML runtime manifest"
+    "subtitle": "One agent retrieves, acts, verifies, remembers, and delivers"
   },
   "motion": {
     "profile": "expressive",
-    "sequence": "layered",
+    "sequence": "staged",
     "ease": "spring",
-    "stagger": 0.12,
-    "duration_scale": 0.95,
-    "intensity": 1.15,
+    "stagger": 0.1,
+    "duration_scale": 1.0,
+    "intensity": 1.05,
     "edge": {
       "preset": "signal-arrow",
       "particle_count": 1,
@@ -45,13 +45,27 @@
   },
   "groups": [
     {
-      "id": "runtime",
-      "label": "Runtime",
+      "id": "input",
+      "label": "Input",
       "bounds": [
-        58,
-        170,
-        1005,
-        175
+        40,
+        220,
+        220,
+        240
+      ],
+      "role": "source",
+      "effect": {
+        "preset": "static"
+      }
+    },
+    {
+      "id": "orchestration",
+      "label": "Orchestration",
+      "bounds": [
+        300,
+        190,
+        320,
+        310
       ],
       "role": "agent",
       "effect": {
@@ -59,13 +73,13 @@
       }
     },
     {
-      "id": "support",
-      "label": "Support",
+      "id": "capabilities",
+      "label": "Capability Paths",
       "bounds": [
-        238,
-        405,
         650,
-        115
+        140,
+        430,
+        420
       ],
       "role": "process",
       "effect": {
@@ -77,14 +91,14 @@
     {
       "id": "request",
       "label": "Request",
-      "caption": "intent arrives",
+      "caption": "user intent",
       "position": [
-        82,
-        220
+        70,
+        295
       ],
       "size": [
-        150,
-        82
+        160,
+        88
       ],
       "role": "source",
       "icon": "token",
@@ -95,14 +109,14 @@
     {
       "id": "agent",
       "label": "Agent",
-      "caption": "think and decide",
+      "caption": "plan · route · decide",
       "position": [
-        270,
-        220
+        350,
+        260
       ],
       "size": [
-        160,
-        82
+        240,
+        120
       ],
       "role": "agent",
       "icon": "agent",
@@ -112,14 +126,14 @@
     },
     {
       "id": "search",
-      "label": "Retriever",
+      "label": "Retrieve",
       "caption": "discover context",
       "position": [
-        470,
-        220
+        690,
+        190
       ],
       "size": [
-        170,
+        155,
         82
       ],
       "role": "source",
@@ -129,15 +143,69 @@
       }
     },
     {
-      "id": "tool",
-      "label": "Tool",
-      "caption": "function call",
+      "id": "memory",
+      "label": "Memory",
+      "caption": "ground response",
       "position": [
-        680,
-        220
+        890,
+        190
       ],
       "size": [
-        145,
+        155,
+        82
+      ],
+      "role": "memory",
+      "icon": "memory",
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "shield",
+      "label": "Policy",
+      "caption": "verify safety",
+      "position": [
+        690,
+        310
+      ],
+      "size": [
+        155,
+        82
+      ],
+      "role": "risk",
+      "icon": "shield",
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "output",
+      "label": "Output",
+      "caption": "compose answer",
+      "position": [
+        890,
+        305
+      ],
+      "size": [
+        165,
+        92
+      ],
+      "role": "output",
+      "icon": "output",
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "tool",
+      "label": "Tool",
+      "caption": "execute action",
+      "position": [
+        690,
+        440
+      ],
+      "size": [
+        155,
         82
       ],
       "role": "tool",
@@ -149,53 +217,17 @@
     {
       "id": "api",
       "label": "API",
-      "caption": "request response",
+      "caption": "external result",
       "position": [
-        865,
-        220
+        890,
+        440
       ],
       "size": [
-        160,
+        155,
         82
       ],
       "role": "tool",
       "icon": "api",
-      "effect": {
-        "preset": "icon-performance"
-      }
-    },
-    {
-      "id": "memory",
-      "label": "Memory",
-      "caption": "commit context",
-      "position": [
-        315,
-        428
-      ],
-      "size": [
-        185,
-        82
-      ],
-      "role": "memory",
-      "icon": "memory",
-      "effect": {
-        "preset": "icon-performance"
-      }
-    },
-    {
-      "id": "output",
-      "label": "Output",
-      "caption": "final answer",
-      "position": [
-        670,
-        428
-      ],
-      "size": [
-        185,
-        82
-      ],
-      "role": "output",
-      "icon": "output",
       "effect": {
         "preset": "icon-performance"
       }
@@ -205,7 +237,7 @@
     {
       "from": "request",
       "to": "agent",
-      "label": "start",
+      "label": "intent",
       "role": "source",
       "effect": {
         "preset": "signal-dot"
@@ -214,16 +246,66 @@
     {
       "from": "agent",
       "to": "search",
-      "label": "query",
-      "role": "agent",
+      "label": "retrieve",
+      "role": "source",
       "effect": {
         "preset": "signal-arrow"
       }
     },
     {
       "from": "search",
+      "to": "memory",
+      "label": "context",
+      "role": "memory",
+      "effect": {
+        "preset": "signal-dot"
+      },
+      "animated": false
+    },
+    {
+      "from": "memory",
+      "to": "output",
+      "label": "ground",
+      "role": "memory",
+      "route": "points",
+      "points": [
+        [
+          968,
+          272
+        ],
+        [
+          968,
+          305
+        ]
+      ],
+      "effect": {
+        "preset": "signal-dot"
+      },
+      "animated": false
+    },
+    {
+      "from": "agent",
+      "to": "shield",
+      "label": "verify",
+      "role": "risk",
+      "effect": {
+        "preset": "dynamic-dash"
+      },
+      "animated": false
+    },
+    {
+      "from": "shield",
+      "to": "output",
+      "label": "approve",
+      "role": "output",
+      "effect": {
+        "preset": "signal-arrow"
+      }
+    },
+    {
+      "from": "agent",
       "to": "tool",
-      "label": "select",
+      "label": "act",
       "role": "tool",
       "effect": {
         "preset": "signal-arrow"
@@ -236,59 +318,23 @@
       "role": "tool",
       "effect": {
         "preset": "signal-arrow"
-      }
-    },
-    {
-      "from": "search",
-      "to": "memory",
-      "label": "store",
-      "role": "memory",
-      "route": "points",
-      "points": [
-        [
-          555,
-          302
-        ],
-        [
-          555,
-          375
-        ],
-        [
-          407,
-          375
-        ],
-        [
-          407,
-          428
-        ]
-      ],
-      "effect": {
-        "preset": "signal-dot"
       },
       "animated": false
     },
     {
       "from": "api",
       "to": "output",
-      "label": "resolve",
+      "label": "result",
       "role": "output",
       "route": "points",
       "points": [
         [
-          945,
-          302
+          968,
+          440
         ],
         [
-          945,
-          382
-        ],
-        [
-          762,
-          382
-        ],
-        [
-          762,
-          428
+          968,
+          397
         ]
       ],
       "effect": {

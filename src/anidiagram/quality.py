@@ -8,6 +8,7 @@ from typing import Dict, Iterable, List, Optional, Tuple
 from .effects import channel_effect, effect_active
 from .icon_system import resolve_icon_system
 from .illustrated_character_icons import character_icon_ids
+from .illustrated_character_v2_icons import character_v2_icon_ids
 from .model import Edge, Node, Point, Scene
 
 
@@ -66,8 +67,12 @@ def quality_report(scene: Scene, style: Optional[Dict[str, object]] = None) -> D
     _check_text_fit(scene.nodes, issues)
     _check_edge_node_collisions(scene.edges, nodes, issues)
     _check_motion_budget(scene, issues)
-    if style is not None and resolve_icon_system(style) == "illustrated-character-v1":
-        _check_character_icon_fallbacks(scene, issues)
+    if style is not None:
+        icon_system = resolve_icon_system(style)
+        if icon_system == "illustrated-character-v1":
+            _check_character_icon_fallbacks(scene, issues, icon_system, character_icon_ids())
+        elif icon_system == "illustrated-character-v2":
+            _check_character_icon_fallbacks(scene, issues, icon_system, character_v2_icon_ids())
     errors = sum(1 for issue in issues if issue.severity == "error")
     warnings = sum(1 for issue in issues if issue.severity == "warning")
     score = max(0, 100 - errors * 20 - warnings * 5)
@@ -79,8 +84,13 @@ def quality_report(scene: Scene, style: Optional[Dict[str, object]] = None) -> D
     }
 
 
-def _check_character_icon_fallbacks(scene: Scene, issues: List[QualityIssue]) -> None:
-    covered = set(character_icon_ids())
+def _check_character_icon_fallbacks(
+    scene: Scene,
+    issues: List[QualityIssue],
+    icon_system: str = "illustrated-character-v1",
+    covered_icons: Iterable[str] = (),
+) -> None:
+    covered = set(covered_icons or character_icon_ids())
     for index, node in enumerate(scene.nodes):
         if node.icon and node.icon not in covered:
             issues.append(
@@ -88,7 +98,7 @@ def _check_character_icon_fallbacks(scene: Scene, issues: List[QualityIssue]) ->
                     "character_icon_fallback",
                     "warning",
                     f"$.nodes[{index}].icon",
-                    f"icon '{node.icon}' is not covered by illustrated-character-v1; rendered with semantic-line-v1",
+                    f"icon '{node.icon}' is not covered by {icon_system}; rendered with semantic-line-v1",
                 )
             )
 

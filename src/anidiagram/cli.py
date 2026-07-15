@@ -84,6 +84,12 @@ def main(argv: Optional[List[str]] = None) -> None:
     parser.add_argument("--export-scale", type=float, default=2.0, help="Browser export device scale factor.")
     parser.add_argument("--export-fps", type=int, default=24, help="Browser export frame rate for animated formats.")
     parser.add_argument("--export-frames", type=int, help="Browser export frame count for animated formats.")
+    parser.add_argument(
+        "--export-loop-blend-frames",
+        type=int,
+        default=0,
+        help="Crossfade this many final browser frames into frame zero for a seamless loop.",
+    )
     parser.add_argument("--all", action="store_true", help="Write every supported output format.")
     parser.add_argument("--html", action="store_true", help="Also write the high-fidelity HTML runtime output.")
     parser.add_argument("--viewer", action="store_true", help="Also write the debug HTML viewer output.")
@@ -148,6 +154,7 @@ def main(argv: Optional[List[str]] = None) -> None:
                 frames=args.export_frames,
                 fps=args.export_fps,
                 scale=args.export_scale,
+                loop_blend_frames=args.export_loop_blend_frames,
             )
         else:
             outputs[format_name] = EXPORTERS[format_name](scene, style, output_path)

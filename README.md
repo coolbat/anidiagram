@@ -32,7 +32,7 @@ host such as GitHub Pages, or opened through a local static server.
 
 | Agent Runtime Flow |
 | --- |
-| [![Agent Runtime Flow](./gallery/previews/agent-runtime-flow.webp)](./gallery/previews/agent-runtime-flow.mp4)<br>Browser-captured `illustrated-character-v1` runtime preview with agent think-act, search discover, API request/response, and memory commit motion.<br>[GIF](./gallery/previews/agent-runtime-flow.gif) · [APNG](./gallery/previews/agent-runtime-flow.apng) · Runtime HTML: `gallery/hero/agent-runtime-flow.html` |
+| [![Agent Runtime Flow](./gallery/previews/agent-runtime-flow.webp)](./gallery/previews/agent-runtime-flow.mp4)<br>Browser-captured `illustrated-character-v1` runtime preview: a focal agent branches into retrieval/memory, policy verification, and tool/API paths before converging on the output.<br>[GIF](./gallery/previews/agent-runtime-flow.gif) · [APNG](./gallery/previews/agent-runtime-flow.apng) · Runtime HTML: `gallery/hero/agent-runtime-flow.html` |
 
 To open the interactive runtime locally:
 
@@ -349,6 +349,7 @@ treatment, and optional style-compatible motion defaults.
 | `openai-minimal` | Stark white/black minimal style | clean product and system diagrams |
 | `dark-luxury` | Black canvas with restrained premium accents | executive maps and high-level networks |
 | `aurora-orb` | Rounded aurora color fills and soft canvas treatment | expressive previews and showcase diagrams |
+| `illustrated-semantic` | Warm off-white canvas, low-saturation semantic fills, quiet framing | clear illustrated workflows and technical explainers |
 | `sketch-board` | Teaching-board style with semantic icons and active motion defaults | educational walkthroughs |
 
 Style catalog: [styles/catalog.json](./styles/catalog.json)

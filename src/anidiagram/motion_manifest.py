@@ -7,6 +7,7 @@ from typing import Any, Dict, List, Optional
 from .effects import channel_effect
 from .icon_system import resolve_icon_system
 from .illustrated_character_icons import character_definition
+from .illustrated_character_v2_icons import character_v2_definition
 from .illustrated_icons import illustrated_definition, is_illustrated_style
 from .model import EffectConfig, Node, Scene
 
@@ -61,6 +62,8 @@ CHARACTER_REST_AT = {
     "shield": 1.35,
     "token": 1.35,
 }
+STRONG_CHARACTER_INTENSITY = 1.5
+STRONG_CHARACTER_REST_AT = 1.2
 SUPPORTED_ICON_PERFORMANCES.update(CHARACTER_ICON_PERFORMANCES.values())
 
 PERFORMANCE_PARTS = {
@@ -187,9 +190,12 @@ def build_motion_manifest(
         if not performance:
             continue
         character = character_definition(node.icon) if icon_system == "illustrated-character-v1" else None
-        definition = character
+        character_v2 = character_v2_definition(node.icon) if icon_system == "illustrated-character-v2" else None
+        definition = character or character_v2
         if character is not None:
             part_names = character.parts
+        elif character_v2 is not None:
+            part_names = character_v2.parts
         elif illustrated:
             definition = illustrated_definition(node.icon)
             part_names = PERFORMANCE_PARTS[performance]
@@ -213,7 +219,13 @@ def build_motion_manifest(
         if definition is not None:
             icon_entry["semantic_role"] = definition.semantic_role
         if character is not None:
-            icon_entry["rest_at"] = CHARACTER_REST_AT[node.icon]
+            if scene.motion.intensity >= STRONG_CHARACTER_INTENSITY:
+                icon_entry["performance_tier"] = "strong-loop"
+                icon_entry["rest_at"] = STRONG_CHARACTER_REST_AT
+            else:
+                icon_entry["rest_at"] = CHARACTER_REST_AT[node.icon]
+        elif character_v2 is not None:
+            icon_entry["concept_generation"] = "v2"
         if definition is not None:
             if hasattr(definition, "colors"):
                 icon_entry["colors"] = definition.colors
@@ -231,11 +243,48 @@ def build_motion_manifest(
     ]
     edge_limit = min(edge_limits) if edge_limits else None
     readable_edge_limit = min(edge_limit if edge_limit is not None else 2, 2)
+    stage_motion_enabled = scene.motion.profile in {"expressive", "teaching"} and scene.motion.intensity > 0
+    edges: List[Dict[str, Any]] = []
+    eligible_edge_indices: List[int] = []
+    for index, edge in enumerate(scene.edges):
+        resolved_effect = channel_effect(scene.motion, style, "edge", edge.effect)
+        active = (
+            stage_motion_enabled
+            and edge.motion.enabled
+            and resolved_effect.preset not in {"none", "static"}
+        )
+        edge_entry: Dict[str, Any] = {
+            "index": index,
+            "source": edge.source,
+            "target": edge.target,
+            "animated": edge.motion.enabled,
+            "active": active,
+            "effect": resolved_effect.preset,
+            "delay": edge.motion.delay,
+        }
+        for key in ("line", "particle", "trail"):
+            value = getattr(resolved_effect, key)
+            if value is not None:
+                edge_entry[key] = value
+        edges.append(edge_entry)
+        if active:
+            eligible_edge_indices.append(index)
+
+    active_edge_indices = (
+        eligible_edge_indices[:edge_limit]
+        if edge_limit is not None
+        else eligible_edge_indices
+    )
+    readable_edge_indices = active_edge_indices[:readable_edge_limit]
     stage = {
-        "edge_flow": scene.motion.profile in {"expressive", "teaching"} and edge_effect.preset not in {"none", "static"},
-        "title_sweep": scene.motion.profile in {"expressive", "teaching"} and title_effect.preset == "highlight-sweep",
+        "edge_flow": stage_motion_enabled and (
+            edge_effect.preset not in {"none", "static"} or bool(eligible_edge_indices)
+        ),
+        "title_sweep": stage_motion_enabled and title_effect.preset == "highlight-sweep",
         "edge_limit": edge_limit,
         "readable_edge_limit": readable_edge_limit,
+        "active_edge_indices": active_edge_indices,
+        "readable_edge_indices": readable_edge_indices,
     }
     if illustrated:
         stage.update(
@@ -256,6 +305,7 @@ def build_motion_manifest(
         "reduced_motion": scene.motion.reduced_motion,
         "stage": stage,
         "icons": icons,
+        "edges": edges,
     }
     manifest["icon_system"] = icon_system
     return manifest
@@ -263,6 +313,10 @@ def build_motion_manifest(
 
 def icon_performance_for_node(node: Node, effect: EffectConfig, profile: str, icon_system: str = "semantic-line-v1") -> Optional[str]:
     if profile == "off":
+        return None
+    if icon_system == "illustrated-character-v2":
+        # The first v2 slice is intentionally static so visual approval happens
+        # before a new motion contract is attached to the redesigned parts.
         return None
     explicit_node_effect = node.effect.explicit
     node_requests_icon_performance = (

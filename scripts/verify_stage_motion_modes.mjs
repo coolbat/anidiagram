@@ -35,6 +35,8 @@ async function snapshot(page) {
       characters: timelines.filter((timeline) => timeline.__anidiagramCharacter).length,
       titleEntries: stageKinds.filter((kind) => kind === "title-entry").length,
       edgePackets: stageKinds.filter((kind) => kind === "edge-packet").length,
+      edgeIndices: timelines.filter((timeline) => timeline.__anidiagramStage === "edge-packet").map((timeline) => timeline.__anidiagramEdgeIndex),
+      edgeEffects: timelines.filter((timeline) => timeline.__anidiagramStage === "edge-packet").map((timeline) => timeline.__anidiagramEdgeEffect),
       generated: document.querySelectorAll(".runtime-generated").length,
       logicalPackets: document.querySelectorAll(".runtime-edge-packet").length,
       generatedKeys: Array.from(document.querySelectorAll(".runtime-generated")).map((element) => `${element.tagName}:${element.className.baseVal || element.className}`),
@@ -67,16 +69,23 @@ async function main() {
     const manifest = await page.evaluate(() => JSON.parse(document.getElementById("anidiagram-motion-manifest").textContent));
     const expectedCharacters = manifest.icons.length;
     const totalEdges = await page.locator("g.edge").count();
-    const expressiveLimit = Number.isInteger(manifest.stage.edge_limit) ? manifest.stage.edge_limit : totalEdges;
-    const readableLimit = Number.isInteger(manifest.stage.readable_edge_limit) ? manifest.stage.readable_edge_limit : Math.min(2, totalEdges);
-    const expectedExpressivePackets = manifest.stage.edge_flow ? Math.min(totalEdges, expressiveLimit) : 0;
-    const expectedReadablePackets = manifest.stage.edge_flow ? Math.min(totalEdges, readableLimit) : 0;
+    const fallbackExpressive = Array.from({ length: Number.isInteger(manifest.stage.edge_limit) ? Math.min(totalEdges, manifest.stage.edge_limit) : totalEdges }, (_, index) => index);
+    const fallbackReadable = Array.from({ length: Number.isInteger(manifest.stage.readable_edge_limit) ? Math.min(totalEdges, manifest.stage.readable_edge_limit) : Math.min(2, totalEdges) }, (_, index) => index);
+    const expectedExpressiveIndices = manifest.stage.edge_flow
+      ? (Array.isArray(manifest.stage.active_edge_indices) ? manifest.stage.active_edge_indices : fallbackExpressive)
+      : [];
+    const expectedReadableIndices = manifest.stage.edge_flow
+      ? (Array.isArray(manifest.stage.readable_edge_indices) ? manifest.stage.readable_edge_indices : fallbackReadable)
+      : [];
+    const expectedExpressivePackets = expectedExpressiveIndices.length;
+    const expectedReadablePackets = expectedReadableIndices.length;
 
     // Expressive -> Readable -> Off -> Expressive
     const expressive = await snapshot(page);
     assert(expressive.characters === expectedCharacters, `expressive character timelines: ${expressive.characters}/${expectedCharacters}`);
     assert(expressive.titleEntries === (manifest.stage.title_sweep ? 1 : 0), `expressive title entries: ${expressive.titleEntries}`);
     assert(expressive.edgePackets === expectedExpressivePackets, `expressive edge packet timelines: ${expressive.edgePackets}/${expectedExpressivePackets}`);
+    assert(JSON.stringify(expressive.edgeIndices) === JSON.stringify(expectedExpressiveIndices), `expressive edge indices: ${expressive.edgeIndices}/${expectedExpressiveIndices}`);
     assert(expressive.logicalPackets === expressive.edgePackets, `logical packet mismatch: ${expressive.logicalPackets}/${expressive.edgePackets}`);
     const cycleCheck = await page.evaluate(() => {
       const edgeTimelines = (window.__ANIDIAGRAM_STAGE_TIMELINES__ || []).filter((timeline) => timeline.__anidiagramStage === "edge-packet");
@@ -104,6 +113,7 @@ async function main() {
     assert(readable.characters === expectedCharacters, `readable character timelines: ${readable.characters}/${expectedCharacters}`);
     assert(readable.titleEntries === 0, `readable title entries: ${readable.titleEntries}`);
     assert(readable.edgePackets === expectedReadablePackets, `readable edge packet timelines: ${readable.edgePackets}/${expectedReadablePackets}`);
+    assert(JSON.stringify(readable.edgeIndices) === JSON.stringify(expectedReadableIndices), `readable edge indices: ${readable.edgeIndices}/${expectedReadableIndices}`);
     assert(readable.logicalPackets === readable.edgePackets, `readable logical packet mismatch: ${readable.logicalPackets}/${readable.edgePackets}`);
 
     const off = await selectMode(page, "off");
@@ -143,6 +153,7 @@ async function main() {
     const expressiveAgain = await selectMode(page, "expressive");
     assert(expressiveAgain.characters === expectedCharacters, `restored character timelines: ${expressiveAgain.characters}/${expectedCharacters}`);
     assert(expressiveAgain.edgePackets === expressive.edgePackets, `restored edge packets: ${expressiveAgain.edgePackets}/${expressive.edgePackets}`);
+    assert(JSON.stringify(expressiveAgain.edgeIndices) === JSON.stringify(expectedExpressiveIndices), `restored edge indices: ${expressiveAgain.edgeIndices}/${expectedExpressiveIndices}`);
     assert(expressiveAgain.titleEntries === expressive.titleEntries, `restored title entries: ${expressiveAgain.titleEntries}/${expressive.titleEntries}`);
     assert(expressiveAgain.logicalPackets === expressiveAgain.edgePackets, "duplicate runtime-generated stage elements");
     assert(expressiveAgain.generated === expressiveAgain.edgePackets * 3, `duplicate runtime-generated stage elements: ${expressiveAgain.generated}/${expressiveAgain.edgePackets * 3}`);

@@ -9,10 +9,12 @@ from unittest.mock import patch
 
 from anidiagram.cli import main
 from anidiagram.exporters import _render_frames
+from anidiagram.exporters import _blend_loop_seam
 from anidiagram.exporters import _browser_capture_script
 from anidiagram.exporters import write_browser_capture
 from anidiagram.exporters import write_gif
 from anidiagram.illustrated_character_icons import character_definition, character_icon_ids
+from anidiagram.illustrated_character_v2_icons import character_v2_definition, character_v2_icon_ids
 from anidiagram.icon_system import resolve_icon_system
 from anidiagram.motion_manifest import CHARACTER_ICON_PERFORMANCES, CHARACTER_REST_AT
 from anidiagram.planner import brief_to_plan
@@ -87,6 +89,43 @@ class SvgRendererTest(unittest.TestCase):
         svg = render_svg(self._scene_with_icon("agent"), load_style())
         self.assertIn('data-icon-system="illustrated-character-v1"', svg)
         self.assertIn('id="icon-agent-chip"', svg)
+
+    def test_character_v2_is_explicit_static_concept_system(self):
+        self.assertEqual(
+            "illustrated-character-v2",
+            resolve_icon_system({"icon_system": "illustrated-character-v2"}),
+        )
+        self.assertEqual({"agent", "operator", "tool", "output"}, set(character_v2_icon_ids()))
+        for icon in character_v2_icon_ids():
+            definition = character_v2_definition(icon)
+            self.assertIsNotNone(definition, icon)
+            self.assertEqual("root", definition.parts[0], icon)
+            self.assertEqual(len(definition.parts), len(set(definition.parts)), icon)
+            self.assertEqual(set(definition.parts[1:]), {primitive.part for primitive in definition.primitives})
+
+        style = deep_merge(load_style(), {"icon_system": "illustrated-character-v2"})
+        svg = render_svg(self._scene_with_icon("agent", motion={"profile": "off"}), style)
+        self.assertIn('data-icon-system="illustrated-character-v2"', svg)
+        self.assertIn('data-character-generation="v2-structured-concept"', svg)
+        self.assertIn('semantic-icon-illustrated-character-v2', svg)
+        for part in character_v2_definition("agent").parts:
+            self.assertEqual(1, svg.count(f'id="icon-agent-{part}"'), part)
+
+        manifest = self._manifest_from_html(
+            render_html_runtime(self._scene_with_icon("agent"), style, runtime="gsap")
+        )
+        self.assertEqual("illustrated-character-v2", manifest["icon_system"])
+        self.assertEqual([], manifest["icons"])
+
+    def test_character_v2_quality_reports_only_uncovered_icons(self):
+        style = deep_merge(load_style(), {"icon_system": "illustrated-character-v2"})
+        covered = quality_report(self._scene_with_icon("agent", motion={"profile": "off"}), style)
+        self.assertEqual([], [item for item in covered["issues"] if item["code"] == "character_icon_fallback"])
+
+        uncovered = quality_report(self._scene_with_icon("database", motion={"profile": "off"}), style)
+        warnings = [item for item in uncovered["issues"] if item["code"] == "character_icon_fallback"]
+        self.assertEqual(1, len(warnings))
+        self.assertIn("illustrated-character-v2", warnings[0]["message"])
 
     def test_character_registry_and_manifest_cover_every_known_icon(self):
         self.assertEqual(set(character_icon_ids()), KNOWN_ICONS)
@@ -222,14 +261,18 @@ class SvgRendererTest(unittest.TestCase):
 
         self.assertIn("const CHARACTER_REPEAT_DELAY = 0.8;", runtime_source)
         self.assertIn("const CHARACTER_IDLE_BREATHE_SCALE = 1.012;", runtime_source)
+        self.assertIn("characterRepeatDelay", runtime_source)
         self.assertIn('class="illustrated-character-motion-shell"', renderer_source)
         rest_body = self._javascript_function_body(runtime_source, "finishCharacterAtRest")
         self.assertIn('querySelector(".illustrated-character-motion-shell")', rest_body)
         self.assertIn("CHARACTER_IDLE_BREATHE_SCALE", rest_body)
-        self.assertIn("duration: 0.22", rest_body)
+        self.assertIn("strong ? 0.15 : 0.22", rest_body)
         for function_name in performer_names:
             body = self._javascript_function_body(runtime_source, function_name)
-            self.assertIn("repeatDelay: CHARACTER_REPEAT_DELAY", body, function_name)
+            if function_name in {"playBrainThinkPulse", "playOperatorTypeFocus", "playToolKitAction", "playOutputEnvelopeReveal"}:
+                self.assertIn("repeatDelay: characterRepeatDelay(config)", body, function_name)
+            else:
+                self.assertIn("repeatDelay: CHARACTER_REPEAT_DELAY", body, function_name)
             self.assertNotRegex(body, r"repeatDelay:\s*1\.")
 
     def test_stage_runtime_contract_has_distinct_modes_and_quiet_packet_rhythm(self):
@@ -249,11 +292,17 @@ class SvgRendererTest(unittest.TestCase):
         self.assertIn("scaleX", title_body)
         edge_body = self._javascript_function_body(runtime_source, "playRuntimeEdgeFlow")
         self.assertIn("EDGE_PACKET_COUNT", edge_body)
-        self.assertIn("readable_edge_limit", edge_body)
+        self.assertIn("readable_edge_indices", edge_body)
+        self.assertIn("active_edge_indices", edge_body)
+        self.assertNotIn("edgeGroups.slice(0", edge_body)
+        self.assertIn("runtime-edge-effect-", edge_body)
         self.assertNotIn('filter: "url(#particle-glow)"', edge_body)
         self.assertIn('"edge_limit"', manifest_source)
         self.assertIn('"readable_edge_limit"', manifest_source)
+        self.assertIn('"active_edge_indices"', manifest_source)
+        self.assertIn('"readable_edge_indices"', manifest_source)
         self.assertIn('require("playwright")', verifier_source)
+        self.assertIn("edgeIndices", verifier_source)
         self.assertIn("Expressive -> Readable -> Off -> Expressive", verifier_source)
         self.assertIn("duplicate runtime-generated stage elements", verifier_source)
 
@@ -292,6 +341,8 @@ class SvgRendererTest(unittest.TestCase):
         self.assertIn("readCharacterManifest", rest_source)
         self.assertIn('manifest.icon_system !== "illustrated-character-v1"', rest_source)
         self.assertIn("FULL_GALLERY_CHARACTER_COUNT = 13", rest_source)
+        self.assertIn("expected-character-icon-count", rest_source)
+        self.assertIn("strong-loop cycle out of range", rest_source)
         self.assertNotIn("CHARACTER_PERFORMANCE_IDS", rest_source)
         self.assertIn("readCharacterManifest", reduced_source)
         self.assertIn('manifest.icon_system !== "illustrated-character-v1"', reduced_source)
@@ -310,6 +361,27 @@ class SvgRendererTest(unittest.TestCase):
         self.assertEqual(set(CHARACTER_ICON_PERFORMANCES), set(CHARACTER_REST_AT))
         for entry in manifest["icons"]:
             self.assertEqual(CHARACTER_REST_AT[entry["icon"]], entry["rest_at"])
+
+    def test_strong_character_loop_cases_use_explicit_high_energy_tier(self):
+        spec = json.loads((ROOT / "examples" / "illustrated-character-strong-loop-cases.diagram.json").read_text(encoding="utf-8"))
+        scene = compile_scene(spec)
+        manifest = self._manifest_from_html(
+            render_html_runtime(scene, load_style(ROOT / "styles" / "illustrated-character.json"), runtime="gsap")
+        )
+
+        self.assertEqual(["agent", "operator", "tool", "output"], [entry["icon"] for entry in manifest["icons"]])
+        self.assertEqual({"strong-loop"}, {entry["performance_tier"] for entry in manifest["icons"]})
+        self.assertEqual({1.2}, {entry["rest_at"] for entry in manifest["icons"]})
+        self.assertTrue(all(entry["intensity"] >= 1.5 for entry in manifest["icons"]))
+
+        runtime_source = (ROOT / "runtime" / "anidiagram-runtime.js").read_text(encoding="utf-8")
+        self.assertIn("const STRONG_CHARACTER_REPEAT_DELAY = 0.28;", runtime_source)
+        self.assertIn("const STRONG_CHARACTER_IDLE_BREATHE_SCALE = 1.028;", runtime_source)
+        for function_name in ("playBrainThinkPulse", "playOperatorTypeFocus", "playToolKitAction", "playOutputEnvelopeReveal"):
+            body = self._javascript_function_body(runtime_source, function_name)
+            self.assertIn("const strong = isStrongCharacter(config);", body, function_name)
+            self.assertIn("repeatDelay: characterRepeatDelay(config)", body, function_name)
+            self.assertIn("if (strong)", body, function_name)
 
     def test_legacy_illustrated_manifest_does_not_serialize_character_rest_times(self):
         manifest = self._manifest_from_html(
@@ -412,6 +484,17 @@ class SvgRendererTest(unittest.TestCase):
         self.assertIn('class="node-title">Agent</tspan>', svg)
         self.assertIn("marker-end", svg)
 
+    def test_edge_markers_use_single_fixed_arrowhead_with_butt_line_caps(self):
+        spec = json.loads((ROOT / "examples" / "agent-memory.diagram.json").read_text(encoding="utf-8"))
+        scene = compile_scene(spec)
+        svg = render_svg(scene, load_style(ROOT / "styles" / "deep-tech.json"))
+
+        self.assertEqual(len(scene.edges), svg.count('marker-end="url(#arrow-'))
+        self.assertIn('markerUnits="userSpaceOnUse"', svg)
+        self.assertIn('viewBox="0 0 12 12"', svg)
+        self.assertIn('refX="9" refY="6"', svg)
+        self.assertIn(".edge-draw, .edge-base { stroke-linecap: butt;", svg)
+
     def test_cli_writes_svg_and_html_runtime(self):
         with tempfile.TemporaryDirectory() as tmp:
             stdout = io.StringIO()
@@ -479,10 +562,16 @@ class SvgRendererTest(unittest.TestCase):
         self.assertEqual("gsap", manifest["runtime"])
         self.assertEqual("ambient", manifest["mode"])
         self.assertEqual("independent-icon-loops", manifest["sequence"])
-        self.assertEqual("layered", manifest["scene_sequence"])
+        self.assertEqual(scene.motion.sequence, manifest["scene_sequence"])
+        self.assertEqual(True, manifest["stage"]["edge_flow"])
+        self.assertEqual(True, manifest["stage"]["title_sweep"])
+        self.assertEqual(4, manifest["stage"]["edge_limit"])
+        self.assertEqual(2, manifest["stage"]["readable_edge_limit"])
+        self.assertEqual([0, 1, 5, 6], manifest["stage"]["active_edge_indices"])
+        self.assertEqual([0, 1], manifest["stage"]["readable_edge_indices"])
         self.assertEqual(
-            {"edge_flow": True, "title_sweep": True, "edge_limit": 4, "readable_edge_limit": 2},
-            manifest["stage"],
+            ["signal-dot", "signal-arrow", "signal-dot", "signal-dot"],
+            [edge["effect"] for edge in manifest["edges"][:4]],
         )
         self.assertEqual(
             {
@@ -493,6 +582,7 @@ class SvgRendererTest(unittest.TestCase):
                 "memory-index-commit-v1",
                 "tool-kit-action-v1",
                 "output-envelope-reveal-v1",
+                "shield-guard-confirm-v1",
             },
             {icon["performance"] for icon in manifest["icons"]},
         )
@@ -554,10 +644,13 @@ class SvgRendererTest(unittest.TestCase):
 
         self.assertEqual("expressive", scene.motion.profile)
         self.assertEqual("expressive", manifest["profile"])
-        self.assertEqual(
-            {"edge_flow": True, "title_sweep": True, "edge_limit": None, "readable_edge_limit": 2},
-            manifest["stage"],
-        )
+        self.assertEqual(True, manifest["stage"]["edge_flow"])
+        self.assertEqual(True, manifest["stage"]["title_sweep"])
+        self.assertEqual(None, manifest["stage"]["edge_limit"])
+        self.assertEqual(2, manifest["stage"]["readable_edge_limit"])
+        self.assertEqual([], manifest["stage"]["active_edge_indices"])
+        self.assertEqual([], manifest["stage"]["readable_edge_indices"])
+        self.assertEqual([], manifest["edges"])
         self.assertEqual(
             {
                 "brain-think-pulse-v1",
@@ -775,6 +868,8 @@ class SvgRendererTest(unittest.TestCase):
                             "24",
                             "--export-frames",
                             "12",
+                            "--export-loop-blend-frames",
+                            "4",
                             "--export-scale",
                             "2",
                         ]
@@ -783,6 +878,7 @@ class SvgRendererTest(unittest.TestCase):
             result = json.loads(stdout.getvalue())
 
             capture.assert_called_once()
+            self.assertEqual(4, capture.call_args.kwargs["loop_blend_frames"])
             self.assertEqual("browser", result["outputs"]["png"]["renderer"])
             self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, result["outputs"]["quality"]["summary"])
 
@@ -808,6 +904,29 @@ class SvgRendererTest(unittest.TestCase):
         self.assertIn("svgElement.setCurrentTime(seconds)", script)
         self.assertIn("window.__ANIDIAGRAM_TIMELINES__", script)
         self.assertIn("tl.totalTime(localSeconds % cycleSeconds, false)", script)
+
+    def test_browser_capture_loop_blend_closes_the_sequence_seam(self):
+        try:
+            from PIL import Image
+        except ImportError:
+            self.skipTest("Pillow is not installed")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            frame_paths = []
+            colors = ((255, 0, 0, 255), (0, 255, 0, 255), (0, 0, 255, 255), (255, 255, 255, 255))
+            for index, color in enumerate(colors):
+                path = Path(tmp) / f"frame-{index:04d}.png"
+                Image.new("RGBA", (2, 2), color).save(path)
+                frame_paths.append(path)
+
+            applied = _blend_loop_seam(frame_paths, 2)
+            with Image.open(frame_paths[0]) as first, Image.open(frame_paths[-1]) as last:
+                self.assertEqual(first.convert("RGBA").tobytes(), last.convert("RGBA").tobytes())
+            with Image.open(frame_paths[-2]) as penultimate:
+                self.assertNotEqual(colors[2], penultimate.getpixel((0, 0)))
+                self.assertNotEqual(colors[0], penultimate.getpixel((0, 0)))
+
+        self.assertEqual(2, applied)
 
     def test_browser_capture_lottie_packages_captured_frames(self):
         spec = json.loads((ROOT / "tests" / "fixtures" / "minimal.diagram.json").read_text(encoding="utf-8"))
@@ -898,7 +1017,7 @@ class SvgRendererTest(unittest.TestCase):
         svg = render_svg(scene, load_style(ROOT / "styles" / "minimal-light.json"))
 
         self.assertEqual(
-            "44b4673059951bc2143ed182c4fa829c65b7fce6d93249a827b088bdbbefb133",
+            "292eb6475dc1726e2e94f19fd2719015bb7299ca7461c09e337d1bbe03fa9197",
             hashlib.sha256(svg.encode("utf-8")).hexdigest(),
         )
 
@@ -1364,6 +1483,18 @@ class SvgRendererTest(unittest.TestCase):
         for name in catalog["styles"]:
             style = load_style(ROOT / "styles" / f"{name}.json")
             self.assertEqual(name, style["name"])
+
+    def test_illustrated_semantic_theme_preserves_the_approved_draft_b_palette(self):
+        theme = load_style(ROOT / "styles" / "illustrated-semantic.json")
+        draft = load_style(ROOT / "styles" / "illustrated-semantic-v2-structured.json")
+
+        self.assertEqual("illustrated-character-v1", theme["icon_system"])
+        for key in ("canvas", "title", "node", "roles"):
+            self.assertEqual(draft[key], theme[key], key)
+        self.assertEqual(
+            {"grid_opacity": 0.26, "frame_opacity": 0.22},
+            {key: theme["effects"][key] for key in ("grid_opacity", "frame_opacity")},
+        )
 
     def test_style_showcase_specs_cover_catalog(self):
         catalog = json.loads((ROOT / "styles" / "catalog.json").read_text(encoding="utf-8"))

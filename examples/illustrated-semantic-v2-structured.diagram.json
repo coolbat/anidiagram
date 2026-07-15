@@ -1,0 +1,65 @@
+{
+  "version": "0.3",
+  "preset": "illustrated-semantic-v2-structured",
+  "canvas": {"width": 1440, "height": 840},
+  "style": "illustrated-semantic-v2-structured",
+  "title": {
+    "text": "Illustrated Semantic v2 — Draft B",
+    "subtitle": "One dominant symbol, one action cue, and one outcome cue with deliberate negative space"
+  },
+  "motion": {
+    "profile": "off",
+    "sequence": "simultaneous",
+    "node": {"preset": "none"},
+    "edge": {"preset": "none"},
+    "group": {"preset": "none"},
+    "title": {"preset": "none"},
+    "reduced_motion": "static"
+  },
+  "motion_policy": {
+    "profile": "focused",
+    "motion_area": "small",
+    "max_active_flow_edges": 0,
+    "max_particle_edges": 0,
+    "max_active_pulse_nodes": 0,
+    "max_scanning_groups": 0
+  },
+  "nodes": [
+    {
+      "id": "think-structured",
+      "label": "Think",
+      "caption": "input → reason → result",
+      "position": [70, 190],
+      "size": [620, 240],
+      "role": "agent",
+      "icon": "agent"
+    },
+    {
+      "id": "operate-structured",
+      "label": "Operate",
+      "caption": "person → interface → status",
+      "position": [750, 190],
+      "size": [620, 240],
+      "role": "source",
+      "icon": "operator"
+    },
+    {
+      "id": "execute-structured",
+      "label": "Execute",
+      "caption": "tool → target → complete",
+      "position": [70, 500],
+      "size": [620, 240],
+      "role": "tool",
+      "icon": "tool"
+    },
+    {
+      "id": "deliver-structured",
+      "label": "Deliver",
+      "caption": "document → send → confirm",
+      "position": [750, 500],
+      "size": [620, 240],
+      "role": "output",
+      "icon": "output"
+    }
+  ]
+}

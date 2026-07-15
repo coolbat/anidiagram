@@ -14,9 +14,11 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple
 from .effects import channel_effect, effect_active
 from .illustrated_icons import illustrated_definition, illustrated_palette, is_illustrated_style
 from .illustrated_character_icons import character_definition
+from .illustrated_character_v2_icons import character_v2_definition
 from .model import Edge, EffectConfig, Group, MotionPolicy, Node, Scene, SceneMotion
 from .motion_manifest import icon_part_id
 from .renderer_illustrated_character import render_character_icon
+from .renderer_illustrated_character_v2 import render_character_v2_icon
 from .schema import compile_scene
 from .styles import role_style
 from .icon_system import resolve_icon_system
@@ -808,6 +810,7 @@ def render_semantic_icon(
     style = style or {}
     icon_system = resolve_icon_system(style)
     character = character_definition(icon) if icon_system == "illustrated-character-v1" else None
+    character_v2 = character_v2_definition(icon) if icon_system == "illustrated-character-v2" else None
     illustrated = illustrated_icons_enabled(style)
     cx = box.x + min(42, max(30, box.w * 0.22))
     cy = box.y + box.h / 2
@@ -822,6 +825,12 @@ def render_semantic_icon(
         size = min(84, max(48, box.h * 0.58))
         return f'''<g class="semantic-icon-wrap semantic-icon-character-wrap" data-icon="{esc(icon)}" data-node-id="{esc(box.node_id)}" opacity="0.98">
   {render_character_icon(character, box.node_id, cx, cy, size)}
+</g>'''
+    if character_v2:
+        cx = box.x + min(82, max(68, box.w * 0.16))
+        size = min(118, max(88, box.h * 0.64))
+        return f'''<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-character-v2-wrap" data-icon="{esc(icon)}" data-node-id="{esc(box.node_id)}" opacity="1">
+  {render_character_v2_icon(character_v2, box.node_id, cx, cy, size)}
 </g>'''
     half = size / 2
     symbol_fill = icon_surface_fill(fill, stroke)
@@ -1285,7 +1294,10 @@ def render_node(
     text_x = box.x + 12
     text_width = box.w - 24
     if node.icon:
-        if illustrated_icons_enabled(style):
+        icon_system = resolve_icon_system(style)
+        if icon_system == "illustrated-character-v2":
+            text_x = box.x + min(174, max(150, box.w * 0.31))
+        elif illustrated_icons_enabled(style):
             text_x = box.x + min(86, max(68, box.w * 0.40))
         else:
             text_x = box.x + min(68, max(54, box.w * 0.36))
@@ -1576,12 +1588,12 @@ def render_edge(
     label_motion_line = f"    {label_motion}\n" if label_motion else ""
     return f"""
 <defs>
-  <marker id="{marker_id}" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-    <path d="M 0 0 L 7 3 L 0 6 z" fill="{esc(stroke)}" />
+  <marker id="{marker_id}" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="{esc(stroke)}" />
   </marker>
 </defs>
 <g class="edge" data-role="{esc(edge.role)}">
-  <path class="edge-base" d="{path}" fill="none" stroke="{esc(stroke)}" stroke-width="{max(1, width - 0.7):.1f}" opacity="0.24" marker-end="url(#{marker_id})" />
+  <path class="edge-base" d="{path}" fill="none" stroke="{esc(stroke)}" stroke-width="{max(1, width - 0.7):.1f}" opacity="0.24" />
 {draw_markup}
 {flow_markup}
 {motion_markup}
@@ -1733,7 +1745,7 @@ def render_svg(
   .edge-label {{ font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }}
   .step-label {{ font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }}
   .edge-flow {{ stroke-linecap: round; }}
-  .edge-draw, .edge-base {{ stroke-linecap: round; stroke-linejoin: round; }}
+  .edge-draw, .edge-base {{ stroke-linecap: butt; stroke-linejoin: round; }}
   .edge-particle {{ filter: url(#particle-glow); }}
   .edge-arrow-particle {{ filter: url(#particle-glow); }}
   .semantic-icon {{ vector-effect: non-scaling-stroke; }}

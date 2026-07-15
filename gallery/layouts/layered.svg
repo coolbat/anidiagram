@@ -10,7 +10,7 @@
   .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
   .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
   .edge-flow { stroke-linecap: round; }
-  .edge-draw, .edge-base { stroke-linecap: round; stroke-linejoin: round; }
+  .edge-draw, .edge-base { stroke-linecap: butt; stroke-linejoin: round; }
   .edge-particle { filter: url(#particle-glow); }
   .edge-arrow-particle { filter: url(#particle-glow); }
   .semantic-icon { vector-effect: non-scaling-stroke; }
@@ -91,12 +91,12 @@
 </g>
 
 <defs>
-  <marker id="arrow-1" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-    <path d="M 0 0 L 7 3 L 0 6 z" fill="#d97706" />
+  <marker id="arrow-1" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#d97706" />
   </marker>
 </defs>
 <g class="edge" data-role="actor">
-  <path class="edge-base" d="M 339.8 228.9 L 490.2 335.1" fill="none" stroke="#d97706" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-1)" />
+  <path class="edge-base" d="M 339.8 228.9 L 490.2 335.1" fill="none" stroke="#d97706" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 339.8 228.9 L 490.2 335.1" fill="none" stroke="#d97706" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-1)">
     <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.47s" fill="freeze" />
@@ -111,12 +111,12 @@
 </g>
 
 <defs>
-  <marker id="arrow-2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-    <path d="M 0 0 L 7 3 L 0 6 z" fill="#2563eb" />
+  <marker id="arrow-2" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#2563eb" />
   </marker>
 </defs>
 <g class="edge" data-role="tool">
-  <path class="edge-base" d="M 722.0 342.0 L 833.0 342.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-2)" />
+  <path class="edge-base" d="M 722.0 342.0 L 833.0 342.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 722.0 342.0 L 833.0 342.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-2)">
     <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.59s" fill="freeze" />
@@ -131,12 +131,12 @@
 </g>
 
 <defs>
-  <marker id="arrow-3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-    <path d="M 0 0 L 7 3 L 0 6 z" fill="#15803d" />
+  <marker id="arrow-3" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#15803d" />
   </marker>
 </defs>
 <g class="edge" data-role="memory">
-  <path class="edge-base" d="M 605.0 396.0 L 605.0 443.0" fill="none" stroke="#15803d" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-3)" />
+  <path class="edge-base" d="M 605.0 396.0 L 605.0 443.0" fill="none" stroke="#15803d" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 605.0 396.0 L 605.0 443.0" fill="none" stroke="#15803d" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-3)">
     <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.71s" fill="freeze" />
@@ -151,12 +151,12 @@
 </g>
 
 <defs>
-  <marker id="arrow-4" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-    <path d="M 0 0 L 7 3 L 0 6 z" fill="#0f766e" />
+  <marker id="arrow-4" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#0f766e" />
   </marker>
 </defs>
 <g class="edge" data-role="source">
-  <path class="edge-base" d="M 937.5 395.7 L 937.5 443.3 L 947.5 443.3" fill="none" stroke="#0f766e" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-4)" />
+  <path class="edge-base" d="M 937.5 395.7 L 937.5 443.3 L 947.5 443.3" fill="none" stroke="#0f766e" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 937.5 395.7 L 937.5 443.3 L 947.5 443.3" fill="none" stroke="#0f766e" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-4)">
     <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.83s" fill="freeze" />
@@ -171,12 +171,12 @@
 </g>
 
 <defs>
-  <marker id="arrow-5" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-    <path d="M 0 0 L 7 3 L 0 6 z" fill="#0f766e" />
+  <marker id="arrow-5" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#0f766e" />
   </marker>
 </defs>
 <g class="edge" data-role="source">
-  <path class="edge-base" d="M 722.0 497.0 L 833.0 497.0" fill="none" stroke="#0f766e" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-5)" />
+  <path class="edge-base" d="M 722.0 497.0 L 833.0 497.0" fill="none" stroke="#0f766e" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 722.0 497.0 L 833.0 497.0" fill="none" stroke="#0f766e" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-5)">
     <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.95s" fill="freeze" />

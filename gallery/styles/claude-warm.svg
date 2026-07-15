@@ -10,7 +10,7 @@
   .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
   .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
   .edge-flow { stroke-linecap: round; }
-  .edge-draw, .edge-base { stroke-linecap: round; stroke-linejoin: round; }
+  .edge-draw, .edge-base { stroke-linecap: butt; stroke-linejoin: round; }
   .edge-particle { filter: url(#particle-glow); }
   .edge-arrow-particle { filter: url(#particle-glow); }
   .semantic-icon { vector-effect: non-scaling-stroke; }
@@ -72,12 +72,12 @@
 </g>
 
 <defs>
-  <marker id="arrow-1" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-    <path d="M 0 0 L 7 3 L 0 6 z" fill="#0e7490" />
+  <marker id="arrow-1" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#0e7490" />
   </marker>
 </defs>
 <g class="edge" data-role="source">
-  <path class="edge-base" d="M 700.8 182.5 C 700.8 222.5, 774.2 276.5, 774.2 316.5" fill="none" stroke="#0e7490" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-1)" />
+  <path class="edge-base" d="M 700.8 182.5 C 700.8 222.5, 774.2 276.5, 774.2 316.5" fill="none" stroke="#0e7490" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 700.8 182.5 C 700.8 222.5, 774.2 276.5, 774.2 316.5" fill="none" stroke="#0e7490" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-1)">
     <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.47s" fill="freeze" />
@@ -107,12 +107,12 @@
 </g>
 
 <defs>
-  <marker id="arrow-2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-    <path d="M 0 0 L 7 3 L 0 6 z" fill="#0e7490" />
+  <marker id="arrow-2" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#0e7490" />
   </marker>
 </defs>
 <g class="edge" data-role="source">
-  <path class="edge-base" d="M 774.4 337.6 C 774.4 377.6, 700.6 436.4, 700.6 476.4" fill="none" stroke="#0e7490" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-2)" />
+  <path class="edge-base" d="M 774.4 337.6 C 774.4 377.6, 700.6 436.4, 700.6 476.4" fill="none" stroke="#0e7490" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 774.4 337.6 C 774.4 377.6, 700.6 436.4, 700.6 476.4" fill="none" stroke="#0e7490" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-2)">
     <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.59s" fill="freeze" />
@@ -142,12 +142,12 @@
 </g>
 
 <defs>
-  <marker id="arrow-3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-    <path d="M 0 0 L 7 3 L 0 6 z" fill="#b91c1c" />
+  <marker id="arrow-3" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#b91c1c" />
   </marker>
 </defs>
 <g class="edge" data-role="risk">
-  <path class="edge-base" d="M 509.4 476.4 C 509.4 436.4, 435.6 377.6, 435.6 337.6" fill="none" stroke="#b91c1c" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-3)" />
+  <path class="edge-base" d="M 509.4 476.4 C 509.4 436.4, 435.6 377.6, 435.6 337.6" fill="none" stroke="#b91c1c" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 509.4 476.4 C 509.4 436.4, 435.6 377.6, 435.6 337.6" fill="none" stroke="#b91c1c" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-3)">
     <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.71s" fill="freeze" />
@@ -166,12 +166,12 @@
 </g>
 
 <defs>
-  <marker id="arrow-4" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-    <path d="M 0 0 L 7 3 L 0 6 z" fill="#ea580c" />
+  <marker id="arrow-4" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#ea580c" />
   </marker>
 </defs>
 <g class="edge" data-role="actor">
-  <path class="edge-base" d="M 435.8 316.5 C 435.8 276.5, 509.2 222.5, 509.2 182.5" fill="none" stroke="#ea580c" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-4)" />
+  <path class="edge-base" d="M 435.8 316.5 C 435.8 276.5, 509.2 222.5, 509.2 182.5" fill="none" stroke="#ea580c" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 435.8 316.5 C 435.8 276.5, 509.2 222.5, 509.2 182.5" fill="none" stroke="#ea580c" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-4)">
     <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.83s" fill="freeze" />
@@ -201,12 +201,12 @@
 </g>
 
 <defs>
-  <marker id="arrow-5" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-    <path d="M 0 0 L 7 3 L 0 6 z" fill="#15803d" />
+  <marker id="arrow-5" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#15803d" />
   </marker>
 </defs>
 <g class="edge" data-role="memory">
-  <path class="edge-base" d="M 605.0 381.0 L 605.0 433.0" fill="none" stroke="#15803d" stroke-width="1.7" opacity="0.24" marker-end="url(#arrow-5)" />
+  <path class="edge-base" d="M 605.0 381.0 L 605.0 433.0" fill="none" stroke="#15803d" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 605.0 381.0 L 605.0 433.0" fill="none" stroke="#15803d" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-5)">
     <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.95s" fill="freeze" />

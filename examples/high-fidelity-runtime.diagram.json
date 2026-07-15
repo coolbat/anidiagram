@@ -5,15 +5,15 @@
   "style": "deep-tech",
   "title": {
     "text": "Agent Runtime Flow",
-    "subtitle": "High-fidelity icon performances driven by an HTML runtime manifest"
+    "subtitle": "One agent retrieves, acts, verifies, remembers, and delivers"
   },
   "motion": {
     "profile": "expressive",
-    "sequence": "layered",
+    "sequence": "staged",
     "ease": "spring",
-    "stagger": 0.12,
-    "duration_scale": 0.95,
-    "intensity": 1.15,
+    "stagger": 0.1,
+    "duration_scale": 1.0,
+    "intensity": 1.05,
     "edge": {"preset": "signal-arrow", "particle_count": 1, "trail_count": 0},
     "node": {"preset": "icon-performance"},
     "group": {"preset": "static"},
@@ -31,24 +31,29 @@
     "max_scanning_groups": 0
   },
   "groups": [
-    {"id": "runtime", "label": "Runtime", "bounds": [58, 170, 1005, 175], "role": "agent", "effect": {"preset": "static"}},
-    {"id": "support", "label": "Support", "bounds": [238, 405, 650, 115], "role": "process", "effect": {"preset": "static"}}
+    {"id": "input", "label": "Input", "bounds": [40, 220, 220, 240], "role": "source", "effect": {"preset": "static"}},
+    {"id": "orchestration", "label": "Orchestration", "bounds": [300, 190, 320, 310], "role": "agent", "effect": {"preset": "static"}},
+    {"id": "capabilities", "label": "Capability Paths", "bounds": [650, 140, 430, 420], "role": "process", "effect": {"preset": "static"}}
   ],
   "nodes": [
-    {"id": "request", "label": "Request", "caption": "intent arrives", "position": [82, 220], "size": [150, 82], "role": "source", "icon": "token", "effect": {"preset": "icon-performance"}},
-    {"id": "agent", "label": "Agent", "caption": "think and decide", "position": [270, 220], "size": [160, 82], "role": "agent", "icon": "agent", "effect": {"preset": "icon-performance"}},
-    {"id": "search", "label": "Retriever", "caption": "discover context", "position": [470, 220], "size": [170, 82], "role": "source", "icon": "search", "effect": {"preset": "icon-performance"}},
-    {"id": "tool", "label": "Tool", "caption": "function call", "position": [680, 220], "size": [145, 82], "role": "tool", "icon": "tool", "effect": {"preset": "icon-performance"}},
-    {"id": "api", "label": "API", "caption": "request response", "position": [865, 220], "size": [160, 82], "role": "tool", "icon": "api", "effect": {"preset": "icon-performance"}},
-    {"id": "memory", "label": "Memory", "caption": "commit context", "position": [315, 428], "size": [185, 82], "role": "memory", "icon": "memory", "effect": {"preset": "icon-performance"}},
-    {"id": "output", "label": "Output", "caption": "final answer", "position": [670, 428], "size": [185, 82], "role": "output", "icon": "output", "effect": {"preset": "icon-performance"}}
+    {"id": "request", "label": "Request", "caption": "user intent", "position": [70, 295], "size": [160, 88], "role": "source", "icon": "token", "effect": {"preset": "icon-performance"}},
+    {"id": "agent", "label": "Agent", "caption": "plan · route · decide", "position": [350, 260], "size": [240, 120], "role": "agent", "icon": "agent", "effect": {"preset": "icon-performance"}},
+    {"id": "search", "label": "Retrieve", "caption": "discover context", "position": [690, 190], "size": [155, 82], "role": "source", "icon": "search", "effect": {"preset": "icon-performance"}},
+    {"id": "memory", "label": "Memory", "caption": "ground response", "position": [890, 190], "size": [155, 82], "role": "memory", "icon": "memory", "effect": {"preset": "icon-performance"}},
+    {"id": "shield", "label": "Policy", "caption": "verify safety", "position": [690, 310], "size": [155, 82], "role": "risk", "icon": "shield", "effect": {"preset": "icon-performance"}},
+    {"id": "output", "label": "Output", "caption": "compose answer", "position": [890, 305], "size": [165, 92], "role": "output", "icon": "output", "effect": {"preset": "icon-performance"}},
+    {"id": "tool", "label": "Tool", "caption": "execute action", "position": [690, 440], "size": [155, 82], "role": "tool", "icon": "tool", "effect": {"preset": "icon-performance"}},
+    {"id": "api", "label": "API", "caption": "external result", "position": [890, 440], "size": [155, 82], "role": "tool", "icon": "api", "effect": {"preset": "icon-performance"}}
   ],
   "edges": [
-    {"from": "request", "to": "agent", "label": "start", "role": "source", "effect": {"preset": "signal-dot"}},
-    {"from": "agent", "to": "search", "label": "query", "role": "agent", "effect": {"preset": "signal-arrow"}},
-    {"from": "search", "to": "tool", "label": "select", "role": "tool", "effect": {"preset": "signal-arrow"}},
-    {"from": "tool", "to": "api", "label": "call", "role": "tool", "effect": {"preset": "signal-arrow"}},
-    {"from": "search", "to": "memory", "label": "store", "role": "memory", "route": "points", "points": [[555, 302], [555, 375], [407, 375], [407, 428]], "effect": {"preset": "signal-dot"}, "animated": false},
-    {"from": "api", "to": "output", "label": "resolve", "role": "output", "route": "points", "points": [[945, 302], [945, 382], [762, 382], [762, 428]], "effect": {"preset": "signal-arrow"}, "animated": false}
+    {"from": "request", "to": "agent", "label": "intent", "role": "source", "effect": {"preset": "signal-dot"}},
+    {"from": "agent", "to": "search", "label": "retrieve", "role": "source", "effect": {"preset": "signal-arrow"}},
+    {"from": "search", "to": "memory", "label": "context", "role": "memory", "effect": {"preset": "signal-dot"}, "animated": false},
+    {"from": "memory", "to": "output", "label": "ground", "role": "memory", "route": "points", "points": [[968, 272], [968, 305]], "effect": {"preset": "signal-dot"}, "animated": false},
+    {"from": "agent", "to": "shield", "label": "verify", "role": "risk", "effect": {"preset": "dynamic-dash"}, "animated": false},
+    {"from": "shield", "to": "output", "label": "approve", "role": "output", "effect": {"preset": "signal-arrow"}},
+    {"from": "agent", "to": "tool", "label": "act", "role": "tool", "effect": {"preset": "signal-arrow"}},
+    {"from": "tool", "to": "api", "label": "call", "role": "tool", "effect": {"preset": "signal-arrow"}, "animated": false},
+    {"from": "api", "to": "output", "label": "result", "role": "output", "route": "points", "points": [[968, 440], [968, 397]], "effect": {"preset": "signal-arrow"}, "animated": false}
   ]
 }

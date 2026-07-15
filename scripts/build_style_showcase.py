@@ -38,6 +38,7 @@ STYLE_ORDER = (
     "openai-minimal",
     "dark-luxury",
     "aurora-orb",
+    "illustrated-semantic",
     "sketch-board",
 )
 
@@ -274,6 +275,21 @@ def style_showcase_specs() -> Dict[str, Spec]:
             ],
             [_group("studio", "Studio Canvas", (55, 145, 1090, 420), "agent")],
             _motion("expressive", "ghost-flow", "icon-pulse", "border-scan", "highlight-sweep", intensity=1.2),
+        ),
+        "illustrated-semantic": _flow_case(
+            "illustrated-semantic",
+            "Semantic Delivery Pipeline",
+            "clear illustrated roles on a warm, low-noise canvas",
+            [
+                _node("brief", "Brief", "input", (90, 315), "actor", "file"),
+                _node("think", "Think", "reason", (300, 315), "agent", "agent"),
+                _node("operate", "Operate", "review", (510, 315), "source", "operator"),
+                _node("execute", "Execute", "run", (720, 315), "tool", "tool"),
+                _node("deliver", "Deliver", "confirm", (930, 315), "output", "output"),
+            ],
+            _chain(["brief", "think", "operate", "execute", "deliver"], "handoff", "straight"),
+            [_group("semantic-flow", "Structured Semantic Flow", (55, 245, 1095, 210), "neutral")],
+            _motion("subtle", "draw", "fade", "soft-reveal", "fade", intensity=0.65),
         ),
         "sketch-board": _flow_case(
             "sketch-board",

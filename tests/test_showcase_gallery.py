@@ -7,9 +7,9 @@ from urllib.parse import urlsplit
 
 from anidiagram.quality import quality_report
 from anidiagram.schema import compile_scene
-from anidiagram.motion_manifest import CHARACTER_ICON_PERFORMANCES, CHARACTER_REST_AT
+from anidiagram.motion_manifest import CHARACTER_ICON_PERFORMANCES, CHARACTER_REST_AT, build_motion_manifest
 from anidiagram.illustrated_character_icons import character_definition
-from anidiagram.renderer_svg import render_svg
+from anidiagram.renderer_svg import node_box, render_svg, route_points
 from anidiagram.styles import load_style
 
 
@@ -34,6 +34,86 @@ class _LocalAssetParser(HTMLParser):
 
 
 class ShowcaseGalleryTest(unittest.TestCase):
+    def test_kubernetes_hero_candidate_has_three_planes_and_focused_motion(self):
+        spec_path = ROOT / "examples" / "kubernetes-production-cluster.diagram.json"
+        spec = json.loads(spec_path.read_text(encoding="utf-8"))
+        scene = compile_scene(spec)
+        style = load_style(ROOT / "styles" / "deep-tech.json")
+
+        self.assertEqual((1280, 740), (scene.canvas.width, scene.canvas.height))
+        self.assertGreaterEqual(len(scene.nodes), 16)
+        self.assertGreaterEqual(len(scene.groups), 6)
+        self.assertTrue({"access", "control-plane", "workload-plane"}.issubset({group.group_id for group in scene.groups}))
+        self.assertTrue({"api-server", "scheduler", "controllers", "etcd", "kubelet-a", "pod-a", "kubelet-b", "pod-b"}.issubset({node.node_id for node in scene.nodes}))
+        self.assertEqual("focused", scene.motion_policy.profile)
+        self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, quality_report(scene, style)["summary"])
+        self.assertIn('data-icon-system="illustrated-character-v1"', render_svg(scene, style))
+
+        manifest = build_motion_manifest(scene, style)
+        self.assertEqual([1, 3, 5, 8], manifest["stage"]["active_edge_indices"])
+        self.assertEqual([1, 3], manifest["stage"]["readable_edge_indices"])
+        self.assertEqual(
+            ["kubectl->api-server", "ingress->service", "api-server->scheduler", "api-server->kubelet-a"],
+            [
+                f'{manifest["edges"][index]["source"]}->{manifest["edges"][index]["target"]}'
+                for index in manifest["stage"]["active_edge_indices"]
+            ],
+        )
+        self.assertTrue(all(manifest["edges"][index]["animated"] for index in manifest["stage"]["active_edge_indices"]))
+        self.assertTrue(all(manifest["edges"][index]["effect"] == "signal-arrow" for index in manifest["stage"]["active_edge_indices"]))
+
+    def test_kubernetes_hero_routes_have_visible_shafts_and_no_shared_segments(self):
+        spec = json.loads((ROOT / "examples" / "kubernetes-production-cluster.diagram.json").read_text(encoding="utf-8"))
+        scene = compile_scene(spec)
+        boxes = {node.node_id: node_box(node) for node in scene.nodes}
+        segments = []
+        short_edges = []
+
+        for edge_index, edge in enumerate(scene.edges):
+            points = route_points(edge, boxes)
+            length = sum(((right[0] - left[0]) ** 2 + (right[1] - left[1]) ** 2) ** 0.5 for left, right in zip(points, points[1:]))
+            if length < 24:
+                short_edges.append(f"{edge.source}->{edge.target}:{length:.1f}")
+            for segment_index, (left, right) in enumerate(zip(points, points[1:])):
+                if abs(left[1] - right[1]) < 0.01:
+                    segments.append((edge_index, segment_index, "h", left[1], *sorted((left[0], right[0]))))
+                elif abs(left[0] - right[0]) < 0.01:
+                    segments.append((edge_index, segment_index, "v", left[0], *sorted((left[1], right[1]))))
+
+        overlaps = []
+        for index, left in enumerate(segments):
+            for right in segments[index + 1:]:
+                if left[0] == right[0] or left[2] != right[2] or abs(left[3] - right[3]) >= 0.01:
+                    continue
+                overlap = min(left[5], right[5]) - max(left[4], right[4])
+                if overlap > 1:
+                    left_edge = scene.edges[left[0]]
+                    right_edge = scene.edges[right[0]]
+                    overlaps.append(f"{left_edge.source}->{left_edge.target} / {right_edge.source}->{right_edge.target}:{overlap:.1f}")
+
+        self.assertEqual([], short_edges)
+        self.assertEqual([], overlaps)
+
+    def test_hero_uses_a_focal_agent_and_complete_runtime_story(self):
+        spec_path = ROOT / "examples" / "high-fidelity-runtime.diagram.json"
+        spec = json.loads(spec_path.read_text(encoding="utf-8"))
+        scene = compile_scene(spec)
+        style = load_style(ROOT / "styles" / "deep-tech.json")
+        agent = next(node for node in scene.nodes if node.node_id == "agent")
+        satellites = [node for node in scene.nodes if node.node_id != "agent"]
+
+        self.assertGreaterEqual(len(scene.nodes), 8)
+        self.assertGreaterEqual(len(scene.groups), 3)
+        self.assertGreater(agent.size[0] * agent.size[1], max(node.size[0] * node.size[1] for node in satellites))
+        self.assertTrue({"token", "agent", "search", "tool", "api", "shield", "memory", "output"}.issubset({node.icon for node in scene.nodes}))
+        self.assertEqual("focused", scene.motion_policy.profile)
+        self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, quality_report(scene, style)["summary"])
+
+        capture_docs = (ROOT / "docs" / "html-runtime.md").read_text(encoding="utf-8")
+        readme_command = capture_docs.split("For a README hero preview", 1)[1].split("Use the animated WebP", 1)[0]
+        self.assertIn("--export-fps 24", readme_command)
+        self.assertIn("--export-loop-blend-frames", readme_command)
+
     def test_representative_examples_use_default_character_icons_and_readable_budgets(self):
         targets = (
             ROOT / "examples" / "agent-memory.diagram.json",
@@ -123,7 +203,7 @@ class ShowcaseGalleryTest(unittest.TestCase):
         catalog = load_runtime_motion_catalog()
 
         self.assertEqual("Agent Runtime Flow", manifest["hero"]["title"])
-        self.assertEqual(12, len(manifest["styles"]))
+        self.assertEqual(13, len(manifest["styles"]))
         self.assertEqual(14, len(manifest["layouts"]))
         self.assertEqual("runtime/motion-catalog.json", manifest["runtime_motion_catalog"])
         self.assertEqual("gallery/runtime-motion.html", manifest["runtime_motion_page"])

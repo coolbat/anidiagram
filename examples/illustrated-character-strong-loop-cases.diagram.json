@@ -1,0 +1,67 @@
+{
+  "version": "0.3",
+  "preset": "illustrated-character-strong-loop-cases",
+  "canvas": {"width": 1280, "height": 720},
+  "style": "illustrated-character",
+  "title": {
+    "text": "Strong Character Loops",
+    "subtitle": "Four high-energy semantic performances: think, operate, execute, and deliver"
+  },
+  "motion": {
+    "profile": "expressive",
+    "sequence": "loop",
+    "stagger": 0.12,
+    "intensity": 1.65,
+    "node": {"preset": "icon-performance"},
+    "edge": {"preset": "static"},
+    "group": {"preset": "static"},
+    "title": {"preset": "highlight-sweep"},
+    "reduced_motion": "subtle"
+  },
+  "motion_policy": {
+    "profile": "focused",
+    "motion_area": "small",
+    "max_active_flow_edges": 0,
+    "max_particle_edges": 0,
+    "max_active_pulse_nodes": 4,
+    "max_scanning_groups": 0
+  },
+  "nodes": [
+    {
+      "id": "think",
+      "label": "Think",
+      "caption": "expand • signal • spark",
+      "position": [80, 180],
+      "size": [520, 190],
+      "role": "agent",
+      "icon": "agent"
+    },
+    {
+      "id": "operate",
+      "label": "Operate",
+      "caption": "focus • type • resolve",
+      "position": [680, 180],
+      "size": [520, 190],
+      "role": "source",
+      "icon": "operator"
+    },
+    {
+      "id": "execute",
+      "label": "Execute",
+      "caption": "open • swing • confirm",
+      "position": [80, 440],
+      "size": [520, 190],
+      "role": "tool",
+      "icon": "tool"
+    },
+    {
+      "id": "deliver",
+      "label": "Deliver",
+      "caption": "lift • reveal • celebrate",
+      "position": [680, 440],
+      "size": [520, 190],
+      "role": "output",
+      "icon": "output"
+    }
+  ]
+}
