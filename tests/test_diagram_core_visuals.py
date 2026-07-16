@@ -1129,6 +1129,52 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             self.assertEqual((255, 0, 0, 255), heatmap.getpixel((3, 4)))
             self.assertEqual((0, 0, 0, 0), heatmap.getpixel((0, 0)))
 
+    def test_public_compare_heatmap_never_clobbers_pre_publish_external_writer(self):
+        for existing in (True, False):
+            with self.subTest(existing=existing), tempfile.TemporaryDirectory() as temp_dir:
+                root = Path(temp_dir).resolve()
+                output = root / "diff.png"
+                if existing:
+                    self.write_snapshot_file(
+                        output,
+                        b"old-heatmap",
+                        0o640,
+                        1_600_000_000_000_000_000,
+                    )
+                external_snapshot = [None]
+                injected = [False]
+                real_rename = os.rename
+
+                def claim_after_external_replace(source, destination):
+                    if Path(source) == output and not injected[0]:
+                        injected[0] = True
+                        external = root / ".external"
+                        external_snapshot[0] = self.write_snapshot_file(
+                            external,
+                            b"EXTERNAL-HEATMAP",
+                            0o604,
+                            1_700_000_000_000_000_000,
+                        )
+                        os.replace(str(external), str(output))
+                    return real_rename(source, destination)
+
+                with mock.patch.object(
+                    visual_comparator.os,
+                    "rename",
+                    side_effect=claim_after_external_replace,
+                ):
+                    with self.assertRaises(VisualComparisonError):
+                        compare_images(
+                            self.solid_image((1, 1), (0, 0, 0, 255)),
+                            self.solid_image((1, 1), (255, 0, 0, 255)),
+                            max_diff_ratio=0,
+                            diff_output=output,
+                        )
+
+                self.assertTrue(injected[0])
+                self.assert_file_snapshot(output, external_snapshot[0])
+                self.assert_no_publish_residue(root)
+
     def test_capture_source_and_lock_freeze_real_browser_contract(self):
         source = self.CAPTURE_SCRIPT.read_text(encoding="utf-8")
         package = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
@@ -2513,6 +2559,299 @@ const assertNoResidue = async (caseRoot) => {
 
             self.assertEqual(0, result.returncode, result.stderr)
 
+    def test_capture_eexist_same_inode_is_an_external_ownership_conflict(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(
+            prefix="diagram-core-eexist-ownership-",
+            dir=build_root,
+        ) as temp_dir:
+            root = Path(temp_dir).resolve()
+            image = root / "candidate.png"
+            metadata = root / "candidate.json"
+            self.write_snapshot_file(
+                image,
+                b"old-image",
+                0o640,
+                1_600_000_000_000_000_000,
+            )
+            metadata_snapshot = self.write_snapshot_file(
+                metadata,
+                b"old-metadata",
+                0o600,
+                1_600_000_001_000_000_000,
+            )
+            program = """
+import { link, readFile, readdir, rename, stat } from "node:fs/promises";
+const { publishCapture } = await import(%s);
+const image = %s;
+const metadata = %s;
+let injected = false;
+let externalState;
+const linkThenEexist = async (source, target) => {
+  if (target === image && !injected) {
+    injected = true;
+    await link(source, target);
+    const info = await stat(target, { bigint: true });
+    externalState = {
+      payload: await readFile(target, "utf8"),
+      mode: Number(info.mode & 0o7777n),
+      mtimeNs: info.mtimeNs,
+    };
+  }
+  return link(source, target);
+};
+let failure;
+try {
+  await publishCapture([
+    { target: image, payload: Buffer.from("new-image") },
+    { target: metadata, payload: Buffer.from("new-metadata") },
+  ], { move: rename, link: linkThenEexist });
+} catch (error) {
+  failure = error;
+}
+if (!injected || !failure) throw new Error("EEXIST ownership race returned success");
+if (!failure.message.includes("EEXIST")) {
+  throw new Error(`EEXIST conflict was not reported: ${failure.message}`);
+}
+if (!failure.message.includes("rollback was incomplete")
+    || !failure.message.includes("recovery claim preserved")) {
+  throw new Error(`ownership claim was not reported: ${failure.message}`);
+}
+const current = await stat(image, { bigint: true });
+if ((await readFile(image, "utf8")) !== externalState.payload
+    || Number(current.mode & 0o7777n) !== externalState.mode
+    || current.mtimeNs !== externalState.mtimeNs) {
+  throw new Error("external same-inode link was changed or deleted");
+}
+if ((await readFile(metadata, "utf8")) !== "old-metadata") {
+  throw new Error("unpublished peer metadata changed");
+}
+const names = await readdir(%s, { recursive: true });
+const claims = names.filter((name) => name.endsWith("/payload"));
+const temporary = names.filter((name) => name.endsWith(".tmp"));
+if (claims.length !== 1) throw new Error(`expected one recovery claim: ${claims}`);
+if ((await readFile(%s + "/" + claims[0], "utf8")) !== "old-image") {
+  throw new Error("recovery claim does not contain the displaced image");
+}
+if (temporary.length !== 0) throw new Error(`temporary residue: ${temporary}`);
+""" % tuple(
+                json.dumps(value)
+                for value in (
+                    self.CAPTURE_SCRIPT.as_uri(),
+                    str(image),
+                    str(metadata),
+                    str(root),
+                    str(root),
+                )
+            )
+
+            result = subprocess.run(
+                ["node", "--input-type=module", "--eval", program],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=10,
+            )
+
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assert_file_snapshot(metadata, metadata_snapshot)
+
+    def test_capture_post_link_mode_change_is_detected_without_resetting_external_mode(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(
+            prefix="diagram-core-post-link-mode-",
+            dir=build_root,
+        ) as temp_dir:
+            root = Path(temp_dir).resolve()
+            image = root / "candidate.png"
+            metadata = root / "candidate.json"
+            self.write_snapshot_file(
+                image,
+                b"old-image",
+                0o640,
+                1_600_000_000_000_000_000,
+            )
+            metadata_snapshot = self.write_snapshot_file(
+                metadata,
+                b"old-metadata",
+                0o600,
+                1_600_000_001_000_000_000,
+            )
+            program = """
+import { chmod, link, readFile, readdir, rename, stat } from "node:fs/promises";
+const { publishCapture } = await import(%s);
+const image = %s;
+const metadata = %s;
+let injected = false;
+let externalState;
+const linkThenChmod = async (source, target) => {
+  const result = await link(source, target);
+  if (target === image && !injected) {
+    injected = true;
+    await chmod(target, 0o604);
+    const info = await stat(target, { bigint: true });
+    externalState = {
+      payload: await readFile(target, "utf8"),
+      mode: Number(info.mode & 0o7777n),
+      mtimeNs: info.mtimeNs,
+    };
+  }
+  return result;
+};
+let failure;
+try {
+  await publishCapture([
+    { target: image, payload: Buffer.from("new-image") },
+    { target: metadata, payload: Buffer.from("new-metadata") },
+  ], { move: rename, link: linkThenChmod });
+} catch (error) {
+  failure = error;
+}
+if (!injected || !failure) throw new Error("post-link chmod returned stale success");
+if (!failure.message.includes("rollback was incomplete")
+    || !failure.message.includes("recovery claim preserved")) {
+  throw new Error(`post-link mode conflict was not reported: ${failure.message}`);
+}
+const current = await stat(image, { bigint: true });
+if ((await readFile(image, "utf8")) !== externalState.payload
+    || Number(current.mode & 0o7777n) !== 0o604
+    || Number(current.mode & 0o7777n) !== externalState.mode
+    || current.mtimeNs !== externalState.mtimeNs) {
+  throw new Error("external post-link mode change was reset");
+}
+if ((await readFile(metadata, "utf8")) !== "old-metadata") {
+  throw new Error("unpublished peer metadata changed");
+}
+const names = await readdir(%s, { recursive: true });
+const claims = names.filter((name) => name.endsWith("/payload"));
+const temporary = names.filter((name) => name.endsWith(".tmp"));
+if (claims.length !== 1) throw new Error(`expected one recovery claim: ${claims}`);
+if ((await readFile(%s + "/" + claims[0], "utf8")) !== "old-image") {
+  throw new Error("recovery claim does not contain the displaced image");
+}
+if (temporary.length !== 0) throw new Error(`temporary residue: ${temporary}`);
+""" % tuple(
+                json.dumps(value)
+                for value in (
+                    self.CAPTURE_SCRIPT.as_uri(),
+                    str(image),
+                    str(metadata),
+                    str(root),
+                    str(root),
+                )
+            )
+
+            result = subprocess.run(
+                ["node", "--input-type=module", "--eval", program],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=10,
+            )
+
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assert_file_snapshot(metadata, metadata_snapshot)
+
+    def test_capture_rechecks_both_outputs_after_claim_cleanup(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(
+            prefix="diagram-core-post-commit-recheck-",
+            dir=build_root,
+        ) as temp_dir:
+            root = Path(temp_dir).resolve()
+            image = root / "candidate.png"
+            metadata = root / "candidate.json"
+            image.write_bytes(b"old-image")
+            metadata.write_bytes(b"old-metadata")
+            program = """
+import {
+  chmod,
+  link,
+  readFile,
+  readdir,
+  rename,
+  rmdir,
+  stat,
+  utimes,
+  writeFile,
+} from "node:fs/promises";
+const { publishCapture } = await import(%s);
+const image = %s;
+const metadata = %s;
+let cleanupCalls = 0;
+let externalState;
+const cleanupThenReplace = async (directory) => {
+  await rmdir(directory);
+  cleanupCalls += 1;
+  if (cleanupCalls === 1) {
+    const external = %s;
+    await writeFile(external, "EXTERNAL-AFTER-COMMIT");
+    await chmod(external, 0o604);
+    await utimes(external, 1700000010, 1700000010);
+    await rename(external, image);
+    const info = await stat(image, { bigint: true });
+    externalState = {
+      payload: await readFile(image, "utf8"),
+      mode: Number(info.mode & 0o7777n),
+      mtimeNs: info.mtimeNs,
+    };
+  }
+};
+let failure;
+try {
+  await publishCapture([
+    { target: image, payload: Buffer.from("new-image") },
+    { target: metadata, payload: Buffer.from("new-metadata") },
+  ], { move: rename, link, rmdir: cleanupThenReplace });
+} catch (error) {
+  failure = error;
+}
+if (cleanupCalls !== 2 || !failure) {
+  throw new Error("post-cleanup external replacement returned stale success");
+}
+if (!failure.message.includes("post-commit external change")
+    || !failure.message.includes("committed outputs retained")) {
+  throw new Error(`post-commit change was not reported clearly: ${failure.message}`);
+}
+const current = await stat(image, { bigint: true });
+if ((await readFile(image, "utf8")) !== externalState.payload
+    || Number(current.mode & 0o7777n) !== externalState.mode
+    || current.mtimeNs !== externalState.mtimeNs) {
+  throw new Error("post-commit external output was overwritten");
+}
+if ((await readFile(metadata, "utf8")) !== "new-metadata") {
+  throw new Error("committed peer metadata was rolled back");
+}
+const names = await readdir(%s, { recursive: true });
+const residue = names.filter((name) => /(?:\\.tmp|\\.bak|claim)/u.test(name));
+if (residue.length !== 0) throw new Error(`post-commit residue: ${residue}`);
+""" % tuple(
+                json.dumps(value)
+                for value in (
+                    self.CAPTURE_SCRIPT.as_uri(),
+                    str(image),
+                    str(metadata),
+                    str(root / ".external"),
+                    str(root),
+                )
+            )
+
+            result = subprocess.run(
+                ["node", "--input-type=module", "--eval", program],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=10,
+            )
+
+            self.assertEqual(0, result.returncode, result.stderr)
+
     def test_capture_claim_snapshot_failure_restores_or_reports_preserved_claim(self):
         build_root = ROOT / "build"
         build_root.mkdir(exist_ok=True)
@@ -3217,6 +3556,232 @@ if (residue.length !== 0) throw new Error(`publish residue: ${residue.join(",")}
 
                 self.assertTrue(injected[0])
                 self.assert_file_snapshot(target, external_snapshot[0])
+                self.assert_no_publish_residue(root)
+
+    def test_python_publishers_treat_eexist_same_inode_as_external_ownership(self):
+        for publisher in ("approval", "heatmap"):
+            with self.subTest(publisher=publisher), tempfile.TemporaryDirectory() as temp_dir:
+                root = Path(temp_dir).resolve()
+                target = root / "published.png"
+                self.write_snapshot_file(
+                    target,
+                    b"old-payload",
+                    0o640,
+                    1_600_000_000_000_000_000,
+                )
+                peer = root / "published.json"
+                peer_snapshot = None
+                if publisher == "approval":
+                    peer_snapshot = self.write_snapshot_file(
+                        peer,
+                        b"old-peer",
+                        0o600,
+                        1_600_000_001_000_000_000,
+                    )
+                staged = root / ".heatmap.staged.tmp"
+                if publisher == "heatmap":
+                    staged.write_bytes(b"new-payload")
+                target_snapshot = visual_comparator._output_snapshot(target)
+                external_snapshot = [None]
+                injected = [False]
+
+                def link_then_eexist(source, destination):
+                    if Path(destination) == target and not injected[0]:
+                        injected[0] = True
+                        os.link(source, destination)
+                        info = target.stat()
+                        external_snapshot[0] = (
+                            target.read_bytes(),
+                            info.st_mode & 0o777,
+                            info.st_mtime_ns,
+                        )
+                    return os.link(source, destination)
+
+                with self.assertRaises(Exception) as caught:
+                    if publisher == "approval":
+                        visual_comparator._publish_approval(
+                            target,
+                            b"new-payload",
+                            peer,
+                            b"new-peer",
+                            operations={"move": os.rename, "link": link_then_eexist},
+                        )
+                    else:
+                        visual_comparator._publish_staged_heatmap(
+                            target,
+                            staged,
+                            target_snapshot,
+                            lambda: None,
+                            operations={"move": os.rename, "link": link_then_eexist},
+                        )
+
+                self.assertTrue(injected[0])
+                self.assertIn("File exists", str(caught.exception))
+                self.assertIn("rollback was incomplete", str(caught.exception))
+                self.assertIn("recovery claim preserved", str(caught.exception))
+                self.assert_file_snapshot(target, external_snapshot[0])
+                if publisher == "approval":
+                    self.assert_file_snapshot(peer, peer_snapshot)
+                self.assertFalse(staged.exists())
+                claims = [
+                    path
+                    for path in root.rglob("payload")
+                    if ".claim-" in str(path.parent)
+                ]
+                self.assertEqual(1, len(claims))
+                self.assertEqual(b"old-payload", claims[0].read_bytes())
+                temporary = [
+                    path
+                    for path in root.rglob("*")
+                    if path.name.endswith((".tmp", ".bak"))
+                ]
+                self.assertEqual([], temporary)
+
+    def test_python_publishers_detect_post_link_chmod_without_resetting_mode(self):
+        for publisher in ("approval", "heatmap"):
+            with self.subTest(publisher=publisher), tempfile.TemporaryDirectory() as temp_dir:
+                root = Path(temp_dir).resolve()
+                target = root / "published.png"
+                self.write_snapshot_file(
+                    target,
+                    b"old-payload",
+                    0o640,
+                    1_600_000_000_000_000_000,
+                )
+                peer = root / "published.json"
+                peer_snapshot = None
+                if publisher == "approval":
+                    peer_snapshot = self.write_snapshot_file(
+                        peer,
+                        b"old-peer",
+                        0o600,
+                        1_600_000_001_000_000_000,
+                    )
+                staged = root / ".heatmap.staged.tmp"
+                if publisher == "heatmap":
+                    staged.write_bytes(b"new-payload")
+                target_snapshot = visual_comparator._output_snapshot(target)
+                external_snapshot = [None]
+                injected = [False]
+
+                def link_then_chmod(source, destination):
+                    result = os.link(source, destination)
+                    if Path(destination) == target and not injected[0]:
+                        injected[0] = True
+                        target.chmod(0o604)
+                        info = target.stat()
+                        external_snapshot[0] = (
+                            target.read_bytes(),
+                            info.st_mode & 0o777,
+                            info.st_mtime_ns,
+                        )
+                    return result
+
+                with self.assertRaises(Exception) as caught:
+                    if publisher == "approval":
+                        visual_comparator._publish_approval(
+                            target,
+                            b"new-payload",
+                            peer,
+                            b"new-peer",
+                            operations={"move": os.rename, "link": link_then_chmod},
+                        )
+                    else:
+                        visual_comparator._publish_staged_heatmap(
+                            target,
+                            staged,
+                            target_snapshot,
+                            lambda: None,
+                            operations={"move": os.rename, "link": link_then_chmod},
+                        )
+
+                self.assertTrue(injected[0])
+                self.assertIn("rollback was incomplete", str(caught.exception))
+                self.assertIn("recovery claim preserved", str(caught.exception))
+                self.assert_file_snapshot(target, external_snapshot[0])
+                self.assertEqual(0o604, target.stat().st_mode & 0o777)
+                if publisher == "approval":
+                    self.assert_file_snapshot(peer, peer_snapshot)
+                self.assertFalse(staged.exists())
+                claims = [
+                    path
+                    for path in root.rglob("payload")
+                    if ".claim-" in str(path.parent)
+                ]
+                self.assertEqual(1, len(claims))
+                self.assertEqual(b"old-payload", claims[0].read_bytes())
+                temporary = [
+                    path
+                    for path in root.rglob("*")
+                    if path.name.endswith((".tmp", ".bak"))
+                ]
+                self.assertEqual([], temporary)
+
+    def test_python_publishers_recheck_targets_after_claim_cleanup(self):
+        for publisher in ("approval", "heatmap"):
+            with self.subTest(publisher=publisher), tempfile.TemporaryDirectory() as temp_dir:
+                root = Path(temp_dir).resolve()
+                target = root / "published.png"
+                target.write_bytes(b"old-payload")
+                peer = root / "published.json"
+                if publisher == "approval":
+                    peer.write_bytes(b"old-peer")
+                staged = root / ".heatmap.staged.tmp"
+                if publisher == "heatmap":
+                    staged.write_bytes(b"new-payload")
+                target_snapshot = visual_comparator._output_snapshot(target)
+                cleanup_calls = [0]
+                external_snapshot = [None]
+
+                def cleanup_then_replace(directory):
+                    os.rmdir(directory)
+                    cleanup_calls[0] += 1
+                    if cleanup_calls[0] == 1:
+                        external = root / ".external"
+                        external_snapshot[0] = self.write_snapshot_file(
+                            external,
+                            b"EXTERNAL-AFTER-COMMIT",
+                            0o604,
+                            1_700_000_010_000_000_000,
+                        )
+                        os.replace(str(external), str(target))
+
+                with self.assertRaisesRegex(
+                    VisualComparisonError,
+                    "post-commit external change",
+                ) as caught:
+                    if publisher == "approval":
+                        visual_comparator._publish_approval(
+                            target,
+                            b"new-payload",
+                            peer,
+                            b"new-peer",
+                            operations={
+                                "move": os.rename,
+                                "link": os.link,
+                                "rmdir": cleanup_then_replace,
+                            },
+                        )
+                    else:
+                        visual_comparator._publish_staged_heatmap(
+                            target,
+                            staged,
+                            target_snapshot,
+                            lambda: None,
+                            operations={
+                                "move": os.rename,
+                                "link": os.link,
+                                "rmdir": cleanup_then_replace,
+                            },
+                        )
+
+                expected_cleanups = 2 if publisher == "approval" else 1
+                self.assertEqual(expected_cleanups, cleanup_calls[0])
+                self.assertIn("committed outputs retained", str(caught.exception))
+                self.assert_file_snapshot(target, external_snapshot[0])
+                if publisher == "approval":
+                    self.assertEqual(b"new-peer", peer.read_bytes())
+                self.assertFalse(staged.exists())
                 self.assert_no_publish_residue(root)
 
     def test_heatmap_rollback_never_overwrites_external_target(self):

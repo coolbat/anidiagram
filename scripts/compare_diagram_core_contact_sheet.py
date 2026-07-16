@@ -3,6 +3,7 @@
 
 import argparse
 import copy
+import errno
 import hashlib
 import io
 import json
@@ -107,36 +108,6 @@ def _validate_thresholds(channel_tolerance, max_diff_ratio):
         raise VisualComparisonError("maximum diff ratio must be between 0 and 1")
 
 
-def _atomic_write_bytes(path, payload, mode=0o644):
-    target = Path(path)
-    _prepare_output_path(target)
-    descriptor = None
-    temp_path = None
-    try:
-        descriptor, temp_name = tempfile.mkstemp(
-            prefix=".{0}.".format(target.name),
-            suffix=".tmp",
-            dir=str(target.parent),
-        )
-        temp_path = Path(temp_name)
-        with os.fdopen(descriptor, "wb") as handle:
-            descriptor = None
-            handle.write(payload)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.chmod(str(temp_path), mode)
-        os.replace(str(temp_path), str(target))
-        temp_path = None
-    finally:
-        if descriptor is not None:
-            os.close(descriptor)
-        if temp_path is not None:
-            try:
-                temp_path.unlink()
-            except FileNotFoundError:
-                pass
-
-
 def _write_heatmap(path, mask, size):
     pixels = bytearray(len(mask) * 4)
     for index, differs in enumerate(mask):
@@ -146,7 +117,22 @@ def _write_heatmap(path, mask, size):
     heatmap = Image.frombytes("RGBA", size, bytes(pixels))
     payload = io.BytesIO()
     heatmap.save(payload, format="PNG")
-    _atomic_write_bytes(path, payload.getvalue())
+    target = _absolute(path)
+    _prepare_output_path(target)
+    target_snapshot = _output_snapshot(target)
+    mode = target_snapshot.mode if target_snapshot is not None else 0o644
+    staged, _ = _stage_approval_payload(
+        target,
+        payload.getvalue(),
+        mode,
+        ".tmp",
+    )
+    _publish_staged_heatmap(
+        target,
+        staged,
+        target_snapshot,
+        lambda: None,
+    )
 
 
 def compare_images(
@@ -830,6 +816,17 @@ def _assert_approval_output_is_published(record):
         )
 
 
+def _assert_staged_output_is_ready(record):
+    current = _read_file_snapshot(record["staged"], "staged publication payload")
+    if (
+        current.signature != record["staged_signature"]
+        or current.payload != record["payload"]
+    ):
+        raise VisualComparisonError(
+            "staged output changed before publish: {0}".format(record["staged"])
+        )
+
+
 def _moved_snapshot_matches(snapshot, expected):
     if snapshot is None or expected is None:
         return snapshot is expected
@@ -907,6 +904,11 @@ def _create_exclusive_link(source, target, operations):
         operations["link"](str(source), str(target))
         return None
     except BaseException as error:
+        if (
+            isinstance(error, FileExistsError)
+            or getattr(error, "errno", None) == errno.EEXIST
+        ):
+            raise
         try:
             linked = _paths_alias(source, target)
         except (OSError, VisualComparisonError):
@@ -918,9 +920,6 @@ def _create_exclusive_link(source, target, operations):
 
 def _restore_claim_exclusive(claim, target, operations):
     _create_exclusive_link(claim["path"], target, operations)
-    snapshot = claim.get("snapshot")
-    if snapshot is not None:
-        os.chmod(str(claim["path"]), snapshot.mode)
     _discard_claim(claim, operations)
 
 
@@ -1007,6 +1006,7 @@ def _rollback_publication_record(record, operations):
 
 def _publish_records(records, verify_current, operations, failure_label):
     committed = False
+    cleanup_completed = False
     try:
         for index, record in enumerate(records):
             verify_current()
@@ -1030,16 +1030,13 @@ def _publish_records(records, verify_current, operations, failure_label):
             for peer in records[:index]:
                 if peer["installed"]:
                     _assert_approval_output_is_published(peer)
+            _assert_staged_output_is_ready(record)
             install_error = _create_exclusive_link(
                 record["staged"],
                 record["target"],
                 operations,
             )
             record["installed"] = True
-            os.chmod(
-                str(record["staged"]),
-                stat.S_IMODE(record["staged_signature"].mode),
-            )
             if install_error is not None:
                 raise install_error
             _assert_approval_output_is_published(record)
@@ -1060,11 +1057,19 @@ def _publish_records(records, verify_current, operations, failure_label):
                         )
                     ) from error
                 record["original_claim"] = None
+        cleanup_completed = True
+        for record in records:
+            _assert_approval_output_is_published(record)
     except BaseException as error:
         if committed:
             raise VisualComparisonError(
-                "{0} publish committed but cleanup failed; committed outputs retained: {1}".format(
+                "{0} publish committed but {1}; committed outputs retained: {2}".format(
                     failure_label,
+                    (
+                        "post-commit external change detected"
+                        if cleanup_completed
+                        else "cleanup failed"
+                    ),
                     error,
                 )
             ) from error

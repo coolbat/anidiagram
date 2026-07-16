@@ -514,6 +514,16 @@ async function assertPublishedPayloadCurrent(entry) {
 }
 
 
+async function assertStagedPayloadCurrent(entry) {
+  const current = await snapshotTarget(entry.temporary);
+  if (current === null
+      || current.replacementSignature !== entry.stagedSignature
+      || !current.payload.equals(entry.payload)) {
+    throw new Error(`staged output changed before publish: ${entry.temporary}`);
+  }
+}
+
+
 function movedSnapshotMatches(snapshot, expected) {
   if (snapshot === null || expected === null) return snapshot === expected;
   return snapshot.replacementSignature === expected.replacementSignature
@@ -594,6 +604,7 @@ async function createExclusiveLink(source, target, operations) {
     await operations.link(source, target);
     return null;
   } catch (error) {
+    if (error && error.code === "EEXIST") throw error;
     if (await pathsAlias(source, target).catch(() => false)) return error;
     throw error;
   }
@@ -602,9 +613,6 @@ async function createExclusiveLink(source, target, operations) {
 
 async function restoreClaimExclusive(claim, target, operations) {
   await createExclusiveLink(claim.path, target, operations);
-  if (claim.snapshot !== undefined && claim.snapshot !== null) {
-    await chmod(claim.path, claim.snapshot.mode);
-  }
   await discardClaim(claim, operations);
 }
 
@@ -696,6 +704,7 @@ export async function publishCapture(
   await Promise.all(entries.map((entry) => prepareOutput(entry.target)));
   const staged = [];
   let committed = false;
+  let cleanupCompleted = false;
   try {
     for (const entry of entries) {
       const payload = Buffer.from(entry.payload);
@@ -740,13 +749,13 @@ export async function publishCapture(
         if (peer === entry) break;
         if (peer.installed) await assertPublishedPayloadCurrent(peer);
       }
+      await assertStagedPayloadCurrent(entry);
       const installError = await createExclusiveLink(
         entry.temporary,
         entry.target,
         operations,
       );
       entry.installed = true;
-      await chmod(entry.temporary, entry.mode);
       if (installError) throw installError;
       await assertPublishedPayloadCurrent(entry);
     }
@@ -769,10 +778,16 @@ export async function publishCapture(
         entry.originalClaim = null;
       }
     }
+    cleanupCompleted = true;
+    for (const entry of staged) {
+      await assertPublishedPayloadCurrent(entry);
+    }
   } catch (error) {
     if (committed) {
       throw new Error(
-        `capture publish committed but cleanup failed; committed outputs retained: ${error.message}`,
+        `capture publish committed but ${cleanupCompleted
+          ? "post-commit external change detected"
+          : "cleanup failed"}; committed outputs retained: ${error.message}`,
         { cause: error },
       );
     }
