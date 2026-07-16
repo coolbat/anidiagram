@@ -1,0 +1,33 @@
+{
+  "id": "database",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "data-knowledge",
+  "semantic_kind": "database",
+  "structural_prototype": "stacked-storage",
+  "parts": [
+    "shell",
+    "top-ring",
+    "layer-top",
+    "layer-middle",
+    "layer-bottom",
+    "core",
+    "indicator"
+  ],
+  "attachments": {
+    "receive": {"x": 48, "y": 8},
+    "send": {"x": 88, "y": 48},
+    "status": {"x": 48, "y": 76}
+  },
+  "states": [
+    "idle",
+    "active",
+    "processing",
+    "success",
+    "warning",
+    "error"
+  ],
+  "actions": ["receive", "write", "index", "search", "send"],
+  "status": "visual-review"
+}

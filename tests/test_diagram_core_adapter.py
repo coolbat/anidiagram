@@ -41,6 +41,48 @@ TOKEN_VALUES = {
     "--icon-accent": "#7c5ce7",
 }
 
+CANONICAL_BENCHMARK_PARTS = {
+    "agent": (
+        "shell",
+        "face-screen",
+        "eye-left",
+        "eye-right",
+        "mouth",
+        "antenna",
+        "core",
+        "indicator",
+    ),
+    "database": (
+        "shell",
+        "top-ring",
+        "layer-top",
+        "layer-middle",
+        "layer-bottom",
+        "core",
+        "indicator",
+    ),
+    "api": (
+        "shell",
+        "header",
+        "input-interface",
+        "output-interface",
+        "processor",
+        "indicator-group",
+    ),
+    "server": (
+        "shell",
+        "tray-top",
+        "tray-bottom",
+        "indicator-top",
+        "indicator-bottom",
+        "vent-top",
+        "vent-bottom",
+        "base",
+    ),
+}
+
+CANONICAL_STATES = ("idle", "active", "processing", "success", "warning", "error")
+
 
 def local_name(name):
     return name.rsplit("}", 1)[-1]
@@ -447,58 +489,109 @@ class DiagramCoreAdapterTest(unittest.TestCase):
                         asset_root=self.bundle.root,
                     )
 
-    def test_canonical_agent_renders_each_static_state_through_preview_adapter(self):
+    def test_canonical_benchmarks_render_each_static_state_through_preview_adapter(self):
         asset_root = ROOT / "assets" / "diagram-core"
-        expected_parts = (
-            "shell",
-            "face-screen",
-            "eye-left",
-            "eye-right",
-            "mouth",
-            "antenna",
-            "core",
-            "indicator",
-        )
-        states = ("idle", "active", "processing", "success", "warning", "error")
-
-        for state in states:
-            with self.subTest(state=state):
-                markup = render_preview_icon(
-                    "agent",
-                    "canonical-" + state,
-                    state=state,
-                    size=48,
-                    asset_root=asset_root,
-                )
-                self.assertEqual(
-                    markup,
-                    render_preview_icon(
-                        "agent",
-                        "canonical-" + state,
+        for icon_id, expected_parts in CANONICAL_BENCHMARK_PARTS.items():
+            for state in CANONICAL_STATES:
+                with self.subTest(icon_id=icon_id, state=state):
+                    instance_id = "canonical-{0}-{1}".format(icon_id, state)
+                    markup = render_preview_icon(
+                        icon_id,
+                        instance_id,
                         state=state,
                         size=48,
                         asset_root=asset_root,
-                    ),
+                    )
+                    self.assertEqual(
+                        markup,
+                        render_preview_icon(
+                            icon_id,
+                            instance_id,
+                            state=state,
+                            size=48,
+                            asset_root=asset_root,
+                        ),
+                    )
+                    root = parse_single_root(markup)
+                    self.assertEqual(icon_id, root.attrib["data-icon"])
+                    self.assertEqual(state, root.attrib["data-icon-state"])
+                    self.assertEqual("diagram-core-v1", root.attrib["data-icon-source"])
+                    self.assertEqual(
+                        expected_parts,
+                        tuple(
+                            element.attrib["data-part"]
+                            for element in root.iter()
+                            if "data-part" in element.attrib
+                        ),
+                    )
+                    self.assertEqual(
+                        set(CANONICAL_STATES),
+                        {
+                            element.attrib["data-state-mark"]
+                            for element in root.iter()
+                            if "data-state-mark" in element.attrib
+                        },
+                    )
+
+    def test_new_canonical_benchmarks_have_disjoint_repeated_instance_ids(self):
+        asset_root = ROOT / "assets" / "diagram-core"
+        for icon_id in ("database", "api", "server"):
+            first_instance = icon_id + ".left"
+            second_instance = icon_id + "-left"
+            document = parse_svg_fragment(
+                render_preview_icon(
+                    icon_id,
+                    first_instance,
+                    state="idle",
+                    asset_root=asset_root,
                 )
-                root = parse_single_root(markup)
-                self.assertEqual(state, root.attrib["data-icon-state"])
-                self.assertEqual("diagram-core-v1", root.attrib["data-icon-source"])
+                + render_preview_icon(
+                    icon_id,
+                    second_instance,
+                    state="error",
+                    asset_root=asset_root,
+                )
+            )
+            roots = list(document)
+            self.assertEqual(2, len(roots))
+            id_sets = [
+                {
+                    element.attrib["id"]
+                    for element in root.iter()
+                    if "id" in element.attrib
+                }
+                for root in roots
+            ]
+            with self.subTest(icon_id=icon_id):
+                self.assertTrue(id_sets[0].isdisjoint(id_sets[1]))
                 self.assertEqual(
-                    expected_parts,
-                    tuple(
-                        element.attrib["data-part"]
-                        for element in root.iter()
-                        if "data-part" in element.attrib
-                    ),
+                    len(CANONICAL_BENCHMARK_PARTS[icon_id]) + 1,
+                    len(id_sets[0]),
                 )
-                self.assertEqual(
-                    set(states),
-                    {
-                        element.attrib["data-state-mark"]
-                        for element in root.iter()
-                        if "data-state-mark" in element.attrib
-                    },
-                )
+                self.assertEqual(len(id_sets[0]), len(id_sets[1]))
+            for root, instance_id in zip(
+                roots,
+                (first_instance, second_instance),
+            ):
+                for element in root.iter():
+                    part_name = element.attrib.get("data-part")
+                    if part_name is not None:
+                        self.assertEqual(
+                            part_dom_id(instance_id, icon_id, part_name),
+                            element.attrib["id"],
+                        )
+
+    def test_canonical_visual_review_benchmarks_are_rejected_by_approved_adapter(self):
+        asset_root = ROOT / "assets" / "diagram-core"
+        for icon_id in CANONICAL_BENCHMARK_PARTS:
+            with self.subTest(icon_id=icon_id):
+                render_preview_icon(icon_id, "preview-" + icon_id, asset_root=asset_root)
+                with self.assertRaises(AssetValidationError):
+                    render_approved_icon(
+                        icon_id,
+                        "approved-" + icon_id,
+                        asset_root=asset_root,
+                    )
 
 
 class DiagramCoreNamespacingTest(unittest.TestCase):

@@ -8,6 +8,7 @@ import tempfile
 import unittest
 from dataclasses import FrozenInstanceError
 from pathlib import Path
+from xml.etree import ElementTree
 
 from anidiagram.diagram_core.asset_loader import (
     AssetValidationError,
@@ -145,6 +146,77 @@ AGENT_STATES = (
     "error",
 )
 
+EXPECTED_BENCHMARK_PART_ORDER = {
+    "agent": AGENT_PART_ORDER,
+    "database": (
+        "shell",
+        "top-ring",
+        "layer-top",
+        "layer-middle",
+        "layer-bottom",
+        "core",
+        "indicator",
+    ),
+    "api": (
+        "shell",
+        "header",
+        "input-interface",
+        "output-interface",
+        "processor",
+        "indicator-group",
+    ),
+    "server": (
+        "shell",
+        "tray-top",
+        "tray-bottom",
+        "indicator-top",
+        "indicator-bottom",
+        "vent-top",
+        "vent-bottom",
+        "base",
+    ),
+}
+
+EXPECTED_BENCHMARK_PARTS = {
+    icon_id: set(parts)
+    for icon_id, parts in EXPECTED_BENCHMARK_PART_ORDER.items()
+}
+
+EXPECTED_BENCHMARK_PROTOTYPES = {
+    "agent": "actor-character",
+    "database": "stacked-storage",
+    "api": "interface-module",
+    "server": "compute-device",
+}
+
+EXPECTED_BENCHMARK_ACTIONS = {
+    "agent": ("enter", "receive", "process", "send"),
+    "database": ("receive", "write", "index", "search", "send"),
+    "api": ("receive", "process", "send", "stream"),
+    "server": ("enter", "receive", "process", "send"),
+}
+
+EXPECTED_BENCHMARK_ATTACHMENTS = {
+    "agent": {"receive": (18, 48), "send": (78, 48), "status": (48, 74)},
+    "database": {"receive": (48, 8), "send": (88, 48), "status": (48, 76)},
+    "api": {"receive": (8, 48), "send": (88, 48), "status": (48, 22)},
+    "server": {"receive": (8, 36), "send": (88, 60), "status": (76, 24)},
+}
+
+EXPECTED_BENCHMARK_INDICATORS = {
+    "agent": "indicator",
+    "database": "indicator",
+    "api": "indicator-group",
+    "server": "indicator-top",
+}
+
+EXPECTED_BENCHMARK_CONTRAST_PARTS = {
+    "agent": "core",
+    "database": "indicator",
+    "api": "indicator-group",
+    "server": "indicator-top",
+}
+
 SVG_PAINTABLE_TAGS = {
     "circle",
     "ellipse",
@@ -228,6 +300,207 @@ def agent_geometry_bounds(element):
     )
 
 
+def _quadratic_value(start, control, end, position):
+    inverse = 1.0 - position
+    return (
+        inverse * inverse * start
+        + 2.0 * inverse * position * control
+        + position * position * end
+    )
+
+
+def _cubic_value(start, control_one, control_two, end, position):
+    inverse = 1.0 - position
+    return (
+        inverse ** 3 * start
+        + 3.0 * inverse * inverse * position * control_one
+        + 3.0 * inverse * position * position * control_two
+        + position ** 3 * end
+    )
+
+
+def _quadratic_extrema(start, control, end):
+    denominator = start - 2.0 * control + end
+    if abs(denominator) < 1e-12:
+        return ()
+    position = (start - control) / denominator
+    return (position,) if 0.0 < position < 1.0 else ()
+
+
+def _cubic_extrema(start, control_one, control_two, end):
+    coefficient_a = -start + 3.0 * control_one - 3.0 * control_two + end
+    coefficient_b = 2.0 * (start - 2.0 * control_one + control_two)
+    coefficient_c = control_one - start
+    if abs(coefficient_a) < 1e-12:
+        if abs(coefficient_b) < 1e-12:
+            return ()
+        position = -coefficient_c / coefficient_b
+        return (position,) if 0.0 < position < 1.0 else ()
+    discriminant = coefficient_b * coefficient_b - 4.0 * coefficient_a * coefficient_c
+    if discriminant < 0.0:
+        return ()
+    root = math.sqrt(max(0.0, discriminant))
+    positions = (
+        (-coefficient_b - root) / (2.0 * coefficient_a),
+        (-coefficient_b + root) / (2.0 * coefficient_a),
+    )
+    return tuple(
+        position
+        for position in positions
+        if 0.0 < position < 1.0
+    )
+
+
+def _path_geometry_points(path_data):
+    tokens = re.findall(
+        r"[MLCQZ]|-?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)",
+        path_data,
+    )
+    if not tokens or "".join(tokens) != re.sub(r"[\s,]+", "", path_data):
+        raise AssertionError("benchmark paths must use explicit absolute M/L/C/Q/Z commands")
+    points = []
+    cursor = None
+    subpath_start = None
+    index = 0
+    coordinate_counts = {"M": 2, "L": 2, "Q": 4, "C": 6, "Z": 0}
+    while index < len(tokens):
+        command = tokens[index]
+        if command not in coordinate_counts:
+            raise AssertionError("every benchmark path segment must name its command")
+        index += 1
+        count = coordinate_counts[command]
+        if index + count > len(tokens):
+            raise AssertionError("benchmark path command has incomplete coordinates")
+        values = tuple(float(value) for value in tokens[index : index + count])
+        index += count
+        if index < len(tokens) and tokens[index] not in coordinate_counts:
+            raise AssertionError("every benchmark path segment must name its command")
+
+        if command == "M":
+            cursor = (values[0], values[1])
+            subpath_start = cursor
+            points.append(cursor)
+        elif command == "Z":
+            if cursor is None or subpath_start is None:
+                raise AssertionError("benchmark close command needs an open subpath")
+            points.extend((cursor, subpath_start))
+            cursor = subpath_start
+        else:
+            if cursor is None:
+                raise AssertionError("benchmark path geometry must begin with M")
+            if command == "L":
+                end = (values[0], values[1])
+                points.extend((cursor, end))
+            elif command == "Q":
+                control = (values[0], values[1])
+                end = (values[2], values[3])
+                positions = set(
+                    _quadratic_extrema(cursor[0], control[0], end[0])
+                    + _quadratic_extrema(cursor[1], control[1], end[1])
+                )
+                points.extend((cursor, end))
+                points.extend(
+                    (
+                        _quadratic_value(cursor[0], control[0], end[0], position),
+                        _quadratic_value(cursor[1], control[1], end[1], position),
+                    )
+                    for position in positions
+                )
+            elif command == "C":
+                control_one = (values[0], values[1])
+                control_two = (values[2], values[3])
+                end = (values[4], values[5])
+                positions = set(
+                    _cubic_extrema(cursor[0], control_one[0], control_two[0], end[0])
+                    + _cubic_extrema(cursor[1], control_one[1], control_two[1], end[1])
+                )
+                points.extend((cursor, end))
+                points.extend(
+                    (
+                        _cubic_value(
+                            cursor[0],
+                            control_one[0],
+                            control_two[0],
+                            end[0],
+                            position,
+                        ),
+                        _cubic_value(
+                            cursor[1],
+                            control_one[1],
+                            control_two[1],
+                            end[1],
+                            position,
+                        ),
+                    )
+                    for position in positions
+                )
+            cursor = end
+    return tuple(points)
+
+
+def benchmark_geometry_bounds(element):
+    tag = local_name(element.tag)
+    if tag == "circle":
+        cx = float(element.attrib["cx"])
+        cy = float(element.attrib["cy"])
+        radius = float(element.attrib["r"])
+        bounds = (cx - radius, cy - radius, cx + radius, cy + radius)
+    elif tag == "ellipse":
+        cx = float(element.attrib["cx"])
+        cy = float(element.attrib["cy"])
+        rx = float(element.attrib["rx"])
+        ry = float(element.attrib["ry"])
+        bounds = (cx - rx, cy - ry, cx + rx, cy + ry)
+    elif tag == "rect":
+        x = float(element.attrib["x"])
+        y = float(element.attrib["y"])
+        bounds = (
+            x,
+            y,
+            x + float(element.attrib["width"]),
+            y + float(element.attrib["height"]),
+        )
+    elif tag == "line":
+        x_values = (float(element.attrib["x1"]), float(element.attrib["x2"]))
+        y_values = (float(element.attrib["y1"]), float(element.attrib["y2"]))
+        bounds = (min(x_values), min(y_values), max(x_values), max(y_values))
+    elif tag in {"polygon", "polyline"}:
+        values = [
+            float(value)
+            for value in re.findall(
+                r"-?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)",
+                element.attrib["points"],
+            )
+        ]
+        if len(values) < 4 or len(values) % 2:
+            raise AssertionError("benchmark point lists must contain coordinate pairs")
+        bounds = (
+            min(values[0::2]),
+            min(values[1::2]),
+            max(values[0::2]),
+            max(values[1::2]),
+        )
+    elif tag == "path":
+        points = _path_geometry_points(element.attrib["d"])
+        bounds = (
+            min(point[0] for point in points),
+            min(point[1] for point in points),
+            max(point[0] for point in points),
+            max(point[1] for point in points),
+        )
+    else:
+        raise AssertionError("unsupported benchmark paintable tag: " + tag)
+
+    stroke = element.attrib.get("stroke", "none").strip().lower()
+    extent = 0.0 if stroke == "none" else float(element.attrib["stroke-width"]) / 2.0
+    return (
+        bounds[0] - extent,
+        bounds[1] - extent,
+        bounds[2] + extent,
+        bounds[3] + extent,
+    )
+
+
 def agent_filled_area(element):
     tag = local_name(element.tag)
     if tag == "circle":
@@ -262,6 +535,100 @@ def agent_state_geometry_signature(mark):
         )
         signature.append((local_name(element.tag), geometry))
     return tuple(signature)
+
+
+def benchmark_state_mark_kind(mark):
+    paintables = [
+        element
+        for element in mark.iter()
+        if local_name(element.tag) in SVG_PAINTABLE_TAGS
+    ]
+    tags = tuple(local_name(element.tag) for element in paintables)
+    state = mark.attrib["data-state-mark"]
+    if state == "idle":
+        return "dot" if tags == ("circle",) and paintables[0].attrib.get("fill") != "none" else None
+    if state == "active":
+        return (
+            "ring"
+            if tags == ("circle",)
+            and paintables[0].attrib.get("fill") == "none"
+            and paintables[0].attrib.get("stroke", "none") != "none"
+            else None
+        )
+    if state == "processing":
+        commands = tuple(
+            command
+            for element in paintables
+            for command in re.findall(r"[A-Za-z]", element.attrib.get("d", ""))
+        )
+        return (
+            "split-arc"
+            if tags in {("path",), ("path", "path")}
+            and commands == ("M", "C", "M", "C")
+            and all(element.attrib.get("fill") == "none" for element in paintables)
+            else None
+        )
+    if state == "success":
+        commands = re.findall(r"[A-Za-z]", paintables[0].attrib.get("d", "")) if tags == ("path",) else ()
+        return "check" if tuple(commands) == ("M", "L", "L") else None
+    if state == "warning":
+        values = re.findall(
+            r"-?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)",
+            paintables[0].attrib.get("points", ""),
+        ) if tags == ("polygon",) else ()
+        return "triangle" if len(values) == 6 else None
+    if state == "error":
+        commands = re.findall(r"[A-Za-z]", paintables[0].attrib.get("d", "")) if tags == ("path",) else ()
+        return "X" if tuple(commands) == ("M", "L", "M", "L") else None
+    return None
+
+
+def benchmark_state_bounds(mark):
+    bounds = [
+        benchmark_geometry_bounds(element)
+        for element in mark.iter()
+        if local_name(element.tag) in SVG_PAINTABLE_TAGS
+    ]
+    if not bounds:
+        raise AssertionError("benchmark state marks must contain paintable geometry")
+    return (
+        min(bound[0] for bound in bounds),
+        min(bound[1] for bound in bounds),
+        max(bound[2] for bound in bounds),
+        max(bound[3] for bound in bounds),
+    )
+
+
+def benchmark_parent_map(root):
+    return {
+        child: parent
+        for parent in root.iter()
+        for child in parent
+    }
+
+
+def benchmark_ancestors(element, parents):
+    while element in parents:
+        element = parents[element]
+        yield element
+
+
+def benchmark_public_part(element, parents):
+    for candidate in (element, *benchmark_ancestors(element, parents)):
+        if "data-part" in candidate.attrib:
+            return candidate.attrib["data-part"]
+    return None
+
+
+def benchmark_is_hidden(element, parents):
+    return any(
+        candidate.attrib.get("display") == "none"
+        for candidate in (element, *benchmark_ancestors(element, parents))
+    )
+
+
+def benchmark_filled_area(element):
+    return agent_filled_area(element)
 
 
 def agent_state_bounds(mark):
@@ -1218,6 +1585,448 @@ class DiagramCoreAssetLoaderTest(unittest.TestCase):
                 load_asset("database", {"visual-review"}, bundle.root)
             self.assertIn(str(bundle.icon_path), str(raised.exception))
             self.assertIn("invalid XML", str(raised.exception))
+
+
+class CanonicalBenchmarkContractTest(unittest.TestCase):
+    def load_benchmark(self, icon_id):
+        return load_asset(icon_id, allow_statuses={"visual-review"})
+
+    def parts_by_name(self, asset):
+        return {
+            element.attrib["data-part"]: element
+            for element in asset.root.iter()
+            if "data-part" in element.attrib
+        }
+
+    def assert_catalog_parity(self, asset):
+        catalog = json.loads(
+            (ROOT / "assets" / "diagram-core" / "catalog.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        entry = next(
+            icon
+            for icon in catalog["icons"]
+            if icon["id"] == asset.manifest.icon_id
+        )
+        manifest_values = {
+            "id": asset.manifest.icon_id,
+            "category": asset.manifest.category,
+            "semantic_kind": asset.manifest.semantic_kind,
+            "structural_prototype": asset.manifest.structural_prototype,
+            "parts": list(asset.manifest.parts),
+            "supported_states": list(asset.manifest.states),
+            "supported_actions": list(asset.manifest.actions),
+            "status": asset.manifest.status,
+            "asset_revision": asset.manifest.asset_revision,
+        }
+        self.assertEqual(
+            {field: entry[field] for field in manifest_values},
+            manifest_values,
+        )
+
+    def assert_common_visual_contract(self, icon_id):
+        asset = self.load_benchmark(icon_id)
+        self.assertEqual("visual-review", asset.manifest.status)
+        self.assertEqual(AGENT_STATES, asset.manifest.states)
+        self.assertEqual((), asset.manifest.exceptions)
+        self.assertEqual(0, asset.metrics.forbidden_elements)
+        self.assertLessEqual(asset.metrics.paintable_elements, 24)
+        self.assertLessEqual(asset.metrics.raw_size_bytes, 12 * 1024)
+        self.assertLessEqual(asset.metrics.gzip_size_bytes, 6 * 1024)
+        self.assert_catalog_parity(asset)
+
+        root = asset.root
+        self.assertEqual("img", root.attrib.get("role"))
+        self.assertEqual("false", root.attrib.get("focusable"))
+        self.assertTrue(root.attrib.get("aria-label", "").strip())
+        self.assertEqual(icon_id, root.attrib.get("data-icon"))
+        self.assertEqual("idle", root.attrib.get("data-icon-state"))
+        self.assertFalse(any("id" in element.attrib for element in root.iter()))
+        self.assertFalse(any("style" in element.attrib for element in root.iter()))
+        self.assertFalse(any("transform" in element.attrib for element in root.iter()))
+        self.assertFalse(
+            any(local_name(element.tag) == "style" for element in root.iter())
+        )
+        self.assertNotRegex(
+            asset.svg_source.lower(),
+            r"\b(?:gradient|shadow|effect|connection-anchor|network)\b",
+        )
+        self.assertNotRegex(asset.svg_source.lower(), r"data-(?:connection-)?anchor")
+
+        parts = self.parts_by_name(asset)
+        indicator = parts[EXPECTED_BENCHMARK_INDICATORS[icon_id]]
+        marks = [
+            element
+            for element in root.iter()
+            if "data-state-mark" in element.attrib
+        ]
+        self.assertEqual(AGENT_STATES, tuple(mark.attrib["data-state-mark"] for mark in marks))
+        self.assertEqual(6, len(marks))
+        self.assertTrue(set(marks).issubset(set(indicator.iter())))
+        signatures = tuple(agent_state_geometry_signature(mark) for mark in marks)
+        self.assertEqual(6, len(set(signatures)))
+        self.assertEqual(
+            dict(STATE_MARK_GEOMETRY),
+            {
+                mark.attrib["data-state-mark"]: benchmark_state_mark_kind(mark)
+                for mark in marks
+            },
+        )
+        for mark in marks:
+            state = mark.attrib["data-state-mark"]
+            self.assertEqual(
+                "inline" if state == "idle" else "none",
+                mark.attrib.get("display"),
+            )
+
+        contrast_part = parts[EXPECTED_BENCHMARK_CONTRAST_PARTS[icon_id]]
+        contrast_surfaces = [
+            element
+            for element in contrast_part.iter()
+            if local_name(element.tag) in SVG_PAINTABLE_TAGS
+            and element.attrib.get("fill")
+            == "var(--icon-surface-contrast, #14213d)"
+        ]
+        self.assertEqual(1, len(contrast_surfaces))
+        surface_bounds = benchmark_geometry_bounds(contrast_surfaces[0])
+        for mark in marks:
+            mark_bounds = benchmark_state_bounds(mark)
+            with self.subTest(icon_id=icon_id, state=mark.attrib["data-state-mark"]):
+                self.assertGreaterEqual(mark_bounds[0], surface_bounds[0])
+                self.assertGreaterEqual(mark_bounds[1], surface_bounds[1])
+                self.assertLessEqual(mark_bounds[2], surface_bounds[2])
+                self.assertLessEqual(mark_bounds[3], surface_bounds[3])
+
+        state_tokens = {
+            "idle": "--icon-status-idle",
+            "active": "--icon-status-active",
+            "processing": "--icon-status-active",
+            "success": "--icon-status-success",
+            "warning": "--icon-status-warning",
+            "error": "--icon-status-error",
+        }
+        for mark in marks:
+            paints = " ".join(
+                element.attrib.get(name, "")
+                for element in mark.iter()
+                if local_name(element.tag) in SVG_PAINTABLE_TAGS
+                for name in ("fill", "stroke")
+            )
+            self.assertIn(state_tokens[mark.attrib["data-state-mark"]], paints)
+
+        source = token_css()
+        defaults = css_declarations(source, ":root")
+        contrast_surface = defaults["--icon-surface-contrast"]
+        for context in ("blue", "dark", "warm", "green"):
+            resolved = dict(defaults)
+            overrides = css_declarations(
+                source,
+                '[data-icon-theme="' + context + '"]',
+            )
+            self.assertNotIn("--icon-surface-contrast", overrides)
+            resolved.update(overrides)
+            for state, token in state_tokens.items():
+                with self.subTest(icon_id=icon_id, context=context, state=state):
+                    self.assertGreaterEqual(
+                        contrast_ratio(resolved[token], contrast_surface),
+                        3.0,
+                    )
+
+        paintables = [
+            element
+            for element in root.iter()
+            if local_name(element.tag) in SVG_PAINTABLE_TAGS
+        ]
+        self.assertEqual(asset.metrics.paintable_elements, len(paintables))
+        saw_roles = set()
+        for element in paintables:
+            bounds = benchmark_geometry_bounds(element)
+            with self.subTest(icon_id=icon_id, geometry=element.attrib):
+                self.assertGreaterEqual(bounds[0], 8.0)
+                self.assertGreaterEqual(bounds[1], 8.0)
+                self.assertLessEqual(bounds[2], 88.0)
+                self.assertLessEqual(bounds[3], 88.0)
+                stroke = element.attrib.get("stroke", "none").strip().lower()
+                role = element.attrib.get("data-stroke-role")
+                if stroke == "none":
+                    self.assertIsNone(role)
+                    continue
+                self.assertIn(role, {"outer", "inner"})
+                self.assertRegex(
+                    element.attrib.get("stroke-width", ""),
+                    r"^[0-9]+(?:\.[0-9]+)?$",
+                )
+                width = float(element.attrib["stroke-width"])
+                if role == "outer":
+                    self.assertGreaterEqual(width, 2.0)
+                    self.assertLessEqual(width, 2.25)
+                else:
+                    self.assertGreaterEqual(width, 1.25)
+                    self.assertLessEqual(width, 1.5)
+                saw_roles.add(role)
+        self.assertEqual({"outer", "inner"}, saw_roles)
+        self.assertNotIn("non-scaling-stroke", asset.svg_source.lower())
+
+        parents = benchmark_parent_map(root)
+        neutral_area = 0.0
+        accent_area = 0.0
+        for element in paintables:
+            if benchmark_is_hidden(element, parents):
+                continue
+            if local_name(element.tag) == "line":
+                continue
+            fill = element.attrib.get("fill", "black").strip().lower()
+            if fill == "none":
+                continue
+            paints = " ".join(
+                element.attrib.get(name, "") for name in ("fill", "stroke")
+            )
+            area = benchmark_filled_area(element)
+            if "--icon-accent" in paints or "--icon-status-" in paints:
+                accent_area += area
+            else:
+                neutral_area += area
+        total_area = neutral_area + accent_area
+        self.assertGreater(neutral_area, 0.0)
+        self.assertGreater(accent_area, 0.0)
+        self.assertGreaterEqual(neutral_area / total_area, 0.8)
+        self.assertLessEqual(accent_area / total_area, 0.2)
+
+    def test_benchmark_assets_have_exact_public_parts_and_manifest_contracts(self):
+        for icon_id, expected_parts in EXPECTED_BENCHMARK_PARTS.items():
+            with self.subTest(icon_id=icon_id):
+                asset = load_asset(icon_id, allow_statuses={"visual-review"})
+                self.assertEqual(expected_parts, set(asset.manifest.parts))
+                self.assertEqual(expected_parts, set(asset.public_parts))
+                self.assertEqual(
+                    EXPECTED_BENCHMARK_PART_ORDER[icon_id],
+                    asset.manifest.parts,
+                )
+                self.assertEqual(
+                    EXPECTED_BENCHMARK_PART_ORDER[icon_id],
+                    asset.public_parts,
+                )
+                self.assertEqual(
+                    EXPECTED_BENCHMARK_PROTOTYPES[icon_id],
+                    asset.manifest.structural_prototype,
+                )
+                self.assertEqual(
+                    EXPECTED_BENCHMARK_ACTIONS[icon_id],
+                    asset.manifest.actions,
+                )
+                self.assertEqual(
+                    EXPECTED_BENCHMARK_ATTACHMENTS[icon_id],
+                    {
+                        name: (attachment.x, attachment.y)
+                        for name, attachment in asset.manifest.attachments.items()
+                    },
+                )
+
+    def test_curve_bounds_include_true_quadratic_and_cubic_extrema_plus_stroke(self):
+        quadratic = ElementTree.fromstring(
+            '<path d="M 10 10 Q 30 50 50 10" fill="none" '
+            'stroke="#000" stroke-width="2"/>'
+        )
+        cubic = ElementTree.fromstring(
+            '<path d="M 10 10 C 10 50 50 50 50 10" fill="none" '
+            'stroke="#000" stroke-width="2"/>'
+        )
+        self.assertEqual((9.0, 9.0, 51.0, 31.0), benchmark_geometry_bounds(quadratic))
+        self.assertEqual((9.0, 9.0, 51.0, 41.0), benchmark_geometry_bounds(cubic))
+
+    def test_agent_obeys_shared_benchmark_machine_contract(self):
+        self.assert_common_visual_contract("agent")
+
+    def test_database_obeys_shared_benchmark_machine_contract(self):
+        self.assert_common_visual_contract("database")
+
+    def test_database_is_one_three_layer_storage_body_with_one_scan_ring_and_core(self):
+        asset = self.load_benchmark("database")
+        parts = self.parts_by_name(asset)
+        self.assertEqual(("rect",), tuple(local_name(child.tag) for child in parts["shell"]))
+        self.assertEqual(
+            ("ellipse", "ellipse"),
+            tuple(local_name(child.tag) for child in parts["top-ring"]),
+        )
+        for part_name in ("layer-top", "layer-middle", "layer-bottom"):
+            with self.subTest(part=part_name):
+                self.assertEqual(
+                    ("path",),
+                    tuple(local_name(child.tag) for child in parts[part_name]),
+                )
+                paints = " ".join(parts[part_name][0].attrib.get(name, "") for name in ("fill", "stroke"))
+                self.assertNotIn("--icon-accent", paints)
+                self.assertNotIn("--icon-status-", paints)
+        self.assertEqual(("circle",), tuple(local_name(child.tag) for child in parts["core"]))
+        self.assertEqual(
+            "var(--icon-accent-secondary, #45c5bd)",
+            parts["top-ring"][1].attrib.get("stroke"),
+        )
+        self.assertFalse(any("data-detail" in element.attrib for element in asset.root.iter()))
+        self.assertNotRegex(
+            asset.svg_source.lower(),
+            r"\b(?:port|socket|connector|anchor|lamp|light)\b",
+        )
+
+    def test_api_obeys_shared_benchmark_machine_contract(self):
+        self.assert_common_visual_contract("api")
+
+    def test_api_interfaces_are_neutral_symmetric_and_physically_attached(self):
+        asset = self.load_benchmark("api")
+        parts = self.parts_by_name(asset)
+        self.assertEqual(("rect",), tuple(local_name(child.tag) for child in parts["shell"]))
+        self.assertEqual(("line",), tuple(local_name(child.tag) for child in parts["header"]))
+        self.assertEqual(
+            ("rect", "circle", "circle"),
+            tuple(local_name(child.tag) for child in parts["processor"]),
+        )
+        shell = parts["shell"][0]
+        input_interface = parts["input-interface"][0]
+        output_interface = parts["output-interface"][0]
+        self.assertEqual("rect", local_name(input_interface.tag))
+        self.assertEqual("rect", local_name(output_interface.tag))
+        for attribute in ("y", "width", "height", "rx"):
+            self.assertEqual(
+                input_interface.attrib[attribute],
+                output_interface.attrib[attribute],
+            )
+        input_left = float(input_interface.attrib["x"])
+        input_right = input_left + float(input_interface.attrib["width"])
+        output_left = float(output_interface.attrib["x"])
+        output_right = output_left + float(output_interface.attrib["width"])
+        shell_left = float(shell.attrib["x"])
+        shell_right = shell_left + float(shell.attrib["width"])
+        self.assertLess(input_left, shell_left)
+        self.assertGreater(input_right, shell_left)
+        self.assertLess(output_left, shell_right)
+        self.assertGreater(output_right, shell_right)
+        self.assertAlmostEqual(96.0, input_left + output_right)
+        self.assertAlmostEqual(96.0, input_right + output_left)
+        self.assertEqual(
+            "var(--icon-surface-secondary, #eef1f5)",
+            input_interface.attrib.get("fill"),
+        )
+        self.assertEqual(
+            input_interface.attrib.get("fill"),
+            output_interface.attrib.get("fill"),
+        )
+        interface_paints = " ".join(
+            element.attrib.get(name, "")
+            for element in (input_interface, output_interface)
+            for name in ("fill", "stroke")
+        )
+        self.assertNotIn("--icon-accent", interface_paints)
+        self.assertNotIn("--icon-status-", interface_paints)
+        self.assertFalse(any("data-detail" in element.attrib for element in asset.root.iter()))
+        self.assertFalse(
+            any(
+                name in element.attrib
+                for element in asset.root.iter()
+                for name in ("marker-start", "marker-mid", "marker-end")
+            )
+        )
+        self.assertNotRegex(asset.svg_source.lower(), r"\b(?:request|response|arrow)\b")
+
+    def test_server_obeys_shared_benchmark_machine_contract(self):
+        self.assert_common_visual_contract("server")
+
+    def test_server_has_two_simple_trays_indicators_vents_and_lightweight_base(self):
+        asset = self.load_benchmark("server")
+        parts = self.parts_by_name(asset)
+        self.assertEqual(("rect",), tuple(local_name(child.tag) for child in parts["shell"]))
+        for part_name in ("tray-top", "tray-bottom"):
+            with self.subTest(part=part_name):
+                self.assertEqual(
+                    ("rect",),
+                    tuple(local_name(child.tag) for child in parts[part_name]),
+                )
+        self.assertEqual(
+            ("circle", "circle"),
+            tuple(local_name(child.tag) for child in parts["indicator-bottom"]),
+        )
+        for part_name in ("vent-top", "vent-bottom"):
+            vents = list(parts[part_name])
+            with self.subTest(part=part_name):
+                self.assertEqual(("line", "line"), tuple(local_name(child.tag) for child in vents))
+                self.assertTrue(
+                    all(
+                        float(vent.attrib["x2"]) - float(vent.attrib["x1"]) <= 20.0
+                        for vent in vents
+                    )
+                )
+        self.assertEqual(("rect",), tuple(local_name(child.tag) for child in parts["base"]))
+        base = parts["base"][0]
+        self.assertLessEqual(float(base.attrib["height"]), 6.0)
+        self.assertLessEqual(float(base.attrib["width"]), 48.0)
+        self.assertFalse(any("data-detail" in element.attrib for element in asset.root.iter()))
+        self.assertNotRegex(
+            asset.svg_source.lower(),
+            r"\b(?:port|socket|connector|anchor|disk|fan|waveform|rack)\b",
+        )
+
+    def test_actor_storage_and_compute_benchmarks_have_no_port_like_private_details(self):
+        for icon_id in ("agent", "database", "server"):
+            with self.subTest(icon_id=icon_id):
+                asset = self.load_benchmark(icon_id)
+                self.assertNotRegex(
+                    asset.svg_source.lower(),
+                    r"\b(?:port|socket|connector|connection-anchor|scene-anchor)\b",
+                )
+                details = [
+                    element.attrib["data-detail"]
+                    for element in asset.root.iter()
+                    if "data-detail" in element.attrib
+                ]
+                self.assertEqual(
+                    ["ear-left", "ear-right"] if icon_id == "agent" else [],
+                    details,
+                )
+
+    def test_four_benchmark_silhouette_signatures_are_distinct_at_48px(self):
+        recognition_parts = {
+            "agent": {"shell", "face-screen", "antenna", "core"},
+            "database": {
+                "shell",
+                "top-ring",
+                "layer-top",
+                "layer-middle",
+                "layer-bottom",
+                "core",
+            },
+            "api": {
+                "shell",
+                "input-interface",
+                "output-interface",
+                "processor",
+                "indicator-group",
+            },
+            "server": {"shell", "tray-top", "tray-bottom", "base"},
+        }
+        signatures = {}
+        for icon_id, included_parts in recognition_parts.items():
+            asset = self.load_benchmark(icon_id)
+            parents = benchmark_parent_map(asset.root)
+            geometry = []
+            for element in asset.root.iter():
+                if local_name(element.tag) not in SVG_PAINTABLE_TAGS:
+                    continue
+                if benchmark_public_part(element, parents) not in included_parts:
+                    continue
+                if benchmark_is_hidden(element, parents):
+                    continue
+                geometry.append(
+                    (
+                        local_name(element.tag),
+                        tuple(
+                            round(coordinate * 0.5, 4)
+                            for coordinate in benchmark_geometry_bounds(element)
+                        ),
+                    )
+                )
+            self.assertTrue(geometry)
+            signatures[icon_id] = tuple(geometry)
+        self.assertEqual(4, len(set(signatures.values())))
 
 
 class AgentBenchmarkAssetTest(unittest.TestCase):

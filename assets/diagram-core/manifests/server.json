@@ -1,0 +1,34 @@
+{
+  "id": "server",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "compute-runtime",
+  "semantic_kind": "server",
+  "structural_prototype": "compute-device",
+  "parts": [
+    "shell",
+    "tray-top",
+    "tray-bottom",
+    "indicator-top",
+    "indicator-bottom",
+    "vent-top",
+    "vent-bottom",
+    "base"
+  ],
+  "attachments": {
+    "receive": {"x": 8, "y": 36},
+    "send": {"x": 88, "y": 60},
+    "status": {"x": 76, "y": 24}
+  },
+  "states": [
+    "idle",
+    "active",
+    "processing",
+    "success",
+    "warning",
+    "error"
+  ],
+  "actions": ["enter", "receive", "process", "send"],
+  "status": "visual-review"
+}

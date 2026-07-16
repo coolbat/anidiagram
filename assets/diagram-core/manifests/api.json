@@ -1,0 +1,32 @@
+{
+  "id": "api",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "network-interfaces",
+  "semantic_kind": "api",
+  "structural_prototype": "interface-module",
+  "parts": [
+    "shell",
+    "header",
+    "input-interface",
+    "output-interface",
+    "processor",
+    "indicator-group"
+  ],
+  "attachments": {
+    "receive": {"x": 8, "y": 48},
+    "send": {"x": 88, "y": 48},
+    "status": {"x": 48, "y": 22}
+  },
+  "states": [
+    "idle",
+    "active",
+    "processing",
+    "success",
+    "warning",
+    "error"
+  ],
+  "actions": ["receive", "process", "send", "stream"],
+  "status": "visual-review"
+}
