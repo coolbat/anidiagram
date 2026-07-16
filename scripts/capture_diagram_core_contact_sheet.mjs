@@ -29,6 +29,7 @@ const DEVICE_SCALE_FACTOR = 1;
 const PLAYWRIGHT_OPERATION_TIMEOUT_MS = 10_000;
 const CLOSE_TIMEOUT_MS = 5_000;
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const INDEX_RELATIVE_PATH = "gallery/diagram-core/index.html";
 const require = createRequire(import.meta.url);
 const PLAYWRIGHT_VERSION = require("playwright/package.json").version;
 const SOURCE_ASSET_PATHS = Object.freeze(
@@ -41,6 +42,20 @@ const SOURCE_ASSET_PATHS = Object.freeze(
     ]),
   ].sort(),
 );
+const CAPTURE_CONTENT_SECURITY_POLICY = [
+  "default-src 'none'",
+  "style-src 'unsafe-inline'",
+  "img-src 'none'",
+  "font-src 'none'",
+  "media-src 'none'",
+  "object-src 'none'",
+  "frame-src 'none'",
+  "worker-src 'none'",
+  "connect-src 'none'",
+  "manifest-src 'none'",
+  "base-uri 'none'",
+  "form-action 'none'",
+].join("; ");
 const CAPTURE_STYLE = `
 *, *::before, *::after {
   animation: none !important;
@@ -174,6 +189,13 @@ async function assertSnapshotCurrent(snapshot, label) {
   }
   if (current.isSymbolicLink() || fileSignature(current) !== snapshot.signature) {
     throw new Error(`${label} changed during capture: ${snapshot.path}`);
+  }
+}
+
+
+async function assertSnapshotsCurrent(entries) {
+  for (const entry of entries) {
+    await assertSnapshotCurrent(entry.snapshot, entry.label);
   }
 }
 
@@ -371,7 +393,11 @@ async function restorePublishedEntry(entry, replace) {
 }
 
 
-export async function publishCapture(entries, replace = rename) {
+export async function publishCapture(
+  entries,
+  replace = rename,
+  verifyCurrent = async () => {},
+) {
   if (!Array.isArray(entries) || entries.length !== 2) {
     throw new Error("capture publish requires exactly image and metadata entries");
   }
@@ -408,11 +434,13 @@ export async function publishCapture(entries, replace = rename) {
       }
     }
     for (const entry of staged) {
+      await verifyCurrent();
       await assertTargetUnchanged(entry);
       entry.attempted = true;
       await replace(entry.temporary, entry.target);
       entry.temporary = null;
     }
+    await verifyCurrent();
   } catch (error) {
     const rollbackErrors = [];
     for (const entry of [...staged].reverse()) {
@@ -456,12 +484,17 @@ function relativeRepoPath(target) {
 
 async function canonicalSourceAssets() {
   const files = [];
+  const snapshots = [];
   for (const relativePath of SOURCE_ASSET_PATHS) {
     const absolutePath = path.join(REPO_ROOT, relativePath);
     const snapshot = await readFileSnapshot(
       absolutePath,
       `canonical source asset ${relativePath}`,
     );
+    snapshots.push({
+      snapshot,
+      label: `canonical source asset ${relativePath}`,
+    });
     files.push({ path: relativePath, sha256: sha256(snapshot.payload) });
   }
   const joint = createHash("sha256");
@@ -471,7 +504,34 @@ async function canonicalSourceAssets() {
     joint.update(file.sha256, "ascii");
     joint.update("\n", "utf8");
   }
-  return { files, joint_sha256: joint.digest("hex") };
+  const metadata = { files, joint_sha256: joint.digest("hex") };
+  await assertSnapshotsCurrent(snapshots);
+  return { metadata, snapshots };
+}
+
+
+async function lockedPlaywrightProvenance() {
+  const snapshot = await readFileSnapshot(
+    path.join(REPO_ROOT, "package-lock.json"),
+    "package lock",
+  );
+  let lockedVersion;
+  try {
+    const lock = JSON.parse(snapshot.payload.toString("utf8"));
+    lockedVersion = lock.packages["node_modules/playwright"].version;
+  } catch (error) {
+    throw new Error("package lock does not pin Playwright", { cause: error });
+  }
+  if (typeof lockedVersion !== "string" || lockedVersion.length === 0) {
+    throw new Error("package lock does not pin Playwright");
+  }
+  if (lockedVersion !== PLAYWRIGHT_VERSION) {
+    throw new Error(
+      `runtime Playwright ${PLAYWRIGHT_VERSION} does not match package-lock.json ${lockedVersion}`,
+    );
+  }
+  await assertSnapshotCurrent(snapshot, "package lock");
+  return { snapshot, version: lockedVersion };
 }
 
 
@@ -539,20 +599,57 @@ async function inspectStaticSurface(page) {
   return withTimeout(() => page.evaluate(() => {
     const violations = [];
     const record = (kind, value) => violations.push(`${kind}: ${value}`);
-    const isLocalFragment = (value) => value.trim().startsWith("#");
-    const inspectUrlValue = (kind, value) => {
+    const elements = [];
+    const roots = [document];
+    for (const root of roots) {
+      for (const element of root.querySelectorAll("*")) {
+        elements.push(element);
+        if (element.shadowRoot) roots.push(element.shadowRoot);
+      }
+    }
+    const isLocalFragment = (value) => {
+      const normalized = value.trim();
+      if (!/^#[^\u0000-\u0020"'<>`]+$/u.test(normalized)) return false;
+      let identifier;
+      try {
+        identifier = decodeURIComponent(normalized.slice(1));
+      } catch (error) {
+        return false;
+      }
+      return elements.filter((element) => element.id === identifier).length === 1;
+    };
+    const inspectUrlValue = (kind, value, allowLocalFragment = false) => {
       const normalized = (value || "").trim();
-      if (normalized && !isLocalFragment(normalized)) record(kind, normalized);
+      if (normalized.length === 0) {
+        record(kind, "<empty>");
+      } else if (!(allowLocalFragment && isLocalFragment(normalized))) {
+        record(kind, normalized);
+      }
+    };
+    const normalizeCss = (source) => {
+      const withoutComments = (source || "").replace(/\/\*[\s\S]*?\*\//gu, "");
+      return withoutComments.replace(
+        /\\(?:([0-9a-f]{1,6})[ \t\r\n\f]?|([^\r\n\f]))/giu,
+        (match, hexadecimal, escaped) => {
+          if (!hexadecimal) return escaped;
+          const codePoint = Number.parseInt(hexadecimal, 16);
+          if (codePoint === 0 || codePoint > 0x10ffff) return "\ufffd";
+          return String.fromCodePoint(codePoint);
+        },
+      );
     };
     const inspectCssText = (source, label) => {
-      const css = source || "";
+      const css = normalizeCss(source);
       const urlExpression = /url\(\s*(["']?)(.*?)\1\s*\)/giu;
       for (const match of css.matchAll(urlExpression)) {
-        inspectUrlValue(`${label} url`, match[2]);
+        inspectUrlValue(`${label} url`, match[2], true);
       }
       const importExpression = /@import\s+(?:url\(\s*)?(["']?)([^"'\s;)]+)\1/giu;
       for (const match of css.matchAll(importExpression)) {
         inspectUrlValue(`${label} import`, match[2]);
+      }
+      if (/(?:-webkit-)?image-set\s*\(/iu.test(css)) {
+        record(`${label} image-set`, css);
       }
     };
     const inspectSheet = (sheet, label) => {
@@ -563,44 +660,121 @@ async function inspectStaticSurface(page) {
         record(`${label} stylesheet`, `inaccessible ${error.name || "error"}`);
         return;
       }
-      for (const rule of rules || []) {
-        inspectCssText(rule.cssText || "", label);
-        if (rule.cssRules) {
-          for (const nested of rule.cssRules) inspectCssText(nested.cssText || "", label);
+      const inspectRules = (ruleList) => {
+        for (const rule of ruleList || []) {
+          inspectCssText(rule.cssText || "", label);
+          if (rule.cssRules) inspectRules(rule.cssRules);
         }
-      }
+      };
+      inspectRules(rules);
     };
 
-    for (const script of document.querySelectorAll("script")) {
-      record("active element", `<script${script.src ? ` src=${script.src}` : ""}>`);
-    }
-    for (const element of document.querySelectorAll("iframe, frame, object, embed, portal")) {
-      record("active element", `<${element.localName}>`);
-    }
-    for (const meta of document.querySelectorAll("meta[http-equiv]")) {
-      if ((meta.getAttribute("http-equiv") || "").trim().toLowerCase() === "refresh") {
+    const activeElements = new Set([
+      "applet",
+      "audio",
+      "embed",
+      "feimage",
+      "foreignobject",
+      "frame",
+      "iframe",
+      "image",
+      "img",
+      "link",
+      "object",
+      "portal",
+      "script",
+      "source",
+      "track",
+      "video",
+    ]);
+    const fetchAttributes = new Set([
+      "action",
+      "archive",
+      "background",
+      "cite",
+      "classid",
+      "code",
+      "codebase",
+      "data",
+      "dynsrc",
+      "formaction",
+      "imagesrcset",
+      "longdesc",
+      "lowsrc",
+      "manifest",
+      "ping",
+      "poster",
+      "profile",
+      "src",
+      "srcset",
+    ]);
+    const fragmentAttributes = new Set(["href", "xlink:href"]);
+    const fragmentOwners = new Set([
+      "filter",
+      "lineargradient",
+      "mpath",
+      "pattern",
+      "radialgradient",
+      "textpath",
+      "use",
+    ]);
+    const svgNamespace = "http://www.w3.org/2000/svg";
+    for (const element of elements) {
+      const elementName = element.localName.toLowerCase();
+      if (activeElements.has(elementName)) {
+        record("active element", `<${element.localName}>`);
+      }
+      if (
+        elementName === "input"
+        && (element.getAttribute("type") || "").trim().toLowerCase() === "image"
+      ) {
+        record("active element", "<input type=image>");
+      }
+      if (
+        elementName === "meta"
+        && (element.getAttribute("http-equiv") || "").trim().toLowerCase() === "refresh"
+      ) {
         record("active element", "<meta http-equiv=refresh>");
       }
-    }
-    for (const base of document.querySelectorAll("base[href]")) {
-      record("active element", `<base href=${base.getAttribute("href") || ""}>`);
-    }
-
-    const urlAttributes = ["src", "srcset", "poster", "data", "href", "xlink:href"];
-    for (const element of document.querySelectorAll("*")) {
+      if (elementName === "base" && element.hasAttribute("href")) {
+        record("active element", `<base href=${element.getAttribute("href") || ""}>`);
+      }
+      if (elementName === "template" && element.hasAttribute("shadowrootmode")) {
+        record("active element", "<template shadowrootmode>");
+      }
       for (const attribute of element.attributes) {
-        if (attribute.name.toLowerCase().startsWith("on")) {
+        const attributeName = attribute.name.toLowerCase();
+        if (attributeName.startsWith("on")) {
           record("event attribute", `${element.localName}[${attribute.name}]`);
         }
+        if (attributeName === "xml:base") {
+          record("base attribute", `${element.localName}[${attribute.name}]`);
+        } else if (fetchAttributes.has(attributeName)) {
+          inspectUrlValue(
+            `${element.localName}[${attribute.name}]`,
+            attribute.value,
+          );
+        } else if (fragmentAttributes.has(attributeName)) {
+          const safeOwner = element.namespaceURI === svgNamespace
+            && fragmentOwners.has(elementName);
+          inspectUrlValue(
+            `${element.localName}[${attribute.name}]`,
+            attribute.value,
+            safeOwner,
+          );
+        }
+        inspectCssText(attribute.value, `${element.localName}[${attribute.name}]`);
       }
-      for (const attribute of urlAttributes) {
-        if (!element.hasAttribute(attribute)) continue;
-        inspectUrlValue(`${element.localName}[${attribute}]`, element.getAttribute(attribute));
+      if (elementName === "style") {
+        inspectCssText(element.textContent || "", "style element");
       }
-      inspectCssText(element.getAttribute("style") || "", `${element.localName}[style]`);
-    }
-    for (const style of document.querySelectorAll("style")) {
-      inspectCssText(style.textContent || "", "style element");
+      if (element.shadowRoot) {
+        for (const [index, sheet] of [
+          ...(element.shadowRoot.adoptedStyleSheets || []),
+        ].entries()) {
+          inspectSheet(sheet, `${element.localName} adopted stylesheet ${index}`);
+        }
+      }
     }
     for (const [index, sheet] of [...document.styleSheets].entries()) {
       inspectSheet(sheet, `document stylesheet ${index}`);
@@ -608,19 +782,12 @@ async function inspectStaticSurface(page) {
     for (const [index, sheet] of [...(document.adoptedStyleSheets || [])].entries()) {
       inspectSheet(sheet, `document adopted stylesheet ${index}`);
     }
-    const elements = [...document.querySelectorAll("*")];
-    for (const element of elements) {
-      if (!element.shadowRoot) continue;
-      for (const [index, sheet] of [...(element.shadowRoot.adoptedStyleSheets || [])].entries()) {
-        inspectSheet(sheet, `${element.localName} adopted stylesheet ${index}`);
-      }
-    }
     return [...new Set(violations)].sort();
   }), "static surface inspection");
 }
 
 
-async function capture(paths) {
+export async function capture(paths, replace = rename) {
   await requireRegularFile(paths.input, "input HTML");
   await rejectAliases([
     ["input", paths.input],
@@ -632,7 +799,20 @@ async function capture(paths) {
   relativeRepoPath(canonicalInput);
   const inputSnapshot = await readFileSnapshot(canonicalInput, "input HTML");
   const inputPayload = inputSnapshot.payload;
+  const lockedPlaywright = await lockedPlaywrightProvenance();
+  const canonicalIndexSnapshot = await readFileSnapshot(
+    path.join(REPO_ROOT, INDEX_RELATIVE_PATH),
+    "canonical Diagram Core index",
+  );
   const sourceAssets = await canonicalSourceAssets();
+  const provenanceSnapshots = [
+    { snapshot: inputSnapshot, label: "input HTML" },
+    { snapshot: lockedPlaywright.snapshot, label: "package lock" },
+    { snapshot: canonicalIndexSnapshot, label: "canonical Diagram Core index" },
+    ...sourceAssets.snapshots,
+  ];
+  const verifyProvenance = () => assertSnapshotsCurrent(provenanceSnapshots);
+  await verifyProvenance();
   const externalRequests = new Set();
   const canonicalInputUrl = pathToFileURL(canonicalInput).href;
   const browser = await chromium.launch({ headless: true });
@@ -685,6 +865,9 @@ async function capture(paths) {
           status: 200,
           contentType: "text/html; charset=utf-8",
           body: inputPayload,
+          headers: {
+            "Content-Security-Policy": CAPTURE_CONTENT_SECURITY_POLICY,
+          },
         });
         return;
       }
@@ -789,13 +972,13 @@ async function capture(paths) {
   }
 
   const captureTimestamp = new Date().toISOString();
-  await assertSnapshotCurrent(inputSnapshot, "input HTML");
+  await verifyProvenance();
   const imageDigest = sha256(screenshot);
   const metadata = {
       schema: "anidiagram.diagram-core.capture",
       version: 1,
       browser: {
-        playwright_version: PLAYWRIGHT_VERSION,
+        playwright_version: lockedPlaywright.version,
         chromium_version: chromiumVersion,
       },
       platform: { os: os.platform(), arch: os.arch() },
@@ -831,7 +1014,7 @@ async function capture(paths) {
         width: dimensions.width,
         height: dimensions.height,
       },
-      source_assets: sourceAssets,
+      source_assets: sourceAssets.metadata,
   };
   await publishCapture([
     { target: paths.output, payload: screenshot },
@@ -839,7 +1022,7 @@ async function capture(paths) {
       target: paths.metadata,
       payload: Buffer.from(`${JSON.stringify(metadata, null, 2)}\n`, "utf8"),
     },
-  ]);
+  ], replace, verifyProvenance);
   return { cells, requests: externalRequests.size, animations: motion.animationCount, metadata };
 }
 

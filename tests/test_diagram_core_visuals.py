@@ -5,6 +5,7 @@ import itertools
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -34,6 +35,7 @@ SIZES = (48, 64, 96)
 CONTEXTS = ("blue", "dark", "warm", "green")
 STATES = ("idle", "active", "processing", "success", "warning", "error")
 ASSET_LOCAL_TOKENS = {"--icon-surface-contrast"}
+CAPTURE_SIZE = (1248, 2496)
 FORBIDDEN_SVG_TAGS = {
     "animate",
     "animateMotion",
@@ -874,27 +876,17 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
     def sha256(self, path):
         return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
-    def capture_metadata_path(self, path):
+    def capture_metadata_path(self, path, repo_root=ROOT):
         absolute = Path(path).resolve()
         try:
-            return absolute.relative_to(ROOT).as_posix()
+            return absolute.relative_to(repo_root).as_posix()
         except ValueError:
             return str(absolute)
 
-    def canonical_source_assets(self):
-        paths = sorted(
-            [
-                "assets/diagram-core/catalog.json",
-                "assets/diagram-core/tokens.css",
-            ]
-            + [
-                "assets/diagram-core/{0}/{1}.{2}".format(directory, icon, suffix)
-                for icon in ICONS
-                for directory, suffix in (("icons", "svg"), ("manifests", "json"))
-            ]
-        )
+    def canonical_source_assets(self, repo_root=ROOT):
+        paths = visual_comparator.SOURCE_ASSET_PATHS
         files = [
-            {"path": relative, "sha256": self.sha256(ROOT / relative)}
+            {"path": relative, "sha256": self.sha256(repo_root / relative)}
             for relative in paths
         ]
         joint_payload = "".join(
@@ -906,9 +898,50 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             "joint_sha256": hashlib.sha256(joint_payload).hexdigest(),
         }
 
-    def locked_playwright_version(self):
-        lock = json.loads((ROOT / "package-lock.json").read_text(encoding="utf-8"))
+    def locked_playwright_version(self, repo_root=ROOT):
+        lock = json.loads((repo_root / "package-lock.json").read_text(encoding="utf-8"))
         return lock["packages"]["node_modules/playwright"]["version"]
+
+    def copy_capture_repository(self, target, include_script=False):
+        repo_root = Path(target).resolve()
+        relative_paths = (
+            "package-lock.json",
+            visual_comparator.INDEX_RELATIVE_PATH,
+            *visual_comparator.SOURCE_ASSET_PATHS,
+        )
+        if include_script:
+            relative_paths += ("scripts/capture_diagram_core_contact_sheet.mjs",)
+        for relative_path in relative_paths:
+            source = ROOT / relative_path
+            destination = repo_root / relative_path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source, destination)
+        return repo_root
+
+    def atomically_replace_identity(self, path, replace=os.replace):
+        target = Path(path)
+        replacement = target.with_name(".{0}.replacement".format(target.name))
+        replacement.write_bytes(target.read_bytes())
+        replace(str(replacement), str(target))
+
+    def capture_command(self, input_path, output, metadata):
+        return subprocess.run(
+            [
+                "node",
+                str(self.CAPTURE_SCRIPT),
+                "--input",
+                str(input_path),
+                "--output",
+                str(output),
+                "--metadata",
+                str(metadata),
+            ],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
 
     def capture_metadata_digest(self, metadata):
         payload = copy.deepcopy(metadata)
@@ -932,23 +965,31 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
         approved=False,
         platform_os="linux",
         platform_arch="x64",
+        image_size=CAPTURE_SIZE,
+        repo_root=ROOT,
     ):
         image_path = root / (stem + ".png")
         metadata_path = root / (stem + ".json")
-        self.solid_image((10, 10), color).save(image_path)
+        self.solid_image(image_size, color).save(image_path)
         digest = self.sha256(image_path)
         metadata = {
             "schema": "anidiagram.diagram-core.capture",
             "version": 1,
             "browser": {
-                "playwright_version": playwright_version or self.locked_playwright_version(),
+                "playwright_version": playwright_version
+                or self.locked_playwright_version(repo_root),
                 "chromium_version": chromium_version,
             },
             "platform": {"os": platform_os, "arch": platform_arch},
             "viewport": {"width": 1280, "height": 900, "device_scale_factor": 1},
             "locator": {
                 "selector": "#diagram-core-regression-grid",
-                "bounding_box": {"x": 0, "y": 0, "width": 10, "height": 10},
+                "bounding_box": {
+                    "x": 0,
+                    "y": 0,
+                    "width": image_size[0],
+                    "height": image_size[1],
+                },
                 "cells": 288,
             },
             "capture": {
@@ -960,15 +1001,15 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             },
             "input": {
                 "path": "gallery/diagram-core/index.html",
-                "sha256": self.sha256(ROOT / "gallery/diagram-core/index.html"),
+                "sha256": self.sha256(repo_root / "gallery/diagram-core/index.html"),
             },
             "image": {
-                "path": self.capture_metadata_path(image_path),
+                "path": self.capture_metadata_path(image_path, repo_root),
                 "sha256": digest,
-                "width": 10,
-                "height": 10,
+                "width": image_size[0],
+                "height": image_size[1],
             },
-            "source_assets": self.canonical_source_assets(),
+            "source_assets": self.canonical_source_assets(repo_root),
         }
         if source_digest is not None:
             metadata["source_assets"]["joint_sha256"] = source_digest
@@ -1100,6 +1141,12 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             "tokens.css",
             "manifests",
             "icons",
+            "Content-Security-Policy",
+            "default-src 'none'",
+            "img-src 'none'",
+            "object-src 'none'",
+            "connect-src 'none'",
+            "base-uri 'none'",
         ):
             self.assertIn(required, source)
         self.assertIn("context.route", source)
@@ -1250,6 +1297,251 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             self.assertIn("external requests are forbidden", result.stderr)
             self.assertFalse(output.exists())
             self.assertFalse(metadata.exists())
+
+    def test_capture_rejects_unsafe_html_presentation_resource_schemes(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        unsafe_references = (
+            "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' "
+            "width='8' height='8'%3E%3Crect width='8' height='8' fill='red'/%3E%3C/svg%3E",
+            "blob:file:///diagram-core-probe",
+            "http://127.0.0.1:9/diagram-core-probe.svg",
+            "file:///etc/hosts",
+            "//127.0.0.1:9/diagram-core-probe.svg",
+            "diagram-core-relative-probe.svg",
+        )
+        source = (ROOT / "gallery/diagram-core/index.html").read_text(encoding="utf-8")
+        self.assertIn("</svg>", source)
+        for index, reference in enumerate(unsafe_references):
+            with self.subTest(reference=reference):
+                with tempfile.TemporaryDirectory(
+                    prefix="diagram-core-presentation-{0}-".format(index),
+                    dir=build_root,
+                ) as temp_dir:
+                    root = Path(temp_dir).resolve()
+                    malicious_input = root / "presentation-resource.html"
+                    probe = (
+                        '<table background="{0}" style="width:104px;height:104px">'
+                        "<tr><td>resource probe</td></tr></table>"
+                    ).format(reference)
+                    malicious_input.write_text(
+                        source.replace("</body>", probe + "</body>", 1),
+                        encoding="utf-8",
+                    )
+                    output = root / "candidate.png"
+                    metadata = root / "candidate.json"
+
+                    result = self.capture_command(malicious_input, output, metadata)
+
+                    self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+                    self.assertIn("forbidden", result.stderr)
+                    self.assertFalse(output.exists())
+                    self.assertFalse(metadata.exists())
+
+    def test_capture_rejects_foreign_object_even_without_resource_attributes(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(
+            prefix="diagram-core-foreign-object-",
+            dir=build_root,
+        ) as temp_dir:
+            root = Path(temp_dir).resolve()
+            input_path = root / "foreign-object.html"
+            source = (ROOT / "gallery/diagram-core/index.html").read_text(encoding="utf-8")
+            probe = (
+                '<foreignObject x="0" y="0" width="104" height="104">'
+                '<div xmlns="http://www.w3.org/1999/xhtml">static probe</div>'
+                "</foreignObject>"
+            )
+            input_path.write_text(
+                source.replace("</svg>", probe + "</svg>", 1),
+                encoding="utf-8",
+            )
+            output = root / "candidate.png"
+            metadata = root / "candidate.json"
+
+            result = self.capture_command(input_path, output, metadata)
+
+            self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+            self.assertIn("forbidden", result.stderr)
+            self.assertFalse(output.exists())
+            self.assertFalse(metadata.exists())
+
+    def test_capture_preserves_strict_same_document_svg_fragments(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(
+            prefix="diagram-core-local-fragment-",
+            dir=build_root,
+        ) as temp_dir:
+            root = Path(temp_dir).resolve()
+            input_path = root / "local-fragment.html"
+            source = (ROOT / "gallery/diagram-core/index.html").read_text(encoding="utf-8")
+            probe = (
+                '<defs><linearGradient id="local-paint">'
+                '<stop offset="0" stop-color="#fff"/>'
+                '<stop offset="1" stop-color="#eee"/>'
+                '</linearGradient><g id="local-shape">'
+                '<rect width="1" height="1" fill="url(#local-paint)"/>'
+                "</g></defs>"
+                '<use href="#local-shape" x="1247" y="2495"/>'
+            )
+            input_path.write_text(
+                source.replace("</svg>", probe + "</svg>", 1),
+                encoding="utf-8",
+            )
+            output = root / "candidate.png"
+            metadata = root / "candidate.json"
+
+            result = self.capture_command(input_path, output, metadata)
+
+            self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+            self.assertIn("cells=288 dpr=1 requests=0 animations=0", result.stdout)
+            self.assertTrue(output.is_file())
+            self.assertTrue(metadata.is_file())
+
+    def test_capture_rejects_unsafe_svg_presentation_url_attributes(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        source = (ROOT / "gallery/diagram-core/index.html").read_text(encoding="utf-8")
+        data_url = (
+            "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' "
+            "width='8' height='8'%3E%3Crect width='8' height='8' fill='red'/%3E%3C/svg%3E"
+        )
+        for attribute in (
+            "fill",
+            "stroke",
+            "filter",
+            "clip-path",
+            "mask",
+            "marker-start",
+            "marker-mid",
+            "marker-end",
+            "cursor",
+        ):
+            with self.subTest(attribute=attribute):
+                with tempfile.TemporaryDirectory(
+                    prefix="diagram-core-svg-presentation-",
+                    dir=build_root,
+                ) as temp_dir:
+                    root = Path(temp_dir).resolve()
+                    input_path = root / "svg-presentation-resource.html"
+                    probe = '<rect width="8" height="8" {0}="url({1}#probe)"/>'.format(
+                        attribute,
+                        data_url,
+                    )
+                    input_path.write_text(
+                        source.replace("</svg>", probe + "</svg>", 1),
+                        encoding="utf-8",
+                    )
+                    output = root / "candidate.png"
+                    metadata = root / "candidate.json"
+
+                    result = self.capture_command(input_path, output, metadata)
+
+                    self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+                    self.assertIn("forbidden", result.stderr)
+                    self.assertFalse(output.exists())
+                    self.assertFalse(metadata.exists())
+
+    def test_capture_rejects_css_escaped_resource_functions(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        source = (ROOT / "gallery/diagram-core/index.html").read_text(encoding="utf-8")
+        data_url = (
+            "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' "
+            "width='8' height='8'%3E%3Crect width='8' height='8' fill='red'/%3E%3C/svg%3E"
+        )
+        probes = (
+            '<rect width="8" height="8" fill="u\\72l({0}#probe)"/>'.format(data_url),
+            '<rect width="8" height="8" style="fill:u\\72l({0}#probe)"/>'.format(
+                data_url
+            ),
+        )
+        for index, probe in enumerate(probes):
+            with self.subTest(index=index):
+                with tempfile.TemporaryDirectory(
+                    prefix="diagram-core-css-escape-",
+                    dir=build_root,
+                ) as temp_dir:
+                    root = Path(temp_dir).resolve()
+                    input_path = root / "css-escaped-resource.html"
+                    input_path.write_text(
+                        source.replace("</svg>", probe + "</svg>", 1),
+                        encoding="utf-8",
+                    )
+                    output = root / "candidate.png"
+                    metadata = root / "candidate.json"
+
+                    result = self.capture_command(input_path, output, metadata)
+
+                    self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+                    self.assertIn("forbidden", result.stderr)
+                    self.assertFalse(output.exists())
+                    self.assertFalse(metadata.exists())
+
+    def test_capture_rejects_empty_resource_references(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        source = (ROOT / "gallery/diagram-core/index.html").read_text(encoding="utf-8")
+        probes = (
+            '<use href="" x="0" y="0"/>',
+            '<rect width="8" height="8" fill="url(\'\')"/>',
+        )
+        for index, probe in enumerate(probes):
+            with self.subTest(index=index):
+                with tempfile.TemporaryDirectory(
+                    prefix="diagram-core-empty-resource-",
+                    dir=build_root,
+                ) as temp_dir:
+                    root = Path(temp_dir).resolve()
+                    input_path = root / "empty-resource.html"
+                    input_path.write_text(
+                        source.replace("</svg>", probe + "</svg>", 1),
+                        encoding="utf-8",
+                    )
+                    output = root / "candidate.png"
+                    metadata = root / "candidate.json"
+
+                    result = self.capture_command(input_path, output, metadata)
+
+                    self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+                    self.assertIn("forbidden", result.stderr)
+                    self.assertFalse(output.exists())
+                    self.assertFalse(metadata.exists())
+
+    def test_capture_rejects_missing_duplicate_and_rebased_fragments(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        source = (ROOT / "gallery/diagram-core/index.html").read_text(encoding="utf-8")
+        probes = (
+            '<use href="#missing-local-shape"/>',
+            '<g id="duplicate-local-shape"/><g id="duplicate-local-shape"/>'
+            '<use href="#duplicate-local-shape"/>',
+            '<g id="rebased-local-shape" xml:base="#rebased">'
+            '<use href="#rebased-local-shape"/></g>',
+        )
+        for index, probe in enumerate(probes):
+            with self.subTest(index=index):
+                with tempfile.TemporaryDirectory(
+                    prefix="diagram-core-invalid-fragment-",
+                    dir=build_root,
+                ) as temp_dir:
+                    root = Path(temp_dir).resolve()
+                    input_path = root / "invalid-fragment.html"
+                    input_path.write_text(
+                        source.replace("</svg>", probe + "</svg>", 1),
+                        encoding="utf-8",
+                    )
+                    output = root / "candidate.png"
+                    metadata = root / "candidate.json"
+
+                    result = self.capture_command(input_path, output, metadata)
+
+                    self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+                    self.assertIn("forbidden", result.stderr)
+                    self.assertFalse(output.exists())
+                    self.assertFalse(metadata.exists())
 
     def test_capture_rejects_self_deleting_data_resource_script_without_outputs(self):
         build_root = ROOT / "build"
@@ -1572,6 +1864,157 @@ if ((await readFile(%s, "utf8")) !== "EXTERNAL-METADATA") {
             )
             self.assertEqual(0, result.returncode, result.stderr)
 
+    def test_capture_rolls_back_pair_when_repo_provenance_changes_during_publish(self):
+        provenance_paths = (
+            "package-lock.json",
+            visual_comparator.INDEX_RELATIVE_PATH,
+            visual_comparator.SOURCE_ASSET_PATHS[0],
+        )
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        for relative_path in provenance_paths:
+            with self.subTest(relative_path=relative_path):
+                with tempfile.TemporaryDirectory(
+                    prefix="diagram-core-js-provenance-",
+                    dir=build_root,
+                ) as temp_dir:
+                    repo_root = self.copy_capture_repository(
+                        Path(temp_dir) / "repo",
+                        include_script=True,
+                    )
+                    output = repo_root / "build/candidate.png"
+                    metadata = repo_root / "build/candidate.json"
+                    output.parent.mkdir(parents=True)
+                    output.write_bytes(b"old-image")
+                    metadata.write_bytes(b"old-metadata")
+                    provenance = repo_root / relative_path
+                    replacement = provenance.with_name(
+                        ".{0}.replacement".format(provenance.name)
+                    )
+                    replacement.write_bytes(provenance.read_bytes())
+                    module_url = (
+                        repo_root / "scripts/capture_diagram_core_contact_sheet.mjs"
+                    ).as_uri()
+                    program = """
+import { readFile, readdir, rename } from "node:fs/promises";
+const captureModule = await import(%s);
+if (typeof captureModule.capture !== "function") {
+  throw new Error("capture export missing");
+}
+let replaceCalls = 0;
+const injectedRename = async (source, target) => {
+  const result = await rename(source, target);
+  replaceCalls += 1;
+  if (replaceCalls === 1) await rename(%s, %s);
+  return result;
+};
+let failure;
+try {
+  await captureModule.capture({
+    input: %s,
+    output: %s,
+    metadata: %s,
+  }, injectedRename);
+} catch (error) {
+  failure = error;
+}
+if (!failure || !failure.message.includes("changed during capture")) {
+  throw new Error(`stale capture did not fail safely: ${failure && failure.message}`);
+}
+if ((await readFile(%s, "utf8")) !== "old-image") throw new Error("image rollback failed");
+if ((await readFile(%s, "utf8")) !== "old-metadata") {
+  throw new Error("metadata rollback failed");
+}
+const residue = (await readdir(%s)).filter(
+  (name) => name.endsWith(".tmp") || name.endsWith(".bak"),
+);
+if (residue.length !== 0) throw new Error(`publish residue: ${residue.join(",")}`);
+""" % tuple(
+                        json.dumps(value)
+                        for value in (
+                            module_url,
+                            str(replacement),
+                            str(provenance),
+                            str(repo_root / visual_comparator.INDEX_RELATIVE_PATH),
+                            str(output),
+                            str(metadata),
+                            str(output),
+                            str(metadata),
+                            str(output.parent),
+                        )
+                    )
+
+                    result = subprocess.run(
+                        ["node", "--input-type=module", "--eval", program],
+                        cwd=ROOT,
+                        capture_output=True,
+                        text=True,
+                        check=False,
+                        timeout=30,
+                    )
+
+                    self.assertEqual(0, result.returncode, result.stderr)
+
+    def test_capture_schema_rejects_boolean_and_float_integer_fields(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            image, metadata_path = self.write_capture_fixture(root, "candidate")
+            original = json.loads(metadata_path.read_text(encoding="utf-8"))
+            cases = (
+                (("version",), True),
+                (("version",), 1.0),
+                (("viewport", "width"), 1280.0),
+                (("viewport", "height"), True),
+                (("viewport", "device_scale_factor"), True),
+                (("locator", "cells"), 288.0),
+                (("locator", "bounding_box", "x"), False),
+                (("locator", "bounding_box", "y"), 0.0),
+                (("locator", "bounding_box", "width"), 1248.0),
+                (("locator", "bounding_box", "height"), 2496.0),
+                (("capture", "external_requests"), False),
+                (("capture", "animation_count"), 0.0),
+                (("capture", "transition_count"), False),
+                (("image", "width"), 1248.0),
+                (("image", "height"), 2496.0),
+            )
+            for keys, invalid_value in cases:
+                payload = copy.deepcopy(original)
+                target = payload
+                for key in keys[:-1]:
+                    target = target[key]
+                target[keys[-1]] = invalid_value
+                with self.subTest(field=".".join(keys), value=invalid_value):
+                    with self.assertRaises(VisualComparisonError):
+                        visual_comparator._validate_capture_metadata(
+                            payload,
+                            image,
+                            "candidate",
+                        )
+
+    def test_accept_rejects_self_consistent_ten_by_ten_capture_without_outputs(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            candidate, candidate_metadata = self.write_capture_fixture(
+                root,
+                "candidate",
+                image_size=(10, 10),
+            )
+            baseline = root / "baseline.png"
+            baseline_metadata = root / "baseline.json"
+
+            with self.assertRaises(VisualComparisonError):
+                visual_comparator.accept_candidate(
+                    candidate,
+                    candidate_metadata,
+                    baseline,
+                    baseline_metadata,
+                    "reviewer",
+                    "reject noncanonical dimensions",
+                )
+
+            self.assertFalse(baseline.exists())
+            self.assertFalse(baseline_metadata.exists())
+
     def test_comparison_rejects_metadata_mismatch_and_hash_tampering(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir).resolve()
@@ -1671,6 +2114,291 @@ if ((await readFile(%s, "utf8")) !== "EXTERNAL-METADATA") {
             self.assertIn("diff_ratio=0.00000000", result.stdout)
             self.assertIn("passed=true", result.stdout)
             self.assertEqual(before, (baseline.read_bytes(), baseline_metadata.read_bytes()))
+
+    def test_normal_compare_rejects_repo_replacement_before_return(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            repo_root = self.copy_capture_repository(root / "repo")
+            fixtures = root / "fixtures"
+            fixtures.mkdir()
+            baseline, baseline_metadata = self.write_capture_fixture(
+                fixtures,
+                "baseline",
+                approved=True,
+                repo_root=repo_root,
+            )
+            candidate, candidate_metadata = self.write_capture_fixture(
+                fixtures,
+                "candidate",
+                repo_root=repo_root,
+            )
+            replaced = repo_root / visual_comparator.SOURCE_ASSET_PATHS[0]
+            real_compare = visual_comparator.compare_images
+
+            def compare_then_replace(*arguments, **keywords):
+                report = real_compare(*arguments, **keywords)
+                self.atomically_replace_identity(replaced)
+                return report
+
+            with mock.patch.object(visual_comparator, "REPO_ROOT", repo_root), mock.patch.object(
+                visual_comparator,
+                "compare_images",
+                side_effect=compare_then_replace,
+            ):
+                with self.assertRaises(VisualComparisonError):
+                    visual_comparator.compare_capture_files(
+                        baseline,
+                        baseline_metadata,
+                        candidate,
+                        candidate_metadata,
+                    )
+
+    def test_normal_compare_repo_race_does_not_publish_stale_heatmap(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            repo_root = self.copy_capture_repository(root / "repo")
+            fixtures = root / "fixtures"
+            fixtures.mkdir()
+            baseline, baseline_metadata = self.write_capture_fixture(
+                fixtures,
+                "baseline",
+                approved=True,
+                repo_root=repo_root,
+            )
+            candidate, candidate_metadata = self.write_capture_fixture(
+                fixtures,
+                "candidate",
+                color=(90, 30, 40, 255),
+                repo_root=repo_root,
+            )
+            diff_output = root / "existing.diff.png"
+            original_diff = self.write_snapshot_file(
+                diff_output,
+                b"old-diff-output",
+                0o640,
+                1_625_000_000_000_000_000,
+            )
+            replaced = repo_root / visual_comparator.SOURCE_ASSET_PATHS[0]
+            real_compare = visual_comparator.compare_images
+
+            def compare_then_replace(*arguments, **keywords):
+                report = real_compare(*arguments, **keywords)
+                self.atomically_replace_identity(replaced)
+                return report
+
+            with mock.patch.object(visual_comparator, "REPO_ROOT", repo_root), mock.patch.object(
+                visual_comparator,
+                "compare_images",
+                side_effect=compare_then_replace,
+            ):
+                with self.assertRaises(VisualComparisonError):
+                    visual_comparator.compare_capture_files(
+                        baseline,
+                        baseline_metadata,
+                        candidate,
+                        candidate_metadata,
+                        diff_output=diff_output,
+                    )
+
+            self.assert_file_snapshot(diff_output, original_diff)
+            self.assert_no_publish_residue(root)
+
+    def test_accept_rechecks_lock_index_and_source_before_output_publish(self):
+        provenance_paths = (
+            "package-lock.json",
+            visual_comparator.INDEX_RELATIVE_PATH,
+            visual_comparator.SOURCE_ASSET_PATHS[0],
+        )
+        for relative_path in provenance_paths:
+            with self.subTest(relative_path=relative_path):
+                with tempfile.TemporaryDirectory() as temp_dir:
+                    root = Path(temp_dir).resolve()
+                    repo_root = self.copy_capture_repository(root / "repo")
+                    fixtures = root / "fixtures"
+                    fixtures.mkdir()
+                    candidate, candidate_metadata = self.write_capture_fixture(
+                        fixtures,
+                        "candidate",
+                        repo_root=repo_root,
+                    )
+                    baseline = root / "baseline.png"
+                    baseline_metadata = root / "baseline.json"
+                    baseline_snapshot = self.write_snapshot_file(
+                        baseline,
+                        b"old-baseline-image",
+                        0o640,
+                        1_630_000_000_000_000_000,
+                    )
+                    metadata_snapshot = self.write_snapshot_file(
+                        baseline_metadata,
+                        b"old-baseline-metadata",
+                        0o600,
+                        1_630_000_001_000_000_000,
+                    )
+                    target = repo_root / relative_path
+                    real_stage = visual_comparator._stage_approval_payload
+                    injected = [False]
+
+                    def stage_then_replace(*arguments, **keywords):
+                        result = real_stage(*arguments, **keywords)
+                        if not injected[0]:
+                            injected[0] = True
+                            self.atomically_replace_identity(target)
+                        return result
+
+                    with mock.patch.object(
+                        visual_comparator,
+                        "REPO_ROOT",
+                        repo_root,
+                    ), mock.patch.object(
+                        visual_comparator,
+                        "_stage_approval_payload",
+                        side_effect=stage_then_replace,
+                    ):
+                        with self.assertRaises(VisualComparisonError):
+                            visual_comparator.accept_candidate(
+                                candidate,
+                                candidate_metadata,
+                                baseline,
+                                baseline_metadata,
+                                "reviewer",
+                                "repository identity must remain current",
+                            )
+
+                    self.assertTrue(injected[0])
+                    self.assert_file_snapshot(baseline, baseline_snapshot)
+                    self.assert_file_snapshot(baseline_metadata, metadata_snapshot)
+                    self.assert_no_publish_residue(root)
+
+    def test_accept_rolls_back_pair_when_source_changes_after_first_replace(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            repo_root = self.copy_capture_repository(root / "repo")
+            fixtures = root / "fixtures"
+            fixtures.mkdir()
+            candidate, candidate_metadata = self.write_capture_fixture(
+                fixtures,
+                "candidate",
+                repo_root=repo_root,
+            )
+            baseline = root / "baseline.png"
+            baseline_metadata = root / "baseline.json"
+            baseline_snapshot = self.write_snapshot_file(
+                baseline,
+                b"old-baseline-image",
+                0o640,
+                1_640_000_000_000_000_000,
+            )
+            metadata_snapshot = self.write_snapshot_file(
+                baseline_metadata,
+                b"old-baseline-metadata",
+                0o600,
+                1_640_000_001_000_000_000,
+            )
+            source_asset = repo_root / visual_comparator.SOURCE_ASSET_PATHS[0]
+            real_replace = os.replace
+            injected = [False]
+
+            def replace_then_change_source(source, target):
+                result = real_replace(source, target)
+                if Path(target) == baseline and not injected[0]:
+                    injected[0] = True
+                    self.atomically_replace_identity(source_asset, replace=real_replace)
+                return result
+
+            with mock.patch.object(
+                visual_comparator,
+                "REPO_ROOT",
+                repo_root,
+            ), mock.patch.object(
+                visual_comparator.os,
+                "replace",
+                side_effect=replace_then_change_source,
+            ):
+                with self.assertRaises(VisualComparisonError):
+                    visual_comparator.accept_candidate(
+                        candidate,
+                        candidate_metadata,
+                        baseline,
+                        baseline_metadata,
+                        "reviewer",
+                        "rollback stale provenance",
+                    )
+
+            self.assertTrue(injected[0])
+            self.assertEqual(baseline_snapshot[0], baseline.read_bytes())
+            self.assertEqual(baseline_snapshot[1], baseline.stat().st_mode & 0o777)
+            self.assertEqual(metadata_snapshot[0], baseline_metadata.read_bytes())
+            self.assertEqual(
+                metadata_snapshot[1],
+                baseline_metadata.stat().st_mode & 0o777,
+            )
+            self.assert_no_publish_residue(root)
+
+    def test_accept_rolls_back_pair_when_source_changes_after_second_replace(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            repo_root = self.copy_capture_repository(root / "repo")
+            fixtures = root / "fixtures"
+            fixtures.mkdir()
+            candidate, candidate_metadata = self.write_capture_fixture(
+                fixtures,
+                "candidate",
+                repo_root=repo_root,
+            )
+            baseline = root / "baseline.png"
+            baseline_metadata = root / "baseline.json"
+            baseline_snapshot = self.write_snapshot_file(
+                baseline,
+                b"old-baseline-image",
+                0o640,
+                1_650_000_000_000_000_000,
+            )
+            metadata_snapshot = self.write_snapshot_file(
+                baseline_metadata,
+                b"old-baseline-metadata",
+                0o600,
+                1_650_000_001_000_000_000,
+            )
+            source_asset = repo_root / visual_comparator.SOURCE_ASSET_PATHS[0]
+            real_replace = os.replace
+            injected = [False]
+
+            def replace_then_change_source(source, target):
+                result = real_replace(source, target)
+                if Path(target) == baseline_metadata and not injected[0]:
+                    injected[0] = True
+                    self.atomically_replace_identity(source_asset, replace=real_replace)
+                return result
+
+            with mock.patch.object(
+                visual_comparator,
+                "REPO_ROOT",
+                repo_root,
+            ), mock.patch.object(
+                visual_comparator.os,
+                "replace",
+                side_effect=replace_then_change_source,
+            ):
+                with self.assertRaises(VisualComparisonError):
+                    visual_comparator.accept_candidate(
+                        candidate,
+                        candidate_metadata,
+                        baseline,
+                        baseline_metadata,
+                        "reviewer",
+                        "rollback final stale provenance",
+                    )
+
+            self.assertTrue(injected[0])
+            self.assertEqual(baseline_snapshot[0], baseline.read_bytes())
+            self.assertEqual(baseline_snapshot[1], baseline.stat().st_mode & 0o777)
+            self.assertEqual(metadata_snapshot[0], baseline_metadata.read_bytes())
+            self.assertEqual(
+                metadata_snapshot[1],
+                baseline_metadata.stat().st_mode & 0o777,
+            )
+            self.assert_no_publish_residue(root)
 
     def test_normal_compare_rejects_symlink_diff_output_even_when_images_pass(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -1774,8 +2502,20 @@ if ((await readFile(%s, "utf8")) !== "EXTERNAL-METADATA") {
             baseline_metadata = root / "baseline.json"
             real_validate = visual_comparator._validate_capture_metadata
 
-            def replace_after_validation(metadata, image_path, label, require_approval=False):
-                result = real_validate(metadata, image_path, label, require_approval)
+            def replace_after_validation(
+                metadata,
+                image_path,
+                label,
+                require_approval=False,
+                repository_provenance=None,
+            ):
+                result = real_validate(
+                    metadata,
+                    image_path,
+                    label,
+                    require_approval,
+                    repository_provenance,
+                )
                 if label == "candidate":
                     Path(image_path).write_bytes(replacement_payload)
                 return result

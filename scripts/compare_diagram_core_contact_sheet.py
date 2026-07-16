@@ -38,6 +38,8 @@ SOURCE_ASSET_PATHS = tuple(
 VIEWPORT = {"width": 1280, "height": 900, "device_scale_factor": 1}
 LOCATOR_SELECTOR = "#diagram-core-regression-grid"
 EXPECTED_CELLS = 288
+EXPECTED_WIDTH = 1248
+EXPECTED_HEIGHT = 2496
 
 
 class VisualComparisonError(ValueError):
@@ -71,10 +73,27 @@ class FileSnapshot:
 
 
 @dataclass(frozen=True)
+class ProvenanceFile:
+    relative_path: str
+    snapshot: FileSnapshot
+    digest: str
+
+
+@dataclass(frozen=True)
+class RepositoryProvenance:
+    package_lock_snapshot: FileSnapshot
+    index_snapshot: FileSnapshot
+    playwright_version: str
+    source_assets: tuple
+    source_assets_joint_sha256: str
+
+
+@dataclass(frozen=True)
 class ValidatedCapture:
     snapshot: FileSnapshot
     digest: str
     image: Image.Image
+    repository_provenance: RepositoryProvenance
 
 
 def _validate_thresholds(channel_tolerance, max_diff_ratio):
@@ -372,6 +391,14 @@ def _require_nonempty_string(value, label):
     return value
 
 
+def _require_exact_integer(value, expected, label):
+    if type(value) is not int or value != expected:
+        raise VisualComparisonError(
+            "{0} must be the exact integer {1}".format(label, expected)
+        )
+    return value
+
+
 def _require_sha256(value, label):
     if (
         not isinstance(value, str)
@@ -402,29 +429,75 @@ def _metadata_image_path(path):
         return str(target)
 
 
-def _locked_playwright_version():
-    lock_snapshot = _read_file_snapshot(REPO_ROOT / "package-lock.json", "package lock")
+def _ensure_repository_provenance_current(provenance):
+    snapshots = (
+        (provenance.package_lock_snapshot, "package lock"),
+        (provenance.index_snapshot, "canonical Diagram Core index"),
+    ) + tuple(
+        (
+            entry.snapshot,
+            "canonical source asset {0}".format(entry.relative_path),
+        )
+        for entry in provenance.source_assets
+    )
+    for snapshot, label in snapshots:
+        _ensure_snapshot_current(snapshot, label)
+
+
+def _read_repository_provenance():
+    package_lock_snapshot = _read_file_snapshot(
+        REPO_ROOT / "package-lock.json",
+        "package lock",
+    )
     try:
-        lock = json.loads(lock_snapshot.payload.decode("utf-8"))
+        lock = json.loads(package_lock_snapshot.payload.decode("utf-8"))
         version = lock["packages"]["node_modules/playwright"]["version"]
     except (UnicodeError, json.JSONDecodeError, KeyError, TypeError) as error:
         raise VisualComparisonError("package lock does not pin Playwright") from error
-    return _require_nonempty_string(version, "locked Playwright version")
-
-
-def _canonical_source_assets():
-    files = []
+    playwright_version = _require_nonempty_string(
+        version,
+        "locked Playwright version",
+    )
+    index_snapshot = _read_file_snapshot(
+        REPO_ROOT / INDEX_RELATIVE_PATH,
+        "canonical Diagram Core index",
+    )
+    source_assets = []
     for relative_path in SOURCE_ASSET_PATHS:
         snapshot = _read_file_snapshot(
             REPO_ROOT / relative_path,
             "canonical source asset {0}".format(relative_path),
         )
-        files.append({"path": relative_path, "sha256": _sha256_bytes(snapshot.payload)})
+        source_assets.append(
+            ProvenanceFile(
+                relative_path=relative_path,
+                snapshot=snapshot,
+                digest=_sha256_bytes(snapshot.payload),
+            )
+        )
     joint_payload = "".join(
-        "{0}\0{1}\n".format(entry["path"], entry["sha256"])
-        for entry in files
+        "{0}\0{1}\n".format(entry.relative_path, entry.digest)
+        for entry in source_assets
     ).encode("utf-8")
-    return {"files": files, "joint_sha256": _sha256_bytes(joint_payload)}
+    provenance = RepositoryProvenance(
+        package_lock_snapshot=package_lock_snapshot,
+        index_snapshot=index_snapshot,
+        playwright_version=playwright_version,
+        source_assets=tuple(source_assets),
+        source_assets_joint_sha256=_sha256_bytes(joint_payload),
+    )
+    _ensure_repository_provenance_current(provenance)
+    return provenance
+
+
+def _repository_source_assets_metadata(provenance):
+    return {
+        "files": [
+            {"path": entry.relative_path, "sha256": entry.digest}
+            for entry in provenance.source_assets
+        ],
+        "joint_sha256": provenance.source_assets_joint_sha256,
+    }
 
 
 def _decode_capture_image(snapshot, label):
@@ -436,7 +509,13 @@ def _decode_capture_image(snapshot, label):
         raise VisualComparisonError("{0} is not a readable image".format(label)) from error
 
 
-def _validate_capture_metadata(metadata, image_path, label, require_approval=False):
+def _validate_capture_metadata(
+    metadata,
+    image_path,
+    label,
+    require_approval=False,
+    repository_provenance=None,
+):
     top_level = {
         "schema",
         "version",
@@ -452,8 +531,15 @@ def _validate_capture_metadata(metadata, image_path, label, require_approval=Fal
     if require_approval:
         top_level.add("approval")
     _require_exact_keys(metadata, top_level, "{0} metadata".format(label))
-    if metadata.get("schema") != CAPTURE_SCHEMA or metadata.get("version") != CAPTURE_VERSION:
+    if metadata.get("schema") != CAPTURE_SCHEMA:
         raise VisualComparisonError("{0} has an unsupported capture schema".format(label))
+    _require_exact_integer(
+        metadata.get("version"),
+        CAPTURE_VERSION,
+        "{0} capture version".format(label),
+    )
+    if repository_provenance is None:
+        repository_provenance = _read_repository_provenance()
 
     browser = _nested(metadata, ("browser",), label)
     _require_exact_keys(
@@ -467,7 +553,7 @@ def _validate_capture_metadata(metadata, image_path, label, require_approval=Fal
     _require_nonempty_string(
         browser["chromium_version"], "{0} Chromium version".format(label)
     )
-    if playwright_version != _locked_playwright_version():
+    if playwright_version != repository_provenance.playwright_version:
         raise VisualComparisonError(
             "{0} Playwright version does not match package-lock.json".format(label)
         )
@@ -477,8 +563,14 @@ def _validate_capture_metadata(metadata, image_path, label, require_approval=Fal
     _require_nonempty_string(platform["os"], "{0} platform.os".format(label))
     _require_nonempty_string(platform["arch"], "{0} platform.arch".format(label))
 
-    if _nested(metadata, ("viewport",), label) != VIEWPORT:
-        raise VisualComparisonError("{0} viewport is not the locked viewport".format(label))
+    viewport = _nested(metadata, ("viewport",), label)
+    _require_exact_keys(viewport, VIEWPORT, "{0} viewport".format(label))
+    for key, expected in VIEWPORT.items():
+        _require_exact_integer(
+            viewport[key],
+            expected,
+            "{0} viewport.{1}".format(label, key),
+        )
 
     locator = _nested(metadata, ("locator",), label)
     _require_exact_keys(
@@ -486,12 +578,26 @@ def _validate_capture_metadata(metadata, image_path, label, require_approval=Fal
         {"selector", "bounding_box", "cells"},
         "{0} locator".format(label),
     )
-    if locator["selector"] != LOCATOR_SELECTOR or locator["cells"] != EXPECTED_CELLS:
+    if locator["selector"] != LOCATOR_SELECTOR:
         raise VisualComparisonError("{0} locator is not the locked capture locator".format(label))
+    _require_exact_integer(
+        locator["cells"],
+        EXPECTED_CELLS,
+        "{0} locator.cells".format(label),
+    )
     bounds = locator["bounding_box"]
     _require_exact_keys(bounds, {"x", "y", "width", "height"}, "{0} bounding box".format(label))
-    if bounds["x"] != 0 or bounds["y"] != 0:
-        raise VisualComparisonError("{0} locator must begin at the capture origin".format(label))
+    for key, expected in (
+        ("x", 0),
+        ("y", 0),
+        ("width", EXPECTED_WIDTH),
+        ("height", EXPECTED_HEIGHT),
+    ):
+        _require_exact_integer(
+            bounds[key],
+            expected,
+            "{0} bounding_box.{1}".format(label, key),
+        )
 
     capture = _nested(metadata, ("capture",), label)
     _require_exact_keys(
@@ -513,18 +619,19 @@ def _validate_capture_metadata(metadata, image_path, label, require_approval=Fal
         ("animation_count", "animations"),
         ("transition_count", "transitions"),
     ):
-        if capture[key] != 0:
-            raise VisualComparisonError("{0} reports nonzero {1}".format(label, description))
+        _require_exact_integer(
+            capture[key],
+            0,
+            "{0} {1}".format(label, description),
+        )
 
     input_metadata = _nested(metadata, ("input",), label)
     _require_exact_keys(input_metadata, {"path", "sha256"}, "{0} input".format(label))
-    index_snapshot = _read_file_snapshot(
-        REPO_ROOT / INDEX_RELATIVE_PATH,
-        "canonical Diagram Core index",
-    )
     if input_metadata["path"] != INDEX_RELATIVE_PATH:
         raise VisualComparisonError("{0} input path is not the canonical index".format(label))
-    if input_metadata["sha256"] != _sha256_bytes(index_snapshot.payload):
+    if input_metadata["sha256"] != _sha256_bytes(
+        repository_provenance.index_snapshot.payload
+    ):
         raise VisualComparisonError("{0} input SHA-256 is not current".format(label))
 
     image_metadata = _nested(metadata, ("image",), label)
@@ -532,6 +639,16 @@ def _validate_capture_metadata(metadata, image_path, label, require_approval=Fal
         image_metadata,
         {"path", "sha256", "width", "height"},
         "{0} image".format(label),
+    )
+    _require_exact_integer(
+        image_metadata["width"],
+        EXPECTED_WIDTH,
+        "{0} image.width".format(label),
+    )
+    _require_exact_integer(
+        image_metadata["height"],
+        EXPECTED_HEIGHT,
+        "{0} image.height".format(label),
     )
     image_snapshot = _read_file_snapshot(image_path, "{0} image".format(label))
     if image_metadata["path"] != _metadata_image_path(image_path):
@@ -545,11 +662,14 @@ def _validate_capture_metadata(metadata, image_path, label, require_approval=Fal
             "{0} image SHA-256 does not match metadata".format(label)
         )
     capture_image = _decode_capture_image(image_snapshot, "{0} image".format(label))
-    actual_dimensions = [capture_image.width, capture_image.height]
-    expected_dimensions = [image_metadata["width"], image_metadata["height"]]
-    if expected_dimensions != actual_dimensions:
+    actual_dimensions = (capture_image.width, capture_image.height)
+    if actual_dimensions != (EXPECTED_WIDTH, EXPECTED_HEIGHT):
         raise VisualComparisonError(
-            "{0} image dimensions do not match metadata".format(label)
+            "{0} image dimensions must be {1}x{2}".format(
+                label,
+                EXPECTED_WIDTH,
+                EXPECTED_HEIGHT,
+            )
         )
     if bounds["width"] != capture_image.width or bounds["height"] != capture_image.height:
         raise VisualComparisonError("{0} bounding box does not match image dimensions".format(label))
@@ -584,7 +704,7 @@ def _validate_capture_metadata(metadata, image_path, label, require_approval=Fal
     )
     if joint_digest != _sha256_bytes(joint_payload):
         raise VisualComparisonError("{0} source asset digest does not match file list".format(label))
-    if source_assets != _canonical_source_assets():
+    if source_assets != _repository_source_assets_metadata(repository_provenance):
         raise VisualComparisonError("{0} source assets do not match current repository".format(label))
 
     if require_approval:
@@ -623,7 +743,13 @@ def _validate_capture_metadata(metadata, image_path, label, require_approval=Fal
                 raise VisualComparisonError(
                     "baseline approval {0} binding does not match".format(description)
                 )
-    return ValidatedCapture(image_snapshot, actual_hash, capture_image)
+    _ensure_repository_provenance_current(repository_provenance)
+    return ValidatedCapture(
+        image_snapshot,
+        actual_hash,
+        capture_image,
+        repository_provenance,
+    )
 
 
 def _ensure_capture_compatibility(baseline_metadata, candidate_metadata):
@@ -747,7 +873,15 @@ def _rollback_approval_record(record):
         ) from error
 
 
-def _publish_approval(baseline_path, baseline_payload, metadata_path, metadata_payload):
+def _publish_approval(
+    baseline_path,
+    baseline_payload,
+    metadata_path,
+    metadata_payload,
+    verify_current=None,
+):
+    if verify_current is None:
+        verify_current = lambda: None
     records = []
     attempted = []
     try:
@@ -783,10 +917,12 @@ def _publish_approval(baseline_path, baseline_payload, metadata_path, metadata_p
                 record["backup"] = backup
                 record["backup_signature"] = backup_signature
         for record in records:
+            verify_current()
             _assert_approval_output_unchanged(record)
             attempted.append(record)
             os.replace(str(record["staged"]), str(record["target"]))
             record["staged"] = None
+        verify_current()
     except BaseException as error:
         rollback_errors = []
         for record in reversed(attempted):
@@ -840,11 +976,17 @@ def accept_candidate(
     candidate_metadata_path = _absolute(candidate_metadata)
     _prepare_output_path(baseline)
     _prepare_output_path(baseline_metadata)
+    repository_provenance = _read_repository_provenance()
     metadata, metadata_snapshot = _read_metadata_snapshot(
         candidate_metadata_path,
         "candidate metadata",
     )
-    validated = _validate_capture_metadata(metadata, candidate_path, "candidate")
+    validated = _validate_capture_metadata(
+        metadata,
+        candidate_path,
+        "candidate",
+        repository_provenance=repository_provenance,
+    )
     if metadata["platform"]["os"] != "linux":
         raise VisualComparisonError("only a linux capture may be accepted as baseline")
     digest = validated.digest
@@ -867,12 +1009,17 @@ def accept_candidate(
     metadata_payload = (
         json.dumps(approved, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
     ).encode("utf-8")
-    _ensure_snapshot_current(metadata_snapshot, "candidate metadata")
+
+    def verify_current():
+        _ensure_snapshot_current(metadata_snapshot, "candidate metadata")
+        _ensure_repository_provenance_current(repository_provenance)
+
     _publish_approval(
         _absolute(baseline),
         validated.snapshot.payload,
         _absolute(baseline_metadata),
         metadata_payload,
+        verify_current=verify_current,
     )
     return digest, reviewer_value
 
@@ -895,45 +1042,79 @@ def compare_capture_files(
     if diff_output is not None:
         paths.append(("diff output", diff_output))
     _reject_aliases(paths)
+    staged_diff_output = None
+    diff_target = None
+    diff_target_snapshot = None
     if diff_output is not None:
         _validate_output_path(diff_output)
-    baseline_path = _absolute(baseline)
-    candidate_path = _absolute(candidate)
-    baseline_payload, baseline_metadata_snapshot = _read_metadata_snapshot(
-        baseline_metadata,
-        "baseline metadata",
-    )
-    candidate_payload, candidate_metadata_snapshot = _read_metadata_snapshot(
-        candidate_metadata,
-        "candidate metadata",
-    )
-    baseline_validated = _validate_capture_metadata(
-        baseline_payload,
-        baseline_path,
-        "baseline",
-        require_approval=True,
-    )
-    candidate_validated = _validate_capture_metadata(
-        candidate_payload,
-        candidate_path,
-        "candidate",
-    )
-    _ensure_capture_compatibility(baseline_payload, candidate_payload)
-    report = compare_images(
-        baseline_validated.image,
-        candidate_validated.image,
-        channel_tolerance=channel_tolerance,
-        max_diff_ratio=max_diff_ratio,
-        diff_output=diff_output,
-    )
-    for snapshot, label in (
-        (baseline_metadata_snapshot, "baseline metadata"),
-        (candidate_metadata_snapshot, "candidate metadata"),
-        (baseline_validated.snapshot, "baseline image"),
-        (candidate_validated.snapshot, "candidate image"),
-    ):
-        _ensure_snapshot_current(snapshot, label)
-    return report
+        diff_target = _absolute(diff_output)
+        _prepare_output_path(diff_target)
+        diff_target_snapshot = _output_snapshot(diff_target)
+        descriptor, temporary_name = tempfile.mkstemp(
+            prefix=".{0}.".format(diff_target.name),
+            suffix=".tmp",
+            dir=str(diff_target.parent),
+        )
+        os.close(descriptor)
+        staged_diff_output = Path(temporary_name)
+    try:
+        baseline_path = _absolute(baseline)
+        candidate_path = _absolute(candidate)
+        repository_provenance = _read_repository_provenance()
+        baseline_payload, baseline_metadata_snapshot = _read_metadata_snapshot(
+            baseline_metadata,
+            "baseline metadata",
+        )
+        candidate_payload, candidate_metadata_snapshot = _read_metadata_snapshot(
+            candidate_metadata,
+            "candidate metadata",
+        )
+        baseline_validated = _validate_capture_metadata(
+            baseline_payload,
+            baseline_path,
+            "baseline",
+            require_approval=True,
+            repository_provenance=repository_provenance,
+        )
+        candidate_validated = _validate_capture_metadata(
+            candidate_payload,
+            candidate_path,
+            "candidate",
+            repository_provenance=repository_provenance,
+        )
+        _ensure_capture_compatibility(baseline_payload, candidate_payload)
+        report = compare_images(
+            baseline_validated.image,
+            candidate_validated.image,
+            channel_tolerance=channel_tolerance,
+            max_diff_ratio=max_diff_ratio,
+            diff_output=staged_diff_output,
+        )
+        for snapshot, label in (
+            (baseline_metadata_snapshot, "baseline metadata"),
+            (candidate_metadata_snapshot, "candidate metadata"),
+            (baseline_validated.snapshot, "baseline image"),
+            (candidate_validated.snapshot, "candidate image"),
+        ):
+            _ensure_snapshot_current(snapshot, label)
+        _ensure_repository_provenance_current(repository_provenance)
+        if staged_diff_output is not None and not report.passed:
+            if not _snapshots_equal(
+                _output_snapshot(diff_target),
+                diff_target_snapshot,
+            ):
+                raise VisualComparisonError(
+                    "diff output changed before publish: {0}".format(diff_target)
+                )
+            os.replace(str(staged_diff_output), str(diff_target))
+            staged_diff_output = None
+        return report
+    finally:
+        if staged_diff_output is not None:
+            try:
+                staged_diff_output.unlink()
+            except FileNotFoundError:
+                pass
 
 
 def _parser():
