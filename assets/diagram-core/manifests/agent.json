@@ -1,0 +1,34 @@
+{
+  "id": "agent",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "actors",
+  "semantic_kind": "agent",
+  "structural_prototype": "actor-character",
+  "parts": [
+    "shell",
+    "face-screen",
+    "eye-left",
+    "eye-right",
+    "mouth",
+    "antenna",
+    "core",
+    "indicator"
+  ],
+  "attachments": {
+    "receive": {"x": 18, "y": 48},
+    "send": {"x": 78, "y": 48},
+    "status": {"x": 48, "y": 74}
+  },
+  "states": [
+    "idle",
+    "active",
+    "processing",
+    "success",
+    "warning",
+    "error"
+  ],
+  "actions": ["enter", "receive", "process", "send"],
+  "status": "visual-review"
+}

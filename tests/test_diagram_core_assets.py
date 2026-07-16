@@ -101,6 +101,10 @@ APPROVED_ICON_DEFAULTS = {
     "--icon-status-error": "#e65b65",
 }
 
+ASSET_LOCAL_TOKEN_DEFAULTS = {
+    "--icon-surface-contrast": "#14213d",
+}
+
 STATE_MARK_GEOMETRY = (
     ("idle", "dot"),
     ("active", "ring"),
@@ -109,6 +113,199 @@ STATE_MARK_GEOMETRY = (
     ("warning", "triangle"),
     ("error", "X"),
 )
+
+AGENT_PARTS = {
+    "shell",
+    "face-screen",
+    "eye-left",
+    "eye-right",
+    "mouth",
+    "antenna",
+    "core",
+    "indicator",
+}
+
+AGENT_PART_ORDER = (
+    "shell",
+    "face-screen",
+    "eye-left",
+    "eye-right",
+    "mouth",
+    "antenna",
+    "core",
+    "indicator",
+)
+
+AGENT_STATES = (
+    "idle",
+    "active",
+    "processing",
+    "success",
+    "warning",
+    "error",
+)
+
+SVG_PAINTABLE_TAGS = {
+    "circle",
+    "ellipse",
+    "line",
+    "path",
+    "polygon",
+    "polyline",
+    "rect",
+}
+
+
+def local_name(name):
+    return name.rsplit("}", 1)[-1]
+
+
+def agent_geometry_bounds(element):
+    tag = local_name(element.tag)
+    if tag == "circle":
+        cx = float(element.attrib["cx"])
+        cy = float(element.attrib["cy"])
+        radius = float(element.attrib["r"])
+        bounds = (cx - radius, cy - radius, cx + radius, cy + radius)
+    elif tag == "ellipse":
+        cx = float(element.attrib["cx"])
+        cy = float(element.attrib["cy"])
+        rx = float(element.attrib["rx"])
+        ry = float(element.attrib["ry"])
+        bounds = (cx - rx, cy - ry, cx + rx, cy + ry)
+    elif tag == "rect":
+        x = float(element.attrib["x"])
+        y = float(element.attrib["y"])
+        bounds = (
+            x,
+            y,
+            x + float(element.attrib["width"]),
+            y + float(element.attrib["height"]),
+        )
+    elif tag == "line":
+        x_values = (float(element.attrib["x1"]), float(element.attrib["x2"]))
+        y_values = (float(element.attrib["y1"]), float(element.attrib["y2"]))
+        bounds = (min(x_values), min(y_values), max(x_values), max(y_values))
+    elif tag in {"polygon", "polyline"}:
+        values = [
+            float(value)
+            for value in re.findall(r"-?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)", element.attrib["points"])
+        ]
+        if len(values) < 4 or len(values) % 2:
+            raise AssertionError("Agent point lists must contain coordinate pairs")
+        bounds = (
+            min(values[0::2]),
+            min(values[1::2]),
+            max(values[0::2]),
+            max(values[1::2]),
+        )
+    elif tag == "path":
+        commands = set(re.findall(r"[A-Za-z]", element.attrib["d"]))
+        if not commands.issubset({"M", "L", "C", "Q", "Z"}):
+            raise AssertionError("Agent paths must use absolute, auditable commands")
+        values = [
+            float(value)
+            for value in re.findall(r"-?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)", element.attrib["d"])
+        ]
+        if len(values) < 2 or len(values) % 2:
+            raise AssertionError("Agent path coordinates must be explicit pairs")
+        bounds = (
+            min(values[0::2]),
+            min(values[1::2]),
+            max(values[0::2]),
+            max(values[1::2]),
+        )
+    else:
+        raise AssertionError("unsupported Agent paintable tag: " + tag)
+
+    stroke = element.attrib.get("stroke", "none").strip().lower()
+    extent = 0.0 if stroke == "none" else float(element.attrib["stroke-width"]) / 2.0
+    return (
+        bounds[0] - extent,
+        bounds[1] - extent,
+        bounds[2] + extent,
+        bounds[3] + extent,
+    )
+
+
+def agent_filled_area(element):
+    tag = local_name(element.tag)
+    if tag == "circle":
+        return math.pi * float(element.attrib["r"]) ** 2
+    if tag == "ellipse":
+        return (
+            math.pi
+            * float(element.attrib["rx"])
+            * float(element.attrib["ry"])
+        )
+    if tag == "rect":
+        return float(element.attrib["width"]) * float(element.attrib["height"])
+    raise AssertionError("visible Agent fills must use auditable primitive geometry")
+
+
+def agent_state_geometry_signature(mark):
+    signature = []
+    for element in mark.iter():
+        geometry = tuple(
+            sorted(
+                (name, value)
+                for name, value in element.attrib.items()
+                if name
+                not in {
+                    "data-state-mark",
+                    "display",
+                    "fill",
+                    "stroke",
+                    "data-stroke-role",
+                }
+            )
+        )
+        signature.append((local_name(element.tag), geometry))
+    return tuple(signature)
+
+
+def agent_state_bounds(mark):
+    bounds = [
+        agent_geometry_bounds(element)
+        for element in mark.iter()
+        if local_name(element.tag) in SVG_PAINTABLE_TAGS
+    ]
+    if not bounds:
+        raise AssertionError("Agent state marks must contain paintable geometry")
+    return (
+        min(bound[0] for bound in bounds),
+        min(bound[1] for bound in bounds),
+        max(bound[2] for bound in bounds),
+        max(bound[3] for bound in bounds),
+    )
+
+
+def agent_radial_extent(element, center_x, center_y):
+    stroke = element.attrib.get("stroke", "none").strip().lower()
+    stroke_extent = (
+        0.0 if stroke == "none" else float(element.attrib["stroke-width"]) / 2.0
+    )
+    tag = local_name(element.tag)
+    if tag == "circle":
+        center_distance = math.hypot(
+            float(element.attrib["cx"]) - center_x,
+            float(element.attrib["cy"]) - center_y,
+        )
+        return center_distance + float(element.attrib["r"]) + stroke_extent
+    if tag in {"path", "polygon", "polyline"}:
+        attribute = "d" if tag == "path" else "points"
+        values = [
+            float(value)
+            for value in re.findall(
+                r"-?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)",
+                element.attrib[attribute],
+            )
+        ]
+        return max(
+            math.hypot(x - center_x, y - center_y)
+            for x, y in zip(values[0::2], values[1::2])
+        ) + stroke_extent
+    raise AssertionError("state clearance uses explicit circle/path/point geometry")
 
 
 def css_declarations(source, selector):
@@ -1023,13 +1220,352 @@ class DiagramCoreAssetLoaderTest(unittest.TestCase):
             self.assertIn("invalid XML", str(raised.exception))
 
 
+class AgentBenchmarkAssetTest(unittest.TestCase):
+    def load_agent(self):
+        try:
+            return load_asset("agent", allow_statuses={"visual-review"})
+        except AssetValidationError as error:
+            self.fail("canonical Agent must pass the asset gate: {0}".format(error))
+
+    def test_agent_asset_matches_manifest_and_visual_contract(self):
+        asset = self.load_agent()
+
+        self.assertEqual(AGENT_PARTS, set(asset.manifest.parts))
+        self.assertEqual(AGENT_PARTS, set(asset.public_parts))
+        self.assertEqual(AGENT_PART_ORDER, asset.manifest.parts)
+        self.assertEqual(AGENT_PART_ORDER, asset.public_parts)
+        self.assertEqual("actor-character", asset.manifest.structural_prototype)
+        self.assertEqual(
+            {"enter", "receive", "process", "send"},
+            set(asset.manifest.actions),
+        )
+        self.assertEqual(AGENT_STATES, asset.manifest.states)
+        self.assertEqual("visual-review", asset.manifest.status)
+        self.assertEqual(
+            {"receive": (18, 48), "send": (78, 48), "status": (48, 74)},
+            {
+                name: (attachment.x, attachment.y)
+                for name, attachment in asset.manifest.attachments.items()
+            },
+        )
+        self.assertEqual(0, asset.metrics.forbidden_elements)
+        self.assertLessEqual(asset.metrics.paintable_elements, 24)
+        self.assertLessEqual(asset.metrics.raw_size_bytes, 12 * 1024)
+        self.assertLessEqual(asset.metrics.gzip_size_bytes, 6 * 1024)
+
+        root = asset.root
+        self.assertEqual("img", root.attrib.get("role"))
+        self.assertEqual("false", root.attrib.get("focusable"))
+        self.assertTrue(root.attrib.get("aria-label", "").strip())
+        self.assertEqual("agent", root.attrib.get("data-icon"))
+        self.assertEqual("idle", root.attrib.get("data-icon-state"))
+
+        catalog = json.loads(
+            (ROOT / "assets" / "diagram-core" / "catalog.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        entry = next(icon for icon in catalog["icons"] if icon["id"] == "agent")
+        manifest_values = {
+            "id": asset.manifest.icon_id,
+            "category": asset.manifest.category,
+            "semantic_kind": asset.manifest.semantic_kind,
+            "structural_prototype": asset.manifest.structural_prototype,
+            "parts": list(asset.manifest.parts),
+            "supported_states": list(asset.manifest.states),
+            "supported_actions": list(asset.manifest.actions),
+            "status": asset.manifest.status,
+            "asset_revision": asset.manifest.asset_revision,
+        }
+        self.assertEqual(
+            {field: entry[field] for field in manifest_values},
+            manifest_values,
+        )
+
+    def test_agent_state_marks_have_distinct_geometry_and_idle_standalone_visibility(self):
+        asset = self.load_agent()
+        indicators = [
+            element
+            for element in asset.root.iter()
+            if element.attrib.get("data-part") == "indicator"
+        ]
+        self.assertEqual(1, len(indicators))
+        indicator = indicators[0]
+        marks = [
+            element
+            for element in asset.root.iter()
+            if "data-state-mark" in element.attrib
+        ]
+        self.assertEqual(set(AGENT_STATES), {mark.attrib["data-state-mark"] for mark in marks})
+        self.assertEqual(6, len(marks))
+        self.assertTrue(set(marks).issubset(set(indicator.iter())))
+
+        signatures = {
+            mark.attrib["data-state-mark"]: agent_state_geometry_signature(mark)
+            for mark in marks
+        }
+        self.assertEqual(6, len(set(signatures.values())))
+        for mark in marks:
+            state = mark.attrib["data-state-mark"]
+            self.assertEqual("inline" if state == "idle" else "none", mark.attrib.get("display"))
+
+    def test_agent_core_and_state_footprints_are_frozen_for_48px_review(self):
+        asset = self.load_agent()
+        core = next(
+            element
+            for element in asset.root.iter()
+            if element.attrib.get("data-part") == "core"
+        )
+        core_circles = [
+            element for element in core if local_name(element.tag) == "circle"
+        ]
+        self.assertEqual(2, len(core_circles))
+        outer_core, recessed_core = core_circles
+        self.assertEqual(9.6, float(outer_core.attrib["r"]))
+        self.assertEqual(6.7, float(recessed_core.attrib["r"]))
+
+        expected_bounds = {
+            "idle": (45.8, 66.8, 50.2, 71.2),
+            "active": (43.5125, 64.5125, 52.4875, 73.4875),
+            "processing": (43.7125, 64.5125, 52.2875, 73.4875),
+            "success": (43.2125, 65.5125, 52.7875, 72.6875),
+            "warning": (43.3125, 64.7125, 52.6875, 72.8875),
+            "error": (43.8125, 64.8125, 52.1875, 73.1875),
+        }
+        marks = {
+            element.attrib["data-state-mark"]: element
+            for element in asset.root.iter()
+            if "data-state-mark" in element.attrib
+        }
+        measured = {}
+        for state in AGENT_STATES:
+            bounds = agent_state_bounds(marks[state])
+            measured[state] = bounds
+            with self.subTest(state=state):
+                for actual, expected in zip(bounds, expected_bounds[state]):
+                    self.assertAlmostEqual(expected, actual, places=4)
+                radial_extent = max(
+                    agent_radial_extent(element, 48, 69)
+                    for element in marks[state].iter()
+                    if local_name(element.tag) in SVG_PAINTABLE_TAGS
+                )
+                self.assertGreaterEqual(
+                    float(recessed_core.attrib["r"]) - radial_extent,
+                    0.75,
+                )
+
+        footprints = {
+            state: (bounds[2] - bounds[0], bounds[3] - bounds[1])
+            for state, bounds in measured.items()
+        }
+        self.assertGreaterEqual(max(footprints["processing"]), 8.5)
+        self.assertGreaterEqual(max(footprints["success"]), 9.5)
+        self.assertGreaterEqual(max(footprints["error"]), 8.25)
+        self.assertLess(
+            abs(footprints["active"][0] - footprints["warning"][0]),
+            0.5,
+        )
+        self.assertLess(
+            max(footprints["idle"]),
+            min(footprints["active"]) * 0.6,
+        )
+
+    def test_agent_face_and_state_marks_keep_three_to_one_contrast_in_every_context(self):
+        asset = self.load_agent()
+        source = token_css()
+        defaults = css_declarations(source, ":root")
+        self.assertEqual(
+            "#14213d",
+            defaults.get("--icon-surface-contrast"),
+        )
+        face_screen = next(
+            element
+            for element in asset.root.iter()
+            if element.attrib.get("data-part") == "face-screen"
+        )[0]
+        core = next(
+            element
+            for element in asset.root.iter()
+            if element.attrib.get("data-part") == "core"
+        )
+        self.assertEqual(
+            "var(--icon-surface-contrast, #14213d)",
+            face_screen.attrib["fill"],
+        )
+        self.assertEqual(
+            "var(--icon-surface-contrast, #14213d)",
+            core[1].attrib["fill"],
+        )
+        for part_name in ("eye-left", "eye-right"):
+            part = next(
+                element
+                for element in asset.root.iter()
+                if element.attrib.get("data-part") == part_name
+            )
+            self.assertEqual(
+                "var(--icon-accent-secondary, #45c5bd)",
+                part[0].attrib["fill"],
+            )
+        mouth = next(
+            element
+            for element in asset.root.iter()
+            if element.attrib.get("data-part") == "mouth"
+        )
+        self.assertEqual(
+            "var(--icon-accent-secondary, #45c5bd)",
+            mouth[0].attrib["stroke"],
+        )
+
+        state_tokens = {
+            "idle": "--icon-status-idle",
+            "active": "--icon-status-active",
+            "processing": "--icon-status-active",
+            "success": "--icon-status-success",
+            "warning": "--icon-status-warning",
+            "error": "--icon-status-error",
+        }
+        contrast_surface = defaults["--icon-surface-contrast"]
+        for context in ("blue", "dark", "warm", "green"):
+            overrides = css_declarations(
+                source,
+                '[data-icon-theme="' + context + '"]',
+            )
+            self.assertNotIn("--icon-surface-contrast", overrides)
+            resolved = dict(defaults)
+            resolved.update(overrides)
+            with self.subTest(context=context, part="face-details"):
+                self.assertGreaterEqual(
+                    contrast_ratio(
+                        resolved["--icon-accent-secondary"],
+                        contrast_surface,
+                    ),
+                    3.0,
+                )
+            for state, token in state_tokens.items():
+                with self.subTest(context=context, state=state):
+                    self.assertGreaterEqual(
+                        contrast_ratio(resolved[token], contrast_surface),
+                        3.0,
+                    )
+
+    def test_agent_geometry_stays_in_safe_zone_and_strokes_are_role_bounded(self):
+        asset = self.load_agent()
+        paintables = [
+            element
+            for element in asset.root.iter()
+            if local_name(element.tag) in SVG_PAINTABLE_TAGS
+        ]
+        self.assertEqual(asset.metrics.paintable_elements, len(paintables))
+        self.assertFalse(
+            any(local_name(element.tag) == "style" for element in asset.root.iter())
+        )
+        self.assertFalse(any("style" in element.attrib for element in asset.root.iter()))
+        self.assertFalse(any("transform" in element.attrib for element in asset.root.iter()))
+
+        saw_roles = set()
+        for element in paintables:
+            bounds = agent_geometry_bounds(element)
+            with self.subTest(tag=local_name(element.tag), geometry=element.attrib):
+                self.assertGreaterEqual(min(bounds[0], bounds[1]), 8.0)
+                self.assertLessEqual(max(bounds[2], bounds[3]), 88.0)
+
+                stroke = element.attrib.get("stroke", "none").strip().lower()
+                role = element.attrib.get("data-stroke-role")
+                if stroke == "none":
+                    self.assertIsNone(role)
+                    continue
+                self.assertIn(role, {"outer", "inner"})
+                self.assertRegex(element.attrib.get("stroke-width", ""), r"^[0-9]+(?:\.[0-9]+)?$")
+                width = float(element.attrib["stroke-width"])
+                if role == "outer":
+                    self.assertGreaterEqual(width, 2.0)
+                    self.assertLessEqual(width, 2.25)
+                else:
+                    self.assertGreaterEqual(width, 1.25)
+                    self.assertLessEqual(width, 1.5)
+                saw_roles.add(role)
+        self.assertEqual({"outer", "inner"}, saw_roles)
+        self.assertNotIn("non-scaling-stroke", asset.svg_source.lower())
+
+    def test_agent_keeps_accent_weight_small_and_avoids_forbidden_pieces(self):
+        asset = self.load_agent()
+        parents = {
+            child: parent
+            for parent in asset.root.iter()
+            for child in parent
+        }
+
+        def ancestors(element):
+            while element in parents:
+                element = parents[element]
+                yield element
+
+        def public_part(element):
+            for candidate in (element, *ancestors(element)):
+                if "data-part" in candidate.attrib:
+                    return candidate.attrib["data-part"]
+            return None
+
+        accent_parts = {
+            "eye-left",
+            "eye-right",
+            "mouth",
+            "antenna",
+            "core",
+            "indicator",
+        }
+        neutral_area = 0.0
+        accent_area = 0.0
+        for element in asset.root.iter():
+            if local_name(element.tag) not in SVG_PAINTABLE_TAGS:
+                continue
+            paints = " ".join(
+                element.attrib.get(name, "") for name in ("fill", "stroke")
+            )
+            is_accent = "--icon-accent" in paints or "--icon-status-" in paints
+            if is_accent:
+                self.assertIn(public_part(element), accent_parts)
+            if any(candidate.attrib.get("display") == "none" for candidate in (element, *ancestors(element))):
+                continue
+            if local_name(element.tag) == "line":
+                continue
+            fill = element.attrib.get("fill", "black").strip().lower()
+            if fill == "none":
+                continue
+            area = agent_filled_area(element)
+            if is_accent:
+                accent_area += area
+            else:
+                neutral_area += area
+
+        total_area = neutral_area + accent_area
+        self.assertGreater(neutral_area, 0)
+        self.assertGreater(accent_area, 0)
+        self.assertGreaterEqual(neutral_area / total_area, 0.8)
+        self.assertLessEqual(accent_area / total_area, 0.2)
+
+        self.assertFalse(any("id" in element.attrib for element in asset.root.iter()))
+        self.assertNotRegex(
+            asset.svg_source.lower(),
+            r"\b(?:port|hand|joint|socket|effect|connection-anchor)\b",
+        )
+        self.assertNotRegex(asset.svg_source.lower(), r"data-(?:connection-)?anchor")
+
+
 class DiagramCoreTokenTest(unittest.TestCase):
     def test_token_css_defines_approved_defaults_and_four_review_contexts(self):
         source = token_css()
 
-        self.assertTrue(REQUIRED_ICON_TOKENS.issubset(declared_tokens(source)))
+        self.assertTrue(
+            (
+                REQUIRED_ICON_TOKENS
+                | set(ASSET_LOCAL_TOKEN_DEFAULTS)
+            ).issubset(declared_tokens(source))
+        )
         root_tokens = css_declarations(source, ":root")
-        for token, value in APPROVED_ICON_DEFAULTS.items():
+        for token, value in (
+            APPROVED_ICON_DEFAULTS | ASSET_LOCAL_TOKEN_DEFAULTS
+        ).items():
             with self.subTest(token=token):
                 self.assertEqual(value, root_tokens[token])
 

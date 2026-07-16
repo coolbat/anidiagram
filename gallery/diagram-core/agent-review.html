@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent static icon review · AniDiagram</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #eef1f5; color: #14213d; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.55; }
+    header, main { width: min(1180px, calc(100% - 40px)); margin-inline: auto; }
+    header { padding: 48px 0 24px; border-bottom: 1px solid #dfe5ec; }
+    main { padding: 28px 0 64px; }
+    section + section { margin-top: 32px; }
+    h1, h2, p { margin-top: 0; }
+    h1 { margin-bottom: 10px; font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.05; letter-spacing: -0.035em; }
+    h2 { margin-bottom: 12px; font-size: 1.3rem; }
+    .eyebrow { margin-bottom: 12px; color: #14213d; font-size: 0.78rem; font-weight: 750; letter-spacing: 0.11em; text-transform: uppercase; }
+    .lede, figcaption, .scope { color: #14213d; }
+    figure { margin: 0; }
+    img { display: block; width: 100%; height: auto; border: 1px solid #dfe5ec; border-radius: 18px; background: #fffaf2; }
+    figcaption { margin-top: 10px; font-size: 0.92rem; }
+    ul { margin: 0; padding-left: 1.35rem; }
+    li + li { margin-top: 9px; }
+    code { overflow-wrap: anywhere; color: #14213d; }
+  </style>
+</head>
+<body>
+  <header>
+    <p class="eyebrow">AniDiagram Diagram Core</p>
+    <h1>Agent static icon review</h1>
+    <p class="lede">A fixed, non-interactive audit surface for the first Diagram Core benchmark. The matrix does not animate and does not load network resources.</p>
+  </header>
+  <main>
+    <section>
+      <h2>Contact sheet</h2>
+      <figure>
+        <img src="../../assets/diagram-core/previews/agent-contact-sheet.svg" alt="Agent robot icon shown at 48, 64, and 96 pixels in four color contexts and six geometric states, followed by accent-off and grayscale recognition rows.">
+        <figcaption>72 primary cells plus two six-state recognition rows. Contact sheet SHA-256: <code>006da116346f77202205e3585625e287badb0db70b619a717f20858ebcf591cd</code>.</figcaption>
+      </figure>
+    </section>
+    <section>
+      <h2>Manual review checklist</h2>
+      <ul>
+        <li><strong>48 px recognition:</strong> the robot reads immediately without relying on the label.</li>
+        <li><strong>Silhouette and visual weight:</strong> the capsule shell remains dominant and visually balanced.</li>
+        <li><strong>Face readability:</strong> both eyes and the simple mouth remain distinct at the smallest size.</li>
+        <li><strong>Accent-off recognition:</strong> identity survives when accent tokens collapse to neutral colors.</li>
+        <li><strong>Four contexts:</strong> compare blue, dark, warm, and green token declarations.</li>
+        <li><strong>Six state marks:</strong> idle, active, processing, success, warning, and error differ by geometry.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Review scope</h2>
+      <p class="scope">Judge only the static Agent candidate and its recognition matrix. This page is generated from the canonical asset through the preview adapter; labels belong to the review surface, not the icon asset.</p>
+    </section>
+  </main>
+</body>
+</html>

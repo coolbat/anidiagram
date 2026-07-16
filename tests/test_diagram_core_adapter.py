@@ -447,6 +447,59 @@ class DiagramCoreAdapterTest(unittest.TestCase):
                         asset_root=self.bundle.root,
                     )
 
+    def test_canonical_agent_renders_each_static_state_through_preview_adapter(self):
+        asset_root = ROOT / "assets" / "diagram-core"
+        expected_parts = (
+            "shell",
+            "face-screen",
+            "eye-left",
+            "eye-right",
+            "mouth",
+            "antenna",
+            "core",
+            "indicator",
+        )
+        states = ("idle", "active", "processing", "success", "warning", "error")
+
+        for state in states:
+            with self.subTest(state=state):
+                markup = render_preview_icon(
+                    "agent",
+                    "canonical-" + state,
+                    state=state,
+                    size=48,
+                    asset_root=asset_root,
+                )
+                self.assertEqual(
+                    markup,
+                    render_preview_icon(
+                        "agent",
+                        "canonical-" + state,
+                        state=state,
+                        size=48,
+                        asset_root=asset_root,
+                    ),
+                )
+                root = parse_single_root(markup)
+                self.assertEqual(state, root.attrib["data-icon-state"])
+                self.assertEqual("diagram-core-v1", root.attrib["data-icon-source"])
+                self.assertEqual(
+                    expected_parts,
+                    tuple(
+                        element.attrib["data-part"]
+                        for element in root.iter()
+                        if "data-part" in element.attrib
+                    ),
+                )
+                self.assertEqual(
+                    set(states),
+                    {
+                        element.attrib["data-state-mark"]
+                        for element in root.iter()
+                        if "data-state-mark" in element.attrib
+                    },
+                )
+
 
 class DiagramCoreNamespacingTest(unittest.TestCase):
     def namespacing_source(self):
