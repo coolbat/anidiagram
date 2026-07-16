@@ -207,6 +207,9 @@ Also assert:
 - every record has id, category, semantic_kind, structural_prototype, aliases, parts, supported_states, supported_actions, status, and asset_revision;
 - planned records use asset_revision 0 and benchmark records use asset_revision 1;
 - status is one of planned, visual-review, approved, or deprecated.
+- semantic_kind equals the canonical icon id for all 56 entries;
+- the 52 planned entries use structural_prototype `unassigned` and expose no parts, states, or actions;
+- the four benchmark entries freeze the exact prototypes, parts, six states, and actions listed below.
 
 - [ ] **Step 2: Run the focused test and confirm red**
 
@@ -250,7 +253,23 @@ class CatalogEntry:
 
 Catalog top-level fields are system, public_name, catalog_revision, and icons. Set public_name to AniDiagram Diagram Core Icon System v1.0 and catalog_revision to 1.
 
-Populate semantic_kind, structural_prototype, parts, states, and actions from the approved product specification; use empty aliases where no approved alias exists. Do not invent aliases.
+Phase 0 freezes only capabilities that are already evidenced:
+
+- Set `semantic_kind` to the canonical icon id for all 56 entries. In v1 it is the stable semantic key, not a partially populated coarse ontology. The isolated `database: storage` example in the product PRD is superseded by this uniform rule.
+- For the 52 planned entries, set `structural_prototype` to `unassigned` and keep `parts`, `supported_states`, and `supported_actions` empty. A roadmap concept is not an implemented Diagram Core capability.
+- For the four visual-review benchmarks, freeze `structural_prototype` as `actor-character`, `stacked-storage`, `interface-module`, and `compute-device` for Agent, Database, API, and Server respectively.
+- Freeze benchmark parts to these exact ordered tuples:
+
+~~~text
+agent    = shell, face-screen, eye-left, eye-right, mouth, antenna, core, indicator
+database = shell, top-ring, layer-top, layer-middle, layer-bottom, core, indicator
+api      = shell, header, input-interface, output-interface, processor, indicator-group
+server   = shell, tray-top, tray-bottom, indicator-top, indicator-bottom, vent-top, vent-bottom, base
+~~~
+
+- Give all four benchmarks the ordered states `idle`, `active`, `processing`, `success`, `warning`, and `error`.
+- Freeze actions as Agent `enter, receive, process, send`; Database `receive, write, index, search, send`; API `receive, process, send, stream`; and Server `enter, receive, process, send`.
+- Use empty aliases everywhere because no alias has been explicitly approved. Do not infer aliases from labels, abbreviations, or legacy implementation names.
 
 - [ ] **Step 4: Run the catalog tests and confirm green**
 
@@ -285,16 +304,19 @@ VALID_MANIFEST = {
     "asset_revision": 1,
     "viewBox": "0 0 96 96",
     "category": "data-knowledge",
-    "semantic_kind": "storage",
+    "semantic_kind": "database",
     "structural_prototype": "stacked-storage",
-    "parts": ["shell", "core", "mechanism", "indicator"],
+    "parts": [
+        "shell", "top-ring", "layer-top", "layer-middle",
+        "layer-bottom", "core", "indicator"
+    ],
     "attachments": {
         "receive": {"x": 48, "y": 8},
         "send": {"x": 88, "y": 48},
         "status": {"x": 48, "y": 78},
     },
     "states": ["idle", "active", "processing", "success", "warning", "error"],
-    "actions": ["receive", "read", "write", "search", "index", "send"],
+    "actions": ["receive", "write", "index", "search", "send"],
     "status": "visual-review",
 }
 
@@ -315,7 +337,9 @@ def test_manifest_rejects_scene_selectors_and_out_of_bounds_attachments(self):
     )
 ~~~
 
-Add SVG fixture tests that reject script, foreignObject, image, text, animate, external href, data URI, filter, author ids, anonymous public parts, non-scaling-stroke without an approved exception, and CSS variable references without literal fallbacks.
+Add SVG fixture tests that reject script, foreignObject, image, text, animate, external href, data URI, filter, author ids, anonymous public parts, non-scaling-stroke without an approved exception, and CSS variable references without literal fallbacks. Each temporary asset fixture must include its own minimal `tokens.css`; Task 2 must not depend on the repository-level token file created in Task 4.
+
+Add catalog-to-manifest parity tests. For every implemented asset, `id`, `category`, `semantic_kind`, `structural_prototype`, `parts`, `states`, `actions`, `status`, and `asset_revision` must exactly match its catalog entry. A mismatch in any field fails closed with the catalog and manifest paths identified.
 
 Freeze paintable tags as path, rect, circle, ellipse, line, polyline, polygon, and use. The 24-element limit counts only those tags; report total DOM elements separately.
 
@@ -341,7 +365,7 @@ Manifest rules:
 - kebab-case unique public parts;
 - finite attachment coordinates in the inclusive 0–96 range;
 - six required static review states for benchmark assets;
-- status synchronized with its catalog entry;
+- all duplicated catalog fields synchronized with its catalog entry: id, category, semantic_kind, structural_prototype, parts, states, actions, status, and asset_revision;
 - optional exceptions require metric, reason, reviewer, and approved_on; a boolean waiver is invalid.
 
 SVG rules:
@@ -354,7 +378,7 @@ SVG rules:
 - raw file size is at most 12 KiB and gzip level-9 size is at most 6 KiB unless a complete approved exception exists;
 - paintable element count is at most 24 unless a complete approved exception exists.
 
-Provide asset_root parameters on load_catalog, load_manifest, and load_svg_source so tests do not depend on the repository location.
+Provide asset_root parameters on load_catalog, load_manifest, load_svg_source, and load_asset so tests do not depend on the repository location. Freeze a read-only `LoadedAsset` result that exposes `manifest`, `svg_source`, `root`, `public_parts`, and `metrics`; `metrics` exposes forbidden, paintable, total-DOM, raw-size, and gzip-size counts. `load_asset(icon_id, allow_statuses, asset_root=None)` is the single aggregate validation entry point used by later tasks and returns only after catalog, manifest, SVG, token, status, and parity checks pass.
 
 - [ ] **Step 4: Prove invalid fixtures fail for the intended reasons**
 
@@ -606,8 +630,12 @@ def test_safe_instance_ids_preserve_uniqueness(self):
     self.assertEqual(len(values), len(keys))
 
 def test_repeated_icon_instances_have_unique_part_ids(self):
-    first = render_preview_icon("agent", "agent.left", state="idle")
-    second = render_preview_icon("agent", "agent-left", state="success")
+    first = render_preview_icon(
+        "agent", "agent.left", state="idle", asset_root=self.fixture_root
+    )
+    second = render_preview_icon(
+        "agent", "agent-left", state="success", asset_root=self.fixture_root
+    )
     document = parse_svg_fragment(first + second)
     ids = [element.attrib["id"] for element in document.iter() if "id" in element.attrib]
     self.assertEqual(len(ids), len(set(ids)))
@@ -621,6 +649,7 @@ def test_adapter_scopes_state_and_accessibility_to_the_instance_root(self):
         "primary-agent",
         state="processing",
         size=64,
+        asset_root=self.fixture_root,
     )
     root = parse_single_root(markup)
     self.assertEqual("processing", root.attrib["data-icon-state"])
@@ -629,6 +658,8 @@ def test_adapter_scopes_state_and_accessibility_to_the_instance_root(self):
 ~~~
 
 Also test that every local href, url fragment, aria-labelledby, and aria-describedby reference resolves inside the same instance and that two instances never select one another’s data-part elements.
+
+Build `self.fixture_root` as a temporary, fully valid visual-review asset bundle containing catalog, manifest, SVG, and tokens. Its SVG uses minimal synthetic primitives and no copied canonical Agent path geometry. Task 5 tests the generic adapter contract; the real Agent geometry remains test-first work in Task 6.
 
 - [ ] **Step 2: Run the focused test and confirm red**
 
@@ -773,7 +804,7 @@ def test_agent_asset_matches_manifest_and_visual_contract(self):
     self.assertLessEqual(asset.metrics.paintable_elements, 24)
 ~~~
 
-Also assert the standalone root is accessible, all six state marks have distinct geometry signatures, and no port, hand, complex joint, text, or runtime effect part exists.
+Also assert the standalone root is accessible, all six state marks have distinct geometry signatures, and no port, hand, complex joint, text, or runtime effect part exists. Add machine checks that all paintable Agent geometry stays inside the 8–88 safe zone and that authored outer and inner stroke widths stay inside 2.0–2.25 px and 1.25–1.5 px respectively.
 
 - [ ] **Step 2: Run the focused tests and confirm red**
 
@@ -850,9 +881,10 @@ PYTHONPATH=src python3 -m unittest \
   tests.test_diagram_core_assets \
   tests.test_diagram_core_adapter \
   tests.test_diagram_core_visuals
+PYTHONPATH=src python3 -m unittest discover -s tests
 ~~~
 
-Expected:
+Expected: the focused checks and the complete regression suite both pass.
 
 ~~~text
 icons=1 cells=72 unique=72 sizes=48,64,96 contexts=blue,dark,warm,green states=6
@@ -870,7 +902,7 @@ git commit -m "feat: add Agent static icon benchmark"
 
 - [ ] Open gallery/diagram-core/agent-review.html through a local static server and show assets/diagram-core/previews/agent-contact-sheet.svg to the user.
 - [ ] Ask the user to judge 48 px recognition, silhouette, visual weight, face readability, accent-off recognition, all four contexts, and all six state marks.
-- [ ] If rejected, revise only the Agent SVG, its manifest, tokens, and generated Agent artifacts; rerun Task 6 and present the new digest.
+- [ ] If rejected, revise the Agent SVG, its manifest, tokens, adapter or generator as required by the observed defect, then regenerate all Agent artifacts, rerun the complete Task 6 validation, and present the new digest. Do not modify unrelated runtime or renderer behavior.
 - [ ] If approved, record reviewer coolbat, approval date, the Agent SVG SHA-256, manifest SHA-256, token SHA-256, and the exact reviewed artifact path in docs/diagram-core-phase-1-approval.md.
 - [ ] Keep Agent status at visual-review; this checkpoint authorizes family expansion, not public DiagramScript promotion.
 - [ ] Commit the durable decision:
