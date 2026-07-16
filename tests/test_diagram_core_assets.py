@@ -625,6 +625,86 @@ class DiagramCoreAssetLoaderTest(unittest.TestCase):
                 with self.subTest(svg=svg[-100:]):
                     self.assert_asset_error(bundle, svg, "non-scaling-stroke")
 
+    def test_variable_vector_effect_requires_exception_on_every_css_surface(self):
+        tokens = MINIMAL_TOKENS + "\n:root { --icon-vector-effect: none; }\n"
+        cases = (
+            (
+                "presentation attribute with non-scaling fallback",
+                valid_svg().replace(
+                    "<circle",
+                    '<circle vector-effect="var(--icon-vector-effect, non-scaling-stroke)"',
+                    1,
+                ),
+                "/@vector-effect",
+            ),
+            (
+                "presentation attribute with none fallback",
+                valid_svg().replace(
+                    "<circle",
+                    '<circle vector-effect="var(--icon-vector-effect, none)"',
+                    1,
+                ),
+                "/@vector-effect",
+            ),
+            (
+                "style attribute",
+                valid_svg().replace(
+                    "<circle",
+                    '<circle style="vector-effect: var(--icon-vector-effect, none)"',
+                    1,
+                ),
+                "/@style",
+            ),
+            (
+                "style element with comments case and whitespace",
+                valid_svg().replace(
+                    "</svg>",
+                    "<style>circle { VeCtOr-EfFeCt /* review */ : "
+                    "VAR( --icon-vector-effect , none ); }</style></svg>",
+                ),
+                "/style/#text",
+            ),
+        )
+        with tempfile.TemporaryDirectory() as temp_dir:
+            bundle = TemporaryAssetBundle(temp_dir).write(tokens=tokens)
+            for label, svg, expected_path in cases:
+                with self.subTest(label=label):
+                    bundle.icon_path.write_text(svg, encoding="utf-8")
+                    with self.assertRaises(AssetValidationError) as raised:
+                        load_asset("database", {"visual-review"}, bundle.root)
+                    self.assertTrue(
+                        any(
+                            issue.path.endswith(expected_path)
+                            and "variable vector-effect requires" in issue.message
+                            for issue in raised.exception.issues
+                        )
+                    )
+
+    def test_variable_vector_effect_accepts_complete_exception(self):
+        manifest = copy.deepcopy(VALID_MANIFEST)
+        manifest["exceptions"] = [
+            {
+                "metric": "non-scaling-stroke",
+                "reason": "Runtime token behavior reviewed",
+                "reviewer": "diagram-core-reviewer",
+                "approved_on": "2026-07-16",
+            }
+        ]
+        svg = valid_svg().replace(
+            "<circle",
+            '<circle vector-effect="var(--icon-vector-effect, none)"',
+            1,
+        )
+        tokens = MINIMAL_TOKENS + "\n:root { --icon-vector-effect: none; }\n"
+        with tempfile.TemporaryDirectory() as temp_dir:
+            bundle = TemporaryAssetBundle(temp_dir).write(
+                manifest=manifest,
+                svg=svg,
+                tokens=tokens,
+            )
+            asset = load_asset("database", {"visual-review"}, bundle.root)
+            self.assertEqual("database", asset.manifest.icon_id)
+
     def test_css_vars_require_literal_fallbacks_and_declared_tokens(self):
         cases = (
             (

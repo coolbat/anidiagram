@@ -365,6 +365,7 @@ def _validate_svg(
     authored_ids = set()
     fragments = []
     non_scaling_locations = []
+    variable_vector_effect_locations = []
     forbidden_count = 0
     paintable_count = 0
     all_elements = tuple(root.iter())
@@ -382,6 +383,7 @@ def _validate_svg(
         for raw_name, value in element.attrib.items():
             namespace, name = _qualified_name(raw_name)
             attribute_path = path + "/@" + name
+            css_value = _CSS_COMMENT_PATTERN.sub("", value)
             if "\\" in value:
                 _issue(
                     issues,
@@ -429,13 +431,13 @@ def _validate_svg(
 
             if lowered_name == "style" and re.search(
                 r"(?:^|;)\s*(?:animation|transition)(?:-[a-z-]+)?\s*:",
-                _CSS_COMMENT_PATTERN.sub("", value),
+                css_value,
                 re.IGNORECASE,
             ):
                 _issue(issues, attribute_path, "CSS animation declarations are forbidden")
             if lowered_name == "style" and re.search(
                 r"(?:^|;)\s*filter\s*:",
-                _CSS_COMMENT_PATTERN.sub("", value),
+                css_value,
                 re.IGNORECASE,
             ):
                 _issue(issues, attribute_path, "filter effects are forbidden")
@@ -444,12 +446,22 @@ def _validate_svg(
                 and value.strip().lower() == "non-scaling-stroke"
             ):
                 non_scaling_locations.append(attribute_path)
+            if lowered_name == "vector-effect" and re.search(
+                r"\bvar\s*\(", css_value, re.IGNORECASE
+            ):
+                variable_vector_effect_locations.append(attribute_path)
             if lowered_name == "style" and re.search(
                 r"(?:^|;)\s*vector-effect\s*:\s*non-scaling-stroke\b",
-                _CSS_COMMENT_PATTERN.sub("", value),
+                css_value,
                 re.IGNORECASE,
             ):
                 non_scaling_locations.append(attribute_path)
+            if lowered_name == "style" and re.search(
+                r"(?:^|;)\s*vector-effect\s*:\s*var\s*\(",
+                css_value,
+                re.IGNORECASE,
+            ):
+                variable_vector_effect_locations.append(attribute_path)
 
         if element.text:
             text_path = path + "/#text"
@@ -482,6 +494,12 @@ def _validate_svg(
                 re.IGNORECASE,
             ):
                 non_scaling_locations.append(text_path)
+            if tag == "style" and re.search(
+                r"(?:^|[;{])\s*vector-effect\s*:\s*var\s*\(",
+                css_text,
+                re.IGNORECASE,
+            ):
+                variable_vector_effect_locations.append(text_path)
             if "javascript:" in element.text.lower():
                 _issue(issues, text_path, "JavaScript URI is forbidden")
 
@@ -508,6 +526,17 @@ def _validate_svg(
                 issues,
                 location,
                 "non-scaling-stroke requires an approved manifest exception",
+            )
+    if (
+        variable_vector_effect_locations
+        and "non-scaling-stroke" not in exception_metrics
+    ):
+        for location in variable_vector_effect_locations:
+            _issue(
+                issues,
+                location,
+                "variable vector-effect requires an approved "
+                "non-scaling-stroke manifest exception",
             )
 
     raw_size = len(source_bytes)
