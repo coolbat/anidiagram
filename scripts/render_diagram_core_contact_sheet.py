@@ -983,6 +983,8 @@ def _assert_output_unchanged(record: _OutputRecord) -> None:
             raise RuntimeError("new output appeared before publish: " + str(record.target))
     elif current is None or _stat_signature(current) != record.target_signature:
         raise RuntimeError("existing output changed before publish: " + str(record.target))
+    elif _read_original_bytes(record.target, current) != record.original_bytes:
+        raise RuntimeError("existing output changed before publish: " + str(record.target))
 
 
 def _write_staged_file(

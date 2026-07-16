@@ -1024,6 +1024,67 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             self.assert_file_snapshot(targets[3], external_snapshot)
             self.assert_no_publish_residue(root)
 
+    def test_publish_rejects_same_stat_external_update_before_next_replace(self):
+        publisher = contact_sheet_generator._publish_outputs
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            targets = tuple(root / name for name in (
+                "one.svg",
+                "two.html",
+                "three.html",
+                "four.json",
+            ))
+            originals = tuple(
+                self.write_snapshot_file(
+                    path,
+                    payload,
+                    0o640 + index,
+                    1_605_000_000_000_000_000 + index * 1_000_000_000,
+                )
+                for index, (path, payload) in enumerate(zip(
+                    targets,
+                    (b"AAAA", b"BBBB", b"CCCC", b"DDDD"),
+                ))
+            )
+            real_replace = os.replace
+            external_snapshot = None
+            injected = False
+
+            def inject_same_stat_update_after_first_publish(source, target):
+                nonlocal external_snapshot, injected
+                if Path(target) == targets[0] and not injected:
+                    injected = True
+                    external_snapshot = self.write_snapshot_file(
+                        targets[1],
+                        b"XXXX",
+                        originals[1][1],
+                        originals[1][2],
+                    )
+                return real_replace(source, target)
+
+            outputs = tuple(
+                (path, "new-{0}".format(index).encode("ascii"))
+                for index, path in enumerate(targets)
+            )
+            with mock.patch.object(
+                contact_sheet_generator.os,
+                "replace",
+                side_effect=inject_same_stat_update_after_first_publish,
+            ):
+                with self.assertRaisesRegex(
+                    RuntimeError,
+                    "existing output changed before publish",
+                ):
+                    publisher(outputs)
+
+            self.assertTrue(injected)
+            self.assertIsNotNone(external_snapshot)
+            self.assert_file_snapshot(targets[0], originals[0])
+            self.assert_file_snapshot(targets[1], external_snapshot)
+            for path, expected in zip(targets[2:], originals[2:]):
+                self.assert_file_snapshot(path, expected)
+            self.assert_no_publish_residue(root)
+
     def test_rollback_conflict_preserves_external_update_and_old_backup(self):
         publisher = contact_sheet_generator._publish_outputs
         with tempfile.TemporaryDirectory() as temp_dir:
