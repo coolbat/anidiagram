@@ -2566,6 +2566,41 @@ class DiagramCoreTokenTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "top-level"):
             diagram_core_tokens.token_contexts(source)
 
+    def test_token_context_parser_rejects_mentions_in_unhandled_rules(self):
+        rules = (
+            """@scope ([data-icon-theme="dark"]) {
+  :scope {
+    --icon-stroke: #202838;
+    --icon-surface-main: #202838;
+  }
+}
+""",
+            """.scope {
+  [data-icon-theme="dark"] {
+    --icon-stroke: #202838;
+    --icon-surface-main: #202838;
+  }
+}
+""",
+        )
+        for rule in rules:
+            with self.subTest(rule=rule.splitlines()[0]):
+                with self.assertRaisesRegex(ValueError, "top-level"):
+                    diagram_core_tokens.token_contexts(token_css() + rule)
+
+    def test_token_context_parser_rejects_invalid_non_contrast_color(self):
+        source = token_css().replace(
+            "--icon-accent: #7c5ce7;",
+            "--icon-accent: not-a-color;",
+            1,
+        )
+
+        with self.assertRaisesRegex(
+            ValueError,
+            "expected #rgb, #rrggbb, or opaque rgb",
+        ):
+            diagram_core_tokens.token_contexts(source)
+
     def test_token_css_defines_approved_defaults_and_four_review_contexts(self):
         source = token_css()
 
@@ -2902,6 +2937,70 @@ class DiagramCoreAssetValidatorCLITest(unittest.TestCase):
         self.assertEqual("", result.stderr)
         report = json.loads(result.stdout)
         self.assertIn("structural contrast", "\n".join(report["error_details"]))
+
+    def test_review_rejects_context_mentions_in_unhandled_rules(self):
+        rules = (
+            """@scope ([data-icon-theme="dark"]) {
+  :scope {
+    --icon-stroke: #202838;
+    --icon-surface-main: #202838;
+  }
+}
+""",
+            """.scope {
+  [data-icon-theme="dark"] {
+    --icon-stroke: #202838;
+    --icon-surface-main: #202838;
+  }
+}
+""",
+        )
+        for rule in rules:
+            with self.subTest(rule=rule.splitlines()[0]):
+                with tempfile.TemporaryDirectory() as temp_dir:
+                    asset_root = copy_canonical_asset_root(temp_dir)
+                    tokens_path = asset_root / "tokens.css"
+                    tokens_path.write_text(
+                        tokens_path.read_text(encoding="utf-8") + rule,
+                        encoding="utf-8",
+                    )
+
+                    result = run_asset_validator(
+                        "--review", "--json", "--asset-root", str(asset_root)
+                    )
+
+                    self.assertEqual(1, result.returncode)
+                    self.assertEqual("", result.stderr)
+                    report = json.loads(result.stdout)
+                    self.assertIn(
+                        "top-level",
+                        "\n".join(report["error_details"]),
+                    )
+
+    def test_review_rejects_invalid_non_contrast_token_color(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            asset_root = copy_canonical_asset_root(temp_dir)
+            tokens_path = asset_root / "tokens.css"
+            tokens_path.write_text(
+                tokens_path.read_text(encoding="utf-8").replace(
+                    "--icon-accent: #7c5ce7;",
+                    "--icon-accent: not-a-color;",
+                    1,
+                ),
+                encoding="utf-8",
+            )
+
+            result = run_asset_validator(
+                "--review", "--json", "--asset-root", str(asset_root)
+            )
+
+        self.assertEqual(1, result.returncode)
+        self.assertEqual("", result.stderr)
+        report = json.loads(result.stdout)
+        self.assertIn(
+            "expected #rgb, #rrggbb, or opaque rgb",
+            "\n".join(report["error_details"]),
+        )
 
     def test_strict_mode_fails_cleanly_until_all_benchmarks_are_approved(self):
         result = run_asset_validator("--strict", "--json")

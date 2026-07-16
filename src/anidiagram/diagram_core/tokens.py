@@ -119,6 +119,7 @@ def _token_declarations(source: str) -> Tuple[Tuple[str, str], ...]:
             raise ValueError("token context rules require --icon-* declarations")
         if "!important" in value.lower():
             raise ValueError("token context declarations cannot use !important")
+        _parse_opaque_color(value)
         declarations.append((name, value))
     if not declarations:
         raise ValueError("token context selector has no icon declarations")
@@ -162,9 +163,11 @@ def token_contexts(source: str) -> Tuple[Mapping[str, str], Mapping[str, Mapping
     contexts = {context: {} for context in _TOKEN_CONTEXTS}
     seen = set()
     for header, body in _top_level_css_rules(source):
+        body_without_comments = _CSS_COMMENT.sub("", body)
         if header.startswith("@"):
-            body_without_comments = _CSS_COMMENT.sub("", body)
-            if _mentions_token_context(body_without_comments):
+            if _mentions_token_context(header) or _mentions_token_context(
+                body_without_comments
+            ):
                 raise ValueError("token context selectors must be top-level")
         elif header in _TOKEN_CONTEXT_SELECTORS:
             seen.add(header)
@@ -178,6 +181,8 @@ def token_contexts(source: str) -> Tuple[Mapping[str, str], Mapping[str, Mapping
                 contexts[target].update(declarations)
         elif _mentions_token_context(header):
             raise ValueError("token context selectors must be exact top-level rules")
+        elif _mentions_token_context(body_without_comments):
+            raise ValueError("token context selectors must be top-level")
 
     missing = sorted(set(_TOKEN_CONTEXT_SELECTORS) - seen)
     if missing:
