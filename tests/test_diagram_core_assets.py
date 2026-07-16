@@ -737,6 +737,89 @@ class DiagramCoreAssetLoaderTest(unittest.TestCase):
                 with self.subTest(label=label):
                     self.assert_asset_error(bundle, svg, expected)
 
+    def test_token_declaration_spoofs_do_not_declare_svg_vars(self):
+        cases = (
+            (
+                "escaped quote string",
+                "--icon-string-spoof",
+                r':root { content: "escaped \" quote --icon-string-spoof:"; }',
+            ),
+            (
+                "selector",
+                "--icon-selector-spoof",
+                "@media (min-width: 1px) "
+                "{ .--icon-selector-spoof:focus { color: red; } }",
+            ),
+            (
+                "at-rule condition",
+                "--icon-supports-spoof",
+                "@media (min-width: 1px) "
+                "{ @supports (--icon-supports-spoof: value) "
+                "{ .supported { color: green; } } }",
+            ),
+        )
+        with tempfile.TemporaryDirectory() as temp_dir:
+            bundle = TemporaryAssetBundle(temp_dir).write()
+            for label, token, spoof in cases:
+                with self.subTest(label=label):
+                    svg = valid_svg().replace("--icon-surface-main", token, 1)
+                    bundle.icon_path.write_text(svg, encoding="utf-8")
+                    bundle.tokens_path.write_text(
+                        MINIMAL_TOKENS + "\n" + spoof + "\n",
+                        encoding="utf-8",
+                    )
+                    with self.assertRaises(AssetValidationError) as raised:
+                        load_asset("database", {"visual-review"}, bundle.root)
+                    self.assertTrue(
+                        any(
+                            issue.path.endswith("/svg/g[1]/circle/@fill")
+                            and token in issue.message
+                            and "not declared in tokens.css" in issue.message
+                            for issue in raised.exception.issues
+                        )
+                    )
+
+    def test_real_token_declarations_work_in_root_context_and_nested_blocks(self):
+        svg = (
+            valid_svg()
+            .replace("--icon-surface-main", "--icon-real-first")
+            .replace("--icon-stroke", "--icon-real-after")
+        )
+        cases = (
+            (
+                "root",
+                r""":root {
+                  /* before first */ --icon-real-first : #fffaf2;
+                  content: "escaped \"; semicolon";
+                  --icon-real-after: #14213d;
+                }""",
+            ),
+            (
+                "context selector",
+                """[data-icon-context="dark"] {
+                  --icon-real-first: #101828;
+                  --icon-real-after : #f8fafc;
+                }""",
+            ),
+            (
+                "nested context block",
+                """@media (prefers-color-scheme: dark) {
+                  [data-icon-context="nested"] {
+                    --icon-real-first: #101828;
+                    /* between declarations */
+                    --icon-real-after: #f8fafc;
+                  }
+                }""",
+            ),
+        )
+        with tempfile.TemporaryDirectory() as temp_dir:
+            bundle = TemporaryAssetBundle(temp_dir).write(svg=svg)
+            for label, tokens in cases:
+                with self.subTest(label=label):
+                    bundle.tokens_path.write_text(tokens, encoding="utf-8")
+                    asset = load_asset("database", {"visual-review"}, bundle.root)
+                    self.assertEqual("database", asset.manifest.icon_id)
+
     def test_missing_tokens_file_fails_closed(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             bundle = TemporaryAssetBundle(temp_dir).write(tokens=None)

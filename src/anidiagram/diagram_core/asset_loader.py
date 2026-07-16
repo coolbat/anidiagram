@@ -26,7 +26,6 @@ from .manifest import (
 _DEFAULT_ASSET_ROOT = Path(__file__).resolve().parents[3] / "assets" / "diagram-core"
 _IDENTIFIER_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 _TOKEN_PATTERN = re.compile(r"--[a-z][a-z0-9-]*")
-_TOKEN_DECLARATION_PATTERN = re.compile(r"(?<![a-zA-Z0-9_-])(--[a-z][a-z0-9-]*)\s*:")
 _CSS_COMMENT_PATTERN = re.compile(r"/\*.*?\*/", re.DOTALL)
 _URL_PATTERN = re.compile(r"url\s*\(\s*([^)]*?)\s*\)", re.IGNORECASE)
 _FORBIDDEN_TAGS = frozenset(
@@ -168,9 +167,102 @@ def _element_paths(root: ElementTree.Element) -> dict:
     return paths
 
 
+def _skip_css_comment(source: str, index: int) -> int:
+    end = source.find("*/", index + 2)
+    return len(source) if end < 0 else end + 2
+
+
+def _skip_css_string(source: str, index: int) -> int:
+    quote = source[index]
+    index += 1
+    while index < len(source):
+        if source[index] == "\\":
+            index += 2
+        elif source[index] == quote:
+            return index + 1
+        else:
+            index += 1
+    return len(source)
+
+
+def _skip_css_spacing_and_comments(source: str, index: int) -> int:
+    while index < len(source):
+        if source[index].isspace():
+            index += 1
+        elif source.startswith("/*", index):
+            index = _skip_css_comment(source, index)
+        else:
+            break
+    return index
+
+
 def _declared_tokens(source: str) -> frozenset:
-    without_comments = _CSS_COMMENT_PATTERN.sub("", source)
-    return frozenset(_TOKEN_DECLARATION_PATTERN.findall(without_comments))
+    tokens = set()
+    frames = [
+        {
+            "declarations": False,
+            "at_boundary": False,
+            "first": None,
+        }
+    ]
+    index = 0
+    while index < len(source):
+        frame = frames[-1]
+        if source.startswith("/*", index):
+            index = _skip_css_comment(source, index)
+            continue
+
+        character = source[index]
+        if character.isspace():
+            index += 1
+            continue
+        if character in {"'", '"'}:
+            if frame["first"] is None:
+                frame["first"] = character
+            if frame["declarations"] and frame["at_boundary"]:
+                frame["at_boundary"] = False
+            index = _skip_css_string(source, index)
+            continue
+        if character == "{":
+            child_has_declarations = frame["first"] != "@"
+            frame["first"] = None
+            frame["at_boundary"] = False
+            frames.append(
+                {
+                    "declarations": child_has_declarations,
+                    "at_boundary": child_has_declarations,
+                    "first": None,
+                }
+            )
+            index += 1
+            continue
+        if character == "}":
+            if len(frames) > 1:
+                frames.pop()
+            frames[-1]["first"] = None
+            frames[-1]["at_boundary"] = False
+            index += 1
+            continue
+        if character == ";":
+            frame["first"] = None
+            frame["at_boundary"] = frame["declarations"]
+            index += 1
+            continue
+
+        if frame["first"] is None:
+            frame["first"] = character
+        if frame["declarations"] and frame["at_boundary"]:
+            match = _TOKEN_PATTERN.match(source, index)
+            if match is not None:
+                colon = _skip_css_spacing_and_comments(source, match.end())
+                if colon < len(source) and source[colon] == ":":
+                    tokens.add(match.group(0))
+                    frame["at_boundary"] = False
+                    index = colon + 1
+                    continue
+            frame["at_boundary"] = False
+        index += 1
+    return frozenset(tokens)
 
 
 def _var_expressions(value: str) -> Tuple[Tuple[str, str], ...]:
