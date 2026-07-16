@@ -6,6 +6,11 @@ import math
 from dataclasses import dataclass
 from typing import Any, Dict, Iterable, List, Optional, Set
 
+from .diagram_core.catalog import (
+    LEGACY_VALID_ICON_IDS,
+    approved_icon_ids,
+    catalog_entry,
+)
 from .model import Bounds, Canvas, Edge, EffectConfig, Group, Motion, MotionPolicy, Node, Point, Scene, SceneMotion, Style, Title
 
 
@@ -60,7 +65,7 @@ KNOWN_EDGE_MOTION = {
 KNOWN_GROUP_MOTION = {"none", "static", "soft-reveal", "marching-ants", "border-scan", "corner-pulse"}
 KNOWN_REDUCED_MOTION = {"static", "subtle", "pause"}
 KNOWN_TITLE_MOTION = {"none", "fade", "breathe", "handwrite-reveal", "highlight-sweep"}
-KNOWN_ICONS = {"database", "file", "folder", "api", "cloud", "search", "shield", "agent", "operator", "token", "memory", "tool", "output"}
+KNOWN_ICONS = set(LEGACY_VALID_ICON_IDS) | set(approved_icon_ids())
 KNOWN_NODE_SHAPES = {"rect", "decision"}
 KNOWN_MOTION_POLICY_PROFILES = {"unrestricted", "readable", "focused", "expressive", "readable-runtime"}
 KNOWN_PULSE_MODES = {"all", "rotate"}
@@ -523,10 +528,19 @@ def _icon(data: Dict[str, Any], key: str, path: str, issues: List[ValidationIssu
     value = _string(data, key, path, issues, required=False)
     if value is None:
         return None
-    if value not in KNOWN_ICONS:
-        issues.append(ValidationIssue(path, f"expected one of: {', '.join(sorted(KNOWN_ICONS))}", "enum"))
+    if value in KNOWN_ICONS:
+        return value
+    if catalog_entry(value) is not None:
+        issues.append(
+            ValidationIssue(
+                path,
+                "icon is cataloged but its Diagram Core asset is not approved",
+                "icon_not_implemented",
+            )
+        )
         return None
-    return value
+    issues.append(ValidationIssue(path, f"expected one of: {', '.join(sorted(KNOWN_ICONS))}", "enum"))
+    return None
 
 
 def _role(data: Dict[str, Any], key: str, path: str, issues: List[ValidationIssue]) -> str:

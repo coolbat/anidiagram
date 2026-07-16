@@ -8,6 +8,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from anidiagram.cli import main
+from anidiagram.diagram_core.catalog import LEGACY_VALID_ICON_IDS
 from anidiagram.exporters import _render_frames
 from anidiagram.exporters import _blend_loop_seam
 from anidiagram.exporters import _browser_capture_script
@@ -35,7 +36,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class SvgRendererTest(unittest.TestCase):
     def _scene_with_icons(self):
-        icons = sorted(KNOWN_ICONS)
+        icons = sorted(LEGACY_VALID_ICON_IDS)
         return compile_scene(
             {
                 "version": "0.3",
@@ -128,8 +129,8 @@ class SvgRendererTest(unittest.TestCase):
         self.assertIn("illustrated-character-v2", warnings[0]["message"])
 
     def test_character_registry_and_manifest_cover_every_known_icon(self):
-        self.assertEqual(set(character_icon_ids()), KNOWN_ICONS)
-        for icon in KNOWN_ICONS:
+        self.assertEqual(LEGACY_VALID_ICON_IDS, frozenset(character_icon_ids()))
+        for icon in LEGACY_VALID_ICON_IDS:
             definition = character_definition(icon)
             self.assertIsNotNone(definition, icon)
             self.assertEqual("root", definition.parts[0], icon)
@@ -139,7 +140,7 @@ class SvgRendererTest(unittest.TestCase):
         manifest = self._manifest_from_html(html)
 
         self.assertEqual("illustrated-character-v1", manifest["icon_system"])
-        self.assertEqual(KNOWN_ICONS, {entry["icon"] for entry in manifest["icons"]})
+        self.assertEqual(LEGACY_VALID_ICON_IDS, frozenset(entry["icon"] for entry in manifest["icons"]))
         for entry in manifest["icons"]:
             definition = character_definition(entry["icon"])
             self.assertEqual(CHARACTER_ICON_PERFORMANCES[entry["icon"]], entry["performance"])
@@ -450,9 +451,9 @@ class SvgRendererTest(unittest.TestCase):
         scene = compile_scene(spec)
         manifest = self._manifest_from_html(render_html_runtime(scene, style, runtime="gsap"))
 
-        self.assertEqual(KNOWN_ICONS, {node["icon"] for node in spec["nodes"]})
-        self.assertEqual(len(KNOWN_ICONS), len(spec["nodes"]))
-        self.assertEqual(len(KNOWN_ICONS), len(manifest["icons"]))
+        self.assertEqual(LEGACY_VALID_ICON_IDS, frozenset(node["icon"] for node in spec["nodes"]))
+        self.assertEqual(len(LEGACY_VALID_ICON_IDS), len(spec["nodes"]))
+        self.assertEqual(len(LEGACY_VALID_ICON_IDS), len(manifest["icons"]))
         self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, quality_report(scene, style)["summary"])
 
     def test_illustrated_character_flow_uses_covered_icons_without_fallback_copy(self):

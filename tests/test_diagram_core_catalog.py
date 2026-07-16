@@ -1,4 +1,8 @@
 import json
+import os
+import shutil
+import subprocess
+import sys
 import tempfile
 import unittest
 from dataclasses import FrozenInstanceError, replace
@@ -15,9 +19,11 @@ from anidiagram.diagram_core.catalog import (
     legacy_valid_icon_ids,
     load_catalog,
 )
+from anidiagram.schema import KNOWN_ICONS, compile_scene, validate_scene
 
 
 ROOT = Path(__file__).resolve().parents[1]
+SYNC_SCRIPT = ROOT / "scripts" / "sync_diagram_script_icons.py"
 
 EXPECTED_BY_CATEGORY = {
     "actors": (
@@ -116,6 +122,56 @@ def catalog_fixture_with_status(catalog, icon_id, status):
     )
 
 
+def scene_spec_with_icon(icon_id):
+    return {
+        "version": "0.3",
+        "nodes": [
+            {
+                "id": "icon-node",
+                "label": "Icon node",
+                "position": [100, 100],
+                "size": [160, 80],
+                "icon": icon_id,
+            }
+        ],
+    }
+
+
+def run_schema_sync(script_path, *arguments):
+    return subprocess.run(
+        [sys.executable, str(script_path), *arguments],
+        cwd=script_path.parents[1],
+        env={**os.environ, "PYTHONPATH": str(ROOT / "src")},
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+
+def copy_sync_fixture(temp_dir, icon_ids):
+    fixture_root = Path(temp_dir)
+    scripts_dir = fixture_root / "scripts"
+    schemas_dir = fixture_root / "schemas"
+    scripts_dir.mkdir()
+    schemas_dir.mkdir()
+    script_path = scripts_dir / SYNC_SCRIPT.name
+    schema_path = schemas_dir / "diagram-script-v0.3.schema.json"
+    shutil.copyfile(SYNC_SCRIPT, script_path)
+
+    source_path = ROOT / "schemas" / schema_path.name
+    lines = source_path.read_text(encoding="utf-8").splitlines(keepends=True)
+    for index, line in enumerate(lines):
+        if '"icon": {"enum":' in line:
+            newline = "\n" if line.endswith("\n") else ""
+            lines[index] = f'    "icon": {{"enum": {json.dumps(icon_ids)}}},{newline}'
+            break
+    else:
+        raise AssertionError("DiagramScript icon enum line is missing")
+    with schema_path.open("w", encoding="utf-8", newline="") as handle:
+        handle.write("".join(lines))
+    return script_path, schema_path
+
+
 class DiagramCoreCatalogTest(unittest.TestCase):
     def test_catalog_freezes_exact_inventory_and_category_counts(self):
         catalog = load_catalog()
@@ -212,6 +268,103 @@ class DiagramCoreCatalogTest(unittest.TestCase):
             LEGACY_VALID_ICON_IDS | {"server"},
             diagram_script_valid_icon_ids(promoted),
         )
+
+    def test_current_known_icons_are_exactly_the_legacy_compatibility_set(self):
+        self.assertEqual(set(LEGACY_VALID_ICON_IDS), KNOWN_ICONS)
+        self.assertEqual(frozenset(), approved_icon_ids())
+        self.assertNotIn("server", KNOWN_ICONS)
+
+    def test_planned_catalog_icons_are_not_implemented(self):
+        for icon_id in ("user", "llm", "pdf", "scheduler"):
+            with self.subTest(icon_id=icon_id):
+                self.assertEqual("planned", catalog_entry(icon_id).status)
+                result = validate_scene(scene_spec_with_icon(icon_id))
+                issue = result["error"]["issues"][0]
+                self.assertEqual("$.nodes[0].icon", issue["path"])
+                self.assertEqual("icon_not_implemented", issue["code"])
+
+    def test_visual_review_server_is_not_yet_valid(self):
+        self.assertEqual("visual-review", catalog_entry("server").status)
+        result = validate_scene(scene_spec_with_icon("server"))
+        issue = result["error"]["issues"][0]
+
+        self.assertEqual("$.nodes[0].icon", issue["path"])
+        self.assertEqual("icon_not_implemented", issue["code"])
+        self.assertNotIn("server", KNOWN_ICONS)
+
+    def test_unknown_icon_remains_an_enum_error(self):
+        result = validate_scene(scene_spec_with_icon("not-a-real-icon"))
+        issue = result["error"]["issues"][0]
+
+        self.assertEqual("$.nodes[0].icon", issue["path"])
+        self.assertEqual("enum", issue["code"])
+
+    def test_all_legacy_ids_remain_valid_during_review(self):
+        for icon_id in sorted(LEGACY_VALID_ICON_IDS):
+            with self.subTest(icon_id=icon_id):
+                scene = compile_scene(scene_spec_with_icon(icon_id))
+                self.assertEqual(icon_id, scene.nodes[0].icon)
+
+    def test_schema_sync_check_reports_clean_without_writing(self):
+        schema_path = ROOT / "schemas" / "diagram-script-v0.3.schema.json"
+        before = schema_path.read_bytes()
+        completed = run_schema_sync(SYNC_SCRIPT, "--check")
+
+        self.assertEqual(0, completed.returncode, completed.stderr)
+        self.assertEqual("icons=13 status=clean\n", completed.stdout)
+        self.assertEqual("", completed.stderr)
+        self.assertEqual(before, schema_path.read_bytes())
+
+    def test_schema_sync_check_exits_nonzero_without_rewriting_drift(self):
+        current = json.loads(
+            (ROOT / "schemas" / "diagram-script-v0.3.schema.json").read_text(encoding="utf-8")
+        )["$defs"]["icon"]["enum"]
+        with tempfile.TemporaryDirectory() as temp_dir:
+            script_path, schema_path = copy_sync_fixture(temp_dir, current + ["server"])
+            before = schema_path.read_bytes()
+            completed = run_schema_sync(script_path, "--check")
+
+            self.assertEqual(1, completed.returncode)
+            self.assertEqual("icons=13 status=drift\n", completed.stdout)
+            self.assertEqual("", completed.stderr)
+            self.assertEqual(before, schema_path.read_bytes())
+
+    def test_schema_sync_write_is_deterministic_and_idempotent(self):
+        current = json.loads(
+            (ROOT / "schemas" / "diagram-script-v0.3.schema.json").read_text(encoding="utf-8")
+        )["$defs"]["icon"]["enum"]
+        drifted = [icon_id for icon_id in current if icon_id != "token"] + ["server"]
+        with tempfile.TemporaryDirectory() as temp_dir:
+            script_path, schema_path = copy_sync_fixture(temp_dir, drifted)
+
+            first = run_schema_sync(script_path, "--write")
+            first_bytes = schema_path.read_bytes()
+            second = run_schema_sync(script_path, "--write")
+            checked = run_schema_sync(script_path, "--check")
+            written = json.loads(first_bytes.decode("utf-8"))["$defs"]["icon"]["enum"]
+
+            self.assertEqual(0, first.returncode, first.stderr)
+            self.assertEqual("icons=13 status=written\n", first.stdout)
+            self.assertEqual("", first.stderr)
+            self.assertEqual(sorted(KNOWN_ICONS), written)
+            self.assertNotIn("server", written)
+            self.assertEqual(0, second.returncode, second.stderr)
+            self.assertEqual("icons=13 status=clean\n", second.stdout)
+            self.assertEqual(first_bytes, schema_path.read_bytes())
+            self.assertEqual(0, checked.returncode, checked.stderr)
+            self.assertEqual("icons=13 status=clean\n", checked.stdout)
+
+    def test_schema_sync_actions_are_required_and_mutually_exclusive(self):
+        missing = run_schema_sync(SYNC_SCRIPT)
+        conflicting = run_schema_sync(SYNC_SCRIPT, "--check", "--write")
+
+        self.assertEqual(2, missing.returncode)
+        self.assertIn("--check", missing.stderr)
+        self.assertIn("--write", missing.stderr)
+        self.assertEqual("", missing.stdout)
+        self.assertEqual(2, conflicting.returncode)
+        self.assertIn("not allowed with argument", conflicting.stderr)
+        self.assertEqual("", conflicting.stdout)
 
     def test_public_models_and_id_sets_are_immutable(self):
         catalog = load_catalog()
