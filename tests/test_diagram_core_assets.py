@@ -201,6 +201,56 @@ class DiagramCoreManifestTest(unittest.TestCase):
             self.assertIn(str(bundle.manifest_path), str(raised.exception))
             self.assertRegex(str(raised.exception), r"line 1, column [0-9]+")
 
+    def test_aggregate_gate_rejects_all_duplicate_json_keys_with_nested_paths(self):
+        manifest = copy.deepcopy(VALID_MANIFEST)
+        manifest["exceptions"] = [
+            {
+                "metric": "raw-size",
+                "reason": "Reviewed source budget",
+                "reviewer": "diagram-core-reviewer",
+                "approved_on": "2026-07-16",
+            }
+        ]
+        source = json.dumps(manifest)
+        source = source.replace(
+            '"status": "visual-review"',
+            '"status": "visual-review", "status": "visual-review"',
+            1,
+        )
+        source = source.replace(
+            '"send": {"x": 88, "y": 48}',
+            '"send": {"x": 88, "x": 89, "y": 48}',
+            1,
+        )
+        source = source.replace(
+            '"reason": "Reviewed source budget"',
+            '"reason": "Reviewed source budget", "reason": "Still reviewed"',
+            1,
+        )
+        self.assertEqual(2, source.count('"status": "visual-review"'))
+        self.assertEqual(2, source.count('"reason":'))
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            bundle = TemporaryAssetBundle(temp_dir).write(manifest=manifest)
+            bundle.manifest_path.write_text(source, encoding="utf-8")
+
+            with self.assertRaises(AssetValidationError) as raised:
+                load_asset("database", {"visual-review"}, bundle.root)
+
+            duplicate_paths = {
+                issue.path
+                for issue in raised.exception.issues
+                if "duplicate JSON key" in issue.message
+            }
+            self.assertEqual(
+                {
+                    str(bundle.manifest_path) + ":$.status",
+                    str(bundle.manifest_path) + ":$.attachments.send.x",
+                    str(bundle.manifest_path) + ":$.exceptions[0].reason",
+                },
+                duplicate_paths,
+            )
+
     def test_manifest_schema_freezes_shape_and_exception_approval_fields(self):
         schema = json.loads(
             (ROOT / "schemas" / "diagram-core-icon-manifest-v1.schema.json").read_text(
@@ -379,6 +429,71 @@ class DiagramCoreAssetLoaderTest(unittest.TestCase):
             for label, svg, expected in cases:
                 with self.subTest(label=label):
                     self.assert_asset_error(bundle, svg, expected)
+
+    def test_css_backslash_escapes_fail_closed_at_style_paths(self):
+        cases = (
+            (
+                "escaped import in style element",
+                valid_svg().replace(
+                    "</svg>",
+                    r'<style>@\69mport "https://example.test/icon.css";</style></svg>',
+                ),
+                "/style/#text",
+            ),
+            (
+                "comment plus escaped animation in style element",
+                valid_svg().replace(
+                    "</svg>",
+                    r"<style>circle { /* bypass */ ANIM\61TION: pulse 1s; }</style></svg>",
+                ),
+                "/style/#text",
+            ),
+            (
+                "escaped animation in style attribute",
+                valid_svg().replace(
+                    "<circle", r'<circle style="anim\61tion: pulse 1s"', 1
+                ),
+                "/@style",
+            ),
+            (
+                "escaped filter in style attribute",
+                valid_svg().replace(
+                    "<circle", r'<circle style="FILT\65R: blur(1px)"', 1
+                ),
+                "/@style",
+            ),
+            (
+                "escaped vector effect property in style attribute",
+                valid_svg().replace(
+                    "<circle",
+                    r'<circle style="vector\2d effect: non-scaling-stroke"',
+                    1,
+                ),
+                "/@style",
+            ),
+            (
+                "escaped non-scaling-stroke value in style element",
+                valid_svg().replace(
+                    "</svg>",
+                    r"<style>circle { vector-effect: non-scaling\2d stroke; }</style></svg>",
+                ),
+                "/style/#text",
+            ),
+        )
+        with tempfile.TemporaryDirectory() as temp_dir:
+            bundle = TemporaryAssetBundle(temp_dir).write()
+            for label, svg, expected_path in cases:
+                with self.subTest(label=label):
+                    bundle.icon_path.write_text(svg, encoding="utf-8")
+                    with self.assertRaises(AssetValidationError) as raised:
+                        load_asset("database", {"visual-review"}, bundle.root)
+                    self.assertTrue(
+                        any(
+                            issue.path.endswith(expected_path)
+                            and "backslash escape" in issue.message
+                            for issue in raised.exception.issues
+                        )
+                    )
 
     def test_external_data_and_unresolved_fragment_references_are_rejected(self):
         cases = (

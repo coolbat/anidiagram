@@ -382,6 +382,12 @@ def _validate_svg(
         for raw_name, value in element.attrib.items():
             namespace, name = _qualified_name(raw_name)
             attribute_path = path + "/@" + name
+            if "\\" in value:
+                _issue(
+                    issues,
+                    attribute_path,
+                    "backslash escapes are forbidden in canonical SVG attributes",
+                )
             if namespace not in {"", _XLINK_NAMESPACE, _XML_NAMESPACE}:
                 _issue(issues, attribute_path, "foreign XML attribute namespace is forbidden")
             if name == "id":
@@ -448,6 +454,12 @@ def _validate_svg(
         if element.text:
             text_path = path + "/#text"
             css_text = _CSS_COMMENT_PATTERN.sub("", element.text)
+            if tag == "style" and "\\" in element.text:
+                _issue(
+                    issues,
+                    text_path,
+                    "backslash escapes are forbidden in canonical SVG CSS",
+                )
             _inspect_urls(element.text, text_path, issues, fragments)
             _validate_css_vars(element.text, text_path, declared_tokens, issues)
             if tag == "style" and re.search(

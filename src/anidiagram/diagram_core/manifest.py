@@ -15,6 +15,7 @@ from .catalog import CATALOG_STATUSES, CATALOG_SYSTEM_ID
 
 _DEFAULT_ASSET_ROOT = Path(__file__).resolve().parents[3] / "assets" / "diagram-core"
 _IDENTIFIER_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+_JSON_PATH_MEMBER_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 _APPROVAL_DATE_PATTERN = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
 _REQUIRED_FIELDS = {
     "id",
@@ -45,6 +46,11 @@ _BENCHMARK_STATES = frozenset(
 class ManifestValidationIssue:
     path: str
     message: str
+
+
+@dataclass(frozen=True)
+class _JSONObject:
+    pairs: Tuple[Tuple[str, Any], ...]
 
 
 class ManifestValidationError(ValueError):
@@ -107,6 +113,37 @@ def _issue(
     message: str,
 ) -> None:
     issues.append(ManifestValidationIssue(path=path, message=message))
+
+
+def _json_member_path(path: str, key: str) -> str:
+    if _JSON_PATH_MEMBER_PATTERN.fullmatch(key) is not None:
+        return path + "." + key
+    return path + "[" + json.dumps(key, ensure_ascii=False) + "]"
+
+
+def _materialize_json(value: Any, path: str, issues: list) -> Any:
+    if isinstance(value, _JSONObject):
+        result = {}
+        seen = set()
+        for key, child in value.pairs:
+            child_path = _json_member_path(path, key)
+            decoded_child = _materialize_json(child, child_path, issues)
+            if key in seen:
+                _issue(
+                    issues,
+                    child_path,
+                    "duplicate JSON key {0}".format(json.dumps(key)),
+                )
+                continue
+            seen.add(key)
+            result[key] = decoded_child
+        return result
+    if isinstance(value, list):
+        return [
+            _materialize_json(child, "{0}[{1}]".format(path, index), issues)
+            for index, child in enumerate(value)
+        ]
+    return value
 
 
 def _identifier(value: Any, path: str, issues: list) -> Optional[str]:
@@ -328,7 +365,10 @@ def load_manifest(icon_id: str, asset_root: Optional[Path] = None) -> IconManife
             path,
         ) from error
     try:
-        raw = json.loads(source)
+        parsed = json.loads(
+            source,
+            object_pairs_hook=lambda pairs: _JSONObject(tuple(pairs)),
+        )
     except json.JSONDecodeError as error:
         raise ManifestValidationError(
             (
@@ -342,6 +382,10 @@ def load_manifest(icon_id: str, asset_root: Optional[Path] = None) -> IconManife
             ),
             path,
         ) from error
+    duplicate_issues = []
+    raw = _materialize_json(parsed, "$", duplicate_issues)
+    if duplicate_issues:
+        raise ManifestValidationError(tuple(duplicate_issues), path)
     try:
         return validate_manifest_dict(raw)
     except ManifestValidationError as error:
