@@ -1,5 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Agent robot icon" data-icon="agent" data-icon-state="idle">
   <g data-part="shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
     <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
   </g>
   <g data-part="face-screen">

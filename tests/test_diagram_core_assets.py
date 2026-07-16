@@ -1487,6 +1487,85 @@ class AgentBenchmarkAssetTest(unittest.TestCase):
         self.assertEqual({"outer", "inner"}, saw_roles)
         self.assertNotIn("non-scaling-stroke", asset.svg_source.lower())
 
+    def test_agent_shell_has_exactly_two_private_symmetric_ear_caps(self):
+        asset = self.load_agent()
+        shell = next(
+            element
+            for element in asset.root.iter()
+            if element.attrib.get("data-part") == "shell"
+        )
+        face_screen = next(
+            element
+            for element in asset.root.iter()
+            if element.attrib.get("data-part") == "face-screen"
+        )[0]
+        details = [
+            element
+            for element in asset.root.iter()
+            if "data-detail" in element.attrib
+        ]
+        self.assertEqual(
+            {"ear-left", "ear-right"},
+            {element.attrib["data-detail"] for element in details},
+        )
+        self.assertEqual(2, len(details))
+        self.assertTrue(all("data-part" not in element.attrib for element in details))
+        self.assertTrue(all(local_name(element.tag) == "rect" for element in details))
+
+        shell_rect = next(
+            element
+            for element in shell
+            if local_name(element.tag) == "rect" and "data-detail" not in element.attrib
+        )
+        shell_children = list(shell)
+        self.assertTrue(all(element in shell_children for element in details))
+        self.assertTrue(
+            all(
+                shell_children.index(element) < shell_children.index(shell_rect)
+                for element in details
+            )
+        )
+
+        ears = {element.attrib["data-detail"]: element for element in details}
+        left = ears["ear-left"]
+        right = ears["ear-right"]
+        for attribute in ("y", "width", "height", "rx"):
+            self.assertEqual(left.attrib[attribute], right.attrib[attribute])
+        left_bounds = agent_geometry_bounds(left)
+        right_bounds = agent_geometry_bounds(right)
+        self.assertAlmostEqual(96.0, left_bounds[0] + right_bounds[2])
+        self.assertAlmostEqual(96.0, left_bounds[2] + right_bounds[0])
+        self.assertAlmostEqual(left_bounds[1], right_bounds[1])
+        self.assertAlmostEqual(left_bounds[3], right_bounds[3])
+
+        shell_left = float(shell_rect.attrib["x"])
+        shell_right = shell_left + float(shell_rect.attrib["width"])
+        left_x = float(left.attrib["x"])
+        left_right = left_x + float(left.attrib["width"])
+        right_x = float(right.attrib["x"])
+        right_right = right_x + float(right.attrib["width"])
+        self.assertLess(left_x, shell_left)
+        self.assertGreater(left_right, shell_left)
+        self.assertLess(right_x, shell_right)
+        self.assertGreater(right_right, shell_right)
+        self.assertLessEqual(shell_left - left_x, 7.0)
+        self.assertLessEqual(right_right - shell_right, 7.0)
+
+        face_top = float(face_screen.attrib["y"])
+        face_bottom = face_top + float(face_screen.attrib["height"])
+        face_center = (face_top + face_bottom) / 2.0
+        ear_top = float(left.attrib["y"])
+        ear_bottom = ear_top + float(left.attrib["height"])
+        self.assertGreater(ear_top, face_top)
+        self.assertLess(ear_bottom, face_bottom)
+        self.assertAlmostEqual(face_center, (ear_top + ear_bottom) / 2.0, delta=1.0)
+
+        for ear in details:
+            self.assertEqual("var(--icon-accent, #7c5ce7)", ear.attrib.get("fill"))
+            self.assertEqual("var(--icon-stroke, #14213d)", ear.attrib.get("stroke"))
+            self.assertEqual("2.125", ear.attrib.get("stroke-width"))
+            self.assertEqual("outer", ear.attrib.get("data-stroke-role"))
+
     def test_agent_keeps_accent_weight_small_and_avoids_forbidden_pieces(self):
         asset = self.load_agent()
         parents = {
@@ -1524,7 +1603,14 @@ class AgentBenchmarkAssetTest(unittest.TestCase):
             )
             is_accent = "--icon-accent" in paints or "--icon-status-" in paints
             if is_accent:
-                self.assertIn(public_part(element), accent_parts)
+                part = public_part(element)
+                if part == "shell":
+                    self.assertIn(
+                        element.attrib.get("data-detail"),
+                        {"ear-left", "ear-right"},
+                    )
+                else:
+                    self.assertIn(part, accent_parts)
             if any(candidate.attrib.get("display") == "none" for candidate in (element, *ancestors(element))):
                 continue
             if local_name(element.tag) == "line":
