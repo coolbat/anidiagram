@@ -2,8 +2,12 @@ import copy
 import gzip
 import json
 import math
+import os
 import random
 import re
+import shutil
+import subprocess
+import sys
 import tempfile
 import unittest
 from dataclasses import FrozenInstanceError
@@ -31,6 +35,67 @@ from anidiagram.styles import load_style
 
 
 ROOT = Path(__file__).resolve().parents[1]
+ASSET_VALIDATOR = ROOT / "scripts" / "validate_diagram_core_assets.py"
+
+
+def run_asset_validator(*arguments):
+    environment = os.environ.copy()
+    environment["PYTHONPATH"] = str(ROOT / "src")
+    return subprocess.run(
+        [sys.executable, str(ASSET_VALIDATOR), *arguments],
+        cwd=ROOT,
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+
+def copy_canonical_asset_root(temp_dir):
+    destination = Path(temp_dir) / "diagram-core"
+    shutil.copytree(ROOT / "assets" / "diagram-core", destination)
+    return destination
+
+
+def mutate_json_file(path, mutation):
+    value = json.loads(path.read_text(encoding="utf-8"))
+    mutation(value)
+    path.write_text(json.dumps(value, sort_keys=True), encoding="utf-8")
+
+
+def replace_file_text(path, old, new):
+    path.write_text(
+        path.read_text(encoding="utf-8").replace(old, new),
+        encoding="utf-8",
+    )
+
+
+def promote_benchmark_assets(asset_root):
+    benchmark_ids = {"agent", "database", "api", "server"}
+
+    def promote_catalog(catalog):
+        for entry in catalog["icons"]:
+            if entry["id"] in benchmark_ids:
+                entry["status"] = "approved"
+
+    mutate_json_file(asset_root / "catalog.json", promote_catalog)
+    for icon_id in sorted(benchmark_ids):
+        mutate_json_file(
+            asset_root / "manifests" / (icon_id + ".json"),
+            lambda manifest: manifest.__setitem__("status", "approved"),
+        )
+
+
+def asset_tree_snapshot(asset_root):
+    return {
+        path.relative_to(asset_root).as_posix(): (
+            path.read_bytes(),
+            path.stat().st_mode,
+            path.stat().st_mtime_ns,
+        )
+        for path in sorted(asset_root.rglob("*"))
+        if path.is_file()
+    }
 
 VALID_MANIFEST = {
     "id": "database",
@@ -2699,6 +2764,290 @@ class DiagramCoreTokenTest(unittest.TestCase):
             )
             with self.subTest(context=context):
                 self.assertGreaterEqual(contrast_ratio(stroke, surface), 3.0)
+
+
+class DiagramCoreAssetValidatorCLITest(unittest.TestCase):
+    def test_review_mode_reports_clean_four_icon_set(self):
+        result = run_asset_validator("--review", "--json")
+
+        self.assertEqual(0, result.returncode, result.stderr)
+        report = json.loads(result.stdout)
+        self.assertEqual(56, report["catalog"])
+        self.assertEqual(13, report["legacy_valid"])
+        self.assertEqual(4, report["visual_review"])
+        self.assertEqual(4, report["svg"])
+        self.assertEqual(4, report["manifests"])
+        self.assertEqual(0, report["errors"])
+
+    def test_review_report_includes_real_metrics_and_contrast_checks(self):
+        result = run_asset_validator("--review", "--json")
+
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual("", result.stderr)
+        report = json.loads(result.stdout)
+        self.assertEqual(0, report["approved"])
+        self.assertEqual(52, report["planned"])
+        self.assertEqual(
+            {"agent": 17, "api": 15, "database": 15, "server": 18},
+            report["paintable_elements_by_icon"],
+        )
+        self.assertEqual(
+            {"agent": 3347, "api": 3061, "database": 3087, "server": 3538},
+            report["raw_bytes_by_icon"],
+        )
+        self.assertEqual(
+            {"agent": 885, "api": 826, "database": 813, "server": 846},
+            report["gzip_bytes_by_icon"],
+        )
+        self.assertGreater(report["contrast_checks"], 0)
+        self.assertEqual(0, report["warnings"])
+
+    def test_strict_mode_fails_cleanly_until_all_benchmarks_are_approved(self):
+        result = run_asset_validator("--strict", "--json")
+
+        self.assertEqual(1, result.returncode)
+        self.assertEqual("", result.stderr)
+        report = json.loads(result.stdout)
+        self.assertEqual(0, report["approved"])
+        self.assertEqual(4, report["visual_review"])
+        self.assertGreater(report["errors"], 0)
+        self.assertIn("approved", "\n".join(report["error_details"]))
+
+    def test_human_summary_matches_json_counts(self):
+        json_result = run_asset_validator("--review", "--json")
+        human_result = run_asset_validator("--review")
+
+        self.assertEqual(0, json_result.returncode, json_result.stderr)
+        self.assertEqual(0, human_result.returncode, human_result.stderr)
+        self.assertEqual("", human_result.stderr)
+        self.assertEqual(
+            "catalog=56 legacy_valid=13 approved=0 visual_review=4 "
+            "svg=4 manifests=4 errors=0 warnings=0\n",
+            human_result.stdout,
+        )
+        json_report = json.loads(json_result.stdout)
+        human_counts = dict(
+            field.split("=", 1) for field in human_result.stdout.split()
+        )
+        self.assertEqual(
+            {key: str(json_report[key]) for key in human_counts},
+            human_counts,
+        )
+
+    def test_review_rejects_extra_svg_and_reports_actual_inventory(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            asset_root = copy_canonical_asset_root(temp_dir)
+            shutil.copyfile(
+                asset_root / "icons" / "agent.svg",
+                asset_root / "icons" / "extra.svg",
+            )
+
+            result = run_asset_validator(
+                "--review", "--json", "--asset-root", str(asset_root)
+            )
+
+        self.assertEqual(1, result.returncode)
+        self.assertEqual("", result.stderr)
+        report = json.loads(result.stdout)
+        self.assertEqual(5, report["svg"])
+        self.assertGreater(report["errors"], 0)
+        self.assertIn("extra.svg", "\n".join(report["error_details"]))
+
+    def test_review_rejects_missing_manifest_and_reports_actual_inventory(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            asset_root = copy_canonical_asset_root(temp_dir)
+            (asset_root / "manifests" / "server.json").unlink()
+
+            result = run_asset_validator(
+                "--review", "--json", "--asset-root", str(asset_root)
+            )
+
+        self.assertEqual(1, result.returncode)
+        self.assertEqual("", result.stderr)
+        report = json.loads(result.stdout)
+        self.assertEqual(3, report["manifests"])
+        self.assertIn("server.json", "\n".join(report["error_details"]))
+
+    def test_review_rejects_asset_file_symlinks(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            asset_root = copy_canonical_asset_root(temp_dir)
+            external_svg = Path(temp_dir) / "external-agent.svg"
+            shutil.copyfile(asset_root / "icons" / "agent.svg", external_svg)
+            (asset_root / "icons" / "agent.svg").unlink()
+            (asset_root / "icons" / "agent.svg").symlink_to(external_svg)
+
+            result = run_asset_validator(
+                "--review", "--json", "--asset-root", str(asset_root)
+            )
+
+        self.assertEqual(1, result.returncode)
+        self.assertEqual("", result.stderr)
+        report = json.loads(result.stdout)
+        self.assertIn("symbolic link", "\n".join(report["error_details"]))
+
+    def test_malformed_catalog_returns_structured_library_error(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            asset_root = copy_canonical_asset_root(temp_dir)
+            (asset_root / "catalog.json").write_text("{", encoding="utf-8")
+
+            result = run_asset_validator(
+                "--review", "--json", "--asset-root", str(asset_root)
+            )
+            human_result = run_asset_validator(
+                "--review", "--asset-root", str(asset_root)
+            )
+
+        self.assertEqual(1, result.returncode)
+        self.assertEqual("", result.stderr)
+        report = json.loads(result.stdout)
+        self.assertGreater(report["errors"], 0)
+        self.assertIn(
+            "invalid JSON at line 1, column 2",
+            "\n".join(report["error_details"]),
+        )
+        self.assertEqual(1, human_result.returncode)
+        self.assertEqual(
+            "catalog=0 legacy_valid=0 approved=0 visual_review=0 "
+            "svg=4 manifests=4 errors=1 warnings=0\n",
+            human_result.stdout,
+        )
+        self.assertIn("invalid JSON at line 1, column 2", human_result.stderr)
+        self.assertNotIn("Traceback", human_result.stderr)
+
+    def test_malformed_asset_classes_preserve_precise_library_errors(self):
+        cases = (
+            (
+                "manifest",
+                lambda root: mutate_json_file(
+                    root / "manifests" / "agent.json",
+                    lambda value: value.pop("parts"),
+                ),
+                "$.parts: required field is missing",
+            ),
+            (
+                "SVG",
+                lambda root: replace_file_text(
+                    root / "icons" / "agent.svg",
+                    "</svg>",
+                    "<script/></svg>",
+                ),
+                "forbidden element <script>",
+            ),
+            (
+                "token",
+                lambda root: replace_file_text(
+                    root / "tokens.css",
+                    "--icon-status-error: #e65b65",
+                    "--icon-status-error: not-a-color",
+                ),
+                "expected #rgb, #rrggbb, or opaque rgb()",
+            ),
+            (
+                "attachment",
+                lambda root: mutate_json_file(
+                    root / "manifests" / "agent.json",
+                    lambda value: value["attachments"]["receive"].__setitem__("x", 97),
+                ),
+                "$.attachments.receive.x: expected a finite number from 0 through 96",
+            ),
+            (
+                "exception",
+                lambda root: mutate_json_file(
+                    root / "manifests" / "agent.json",
+                    lambda value: value.__setitem__(
+                        "exceptions",
+                        [
+                            {
+                                "metric": "raw-size",
+                                "reviewer": "qa",
+                                "approved_on": "2026-07-16",
+                            }
+                        ],
+                    ),
+                ),
+                "$.exceptions[0].reason: required field is missing",
+            ),
+            (
+                "reference",
+                lambda root: replace_file_text(
+                    root / "icons" / "agent.svg",
+                    "</svg>",
+                    '<use href="#missing"/></svg>',
+                ),
+                "unresolved fragment #missing",
+            ),
+        )
+        for label, mutate, expected_error in cases:
+            with self.subTest(label=label), tempfile.TemporaryDirectory() as temp_dir:
+                asset_root = copy_canonical_asset_root(temp_dir)
+                mutate(asset_root)
+
+                result = run_asset_validator(
+                    "--review", "--json", "--asset-root", str(asset_root)
+                )
+
+                self.assertEqual(1, result.returncode)
+                self.assertEqual("", result.stderr)
+                report = json.loads(result.stdout)
+                self.assertGreater(report["errors"], 0)
+                self.assertIn(expected_error, "\n".join(report["error_details"]))
+
+    def test_review_rejects_unexpected_approved_catalog_entry(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            asset_root = copy_canonical_asset_root(temp_dir)
+
+            def approve_user(catalog):
+                entry = next(icon for icon in catalog["icons"] if icon["id"] == "user")
+                entry.update(
+                    {
+                        "structural_prototype": "actor-character",
+                        "parts": ["shell"],
+                        "supported_states": ["idle"],
+                        "supported_actions": ["enter"],
+                        "status": "approved",
+                        "asset_revision": 1,
+                    }
+                )
+
+            mutate_json_file(asset_root / "catalog.json", approve_user)
+            result = run_asset_validator(
+                "--review", "--json", "--asset-root", str(asset_root)
+            )
+
+        self.assertEqual(1, result.returncode)
+        self.assertEqual("", result.stderr)
+        report = json.loads(result.stdout)
+        self.assertEqual(1, report["approved"])
+        self.assertIn("user", "\n".join(report["error_details"]))
+
+    def test_strict_mode_passes_after_all_four_benchmarks_are_promoted(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            asset_root = copy_canonical_asset_root(temp_dir)
+            promote_benchmark_assets(asset_root)
+
+            result = run_asset_validator(
+                "--strict", "--json", "--asset-root", str(asset_root)
+            )
+
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual("", result.stderr)
+        report = json.loads(result.stdout)
+        self.assertEqual(4, report["approved"])
+        self.assertEqual(0, report["visual_review"])
+        self.assertEqual(0, report["errors"])
+
+    def test_json_output_is_deterministic_and_does_not_mutate_assets(self):
+        asset_root = ROOT / "assets" / "diagram-core"
+        before = asset_tree_snapshot(asset_root)
+
+        first = run_asset_validator("--review", "--json")
+        second = run_asset_validator("--review", "--json")
+
+        self.assertEqual(0, first.returncode, first.stderr)
+        self.assertEqual(0, second.returncode, second.stderr)
+        self.assertEqual("", first.stderr)
+        self.assertEqual(first.stdout, second.stdout)
+        self.assertEqual(before, asset_tree_snapshot(asset_root))
 
 
 if __name__ == "__main__":

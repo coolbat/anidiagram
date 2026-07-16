@@ -1,6 +1,11 @@
 import copy
+import importlib.util
 import json
+import os
 import re
+import shutil
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -20,6 +25,7 @@ from anidiagram.diagram_core.instance_ids import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
+PART_CHECKER = ROOT / "scripts" / "check_diagram_core_parts.py"
 SVG_NAMESPACE = "http://www.w3.org/2000/svg"
 XLINK_NAMESPACE = "http://www.w3.org/1999/xlink"
 URL_REFERENCE = re.compile(
@@ -82,6 +88,38 @@ CANONICAL_BENCHMARK_PARTS = {
 }
 
 CANONICAL_STATES = ("idle", "active", "processing", "success", "warning", "error")
+
+
+def run_part_checker(*arguments):
+    environment = os.environ.copy()
+    environment["PYTHONPATH"] = str(ROOT / "src")
+    return subprocess.run(
+        [sys.executable, str(PART_CHECKER), *arguments],
+        cwd=ROOT,
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+
+def load_part_checker_module():
+    spec = importlib.util.spec_from_file_location("diagram_core_part_checker", PART_CHECKER)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def adapter_asset_tree_snapshot(asset_root):
+    return {
+        path.relative_to(asset_root).as_posix(): (
+            path.read_bytes(),
+            path.stat().st_mode,
+            path.stat().st_mtime_ns,
+        )
+        for path in sorted(asset_root.rglob("*"))
+        if path.is_file()
+    }
 
 
 def local_name(name):
@@ -764,6 +802,155 @@ class DiagramCoreNamespacingTest(unittest.TestCase):
                 root = ElementTree.fromstring(source.format(SVG_NAMESPACE))
                 with self.assertRaises(ValueError):
                     namespace_svg_instance(root, "instance", "agent")
+
+
+class DiagramCorePartCheckerCLITest(unittest.TestCase):
+    def test_proves_two_instances_per_icon(self):
+        result = run_part_checker(
+            "--icons",
+            "agent,database,api,server",
+            "--instances",
+            "2",
+            "--json",
+        )
+
+        self.assertEqual(0, result.returncode, result.stderr)
+        report = json.loads(result.stdout)
+        self.assertEqual(8, report["instances"])
+        self.assertEqual(0, report["duplicate_ids"])
+        self.assertEqual(0, report["unresolved_refs"])
+        self.assertEqual(0, report["missing_parts"])
+
+    def test_normalizes_comma_whitespace(self):
+        result = run_part_checker(
+            "--icons", " agent, database ", "--instances", "1", "--json"
+        )
+
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual("", result.stderr)
+        report = json.loads(result.stdout)
+        self.assertEqual(2, report["icons"])
+        self.assertEqual(2, report["instances"])
+
+    def test_invalid_icons_and_instance_counts_are_usage_errors(self):
+        cases = (
+            ("empty icon", ("--icons", "agent,,api", "--instances", "1")),
+            ("duplicate icon", ("--icons", "agent, agent", "--instances", "1")),
+            ("unknown icon", ("--icons", "unknown", "--instances", "1")),
+            ("zero instances", ("--icons", "agent", "--instances", "0")),
+            ("negative instances", ("--icons", "agent", "--instances", "-1")),
+            ("instances cap", ("--icons", "agent", "--instances", "65")),
+        )
+        for label, arguments in cases:
+            with self.subTest(label=label):
+                result = run_part_checker(*arguments)
+                self.assertEqual(2, result.returncode)
+                self.assertEqual("", result.stdout)
+                self.assertIn("usage:", result.stderr)
+
+    def test_output_inspection_scopes_references_and_checks_exact_part_ids(self):
+        checker = load_part_checker_module()
+        instance_id = "first"
+        root_id = part_dom_id(instance_id, "agent", "root")
+        shell_id = part_dom_id(instance_id, "agent", "shell")
+        other_id = part_dom_id("second", "agent", "shell")
+        root = ElementTree.fromstring(
+            '<g xmlns="{0}" id="{1}" aria-labelledby="{2}">'
+            '<g data-part="shell" id="{3}"/>'
+            "</g>".format(SVG_NAMESPACE, root_id, other_id, shell_id)
+        )
+
+        inspection = checker._inspect_instance(
+            root, "agent", instance_id, ("shell",)
+        )
+
+        self.assertEqual(1, inspection["unresolved_refs"])
+        self.assertEqual(0, inspection["missing_parts"])
+        root[0].set("id", root_id)
+        inspection = checker._inspect_instance(
+            root, "agent", instance_id, ("shell",)
+        )
+        self.assertGreater(inspection["missing_parts"], 0)
+
+    def test_asset_validation_failure_is_structured_json(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            asset_root = Path(temp_dir) / "diagram-core"
+            shutil.copytree(ROOT / "assets" / "diagram-core", asset_root)
+            manifest_path = asset_root / "manifests" / "agent.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest.pop("parts")
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+            result = run_part_checker(
+                "--icons",
+                "agent",
+                "--instances",
+                "1",
+                "--json",
+                "--asset-root",
+                str(asset_root),
+            )
+
+        self.assertEqual(1, result.returncode)
+        self.assertEqual("", result.stderr)
+        report = json.loads(result.stdout)
+        self.assertIn("$.parts", "\n".join(report["error_details"]))
+
+    def test_human_json_determinism_parity_and_no_asset_mutation(self):
+        asset_root = ROOT / "assets" / "diagram-core"
+        before = adapter_asset_tree_snapshot(asset_root)
+        arguments = (
+            "--icons", "agent,database,api,server", "--instances", "2"
+        )
+
+        first = run_part_checker(*arguments, "--json")
+        second = run_part_checker(*arguments, "--json")
+        human = run_part_checker(*arguments)
+
+        self.assertEqual(0, first.returncode, first.stderr)
+        self.assertEqual(0, second.returncode, second.stderr)
+        self.assertEqual(0, human.returncode, human.stderr)
+        self.assertEqual("", first.stderr)
+        self.assertEqual("", human.stderr)
+        self.assertEqual(first.stdout, second.stdout)
+        self.assertEqual(
+            "icons=4 instances=8 duplicate_ids=0 unresolved_refs=0 "
+            "missing_parts=0\n",
+            human.stdout,
+        )
+        json_report = json.loads(first.stdout)
+        human_counts = dict(field.split("=", 1) for field in human.stdout.split())
+        self.assertEqual(
+            {key: str(json_report[key]) for key in human_counts},
+            human_counts,
+        )
+        self.assertEqual(before, adapter_asset_tree_snapshot(asset_root))
+
+    def test_asset_validation_failure_human_output_has_no_traceback(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            asset_root = Path(temp_dir) / "diagram-core"
+            shutil.copytree(ROOT / "assets" / "diagram-core", asset_root)
+            manifest_path = asset_root / "manifests" / "agent.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest.pop("parts")
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+            result = run_part_checker(
+                "--icons",
+                "agent",
+                "--instances",
+                "1",
+                "--asset-root",
+                str(asset_root),
+            )
+
+        self.assertEqual(1, result.returncode)
+        self.assertEqual(
+            "icons=1 instances=0 duplicate_ids=0 unresolved_refs=0 missing_parts=0\n",
+            result.stdout,
+        )
+        self.assertIn("$.parts", result.stderr)
+        self.assertNotIn("Traceback", result.stderr)
 
 
 if __name__ == "__main__":
