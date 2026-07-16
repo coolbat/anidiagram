@@ -9,3 +9,4 @@ build/
 outputs/
 .superpowers/
 .playwright-mcp/
+.worktrees/
