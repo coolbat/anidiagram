@@ -93,6 +93,281 @@ def _rewrite_url_calls(value: str, id_mapping: Dict[str, str]) -> str:
         cursor = closing + 1
 
 
+def _consume_css_comment(source: str, index: int) -> int:
+    end = source.find("*/", index + 2)
+    if end < 0:
+        raise ValueError("unterminated CSS comment")
+    return end + 2
+
+
+def _consume_css_string(source: str, index: int) -> int:
+    quote = source[index]
+    cursor = index + 1
+    while cursor < len(source):
+        character = source[cursor]
+        if character == "\\":
+            if cursor + 1 >= len(source):
+                raise ValueError("unterminated CSS string escape")
+            cursor += 2
+        elif character == quote:
+            return cursor + 1
+        elif character in {"\n", "\r", "\f"}:
+            raise ValueError("unescaped newline in CSS string")
+        else:
+            cursor += 1
+    raise ValueError("unterminated CSS string")
+
+
+def _skip_css_trivia(source: str, index: int) -> int:
+    while index < len(source):
+        if source[index].isspace():
+            index += 1
+        elif source.startswith("/*", index):
+            index = _consume_css_comment(source, index)
+        else:
+            break
+    return index
+
+
+def _is_css_name_character(character: str) -> bool:
+    return (
+        character.isalnum()
+        or character in {"-", "_"}
+        or ord(character) >= 0x80
+        or character == "\\"
+    )
+
+
+def _find_css_rule_open(source: str, index: int) -> int:
+    bracket_depth = 0
+    parenthesis_depth = 0
+    while index < len(source):
+        if source.startswith("/*", index):
+            index = _consume_css_comment(source, index)
+            continue
+        character = source[index]
+        if character in {"'", '"'}:
+            index = _consume_css_string(source, index)
+            continue
+        if character == "[":
+            bracket_depth += 1
+        elif character == "]":
+            bracket_depth -= 1
+            if bracket_depth < 0:
+                raise ValueError("unbalanced CSS selector brackets")
+        elif character == "(":
+            parenthesis_depth += 1
+        elif character == ")":
+            parenthesis_depth -= 1
+            if parenthesis_depth < 0:
+                raise ValueError("unbalanced CSS selector parentheses")
+        elif character == "{" and bracket_depth == 0 and parenthesis_depth == 0:
+            return index
+        elif character in {"{", "}"}:
+            raise ValueError("ambiguous CSS selector block")
+        elif character == ";" and bracket_depth == 0 and parenthesis_depth == 0:
+            raise ValueError("unsupported CSS at-rule or statement")
+        index += 1
+    raise ValueError("CSS selector is missing a declaration block")
+
+
+def _rewritten_css_selector(selector: str, id_mapping: Dict[str, str]) -> str:
+    output = []
+    index = 0
+    bracket_depth = 0
+    saw_selector = False
+    while index < len(selector):
+        if selector.startswith("/*", index):
+            end = _consume_css_comment(selector, index)
+            output.append(selector[index:end])
+            index = end
+            continue
+        character = selector[index]
+        if character in {"'", '"'}:
+            end = _consume_css_string(selector, index)
+            output.append(selector[index:end])
+            saw_selector = True
+            index = end
+            continue
+        if character == "[":
+            bracket_depth += 1
+            saw_selector = True
+        elif character == "]":
+            bracket_depth -= 1
+            if bracket_depth < 0:
+                raise ValueError("unbalanced CSS selector brackets")
+        elif character == "\\":
+            raise ValueError("CSS selector escapes are unsupported")
+        elif character == "@" and bracket_depth == 0:
+            raise ValueError("unsupported CSS at-rule")
+        elif character == "#" and bracket_depth == 0:
+            token_start = index + 1
+            token_end = token_start
+            while token_end < len(selector) and (
+                selector[token_end].islower()
+                or selector[token_end].isdigit()
+                or selector[token_end] == "-"
+            ):
+                token_end += 1
+            if token_end == token_start:
+                raise ValueError("ambiguous CSS id selector")
+            if token_end < len(selector) and _is_css_name_character(
+                selector[token_end]
+            ):
+                raise ValueError("unsupported CSS id selector syntax")
+            old_id = validated_kebab_token(selector[token_start:token_end])
+            if old_id not in id_mapping:
+                raise ValueError("unresolved CSS id selector: #{0}".format(old_id))
+            output.append("#" + id_mapping[old_id])
+            saw_selector = True
+            index = token_end
+            continue
+        elif (
+            character == ":"
+            and bracket_depth == 0
+            and selector.startswith(":root", index)
+            and (
+                index + len(":root") == len(selector)
+                or not _is_css_name_character(selector[index + len(":root")])
+            )
+        ):
+            output.append(":scope")
+            saw_selector = True
+            index += len(":root")
+            continue
+        elif not character.isspace():
+            saw_selector = True
+        output.append(character)
+        index += 1
+    if bracket_depth != 0:
+        raise ValueError("unbalanced CSS selector brackets")
+    if not saw_selector:
+        raise ValueError("empty CSS selector")
+    return "".join(output)
+
+
+def _find_css_declaration_close(source: str, index: int) -> int:
+    while index < len(source):
+        if source.startswith("/*", index):
+            index = _consume_css_comment(source, index)
+            continue
+        character = source[index]
+        if character in {"'", '"'}:
+            index = _consume_css_string(source, index)
+            continue
+        if character == "{":
+            raise ValueError("nested CSS rules are unsupported")
+        if character == "}":
+            return index
+        index += 1
+    raise ValueError("unterminated CSS declaration block")
+
+
+def _css_url_open(source: str, index: int) -> Optional[int]:
+    if source[index : index + 3].lower() != "url":
+        return None
+    if index and _is_css_name_character(source[index - 1]):
+        return None
+    after_name = index + 3
+    if after_name < len(source) and _is_css_name_character(source[after_name]):
+        return None
+    opening = _skip_css_trivia(source, after_name)
+    return opening if opening < len(source) and source[opening] == "(" else None
+
+
+def _rewritten_css_url(
+    source: str,
+    opening: int,
+    id_mapping: Dict[str, str],
+) -> tuple:
+    index = _skip_css_trivia(source, opening + 1)
+    quote = source[index] if index < len(source) and source[index] in {"'", '"'} else ""
+    if quote:
+        string_end = _consume_css_string(source, index)
+        target = source[index + 1 : string_end - 1]
+        if "\\" in target:
+            raise ValueError("CSS url() escapes are unsupported")
+        closing = _skip_css_trivia(source, string_end)
+        if closing >= len(source) or source[closing] != ")":
+            raise ValueError("malformed CSS url() reference")
+    else:
+        target_start = index
+        while index < len(source) and source[index] != ")":
+            if source.startswith("/*", index) or source[index] in {"'", '"', "\\", "("}:
+                raise ValueError("ambiguous CSS url() reference")
+            index += 1
+        if index >= len(source):
+            raise ValueError("unterminated CSS url() reference")
+        closing = index
+        target = source[target_start:closing].strip()
+    rewritten = _rewritten_reference(target, id_mapping)
+    normalized = "url(" + (quote + rewritten + quote if quote else rewritten) + ")"
+    return normalized, closing + 1
+
+
+def _rewritten_css_declarations(
+    declarations: str,
+    id_mapping: Dict[str, str],
+) -> str:
+    output = []
+    cursor = 0
+    index = 0
+    while index < len(declarations):
+        if declarations.startswith("/*", index):
+            index = _consume_css_comment(declarations, index)
+            continue
+        character = declarations[index]
+        if character in {"'", '"'}:
+            index = _consume_css_string(declarations, index)
+            continue
+        opening = _css_url_open(declarations, index)
+        if opening is None:
+            index += 1
+            continue
+        rewritten_url, after_url = _rewritten_css_url(
+            declarations,
+            opening,
+            id_mapping,
+        )
+        output.append(declarations[cursor:index])
+        output.append(rewritten_url)
+        cursor = after_url
+        index = after_url
+    output.append(declarations[cursor:])
+    return "".join(output)
+
+
+def _scoped_css(
+    source: str,
+    root_dom_id: str,
+    id_mapping: Dict[str, str],
+) -> str:
+    body = []
+    cursor = 0
+    rule_count = 0
+    while cursor < len(source):
+        significant = _skip_css_trivia(source, cursor)
+        if significant == len(source):
+            body.append(source[cursor:])
+            break
+        opening = _find_css_rule_open(source, significant)
+        rewritten_selector = _rewritten_css_selector(
+            source[cursor:opening], id_mapping
+        )
+        closing = _find_css_declaration_close(source, opening + 1)
+        body.append(rewritten_selector)
+        body.append("{")
+        body.append(
+            _rewritten_css_declarations(source[opening + 1 : closing], id_mapping)
+        )
+        body.append("}")
+        cursor = closing + 1
+        rule_count += 1
+    if rule_count == 0:
+        raise ValueError("style element must contain a CSS rule")
+    return "@scope (#{0}) {{{1}}}".format(root_dom_id, "".join(body))
+
+
 def namespace_svg_instance(
     root: ElementTree.Element,
     instance_id: str,
@@ -140,6 +415,7 @@ def namespace_svg_instance(
     for element, new_id in assignments:
         element.set("id", new_id)
 
+    root_dom_id = clone.attrib["id"]
     for element in clone.iter():
         for raw_name, value in tuple(element.attrib.items()):
             name = _local_name(raw_name).lower()
@@ -161,7 +437,9 @@ def namespace_svg_instance(
                 element.set(raw_name, " ".join(rewritten_targets))
                 continue
             element.set(raw_name, _rewrite_url_calls(value, old_to_new))
-        if element.text:
+        if _local_name(element.tag).lower() == "style":
+            element.text = _scoped_css(element.text or "", root_dom_id, old_to_new)
+        elif element.text:
             element.text = _rewrite_url_calls(element.text, old_to_new)
         if element.tail:
             element.tail = _rewrite_url_calls(element.tail, old_to_new)

@@ -470,6 +470,25 @@ class DiagramCoreNamespacingTest(unittest.TestCase):
 </g>"""
         )
 
+    def styled_namespacing_source(self):
+        return ElementTree.fromstring(
+            """<g xmlns="http://www.w3.org/2000/svg">
+  <defs><linearGradient id="gradient"><stop offset="0"/></linearGradient></defs>
+  <style>/* #paint { comment-brace } */
+.painted, [data-part="indicator"] {
+  fill: url(&quot;#gradient&quot;);
+  --backup-paint: url(#gradient);
+  stroke: #abc;
+  --label: &quot;#paint { declaration-string }&quot;;
+}
+:root .painted { color: #123456; }
+#paint:hover { opacity: 0.75; }
+  </style>
+  <g id="paint"><path class="painted"/></g>
+  <g data-part="indicator"><circle r="1"/></g>
+</g>"""
+        )
+
     def test_namespacing_clone_rewrites_every_reference_with_instance_scope(self):
         source = self.namespacing_source()
         source_before = ElementTree.tostring(source, encoding="unicode")
@@ -515,6 +534,74 @@ class DiagramCoreNamespacingTest(unittest.TestCase):
                         ),
                         element.attrib["id"],
                     )
+
+    def test_style_selectors_are_scoped_and_namespaced_per_instance(self):
+        source = self.styled_namespacing_source()
+        first = namespace_svg_instance(source, "instance.one", "agent")
+        second = namespace_svg_instance(source, "instance-one", "agent")
+        parent = ElementTree.Element("{{{0}}}svg".format(SVG_NAMESPACE))
+        parent.extend((first, second))
+
+        styles = [
+            element.text
+            for element in parent.iter()
+            if local_name(element.tag) == "style"
+        ]
+        self.assertEqual(2, len(styles))
+        first_root_id = part_dom_id("instance.one", "agent", "root")
+        second_root_id = part_dom_id("instance-one", "agent", "root")
+        first_paint_id = part_dom_id("instance.one", "agent", "paint")
+        second_paint_id = part_dom_id("instance-one", "agent", "paint")
+        first_gradient_id = part_dom_id("instance.one", "agent", "gradient")
+        second_gradient_id = part_dom_id("instance-one", "agent", "gradient")
+
+        expected = (
+            (styles[0], first_root_id, first_paint_id, first_gradient_id, second_root_id),
+            (styles[1], second_root_id, second_paint_id, second_gradient_id, first_root_id),
+        )
+        for style, root_id, paint_id, gradient_id, other_root_id in expected:
+            with self.subTest(root_id=root_id):
+                self.assertIsNotNone(style)
+                self.assertTrue(style.strip().startswith("@scope (#{0}) {{".format(root_id)))
+                self.assertEqual(1, style.count("@scope"))
+                self.assertIn(":scope .painted", style)
+                self.assertNotIn(":root", style)
+                self.assertIn("#{0}:hover".format(paint_id), style)
+                self.assertIn('url("#{0}")'.format(gradient_id), style)
+                self.assertIn("url(#{0})".format(gradient_id), style)
+                self.assertNotIn(other_root_id, style)
+                self.assertIn(".painted, [data-part=\"indicator\"]", style)
+                self.assertIn("stroke: #abc", style)
+                self.assertIn("color: #123456", style)
+                self.assertIn('"#paint { declaration-string }"', style)
+                self.assertIn("/* #paint { comment-brace } */", style)
+                self.assertEqual(
+                    2,
+                    referenced_ids(
+                        first if root_id == first_root_id else second
+                    )["url"].count(gradient_id),
+                )
+
+        first_ids = {
+            element.attrib["id"] for element in first.iter() if "id" in element.attrib
+        }
+        second_ids = {
+            element.attrib["id"] for element in second.iter() if "id" in element.attrib
+        }
+        self.assertTrue(first_ids.isdisjoint(second_ids))
+        self.assertTrue(set(referenced_ids(first)["url"]).issubset(first_ids))
+        self.assertTrue(set(referenced_ids(second)["url"]).issubset(second_ids))
+
+    def test_style_scoping_fails_closed_for_unsupported_at_rules(self):
+        source = ElementTree.fromstring(
+            """<g xmlns="http://www.w3.org/2000/svg">
+  <style>@media (min-width: 1px) { .painted { fill: #abc; } }</style>
+  <path class="painted"/>
+</g>"""
+        )
+
+        with self.assertRaisesRegex(ValueError, "CSS at-rule"):
+            namespace_svg_instance(source, "instance", "agent")
 
     def test_namespacing_rejects_external_unresolved_duplicate_and_invalid_ids(self):
         cases = (
