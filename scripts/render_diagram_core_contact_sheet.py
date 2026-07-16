@@ -990,7 +990,8 @@ def _write_staged_file(
     payload: bytes,
     mode: int,
     suffix: str,
-) -> Tuple[Path, Tuple[int, int]]:
+    mtime_ns: Optional[int] = None,
+) -> Tuple[Path, Tuple[int, int, int, int, int]]:
     descriptor, temp_name = tempfile.mkstemp(
         prefix=".{0}.".format(target.name),
         suffix=suffix,
@@ -1005,8 +1006,10 @@ def _write_staged_file(
             handle.flush()
             os.fsync(handle.fileno())
         os.chmod(temp_path, mode)
+        if mtime_ns is not None:
+            os.utime(temp_path, ns=(mtime_ns, mtime_ns))
         info = temp_path.lstat()
-        return temp_path, (info.st_dev, info.st_ino)
+        return temp_path, _stat_signature(info)
     except BaseException:
         try:
             temp_path.unlink()
@@ -1030,44 +1033,82 @@ def _cleanup_temp(path: Optional[Path]) -> None:
 def _rollback_outputs(
     records: Sequence[_OutputRecord],
     backups: Dict[Path, Optional[Path]],
-    staged_identities: Mapping[Path, Tuple[int, int]],
+    staged_signatures: Mapping[Path, Tuple[int, int, int, int, int]],
 ) -> Tuple[str, ...]:
+    def matches_snapshot(
+        record: _OutputRecord,
+        current,
+        signature: Optional[Tuple[int, int, int, int, int]],
+        payload: Optional[bytes],
+    ) -> bool:
+        if (
+            current is None
+            or signature is None
+            or payload is None
+            or not stat.S_ISREG(current.st_mode)
+            or _stat_signature(current) != signature
+        ):
+            return False
+        try:
+            return _read_original_bytes(record.target, current) == payload
+        except (OSError, RuntimeError, ValueError):
+            return False
+
+    def preserve_backup(record: _OutputRecord, reason: str) -> str:
+        backup = backups.get(record.target)
+        if backup is not None and os.path.lexists(os.fspath(backup)):
+            backups[record.target] = None
+            return "{0}; original backup preserved at {1}".format(reason, backup)
+        return reason
+
     errors = []
     for record in reversed(tuple(records)):
         try:
             current = _lstat_or_none(record.target)
-            current_identity = (
-                None if current is None else (current.st_dev, current.st_ino)
-            )
-            staged_identity = staged_identities[record.target]
-            if record.existed:
-                original_identity = (
-                    record.target_signature[0],
-                    record.target_signature[1],
+            original_matches = (
+                current is None
+                if not record.existed
+                else matches_snapshot(
+                    record,
+                    current,
+                    record.target_signature,
+                    record.original_bytes,
                 )
-                if current is not None and (
-                    not stat.S_ISREG(current.st_mode)
-                    or current_identity not in {original_identity, staged_identity}
-                ):
-                    raise RuntimeError(
-                        "refusing to overwrite changed output during rollback"
+            )
+            if original_matches:
+                continue
+            staged_matches = matches_snapshot(
+                record,
+                current,
+                staged_signatures[record.target],
+                record.payload,
+            )
+            if not staged_matches:
+                errors.append(
+                    "{0}: {1}".format(
+                        record.target,
+                        preserve_backup(
+                            record,
+                            "rollback conflict: current output is neither the original snapshot nor the staged payload",
+                        ),
                     )
+                )
+                continue
+            if record.existed:
                 backup = backups.get(record.target)
                 if backup is None or not os.path.lexists(os.fspath(backup)):
                     raise RuntimeError("rollback backup is missing")
                 os.replace(os.fspath(backup), os.fspath(record.target))
                 backups[record.target] = None
-            elif current is not None:
-                if (
-                    not stat.S_ISREG(current.st_mode)
-                    or current_identity != staged_identity
-                ):
-                    raise RuntimeError(
-                        "refusing to remove changed output during rollback"
-                    )
+            else:
                 record.target.unlink()
         except Exception as error:
-            errors.append("{0}: {1}".format(record.target, error))
+            errors.append(
+                "{0}: {1}".format(
+                    record.target,
+                    preserve_backup(record, str(error)),
+                )
+            )
     return tuple(errors)
 
 
@@ -1086,19 +1127,19 @@ def _publish_outputs(outputs: Sequence[Tuple[Path, bytes]]) -> None:
     )
 
     staged: Dict[Path, Optional[Path]] = {}
-    staged_identities: Dict[Path, Tuple[int, int]] = {}
+    staged_signatures: Dict[Path, Tuple[int, int, int, int, int]] = {}
     backups: Dict[Path, Optional[Path]] = {}
-    publishing = False
+    attempted = []
     try:
         for record in records:
-            staged_path, staged_identity = _write_staged_file(
+            staged_path, staged_signature = _write_staged_file(
                 record.target,
                 record.payload,
                 record.mode,
                 ".tmp",
             )
             staged[record.target] = staged_path
-            staged_identities[record.target] = staged_identity
+            staged_signatures[record.target] = staged_signature
         for record in records:
             if record.existed:
                 backup_path, _ = _write_staged_file(
@@ -1106,6 +1147,7 @@ def _publish_outputs(outputs: Sequence[Tuple[Path, bytes]]) -> None:
                     record.original_bytes,
                     record.mode,
                     ".bak",
+                    record.target_signature[4],
                 )
                 backups[record.target] = backup_path
             else:
@@ -1113,21 +1155,21 @@ def _publish_outputs(outputs: Sequence[Tuple[Path, bytes]]) -> None:
 
         for record in records:
             _assert_output_unchanged(record)
-        publishing = True
         for record in records:
             _assert_output_unchanged(record)
             staged_path = staged[record.target]
             if staged_path is None:
                 raise RuntimeError("staged output disappeared before publish")
+            attempted.append(record)
             os.replace(os.fspath(staged_path), os.fspath(record.target))
             staged[record.target] = None
     except BaseException as publish_error:
         rollback_errors = ()
-        if publishing:
+        if attempted:
             rollback_errors = _rollback_outputs(
-                records,
+                attempted,
                 backups,
-                staged_identities,
+                staged_signatures,
             )
         if rollback_errors:
             raise RuntimeError(

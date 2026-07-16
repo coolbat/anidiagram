@@ -145,6 +145,19 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
         ]
         self.assertEqual([], residues)
 
+    def write_snapshot_file(self, path, payload, mode, mtime_ns):
+        path.write_bytes(payload)
+        path.chmod(mode)
+        os.utime(path, ns=(mtime_ns, mtime_ns))
+        return (payload, mode, mtime_ns)
+
+    def assert_file_snapshot(self, path, expected):
+        payload, mode, mtime_ns = expected
+        self.assertEqual(payload, path.read_bytes())
+        info = path.stat()
+        self.assertEqual(mode, info.st_mode & 0o777)
+        self.assertEqual(mtime_ns, info.st_mtime_ns)
+
     def generator_command(self, output, html_output, recognition=True, icon="agent", extra=()):
         command = [
             sys.executable,
@@ -955,6 +968,182 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             self.assertEqual(b"old-three", third.read_bytes())
             self.assertEqual(0o600, third.stat().st_mode & 0o777)
             self.assertFalse(fourth.exists())
+            self.assert_no_publish_residue(root)
+
+    def test_failure_does_not_touch_unattempted_externally_updated_target(self):
+        publisher = contact_sheet_generator._publish_outputs
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            targets = tuple(root / name for name in (
+                "one.svg",
+                "two.html",
+                "three.html",
+                "four.json",
+            ))
+            originals = tuple(
+                self.write_snapshot_file(
+                    path,
+                    "old-{0}".format(index).encode("ascii"),
+                    0o640 + index,
+                    1_600_000_000_000_000_000 + index * 1_000_000_000,
+                )
+                for index, path in enumerate(targets)
+            )
+            external_snapshot = None
+            real_replace = os.replace
+            calls = 0
+
+            def fail_third_before_replace(source, target):
+                nonlocal calls, external_snapshot
+                calls += 1
+                if calls == 3:
+                    external_snapshot = self.write_snapshot_file(
+                        targets[3],
+                        b"EXTERNAL-UPDATE",
+                        0o604,
+                        1_700_000_000_000_000_000,
+                    )
+                    raise OSError("third replace failed before publish")
+                return real_replace(source, target)
+
+            outputs = tuple(
+                (path, "new-{0}".format(index).encode("ascii"))
+                for index, path in enumerate(targets)
+            )
+            with mock.patch.object(
+                contact_sheet_generator.os,
+                "replace",
+                side_effect=fail_third_before_replace,
+            ):
+                with self.assertRaisesRegex(OSError, "before publish"):
+                    publisher(outputs)
+
+            for path, expected in zip(targets[:3], originals[:3]):
+                self.assert_file_snapshot(path, expected)
+            self.assertIsNotNone(external_snapshot)
+            self.assert_file_snapshot(targets[3], external_snapshot)
+            self.assert_no_publish_residue(root)
+
+    def test_rollback_conflict_preserves_external_update_and_old_backup(self):
+        publisher = contact_sheet_generator._publish_outputs
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            targets = tuple(root / name for name in (
+                "one.svg",
+                "two.html",
+                "three.html",
+                "four.json",
+            ))
+            originals = tuple(
+                self.write_snapshot_file(
+                    path,
+                    "old-{0}".format(index).encode("ascii"),
+                    0o640 + index,
+                    1_610_000_000_000_000_000 + index * 1_000_000_000,
+                )
+                for index, path in enumerate(targets)
+            )
+            external_snapshot = None
+            real_replace = os.replace
+            calls = 0
+
+            def corrupt_first_then_fail_third(source, target):
+                nonlocal calls, external_snapshot
+                calls += 1
+                if calls == 3:
+                    external_snapshot = self.write_snapshot_file(
+                        targets[0],
+                        b"EXTERNAL-FIRST",
+                        0o604,
+                        1_710_000_000_000_000_000,
+                    )
+                    raise OSError("third replace exposed rollback conflict")
+                return real_replace(source, target)
+
+            outputs = tuple(
+                (path, "new-{0}".format(index).encode("ascii"))
+                for index, path in enumerate(targets)
+            )
+            with mock.patch.object(
+                contact_sheet_generator.os,
+                "replace",
+                side_effect=corrupt_first_then_fail_third,
+            ):
+                with self.assertRaises(Exception) as caught:
+                    publisher(outputs)
+
+            self.assertIsInstance(caught.exception, RuntimeError)
+            self.assertIn("rollback was incomplete", str(caught.exception))
+            self.assertIsNotNone(external_snapshot)
+            self.assert_file_snapshot(targets[0], external_snapshot)
+            for path, expected in zip(targets[1:], originals[1:]):
+                self.assert_file_snapshot(path, expected)
+            backups = [path for path in root.iterdir() if path.name.endswith(".bak")]
+            self.assertEqual(1, len(backups))
+            self.assert_file_snapshot(backups[0], originals[0])
+            message = str(caught.exception)
+            self.assertIn(str(targets[0]), message)
+            self.assertIn(str(backups[0]), message)
+            self.assertEqual(
+                [],
+                [path for path in root.iterdir() if path.name.endswith(".tmp")],
+            )
+
+    def test_replace_that_succeeds_then_raises_is_safely_rolled_back(self):
+        publisher = contact_sheet_generator._publish_outputs
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            first = root / "one.svg"
+            second = root / "two.html"
+            third = root / "three.html"
+            fourth = root / "four.json"
+            first_snapshot = self.write_snapshot_file(
+                first,
+                b"old-one",
+                0o640,
+                1_620_000_000_000_000_000,
+            )
+            third_snapshot = self.write_snapshot_file(
+                third,
+                b"old-three",
+                0o600,
+                1_620_000_001_000_000_000,
+            )
+            fourth_snapshot = self.write_snapshot_file(
+                fourth,
+                b"old-four",
+                0o604,
+                1_620_000_002_000_000_000,
+            )
+            real_replace = os.replace
+            calls = 0
+
+            def fail_after_third_replace(source, target):
+                nonlocal calls
+                calls += 1
+                result = real_replace(source, target)
+                if calls == 3:
+                    raise OSError("third replace raised after publish")
+                return result
+
+            outputs = (
+                (first, b"new-one"),
+                (second, b"new-two"),
+                (third, b"new-three"),
+                (fourth, b"new-four"),
+            )
+            with mock.patch.object(
+                contact_sheet_generator.os,
+                "replace",
+                side_effect=fail_after_third_replace,
+            ):
+                with self.assertRaisesRegex(OSError, "after publish"):
+                    publisher(outputs)
+
+            self.assert_file_snapshot(first, first_snapshot)
+            self.assertFalse(second.exists())
+            self.assert_file_snapshot(third, third_snapshot)
+            self.assert_file_snapshot(fourth, fourth_snapshot)
             self.assert_no_publish_residue(root)
 
 
