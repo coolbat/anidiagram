@@ -25,6 +25,7 @@ from anidiagram.diagram_core.manifest import (
     load_manifest,
     validate_manifest_dict,
 )
+from anidiagram.diagram_core import tokens as diagram_core_tokens
 from anidiagram.diagram_core.tokens import (
     contrast_ratio,
     icon_tokens_for_style,
@@ -2513,6 +2514,58 @@ class AgentBenchmarkAssetTest(unittest.TestCase):
 
 
 class DiagramCoreTokenTest(unittest.TestCase):
+    def test_token_context_parser_applies_later_matching_rules(self):
+        source = token_css() + """
+[data-icon-theme="dark"] {
+  --icon-stroke: #202838;
+  --icon-surface-main: #202838;
+}
+"""
+
+        _, contexts = diagram_core_tokens.token_contexts(source)
+
+        self.assertEqual("#202838", contexts["dark"]["--icon-stroke"])
+        self.assertEqual("#202838", contexts["dark"]["--icon-surface-main"])
+
+    def test_token_context_parser_applies_root_and_context_rules_in_source_order(self):
+        source = token_css() + """
+:root {
+  --icon-stroke: #202838;
+}
+"""
+
+        defaults, contexts = diagram_core_tokens.token_contexts(source)
+
+        self.assertEqual("#202838", defaults["--icon-stroke"])
+        self.assertEqual("#202838", contexts["dark"]["--icon-stroke"])
+
+    def test_token_context_parser_rejects_non_exact_context_selectors(self):
+        selectors = (
+            '[data-icon-theme = "dark"]',
+            '[data-icon-theme="dark"], .other',
+        )
+        for selector in selectors:
+            with self.subTest(selector=selector):
+                source = token_css() + """
+{0} {{
+  --icon-stroke: #202838;
+}}
+""".format(selector)
+                with self.assertRaisesRegex(ValueError, "exact top-level"):
+                    diagram_core_tokens.token_contexts(source)
+
+    def test_token_context_parser_rejects_conditional_context_rules(self):
+        source = token_css() + """
+@media (min-width: 1px) {
+  [data-icon-theme="dark"] {
+    --icon-stroke: #202838;
+  }
+}
+"""
+
+        with self.assertRaisesRegex(ValueError, "top-level"):
+            diagram_core_tokens.token_contexts(source)
+
     def test_token_css_defines_approved_defaults_and_four_review_contexts(self):
         source = token_css()
 
@@ -2802,6 +2855,54 @@ class DiagramCoreAssetValidatorCLITest(unittest.TestCase):
         self.assertGreater(report["contrast_checks"], 0)
         self.assertEqual(0, report["warnings"])
 
+    def test_review_rejects_later_context_override_with_low_contrast(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            asset_root = copy_canonical_asset_root(temp_dir)
+            tokens_path = asset_root / "tokens.css"
+            tokens_path.write_text(
+                tokens_path.read_text(encoding="utf-8")
+                + """
+[data-icon-theme="dark"] {
+  --icon-stroke: #202838;
+  --icon-surface-main: #202838;
+}
+""",
+                encoding="utf-8",
+            )
+
+            result = run_asset_validator(
+                "--review", "--json", "--asset-root", str(asset_root)
+            )
+
+        self.assertEqual(1, result.returncode)
+        self.assertEqual("", result.stderr)
+        report = json.loads(result.stdout)
+        self.assertGreater(report["errors"], 0)
+        self.assertIn("structural contrast", "\n".join(report["error_details"]))
+
+    def test_review_applies_later_root_override_in_static_cascade_order(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            asset_root = copy_canonical_asset_root(temp_dir)
+            tokens_path = asset_root / "tokens.css"
+            tokens_path.write_text(
+                tokens_path.read_text(encoding="utf-8")
+                + """
+:root {
+  --icon-stroke: #202838;
+}
+""",
+                encoding="utf-8",
+            )
+
+            result = run_asset_validator(
+                "--review", "--json", "--asset-root", str(asset_root)
+            )
+
+        self.assertEqual(1, result.returncode)
+        self.assertEqual("", result.stderr)
+        report = json.loads(result.stdout)
+        self.assertIn("structural contrast", "\n".join(report["error_details"]))
+
     def test_strict_mode_fails_cleanly_until_all_benchmarks_are_approved(self):
         result = run_asset_validator("--strict", "--json")
 
@@ -2822,17 +2923,21 @@ class DiagramCoreAssetValidatorCLITest(unittest.TestCase):
         self.assertEqual("", human_result.stderr)
         self.assertEqual(
             "catalog=56 legacy_valid=13 approved=0 visual_review=4 "
-            "svg=4 manifests=4 errors=0 warnings=0\n",
+            "planned=52 svg=4 manifests=4 "
+            'paintable_elements_by_icon={"agent":17,"api":15,"database":15,"server":18} '
+            'raw_bytes_by_icon={"agent":3347,"api":3061,"database":3087,"server":3538} '
+            'gzip_bytes_by_icon={"agent":885,"api":826,"database":813,"server":846} '
+            "contrast_checks=28 errors=0 warnings=0\n",
             human_result.stdout,
         )
         json_report = json.loads(json_result.stdout)
-        human_counts = dict(
-            field.split("=", 1) for field in human_result.stdout.split()
-        )
-        self.assertEqual(
-            {key: str(json_report[key]) for key in human_counts},
-            human_counts,
-        )
+        human_report = {}
+        for field in human_result.stdout.split():
+            key, value = field.split("=", 1)
+            human_report[key] = (
+                json.loads(value) if key.endswith("_by_icon") else int(value)
+            )
+        self.assertEqual(json_report, human_report)
 
     def test_review_rejects_extra_svg_and_reports_actual_inventory(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -2885,6 +2990,58 @@ class DiagramCoreAssetValidatorCLITest(unittest.TestCase):
         report = json.loads(result.stdout)
         self.assertIn("symbolic link", "\n".join(report["error_details"]))
 
+    def test_review_rejects_symlinked_root_directories_and_key_files(self):
+        cases = ("asset-root", "icons", "manifests", "catalog.json", "tokens.css")
+        for target in cases:
+            with self.subTest(target=target), tempfile.TemporaryDirectory() as temp_dir:
+                temp_path = Path(temp_dir)
+                asset_root = copy_canonical_asset_root(temp_dir)
+                cli_root = asset_root
+                if target == "asset-root":
+                    cli_root = temp_path / "linked-diagram-core"
+                    cli_root.symlink_to(asset_root, target_is_directory=True)
+                elif target in {"icons", "manifests"}:
+                    original = asset_root / target
+                    external = temp_path / ("external-" + target)
+                    shutil.copytree(original, external)
+                    shutil.rmtree(original)
+                    original.symlink_to(external, target_is_directory=True)
+                else:
+                    original = asset_root / target
+                    external = temp_path / ("external-" + target)
+                    shutil.copyfile(original, external)
+                    original.unlink()
+                    original.symlink_to(external)
+
+                result = run_asset_validator(
+                    "--review", "--json", "--asset-root", str(cli_root)
+                )
+
+                self.assertEqual(1, result.returncode)
+                self.assertEqual("", result.stderr)
+                report = json.loads(result.stdout)
+                self.assertGreater(report["errors"], 0)
+                self.assertIn("symbolic link", "\n".join(report["error_details"]))
+
+    def test_review_allows_a_symlinked_ancestor_of_the_real_asset_root(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            real_parent = temp_path / "real-parent"
+            real_parent.mkdir()
+            asset_root = real_parent / "diagram-core"
+            shutil.copytree(ROOT / "assets" / "diagram-core", asset_root)
+            linked_parent = temp_path / "linked-parent"
+            linked_parent.symlink_to(real_parent, target_is_directory=True)
+            cli_root = linked_parent / "diagram-core"
+            self.assertFalse(cli_root.is_symlink())
+
+            result = run_asset_validator(
+                "--review", "--json", "--asset-root", str(cli_root)
+            )
+
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual(0, json.loads(result.stdout)["errors"])
+
     def test_malformed_catalog_returns_structured_library_error(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             asset_root = copy_canonical_asset_root(temp_dir)
@@ -2908,7 +3065,9 @@ class DiagramCoreAssetValidatorCLITest(unittest.TestCase):
         self.assertEqual(1, human_result.returncode)
         self.assertEqual(
             "catalog=0 legacy_valid=0 approved=0 visual_review=0 "
-            "svg=4 manifests=4 errors=1 warnings=0\n",
+            "planned=0 svg=4 manifests=4 paintable_elements_by_icon={} "
+            "raw_bytes_by_icon={} gzip_bytes_by_icon={} contrast_checks=0 "
+            "errors=1 warnings=0\n",
             human_result.stdout,
         )
         self.assertIn("invalid JSON at line 1, column 2", human_result.stderr)

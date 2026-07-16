@@ -3,13 +3,13 @@
 
 import argparse
 import json
+import stat
 import sys
 from pathlib import Path
 
 from anidiagram.diagram_core.asset_loader import AssetValidationError, load_asset
 from anidiagram.diagram_core.catalog import legacy_valid_icon_ids, load_catalog
-from anidiagram.diagram_core.tokens import contrast_ratio, token_css
-from render_diagram_core_contact_sheet import _context_tokens
+from anidiagram.diagram_core.tokens import contrast_ratio, token_contexts, token_css
 
 
 _STATE_TOKENS = (
@@ -22,6 +22,31 @@ _STATE_TOKENS = (
 )
 _BENCHMARK_IDS = ("agent", "database", "api", "server")
 _DEFAULT_ASSET_ROOT = Path(__file__).resolve().parents[1] / "assets" / "diagram-core"
+
+
+def _checked_path(path, expected_kind):
+    try:
+        mode = path.lstat().st_mode
+    except OSError as error:
+        return ["{0}: cannot inspect path: {1}".format(path, error)]
+    if stat.S_ISLNK(mode):
+        return ["{0}: symbolic link is forbidden".format(path)]
+    if expected_kind == "directory" and not stat.S_ISDIR(mode):
+        return ["{0}: expected a directory".format(path)]
+    if expected_kind == "file" and not stat.S_ISREG(mode):
+        return ["{0}: expected a regular file".format(path)]
+    return []
+
+
+def _filesystem_preflight(root):
+    details = _checked_path(root, "directory")
+    if details:
+        return details
+    for directory in ("icons", "manifests"):
+        details.extend(_checked_path(root / directory, "directory"))
+    for filename in ("catalog.json", "tokens.css"):
+        details.extend(_checked_path(root / filename, "file"))
+    return details
 
 
 def _inventory(root, directory, suffix):
@@ -57,7 +82,7 @@ def _contrast_checks(asset_root):
         if asset_root is None
         else (asset_root / "tokens.css").read_text(encoding="utf-8")
     )
-    _, contexts = _context_tokens(source)
+    _, contexts = token_contexts(source)
     checks = 0
     for tokens in contexts.values():
         if contrast_ratio(tokens["--icon-stroke"], tokens["--icon-surface-main"]) < 3:
@@ -107,6 +132,12 @@ def _build_report(arguments):
         if arguments.asset_root is None
         else arguments.asset_root
     )
+    preflight_errors = _filesystem_preflight(asset_root)
+    if preflight_errors:
+        report = _empty_report(0, 0)
+        report["errors"] = len(preflight_errors)
+        report["error_details"] = preflight_errors
+        return report
     svg_count, svg_errors = _inventory(asset_root, "icons", ".svg")
     manifest_count, manifest_errors = _inventory(
         asset_root, "manifests", ".json"
@@ -205,12 +236,31 @@ def _emit(report, arguments):
             "legacy_valid",
             "approved",
             "visual_review",
+            "planned",
             "svg",
             "manifests",
+            "paintable_elements_by_icon",
+            "raw_bytes_by_icon",
+            "gzip_bytes_by_icon",
+            "contrast_checks",
             "errors",
             "warnings",
         )
-        print(" ".join("{0}={1}".format(key, report[key]) for key in order))
+        print(
+            " ".join(
+                "{0}={1}".format(
+                    key,
+                    json.dumps(
+                        report[key],
+                        sort_keys=True,
+                        separators=(",", ":"),
+                    )
+                    if isinstance(report[key], dict)
+                    else report[key],
+                )
+                for key in order
+            )
+        )
         for detail in report.get("error_details", ()):
             print(detail, file=sys.stderr)
     return 1 if report["errors"] else 0
