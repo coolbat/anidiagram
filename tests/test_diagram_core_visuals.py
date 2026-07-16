@@ -1,4 +1,5 @@
 import copy
+import hashlib
 import itertools
 import json
 import os
@@ -12,8 +13,15 @@ from pathlib import Path
 from unittest import mock
 from xml.etree import ElementTree
 
+from PIL import Image
+
 from anidiagram.diagram_core.tokens import contrast_ratio
 from scripts import render_diagram_core_contact_sheet as contact_sheet_generator
+from scripts import compare_diagram_core_contact_sheet as visual_comparator
+from scripts.compare_diagram_core_contact_sheet import (
+    VisualComparisonError,
+    compare_images,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -847,6 +855,634 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             self.assertEqual(b"old-agent-svg", output.read_bytes())
             self.assertTrue(html_output.is_dir())
             self.assert_no_publish_residue(root)
+
+    CAPTURE_SCRIPT = ROOT / "scripts" / "capture_diagram_core_contact_sheet.mjs"
+    COMPARATOR_SCRIPT = ROOT / "scripts" / "compare_diagram_core_contact_sheet.py"
+
+    def solid_image(self, size=(100, 100), color=(240, 240, 240, 255)):
+        return Image.new("RGBA", size, color)
+
+    def change_square(self, image, x, y, width, height, delta):
+        pixels = image.load()
+        for py in range(y, y + height):
+            for px in range(x, x + width):
+                red, green, blue, alpha = pixels[px, py]
+                pixels[px, py] = (min(255, red + delta), green, blue, alpha)
+
+    def sha256(self, path):
+        return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+    def write_capture_fixture(
+        self,
+        root,
+        stem,
+        color=(20, 30, 40, 255),
+        source_digest=None,
+        playwright_version="1.57.0",
+        chromium_version="143.0.7499.4",
+        approved=False,
+    ):
+        image_path = root / (stem + ".png")
+        metadata_path = root / (stem + ".json")
+        self.solid_image((10, 10), color).save(image_path)
+        digest = self.sha256(image_path)
+        metadata = {
+            "schema": "anidiagram.diagram-core.capture",
+            "version": 1,
+            "browser": {
+                "playwright_version": playwright_version,
+                "chromium_version": chromium_version,
+            },
+            "platform": {"os": "synthetic", "arch": "synthetic"},
+            "viewport": {"width": 1280, "height": 900, "device_scale_factor": 1},
+            "locator": {
+                "selector": "#diagram-core-regression-grid",
+                "bounding_box": {"x": 0, "y": 0, "width": 10, "height": 10},
+                "cells": 288,
+            },
+            "capture": {
+                "timestamp_utc": "2026-07-16T00:00:00.000Z",
+                "external_requests": 0,
+                "animation_count": 0,
+                "transition_count": 0,
+            },
+            "input": {"path": "gallery/diagram-core/index.html", "sha256": "b" * 64},
+            "image": {
+                "path": str(image_path),
+                "sha256": digest,
+                "width": 10,
+                "height": 10,
+            },
+            "source_assets": {
+                "joint_sha256": source_digest or "a" * 64,
+                "files": [
+                    {"path": "assets/diagram-core/catalog.json", "sha256": "c" * 64}
+                ],
+            },
+        }
+        if approved:
+            metadata["approval"] = {
+                "timestamp_utc": "2026-07-16T00:01:00.000Z",
+                "reviewer": "reviewer",
+                "note": "approved synthetic fixture",
+                "candidate_sha256": digest,
+                "baseline_sha256": digest,
+            }
+        metadata_path.write_text(
+            json.dumps(metadata, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        return image_path, metadata_path
+
+    def comparator_command(self, *arguments):
+        environment = os.environ.copy()
+        environment["PYTHONPATH"] = str(ROOT / "src")
+        return subprocess.run(
+            [sys.executable, str(self.COMPARATOR_SCRIPT)] + list(arguments),
+            cwd=ROOT,
+            env=environment,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+    def test_pixel_diff_uses_channel_tolerance_eight_and_ratio_one_percent(self):
+        baseline = self.solid_image()
+        candidate = baseline.copy()
+        self.change_square(candidate, x=0, y=0, width=10, height=10, delta=9)
+        report = compare_images(
+            baseline,
+            candidate,
+            channel_tolerance=8,
+            max_diff_ratio=0.01,
+        )
+        self.assertEqual(100, report.differing_pixels)
+        self.assertEqual(0.01, report.diff_ratio)
+        self.assertTrue(report.passed)
+
+    def test_pixel_diff_ratio_below_equal_and_above_threshold(self):
+        baseline = self.solid_image()
+        for pixels, passed in ((99, True), (100, True), (101, False)):
+            candidate = baseline.copy()
+            for index in range(pixels):
+                candidate.putpixel((index % 100, index // 100), (249, 240, 240, 255))
+            with self.subTest(pixels=pixels):
+                report = compare_images(baseline, candidate)
+                self.assertEqual(pixels, report.differing_pixels)
+                self.assertEqual(passed, report.passed)
+
+    def test_pixel_channel_difference_eight_is_equal_and_nine_differs(self):
+        baseline = self.solid_image((1, 1), (100, 100, 100, 100))
+        for delta, expected in ((8, 0), (9, 1)):
+            candidate = self.solid_image((1, 1), (100, 100, 100, 100 + delta))
+            with self.subTest(delta=delta):
+                self.assertEqual(
+                    expected,
+                    compare_images(baseline, candidate).differing_pixels,
+                )
+
+    def test_dimension_mismatch_fails_before_pixel_comparison(self):
+        with self.assertRaisesRegex(VisualComparisonError, "dimensions"):
+            compare_images(
+                self.solid_image((100, 100), (0, 0, 0, 255)),
+                self.solid_image((101, 100), (0, 0, 0, 255)),
+            )
+
+    def test_failed_comparison_writes_nonzero_heatmap(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output = Path(temp_dir).resolve() / "diff.png"
+            baseline = self.solid_image((10, 10), (0, 0, 0, 255))
+            candidate = baseline.copy()
+            candidate.putpixel((3, 4), (9, 0, 0, 255))
+            report = compare_images(
+                baseline,
+                candidate,
+                max_diff_ratio=0,
+                diff_output=output,
+            )
+            self.assertFalse(report.passed)
+            self.assertTrue(output.is_file())
+            heatmap = Image.open(output).convert("RGBA")
+            self.assertEqual((255, 0, 0, 255), heatmap.getpixel((3, 4)))
+            self.assertEqual((0, 0, 0, 0), heatmap.getpixel((0, 0)))
+
+    def test_capture_source_and_lock_freeze_real_browser_contract(self):
+        source = self.CAPTURE_SCRIPT.read_text(encoding="utf-8")
+        package = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
+        lock = json.loads((ROOT / "package-lock.json").read_text(encoding="utf-8"))
+        self.assertTrue(package["private"])
+        pinned = package["devDependencies"]["playwright"]
+        self.assertRegex(pinned, r"^\d+\.\d+\.\d+$")
+        self.assertEqual(
+            pinned,
+            lock["packages"]["node_modules/playwright"]["version"],
+        )
+        for required in (
+            'from "playwright"',
+            "chromium.launch",
+            "deviceScaleFactor: 1",
+            'reducedMotion: "reduce"',
+            "width: 1280",
+            "height: 900",
+            'serviceWorkers: "block"',
+            'const LOCATOR = "#diagram-core-regression-grid"',
+            "document.fonts.ready",
+            "requestAnimationFrame",
+            "animation: none !important",
+            "transition: none !important",
+            "position: fixed !important",
+            "top: 0 !important",
+            "left: 0 !important",
+            "data-cell-kind=\"regression\"",
+            "1248",
+            "2496",
+            "source_assets",
+            "joint_sha256",
+            "catalog.json",
+            "tokens.css",
+            "manifests",
+            "icons",
+        ):
+            self.assertIn(required, source)
+        self.assertIn("page.route", source)
+        self.assertIn("locator.screenshot", source)
+
+    def test_capture_cli_requires_all_three_paths(self):
+        result = subprocess.run(
+            ["node", str(self.CAPTURE_SCRIPT)],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(2, result.returncode)
+        self.assertIn("--input", result.stderr)
+        self.assertIn("--output", result.stderr)
+        self.assertIn("--metadata", result.stderr)
+
+    def test_capture_blocks_secondary_local_file_requests_without_outputs(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="diagram-core-capture-", dir=build_root) as temp_dir:
+            root = Path(temp_dir).resolve()
+            malicious_input = root / "malicious.html"
+            malicious_input.write_text(
+                '<!doctype html><html><body><img src="file:///etc/hosts"></body></html>',
+                encoding="utf-8",
+            )
+            output = root / "candidate.png"
+            metadata = root / "candidate.json"
+            result = subprocess.run(
+                [
+                    "node",
+                    str(self.CAPTURE_SCRIPT),
+                    "--input",
+                    str(malicious_input),
+                    "--output",
+                    str(output),
+                    "--metadata",
+                    str(metadata),
+                ],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(1, result.returncode)
+            self.assertIn("external requests are forbidden", result.stderr)
+            self.assertFalse(output.exists())
+            self.assertFalse(metadata.exists())
+
+    def test_capture_allows_input_url_only_for_main_navigation(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="diagram-core-self-", dir=build_root) as temp_dir:
+            root = Path(temp_dir).resolve()
+            malicious_input = root / "self-resource.html"
+            malicious_input.write_text(
+                '<!doctype html><html><body><img src="self-resource.html"></body></html>',
+                encoding="utf-8",
+            )
+            output = root / "candidate.png"
+            metadata = root / "candidate.json"
+            result = subprocess.run(
+                [
+                    "node", str(self.CAPTURE_SCRIPT),
+                    "--input", str(malicious_input),
+                    "--output", str(output),
+                    "--metadata", str(metadata),
+                ],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(1, result.returncode)
+            self.assertIn("external requests are forbidden", result.stderr)
+            self.assertFalse(output.exists())
+            self.assertFalse(metadata.exists())
+
+    def test_capture_blocks_embedded_data_resources_without_outputs(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="diagram-core-data-", dir=build_root) as temp_dir:
+            root = Path(temp_dir).resolve()
+            malicious_input = root / "malicious-data.html"
+            malicious_input.write_text(
+                "<!doctype html><style>"
+                "#diagram-core-regression-grid{background-image:url(data:image/png;base64,AA==)}"
+                "</style><div id=\"diagram-core-regression-grid\"></div>",
+                encoding="utf-8",
+            )
+            output = root / "candidate.png"
+            metadata = root / "candidate.json"
+            result = subprocess.run(
+                [
+                    "node",
+                    str(self.CAPTURE_SCRIPT),
+                    "--input", str(malicious_input),
+                    "--output", str(output),
+                    "--metadata", str(metadata),
+                ],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(1, result.returncode)
+            self.assertIn("external requests are forbidden", result.stderr)
+            self.assertFalse(output.exists())
+            self.assertFalse(metadata.exists())
+
+    def test_capture_blocks_data_import_without_outputs(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="diagram-core-import-", dir=build_root) as temp_dir:
+            root = Path(temp_dir).resolve()
+            malicious_input = root / "malicious-import.html"
+            malicious_input.write_text(
+                "<!doctype html><style>"
+                '@import "data:text/css,body%7Bcolor%3Ared%7D";'
+                "#diagram-core-regression-grid{width:1248px;height:2496px}"
+                "</style><div id=\"diagram-core-regression-grid\"></div>"
+                "<script>for(let i=0;i<288;i++){const c=document.createElement('i');"
+                "c.dataset.cellKind='regression';document.querySelector("
+                "'#diagram-core-regression-grid').append(c)}</script>",
+                encoding="utf-8",
+            )
+            output = root / "candidate.png"
+            metadata = root / "candidate.json"
+            result = subprocess.run(
+                [
+                    "node",
+                    str(self.CAPTURE_SCRIPT),
+                    "--input", str(malicious_input),
+                    "--output", str(output),
+                    "--metadata", str(metadata),
+                ],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(1, result.returncode)
+            self.assertIn("external requests are forbidden", result.stderr)
+            self.assertFalse(output.exists())
+            self.assertFalse(metadata.exists())
+
+    def test_capture_pair_publish_rolls_back_when_second_rename_fails(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="diagram-core-publish-", dir=build_root) as temp_dir:
+            root = Path(temp_dir).resolve()
+            output = root / "candidate.png"
+            metadata = root / "candidate.json"
+            output.write_bytes(b"old-image")
+            module_url = self.CAPTURE_SCRIPT.as_uri()
+            program = """
+import { rename, readFile, readdir } from "node:fs/promises";
+const { publishCapture } = await import(%s);
+let calls = 0;
+const injectedRename = async (source, target) => {
+  calls += 1;
+  if (calls === 2) throw new Error("injected second rename failure");
+  return rename(source, target);
+};
+let failed = false;
+try {
+  await publishCapture([
+    { target: %s, payload: Buffer.from("new-image") },
+    { target: %s, payload: Buffer.from("new-metadata") },
+  ], injectedRename);
+} catch (error) {
+  failed = error.message.includes("injected second rename failure");
+}
+if (!failed) throw new Error("publish did not expose injected failure");
+if ((await readFile(%s, "utf8")) !== "old-image") throw new Error("image rollback failed");
+try {
+  await readFile(%s);
+  throw new Error("metadata was partially published");
+} catch (error) {
+  if (error.code !== "ENOENT") throw error;
+}
+const residue = (await readdir(%s)).filter((name) => name.endsWith(".tmp"));
+if (residue.length !== 0) throw new Error(`temporary residue: ${residue.join(",")}`);
+""" % tuple(
+                json.dumps(value)
+                for value in (
+                    module_url,
+                    str(output),
+                    str(metadata),
+                    str(output),
+                    str(metadata),
+                    str(root),
+                )
+            )
+            result = subprocess.run(
+                ["node", "--input-type=module", "--eval", program],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+
+    def test_comparison_rejects_metadata_mismatch_and_hash_tampering(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            baseline, baseline_metadata = self.write_capture_fixture(
+                root, "baseline", approved=True
+            )
+            candidate, candidate_metadata = self.write_capture_fixture(root, "candidate")
+            candidate_payload = json.loads(candidate_metadata.read_text(encoding="utf-8"))
+            candidate_payload["source_assets"]["joint_sha256"] = "d" * 64
+            candidate_metadata.write_text(json.dumps(candidate_payload), encoding="utf-8")
+            mismatch = self.comparator_command(
+                "--baseline", str(baseline),
+                "--baseline-metadata", str(baseline_metadata),
+                "--candidate", str(candidate),
+                "--candidate-metadata", str(candidate_metadata),
+            )
+            self.assertNotEqual(0, mismatch.returncode)
+            self.assertIn("source asset digest", mismatch.stderr)
+
+            candidate_payload["source_assets"]["joint_sha256"] = "a" * 64
+            candidate_payload["browser"]["playwright_version"] = "different"
+            candidate_metadata.write_text(json.dumps(candidate_payload), encoding="utf-8")
+            playwright_mismatch = self.comparator_command(
+                "--baseline", str(baseline),
+                "--baseline-metadata", str(baseline_metadata),
+                "--candidate", str(candidate),
+                "--candidate-metadata", str(candidate_metadata),
+            )
+            self.assertNotEqual(0, playwright_mismatch.returncode)
+            self.assertIn("Playwright", playwright_mismatch.stderr)
+
+            candidate_payload["browser"]["playwright_version"] = "1.57.0"
+            candidate_payload["browser"]["chromium_version"] = "different"
+            candidate_metadata.write_text(json.dumps(candidate_payload), encoding="utf-8")
+            browser_mismatch = self.comparator_command(
+                "--baseline", str(baseline),
+                "--baseline-metadata", str(baseline_metadata),
+                "--candidate", str(candidate),
+                "--candidate-metadata", str(candidate_metadata),
+            )
+            self.assertNotEqual(0, browser_mismatch.returncode)
+            self.assertIn("Chromium", browser_mismatch.stderr)
+
+            candidate_payload["browser"]["chromium_version"] = "143.0.7499.4"
+            candidate_payload["image"]["sha256"] = "0" * 64
+            candidate_metadata.write_text(json.dumps(candidate_payload), encoding="utf-8")
+            tampered = self.comparator_command(
+                "--baseline", str(baseline),
+                "--baseline-metadata", str(baseline_metadata),
+                "--candidate", str(candidate),
+                "--candidate-metadata", str(candidate_metadata),
+            )
+            self.assertNotEqual(0, tampered.returncode)
+            self.assertIn("candidate image SHA-256", tampered.stderr)
+
+    def test_normal_compare_writes_diff_without_mutating_baseline(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            baseline, baseline_metadata = self.write_capture_fixture(
+                root, "baseline", approved=True
+            )
+            candidate, candidate_metadata = self.write_capture_fixture(
+                root, "candidate", color=(80, 30, 40, 255)
+            )
+            before = baseline.read_bytes(), baseline_metadata.read_bytes()
+            diff = root / "heatmap.png"
+            result = self.comparator_command(
+                "--baseline", str(baseline),
+                "--baseline-metadata", str(baseline_metadata),
+                "--candidate", str(candidate),
+                "--candidate-metadata", str(candidate_metadata),
+                "--diff-output", str(diff),
+            )
+            self.assertEqual(1, result.returncode)
+            self.assertTrue(diff.is_file())
+            self.assertEqual(before, (baseline.read_bytes(), baseline_metadata.read_bytes()))
+
+    def test_normal_compare_passes_matching_synthetic_captures(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            baseline, baseline_metadata = self.write_capture_fixture(
+                root, "baseline", approved=True
+            )
+            candidate, candidate_metadata = self.write_capture_fixture(root, "candidate")
+            before = baseline.read_bytes(), baseline_metadata.read_bytes()
+            result = self.comparator_command(
+                "--baseline", str(baseline),
+                "--baseline-metadata", str(baseline_metadata),
+                "--candidate", str(candidate),
+                "--candidate-metadata", str(candidate_metadata),
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assertIn("differing_pixels=0", result.stdout)
+            self.assertIn("diff_ratio=0.00000000", result.stdout)
+            self.assertIn("passed=true", result.stdout)
+            self.assertEqual(before, (baseline.read_bytes(), baseline_metadata.read_bytes()))
+
+    def test_normal_compare_rejects_symlink_diff_output_even_when_images_pass(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            baseline, baseline_metadata = self.write_capture_fixture(
+                root, "baseline", approved=True
+            )
+            candidate, candidate_metadata = self.write_capture_fixture(root, "candidate")
+            referent = root / "outside-diff.png"
+            referent.write_bytes(b"unchanged")
+            diff_output = root / "diff-link.png"
+            try:
+                diff_output.symlink_to(referent)
+            except (NotImplementedError, OSError):
+                self.skipTest("symlinks are unavailable")
+            result = self.comparator_command(
+                "--baseline", str(baseline),
+                "--baseline-metadata", str(baseline_metadata),
+                "--candidate", str(candidate),
+                "--candidate-metadata", str(candidate_metadata),
+                "--diff-output", str(diff_output),
+            )
+            self.assertEqual(2, result.returncode)
+            self.assertIn("symlink", result.stderr)
+            self.assertEqual(b"unchanged", referent.read_bytes())
+
+    def test_accept_requires_stripped_reviewer_and_note_and_publishes_metadata(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            candidate, candidate_metadata = self.write_capture_fixture(root, "candidate")
+            baseline = root / "approved" / "baseline.png"
+            baseline_metadata = root / "approved" / "baseline.json"
+            for arguments, label in (
+                (("--reviewer", "   ", "--approval-note", "valid"), "reviewer"),
+                (("--reviewer", "valid", "--approval-note", "  "), "approval note"),
+            ):
+                result = self.comparator_command(
+                    "--accept",
+                    *arguments,
+                    "--candidate", str(candidate),
+                    "--candidate-metadata", str(candidate_metadata),
+                    "--baseline", str(baseline),
+                    "--baseline-metadata", str(baseline_metadata),
+                )
+                self.assertNotEqual(0, result.returncode)
+                self.assertIn(label, result.stderr)
+                self.assertFalse(baseline.exists())
+                self.assertFalse(baseline_metadata.exists())
+
+            accepted = self.comparator_command(
+                "--accept",
+                "--reviewer", "  coolbat  ",
+                "--approval-note", "  approved exact candidate  ",
+                "--candidate", str(candidate),
+                "--candidate-metadata", str(candidate_metadata),
+                "--baseline", str(baseline),
+                "--baseline-metadata", str(baseline_metadata),
+            )
+            self.assertEqual(0, accepted.returncode, accepted.stderr)
+            self.assertEqual(candidate.read_bytes(), baseline.read_bytes())
+            approval = json.loads(baseline_metadata.read_text(encoding="utf-8"))
+            self.assertEqual("coolbat", approval["approval"]["reviewer"])
+            self.assertEqual(
+                "approved exact candidate", approval["approval"]["note"]
+            )
+            self.assertEqual(self.sha256(candidate), approval["approval"]["baseline_sha256"])
+            self.assertEqual([], list(root.rglob("*.tmp")))
+
+    def test_accept_rolls_back_both_files_if_second_replace_succeeds_then_raises(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            candidate, candidate_metadata = self.write_capture_fixture(root, "candidate")
+            baseline, baseline_metadata = self.write_capture_fixture(
+                root,
+                "baseline",
+                color=(70, 80, 90, 255),
+                approved=True,
+            )
+            before = baseline.read_bytes(), baseline_metadata.read_bytes()
+            real_replace = os.replace
+            calls = 0
+
+            def second_replace_succeeds_then_raises(source, target):
+                nonlocal calls
+                calls += 1
+                result = real_replace(source, target)
+                if calls == 2:
+                    raise OSError("injected failure after metadata replace")
+                return result
+
+            with mock.patch.object(
+                visual_comparator.os,
+                "replace",
+                side_effect=second_replace_succeeds_then_raises,
+            ):
+                with self.assertRaisesRegex(OSError, "after metadata replace"):
+                    visual_comparator.accept_candidate(
+                        candidate,
+                        candidate_metadata,
+                        baseline,
+                        baseline_metadata,
+                        "reviewer",
+                        "approval note",
+                    )
+
+            self.assertEqual(before, (baseline.read_bytes(), baseline_metadata.read_bytes()))
+            self.assertEqual([], list(root.rglob("*.tmp")))
+
+    def test_accept_rejects_path_aliases_and_symlink_inputs(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            candidate, candidate_metadata = self.write_capture_fixture(root, "candidate")
+            alias = self.comparator_command(
+                "--accept",
+                "--reviewer", "reviewer",
+                "--approval-note", "note",
+                "--candidate", str(candidate),
+                "--candidate-metadata", str(candidate_metadata),
+                "--baseline", str(candidate),
+                "--baseline-metadata", str(root / "baseline.json"),
+            )
+            self.assertNotEqual(0, alias.returncode)
+            self.assertIn("alias", alias.stderr)
+
+            symlink = root / "candidate-link.png"
+            try:
+                symlink.symlink_to(candidate)
+            except (NotImplementedError, OSError):
+                self.skipTest("symlinks are unavailable")
+            rejected = self.comparator_command(
+                "--accept",
+                "--reviewer", "reviewer",
+                "--approval-note", "note",
+                "--candidate", str(symlink),
+                "--candidate-metadata", str(candidate_metadata),
+                "--baseline", str(root / "baseline.png"),
+                "--baseline-metadata", str(root / "baseline.json"),
+            )
+            self.assertNotEqual(0, rejected.returncode)
+            self.assertIn("symlink", rejected.stderr)
 
     def test_direct_target_symlink_is_rejected_without_touching_referent(self):
         with tempfile.TemporaryDirectory() as temp_dir:

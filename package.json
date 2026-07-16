@@ -1,0 +1,10 @@
+{
+  "name": "anidiagram-visual-tests",
+  "private": true,
+  "scripts": {
+    "capture:diagram-core": "node scripts/capture_diagram_core_contact_sheet.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.61.1"
+  }
+}
