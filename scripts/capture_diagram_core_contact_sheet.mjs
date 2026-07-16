@@ -27,6 +27,7 @@ const EXPECTED_HEIGHT = 2496;
 const VIEWPORT = Object.freeze({ width: 1280, height: 900 });
 const DEVICE_SCALE_FACTOR = 1;
 const PLAYWRIGHT_OPERATION_TIMEOUT_MS = 10_000;
+const CAPTURE_SESSION_TIMEOUT_MS = 12_000;
 const CLOSE_TIMEOUT_MS = 5_000;
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const INDEX_RELATIVE_PATH = "gallery/diagram-core/index.html";
@@ -164,7 +165,7 @@ async function readFileSnapshot(target, label) {
     return {
       path: target,
       payload,
-      mode: Number(after.mode & BigInt(0o777)),
+      mode: Number(after.mode & BigInt(0o7777)),
       signature: fileSignature(after),
       replacementSignature: replacementSignature(after),
     };
@@ -215,6 +216,102 @@ async function withTimeout(operation, label, timeoutMs = PLAYWRIGHT_OPERATION_TI
   } finally {
     if (timeoutId !== undefined) clearTimeout(timeoutId);
   }
+}
+
+
+export async function withCaptureDeadline(
+  operation,
+  timeoutMs = CAPTURE_SESSION_TIMEOUT_MS,
+) {
+  return withTimeout(operation, "browser capture session", timeoutMs);
+}
+
+
+export async function shutdownBrowser(
+  resources,
+  timeoutMs = CLOSE_TIMEOUT_MS,
+  forceKill = process.kill.bind(process),
+) {
+  const errors = [];
+  const closeBounded = async (operation, label) => {
+    try {
+      await withTimeout(operation, label, timeoutMs);
+    } catch (error) {
+      errors.push(error);
+    }
+  };
+
+  if (resources.context) {
+    await closeBounded(() => resources.context.close(), "browser context close");
+  }
+  if (resources.browser) {
+    await closeBounded(() => resources.browser.close(), "browser close");
+  }
+
+  const serverProcess = resources.browserServer
+    && typeof resources.browserServer.process === "function"
+    ? resources.browserServer.process()
+    : null;
+  const processMayBeAlive = serverProcess
+    && serverProcess.exitCode == null
+    && serverProcess.signalCode == null;
+  if (resources.browserServer && (errors.length !== 0 || processMayBeAlive)) {
+    try {
+      await withTimeout(
+        () => resources.browserServer.kill(),
+        "browser server kill",
+        timeoutMs,
+      );
+    } catch (error) {
+      errors.push(error);
+      if (serverProcess && Number.isInteger(serverProcess.pid)) {
+        try {
+          forceKill(serverProcess.pid, "SIGKILL");
+        } catch (killError) {
+          if (!killError || killError.code !== "ESRCH") errors.push(killError);
+        }
+      }
+    }
+  }
+
+  if (errors.length !== 0) {
+    throw new Error(
+      `browser shutdown failed: ${errors.map((error) => error.message).join("; ")}`,
+      { cause: errors[0] },
+    );
+  }
+}
+
+
+export async function runCaptureSession(
+  operation,
+  resources,
+  sessionTimeoutMs = CAPTURE_SESSION_TIMEOUT_MS,
+  closeTimeoutMs = CLOSE_TIMEOUT_MS,
+  forceKill = process.kill.bind(process),
+) {
+  let operationError = null;
+  try {
+    await withCaptureDeadline(operation, sessionTimeoutMs);
+  } catch (error) {
+    operationError = error;
+  }
+
+  let shutdownError = null;
+  try {
+    await shutdownBrowser(resources(), closeTimeoutMs, forceKill);
+  } catch (error) {
+    shutdownError = error;
+  }
+
+  if (operationError && shutdownError) {
+    throw new Error(
+      `browser capture failed: ${operationError.message}; ${shutdownError.message}`,
+      { cause: operationError },
+    );
+  }
+  if (operationError) throw operationError;
+  if (shutdownError) throw shutdownError;
 }
 
 
@@ -348,6 +445,13 @@ async function matchesPublishedPayload(entry) {
 }
 
 
+async function assertPublishedPayloadCurrent(entry) {
+  if (!(await matchesPublishedPayload(entry))) {
+    throw new Error(`output changed after publish: ${entry.target}`);
+  }
+}
+
+
 function preserveBackup(entry, reason) {
   if (entry.backup) {
     const backup = entry.backup;
@@ -408,7 +512,11 @@ export async function publishCapture(
     for (const entry of entries) {
       const payload = Buffer.from(entry.payload);
       const snapshot = await snapshotTarget(entry.target);
-      const temporary = await stagePayload(entry.target, payload);
+      const temporary = await stagePayload(
+        entry.target,
+        payload,
+        snapshot === null ? 0o644 : snapshot.mode,
+      );
       const stagedInfo = await lstat(temporary, { bigint: true });
       const record = {
         target: entry.target,
@@ -441,6 +549,9 @@ export async function publishCapture(
       entry.temporary = null;
     }
     await verifyCurrent();
+    for (const entry of staged) {
+      await assertPublishedPayloadCurrent(entry);
+    }
   } catch (error) {
     const rollbackErrors = [];
     for (const entry of [...staged].reverse()) {
@@ -575,30 +686,55 @@ async function computedMotionCounts(locator) {
 }
 
 
-async function stabilizeStaticDocument(page) {
+export async function stabilizeStaticDocument(
+  page,
+  timeoutMs = PLAYWRIGHT_OPERATION_TIMEOUT_MS,
+) {
   await withTimeout(() => page.evaluate(async () => {
     await document.fonts.ready;
-  }), "font stabilization");
+  }), "font stabilization", timeoutMs);
 
-  // Chromium suppresses requestAnimationFrame callbacks when the context was
-  // created with javaScriptEnabled:false. Drive two bounded compositor/layout
-  // turns from Playwright instead, without ever enabling page-authored script.
-  for (let frame = 0; frame < 2; frame += 1) {
-    await new Promise((resolve) => setTimeout(resolve, 17));
-    await withTimeout(() => page.evaluate(() => {
-      const root = document.documentElement;
-      const style = getComputedStyle(root);
-      const bounds = root.getBoundingClientRect();
-      return [style.display, bounds.width, bounds.height];
-    }), `static layout turn ${frame + 1}`);
+  const session = await withTimeout(
+    () => page.context().newCDPSession(page),
+    "compositor frame session",
+    timeoutMs,
+  );
+  try {
+    for (let frame = 0; frame < 2; frame += 1) {
+      const frameCapture = await withTimeout(
+        () => session.send("Page.captureScreenshot", {
+          format: "png",
+          fromSurface: true,
+          captureBeyondViewport: false,
+        }),
+        `compositor frame ${frame + 1}`,
+        timeoutMs,
+      );
+      if (typeof frameCapture.data !== "string" || frameCapture.data.length === 0) {
+        throw new Error(`compositor frame capture ${frame + 1} returned no image data`);
+      }
+    }
+  } finally {
+    await withTimeout(
+      () => session.detach(),
+      "compositor frame session detach",
+      timeoutMs,
+    );
   }
 }
 
 
-async function inspectStaticSurface(page) {
-  return withTimeout(() => page.evaluate(() => {
+async function inspectStaticSurface(page, frozenSource) {
+  return withTimeout(() => page.evaluate((source) => {
     const violations = [];
     const record = (kind, value) => violations.push(`${kind}: ${value}`);
+    const inertDocument = new DOMParser().parseFromString(source, "text/html");
+    for (const template of inertDocument.querySelectorAll("template[shadowrootmode]")) {
+      record(
+        "declarative shadow root",
+        `<template shadowrootmode=${template.getAttribute("shadowrootmode") || ""}>`,
+      );
+    }
     const elements = [];
     const roots = [document];
     for (const root of roots) {
@@ -652,6 +788,17 @@ async function inspectStaticSurface(page) {
         record(`${label} image-set`, css);
       }
     };
+    const inspectDeclaration = (declaration, label) => {
+      if (!declaration) return;
+      inspectCssText(declaration.cssText || "", `${label} declaration`);
+      for (let index = 0; index < declaration.length; index += 1) {
+        const property = declaration.item(index);
+        inspectCssText(
+          `${property}:${declaration.getPropertyValue(property)}`,
+          `${label} ${property}`,
+        );
+      }
+    };
     const inspectSheet = (sheet, label) => {
       let rules;
       try {
@@ -663,6 +810,10 @@ async function inspectStaticSurface(page) {
       const inspectRules = (ruleList) => {
         for (const rule of ruleList || []) {
           inspectCssText(rule.cssText || "", label);
+          inspectDeclaration(rule.style, `${label} rule`);
+          if (typeof rule.href === "string") {
+            inspectUrlValue(`${label} rule href`, rule.href);
+          }
           if (rule.cssRules) inspectRules(rule.cssRules);
         }
       };
@@ -719,8 +870,19 @@ async function inspectStaticSurface(page) {
       "use",
     ]);
     const svgNamespace = "http://www.w3.org/2000/svg";
+    const smilElements = new Set([
+      "animate",
+      "animatecolor",
+      "animatemotion",
+      "animatetransform",
+      "discard",
+      "set",
+    ]);
     for (const element of elements) {
       const elementName = element.localName.toLowerCase();
+      if (element.namespaceURI === svgNamespace && smilElements.has(elementName)) {
+        record("SMIL element", `<${element.localName}>`);
+      }
       if (activeElements.has(elementName)) {
         record("active element", `<${element.localName}>`);
       }
@@ -765,6 +927,9 @@ async function inspectStaticSurface(page) {
         }
         inspectCssText(attribute.value, `${element.localName}[${attribute.name}]`);
       }
+      if (element.hasAttribute("style")) {
+        inspectDeclaration(element.style, `${element.localName}[style]`);
+      }
       if (elementName === "style") {
         inspectCssText(element.textContent || "", "style element");
       }
@@ -783,7 +948,7 @@ async function inspectStaticSurface(page) {
       inspectSheet(sheet, `document adopted stylesheet ${index}`);
     }
     return [...new Set(violations)].sort();
-  }), "static surface inspection");
+  }, frozenSource), "static surface inspection");
 }
 
 
@@ -815,16 +980,23 @@ export async function capture(paths, replace = rename) {
   await verifyProvenance();
   const externalRequests = new Set();
   const canonicalInputUrl = pathToFileURL(canonicalInput).href;
-  const browser = await chromium.launch({ headless: true });
+  const browserServer = await chromium.launchServer({
+    headless: true,
+    timeout: PLAYWRIGHT_OPERATION_TIMEOUT_MS,
+  });
+  let browser;
   let context;
-  let browserClosed = false;
   let screenshot;
   let boundingBox;
   let cells;
   let motion;
   let chromiumVersion;
   let dimensions;
-  try {
+  let allowedMainNavigations = 0;
+  const runBrowserCapture = async () => {
+    browser = await chromium.connect(browserServer.wsEndpoint(), {
+      timeout: PLAYWRIGHT_OPERATION_TIMEOUT_MS,
+    });
     context = await browser.newContext({
       viewport: VIEWPORT,
       deviceScaleFactor: DEVICE_SCALE_FACTOR,
@@ -835,7 +1007,6 @@ export async function capture(paths, replace = rename) {
     const page = await context.newPage();
     page.setDefaultTimeout(PLAYWRIGHT_OPERATION_TIMEOUT_MS);
     page.setDefaultNavigationTimeout(PLAYWRIGHT_OPERATION_TIMEOUT_MS);
-    let allowedMainNavigations = 0;
     const isCanonicalMainNavigation = (request) => request.url() === canonicalInputUrl
       && request.isNavigationRequest()
       && request.frame() === page.mainFrame();
@@ -881,7 +1052,10 @@ export async function capture(paths, replace = rename) {
     if (allowedMainNavigations !== 1) {
       throw new Error(`canonical input navigation must occur exactly once; found ${allowedMainNavigations}`);
     }
-    const surfaceViolations = await inspectStaticSurface(page);
+    const surfaceViolations = await inspectStaticSurface(
+      page,
+      inputPayload.toString("utf8"),
+    );
     for (const violation of surfaceViolations) externalRequests.add(violation);
     if (externalRequests.size !== 0) {
       throw new Error(
@@ -941,34 +1115,20 @@ export async function capture(paths, replace = rename) {
       );
     }
     chromiumVersion = browser.version();
-    await withTimeout(() => context.close(), "browser context close", CLOSE_TIMEOUT_MS);
-    context = undefined;
-    await withTimeout(() => browser.close(), "browser close", CLOSE_TIMEOUT_MS);
-    browserClosed = true;
-    if (allowedMainNavigations !== 1) {
-      throw new Error(`canonical input navigation must occur exactly once; found ${allowedMainNavigations}`);
-    }
-    if (externalRequests.size !== 0) {
-      throw new Error(
-        `external requests are forbidden; active content is forbidden: `
-        + `${[...externalRequests].join(", ")}`,
-      );
-    }
-  } finally {
-    if (context) {
-      await withTimeout(
-        () => context.close(),
-        "browser context cleanup",
-        CLOSE_TIMEOUT_MS,
-      ).catch(() => {});
-    }
-    if (!browserClosed) {
-      await withTimeout(
-        () => browser.close(),
-        "browser cleanup",
-        CLOSE_TIMEOUT_MS,
-      ).catch(() => {});
-    }
+  };
+  await runCaptureSession(
+    runBrowserCapture,
+    () => ({ context, browser, browserServer }),
+  );
+  context = undefined;
+  if (allowedMainNavigations !== 1) {
+    throw new Error(`canonical input navigation must occur exactly once; found ${allowedMainNavigations}`);
+  }
+  if (externalRequests.size !== 0) {
+    throw new Error(
+      `external requests are forbidden; active content is forbidden: `
+      + `${[...externalRequests].join(", ")}`,
+    );
   }
 
   const captureTimestamp = new Date().toISOString();

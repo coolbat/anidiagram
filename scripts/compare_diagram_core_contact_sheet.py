@@ -138,12 +138,12 @@ def _atomic_write_bytes(path, payload, mode=0o644):
 
 
 def _write_heatmap(path, mask, size):
-    heatmap = Image.new("RGBA", size, (0, 0, 0, 0))
-    pixels = [(255, 0, 0, 255) if differs else (0, 0, 0, 0) for differs in mask]
-    if hasattr(heatmap, "put_flattened_data"):
-        heatmap.put_flattened_data(pixels)
-    else:  # Pillow 9-11, supported by the project's Python 3.9 floor.
-        heatmap.putdata(pixels)
+    pixels = bytearray(len(mask) * 4)
+    for index, differs in enumerate(mask):
+        if differs:
+            offset = index * 4
+            pixels[offset : offset + 4] = b"\xff\x00\x00\xff"
+    heatmap = Image.frombytes("RGBA", size, bytes(pixels))
     payload = io.BytesIO()
     heatmap.save(payload, format="PNG")
     _atomic_write_bytes(path, payload.getvalue())
@@ -166,9 +166,9 @@ def compare_images(
                 candidate.size,
             )
         )
-    baseline_rgba = baseline.convert("RGBA")
-    candidate_rgba = candidate.convert("RGBA")
-    mask = []
+    baseline_rgba = baseline if baseline.mode == "RGBA" else baseline.convert("RGBA")
+    candidate_rgba = candidate if candidate.mode == "RGBA" else candidate.convert("RGBA")
+    mask = bytearray()
     baseline_pixels = (
         baseline_rgba.get_flattened_data()
         if hasattr(baseline_rgba, "get_flattened_data")
@@ -181,10 +181,10 @@ def compare_images(
     )
     for baseline_pixel, candidate_pixel in zip(baseline_pixels, candidate_pixels):
         mask.append(
-            any(
+            int(any(
                 abs(left - right) > channel_tolerance
                 for left, right in zip(baseline_pixel, candidate_pixel)
-            )
+            ))
         )
     differing_pixels = sum(mask)
     total_pixels = baseline_rgba.width * baseline_rgba.height
@@ -562,6 +562,10 @@ def _validate_capture_metadata(
     _require_exact_keys(platform, {"os", "arch"}, "{0} platform".format(label))
     _require_nonempty_string(platform["os"], "{0} platform.os".format(label))
     _require_nonempty_string(platform["arch"], "{0} platform.arch".format(label))
+    if require_approval and platform["os"] != "linux":
+        raise VisualComparisonError(
+            "{0} approved baseline must be a linux capture".format(label)
+        )
 
     viewport = _nested(metadata, ("viewport",), label)
     _require_exact_keys(viewport, VIEWPORT, "{0} viewport".format(label))
@@ -816,6 +820,23 @@ def _assert_approval_output_unchanged(record):
         )
 
 
+def _approval_output_matches_published(record):
+    current = _output_snapshot(record["target"])
+    return (
+        current is not None
+        and _replacement_signature(current.signature)
+        == _replacement_signature(record["staged_signature"])
+        and current.payload == record["payload"]
+    )
+
+
+def _assert_approval_output_is_published(record):
+    if not _approval_output_matches_published(record):
+        raise VisualComparisonError(
+            "approval output changed after publish: {0}".format(record["target"])
+        )
+
+
 def _preserve_approval_backup(record, reason):
     backup = record.get("backup")
     if backup is not None and os.path.lexists(str(backup)):
@@ -923,6 +944,8 @@ def _publish_approval(
             os.replace(str(record["staged"]), str(record["target"]))
             record["staged"] = None
         verify_current()
+        for record in records:
+            _assert_approval_output_is_published(record)
     except BaseException as error:
         rollback_errors = []
         for record in reversed(attempted):
@@ -948,6 +971,67 @@ def _publish_approval(
                         residue.unlink()
                     except FileNotFoundError:
                         pass
+
+
+def _publish_staged_heatmap(target, staged, target_snapshot, verify_current):
+    target = _absolute(target)
+    staged = _absolute(staged)
+    mode = target_snapshot.mode if target_snapshot is not None else 0o644
+    os.chmod(str(staged), mode)
+    staged_snapshot = _read_file_snapshot(staged, "staged diff output")
+    record = {
+        "target": target,
+        "payload": staged_snapshot.payload,
+        "snapshot": target_snapshot,
+        "staged": staged,
+        "staged_signature": staged_snapshot.signature,
+        "backup": None,
+        "backup_signature": None,
+    }
+    attempted = False
+    try:
+        if target_snapshot is not None:
+            backup, _ = _stage_approval_payload(
+                target,
+                target_snapshot.payload,
+                target_snapshot.mode,
+                ".bak",
+            )
+            os.utime(
+                str(backup),
+                ns=(
+                    target_snapshot.signature.mtime_ns,
+                    target_snapshot.signature.mtime_ns,
+                ),
+            )
+            record["backup"] = backup
+            record["backup_signature"] = _file_signature(os.lstat(str(backup)))
+        verify_current()
+        _assert_approval_output_unchanged(record)
+        attempted = True
+        os.replace(str(record["staged"]), str(record["target"]))
+        record["staged"] = None
+        verify_current()
+        _assert_approval_output_is_published(record)
+    except BaseException as error:
+        if attempted:
+            try:
+                _rollback_approval_record(record)
+            except BaseException as rollback_error:
+                raise VisualComparisonError(
+                    "diff publish failed and rollback was incomplete: {0}".format(
+                        _preserve_approval_backup(record, str(rollback_error))
+                    )
+                ) from error
+        raise
+    finally:
+        for key in ("staged", "backup"):
+            residue = record.get(key)
+            if residue is not None:
+                try:
+                    residue.unlink()
+                except FileNotFoundError:
+                    pass
 
 
 def accept_candidate(
@@ -1090,14 +1174,18 @@ def compare_capture_files(
             max_diff_ratio=max_diff_ratio,
             diff_output=staged_diff_output,
         )
-        for snapshot, label in (
-            (baseline_metadata_snapshot, "baseline metadata"),
-            (candidate_metadata_snapshot, "candidate metadata"),
-            (baseline_validated.snapshot, "baseline image"),
-            (candidate_validated.snapshot, "candidate image"),
-        ):
-            _ensure_snapshot_current(snapshot, label)
-        _ensure_repository_provenance_current(repository_provenance)
+
+        def verify_comparison_current():
+            for snapshot, label in (
+                (baseline_metadata_snapshot, "baseline metadata"),
+                (candidate_metadata_snapshot, "candidate metadata"),
+                (baseline_validated.snapshot, "baseline image"),
+                (candidate_validated.snapshot, "candidate image"),
+            ):
+                _ensure_snapshot_current(snapshot, label)
+            _ensure_repository_provenance_current(repository_provenance)
+
+        verify_comparison_current()
         if staged_diff_output is not None and not report.passed:
             if not _snapshots_equal(
                 _output_snapshot(diff_target),
@@ -1106,7 +1194,12 @@ def compare_capture_files(
                 raise VisualComparisonError(
                     "diff output changed before publish: {0}".format(diff_target)
                 )
-            os.replace(str(staged_diff_output), str(diff_target))
+            _publish_staged_heatmap(
+                diff_target,
+                staged_diff_output,
+                diff_target_snapshot,
+                verify_comparison_current,
+            )
             staged_diff_output = None
         return report
     finally:

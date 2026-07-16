@@ -1117,7 +1117,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
         )
         for required in (
             'from "playwright"',
-            "chromium.launch",
+            "chromium.launchServer",
             "const DEVICE_SCALE_FACTOR = 1",
             "deviceScaleFactor: DEVICE_SCALE_FACTOR",
             'reducedMotion: "reduce"',
@@ -1126,7 +1126,6 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             'serviceWorkers: "block"',
             'const LOCATOR = "#diagram-core-regression-grid"',
             "document.fonts.ready",
-            "requestAnimationFrame",
             "animation: none !important",
             "transition: none !important",
             "position: fixed !important",
@@ -1155,6 +1154,176 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
         self.assertIn("route.fulfill", source)
         self.assertIn("locator.screenshot", source)
 
+    def test_capture_stabilization_uses_two_bounded_compositor_frame_captures(self):
+        module_url = self.CAPTURE_SCRIPT.as_uri()
+        program = """
+const { stabilizeStaticDocument } = await import(%s);
+if (typeof stabilizeStaticDocument !== "function") {
+  throw new Error("stabilization export missing");
+}
+const calls = [];
+const session = {
+  send: async (method, parameters) => {
+    calls.push([method, parameters]);
+    return { data: "ZnJhbWU=" };
+  },
+  detach: async () => { calls.push(["detach", null]); },
+};
+const page = {
+  evaluate: async (callback) => {
+    calls.push(["fonts.ready", null]);
+    return callback.toString().includes("document.fonts.ready");
+  },
+  context: () => ({
+    newCDPSession: async (target) => {
+      if (target !== page) throw new Error("wrong CDP target");
+      calls.push(["newCDPSession", null]);
+      return session;
+    },
+  }),
+};
+await stabilizeStaticDocument(page, 50);
+const frames = calls.filter(([method]) => method === "Page.captureScreenshot");
+if (frames.length !== 2) throw new Error(`expected two frame captures; found ${frames.length}`);
+if (calls[0][0] !== "fonts.ready" || calls[1][0] !== "newCDPSession") {
+  throw new Error(`fonts must settle before frame capture: ${JSON.stringify(calls)}`);
+}
+if (!frames.every(([, parameters]) => parameters.fromSurface === true)) {
+  throw new Error("frame captures must use the compositor surface");
+}
+if (calls.at(-1)[0] !== "detach") throw new Error("CDP session was not detached");
+
+const emptyFramePage = {
+  evaluate: async () => {},
+  context: () => ({
+    newCDPSession: async () => ({
+      send: async () => ({ data: "" }),
+      detach: async () => {},
+    }),
+  }),
+};
+let emptyFrameFailure;
+try {
+  await stabilizeStaticDocument(emptyFramePage, 50);
+} catch (error) {
+  emptyFrameFailure = error;
+}
+if (!emptyFrameFailure || !emptyFrameFailure.message.includes("frame capture")) {
+  throw new Error(`empty frame capture was accepted: ${emptyFrameFailure && emptyFrameFailure.message}`);
+}
+
+const never = () => new Promise(() => {});
+const hangingPage = {
+  evaluate: async () => {},
+  context: () => ({
+    newCDPSession: async () => ({ send: never, detach: async () => {} }),
+  }),
+};
+const started = Date.now();
+let timeoutFailure;
+try {
+  await stabilizeStaticDocument(hangingPage, 20);
+} catch (error) {
+  timeoutFailure = error;
+}
+if (!timeoutFailure || !timeoutFailure.message.includes("timed out")) {
+  throw new Error(`frame timeout missing: ${timeoutFailure && timeoutFailure.message}`);
+}
+if (Date.now() - started > 500) throw new Error("frame barrier exceeded its bound");
+""" % json.dumps(module_url)
+
+        result = subprocess.run(
+            ["node", "--input-type=module", "--eval", program],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=5,
+        )
+
+        self.assertEqual(0, result.returncode, result.stderr)
+
+    def test_capture_cleanup_force_kills_browser_process_after_close_timeouts(self):
+        module_url = self.CAPTURE_SCRIPT.as_uri()
+        program = """
+const { runCaptureSession, shutdownBrowser, withCaptureDeadline } = await import(%s);
+if (typeof shutdownBrowser !== "function") throw new Error("shutdown export missing");
+if (typeof withCaptureDeadline !== "function") throw new Error("deadline export missing");
+if (typeof runCaptureSession !== "function") throw new Error("session orchestration export missing");
+const never = () => new Promise(() => {});
+const signals = [];
+const browserServer = {
+  kill: never,
+  process: () => ({ pid: 424242 }),
+};
+const started = Date.now();
+let deadlineFailure;
+try {
+  await withCaptureDeadline(never, 20);
+} catch (error) {
+  deadlineFailure = error;
+}
+if (!deadlineFailure || !deadlineFailure.message.includes("timed out")) {
+  throw new Error(`production capture deadline missing: ${deadlineFailure && deadlineFailure.message}`);
+}
+let failure;
+try {
+  await shutdownBrowser({
+    context: { close: never },
+    browser: { close: never },
+    browserServer,
+  }, 20, (pid, signal) => signals.push([pid, signal]));
+} catch (error) {
+  failure = error;
+}
+if (!failure || !failure.message.includes("timed out")) {
+  throw new Error(`bounded cleanup failure missing: ${failure && failure.message}`);
+}
+if (JSON.stringify(signals) !== JSON.stringify([[424242, "SIGKILL"]])) {
+  throw new Error(`forced process kill missing: ${JSON.stringify(signals)}`);
+}
+if (Date.now() - started > 500) throw new Error("cleanup exceeded its bound");
+
+const orchestrationSignals = [];
+const orchestrationStarted = Date.now();
+let orchestrationFailure;
+try {
+  await runCaptureSession(
+    never,
+    () => ({
+      context: { close: never },
+      browser: { close: never },
+      browserServer: { kill: never, process: () => ({ pid: 515151 }) },
+    }),
+    20,
+    20,
+    (pid, signal) => orchestrationSignals.push([pid, signal]),
+  );
+} catch (error) {
+  orchestrationFailure = error;
+}
+if (!orchestrationFailure || !orchestrationFailure.message.includes("timed out")) {
+  throw new Error(`session orchestration failure missing: ${orchestrationFailure && orchestrationFailure.message}`);
+}
+if (JSON.stringify(orchestrationSignals) !== JSON.stringify([[515151, "SIGKILL"]])) {
+  throw new Error(`session cleanup was repeated: ${JSON.stringify(orchestrationSignals)}`);
+}
+if (Date.now() - orchestrationStarted > 500) {
+  throw new Error("session plus cleanup exceeded its shared bound");
+}
+""" % json.dumps(module_url)
+
+        result = subprocess.run(
+            ["node", "--input-type=module", "--eval", program],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=3,
+        )
+
+        self.assertEqual(0, result.returncode, result.stderr)
+
     def test_capture_cli_requires_all_three_paths(self):
         result = subprocess.run(
             ["node", str(self.CAPTURE_SCRIPT)],
@@ -1162,6 +1331,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             capture_output=True,
             text=True,
             check=False,
+            timeout=10,
         )
         self.assertEqual(2, result.returncode)
         self.assertIn("--input", result.stderr)
@@ -1195,6 +1365,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                 capture_output=True,
                 text=True,
                 check=False,
+                timeout=30,
             )
             self.assertEqual(1, result.returncode)
             self.assertIn("external requests are forbidden", result.stderr)
@@ -1224,6 +1395,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                 capture_output=True,
                 text=True,
                 check=False,
+                timeout=30,
             )
             self.assertEqual(1, result.returncode)
             self.assertIn("external requests are forbidden", result.stderr)
@@ -1256,6 +1428,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                 capture_output=True,
                 text=True,
                 check=False,
+                timeout=30,
             )
             self.assertEqual(1, result.returncode)
             self.assertIn("external requests are forbidden", result.stderr)
@@ -1292,6 +1465,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                 capture_output=True,
                 text=True,
                 check=False,
+                timeout=30,
             )
             self.assertEqual(1, result.returncode)
             self.assertIn("external requests are forbidden", result.stderr)
@@ -1480,6 +1654,136 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                     self.assertFalse(output.exists())
                     self.assertFalse(metadata.exists())
 
+    def test_capture_rejects_browser_normalized_multiline_inline_css_url(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        source = (ROOT / "gallery/diagram-core/index.html").read_text(encoding="utf-8")
+        with tempfile.TemporaryDirectory(
+            prefix="diagram-core-css-continuation-",
+            dir=build_root,
+        ) as temp_dir:
+            root = Path(temp_dir).resolve()
+            input_path = root / "multiline-css-resource.html"
+            probe = (
+                '<rect x="0" y="0" width="104" height="104" '
+                'style="fill:url(&quot;da\\\n'
+                "ta:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20"
+                "width=%271%27%20height=%271%27%3E%3Crect%20width=%271%27%20"
+                'height=%271%27%20fill=%27red%27/%3E%3C/svg%3E&quot;)"/>'
+            )
+            self.assertIn("\\\n", probe)
+            input_path.write_text(
+                source.replace("</svg>", probe + "</svg>", 1),
+                encoding="utf-8",
+            )
+            output = root / "candidate.png"
+            metadata = root / "candidate.json"
+
+            result = self.capture_command(input_path, output, metadata)
+
+            self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+            self.assertIn("forbidden", result.stderr)
+            self.assertFalse(output.exists())
+            self.assertFalse(metadata.exists())
+
+    def test_capture_rejects_pixel_changing_closed_declarative_shadow_root(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        source = (ROOT / "gallery/diagram-core/index.html").read_text(encoding="utf-8")
+        source = source.replace(
+            'id="diagram-core-regression-grid"',
+            'id="diagram-core-shadow-inner-grid"',
+            1,
+        ).replace(
+            '<svg xmlns="http://www.w3.org/2000/svg"',
+            '<div id="diagram-core-regression-grid" '
+            'style="display:block;width:1248px;height:2496px;position:relative">'
+            '<svg xmlns="http://www.w3.org/2000/svg"',
+            1,
+        )
+        shadow_overlay = (
+            '</svg><span><template shadowrootmode="closed">'
+            '<style>:host{display:block;position:absolute;inset:0;z-index:999;'
+            'background:#ff00ff}img{display:block;width:100%;height:100%}</style>'
+            '<img alt="" src="data:image/png;base64,'
+            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/'
+            'h6mO9QAAAABJRU5ErkJggg==">'
+            "</template></span></div>"
+        )
+        source = source.replace("</svg>", shadow_overlay, 1)
+        with tempfile.TemporaryDirectory(
+            prefix="diagram-core-closed-shadow-",
+            dir=build_root,
+        ) as temp_dir:
+            root = Path(temp_dir).resolve()
+            input_path = root / "closed-shadow-resource.html"
+            input_path.write_text(source, encoding="utf-8")
+            output = root / "candidate.png"
+            metadata = root / "candidate.json"
+
+            result = self.capture_command(input_path, output, metadata)
+
+            self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+            self.assertIn("forbidden", result.stderr)
+            self.assertFalse(output.exists())
+            self.assertFalse(metadata.exists())
+
+    def test_capture_rejects_svg_smil_elements_missing_from_web_animations(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        source = (ROOT / "gallery/diagram-core/index.html").read_text(encoding="utf-8")
+        probes = {
+            "animate": (
+                '<g><rect width="8" height="8" fill="red"/>'
+                '<animate attributeName="opacity" values="1;0;1" dur="1s" '
+                'repeatCount="indefinite"/></g>'
+            ),
+            "animateMotion": (
+                '<g><rect width="8" height="8" fill="red"/>'
+                '<animateMotion path="M0 0 L16 0" dur="1s" '
+                'repeatCount="indefinite"/></g>'
+            ),
+            "animateTransform": (
+                '<g><rect width="8" height="8" fill="red"/>'
+                '<animateTransform attributeName="transform" type="rotate" '
+                'from="0" to="360" dur="1s" repeatCount="indefinite"/></g>'
+            ),
+            "set": (
+                '<g><rect width="8" height="8" fill="red"/>'
+                '<set attributeName="opacity" to="0" begin="0s" dur="indefinite"/></g>'
+            ),
+            "animateColor": (
+                '<g><rect width="8" height="8" fill="red"/>'
+                '<animateColor attributeName="fill" from="red" to="blue" '
+                'dur="1s" repeatCount="indefinite"/></g>'
+            ),
+            "discard": (
+                '<g><rect width="8" height="8" fill="red"/>'
+                '<discard begin="0s"/></g>'
+            ),
+        }
+        for name, probe in probes.items():
+            with self.subTest(name=name):
+                with tempfile.TemporaryDirectory(
+                    prefix="diagram-core-smil-{0}-".format(name.lower()),
+                    dir=build_root,
+                ) as temp_dir:
+                    root = Path(temp_dir).resolve()
+                    input_path = root / "smil.html"
+                    input_path.write_text(
+                        source.replace("</svg>", probe + "</svg>", 1),
+                        encoding="utf-8",
+                    )
+                    output = root / "candidate.png"
+                    metadata = root / "candidate.json"
+
+                    result = self.capture_command(input_path, output, metadata)
+
+                    self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+                    self.assertIn("forbidden", result.stderr)
+                    self.assertFalse(output.exists())
+                    self.assertFalse(metadata.exists())
+
     def test_capture_rejects_empty_resource_references(self):
         build_root = ROOT / "build"
         build_root.mkdir(exist_ok=True)
@@ -1565,18 +1869,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             output = root / "candidate.png"
             metadata = root / "candidate.json"
 
-            result = subprocess.run(
-                [
-                    "node", str(self.CAPTURE_SCRIPT),
-                    "--input", str(malicious_input),
-                    "--output", str(output),
-                    "--metadata", str(metadata),
-                ],
-                cwd=ROOT,
-                capture_output=True,
-                text=True,
-                check=False,
-            )
+            result = self.capture_command(malicious_input, output, metadata)
 
             self.assertEqual(1, result.returncode, result.stdout + result.stderr)
             self.assertIn("forbidden", result.stderr)
@@ -1598,18 +1891,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             output = root / "candidate.png"
             metadata = root / "candidate.json"
 
-            result = subprocess.run(
-                [
-                    "node", str(self.CAPTURE_SCRIPT),
-                    "--input", str(malicious_input),
-                    "--output", str(output),
-                    "--metadata", str(metadata),
-                ],
-                cwd=ROOT,
-                capture_output=True,
-                text=True,
-                check=False,
-            )
+            result = self.capture_command(malicious_input, output, metadata)
 
             self.assertEqual(1, result.returncode, result.stdout + result.stderr)
             self.assertIn("forbidden", result.stderr)
@@ -1636,18 +1918,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             output = root / "candidate.png"
             metadata = root / "candidate.json"
 
-            result = subprocess.run(
-                [
-                    "node", str(self.CAPTURE_SCRIPT),
-                    "--input", str(malicious_input),
-                    "--output", str(output),
-                    "--metadata", str(metadata),
-                ],
-                cwd=ROOT,
-                capture_output=True,
-                text=True,
-                check=False,
-            )
+            result = self.capture_command(malicious_input, output, metadata)
 
             self.assertEqual(1, result.returncode, result.stdout + result.stderr)
             self.assertIn("forbidden", result.stderr)
@@ -1691,18 +1962,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                 output = root / "candidate.png"
                 metadata = root / "candidate.json"
 
-                result = subprocess.run(
-                    [
-                        "node", str(self.CAPTURE_SCRIPT),
-                        "--input", str(malicious_input),
-                        "--output", str(output),
-                        "--metadata", str(metadata),
-                    ],
-                    cwd=ROOT,
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                )
+                result = self.capture_command(malicious_input, output, metadata)
 
                 self.assertEqual(1, result.returncode, result.stdout + result.stderr)
                 self.assertIn("forbidden", result.stderr)
@@ -1732,18 +1992,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             output = root / "candidate.png"
             metadata = root / "candidate.json"
 
-            result = subprocess.run(
-                [
-                    "node", str(self.CAPTURE_SCRIPT),
-                    "--input", str(malicious_input),
-                    "--output", str(output),
-                    "--metadata", str(metadata),
-                ],
-                cwd=ROOT,
-                capture_output=True,
-                text=True,
-                check=False,
-            )
+            result = self.capture_command(malicious_input, output, metadata)
 
             self.assertEqual(1, result.returncode, result.stdout + result.stderr)
             self.assertIn("forbidden", result.stderr)
@@ -1804,7 +2053,133 @@ if (residue.length !== 0) throw new Error(`temporary residue: ${residue.join(","
                 capture_output=True,
                 text=True,
                 check=False,
+                timeout=5,
             )
+            self.assertEqual(0, result.returncode, result.stderr)
+
+    def test_capture_publish_preserves_existing_target_modes(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="diagram-core-mode-", dir=build_root) as temp_dir:
+            root = Path(temp_dir).resolve()
+            output = root / "candidate.png"
+            metadata = root / "candidate.json"
+            output.write_bytes(b"old-image")
+            metadata.write_bytes(b"old-metadata")
+            output.chmod(0o4600)
+            metadata.chmod(0o1640)
+            module_url = self.CAPTURE_SCRIPT.as_uri()
+            program = """
+import { stat } from "node:fs/promises";
+const { publishCapture } = await import(%s);
+await publishCapture([
+  { target: %s, payload: Buffer.from("new-image") },
+  { target: %s, payload: Buffer.from("new-metadata") },
+]);
+const imageMode = (await stat(%s)).mode & 0o7777;
+const metadataMode = (await stat(%s)).mode & 0o7777;
+if (imageMode !== 0o4600) throw new Error(`image mode changed to ${imageMode.toString(8)}`);
+if (metadataMode !== 0o1640) throw new Error(`metadata mode changed to ${metadataMode.toString(8)}`);
+""" % tuple(
+                json.dumps(value)
+                for value in (
+                    module_url,
+                    str(output),
+                    str(metadata),
+                    str(output),
+                    str(metadata),
+                )
+            )
+
+            result = subprocess.run(
+                ["node", "--input-type=module", "--eval", program],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=5,
+            )
+
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assert_no_publish_residue(root)
+
+    def test_capture_publish_rejects_external_image_rewrite_after_first_replace(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="diagram-core-final-cas-", dir=build_root) as temp_dir:
+            root = Path(temp_dir).resolve()
+            output = root / "candidate.png"
+            metadata = root / "candidate.json"
+            output.write_bytes(b"old-image")
+            metadata.write_bytes(b"old-metadata")
+            module_url = self.CAPTURE_SCRIPT.as_uri()
+            program = """
+import { rename, readFile, readdir, writeFile } from "node:fs/promises";
+const { publishCapture } = await import(%s);
+let calls = 0;
+const injectedRename = async (source, target) => {
+  const result = await rename(source, target);
+  calls += 1;
+  if (calls === 1) {
+    const external = %s;
+    await writeFile(external, "EXTERNAL-IMAGE");
+    await rename(external, %s);
+  }
+  return result;
+};
+let failure;
+try {
+  await publishCapture([
+    { target: %s, payload: Buffer.from("new-image") },
+    { target: %s, payload: Buffer.from("new-metadata") },
+  ], injectedRename);
+} catch (error) {
+  failure = error;
+}
+if (!failure || !failure.message.includes("rollback was incomplete")) {
+  throw new Error(`stale publish was reported successful: ${failure && failure.message}`);
+}
+if (!failure.message.includes("backup preserved")) {
+  throw new Error(`preserved backup was not reported: ${failure.message}`);
+}
+if ((await readFile(%s, "utf8")) !== "EXTERNAL-IMAGE") {
+  throw new Error("external image update was overwritten");
+}
+if ((await readFile(%s, "utf8")) !== "old-metadata") {
+  throw new Error("metadata was not rolled back");
+}
+const names = await readdir(%s);
+const backups = names.filter((name) => name.endsWith(".bak"));
+const temporary = names.filter((name) => name.endsWith(".tmp"));
+if (backups.length !== 1) throw new Error(`expected one backup; found ${backups}`);
+if ((await readFile(%s + "/" + backups[0], "utf8")) !== "old-image") {
+  throw new Error("preserved backup does not contain the original image");
+}
+if (temporary.length !== 0) throw new Error(`temporary residue: ${temporary}`);
+""" % tuple(
+                json.dumps(value)
+                for value in (
+                    module_url,
+                    str(root / ".external-image"),
+                    str(output),
+                    str(output),
+                    str(metadata),
+                    str(output),
+                    str(metadata),
+                    str(root),
+                    str(root),
+                )
+            )
+
+            result = subprocess.run(
+                ["node", "--input-type=module", "--eval", program],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=5,
+            )
+
             self.assertEqual(0, result.returncode, result.stderr)
 
     def test_capture_publish_rejects_external_metadata_update_before_replace(self):
@@ -1861,6 +2236,7 @@ if ((await readFile(%s, "utf8")) !== "EXTERNAL-METADATA") {
                 capture_output=True,
                 text=True,
                 check=False,
+                timeout=5,
             )
             self.assertEqual(0, result.returncode, result.stderr)
 
@@ -2115,6 +2491,31 @@ if (residue.length !== 0) throw new Error(`publish residue: ${residue.join(",")}
             self.assertIn("passed=true", result.stdout)
             self.assertEqual(before, (baseline.read_bytes(), baseline_metadata.read_bytes()))
 
+    def test_normal_compare_rejects_non_linux_approved_baseline(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            baseline, baseline_metadata = self.write_capture_fixture(
+                root,
+                "baseline",
+                approved=True,
+                platform_os="darwin",
+                platform_arch="arm64",
+            )
+            candidate, candidate_metadata = self.write_capture_fixture(
+                root,
+                "candidate",
+                platform_os="darwin",
+                platform_arch="arm64",
+            )
+
+            with self.assertRaisesRegex(VisualComparisonError, "linux"):
+                visual_comparator.compare_capture_files(
+                    baseline,
+                    baseline_metadata,
+                    candidate,
+                    candidate_metadata,
+                )
+
     def test_normal_compare_rejects_repo_replacement_before_return(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir).resolve()
@@ -2200,6 +2601,102 @@ if (residue.length !== 0) throw new Error(`publish residue: ${residue.join(",")}
                         diff_output=diff_output,
                     )
 
+            self.assert_file_snapshot(diff_output, original_diff)
+            self.assert_no_publish_residue(root)
+
+    def test_heatmap_rolls_back_when_repo_changes_after_publish(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            repo_root = self.copy_capture_repository(root / "repo")
+            fixtures = root / "fixtures"
+            fixtures.mkdir()
+            baseline, baseline_metadata = self.write_capture_fixture(
+                fixtures,
+                "baseline",
+                approved=True,
+                repo_root=repo_root,
+            )
+            candidate, candidate_metadata = self.write_capture_fixture(
+                fixtures,
+                "candidate",
+                color=(90, 30, 40, 255),
+                repo_root=repo_root,
+            )
+            diff_output = root / "existing.diff.png"
+            original_diff = self.write_snapshot_file(
+                diff_output,
+                b"old-diff-output",
+                0o600,
+                1_626_000_000_000_000_000,
+            )
+            source_asset = repo_root / visual_comparator.SOURCE_ASSET_PATHS[0]
+            real_replace = os.replace
+            real_compare = visual_comparator.compare_images
+            injected = [False]
+
+            def validate_with_small_decoded_image(
+                metadata,
+                image_path,
+                label,
+                require_approval=False,
+                repository_provenance=None,
+            ):
+                del metadata, require_approval
+                snapshot = visual_comparator._read_file_snapshot(
+                    image_path,
+                    "{0} image".format(label),
+                )
+                return visual_comparator.ValidatedCapture(
+                    snapshot,
+                    hashlib.sha256(snapshot.payload).hexdigest(),
+                    self.solid_image((1, 1), (0, 0, 0, 255)),
+                    repository_provenance,
+                )
+
+            def stage_small_failed_heatmap(*arguments, **keywords):
+                del arguments
+                return real_compare(
+                    self.solid_image((1, 1), (0, 0, 0, 255)),
+                    self.solid_image((1, 1), (255, 0, 0, 255)),
+                    channel_tolerance=keywords["channel_tolerance"],
+                    max_diff_ratio=keywords["max_diff_ratio"],
+                    diff_output=keywords["diff_output"],
+                )
+
+            def publish_heatmap_then_change_source(source, target):
+                result = real_replace(source, target)
+                if Path(target) == diff_output and not injected[0]:
+                    injected[0] = True
+                    self.atomically_replace_identity(source_asset, replace=real_replace)
+                return result
+
+            with mock.patch.object(
+                visual_comparator,
+                "REPO_ROOT",
+                repo_root,
+            ), mock.patch.object(
+                visual_comparator,
+                "_validate_capture_metadata",
+                side_effect=validate_with_small_decoded_image,
+            ), mock.patch.object(
+                visual_comparator,
+                "compare_images",
+                side_effect=stage_small_failed_heatmap,
+            ), mock.patch.object(
+                visual_comparator.os,
+                "replace",
+                side_effect=publish_heatmap_then_change_source,
+            ):
+                with self.assertRaises(VisualComparisonError):
+                    visual_comparator.compare_capture_files(
+                        baseline,
+                        baseline_metadata,
+                        candidate,
+                        candidate_metadata,
+                        diff_output=diff_output,
+                    )
+
+            self.assertTrue(injected[0])
             self.assert_file_snapshot(diff_output, original_diff)
             self.assert_no_publish_residue(root)
 
@@ -2489,6 +2986,53 @@ if (residue.length !== 0) throw new Error(`publish residue: ${residue.join(",")}
             self.assertIn("linux", result.stderr.lower())
             self.assertFalse((root / "baseline.png").exists())
             self.assertFalse((root / "baseline.json").exists())
+
+    def test_approval_publish_rejects_external_image_rewrite_after_first_replace(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            baseline = root / "baseline.png"
+            baseline_metadata = root / "baseline.json"
+            baseline.write_bytes(b"old-baseline-image")
+            baseline_metadata.write_bytes(b"old-baseline-metadata")
+            real_replace = os.replace
+            injected = [False]
+
+            def replace_then_rewrite_first_target(source, target):
+                result = real_replace(source, target)
+                if Path(target) == baseline and not injected[0]:
+                    injected[0] = True
+                    external = root / ".external-baseline"
+                    external.write_bytes(b"EXTERNAL-IMAGE")
+                    real_replace(str(external), str(baseline))
+                return result
+
+            with mock.patch.object(
+                visual_comparator.os,
+                "replace",
+                side_effect=replace_then_rewrite_first_target,
+            ):
+                with self.assertRaisesRegex(
+                    VisualComparisonError,
+                    "rollback was incomplete",
+                ) as caught:
+                    visual_comparator._publish_approval(
+                        baseline,
+                        b"new-baseline-image",
+                        baseline_metadata,
+                        b"new-baseline-metadata",
+                    )
+
+            self.assertTrue(injected[0])
+            self.assertIn("backup preserved", str(caught.exception))
+            self.assertEqual(b"EXTERNAL-IMAGE", baseline.read_bytes())
+            self.assertEqual(b"old-baseline-metadata", baseline_metadata.read_bytes())
+            backups = [path for path in root.iterdir() if path.name.endswith(".bak")]
+            self.assertEqual(1, len(backups))
+            self.assertEqual(b"old-baseline-image", backups[0].read_bytes())
+            self.assertEqual(
+                [],
+                [path for path in root.iterdir() if path.name.endswith(".tmp")],
+            )
 
     def test_accept_uses_candidate_bytes_frozen_during_validation(self):
         with tempfile.TemporaryDirectory() as temp_dir:
