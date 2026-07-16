@@ -3,17 +3,21 @@ import { createHash, randomBytes } from "node:crypto";
 import { constants as fsConstants } from "node:fs";
 import {
   chmod,
+  link,
   lstat,
   mkdir,
+  mkdtemp,
   open,
   realpath,
   rename,
   rm,
+  rmdir,
   stat,
 } from "node:fs/promises";
 import { createRequire } from "node:module";
 import os from "node:os";
 import path from "node:path";
+import { performance } from "node:perf_hooks";
 import process from "node:process";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -28,7 +32,7 @@ const VIEWPORT = Object.freeze({ width: 1280, height: 900 });
 const DEVICE_SCALE_FACTOR = 1;
 const PLAYWRIGHT_OPERATION_TIMEOUT_MS = 10_000;
 const CAPTURE_SESSION_TIMEOUT_MS = 12_000;
-const CLOSE_TIMEOUT_MS = 5_000;
+const CAPTURE_CLEANUP_TIMEOUT_MS = 5_000;
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const INDEX_RELATIVE_PATH = "gallery/diagram-core/index.html";
 const require = createRequire(import.meta.url);
@@ -219,23 +223,92 @@ async function withTimeout(operation, label, timeoutMs = PLAYWRIGHT_OPERATION_TI
 }
 
 
+export function createOperationDeadline(
+  timeoutMs = CAPTURE_SESSION_TIMEOUT_MS,
+  monotonicNow = () => performance.now(),
+) {
+  if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) {
+    throw new Error("operation deadline must be a positive finite number");
+  }
+  const startedAt = monotonicNow();
+  return Object.freeze({ expiresAt: startedAt + timeoutMs, monotonicNow });
+}
+
+
+function normalizeOperationDeadline(deadlineOrTimeout) {
+  if (
+    deadlineOrTimeout
+    && typeof deadlineOrTimeout === "object"
+    && typeof deadlineOrTimeout.monotonicNow === "function"
+    && Number.isFinite(deadlineOrTimeout.expiresAt)
+  ) return deadlineOrTimeout;
+  return createOperationDeadline(deadlineOrTimeout);
+}
+
+
+function remainingOperationBudget(deadline, label) {
+  const remaining = Math.ceil(deadline.expiresAt - deadline.monotonicNow());
+  if (remaining <= 0) throw new Error(`${label} timed out before it started`);
+  return remaining;
+}
+
+
+async function withOperationDeadline(operation, label, deadline) {
+  return withTimeout(
+    operation,
+    label,
+    remainingOperationBudget(deadline, label),
+  );
+}
+
+
 export async function withCaptureDeadline(
   operation,
-  timeoutMs = CAPTURE_SESSION_TIMEOUT_MS,
+  deadlineOrTimeout = CAPTURE_SESSION_TIMEOUT_MS,
 ) {
-  return withTimeout(operation, "browser capture session", timeoutMs);
+  return withOperationDeadline(
+    operation,
+    "browser capture session",
+    normalizeOperationDeadline(deadlineOrTimeout),
+  );
+}
+
+
+export async function launchBrowserServer(
+  operationDeadline,
+  launch = (options) => chromium.launchServer(options),
+) {
+  const deadline = normalizeOperationDeadline(operationDeadline);
+  const timeout = remainingOperationBudget(deadline, "browser launch");
+  const launchPromise = Promise.resolve().then(
+    () => launch({ headless: true, timeout }),
+  );
+  try {
+    return await withTimeout(
+      () => launchPromise,
+      "browser launch",
+      timeout,
+    );
+  } catch (error) {
+    launchPromise.then(
+      (lateServer) => shutdownBrowser({ browserServer: lateServer }).catch(() => {}),
+      () => {},
+    );
+    throw error;
+  }
 }
 
 
 export async function shutdownBrowser(
   resources,
-  timeoutMs = CLOSE_TIMEOUT_MS,
+  timeoutMs = CAPTURE_CLEANUP_TIMEOUT_MS,
   forceKill = process.kill.bind(process),
 ) {
+  const cleanupDeadline = createOperationDeadline(timeoutMs);
   const errors = [];
   const closeBounded = async (operation, label) => {
     try {
-      await withTimeout(operation, label, timeoutMs);
+      await withOperationDeadline(operation, label, cleanupDeadline);
     } catch (error) {
       errors.push(error);
     }
@@ -260,13 +333,16 @@ export async function shutdownBrowser(
       await withTimeout(
         () => resources.browserServer.kill(),
         "browser server kill",
-        timeoutMs,
+        remainingOperationBudget(cleanupDeadline, "browser server kill"),
       );
     } catch (error) {
       errors.push(error);
       if (serverProcess && Number.isInteger(serverProcess.pid)) {
         try {
-          forceKill(serverProcess.pid, "SIGKILL");
+          const killTarget = process.platform === "win32"
+            ? serverProcess.pid
+            : -serverProcess.pid;
+          forceKill(killTarget, "SIGKILL");
         } catch (killError) {
           if (!killError || killError.code !== "ESRCH") errors.push(killError);
         }
@@ -286,13 +362,13 @@ export async function shutdownBrowser(
 export async function runCaptureSession(
   operation,
   resources,
-  sessionTimeoutMs = CAPTURE_SESSION_TIMEOUT_MS,
-  closeTimeoutMs = CLOSE_TIMEOUT_MS,
+  sessionDeadlineOrTimeout = CAPTURE_SESSION_TIMEOUT_MS,
+  closeTimeoutMs = CAPTURE_CLEANUP_TIMEOUT_MS,
   forceKill = process.kill.bind(process),
 ) {
   let operationError = null;
   try {
-    await withCaptureDeadline(operation, sessionTimeoutMs);
+    await withCaptureDeadline(operation, sessionDeadlineOrTimeout);
   } catch (error) {
     operationError = error;
   }
@@ -423,20 +499,6 @@ async function snapshotTarget(target) {
 }
 
 
-function snapshotsEqual(left, right) {
-  if (left === null || right === null) return left === right;
-  return left.signature === right.signature && left.payload.equals(right.payload);
-}
-
-
-async function assertTargetUnchanged(entry) {
-  const current = await snapshotTarget(entry.target);
-  if (!snapshotsEqual(current, entry.snapshot)) {
-    throw new Error(`output changed before publish: ${entry.target}`);
-  }
-}
-
-
 async function matchesPublishedPayload(entry) {
   const current = await snapshotTarget(entry.target);
   return current !== null
@@ -452,62 +514,188 @@ async function assertPublishedPayloadCurrent(entry) {
 }
 
 
-function preserveBackup(entry, reason) {
-  if (entry.backup) {
-    const backup = entry.backup;
-    entry.backup = null;
-    return `${reason}; original backup preserved at ${backup}`;
-  }
-  return reason;
+function movedSnapshotMatches(snapshot, expected) {
+  if (snapshot === null || expected === null) return snapshot === expected;
+  return snapshot.replacementSignature === expected.replacementSignature
+    && snapshot.payload.equals(expected.payload);
 }
 
 
-async function restorePublishedEntry(entry, replace) {
-  const current = await snapshotTarget(entry.target);
-  if (snapshotsEqual(current, entry.snapshot)) return;
-  if (!(await matchesPublishedPayload(entry))) {
-    throw new Error(preserveBackup(
-      entry,
-      `rollback conflict at ${entry.target}: current output is neither original nor published`,
-    ));
+function normalizePublicationOperations(operations) {
+  if (operations === undefined || operations === null) {
+    return { move: rename, link, unlink: rm, rmdir, snapshot: snapshotTarget };
   }
-  if (entry.snapshot === null) {
-    await rm(entry.target);
-    return;
+  if (typeof operations !== "object") {
+    throw new Error("publication operations must be an object");
   }
-  if (!entry.backup || !(await exists(entry.backup))) {
-    throw new Error(`rollback backup is missing for ${entry.target}`);
-  }
-  const backup = entry.backup;
+  return {
+    move: typeof operations.move === "function" ? operations.move : rename,
+    link: typeof operations.link === "function" ? operations.link : link,
+    unlink: typeof operations.unlink === "function" ? operations.unlink : rm,
+    rmdir: typeof operations.rmdir === "function" ? operations.rmdir : rmdir,
+    snapshot: typeof operations.snapshot === "function"
+      ? operations.snapshot
+      : snapshotTarget,
+  };
+}
+
+
+async function createClaimArea(target) {
+  const directory = await mkdtemp(
+    path.join(path.dirname(target), `.${path.basename(target)}.${process.pid}.claim-`),
+  );
+  return { directory, path: path.join(directory, "payload") };
+}
+
+
+async function discardClaim(claim, operations) {
+  await operations.unlink(claim.path);
+  await operations.rmdir(claim.directory);
+}
+
+
+async function claimCurrentTarget(target, operations) {
+  const claim = await createClaimArea(target);
   try {
-    await replace(backup, entry.target);
-    entry.backup = null;
+    await operations.move(target, claim.path);
   } catch (error) {
-    const restored = await snapshotTarget(entry.target).catch(() => null);
-    if (
-      restored !== null
-      && restored.replacementSignature === entry.backupSignature
-      && restored.payload.equals(entry.snapshot.payload)
-    ) {
-      entry.backup = null;
-      return;
+    if (error && error.code === "ENOENT") {
+      await operations.rmdir(claim.directory);
+      return null;
     }
-    throw new Error(preserveBackup(entry, error.message), { cause: error });
+    await operations.rmdir(claim.directory).catch(() => {});
+    throw error;
+  }
+  try {
+    claim.snapshot = await operations.snapshot(claim.path);
+    if (claim.snapshot === null) {
+      throw new Error(`claimed output disappeared: ${target}`);
+    }
+  } catch (error) {
+    try {
+      await restoreClaimExclusive(claim, target, operations);
+    } catch (recoveryError) {
+      throw new Error(
+        preserveClaim(
+          claim,
+          `claimed output inspection failed at ${target}: ${error.message}; exclusive recovery failed: ${recoveryError.message}`,
+        ),
+        { cause: error },
+      );
+    }
+    throw error;
+  }
+  return claim;
+}
+
+
+async function createExclusiveLink(source, target, operations) {
+  try {
+    await operations.link(source, target);
+    return null;
+  } catch (error) {
+    if (await pathsAlias(source, target).catch(() => false)) return error;
+    throw error;
+  }
+}
+
+
+async function restoreClaimExclusive(claim, target, operations) {
+  await createExclusiveLink(claim.path, target, operations);
+  if (claim.snapshot !== undefined && claim.snapshot !== null) {
+    await chmod(claim.path, claim.snapshot.mode);
+  }
+  await discardClaim(claim, operations);
+}
+
+
+function preserveClaim(claim, reason) {
+  if (!claim) return reason;
+  return `${reason}; recovery claim preserved at ${claim.path}`;
+}
+
+
+async function rejectUnexpectedClaim(claim, target, operations, reason) {
+  if (claim === null) throw new Error(reason);
+  try {
+    await restoreClaimExclusive(claim, target, operations);
+  } catch (error) {
+    throw new Error(
+      preserveClaim(claim, `${reason}; exclusive recovery failed: ${error.message}`),
+      { cause: error },
+    );
+  }
+  throw new Error(reason);
+}
+
+
+async function rollbackPublishedEntry(entry, operations) {
+  if (entry.installed) {
+    const displaced = await claimCurrentTarget(entry.target, operations);
+    if (displaced === null) {
+      throw new Error(preserveClaim(
+        entry.originalClaim,
+        `rollback conflict at ${entry.target}: published output disappeared`,
+      ));
+    }
+    if (!movedSnapshotMatches(displaced.snapshot, {
+      replacementSignature: entry.stagedSignature,
+      payload: entry.payload,
+    })) {
+      try {
+        await restoreClaimExclusive(displaced, entry.target, operations);
+      } catch (error) {
+        throw new Error(
+          preserveClaim(
+            entry.originalClaim,
+            preserveClaim(
+              displaced,
+              `rollback conflict at ${entry.target}; external output recovery failed: ${error.message}`,
+            ),
+          ),
+          { cause: error },
+        );
+      }
+      throw new Error(preserveClaim(
+        entry.originalClaim,
+        `rollback conflict at ${entry.target}: current output is not owned by this publish`,
+      ));
+    }
+    await discardClaim(displaced, operations);
+    entry.installed = false;
+  }
+
+  if (entry.originalClaim !== null) {
+    const originalClaim = entry.originalClaim;
+    try {
+      await restoreClaimExclusive(originalClaim, entry.target, operations);
+      entry.originalClaim = null;
+    } catch (error) {
+      throw new Error(
+        preserveClaim(
+          originalClaim,
+          `rollback conflict at ${entry.target}; exclusive original restore failed: ${error.message}`,
+        ),
+        { cause: error },
+      );
+    }
   }
 }
 
 
 export async function publishCapture(
   entries,
-  replace = rename,
+  operationsValue,
   verifyCurrent = async () => {},
 ) {
   if (!Array.isArray(entries) || entries.length !== 2) {
     throw new Error("capture publish requires exactly image and metadata entries");
   }
+  const operations = normalizePublicationOperations(operationsValue);
   await rejectAliases(entries.map((entry, index) => [`capture output ${index}`, entry.target]));
   await Promise.all(entries.map((entry) => prepareOutput(entry.target)));
   const staged = [];
+  let committed = false;
   try {
     for (const entry of entries) {
       const payload = Buffer.from(entry.payload);
@@ -521,45 +709,80 @@ export async function publishCapture(
       const record = {
         target: entry.target,
         payload,
+        mode: snapshot === null ? 0o644 : snapshot.mode,
         snapshot,
         temporary,
-        backup: null,
-        backupSignature: null,
-        attempted: false,
+        originalClaim: null,
+        installed: false,
         stagedSignature: replacementSignature(stagedInfo),
       };
       staged.push(record);
-      if (snapshot !== null) {
-        record.backup = await stagePayload(
-          entry.target,
-          snapshot.payload,
-          snapshot.mode,
-          ".bak",
-        );
-        record.backupSignature = replacementSignature(
-          await lstat(record.backup, { bigint: true }),
-        );
-      }
     }
     for (const entry of staged) {
       await verifyCurrent();
-      await assertTargetUnchanged(entry);
-      entry.attempted = true;
-      await replace(entry.temporary, entry.target);
-      entry.temporary = null;
+      for (const peer of staged) {
+        if (peer === entry) break;
+        if (peer.installed) await assertPublishedPayloadCurrent(peer);
+      }
+      const claim = await claimCurrentTarget(entry.target, operations);
+      const moved = claim === null ? null : claim.snapshot;
+      if (!movedSnapshotMatches(moved, entry.snapshot)) {
+        await rejectUnexpectedClaim(
+          claim,
+          entry.target,
+          operations,
+          `output changed before publish: ${entry.target}`,
+        );
+      }
+      entry.originalClaim = claim;
+      await verifyCurrent();
+      for (const peer of staged) {
+        if (peer === entry) break;
+        if (peer.installed) await assertPublishedPayloadCurrent(peer);
+      }
+      const installError = await createExclusiveLink(
+        entry.temporary,
+        entry.target,
+        operations,
+      );
+      entry.installed = true;
+      await chmod(entry.temporary, entry.mode);
+      if (installError) throw installError;
+      await assertPublishedPayloadCurrent(entry);
     }
     await verifyCurrent();
     for (const entry of staged) {
       await assertPublishedPayloadCurrent(entry);
     }
+    committed = true;
+    for (const entry of staged) {
+      if (entry.originalClaim !== null) {
+        const claim = entry.originalClaim;
+        try {
+          await discardClaim(claim, operations);
+        } catch (error) {
+          throw new Error(
+            `claim cleanup failed at ${claim.directory}: ${error.message}`,
+            { cause: error },
+          );
+        }
+        entry.originalClaim = null;
+      }
+    }
   } catch (error) {
+    if (committed) {
+      throw new Error(
+        `capture publish committed but cleanup failed; committed outputs retained: ${error.message}`,
+        { cause: error },
+      );
+    }
     const rollbackErrors = [];
     for (const entry of [...staged].reverse()) {
-      if (!entry.attempted) continue;
+      if (!entry.installed && entry.originalClaim === null) continue;
       try {
-        await restorePublishedEntry(entry, replace);
+        await rollbackPublishedEntry(entry, operations);
       } catch (rollbackError) {
-        rollbackErrors.push(preserveBackup(entry, rollbackError.message));
+        rollbackErrors.push(rollbackError.message);
       }
     }
     if (rollbackErrors.length !== 0) {
@@ -574,11 +797,6 @@ export async function publishCapture(
       staged
         .filter((entry) => entry.temporary)
         .map((entry) => rm(entry.temporary, { force: true }).catch(() => {})),
-    );
-    await Promise.all(
-      staged
-        .filter((entry) => entry.backup)
-        .map((entry) => rm(entry.backup, { force: true }).catch(() => {})),
     );
   }
 }
@@ -952,7 +1170,8 @@ async function inspectStaticSurface(page, frozenSource) {
 }
 
 
-export async function capture(paths, replace = rename) {
+export async function capture(paths, publicationOperations) {
+  const operationDeadline = createOperationDeadline();
   await requireRegularFile(paths.input, "input HTML");
   await rejectAliases([
     ["input", paths.input],
@@ -980,10 +1199,7 @@ export async function capture(paths, replace = rename) {
   await verifyProvenance();
   const externalRequests = new Set();
   const canonicalInputUrl = pathToFileURL(canonicalInput).href;
-  const browserServer = await chromium.launchServer({
-    headless: true,
-    timeout: PLAYWRIGHT_OPERATION_TIMEOUT_MS,
-  });
+  const browserServer = await launchBrowserServer(operationDeadline);
   let browser;
   let context;
   let screenshot;
@@ -1119,6 +1335,7 @@ export async function capture(paths, replace = rename) {
   await runCaptureSession(
     runBrowserCapture,
     () => ({ context, browser, browserServer }),
+    operationDeadline,
   );
   context = undefined;
   if (allowedMainNavigations !== 1) {
@@ -1182,7 +1399,7 @@ export async function capture(paths, replace = rename) {
       target: paths.metadata,
       payload: Buffer.from(`${JSON.stringify(metadata, null, 2)}\n`, "utf8"),
     },
-  ], replace, verifyProvenance);
+  ], publicationOperations, verifyProvenance);
   return { cells, requests: externalRequests.size, animations: motion.animationCount, metadata };
 }
 

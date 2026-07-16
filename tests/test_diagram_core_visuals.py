@@ -5,6 +5,7 @@ import itertools
 import json
 import os
 import re
+import signal
 import shutil
 import subprocess
 import sys
@@ -153,7 +154,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
         residues = [
             path
             for path in Path(root).rglob("*")
-            if path.name.endswith((".tmp", ".bak"))
+            if path.name.endswith((".tmp", ".bak")) or ".claim-" in path.name
         ]
         self.assertEqual([], residues)
 
@@ -925,7 +926,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
         replace(str(replacement), str(target))
 
     def capture_command(self, input_path, output, metadata):
-        return subprocess.run(
+        return self.run_process_group(
             [
                 "node",
                 str(self.CAPTURE_SCRIPT),
@@ -937,11 +938,35 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                 str(metadata),
             ],
             cwd=ROOT,
-            capture_output=True,
-            text=True,
-            check=False,
             timeout=30,
         )
+
+    def run_process_group(self, command, cwd=ROOT, env=None, timeout=30):
+        process = subprocess.Popen(
+            command,
+            cwd=cwd,
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            start_new_session=True,
+        )
+        try:
+            stdout, stderr = process.communicate(timeout=timeout)
+        except subprocess.TimeoutExpired as error:
+            os.killpg(process.pid, signal.SIGTERM)
+            try:
+                stdout, stderr = process.communicate(timeout=1)
+            except subprocess.TimeoutExpired:
+                os.killpg(process.pid, signal.SIGKILL)
+                stdout, stderr = process.communicate(timeout=1)
+            raise subprocess.TimeoutExpired(
+                error.cmd,
+                error.timeout,
+                output=stdout,
+                stderr=stderr,
+            ) from error
+        return subprocess.CompletedProcess(command, process.returncode, stdout, stderr)
 
     def capture_metadata_digest(self, metadata):
         payload = copy.deepcopy(metadata)
@@ -1279,7 +1304,8 @@ try {
 if (!failure || !failure.message.includes("timed out")) {
   throw new Error(`bounded cleanup failure missing: ${failure && failure.message}`);
 }
-if (JSON.stringify(signals) !== JSON.stringify([[424242, "SIGKILL"]])) {
+const forcedBrowserPid = process.platform === "win32" ? 424242 : -424242;
+if (JSON.stringify(signals) !== JSON.stringify([[forcedBrowserPid, "SIGKILL"]])) {
   throw new Error(`forced process kill missing: ${JSON.stringify(signals)}`);
 }
 if (Date.now() - started > 500) throw new Error("cleanup exceeded its bound");
@@ -1305,7 +1331,8 @@ try {
 if (!orchestrationFailure || !orchestrationFailure.message.includes("timed out")) {
   throw new Error(`session orchestration failure missing: ${orchestrationFailure && orchestrationFailure.message}`);
 }
-if (JSON.stringify(orchestrationSignals) !== JSON.stringify([[515151, "SIGKILL"]])) {
+const forcedSessionPid = process.platform === "win32" ? 515151 : -515151;
+if (JSON.stringify(orchestrationSignals) !== JSON.stringify([[forcedSessionPid, "SIGKILL"]])) {
   throw new Error(`session cleanup was repeated: ${JSON.stringify(orchestrationSignals)}`);
 }
 if (Date.now() - orchestrationStarted > 500) {
@@ -1323,6 +1350,127 @@ if (Date.now() - orchestrationStarted > 500) {
         )
 
         self.assertEqual(0, result.returncode, result.stderr)
+
+    def test_capture_absolute_deadline_bounds_launch_and_remaining_session_budget(self):
+        module_url = self.CAPTURE_SCRIPT.as_uri()
+        program = """
+const {
+  createOperationDeadline,
+  launchBrowserServer,
+  runCaptureSession,
+} = await import(%s);
+if (typeof createOperationDeadline !== "function") {
+  throw new Error("absolute operation deadline export missing");
+}
+if (typeof launchBrowserServer !== "function") {
+  throw new Error("deadline-aware browser launch export missing");
+}
+const never = () => new Promise(() => {});
+const started = Date.now();
+const deadline = createOperationDeadline(30);
+let launchOptions;
+let launchFailure;
+let lateServerKills = 0;
+try {
+  await launchBrowserServer(deadline, async (options) => {
+    launchOptions = options;
+    await new Promise((resolve) => setTimeout(resolve, 60));
+    return {
+      kill: async () => { lateServerKills += 1; },
+      process: () => ({ pid: 626262, exitCode: null, signalCode: null }),
+    };
+  });
+} catch (error) {
+  launchFailure = error;
+}
+if (!launchFailure || !launchFailure.message.includes("timed out")) {
+  throw new Error(`hanging launch escaped deadline: ${launchFailure && launchFailure.message}`);
+}
+if (!launchOptions || !(launchOptions.timeout > 0 && launchOptions.timeout <= 30)) {
+  throw new Error(`launch did not consume remaining budget: ${JSON.stringify(launchOptions)}`);
+}
+if (Date.now() - started > 500) throw new Error("launch deadline exceeded its bound");
+await new Promise((resolve) => setTimeout(resolve, 80));
+if (lateServerKills !== 1) {
+  throw new Error(`late browser server was orphaned: kills=${lateServerKills}`);
+}
+
+const sharedDeadline = createOperationDeadline(50);
+await new Promise((resolve) => setTimeout(resolve, 25));
+let sessionFailure;
+const sessionStarted = Date.now();
+try {
+  await runCaptureSession(
+    never,
+    () => ({}),
+    sharedDeadline,
+    20,
+  );
+} catch (error) {
+  sessionFailure = error;
+}
+if (!sessionFailure || !sessionFailure.message.includes("timed out")) {
+  throw new Error(`session escaped remaining budget: ${sessionFailure && sessionFailure.message}`);
+}
+if (Date.now() - sessionStarted > 300) {
+  throw new Error("session received a fresh operation timeout");
+}
+""" % json.dumps(module_url)
+
+        result = subprocess.run(
+            ["node", "--input-type=module", "--eval", program],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=3,
+        )
+
+        self.assertEqual(0, result.returncode, result.stderr)
+        source = self.CAPTURE_SCRIPT.read_text(encoding="utf-8")
+        deadline_index = source.index("const operationDeadline = createOperationDeadline")
+        launch_index = source.index("await launchBrowserServer(operationDeadline")
+        session_index = source.index("operationDeadline,", launch_index)
+        self.assertLess(deadline_index, launch_index)
+        self.assertLess(launch_index, session_index)
+
+    def test_capture_subprocess_timeout_kills_entire_process_group(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            child_pid_path = Path(temp_dir) / "child.pid"
+            child_program = (
+                "import signal,time;"
+                "signal.signal(signal.SIGTERM, signal.SIG_IGN);"
+                "time.sleep(60)"
+            )
+            parent_program = (
+                "import pathlib,signal,subprocess,sys,time;"
+                "signal.signal(signal.SIGTERM, signal.SIG_IGN);"
+                "child=subprocess.Popen([sys.executable,'-c',sys.argv[2]]);"
+                "pathlib.Path(sys.argv[1]).write_text(str(child.pid));"
+                "time.sleep(60)"
+            )
+
+            with self.assertRaises(subprocess.TimeoutExpired):
+                self.run_process_group(
+                    [
+                        sys.executable,
+                        "-c",
+                        parent_program,
+                        str(child_pid_path),
+                        child_program,
+                    ],
+                    timeout=0.2,
+                )
+
+            child_pid = int(child_pid_path.read_text(encoding="utf-8"))
+            for _ in range(50):
+                try:
+                    os.kill(child_pid, 0)
+                except ProcessLookupError:
+                    break
+                threading.Event().wait(0.02)
+            else:
+                self.fail("timed-out capture process group left a child process alive")
 
     def test_capture_cli_requires_all_three_paths(self):
         result = subprocess.run(
@@ -1350,23 +1498,7 @@ if (Date.now() - orchestrationStarted > 500) {
             )
             output = root / "candidate.png"
             metadata = root / "candidate.json"
-            result = subprocess.run(
-                [
-                    "node",
-                    str(self.CAPTURE_SCRIPT),
-                    "--input",
-                    str(malicious_input),
-                    "--output",
-                    str(output),
-                    "--metadata",
-                    str(metadata),
-                ],
-                cwd=ROOT,
-                capture_output=True,
-                text=True,
-                check=False,
-                timeout=30,
-            )
+            result = self.capture_command(malicious_input, output, metadata)
             self.assertEqual(1, result.returncode)
             self.assertIn("external requests are forbidden", result.stderr)
             self.assertFalse(output.exists())
@@ -1384,19 +1516,7 @@ if (Date.now() - orchestrationStarted > 500) {
             )
             output = root / "candidate.png"
             metadata = root / "candidate.json"
-            result = subprocess.run(
-                [
-                    "node", str(self.CAPTURE_SCRIPT),
-                    "--input", str(malicious_input),
-                    "--output", str(output),
-                    "--metadata", str(metadata),
-                ],
-                cwd=ROOT,
-                capture_output=True,
-                text=True,
-                check=False,
-                timeout=30,
-            )
+            result = self.capture_command(malicious_input, output, metadata)
             self.assertEqual(1, result.returncode)
             self.assertIn("external requests are forbidden", result.stderr)
             self.assertFalse(output.exists())
@@ -1416,20 +1536,7 @@ if (Date.now() - orchestrationStarted > 500) {
             )
             output = root / "candidate.png"
             metadata = root / "candidate.json"
-            result = subprocess.run(
-                [
-                    "node",
-                    str(self.CAPTURE_SCRIPT),
-                    "--input", str(malicious_input),
-                    "--output", str(output),
-                    "--metadata", str(metadata),
-                ],
-                cwd=ROOT,
-                capture_output=True,
-                text=True,
-                check=False,
-                timeout=30,
-            )
+            result = self.capture_command(malicious_input, output, metadata)
             self.assertEqual(1, result.returncode)
             self.assertIn("external requests are forbidden", result.stderr)
             self.assertFalse(output.exists())
@@ -1453,20 +1560,7 @@ if (Date.now() - orchestrationStarted > 500) {
             )
             output = root / "candidate.png"
             metadata = root / "candidate.json"
-            result = subprocess.run(
-                [
-                    "node",
-                    str(self.CAPTURE_SCRIPT),
-                    "--input", str(malicious_input),
-                    "--output", str(output),
-                    "--metadata", str(metadata),
-                ],
-                cwd=ROOT,
-                capture_output=True,
-                text=True,
-                check=False,
-                timeout=30,
-            )
+            result = self.capture_command(malicious_input, output, metadata)
             self.assertEqual(1, result.returncode)
             self.assertIn("external requests are forbidden", result.stderr)
             self.assertFalse(output.exists())
@@ -1999,7 +2093,7 @@ if (Date.now() - orchestrationStarted > 500) {
             self.assertFalse(output.exists())
             self.assertFalse(metadata.exists())
 
-    def test_capture_pair_publish_rolls_back_when_second_rename_fails(self):
+    def test_capture_pair_publish_rolls_back_when_second_install_fails(self):
         build_root = ROOT / "build"
         build_root.mkdir(exist_ok=True)
         with tempfile.TemporaryDirectory(prefix="diagram-core-publish-", dir=build_root) as temp_dir:
@@ -2009,22 +2103,22 @@ if (Date.now() - orchestrationStarted > 500) {
             output.write_bytes(b"old-image")
             module_url = self.CAPTURE_SCRIPT.as_uri()
             program = """
-import { rename, readFile, readdir } from "node:fs/promises";
+import { link, rename, readFile, readdir } from "node:fs/promises";
 const { publishCapture } = await import(%s);
 let calls = 0;
-const injectedRename = async (source, target) => {
+const injectedLink = async (source, target) => {
   calls += 1;
-  if (calls === 2) throw new Error("injected second rename failure");
-  return rename(source, target);
+  if (calls === 2) throw new Error("injected second install failure");
+  return link(source, target);
 };
 let failed = false;
 try {
   await publishCapture([
     { target: %s, payload: Buffer.from("new-image") },
     { target: %s, payload: Buffer.from("new-metadata") },
-  ], injectedRename);
+  ], { move: rename, link: injectedLink });
 } catch (error) {
-  failed = error.message.includes("injected second rename failure");
+  failed = error.message.includes("injected second install failure");
 }
 if (!failed) throw new Error("publish did not expose injected failure");
 if ((await readFile(%s, "utf8")) !== "old-image") throw new Error("image rollback failed");
@@ -2114,11 +2208,11 @@ if (metadataMode !== 0o1640) throw new Error(`metadata mode changed to ${metadat
             metadata.write_bytes(b"old-metadata")
             module_url = self.CAPTURE_SCRIPT.as_uri()
             program = """
-import { rename, readFile, readdir, writeFile } from "node:fs/promises";
+import { link, rename, readFile, readdir, writeFile } from "node:fs/promises";
 const { publishCapture } = await import(%s);
 let calls = 0;
-const injectedRename = async (source, target) => {
-  const result = await rename(source, target);
+const injectedLink = async (source, target) => {
+  const result = await link(source, target);
   calls += 1;
   if (calls === 1) {
     const external = %s;
@@ -2132,15 +2226,15 @@ try {
   await publishCapture([
     { target: %s, payload: Buffer.from("new-image") },
     { target: %s, payload: Buffer.from("new-metadata") },
-  ], injectedRename);
+  ], { move: rename, link: injectedLink });
 } catch (error) {
   failure = error;
 }
 if (!failure || !failure.message.includes("rollback was incomplete")) {
   throw new Error(`stale publish was reported successful: ${failure && failure.message}`);
 }
-if (!failure.message.includes("backup preserved")) {
-  throw new Error(`preserved backup was not reported: ${failure.message}`);
+if (!failure.message.includes("claim preserved")) {
+  throw new Error(`preserved claim was not reported: ${failure.message}`);
 }
 if ((await readFile(%s, "utf8")) !== "EXTERNAL-IMAGE") {
   throw new Error("external image update was overwritten");
@@ -2148,8 +2242,8 @@ if ((await readFile(%s, "utf8")) !== "EXTERNAL-IMAGE") {
 if ((await readFile(%s, "utf8")) !== "old-metadata") {
   throw new Error("metadata was not rolled back");
 }
-const names = await readdir(%s);
-const backups = names.filter((name) => name.endsWith(".bak"));
+const names = await readdir(%s, { recursive: true });
+const backups = names.filter((name) => name.endsWith("/payload"));
 const temporary = names.filter((name) => name.endsWith(".tmp"));
 if (backups.length !== 1) throw new Error(`expected one backup; found ${backups}`);
 if ((await readFile(%s + "/" + backups[0], "utf8")) !== "old-image") {
@@ -2193,24 +2287,24 @@ if (temporary.length !== 0) throw new Error(`temporary residue: ${temporary}`);
             metadata.write_bytes(b"old-metadata")
             module_url = self.CAPTURE_SCRIPT.as_uri()
             program = """
-import { rename, readFile, writeFile } from "node:fs/promises";
+import { link, rename, readFile, writeFile } from "node:fs/promises";
 const { publishCapture } = await import(%s);
 let calls = 0;
-const injectedRename = async (source, target) => {
+const injectedLink = async (source, target) => {
   calls += 1;
   if (calls === 1) {
-    const result = await rename(source, target);
+    const result = await link(source, target);
     await writeFile(%s, "EXTERNAL-METADATA");
     return result;
   }
-  return rename(source, target);
+  return link(source, target);
 };
 let failure;
 try {
   await publishCapture([
     { target: %s, payload: Buffer.from("new-image") },
     { target: %s, payload: Buffer.from("new-metadata") },
-  ], injectedRename);
+  ], { move: rename, link: injectedLink });
 } catch (error) {
   failure = error;
 }
@@ -2238,6 +2332,372 @@ if ((await readFile(%s, "utf8")) !== "EXTERNAL-METADATA") {
                 check=False,
                 timeout=5,
             )
+            self.assertEqual(0, result.returncode, result.stderr)
+
+    def test_capture_publish_is_no_clobber_at_claim_install_and_rollback_boundaries(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(
+            prefix="diagram-core-no-clobber-",
+            dir=build_root,
+        ) as temp_dir:
+            root = Path(temp_dir).resolve()
+            module_url = self.CAPTURE_SCRIPT.as_uri()
+            program = """
+import {
+  chmod,
+  link,
+  readFile,
+  readdir,
+  rename,
+  stat,
+  utimes,
+  writeFile,
+} from "node:fs/promises";
+const { publishCapture } = await import(%s);
+const root = %s;
+const state = async (target) => {
+  const info = await stat(target, { bigint: true });
+  return {
+    payload: await readFile(target, "utf8"),
+    mode: Number(info.mode & 0o7777n),
+    mtimeNs: info.mtimeNs,
+  };
+};
+const assertState = async (target, expected, label) => {
+  const actual = await state(target);
+  if (
+    actual.payload !== expected.payload
+    || actual.mode !== expected.mode
+    || actual.mtimeNs !== expected.mtimeNs
+  ) throw new Error(`${label} changed: ${JSON.stringify(actual, (_, value) =>
+    typeof value === "bigint" ? value.toString() : value)}`);
+};
+const writeExternal = async (target, payload, mode, seconds) => {
+  await writeFile(target, payload);
+  await chmod(target, mode);
+  await utimes(target, seconds, seconds);
+  return state(target);
+};
+const assertMissing = async (target, label) => {
+  try {
+    await stat(target);
+    throw new Error(`${label} unexpectedly exists`);
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
+};
+const assertNoResidue = async (caseRoot) => {
+  const names = await readdir(caseRoot, { recursive: true });
+  const residue = names.filter((name) => /(?:\\.tmp|\\.bak|claim)/u.test(name));
+  if (residue.length !== 0) throw new Error(`publish residue: ${residue.join(",")}`);
+};
+
+{
+  const caseRoot = `${root}/claim-race`;
+  await import("node:fs/promises").then(({ mkdir }) => mkdir(caseRoot));
+  const image = `${caseRoot}/candidate.png`;
+  const metadata = `${caseRoot}/candidate.json`;
+  await writeFile(image, "old-image");
+  await writeFile(metadata, "old-metadata");
+  let externalState;
+  let injected = false;
+  const move = async (source, target) => {
+    if (source === image && !injected) {
+      injected = true;
+      const external = `${caseRoot}/.external`;
+      externalState = await writeExternal(external, "EXTERNAL-CLAIM", 0o604, 1700000001);
+      await rename(external, image);
+    }
+    return rename(source, target);
+  };
+  let failure;
+  try {
+    await publishCapture([
+      { target: image, payload: Buffer.from("new-image") },
+      { target: metadata, payload: Buffer.from("new-metadata") },
+    ], { move, link });
+  } catch (error) {
+    failure = error;
+  }
+  if (!injected || !failure) throw new Error("claim race returned success");
+  await assertState(image, externalState, "claim-race external target");
+  if ((await readFile(metadata, "utf8")) !== "old-metadata") {
+    throw new Error("claim-race peer changed");
+  }
+  await assertNoResidue(caseRoot);
+}
+
+{
+  const caseRoot = `${root}/install-race`;
+  await import("node:fs/promises").then(({ mkdir }) => mkdir(caseRoot));
+  const image = `${caseRoot}/candidate.png`;
+  const metadata = `${caseRoot}/candidate.json`;
+  let externalState;
+  let injected = false;
+  const install = async (source, target) => {
+    if (target === image && !injected) {
+      injected = true;
+      externalState = await writeExternal(image, "EXTERNAL-INSTALL", 0o640, 1700000002);
+    }
+    return link(source, target);
+  };
+  let failure;
+  try {
+    await publishCapture([
+      { target: image, payload: Buffer.from("new-image") },
+      { target: metadata, payload: Buffer.from("new-metadata") },
+    ], { move: rename, link: install });
+  } catch (error) {
+    failure = error;
+  }
+  if (!injected || !failure) throw new Error("absent-target install race returned success");
+  await assertState(image, externalState, "install-race external target");
+  await assertMissing(metadata, "install-race metadata");
+  await assertNoResidue(caseRoot);
+}
+
+{
+  const caseRoot = `${root}/rollback-race`;
+  await import("node:fs/promises").then(({ mkdir }) => mkdir(caseRoot));
+  const image = `${caseRoot}/candidate.png`;
+  const metadata = `${caseRoot}/candidate.json`;
+  await writeExternal(image, "old-image", 0o600, 1600000000);
+  let moveCalls = 0;
+  let externalState;
+  const move = async (source, target) => {
+    if (source === image) {
+      moveCalls += 1;
+      if (moveCalls === 2) {
+        const external = `${caseRoot}/.external`;
+        externalState = await writeExternal(external, "EXTERNAL-ROLLBACK", 0o604, 1700000003);
+        await rename(external, image);
+      }
+    }
+    return rename(source, target);
+  };
+  let installs = 0;
+  const install = async (source, target) => {
+    installs += 1;
+    if (installs === 2) throw new Error("force rollback");
+    return link(source, target);
+  };
+  let failure;
+  try {
+    await publishCapture([
+      { target: image, payload: Buffer.from("new-image") },
+      { target: metadata, payload: Buffer.from("new-metadata") },
+    ], { move, link: install });
+  } catch (error) {
+    failure = error;
+  }
+  if (!failure || !failure.message.includes("rollback was incomplete")) {
+    throw new Error(`rollback race was not reported: ${failure && failure.message}`);
+  }
+  if (!failure.message.includes("preserved")) {
+    throw new Error(`rollback recovery path missing: ${failure.message}`);
+  }
+  await assertState(image, externalState, "rollback-race external target");
+  await assertMissing(metadata, "rollback-race metadata");
+}
+""" % (json.dumps(module_url), json.dumps(str(root)))
+
+            result = subprocess.run(
+                ["node", "--input-type=module", "--eval", program],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=10,
+            )
+
+            self.assertEqual(0, result.returncode, result.stderr)
+
+    def test_capture_claim_snapshot_failure_restores_or_reports_preserved_claim(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(
+            prefix="diagram-core-claim-snapshot-",
+            dir=build_root,
+        ) as temp_dir:
+            root = Path(temp_dir).resolve()
+            program = """
+import {
+  chmod,
+  link,
+  mkdir,
+  readFile,
+  readdir,
+  rename,
+  stat,
+  utimes,
+  writeFile,
+} from "node:fs/promises";
+const { publishCapture } = await import(%s);
+const root = %s;
+const state = async (target) => {
+  const info = await stat(target, { bigint: true });
+  return {
+    payload: await readFile(target, "utf8"),
+    mode: Number(info.mode & 0o7777n),
+    mtimeNs: info.mtimeNs,
+  };
+};
+const writeState = async (target, payload, mode, seconds) => {
+  await writeFile(target, payload);
+  await chmod(target, mode);
+  await utimes(target, seconds, seconds);
+  return state(target);
+};
+const assertState = async (target, expected, label) => {
+  const actual = await state(target);
+  if (
+    actual.payload !== expected.payload
+    || actual.mode !== expected.mode
+    || actual.mtimeNs !== expected.mtimeNs
+  ) throw new Error(`${label} changed`);
+};
+for (const conflict of [false, true]) {
+  const caseRoot = `${root}/${conflict ? "conflict" : "restore"}`;
+  await mkdir(caseRoot);
+  const image = `${caseRoot}/candidate.png`;
+  const metadata = `${caseRoot}/candidate.json`;
+  const originalImage = await writeState(image, "old-image", 0o640, 1600000000);
+  const originalMetadata = await writeState(
+    metadata,
+    "old-metadata",
+    0o600,
+    1600000001,
+  );
+  let externalState;
+  let injected = false;
+  const failClaimSnapshot = async () => {
+    if (injected) throw new Error("claim snapshot hook called twice");
+    injected = true;
+    if (conflict) {
+      externalState = await writeState(
+        image,
+        "EXTERNAL-SNAPSHOT-RACE",
+        0o604,
+        1700000000,
+      );
+    }
+    throw new Error("injected claim snapshot failure");
+  };
+  let failure;
+  try {
+    await publishCapture([
+      { target: image, payload: Buffer.from("new-image") },
+      { target: metadata, payload: Buffer.from("new-metadata") },
+    ], { move: rename, link, snapshot: failClaimSnapshot });
+  } catch (error) {
+    failure = error;
+  }
+  if (!injected || !failure) {
+    throw new Error(`claim snapshot failure was ignored: conflict=${conflict}`);
+  }
+  await assertState(
+    image,
+    conflict ? externalState : originalImage,
+    `image conflict=${conflict}`,
+  );
+  await assertState(metadata, originalMetadata, `metadata conflict=${conflict}`);
+  const names = await readdir(caseRoot, { recursive: true });
+  const temporary = names.filter((name) => /(?:\\.tmp|\\.bak)$/u.test(name));
+  if (temporary.length !== 0) throw new Error(`temporary residue: ${temporary}`);
+  const claims = names.filter(
+    (name) => name.includes(".claim-") && name.endsWith("payload"),
+  );
+  if (conflict) {
+    if (!failure.message.includes("recovery claim preserved")) {
+      throw new Error(`claim recovery path was not reported: ${failure.message}`);
+    }
+    if (claims.length !== 1) throw new Error(`expected one preserved claim: ${claims}`);
+    if ((await readFile(`${caseRoot}/${claims[0]}`, "utf8")) !== "old-image") {
+      throw new Error("preserved claim payload changed");
+    }
+  } else if (claims.length !== 0) {
+    throw new Error(`restored claim residue: ${claims}`);
+  }
+}
+""" % (
+                json.dumps(self.CAPTURE_SCRIPT.as_uri()),
+                json.dumps(str(root)),
+            )
+
+            result = subprocess.run(
+                ["node", "--input-type=module", "--eval", program],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=10,
+            )
+
+            self.assertEqual(0, result.returncode, result.stderr)
+
+    def test_capture_commit_cleanup_failure_never_rolls_back_published_pair(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(
+            prefix="diagram-core-commit-barrier-",
+            dir=build_root,
+        ) as temp_dir:
+            root = Path(temp_dir).resolve()
+            output = root / "candidate.png"
+            metadata = root / "candidate.json"
+            output.write_bytes(b"old-image")
+            metadata.write_bytes(b"old-metadata")
+            program = """
+import { link, readFile, readdir, rename, rmdir } from "node:fs/promises";
+const { publishCapture } = await import(%s);
+let cleanupCalls = 0;
+const failSecondClaimDirectoryCleanup = async (directory) => {
+  cleanupCalls += 1;
+  if (cleanupCalls === 2) throw new Error("injected committed cleanup failure");
+  return rmdir(directory);
+};
+let failure;
+try {
+  await publishCapture([
+    { target: %s, payload: Buffer.from("new-image") },
+    { target: %s, payload: Buffer.from("new-metadata") },
+  ], { move: rename, link, rmdir: failSecondClaimDirectoryCleanup });
+} catch (error) {
+  failure = error;
+}
+if (!failure || !failure.message.includes("committed outputs retained")) {
+  throw new Error(`commit cleanup did not report retained outputs: ${failure && failure.message}`);
+}
+if ((await readFile(%s, "utf8")) !== "new-image") {
+  throw new Error("committed image was rolled back");
+}
+if ((await readFile(%s, "utf8")) !== "new-metadata") {
+  throw new Error("committed metadata was rolled back");
+}
+const residue = (await readdir(%s, { recursive: true })).filter((name) => name.includes("claim"));
+if (residue.length !== 1) throw new Error(`cleanup residue was not preserved: ${residue}`);
+""" % tuple(
+                json.dumps(value)
+                for value in (
+                    self.CAPTURE_SCRIPT.as_uri(),
+                    str(output),
+                    str(metadata),
+                    str(output),
+                    str(metadata),
+                    str(root),
+                )
+            )
+
+            result = subprocess.run(
+                ["node", "--input-type=module", "--eval", program],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=5,
+            )
+
             self.assertEqual(0, result.returncode, result.stderr)
 
     def test_capture_rolls_back_pair_when_repo_provenance_changes_during_publish(self):
@@ -2272,16 +2732,16 @@ if ((await readFile(%s, "utf8")) !== "EXTERNAL-METADATA") {
                         repo_root / "scripts/capture_diagram_core_contact_sheet.mjs"
                     ).as_uri()
                     program = """
-import { readFile, readdir, rename } from "node:fs/promises";
+import { link, readFile, readdir, rename } from "node:fs/promises";
 const captureModule = await import(%s);
 if (typeof captureModule.capture !== "function") {
   throw new Error("capture export missing");
 }
-let replaceCalls = 0;
-const injectedRename = async (source, target) => {
-  const result = await rename(source, target);
-  replaceCalls += 1;
-  if (replaceCalls === 1) await rename(%s, %s);
+let installCalls = 0;
+const injectedLink = async (source, target) => {
+  const result = await link(source, target);
+  installCalls += 1;
+  if (installCalls === 1) await rename(%s, %s);
   return result;
 };
 let failure;
@@ -2290,7 +2750,7 @@ try {
     input: %s,
     output: %s,
     metadata: %s,
-  }, injectedRename);
+  }, { move: rename, link: injectedLink });
 } catch (error) {
   failure = error;
 }
@@ -2302,7 +2762,7 @@ if ((await readFile(%s, "utf8")) !== "old-metadata") {
   throw new Error("metadata rollback failed");
 }
 const residue = (await readdir(%s)).filter(
-  (name) => name.endsWith(".tmp") || name.endsWith(".bak"),
+  (name) => name.endsWith(".tmp") || name.endsWith(".bak") || name.includes("claim"),
 );
 if (residue.length !== 0) throw new Error(`publish residue: ${residue.join(",")}`);
 """ % tuple(
@@ -2320,12 +2780,9 @@ if (residue.length !== 0) throw new Error(`publish residue: ${residue.join(",")}
                         )
                     )
 
-                    result = subprocess.run(
+                    result = self.run_process_group(
                         ["node", "--input-type=module", "--eval", program],
                         cwd=ROOT,
-                        capture_output=True,
-                        text=True,
-                        check=False,
                         timeout=30,
                     )
 
@@ -2630,7 +3087,7 @@ if (residue.length !== 0) throw new Error(`publish residue: ${residue.join(",")}
                 1_626_000_000_000_000_000,
             )
             source_asset = repo_root / visual_comparator.SOURCE_ASSET_PATHS[0]
-            real_replace = os.replace
+            real_link = os.link
             real_compare = visual_comparator.compare_images
             injected = [False]
 
@@ -2664,10 +3121,10 @@ if (residue.length !== 0) throw new Error(`publish residue: ${residue.join(",")}
                 )
 
             def publish_heatmap_then_change_source(source, target):
-                result = real_replace(source, target)
+                result = real_link(source, target)
                 if Path(target) == diff_output and not injected[0]:
                     injected[0] = True
-                    self.atomically_replace_identity(source_asset, replace=real_replace)
+                    self.atomically_replace_identity(source_asset)
                 return result
 
             with mock.patch.object(
@@ -2684,7 +3141,7 @@ if (residue.length !== 0) throw new Error(`publish residue: ${residue.join(",")}
                 side_effect=stage_small_failed_heatmap,
             ), mock.patch.object(
                 visual_comparator.os,
-                "replace",
+                "link",
                 side_effect=publish_heatmap_then_change_source,
             ):
                 with self.assertRaises(VisualComparisonError):
@@ -2699,6 +3156,346 @@ if (residue.length !== 0) throw new Error(`publish residue: ${residue.join(",")}
             self.assertTrue(injected[0])
             self.assert_file_snapshot(diff_output, original_diff)
             self.assert_no_publish_residue(root)
+
+    def test_heatmap_publish_is_no_clobber_for_existing_and_absent_targets(self):
+        for existing in (True, False):
+            with self.subTest(existing=existing), tempfile.TemporaryDirectory() as temp_dir:
+                root = Path(temp_dir).resolve()
+                target = root / "heatmap.png"
+                staged = root / ".heatmap.png.staged.tmp"
+                staged.write_bytes(b"new-heatmap")
+                original_snapshot = None
+                if existing:
+                    self.write_snapshot_file(
+                        target,
+                        b"old-heatmap",
+                        0o640,
+                        1_600_000_000_000_000_000,
+                    )
+                    original_snapshot = visual_comparator._output_snapshot(target)
+                real_move = os.rename
+                real_link = os.link
+                external_snapshot = [None]
+                injected = [False]
+
+                def move_with_claim_race(source, destination):
+                    if Path(source) == target and not injected[0]:
+                        injected[0] = True
+                        external = root / ".external"
+                        external_snapshot[0] = self.write_snapshot_file(
+                            external,
+                            b"EXTERNAL-HEATMAP-CLAIM",
+                            0o604,
+                            1_700_000_000_000_000_000,
+                        )
+                        os.replace(str(external), str(target))
+                    return real_move(source, destination)
+
+                def link_with_install_race(source, destination):
+                    if Path(destination) == target and not injected[0]:
+                        injected[0] = True
+                        external_snapshot[0] = self.write_snapshot_file(
+                            target,
+                            b"EXTERNAL-HEATMAP-INSTALL",
+                            0o600,
+                            1_700_000_001_000_000_000,
+                        )
+                    return real_link(source, destination)
+
+                operations = {
+                    "move": move_with_claim_race if existing else real_move,
+                    "link": real_link if existing else link_with_install_race,
+                }
+                with self.assertRaises(Exception):
+                    visual_comparator._publish_staged_heatmap(
+                        target,
+                        staged,
+                        original_snapshot,
+                        lambda: None,
+                        operations=operations,
+                    )
+
+                self.assertTrue(injected[0])
+                self.assert_file_snapshot(target, external_snapshot[0])
+                self.assert_no_publish_residue(root)
+
+    def test_heatmap_rollback_never_overwrites_external_target(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            target = root / "heatmap.png"
+            staged = root / ".heatmap.png.staged.tmp"
+            original = self.write_snapshot_file(
+                target,
+                b"old-heatmap",
+                0o640,
+                1_600_000_000_000_000_000,
+            )
+            del original
+            staged.write_bytes(b"new-heatmap")
+            target_snapshot = visual_comparator._output_snapshot(target)
+            real_move = os.rename
+            move_calls = [0]
+            external_snapshot = [None]
+
+            def move_with_rollback_race(source, destination):
+                if Path(source) == target:
+                    move_calls[0] += 1
+                    if move_calls[0] == 2:
+                        external = root / ".external"
+                        external_snapshot[0] = self.write_snapshot_file(
+                            external,
+                            b"EXTERNAL-HEATMAP-ROLLBACK",
+                            0o604,
+                            1_700_000_002_000_000_000,
+                        )
+                        os.replace(str(external), str(target))
+                return real_move(source, destination)
+
+            verify_calls = [0]
+
+            def fail_after_install():
+                verify_calls[0] += 1
+                if verify_calls[0] == 3:
+                    raise VisualComparisonError("force heatmap rollback")
+
+            with self.assertRaisesRegex(
+                VisualComparisonError,
+                "rollback was incomplete",
+            ) as caught:
+                visual_comparator._publish_staged_heatmap(
+                    target,
+                    staged,
+                    target_snapshot,
+                    fail_after_install,
+                    operations={"move": move_with_rollback_race, "link": os.link},
+                )
+
+            self.assertIn("preserved", str(caught.exception))
+            self.assert_file_snapshot(target, external_snapshot[0])
+
+    def test_approval_publish_is_no_clobber_for_existing_and_absent_targets(self):
+        for existing in (True, False):
+            with self.subTest(existing=existing), tempfile.TemporaryDirectory() as temp_dir:
+                root = Path(temp_dir).resolve()
+                baseline = root / "baseline.png"
+                metadata = root / "baseline.json"
+                if existing:
+                    baseline.write_bytes(b"old-image")
+                    metadata.write_bytes(b"old-metadata")
+                real_move = os.rename
+                real_link = os.link
+                injected = [False]
+                external_snapshot = [None]
+
+                def move_with_claim_race(source, destination):
+                    if Path(source) == baseline and not injected[0]:
+                        injected[0] = True
+                        external = root / ".external"
+                        external_snapshot[0] = self.write_snapshot_file(
+                            external,
+                            b"EXTERNAL-APPROVAL-CLAIM",
+                            0o604,
+                            1_700_000_003_000_000_000,
+                        )
+                        os.replace(str(external), str(baseline))
+                    return real_move(source, destination)
+
+                def link_with_install_race(source, destination):
+                    if Path(destination) == baseline and not injected[0]:
+                        injected[0] = True
+                        external_snapshot[0] = self.write_snapshot_file(
+                            baseline,
+                            b"EXTERNAL-APPROVAL-INSTALL",
+                            0o600,
+                            1_700_000_004_000_000_000,
+                        )
+                    return real_link(source, destination)
+
+                operations = {
+                    "move": move_with_claim_race if existing else real_move,
+                    "link": real_link if existing else link_with_install_race,
+                }
+                with self.assertRaises(Exception):
+                    visual_comparator._publish_approval(
+                        baseline,
+                        b"new-image",
+                        metadata,
+                        b"new-metadata",
+                        operations=operations,
+                    )
+
+                self.assertTrue(injected[0])
+                self.assert_file_snapshot(baseline, external_snapshot[0])
+                if existing:
+                    self.assertEqual(b"old-metadata", metadata.read_bytes())
+                else:
+                    self.assertFalse(metadata.exists())
+                self.assert_no_publish_residue(root)
+
+    def test_approval_rollback_never_overwrites_external_target(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            baseline = root / "baseline.png"
+            metadata = root / "baseline.json"
+            self.write_snapshot_file(
+                baseline,
+                b"old-image",
+                0o640,
+                1_600_000_000_000_000_000,
+            )
+            real_move = os.rename
+            move_calls = [0]
+            external_snapshot = [None]
+
+            def move_with_rollback_race(source, destination):
+                if Path(source) == baseline:
+                    move_calls[0] += 1
+                    if move_calls[0] == 2:
+                        external = root / ".external"
+                        external_snapshot[0] = self.write_snapshot_file(
+                            external,
+                            b"EXTERNAL-APPROVAL-ROLLBACK",
+                            0o604,
+                            1_700_000_005_000_000_000,
+                        )
+                        os.replace(str(external), str(baseline))
+                return real_move(source, destination)
+
+            link_calls = [0]
+
+            def fail_second_install(source, destination):
+                link_calls[0] += 1
+                if link_calls[0] == 2:
+                    raise OSError("force approval rollback")
+                return os.link(source, destination)
+
+            with self.assertRaisesRegex(
+                VisualComparisonError,
+                "rollback was incomplete",
+            ) as caught:
+                visual_comparator._publish_approval(
+                    baseline,
+                    b"new-image",
+                    metadata,
+                    b"new-metadata",
+                    operations={
+                        "move": move_with_rollback_race,
+                        "link": fail_second_install,
+                    },
+                )
+
+            self.assertIn("preserved", str(caught.exception))
+            self.assert_file_snapshot(baseline, external_snapshot[0])
+            self.assertFalse(metadata.exists())
+
+    def test_approval_claim_snapshot_failure_restores_or_reports_preserved_claim(self):
+        for conflict in (False, True):
+            with self.subTest(conflict=conflict), tempfile.TemporaryDirectory() as temp_dir:
+                root = Path(temp_dir).resolve()
+                baseline = root / "baseline.png"
+                metadata = root / "baseline.json"
+                original_baseline = self.write_snapshot_file(
+                    baseline,
+                    b"old-image",
+                    0o640,
+                    1_600_000_000_000_000_000,
+                )
+                original_metadata = self.write_snapshot_file(
+                    metadata,
+                    b"old-metadata",
+                    0o600,
+                    1_600_000_001_000_000_000,
+                )
+                external_snapshot = [None]
+                injected = [False]
+
+                def fail_claim_snapshot(path):
+                    del path
+                    if injected[0]:
+                        raise AssertionError("claim snapshot hook called twice")
+                    injected[0] = True
+                    if conflict:
+                        external_snapshot[0] = self.write_snapshot_file(
+                            baseline,
+                            b"EXTERNAL-SNAPSHOT-RACE",
+                            0o604,
+                            1_700_000_000_000_000_000,
+                        )
+                    raise OSError("injected claim snapshot failure")
+
+                with self.assertRaises(Exception) as caught:
+                    visual_comparator._publish_approval(
+                        baseline,
+                        b"new-image",
+                        metadata,
+                        b"new-metadata",
+                        operations={
+                            "move": os.rename,
+                            "link": os.link,
+                            "snapshot": fail_claim_snapshot,
+                        },
+                    )
+
+                self.assertTrue(injected[0])
+                self.assert_file_snapshot(
+                    baseline,
+                    external_snapshot[0] if conflict else original_baseline,
+                )
+                self.assert_file_snapshot(metadata, original_metadata)
+                temporary = [
+                    path
+                    for path in root.rglob("*")
+                    if path.name.endswith((".tmp", ".bak"))
+                ]
+                self.assertEqual([], temporary)
+                claims = [
+                    path
+                    for path in root.rglob("payload")
+                    if ".claim-" in str(path.parent)
+                ]
+                if conflict:
+                    self.assertIn("recovery claim preserved", str(caught.exception))
+                    self.assertEqual(1, len(claims))
+                    self.assertEqual(b"old-image", claims[0].read_bytes())
+                else:
+                    self.assertEqual([], claims)
+
+    def test_approval_commit_cleanup_failure_never_rolls_back_published_pair(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            baseline = root / "baseline.png"
+            metadata = root / "baseline.json"
+            baseline.write_bytes(b"old-image")
+            metadata.write_bytes(b"old-metadata")
+            real_rmdir = os.rmdir
+            cleanup_calls = [0]
+
+            def fail_second_claim_directory_cleanup(directory):
+                cleanup_calls[0] += 1
+                if cleanup_calls[0] == 2:
+                    raise OSError("injected committed cleanup failure")
+                return real_rmdir(directory)
+
+            with self.assertRaisesRegex(
+                VisualComparisonError,
+                "committed outputs retained",
+            ):
+                visual_comparator._publish_approval(
+                    baseline,
+                    b"new-image",
+                    metadata,
+                    b"new-metadata",
+                    operations={
+                        "move": os.rename,
+                        "link": os.link,
+                        "rmdir": fail_second_claim_directory_cleanup,
+                    },
+                )
+
+            self.assertEqual(b"new-image", baseline.read_bytes())
+            self.assertEqual(b"new-metadata", metadata.read_bytes())
+            claim_residue = [path for path in root.rglob("*") if "claim" in path.name]
+            self.assertEqual(1, len(claim_residue))
 
     def test_accept_rechecks_lock_index_and_source_before_output_publish(self):
         provenance_paths = (
@@ -2793,14 +3590,14 @@ if (residue.length !== 0) throw new Error(`publish residue: ${residue.join(",")}
                 1_640_000_001_000_000_000,
             )
             source_asset = repo_root / visual_comparator.SOURCE_ASSET_PATHS[0]
-            real_replace = os.replace
+            real_link = os.link
             injected = [False]
 
-            def replace_then_change_source(source, target):
-                result = real_replace(source, target)
+            def install_then_change_source(source, target):
+                result = real_link(source, target)
                 if Path(target) == baseline and not injected[0]:
                     injected[0] = True
-                    self.atomically_replace_identity(source_asset, replace=real_replace)
+                    self.atomically_replace_identity(source_asset)
                 return result
 
             with mock.patch.object(
@@ -2809,8 +3606,8 @@ if (residue.length !== 0) throw new Error(`publish residue: ${residue.join(",")}
                 repo_root,
             ), mock.patch.object(
                 visual_comparator.os,
-                "replace",
-                side_effect=replace_then_change_source,
+                "link",
+                side_effect=install_then_change_source,
             ):
                 with self.assertRaises(VisualComparisonError):
                     visual_comparator.accept_candidate(
@@ -2858,14 +3655,14 @@ if (residue.length !== 0) throw new Error(`publish residue: ${residue.join(",")}
                 1_650_000_001_000_000_000,
             )
             source_asset = repo_root / visual_comparator.SOURCE_ASSET_PATHS[0]
-            real_replace = os.replace
+            real_link = os.link
             injected = [False]
 
-            def replace_then_change_source(source, target):
-                result = real_replace(source, target)
+            def install_then_change_source(source, target):
+                result = real_link(source, target)
                 if Path(target) == baseline_metadata and not injected[0]:
                     injected[0] = True
-                    self.atomically_replace_identity(source_asset, replace=real_replace)
+                    self.atomically_replace_identity(source_asset)
                 return result
 
             with mock.patch.object(
@@ -2874,8 +3671,8 @@ if (residue.length !== 0) throw new Error(`publish residue: ${residue.join(",")}
                 repo_root,
             ), mock.patch.object(
                 visual_comparator.os,
-                "replace",
-                side_effect=replace_then_change_source,
+                "link",
+                side_effect=install_then_change_source,
             ):
                 with self.assertRaises(VisualComparisonError):
                     visual_comparator.accept_candidate(
@@ -2994,22 +3791,22 @@ if (residue.length !== 0) throw new Error(`publish residue: ${residue.join(",")}
             baseline_metadata = root / "baseline.json"
             baseline.write_bytes(b"old-baseline-image")
             baseline_metadata.write_bytes(b"old-baseline-metadata")
-            real_replace = os.replace
+            real_link = os.link
             injected = [False]
 
-            def replace_then_rewrite_first_target(source, target):
-                result = real_replace(source, target)
+            def install_then_rewrite_first_target(source, target):
+                result = real_link(source, target)
                 if Path(target) == baseline and not injected[0]:
                     injected[0] = True
                     external = root / ".external-baseline"
                     external.write_bytes(b"EXTERNAL-IMAGE")
-                    real_replace(str(external), str(baseline))
+                    os.replace(str(external), str(baseline))
                 return result
 
             with mock.patch.object(
                 visual_comparator.os,
-                "replace",
-                side_effect=replace_then_rewrite_first_target,
+                "link",
+                side_effect=install_then_rewrite_first_target,
             ):
                 with self.assertRaisesRegex(
                     VisualComparisonError,
@@ -3023,10 +3820,14 @@ if (residue.length !== 0) throw new Error(`publish residue: ${residue.join(",")}
                     )
 
             self.assertTrue(injected[0])
-            self.assertIn("backup preserved", str(caught.exception))
+            self.assertIn("claim preserved", str(caught.exception))
             self.assertEqual(b"EXTERNAL-IMAGE", baseline.read_bytes())
             self.assertEqual(b"old-baseline-metadata", baseline_metadata.read_bytes())
-            backups = [path for path in root.iterdir() if path.name.endswith(".bak")]
+            backups = [
+                path
+                for path in root.rglob("payload")
+                if "claim" in path.parent.name
+            ]
             self.assertEqual(1, len(backups))
             self.assertEqual(b"old-baseline-image", backups[0].read_bytes())
             self.assertEqual(
@@ -3091,23 +3892,23 @@ if (residue.length !== 0) throw new Error(`publish residue: ${residue.join(",")}
                 approved=True,
             )
             before = baseline.read_bytes(), baseline_metadata.read_bytes()
-            real_replace = os.replace
+            real_link = os.link
             calls = 0
 
-            def second_replace_succeeds_then_raises(source, target):
+            def second_install_succeeds_then_raises(source, target):
                 nonlocal calls
                 calls += 1
-                result = real_replace(source, target)
+                result = real_link(source, target)
                 if calls == 2:
-                    raise OSError("injected failure after metadata replace")
+                    raise OSError("injected failure after metadata install")
                 return result
 
             with mock.patch.object(
                 visual_comparator.os,
-                "replace",
-                side_effect=second_replace_succeeds_then_raises,
+                "link",
+                side_effect=second_install_succeeds_then_raises,
             ):
-                with self.assertRaisesRegex(OSError, "after metadata replace"):
+                with self.assertRaisesRegex(OSError, "after metadata install"):
                     visual_comparator.accept_candidate(
                         candidate,
                         candidate_metadata,

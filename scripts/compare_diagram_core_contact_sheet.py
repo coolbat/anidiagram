@@ -813,13 +813,6 @@ def _stage_approval_payload(target, payload, mode, suffix):
             os.close(descriptor)
 
 
-def _assert_approval_output_unchanged(record):
-    if not _snapshots_equal(_output_snapshot(record["target"]), record["snapshot"]):
-        raise VisualComparisonError(
-            "approval output changed before publish: {0}".format(record["target"])
-        )
-
-
 def _approval_output_matches_published(record):
     current = _output_snapshot(record["target"])
     return (
@@ -837,61 +830,268 @@ def _assert_approval_output_is_published(record):
         )
 
 
-def _preserve_approval_backup(record, reason):
-    backup = record.get("backup")
-    if backup is not None and os.path.lexists(str(backup)):
-        record["backup"] = None
-        return "{0}; original backup preserved at {1}".format(reason, backup)
-    return reason
-
-
-def _rollback_approval_record(record):
-    current = _output_snapshot(record["target"])
-    if _snapshots_equal(current, record["snapshot"]):
-        return
-    published_matches = (
-        current is not None
-        and _replacement_signature(current.signature)
-        == _replacement_signature(record["staged_signature"])
-        and current.payload == record["payload"]
+def _moved_snapshot_matches(snapshot, expected):
+    if snapshot is None or expected is None:
+        return snapshot is expected
+    return (
+        _replacement_signature(snapshot.signature)
+        == _replacement_signature(expected.signature)
+        and snapshot.payload == expected.payload
     )
-    if not published_matches:
-        raise VisualComparisonError(
-            _preserve_approval_backup(
-                record,
-                "rollback conflict at {0}: current output is neither original nor published".format(
-                    record["target"]
-                ),
-            )
+
+
+def _normalize_publication_operations(operations):
+    values = operations or {}
+    if not isinstance(values, dict):
+        raise TypeError("publication operations must be a mapping")
+    return {
+        "move": values.get("move", os.rename),
+        "link": values.get("link", os.link),
+        "unlink": values.get("unlink", os.unlink),
+        "rmdir": values.get("rmdir", os.rmdir),
+        "snapshot": values.get("snapshot", _output_snapshot),
+    }
+
+
+def _claim_output(target, operations):
+    target = _absolute(target)
+    directory = Path(
+        tempfile.mkdtemp(
+            prefix=".{0}.claim-".format(target.name),
+            dir=str(target.parent),
         )
-    if record["snapshot"] is None:
-        record["target"].unlink()
-        return
-    backup = record.get("backup")
-    if backup is None or not os.path.lexists(str(backup)):
-        raise VisualComparisonError(
-            "rollback backup is missing for {0}".format(record["target"])
-        )
+    )
+    claim = {"directory": directory, "path": directory / "payload"}
     try:
-        os.replace(str(backup), str(record["target"]))
-        record["backup"] = None
-    except BaseException as error:
-        restored = None
+        operations["move"](str(target), str(claim["path"]))
+    except FileNotFoundError:
+        operations["rmdir"](str(directory))
+        return None
+    except BaseException:
         try:
-            restored = _output_snapshot(record["target"])
-        except (OSError, VisualComparisonError):
+            operations["rmdir"](str(directory))
+        except OSError:
             pass
-        if (
-            restored is not None
-            and _replacement_signature(restored.signature)
-            == _replacement_signature(record["backup_signature"])
-            and restored.payload == record["snapshot"].payload
-        ):
-            record["backup"] = None
-            return
+        raise
+    try:
+        claim["snapshot"] = operations["snapshot"](claim["path"])
+        if claim["snapshot"] is None:
+            raise VisualComparisonError(
+                "claimed output disappeared: {0}".format(target)
+            )
+    except BaseException as error:
+        try:
+            _restore_claim_exclusive(claim, target, operations)
+        except BaseException as recovery_error:
+            raise VisualComparisonError(
+                _preserve_claim(
+                    claim,
+                    "claimed output inspection failed at {0}: {1}; exclusive recovery failed: {2}".format(
+                        target,
+                        error,
+                        recovery_error,
+                    ),
+                )
+            ) from error
+        raise
+    return claim
+
+
+def _discard_claim(claim, operations):
+    operations["unlink"](str(claim["path"]))
+    operations["rmdir"](str(claim["directory"]))
+
+
+def _create_exclusive_link(source, target, operations):
+    try:
+        operations["link"](str(source), str(target))
+        return None
+    except BaseException as error:
+        try:
+            linked = _paths_alias(source, target)
+        except (OSError, VisualComparisonError):
+            linked = False
+        if linked:
+            return error
+        raise
+
+
+def _restore_claim_exclusive(claim, target, operations):
+    _create_exclusive_link(claim["path"], target, operations)
+    snapshot = claim.get("snapshot")
+    if snapshot is not None:
+        os.chmod(str(claim["path"]), snapshot.mode)
+    _discard_claim(claim, operations)
+
+
+def _preserve_claim(claim, reason):
+    if claim is None:
+        return reason
+    return "{0}; recovery claim preserved at {1}".format(reason, claim["path"])
+
+
+def _reject_unexpected_claim(claim, target, operations, reason):
+    if claim is None:
+        raise VisualComparisonError(reason)
+    try:
+        _restore_claim_exclusive(claim, target, operations)
+    except BaseException as error:
         raise VisualComparisonError(
-            _preserve_approval_backup(record, str(error))
+            _preserve_claim(
+                claim,
+                "{0}; exclusive recovery failed: {1}".format(reason, error),
+            )
         ) from error
+    raise VisualComparisonError(reason)
+
+
+def _rollback_publication_record(record, operations):
+    if record["installed"]:
+        displaced = _claim_output(record["target"], operations)
+        if displaced is None:
+            raise VisualComparisonError(
+                _preserve_claim(
+                    record["original_claim"],
+                    "rollback conflict at {0}: published output disappeared".format(
+                        record["target"]
+                    ),
+                )
+            )
+        staged_expected = FileSnapshot(
+            path=record["staged"],
+            payload=record["payload"],
+            mode=stat.S_IMODE(record["staged_signature"].mode),
+            signature=record["staged_signature"],
+        )
+        if not _moved_snapshot_matches(displaced["snapshot"], staged_expected):
+            try:
+                _restore_claim_exclusive(displaced, record["target"], operations)
+            except BaseException as error:
+                raise VisualComparisonError(
+                    _preserve_claim(
+                        record["original_claim"],
+                        _preserve_claim(
+                            displaced,
+                            "rollback conflict at {0}; external output recovery failed: {1}".format(
+                                record["target"], error
+                            ),
+                        ),
+                    )
+                ) from error
+            raise VisualComparisonError(
+                _preserve_claim(
+                    record["original_claim"],
+                    "rollback conflict at {0}: current output is not owned by this publish".format(
+                        record["target"]
+                    ),
+                )
+            )
+        _discard_claim(displaced, operations)
+        record["installed"] = False
+
+    original_claim = record["original_claim"]
+    if original_claim is not None:
+        try:
+            _restore_claim_exclusive(original_claim, record["target"], operations)
+            record["original_claim"] = None
+        except BaseException as error:
+            raise VisualComparisonError(
+                _preserve_claim(
+                    original_claim,
+                    "rollback conflict at {0}; exclusive original restore failed: {1}".format(
+                        record["target"], error
+                    ),
+                )
+            ) from error
+
+
+def _publish_records(records, verify_current, operations, failure_label):
+    committed = False
+    try:
+        for index, record in enumerate(records):
+            verify_current()
+            for peer in records[:index]:
+                if peer["installed"]:
+                    _assert_approval_output_is_published(peer)
+            claim = _claim_output(record["target"], operations)
+            moved = claim["snapshot"] if claim is not None else None
+            if not _moved_snapshot_matches(moved, record["snapshot"]):
+                _reject_unexpected_claim(
+                    claim,
+                    record["target"],
+                    operations,
+                    "{0} output changed before publish: {1}".format(
+                        failure_label,
+                        record["target"],
+                    ),
+                )
+            record["original_claim"] = claim
+            verify_current()
+            for peer in records[:index]:
+                if peer["installed"]:
+                    _assert_approval_output_is_published(peer)
+            install_error = _create_exclusive_link(
+                record["staged"],
+                record["target"],
+                operations,
+            )
+            record["installed"] = True
+            os.chmod(
+                str(record["staged"]),
+                stat.S_IMODE(record["staged_signature"].mode),
+            )
+            if install_error is not None:
+                raise install_error
+            _assert_approval_output_is_published(record)
+        verify_current()
+        for record in records:
+            _assert_approval_output_is_published(record)
+        committed = True
+        for record in records:
+            if record["original_claim"] is not None:
+                claim = record["original_claim"]
+                try:
+                    _discard_claim(claim, operations)
+                except BaseException as error:
+                    raise VisualComparisonError(
+                        "claim cleanup failed at {0}: {1}".format(
+                            claim["directory"],
+                            error,
+                        )
+                    ) from error
+                record["original_claim"] = None
+    except BaseException as error:
+        if committed:
+            raise VisualComparisonError(
+                "{0} publish committed but cleanup failed; committed outputs retained: {1}".format(
+                    failure_label,
+                    error,
+                )
+            ) from error
+        rollback_errors = []
+        for record in reversed(records):
+            if not record["installed"] and record["original_claim"] is None:
+                continue
+            try:
+                _rollback_publication_record(record, operations)
+            except BaseException as rollback_error:
+                rollback_errors.append(str(rollback_error))
+        if rollback_errors:
+            raise VisualComparisonError(
+                "{0} publish failed and rollback was incomplete: {1}".format(
+                    failure_label,
+                    "; ".join(rollback_errors),
+                )
+            ) from error
+        raise
+    finally:
+        for record in records:
+            staged = record.get("staged")
+            if staged is not None:
+                try:
+                    staged.unlink()
+                except FileNotFoundError:
+                    pass
 
 
 def _publish_approval(
@@ -900,11 +1100,12 @@ def _publish_approval(
     metadata_path,
     metadata_payload,
     verify_current=None,
+    operations=None,
 ):
     if verify_current is None:
         verify_current = lambda: None
+    publication_operations = _normalize_publication_operations(operations)
     records = []
-    attempted = []
     try:
         for target, payload in (
             (_absolute(baseline_path), bytes(baseline_payload)),
@@ -918,62 +1119,39 @@ def _publish_approval(
                 mode,
                 ".tmp",
             )
-            record = {
-                "target": target,
-                "payload": payload,
-                "snapshot": snapshot,
-                "staged": staged,
-                "staged_signature": staged_signature,
-                "backup": None,
-                "backup_signature": None,
-            }
-            records.append(record)
-            if snapshot is not None:
-                backup, backup_signature = _stage_approval_payload(
-                    target,
-                    snapshot.payload,
-                    snapshot.mode,
-                    ".bak",
-                )
-                record["backup"] = backup
-                record["backup_signature"] = backup_signature
+            records.append(
+                {
+                    "target": target,
+                    "payload": payload,
+                    "snapshot": snapshot,
+                    "staged": staged,
+                    "staged_signature": staged_signature,
+                    "original_claim": None,
+                    "installed": False,
+                }
+            )
+    except BaseException:
         for record in records:
-            verify_current()
-            _assert_approval_output_unchanged(record)
-            attempted.append(record)
-            os.replace(str(record["staged"]), str(record["target"]))
-            record["staged"] = None
-        verify_current()
-        for record in records:
-            _assert_approval_output_is_published(record)
-    except BaseException as error:
-        rollback_errors = []
-        for record in reversed(attempted):
             try:
-                _rollback_approval_record(record)
-            except BaseException as rollback_error:
-                rollback_errors.append(
-                    _preserve_approval_backup(record, str(rollback_error))
-                )
-        if rollback_errors:
-            raise VisualComparisonError(
-                "approval publish failed and rollback was incomplete: {0}".format(
-                    "; ".join(rollback_errors)
-                )
-            ) from error
+                record["staged"].unlink()
+            except FileNotFoundError:
+                pass
         raise
-    finally:
-        for record in records:
-            for key in ("staged", "backup"):
-                residue = record.get(key)
-                if residue is not None:
-                    try:
-                        residue.unlink()
-                    except FileNotFoundError:
-                        pass
+    _publish_records(
+        records,
+        verify_current,
+        publication_operations,
+        "approval",
+    )
 
 
-def _publish_staged_heatmap(target, staged, target_snapshot, verify_current):
+def _publish_staged_heatmap(
+    target,
+    staged,
+    target_snapshot,
+    verify_current,
+    operations=None,
+):
     target = _absolute(target)
     staged = _absolute(staged)
     mode = target_snapshot.mode if target_snapshot is not None else 0o644
@@ -985,53 +1163,15 @@ def _publish_staged_heatmap(target, staged, target_snapshot, verify_current):
         "snapshot": target_snapshot,
         "staged": staged,
         "staged_signature": staged_snapshot.signature,
-        "backup": None,
-        "backup_signature": None,
+        "original_claim": None,
+        "installed": False,
     }
-    attempted = False
-    try:
-        if target_snapshot is not None:
-            backup, _ = _stage_approval_payload(
-                target,
-                target_snapshot.payload,
-                target_snapshot.mode,
-                ".bak",
-            )
-            os.utime(
-                str(backup),
-                ns=(
-                    target_snapshot.signature.mtime_ns,
-                    target_snapshot.signature.mtime_ns,
-                ),
-            )
-            record["backup"] = backup
-            record["backup_signature"] = _file_signature(os.lstat(str(backup)))
-        verify_current()
-        _assert_approval_output_unchanged(record)
-        attempted = True
-        os.replace(str(record["staged"]), str(record["target"]))
-        record["staged"] = None
-        verify_current()
-        _assert_approval_output_is_published(record)
-    except BaseException as error:
-        if attempted:
-            try:
-                _rollback_approval_record(record)
-            except BaseException as rollback_error:
-                raise VisualComparisonError(
-                    "diff publish failed and rollback was incomplete: {0}".format(
-                        _preserve_approval_backup(record, str(rollback_error))
-                    )
-                ) from error
-        raise
-    finally:
-        for key in ("staged", "backup"):
-            residue = record.get(key)
-            if residue is not None:
-                try:
-                    residue.unlink()
-                except FileNotFoundError:
-                    pass
+    _publish_records(
+        [record],
+        verify_current,
+        _normalize_publication_operations(operations),
+        "diff",
+    )
 
 
 def accept_candidate(
