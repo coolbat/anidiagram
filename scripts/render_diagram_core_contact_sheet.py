@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
-"""Render the deterministic Agent benchmark and its static review page."""
+"""Render deterministic Diagram Core static review surfaces."""
 
 from __future__ import annotations
 
 import argparse
 import hashlib
 import html
+import json
 import os
 import re
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Mapping, Tuple
+from typing import Dict, Mapping, Sequence, Tuple
+from xml.etree import ElementTree
 
 from anidiagram.diagram_core.adapter import render_preview_icon
 from anidiagram.diagram_core.tokens import token_css
@@ -18,6 +21,7 @@ from anidiagram.diagram_core.tokens import token_css
 ROOT = Path(__file__).resolve().parents[1]
 ASSET_ROOT = ROOT / "assets" / "diagram-core"
 ICON_ID = "agent"
+BENCHMARK_ICONS = ("agent", "database", "api", "server")
 SIZES = (48, 64, 96)
 CONTEXTS = ("blue", "dark", "warm", "green")
 STATES = ("idle", "active", "processing", "success", "warning", "error")
@@ -30,6 +34,11 @@ CELL_WIDTH = 158
 CELL_HEIGHT = 146
 MAIN_Y = 128
 ROW_STEP_Y = 160
+BENCHMARK_COLUMNS = len(BENCHMARK_ICONS) * len(SIZES)
+BENCHMARK_ROWS = len(CONTEXTS) * len(STATES)
+BENCHMARK_CELL_SIZE = 104
+BENCHMARK_WIDTH = BENCHMARK_COLUMNS * BENCHMARK_CELL_SIZE
+BENCHMARK_HEIGHT = BENCHMARK_ROWS * BENCHMARK_CELL_SIZE
 _HEX_COLOR = re.compile(r"^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$")
 _RGB_COLOR = re.compile(
     r"^rgb\(\s*(\d{1,3})(?:\s*,\s*|\s+)(\d{1,3})"
@@ -37,6 +46,19 @@ _RGB_COLOR = re.compile(
     re.IGNORECASE,
 )
 _SIMPLE_VAR = re.compile(r"^var\(\s*(--[a-z0-9-]+)\s*\)$")
+
+
+@dataclass(frozen=True)
+class ContactSheetCell:
+    ordinal: int
+    column: int
+    row: int
+    icon_id: str
+    size: int
+    context: str
+    state: str
+    cell_id: str
+    instance_id: str
 
 
 def _declarations(source: str, selector: str) -> Dict[str, str]:
@@ -382,14 +404,419 @@ def render_review_html(
     )
 
 
+def build_contact_sheet_cells(
+    icons: Sequence[str] = BENCHMARK_ICONS,
+) -> Tuple[ContactSheetCell, ...]:
+    """Return the locked row-major 12-column by 24-row benchmark matrix."""
+
+    normalized_icons = tuple(icons)
+    if normalized_icons != BENCHMARK_ICONS:
+        raise ValueError(
+            "benchmark icons must be agent,database,api,server in canonical order"
+        )
+    cells = []
+    ordinal = 0
+    for context_index, context in enumerate(CONTEXTS):
+        for state_index, state in enumerate(STATES):
+            row = context_index * len(STATES) + state_index
+            for icon_index, icon_id in enumerate(normalized_icons):
+                for size_index, size in enumerate(SIZES):
+                    column = icon_index * len(SIZES) + size_index
+                    cell_id = "{0}-{1}-{2}-{3}".format(
+                        icon_id,
+                        size,
+                        context,
+                        state,
+                    )
+                    cells.append(
+                        ContactSheetCell(
+                            ordinal=ordinal,
+                            column=column,
+                            row=row,
+                            icon_id=icon_id,
+                            size=size,
+                            context=context,
+                            state=state,
+                            cell_id=cell_id,
+                            instance_id="benchmark.{0}.{1}.{2}.{3}.{4}".format(
+                                ordinal,
+                                icon_id,
+                                size,
+                                context,
+                                state,
+                            ),
+                        )
+                    )
+                    ordinal += 1
+    return tuple(cells)
+
+
+def _static_preview(
+    icon_id: str,
+    instance_id: str,
+    state: str,
+    size: int,
+    x: float,
+    y: float,
+    tokens: Mapping[str, str],
+) -> str:
+    """Render through the adapter, then freeze the requested state as attributes."""
+
+    adapter_tokens = {
+        token: value
+        for token, value in tokens.items()
+        if token not in ASSET_LOCAL_TOKENS
+    }
+    fragment = render_preview_icon(
+        icon_id,
+        instance_id,
+        state=state,
+        size=size,
+        x=x,
+        y=y,
+        tokens=adapter_tokens,
+        asset_root=ASSET_ROOT,
+    )
+    root = ElementTree.fromstring(fragment)
+    for element in root.iter():
+        mark = element.attrib.get("data-state-mark")
+        if mark is not None:
+            element.set("display", "inline" if mark == state else "none")
+    return ElementTree.tostring(
+        root,
+        encoding="unicode",
+        short_empty_elements=True,
+    )
+
+
+def _benchmark_cell(
+    cell: ContactSheetCell,
+    tokens: Mapping[str, str],
+) -> str:
+    x = cell.column * BENCHMARK_CELL_SIZE
+    y = cell.row * BENCHMARK_CELL_SIZE
+    icon_x = x + (BENCHMARK_CELL_SIZE - cell.size) / 2
+    icon_y = y + (BENCHMARK_CELL_SIZE - cell.size) / 2
+    preview = _static_preview(
+        cell.icon_id,
+        cell.instance_id,
+        cell.state,
+        cell.size,
+        icon_x,
+        icon_y,
+        tokens,
+    )
+    return """  <g data-cell-kind="regression" data-cell-id="{cell_id}" data-icon-id="{icon_id}" data-size="{size}" data-context="{context}" data-state="{state}" role="img" aria-label="{label}" style="{local_style}">
+    <rect x="{x}" y="{y}" width="{cell_size}" height="{cell_size}" fill="{surface}" stroke="{border}" stroke-width="1"/>
+{preview}
+  </g>""".format(
+        cell_id=_escaped(cell.cell_id),
+        icon_id=_escaped(cell.icon_id),
+        size=cell.size,
+        context=_escaped(cell.context),
+        state=_escaped(cell.state),
+        label=_escaped(
+            "{0} icon, {1} pixels, {2} context, {3} state".format(
+                cell.icon_id,
+                cell.size,
+                cell.context,
+                cell.state,
+            )
+        ),
+        local_style=_escaped(_asset_local_style(tokens)),
+        x=x,
+        y=y,
+        cell_size=BENCHMARK_CELL_SIZE,
+        surface=_escaped(tokens["--icon-surface-main"]),
+        border=_escaped(tokens["--icon-surface-recessed"]),
+        preview=preview,
+    )
+
+
+def render_benchmark_contact_sheet(
+    cells: Sequence[ContactSheetCell] = None,
+    aria_labelledby: str = "",
+) -> str:
+    """Render the fixed, text-free locator used by the later pixel gate."""
+
+    ordered_cells = (
+        build_contact_sheet_cells() if cells is None else tuple(cells)
+    )
+    if len(ordered_cells) != BENCHMARK_COLUMNS * BENCHMARK_ROWS:
+        raise ValueError("benchmark contact sheet requires exactly 288 cells")
+    source = token_css()
+    _, contexts = _context_tokens(source)
+    rendered_cells = [
+        _benchmark_cell(cell, contexts[cell.context]) for cell in ordered_cells
+    ]
+    labelledby = (
+        ' aria-labelledby="{0}"'.format(_escaped(aria_labelledby))
+        if aria_labelledby
+        else ""
+    )
+    return """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" width="{width}" height="{height}" id="diagram-core-regression-grid" role="img" aria-label="Diagram Core benchmark: four icons, three sizes, four contexts, and six static states"{labelledby} data-icon-review-region="true" data-grid-columns="{columns}" data-grid-rows="{rows}" data-cell-count="{count}">
+{cells}
+</svg>
+""".format(
+        width=BENCHMARK_WIDTH,
+        height=BENCHMARK_HEIGHT,
+        labelledby=labelledby,
+        columns=BENCHMARK_COLUMNS,
+        rows=BENCHMARK_ROWS,
+        count=len(ordered_cells),
+        cells="\n".join(rendered_cells),
+    )
+
+
+def render_cell_index(
+    cells: Sequence[ContactSheetCell] = None,
+) -> str:
+    ordered_cells = (
+        build_contact_sheet_cells() if cells is None else tuple(cells)
+    )
+    payload = {
+        "version": 1,
+        "grid": {
+            "columns": BENCHMARK_COLUMNS,
+            "rows": BENCHMARK_ROWS,
+            "cells": len(ordered_cells),
+        },
+        "cells": [
+            {
+                "ordinal": cell.ordinal,
+                "cell_id": cell.cell_id,
+                "icon_id": cell.icon_id,
+                "size": cell.size,
+                "context": cell.context,
+                "state": cell.state,
+            }
+            for cell in ordered_cells
+        ],
+    }
+    return json.dumps(payload, indent=2, ensure_ascii=True) + "\n"
+
+
+def _legend_items(values: Sequence[str]) -> str:
+    return "\n".join("        <li>{0}</li>".format(_escaped(value)) for value in values)
+
+
+def render_benchmark_review_html(
+    contact_digest: str,
+    tokens: Mapping[str, str],
+    cells: Sequence[ContactSheetCell] = None,
+) -> str:
+    ordered_cells = (
+        build_contact_sheet_cells() if cells is None else tuple(cells)
+    )
+    embedded_grid = render_benchmark_contact_sheet(
+        ordered_cells,
+        aria_labelledby="diagram-core-grid-title diagram-core-grid-description",
+    ).rstrip()
+    column_labels = [
+        "{0} · {1} px".format(icon_id, size)
+        for icon_id in BENCHMARK_ICONS
+        for size in SIZES
+    ]
+    row_labels = [
+        "{0} · {1}".format(context, state)
+        for context in CONTEXTS
+        for state in STATES
+    ]
+    return """<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diagram Core static regression matrix · AniDiagram</title>
+  <style>
+    * {{ box-sizing: border-box; }}
+    body {{ margin: 0; background: {page}; color: {text}; font-family: ui-sans-serif, system-ui, sans-serif; line-height: 1.5; }}
+    header, main {{ width: max-content; min-width: {width}px; margin-inline: auto; }}
+    header {{ width: {width}px; padding: 40px 0 24px; }}
+    h1, h2, p {{ margin-top: 0; }}
+    h1 {{ margin-bottom: 8px; font-size: 36px; }}
+    .legends {{ width: {width}px; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; padding: 20px; border: 1px solid {border}; background: {card}; }}
+    .legends ol {{ margin: 0; padding-left: 24px; columns: 2; }}
+    .legends li {{ break-inside: avoid; margin-bottom: 4px; }}
+    .grid-shell {{ width: {width}px; margin: 24px 0 64px; }}
+    #diagram-core-regression-grid {{ display: block; width: {width}px; height: {height}px; }}
+    code {{ overflow-wrap: anywhere; }}
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="diagram-core-grid-title">Diagram Core static regression matrix</h1>
+    <p id="diagram-core-grid-description">A fixed 12-column by 24-row, 288-cell visual review surface. The screenshot locator contains icon geometry only; all labels and legends remain outside it.</p>
+    <p>Contact sheet SHA-256: <code>{digest}</code>.</p>
+  </header>
+  <main>
+    <section class="legends" aria-label="Regression grid legends">
+      <div>
+        <h2>Column legend</h2>
+        <ol data-grid-legend="columns">
+{column_items}
+        </ol>
+      </div>
+      <div>
+        <h2>Row legend</h2>
+        <ol data-grid-legend="rows">
+{row_items}
+        </ol>
+      </div>
+    </section>
+    <section class="grid-shell" aria-label="Text-free regression crop">
+{grid}
+    </section>
+  </main>
+</body>
+</html>
+""".format(
+        page=_escaped(tokens["--icon-surface-secondary"]),
+        card=_escaped(tokens["--icon-surface-main"]),
+        text=_escaped(tokens["--icon-stroke"]),
+        border=_escaped(tokens["--icon-surface-recessed"]),
+        width=BENCHMARK_WIDTH,
+        height=BENCHMARK_HEIGHT,
+        digest=_escaped(contact_digest),
+        column_items=_legend_items(column_labels),
+        row_items=_legend_items(row_labels),
+        grid=embedded_grid,
+    )
+
+
+def _recognition_cell(
+    mode: str,
+    icon_id: str,
+    state: str,
+    tokens: Mapping[str, str],
+) -> str:
+    size = 48
+    offset = (BENCHMARK_CELL_SIZE - size) / 2
+    cell_id = "recognition-{0}-{1}-{2}".format(mode, icon_id, state)
+    preview = _static_preview(
+        icon_id,
+        "recognition.{0}.{1}.{2}".format(mode, icon_id, state),
+        state,
+        size,
+        offset,
+        offset,
+        tokens,
+    )
+    return """        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {cell_size} {cell_size}" width="{cell_size}" height="{cell_size}" role="img" aria-label="{label}" data-cell-kind="recognition" data-cell-id="{cell_id}" data-icon-id="{icon_id}" data-recognition-mode="{mode}" data-size="48" data-context="blue" data-state="{state}" style="{local_style}">
+          <rect x="0" y="0" width="{cell_size}" height="{cell_size}" fill="{surface}" stroke="{border}" stroke-width="1"/>
+{preview}
+        </svg>""".format(
+        cell_size=BENCHMARK_CELL_SIZE,
+        label=_escaped(
+            "{0} icon, {1} state, {2} recognition view, 48 pixels".format(
+                icon_id,
+                state,
+                mode,
+            )
+        ),
+        cell_id=_escaped(cell_id),
+        icon_id=_escaped(icon_id),
+        mode=_escaped(mode),
+        state=_escaped(state),
+        local_style=_escaped(_asset_local_style(tokens)),
+        surface=_escaped(tokens["--icon-surface-main"]),
+        border=_escaped(tokens["--icon-surface-recessed"]),
+        preview=preview,
+    )
+
+
+def render_recognition_html(
+    token_source: str,
+    contexts: Mapping[str, Mapping[str, str]],
+) -> str:
+    blue = contexts["blue"]
+    modes = (
+        ("label-hidden", blue),
+        ("accent-off", _accent_off_tokens(token_source, blue)),
+        ("grayscale", _grayscale_tokens(blue)),
+        ("node-context", blue),
+    )
+    mode_groups = []
+    for mode, tokens in modes:
+        cells = [
+            _recognition_cell(mode, icon_id, state, tokens)
+            for state in STATES
+            for icon_id in BENCHMARK_ICONS
+        ]
+        mode_groups.append(
+            """      <div class="recognition-mode" role="group" aria-label="{label}" data-recognition-group="{mode}">
+{cells}
+      </div>""".format(
+                label=_escaped(mode.replace("-", " ") + " recognition checks"),
+                mode=_escaped(mode),
+                cells="\n".join(cells),
+            )
+        )
+    legend = _legend_items(
+        (
+            "label-hidden · normal blue-context silhouettes at 48 px",
+            "accent-off · accent tokens collapsed to neutral roles",
+            "grayscale · luminance-only recognition",
+            "node-context · four icons in one fixed blue node context for visual-weight comparison",
+        )
+    )
+    defaults, _ = _context_tokens(token_source)
+    return """<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diagram Core recognition review · AniDiagram</title>
+  <style>
+    * {{ box-sizing: border-box; }}
+    body {{ margin: 0; background: {page}; color: {text}; font-family: ui-sans-serif, system-ui, sans-serif; line-height: 1.5; }}
+    header, main {{ width: 864px; margin-inline: auto; }}
+    header {{ padding: 40px 0 20px; }}
+    h1, h2, p {{ margin-top: 0; }}
+    h1 {{ margin-bottom: 8px; font-size: 36px; }}
+    .mode-legend {{ margin: 0 0 24px; padding: 20px 20px 20px 44px; border: 1px solid {border}; background: {card}; }}
+    .review-grid {{ width: 864px; display: grid; grid-template-columns: repeat(2, 416px); gap: 32px; padding-bottom: 64px; }}
+    .recognition-mode {{ display: grid; grid-template-columns: repeat(4, {cell_size}px); width: 416px; }}
+    .recognition-mode svg {{ display: block; width: {cell_size}px; height: {cell_size}px; }}
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="diagram-core-recognition-title">Diagram Core recognition review</h1>
+    <p id="diagram-core-recognition-description">Four label-free 48 px review modes. Every cell has an accessible name while the review region contains no visible labels.</p>
+    <h2>Mode legend</h2>
+    <ul class="mode-legend" data-recognition-legend="modes">
+{legend}
+    </ul>
+  </header>
+  <main>
+    <div id="diagram-core-recognition-grid" class="review-grid" role="group" aria-labelledby="diagram-core-recognition-title diagram-core-recognition-description" data-icon-review-region="true">
+{groups}
+    </div>
+  </main>
+</body>
+</html>
+""".format(
+        page=_escaped(defaults["--icon-surface-secondary"]),
+        card=_escaped(defaults["--icon-surface-main"]),
+        text=_escaped(defaults["--icon-stroke"]),
+        border=_escaped(defaults["--icon-surface-recessed"]),
+        cell_size=BENCHMARK_CELL_SIZE,
+        legend=legend,
+        groups="\n".join(mode_groups),
+    )
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Render the static Agent Diagram Core benchmark."
+        description="Render static Diagram Core review surfaces."
     )
-    parser.add_argument("--icons", required=True, choices=(ICON_ID,))
+    parser.add_argument("--icons", required=True)
     parser.add_argument("--output", required=True)
     parser.add_argument("--html-output", required=True)
-    parser.add_argument("--recognition", action="store_true", required=True)
+    parser.add_argument("--recognition", action="store_true")
+    parser.add_argument("--recognition-output")
+    parser.add_argument("--cell-index")
     return parser
 
 
@@ -405,22 +832,76 @@ def main() -> int:
     if output.absolute() == html_output.absolute():
         parser.error("SVG and HTML outputs must be different files")
 
-    contact_sheet = render_contact_sheet()
+    if arguments.icons == ICON_ID:
+        if not arguments.recognition:
+            parser.error("Agent checkpoint generation requires --recognition")
+        if arguments.recognition_output is not None or arguments.cell_index is not None:
+            parser.error(
+                "Agent checkpoint generation does not accept benchmark outputs"
+            )
+
+        contact_sheet = render_contact_sheet()
+        contact_bytes = contact_sheet.encode("utf-8")
+        digest = hashlib.sha256(contact_bytes).hexdigest()
+        reference = os.path.relpath(
+            output.absolute(),
+            html_output.parent.absolute(),
+        ).replace(os.sep, "/")
+        defaults, _ = _context_tokens(token_css())
+        review_page = render_review_html(reference, digest, defaults)
+
+        output.parent.mkdir(parents=True, exist_ok=True)
+        html_output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_bytes(contact_bytes)
+        html_output.write_text(review_page, encoding="utf-8")
+        print(
+            "icons=1 cells=72 unique=72 sizes=48,64,96 "
+            "contexts=blue,dark,warm,green states=6"
+        )
+        print("OK")
+        return 0
+
+    canonical_icons = ",".join(BENCHMARK_ICONS)
+    if arguments.icons != canonical_icons:
+        parser.error(
+            "--icons must be either agent or " + canonical_icons
+        )
+    if arguments.recognition:
+        parser.error("benchmark generation uses --recognition-output")
+    if arguments.recognition_output is None:
+        parser.error("benchmark generation requires --recognition-output")
+    if arguments.cell_index is None:
+        parser.error("benchmark generation requires --cell-index")
+
+    recognition_output = Path(arguments.recognition_output)
+    cell_index = Path(arguments.cell_index)
+    if recognition_output.suffix.lower() != ".html":
+        parser.error("--recognition-output must end in .html")
+    if cell_index.suffix.lower() != ".json":
+        parser.error("--cell-index must end in .json")
+    paths = (output, html_output, recognition_output, cell_index)
+    absolute_paths = [path.absolute() for path in paths]
+    if len(set(absolute_paths)) != len(absolute_paths):
+        parser.error("benchmark output files must use distinct paths")
+
+    cells = build_contact_sheet_cells()
+    contact_sheet = render_benchmark_contact_sheet(cells)
     contact_bytes = contact_sheet.encode("utf-8")
     digest = hashlib.sha256(contact_bytes).hexdigest()
-    reference = os.path.relpath(
-        output.absolute(),
-        html_output.parent.absolute(),
-    ).replace(os.sep, "/")
-    defaults, _ = _context_tokens(token_css())
-    review_page = render_review_html(reference, digest, defaults)
+    token_source = token_css()
+    defaults, contexts = _context_tokens(token_source)
+    review_page = render_benchmark_review_html(digest, defaults, cells)
+    recognition_page = render_recognition_html(token_source, contexts)
+    index_source = render_cell_index(cells)
 
-    output.parent.mkdir(parents=True, exist_ok=True)
-    html_output.parent.mkdir(parents=True, exist_ok=True)
+    for path in paths:
+        path.parent.mkdir(parents=True, exist_ok=True)
     output.write_bytes(contact_bytes)
     html_output.write_text(review_page, encoding="utf-8")
+    recognition_output.write_text(recognition_page, encoding="utf-8")
+    cell_index.write_text(index_source, encoding="utf-8")
     print(
-        "icons=1 cells=72 unique=72 sizes=48,64,96 "
+        "icons=4 cells=288 unique=288 sizes=48,64,96 "
         "contexts=blue,dark,warm,green states=6"
     )
     print("OK")

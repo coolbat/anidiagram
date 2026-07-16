@@ -1,3 +1,6 @@
+import copy
+import itertools
+import json
 import os
 import re
 import subprocess
@@ -14,6 +17,7 @@ from anidiagram.diagram_core.tokens import contrast_ratio
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts" / "render_diagram_core_contact_sheet.py"
 TOKENS_PATH = ROOT / "assets" / "diagram-core" / "tokens.css"
+ICONS = ("agent", "database", "api", "server")
 SIZES = (48, 64, 96)
 CONTEXTS = ("blue", "dark", "warm", "green")
 STATES = ("idle", "active", "processing", "success", "warning", "error")
@@ -73,6 +77,63 @@ class ReviewHTMLAudit(HTMLParser):
             self.text.append(data.strip())
 
 
+class StaticGridHTMLAudit(ReviewHTMLAudit):
+    def __init__(self):
+        super().__init__()
+        self.regression_cells = []
+        self.recognition_cells = []
+        self.review_region_text = []
+        self._review_region_depth = 0
+
+    def handle_starttag(self, tag, attrs):
+        super().handle_starttag(tag, attrs)
+        attributes = dict(attrs)
+        if attributes.get("data-icon-review-region") == "true":
+            self._review_region_depth += 1
+        elif self._review_region_depth:
+            self._review_region_depth += 1
+        if attributes.get("data-cell-kind") == "regression":
+            self.regression_cells.append(attributes)
+        if attributes.get("data-cell-kind") == "recognition":
+            self.recognition_cells.append(attributes)
+
+    def handle_startendtag(self, tag, attrs):
+        ReviewHTMLAudit.handle_starttag(self, tag, attrs)
+
+    def handle_endtag(self, tag):
+        if self._review_region_depth:
+            self._review_region_depth -= 1
+
+    def handle_data(self, data):
+        super().handle_data(data)
+        if self._review_region_depth and data.strip():
+            self.review_region_text.append(data.strip())
+
+
+def geometry_signature(element):
+    ignored = {
+        "data-state-mark",
+        "display",
+        "fill",
+        "stroke",
+        "stroke-width",
+        "stroke-linecap",
+        "stroke-linejoin",
+        "data-stroke-role",
+    }
+    return (
+        local_name(element.tag),
+        tuple(
+            sorted(
+                (local_name(name), value)
+                for name, value in element.attrib.items()
+                if local_name(name) not in ignored
+            )
+        ),
+        tuple(geometry_signature(child) for child in element),
+    )
+
+
 class DiagramCoreVisualReviewTest(unittest.TestCase):
     def generator_command(self, output, html_output, recognition=True, icon="agent", extra=()):
         command = [
@@ -113,6 +174,263 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
         self.assertTrue(output.is_file())
         self.assertTrue(html_output.is_file())
         return output, html_output
+
+    def benchmark_generator_command(
+        self,
+        output,
+        html_output,
+        recognition_output,
+        cell_index,
+        icons=ICONS,
+        extra=(),
+    ):
+        command = [
+            sys.executable,
+            str(SCRIPT),
+            "--icons",
+            ",".join(icons),
+            "--output",
+            str(output),
+            "--html-output",
+            str(html_output),
+            "--recognition-output",
+            str(recognition_output),
+            "--cell-index",
+            str(cell_index),
+        ]
+        command.extend(extra)
+        environment = os.environ.copy()
+        environment["PYTHONPATH"] = str(ROOT / "src")
+        return subprocess.run(
+            command,
+            cwd=ROOT,
+            env=environment,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+    def generate_benchmark(self, temp_dir):
+        root = Path(temp_dir)
+        output = root / "assets" / "diagram-core" / "previews" / "benchmark.svg"
+        html_output = root / "gallery" / "diagram-core" / "index.html"
+        recognition_output = root / "gallery" / "diagram-core" / "recognition.html"
+        cell_index = root / "gallery" / "diagram-core" / "cell-index.json"
+        result = self.benchmark_generator_command(
+            output,
+            html_output,
+            recognition_output,
+            cell_index,
+        )
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual(
+            "icons=4 cells=288 unique=288 sizes=48,64,96 "
+            "contexts=blue,dark,warm,green states=6\nOK\n",
+            result.stdout,
+        )
+        for path in (output, html_output, recognition_output, cell_index):
+            self.assertTrue(path.is_file(), path)
+        return output, html_output, recognition_output, cell_index
+
+    def test_benchmark_is_exact_ordered_288_cell_product_and_index_matches_dom(self):
+        expected = [
+            (icon_id, size, context, state)
+            for context, state, icon_id, size in itertools.product(
+                CONTEXTS,
+                STATES,
+                ICONS,
+                SIZES,
+            )
+        ]
+        self.assertEqual(288, len(expected))
+        self.assertEqual(288, len(set(expected)))
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output, html_output, _, cell_index = self.generate_benchmark(temp_dir)
+            root = ElementTree.parse(output).getroot()
+            self.assertEqual("diagram-core-regression-grid", root.attrib.get("id"))
+            self.assertEqual("12", root.attrib.get("data-grid-columns"))
+            self.assertEqual("24", root.attrib.get("data-grid-rows"))
+            self.assertEqual("288", root.attrib.get("data-cell-count"))
+            self.assertEqual("1248", root.attrib.get("width"))
+            self.assertEqual("2496", root.attrib.get("height"))
+            cells = [
+                element
+                for element in root.iter()
+                if element.attrib.get("data-cell-kind") == "regression"
+            ]
+            self.assertFalse(
+                any(local_name(element.tag) == "text" for element in root.iter())
+            )
+            svg_ids = [
+                element.attrib["id"]
+                for element in root.iter()
+                if "id" in element.attrib
+            ]
+            self.assertEqual(len(svg_ids), len(set(svg_ids)))
+            actual = [
+                (
+                    cell.attrib["data-icon-id"],
+                    int(cell.attrib["data-size"]),
+                    cell.attrib["data-context"],
+                    cell.attrib["data-state"],
+                )
+                for cell in cells
+            ]
+            self.assertEqual(expected, actual)
+            cell_ids = [cell.attrib["data-cell-id"] for cell in cells]
+            self.assertEqual(288, len(set(cell_ids)))
+
+            index = json.loads(cell_index.read_text(encoding="utf-8"))
+            self.assertEqual(1, index["version"])
+            self.assertEqual({"columns": 12, "rows": 24, "cells": 288}, index["grid"])
+            self.assertEqual(
+                [
+                    {
+                        "ordinal": ordinal,
+                        "cell_id": cell_ids[ordinal],
+                        "icon_id": icon_id,
+                        "size": size,
+                        "context": context,
+                        "state": state,
+                    }
+                    for ordinal, (icon_id, size, context, state) in enumerate(expected)
+                ],
+                index["cells"],
+            )
+
+            audit = StaticGridHTMLAudit()
+            audit.feed(html_output.read_text(encoding="utf-8"))
+            self.assertEqual(cell_ids, [cell["data-cell-id"] for cell in audit.regression_cells])
+            self.assertEqual([], audit.review_region_text)
+            id_values = [
+                attributes["id"]
+                for _, attributes in audit.attributes
+                if "id" in attributes
+            ]
+            self.assertEqual(len(id_values), len(set(id_values)))
+
+            source = html_output.read_text(encoding="utf-8")
+            locator = next(
+                attributes
+                for _, attributes in audit.attributes
+                if attributes.get("id") == "diagram-core-regression-grid"
+            )
+            self.assertEqual("true", locator.get("data-icon-review-region"))
+            self.assertTrue(
+                locator.get("aria-label", "").strip()
+                or locator.get("aria-labelledby", "").strip()
+            )
+            legends = {
+                attributes.get("data-grid-legend")
+                for _, attributes in audit.attributes
+                if attributes.get("data-grid-legend")
+            }
+            self.assertEqual({"columns", "rows"}, legends)
+            visible_text = " ".join(audit.text).lower()
+            for label in ICONS + CONTEXTS + STATES:
+                self.assertIn(label, visible_text)
+            for size in SIZES:
+                self.assertIn(str(size) + " px", visible_text)
+            self.assertNotRegex(
+                source[source.index('id="diagram-core-regression-grid"') :],
+                r"<text\b",
+            )
+
+    def test_benchmark_and_static_pages_are_local_deterministic_and_noninteractive(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            paths = self.generate_benchmark(temp_dir)
+            first = tuple(path.read_bytes() for path in paths)
+            self.generate_benchmark(temp_dir)
+            self.assertEqual(first, tuple(path.read_bytes() for path in paths))
+
+            svg_root = ElementTree.fromstring(first[0])
+            for element in svg_root.iter():
+                self.assertNotIn(local_name(element.tag), FORBIDDEN_SVG_TAGS)
+                for name, value in element.attrib.items():
+                    self.assertFalse(name.lower().startswith("on"))
+                    if local_name(name).lower() == "href":
+                        self.assertTrue(value.startswith("#"))
+            for path, payload in zip(paths, first):
+                if path.suffix == ".json":
+                    json.loads(payload.decode("utf-8"))
+                    continue
+                lowered = payload.decode("utf-8").lower()
+                network_surface = lowered.replace("http://www.w3.org/2000/svg", "")
+                self.assertNotIn("http://", network_surface)
+                self.assertNotIn("https://", network_surface)
+                self.assertNotIn("//", network_surface)
+                self.assertNotIn("@import", network_surface)
+                self.assertNotIn("<script", lowered)
+                self.assertNotRegex(lowered, r"\b(?:animation|transition)\s*:")
+                self.assertNotRegex(lowered, r"\bon[a-z]+\s*=")
+
+    def test_recognition_surfaces_keep_four_silhouettes_and_six_state_geometries(self):
+        modes = ("label-hidden", "accent-off", "grayscale", "node-context")
+        with tempfile.TemporaryDirectory() as temp_dir:
+            _, _, recognition_output, _ = self.generate_benchmark(temp_dir)
+            source = recognition_output.read_text(encoding="utf-8")
+            audit = StaticGridHTMLAudit()
+            audit.feed(source)
+            self.assertEqual([], audit.review_region_text)
+            self.assertEqual(96, len(audit.recognition_cells))
+            for mode in modes:
+                cells = [
+                    cell
+                    for cell in audit.recognition_cells
+                    if cell["data-recognition-mode"] == mode
+                ]
+                self.assertEqual(24, len(cells), mode)
+                self.assertEqual(
+                    set(itertools.product(ICONS, STATES)),
+                    {
+                        (cell["data-icon-id"], cell["data-state"])
+                        for cell in cells
+                    },
+                )
+                self.assertEqual({"48"}, {cell["data-size"] for cell in cells})
+                self.assertTrue(all(cell.get("aria-label", "").strip() for cell in cells))
+
+            ids = [
+                attributes["id"]
+                for _, attributes in audit.attributes
+                if "id" in attributes
+            ]
+            self.assertEqual(len(ids), len(set(ids)))
+            self.assertNotRegex(source.lower(), r"\bfilter\s*:")
+
+    def test_each_icon_has_six_distinct_rendered_state_geometry_signatures(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output, _, _, _ = self.generate_benchmark(temp_dir)
+            root = ElementTree.parse(output).getroot()
+            cells = [
+                element
+                for element in root.iter()
+                if element.attrib.get("data-cell-kind") == "regression"
+                and element.attrib.get("data-size") == "48"
+                and element.attrib.get("data-context") == "blue"
+            ]
+            for icon_id in ICONS:
+                signatures = {}
+                for state in STATES:
+                    cell = next(
+                        cell
+                        for cell in cells
+                        if cell.attrib["data-icon-id"] == icon_id
+                        and cell.attrib["data-state"] == state
+                    )
+                    wrapper = next(
+                        element
+                        for element in cell.iter()
+                        if element.attrib.get("data-icon-source") == "diagram-core-v1"
+                    )
+                    state_marks = [
+                        element
+                        for element in wrapper.iter()
+                        if element.attrib.get("data-state-mark") == state
+                    ]
+                    self.assertEqual(1, len(state_marks), (icon_id, state))
+                    signatures[state] = geometry_signature(copy.deepcopy(state_marks[0]))
+                self.assertEqual(6, len(set(signatures.values())), icon_id)
 
     def test_contact_sheet_has_exact_unique_matrix_and_real_context_tokens(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -357,6 +675,27 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                 ).read_bytes(),
                 html_output.read_bytes(),
             )
+
+    def test_committed_benchmark_artifacts_match_a_fresh_generation(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            generated = self.generate_benchmark(temp_dir)
+            committed = (
+                ROOT
+                / "assets"
+                / "diagram-core"
+                / "previews"
+                / "benchmark-contact-sheet.svg",
+                ROOT / "gallery" / "diagram-core" / "index.html",
+                ROOT / "gallery" / "diagram-core" / "recognition.html",
+                ROOT / "gallery" / "diagram-core" / "cell-index.json",
+            )
+            for committed_path, generated_path in zip(committed, generated):
+                with self.subTest(path=committed_path):
+                    self.assertTrue(committed_path.is_file())
+                    self.assertEqual(
+                        committed_path.read_bytes(),
+                        generated_path.read_bytes(),
+                    )
 
     def test_review_html_is_semantic_accessible_and_references_only_local_sheet(self):
         with tempfile.TemporaryDirectory() as temp_dir:
