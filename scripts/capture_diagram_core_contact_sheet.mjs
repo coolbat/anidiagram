@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 import { createHash, randomBytes } from "node:crypto";
+import { constants as fsConstants } from "node:fs";
 import {
   chmod,
   lstat,
   mkdir,
   open,
-  readFile,
   realpath,
   rename,
   rm,
@@ -26,6 +26,8 @@ const EXPECTED_WIDTH = 1248;
 const EXPECTED_HEIGHT = 2496;
 const VIEWPORT = Object.freeze({ width: 1280, height: 900 });
 const DEVICE_SCALE_FACTOR = 1;
+const PLAYWRIGHT_OPERATION_TIMEOUT_MS = 10_000;
+const CLOSE_TIMEOUT_MS = 5_000;
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(import.meta.url);
 const PLAYWRIGHT_VERSION = require("playwright/package.json").version;
@@ -99,6 +101,98 @@ function parseArguments(argumentsList) {
 
 function sha256(payload) {
   return createHash("sha256").update(payload).digest("hex");
+}
+
+
+function fileSignature(info) {
+  return [
+    info.dev,
+    info.ino,
+    info.size,
+    info.mtimeNs,
+    info.ctimeNs,
+    info.mode,
+  ].map((value) => value.toString()).join(":");
+}
+
+
+function replacementSignature(info) {
+  return [
+    info.dev,
+    info.ino,
+    info.size,
+    info.mtimeNs,
+    info.mode,
+  ].map((value) => value.toString()).join(":");
+}
+
+
+async function readFileSnapshot(target, label) {
+  await assertNoSymlinkComponents(target);
+  let handle;
+  try {
+    const flags = fsConstants.O_RDONLY | (fsConstants.O_NOFOLLOW || 0);
+    handle = await open(target, flags);
+    const before = await handle.stat({ bigint: true });
+    if ((before.mode & BigInt(fsConstants.S_IFMT)) !== BigInt(fsConstants.S_IFREG)) {
+      throw new Error(`${label} must be a regular file: ${target}`);
+    }
+    const payload = await handle.readFile();
+    const after = await handle.stat({ bigint: true });
+    if (fileSignature(before) !== fileSignature(after) || BigInt(payload.length) !== after.size) {
+      throw new Error(`${label} changed while it was read: ${target}`);
+    }
+    const current = await lstat(target, { bigint: true });
+    if (current.isSymbolicLink() || fileSignature(current) !== fileSignature(after)) {
+      throw new Error(`${label} changed while it was read: ${target}`);
+    }
+    return {
+      path: target,
+      payload,
+      mode: Number(after.mode & BigInt(0o777)),
+      signature: fileSignature(after),
+      replacementSignature: replacementSignature(after),
+    };
+  } catch (error) {
+    if (error && error.code === "ENOENT") {
+      throw new Error(`${label} does not exist: ${target}`);
+    }
+    throw error;
+  } finally {
+    if (handle) await handle.close().catch(() => {});
+  }
+}
+
+
+async function assertSnapshotCurrent(snapshot, label) {
+  await assertNoSymlinkComponents(snapshot.path);
+  let current;
+  try {
+    current = await lstat(snapshot.path, { bigint: true });
+  } catch (error) {
+    throw new Error(`${label} changed during capture: ${snapshot.path}`, { cause: error });
+  }
+  if (current.isSymbolicLink() || fileSignature(current) !== snapshot.signature) {
+    throw new Error(`${label} changed during capture: ${snapshot.path}`);
+  }
+}
+
+
+async function withTimeout(operation, label, timeoutMs = PLAYWRIGHT_OPERATION_TIMEOUT_MS) {
+  let timeoutId;
+  try {
+    return await Promise.race([
+      Promise.resolve().then(operation),
+      new Promise((resolve, reject) => {
+        timeoutId = setTimeout(
+          () => reject(new Error(`${label} timed out after ${timeoutMs}ms`)),
+          timeoutMs,
+        );
+      }),
+    ]);
+  } finally {
+    if (timeoutId !== undefined) clearTimeout(timeoutId);
+  }
 }
 
 
@@ -180,10 +274,10 @@ async function rejectAliases(entries) {
 }
 
 
-async function stagePayload(target, payload, mode = 0o644) {
+async function stagePayload(target, payload, mode = 0o644, suffix = ".tmp") {
   const temporary = path.join(
     path.dirname(target),
-    `.${path.basename(target)}.${process.pid}.${randomBytes(8).toString("hex")}.tmp`,
+    `.${path.basename(target)}.${process.pid}.${randomBytes(8).toString("hex")}${suffix}`,
   );
   let handle;
   let completed = false;
@@ -205,37 +299,75 @@ async function stagePayload(target, payload, mode = 0o644) {
 
 async function snapshotTarget(target) {
   if (!(await exists(target))) return null;
-  await assertNoSymlinkComponents(target);
-  const info = await stat(target);
-  if (!info.isFile()) throw new Error(`output must be a regular file: ${target}`);
-  const payload = await readFile(target);
-  return { payload, mode: info.mode & 0o777, sha256: sha256(payload) };
+  const snapshot = await readFileSnapshot(target, "output");
+  return { ...snapshot, sha256: sha256(snapshot.payload) };
+}
+
+
+function snapshotsEqual(left, right) {
+  if (left === null || right === null) return left === right;
+  return left.signature === right.signature && left.payload.equals(right.payload);
+}
+
+
+async function assertTargetUnchanged(entry) {
+  const current = await snapshotTarget(entry.target);
+  if (!snapshotsEqual(current, entry.snapshot)) {
+    throw new Error(`output changed before publish: ${entry.target}`);
+  }
+}
+
+
+async function matchesPublishedPayload(entry) {
+  const current = await snapshotTarget(entry.target);
+  return current !== null
+    && current.replacementSignature === entry.stagedSignature
+    && current.payload.equals(entry.payload);
+}
+
+
+function preserveBackup(entry, reason) {
+  if (entry.backup) {
+    const backup = entry.backup;
+    entry.backup = null;
+    return `${reason}; original backup preserved at ${backup}`;
+  }
+  return reason;
 }
 
 
 async function restorePublishedEntry(entry, replace) {
   const current = await snapshotTarget(entry.target);
-  const oldDigest = entry.snapshot && entry.snapshot.sha256;
-  if (current && current.sha256 === entry.newDigest) {
-    if (entry.snapshot === null) {
-      await rm(entry.target);
-      return;
-    }
-    const rollbackStage = await stagePayload(
-      entry.target,
-      entry.snapshot.payload,
-      entry.snapshot.mode,
-    );
-    try {
-      await replace(rollbackStage, entry.target);
-    } finally {
-      await rm(rollbackStage, { force: true }).catch(() => {});
-    }
+  if (snapshotsEqual(current, entry.snapshot)) return;
+  if (!(await matchesPublishedPayload(entry))) {
+    throw new Error(preserveBackup(
+      entry,
+      `rollback conflict at ${entry.target}: current output is neither original nor published`,
+    ));
+  }
+  if (entry.snapshot === null) {
+    await rm(entry.target);
     return;
   }
-  if (current === null && entry.snapshot === null) return;
-  if (current && oldDigest && current.sha256 === oldDigest) return;
-  throw new Error(`rollback conflict at ${entry.target}`);
+  if (!entry.backup || !(await exists(entry.backup))) {
+    throw new Error(`rollback backup is missing for ${entry.target}`);
+  }
+  const backup = entry.backup;
+  try {
+    await replace(backup, entry.target);
+    entry.backup = null;
+  } catch (error) {
+    const restored = await snapshotTarget(entry.target).catch(() => null);
+    if (
+      restored !== null
+      && restored.replacementSignature === entry.backupSignature
+      && restored.payload.equals(entry.snapshot.payload)
+    ) {
+      entry.backup = null;
+      return;
+    }
+    throw new Error(preserveBackup(entry, error.message), { cause: error });
+  }
 }
 
 
@@ -251,15 +383,32 @@ export async function publishCapture(entries, replace = rename) {
       const payload = Buffer.from(entry.payload);
       const snapshot = await snapshotTarget(entry.target);
       const temporary = await stagePayload(entry.target, payload);
-      staged.push({
+      const stagedInfo = await lstat(temporary, { bigint: true });
+      const record = {
         target: entry.target,
+        payload,
         snapshot,
         temporary,
+        backup: null,
+        backupSignature: null,
         attempted: false,
-        newDigest: sha256(payload),
-      });
+        stagedSignature: replacementSignature(stagedInfo),
+      };
+      staged.push(record);
+      if (snapshot !== null) {
+        record.backup = await stagePayload(
+          entry.target,
+          snapshot.payload,
+          snapshot.mode,
+          ".bak",
+        );
+        record.backupSignature = replacementSignature(
+          await lstat(record.backup, { bigint: true }),
+        );
+      }
     }
     for (const entry of staged) {
+      await assertTargetUnchanged(entry);
       entry.attempted = true;
       await replace(entry.temporary, entry.target);
       entry.temporary = null;
@@ -271,7 +420,7 @@ export async function publishCapture(entries, replace = rename) {
       try {
         await restorePublishedEntry(entry, replace);
       } catch (rollbackError) {
-        rollbackErrors.push(rollbackError.message);
+        rollbackErrors.push(preserveBackup(entry, rollbackError.message));
       }
     }
     if (rollbackErrors.length !== 0) {
@@ -286,6 +435,11 @@ export async function publishCapture(entries, replace = rename) {
       staged
         .filter((entry) => entry.temporary)
         .map((entry) => rm(entry.temporary, { force: true }).catch(() => {})),
+    );
+    await Promise.all(
+      staged
+        .filter((entry) => entry.backup)
+        .map((entry) => rm(entry.backup, { force: true }).catch(() => {})),
     );
   }
 }
@@ -304,9 +458,11 @@ async function canonicalSourceAssets() {
   const files = [];
   for (const relativePath of SOURCE_ASSET_PATHS) {
     const absolutePath = path.join(REPO_ROOT, relativePath);
-    await requireRegularFile(absolutePath, `canonical source asset ${relativePath}`);
-    const payload = await readFile(absolutePath);
-    files.push({ path: relativePath, sha256: sha256(payload) });
+    const snapshot = await readFileSnapshot(
+      absolutePath,
+      `canonical source asset ${relativePath}`,
+    );
+    files.push({ path: relativePath, sha256: sha256(snapshot.payload) });
   }
   const joint = createHash("sha256");
   for (const file of files) {
@@ -329,7 +485,7 @@ function pngDimensions(payload) {
 
 
 async function computedMotionCounts(locator) {
-  return locator.evaluate((root) => {
+  return withTimeout(() => locator.evaluate((root) => {
     const hasPositiveTime = (source) => source
       .split(",")
       .map((value) => value.trim())
@@ -355,7 +511,112 @@ async function computedMotionCounts(locator) {
       if (hasPositiveTime(style.transitionDuration)) transitionCount += 1;
     }
     return { animationCount, transitionCount };
-  });
+  }), "motion inspection");
+}
+
+
+async function stabilizeStaticDocument(page) {
+  await withTimeout(() => page.evaluate(async () => {
+    await document.fonts.ready;
+  }), "font stabilization");
+
+  // Chromium suppresses requestAnimationFrame callbacks when the context was
+  // created with javaScriptEnabled:false. Drive two bounded compositor/layout
+  // turns from Playwright instead, without ever enabling page-authored script.
+  for (let frame = 0; frame < 2; frame += 1) {
+    await new Promise((resolve) => setTimeout(resolve, 17));
+    await withTimeout(() => page.evaluate(() => {
+      const root = document.documentElement;
+      const style = getComputedStyle(root);
+      const bounds = root.getBoundingClientRect();
+      return [style.display, bounds.width, bounds.height];
+    }), `static layout turn ${frame + 1}`);
+  }
+}
+
+
+async function inspectStaticSurface(page) {
+  return withTimeout(() => page.evaluate(() => {
+    const violations = [];
+    const record = (kind, value) => violations.push(`${kind}: ${value}`);
+    const isLocalFragment = (value) => value.trim().startsWith("#");
+    const inspectUrlValue = (kind, value) => {
+      const normalized = (value || "").trim();
+      if (normalized && !isLocalFragment(normalized)) record(kind, normalized);
+    };
+    const inspectCssText = (source, label) => {
+      const css = source || "";
+      const urlExpression = /url\(\s*(["']?)(.*?)\1\s*\)/giu;
+      for (const match of css.matchAll(urlExpression)) {
+        inspectUrlValue(`${label} url`, match[2]);
+      }
+      const importExpression = /@import\s+(?:url\(\s*)?(["']?)([^"'\s;)]+)\1/giu;
+      for (const match of css.matchAll(importExpression)) {
+        inspectUrlValue(`${label} import`, match[2]);
+      }
+    };
+    const inspectSheet = (sheet, label) => {
+      let rules;
+      try {
+        rules = sheet.cssRules;
+      } catch (error) {
+        record(`${label} stylesheet`, `inaccessible ${error.name || "error"}`);
+        return;
+      }
+      for (const rule of rules || []) {
+        inspectCssText(rule.cssText || "", label);
+        if (rule.cssRules) {
+          for (const nested of rule.cssRules) inspectCssText(nested.cssText || "", label);
+        }
+      }
+    };
+
+    for (const script of document.querySelectorAll("script")) {
+      record("active element", `<script${script.src ? ` src=${script.src}` : ""}>`);
+    }
+    for (const element of document.querySelectorAll("iframe, frame, object, embed, portal")) {
+      record("active element", `<${element.localName}>`);
+    }
+    for (const meta of document.querySelectorAll("meta[http-equiv]")) {
+      if ((meta.getAttribute("http-equiv") || "").trim().toLowerCase() === "refresh") {
+        record("active element", "<meta http-equiv=refresh>");
+      }
+    }
+    for (const base of document.querySelectorAll("base[href]")) {
+      record("active element", `<base href=${base.getAttribute("href") || ""}>`);
+    }
+
+    const urlAttributes = ["src", "srcset", "poster", "data", "href", "xlink:href"];
+    for (const element of document.querySelectorAll("*")) {
+      for (const attribute of element.attributes) {
+        if (attribute.name.toLowerCase().startsWith("on")) {
+          record("event attribute", `${element.localName}[${attribute.name}]`);
+        }
+      }
+      for (const attribute of urlAttributes) {
+        if (!element.hasAttribute(attribute)) continue;
+        inspectUrlValue(`${element.localName}[${attribute}]`, element.getAttribute(attribute));
+      }
+      inspectCssText(element.getAttribute("style") || "", `${element.localName}[style]`);
+    }
+    for (const style of document.querySelectorAll("style")) {
+      inspectCssText(style.textContent || "", "style element");
+    }
+    for (const [index, sheet] of [...document.styleSheets].entries()) {
+      inspectSheet(sheet, `document stylesheet ${index}`);
+    }
+    for (const [index, sheet] of [...(document.adoptedStyleSheets || [])].entries()) {
+      inspectSheet(sheet, `document adopted stylesheet ${index}`);
+    }
+    const elements = [...document.querySelectorAll("*")];
+    for (const element of elements) {
+      if (!element.shadowRoot) continue;
+      for (const [index, sheet] of [...(element.shadowRoot.adoptedStyleSheets || [])].entries()) {
+        inspectSheet(sheet, `${element.localName} adopted stylesheet ${index}`);
+      }
+    }
+    return [...new Set(violations)].sort();
+  }), "static surface inspection");
 }
 
 
@@ -369,102 +630,100 @@ async function capture(paths) {
   await Promise.all([prepareOutput(paths.output), prepareOutput(paths.metadata)]);
   const canonicalInput = await realpath(paths.input);
   relativeRepoPath(canonicalInput);
-  const inputPayload = await readFile(canonicalInput);
+  const inputSnapshot = await readFileSnapshot(canonicalInput, "input HTML");
+  const inputPayload = inputSnapshot.payload;
   const sourceAssets = await canonicalSourceAssets();
   const externalRequests = new Set();
   const canonicalInputUrl = pathToFileURL(canonicalInput).href;
   const browser = await chromium.launch({ headless: true });
   let context;
+  let browserClosed = false;
+  let screenshot;
+  let boundingBox;
+  let cells;
+  let motion;
+  let chromiumVersion;
+  let dimensions;
   try {
     context = await browser.newContext({
       viewport: VIEWPORT,
-      deviceScaleFactor: 1,
+      deviceScaleFactor: DEVICE_SCALE_FACTOR,
       reducedMotion: "reduce",
       serviceWorkers: "block",
+      javaScriptEnabled: false,
     });
     const page = await context.newPage();
-    const isAllowedMainNavigation = (request) => request.url() === canonicalInputUrl
+    page.setDefaultTimeout(PLAYWRIGHT_OPERATION_TIMEOUT_MS);
+    page.setDefaultNavigationTimeout(PLAYWRIGHT_OPERATION_TIMEOUT_MS);
+    let allowedMainNavigations = 0;
+    const isCanonicalMainNavigation = (request) => request.url() === canonicalInputUrl
       && request.isNavigationRequest()
       && request.frame() === page.mainFrame();
-    page.on("request", (request) => {
-      if (!isAllowedMainNavigation(request)) externalRequests.add(request.url());
+    const watchPage = (candidate) => {
+      candidate.on("worker", (worker) => {
+        externalRequests.add(`worker:${worker.url() || "unknown"}`);
+      });
+      candidate.on("popup", (popup) => {
+        externalRequests.add(`popup:${popup.url() || "pending"}`);
+      });
+    };
+    watchPage(page);
+    context.on("page", (popup) => {
+      externalRequests.add(`popup:${popup.url() || "pending"}`);
+      watchPage(popup);
     });
-    await page.route("**/*", async (route) => {
-      if (isAllowedMainNavigation(route.request())) {
-        await route.continue();
+    context.on("serviceworker", (worker) => {
+      externalRequests.add(`serviceworker:${worker.url() || "unknown"}`);
+    });
+    context.on("request", (request) => {
+      if (!isCanonicalMainNavigation(request)) externalRequests.add(request.url());
+    });
+    await context.route("**/*", async (route) => {
+      if (isCanonicalMainNavigation(route.request()) && allowedMainNavigations === 0) {
+        allowedMainNavigations += 1;
+        await route.fulfill({
+          status: 200,
+          contentType: "text/html; charset=utf-8",
+          body: inputPayload,
+        });
         return;
       }
       externalRequests.add(route.request().url());
       await route.abort("blockedbyclient");
     });
-    await page.goto(canonicalInputUrl, { waitUntil: "load" });
-    const embeddedResourceUrls = await page.evaluate(() => {
-      const resources = [
-        ["img", "src"],
-        ["script", "src"],
-        ["link", "href"],
-        ["iframe", "src"],
-        ["audio", "src"],
-        ["video", "src"],
-        ["source", "src"],
-        ["object", "data"],
-        ["embed", "src"],
-        ["image", "href"],
-        ["use", "href"],
-      ];
-      const urls = [];
-      for (const [tag, attribute] of resources) {
-        for (const element of document.querySelectorAll(`${tag}[${attribute}]`)) {
-          const value = element.getAttribute(attribute);
-          if (!value || value.startsWith("#")) continue;
-          urls.push(new URL(value, document.baseURI).href);
-        }
-      }
-      const appendCssUrls = (source) => {
-        const expression = /url\(\s*(["']?)(.*?)\1\s*\)/giu;
-        for (const match of source.matchAll(expression)) {
-          const value = match[2].trim();
-          if (!value || value.startsWith("#")) continue;
-          urls.push(new URL(value, document.baseURI).href);
-        }
-        const importExpression = /@import\s+(["'])(.*?)\1/giu;
-        for (const match of source.matchAll(importExpression)) {
-          const value = match[2].trim();
-          if (!value || value.startsWith("#")) continue;
-          urls.push(new URL(value, document.baseURI).href);
-        }
-      };
-      for (const style of document.querySelectorAll("style")) {
-        appendCssUrls(style.textContent || "");
-      }
-      for (const element of document.querySelectorAll("[style]")) {
-        appendCssUrls(element.getAttribute("style") || "");
-      }
-      return urls;
+    await page.goto(canonicalInputUrl, {
+      waitUntil: "load",
+      timeout: PLAYWRIGHT_OPERATION_TIMEOUT_MS,
     });
-    for (const resourceUrl of embeddedResourceUrls) {
-      if (resourceUrl !== canonicalInputUrl) externalRequests.add(resourceUrl);
+    if (allowedMainNavigations !== 1) {
+      throw new Error(`canonical input navigation must occur exactly once; found ${allowedMainNavigations}`);
     }
+    const surfaceViolations = await inspectStaticSurface(page);
+    for (const violation of surfaceViolations) externalRequests.add(violation);
     if (externalRequests.size !== 0) {
-      throw new Error(`external requests are forbidden: ${[...externalRequests].join(", ")}`);
+      throw new Error(
+        `external requests are forbidden; active content is forbidden: `
+        + `${[...externalRequests].join(", ")}`,
+      );
     }
-    await page.addStyleTag({ content: CAPTURE_STYLE });
-    await page.evaluate(async () => {
-      await document.fonts.ready;
-      await new Promise((resolve) => requestAnimationFrame(() => resolve()));
-      await new Promise((resolve) => requestAnimationFrame(() => resolve()));
-    });
+    await withTimeout(() => page.evaluate((captureStyle) => {
+      const style = document.createElement("style");
+      style.dataset.diagramCoreCaptureStyle = "";
+      style.textContent = captureStyle;
+      document.head.append(style);
+    }, CAPTURE_STYLE), "capture style injection");
+    await stabilizeStaticDocument(page);
 
     const locator = page.locator(LOCATOR);
     const locatorCount = await locator.count();
     if (locatorCount !== 1) {
       throw new Error(`${LOCATOR} must match exactly once; found ${locatorCount}`);
     }
-    const cells = await locator.locator('[data-cell-kind="regression"]').count();
+    cells = await locator.locator('[data-cell-kind="regression"]').count();
     if (cells !== EXPECTED_CELLS) {
       throw new Error(`regression grid must contain ${EXPECTED_CELLS} cells; found ${cells}`);
     }
-    const boundingBox = await locator.boundingBox();
+    boundingBox = await locator.boundingBox();
     if (!boundingBox) throw new Error(`${LOCATOR} has no visible bounding box`);
     if (boundingBox.width !== EXPECTED_WIDTH || boundingBox.height !== EXPECTED_HEIGHT) {
       throw new Error(
@@ -472,7 +731,7 @@ async function capture(paths) {
         + `found ${boundingBox.width}x${boundingBox.height}`,
       );
     }
-    const motion = await computedMotionCounts(locator);
+    motion = await computedMotionCounts(locator);
     if (motion.animationCount !== 0 || motion.transitionCount !== 0) {
       throw new Error(
         `capture surface still has motion: animations=${motion.animationCount} `
@@ -483,21 +742,56 @@ async function capture(paths) {
       throw new Error(`external requests are forbidden: ${[...externalRequests].join(", ")}`);
     }
 
-    const screenshot = await locator.screenshot({ type: "png", animations: "disabled" });
+    screenshot = await locator.screenshot({
+      type: "png",
+      animations: "disabled",
+      timeout: PLAYWRIGHT_OPERATION_TIMEOUT_MS,
+    });
     if (externalRequests.size !== 0) {
       throw new Error(`external requests are forbidden: ${[...externalRequests].join(", ")}`);
     }
-    const dimensions = pngDimensions(screenshot);
+    dimensions = pngDimensions(screenshot);
     if (dimensions.width !== EXPECTED_WIDTH || dimensions.height !== EXPECTED_HEIGHT) {
       throw new Error(
         `screenshot dimensions must be ${EXPECTED_WIDTH}x${EXPECTED_HEIGHT}; `
         + `found ${dimensions.width}x${dimensions.height}`,
       );
     }
-    const chromiumVersion = browser.version();
-    const captureTimestamp = new Date().toISOString();
-    const imageDigest = sha256(screenshot);
-    const metadata = {
+    chromiumVersion = browser.version();
+    await withTimeout(() => context.close(), "browser context close", CLOSE_TIMEOUT_MS);
+    context = undefined;
+    await withTimeout(() => browser.close(), "browser close", CLOSE_TIMEOUT_MS);
+    browserClosed = true;
+    if (allowedMainNavigations !== 1) {
+      throw new Error(`canonical input navigation must occur exactly once; found ${allowedMainNavigations}`);
+    }
+    if (externalRequests.size !== 0) {
+      throw new Error(
+        `external requests are forbidden; active content is forbidden: `
+        + `${[...externalRequests].join(", ")}`,
+      );
+    }
+  } finally {
+    if (context) {
+      await withTimeout(
+        () => context.close(),
+        "browser context cleanup",
+        CLOSE_TIMEOUT_MS,
+      ).catch(() => {});
+    }
+    if (!browserClosed) {
+      await withTimeout(
+        () => browser.close(),
+        "browser cleanup",
+        CLOSE_TIMEOUT_MS,
+      ).catch(() => {});
+    }
+  }
+
+  const captureTimestamp = new Date().toISOString();
+  await assertSnapshotCurrent(inputSnapshot, "input HTML");
+  const imageDigest = sha256(screenshot);
+  const metadata = {
       schema: "anidiagram.diagram-core.capture",
       version: 1,
       browser: {
@@ -538,19 +832,15 @@ async function capture(paths) {
         height: dimensions.height,
       },
       source_assets: sourceAssets,
-    };
-    await publishCapture([
-      { target: paths.output, payload: screenshot },
-      {
-        target: paths.metadata,
-        payload: Buffer.from(`${JSON.stringify(metadata, null, 2)}\n`, "utf8"),
-      },
-    ]);
-    return { cells, requests: externalRequests.size, animations: motion.animationCount, metadata };
-  } finally {
-    if (context) await context.close().catch(() => {});
-    await browser.close().catch(() => {});
-  }
+  };
+  await publishCapture([
+    { target: paths.output, payload: screenshot },
+    {
+      target: paths.metadata,
+      payload: Buffer.from(`${JSON.stringify(metadata, null, 2)}\n`, "utf8"),
+    },
+  ]);
+  return { cells, requests: externalRequests.size, animations: motion.animationCount, metadata };
 }
 
 
@@ -570,7 +860,9 @@ if (invokedAsScript) {
   try {
     await main();
   } catch (error) {
-    process.stderr.write(`error: ${error.message}\n`);
-    process.exitCode = error instanceof UsageError ? 2 : 1;
+    await new Promise((resolve) => {
+      process.stderr.write(`error: ${error.message}\n`, resolve);
+    });
+    process.exit(error instanceof UsageError ? 2 : 1);
   }
 }

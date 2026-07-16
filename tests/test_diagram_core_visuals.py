@@ -1,5 +1,6 @@
 import copy
 import hashlib
+import http.server
 import itertools
 import json
 import os
@@ -7,6 +8,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import threading
 import unittest
 from html.parser import HTMLParser
 from pathlib import Path
@@ -872,15 +874,64 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
     def sha256(self, path):
         return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
+    def capture_metadata_path(self, path):
+        absolute = Path(path).resolve()
+        try:
+            return absolute.relative_to(ROOT).as_posix()
+        except ValueError:
+            return str(absolute)
+
+    def canonical_source_assets(self):
+        paths = sorted(
+            [
+                "assets/diagram-core/catalog.json",
+                "assets/diagram-core/tokens.css",
+            ]
+            + [
+                "assets/diagram-core/{0}/{1}.{2}".format(directory, icon, suffix)
+                for icon in ICONS
+                for directory, suffix in (("icons", "svg"), ("manifests", "json"))
+            ]
+        )
+        files = [
+            {"path": relative, "sha256": self.sha256(ROOT / relative)}
+            for relative in paths
+        ]
+        joint_payload = "".join(
+            "{0}\0{1}\n".format(entry["path"], entry["sha256"])
+            for entry in files
+        ).encode("utf-8")
+        return {
+            "files": files,
+            "joint_sha256": hashlib.sha256(joint_payload).hexdigest(),
+        }
+
+    def locked_playwright_version(self):
+        lock = json.loads((ROOT / "package-lock.json").read_text(encoding="utf-8"))
+        return lock["packages"]["node_modules/playwright"]["version"]
+
+    def capture_metadata_digest(self, metadata):
+        payload = copy.deepcopy(metadata)
+        payload.pop("approval", None)
+        canonical = json.dumps(
+            payload,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+        return hashlib.sha256(canonical).hexdigest()
+
     def write_capture_fixture(
         self,
         root,
         stem,
         color=(20, 30, 40, 255),
         source_digest=None,
-        playwright_version="1.57.0",
+        playwright_version=None,
         chromium_version="143.0.7499.4",
         approved=False,
+        platform_os="linux",
+        platform_arch="x64",
     ):
         image_path = root / (stem + ".png")
         metadata_path = root / (stem + ".json")
@@ -890,10 +941,10 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             "schema": "anidiagram.diagram-core.capture",
             "version": 1,
             "browser": {
-                "playwright_version": playwright_version,
+                "playwright_version": playwright_version or self.locked_playwright_version(),
                 "chromium_version": chromium_version,
             },
-            "platform": {"os": "synthetic", "arch": "synthetic"},
+            "platform": {"os": platform_os, "arch": platform_arch},
             "viewport": {"width": 1280, "height": 900, "device_scale_factor": 1},
             "locator": {
                 "selector": "#diagram-core-regression-grid",
@@ -903,30 +954,36 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             "capture": {
                 "timestamp_utc": "2026-07-16T00:00:00.000Z",
                 "external_requests": 0,
+                "external_request_urls": [],
                 "animation_count": 0,
                 "transition_count": 0,
             },
-            "input": {"path": "gallery/diagram-core/index.html", "sha256": "b" * 64},
+            "input": {
+                "path": "gallery/diagram-core/index.html",
+                "sha256": self.sha256(ROOT / "gallery/diagram-core/index.html"),
+            },
             "image": {
-                "path": str(image_path),
+                "path": self.capture_metadata_path(image_path),
                 "sha256": digest,
                 "width": 10,
                 "height": 10,
             },
-            "source_assets": {
-                "joint_sha256": source_digest or "a" * 64,
-                "files": [
-                    {"path": "assets/diagram-core/catalog.json", "sha256": "c" * 64}
-                ],
-            },
+            "source_assets": self.canonical_source_assets(),
         }
+        if source_digest is not None:
+            metadata["source_assets"]["joint_sha256"] = source_digest
         if approved:
+            capture_digest = self.capture_metadata_digest(metadata)
             metadata["approval"] = {
                 "timestamp_utc": "2026-07-16T00:01:00.000Z",
                 "reviewer": "reviewer",
                 "note": "approved synthetic fixture",
                 "candidate_sha256": digest,
                 "baseline_sha256": digest,
+                "capture_metadata_sha256": capture_digest,
+                "playwright_version": metadata["browser"]["playwright_version"],
+                "chromium_version": metadata["browser"]["chromium_version"],
+                "source_assets_joint_sha256": metadata["source_assets"]["joint_sha256"],
             }
         metadata_path.write_text(
             json.dumps(metadata, sort_keys=True) + "\n",
@@ -1020,7 +1077,8 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
         for required in (
             'from "playwright"',
             "chromium.launch",
-            "deviceScaleFactor: 1",
+            "const DEVICE_SCALE_FACTOR = 1",
+            "deviceScaleFactor: DEVICE_SCALE_FACTOR",
             'reducedMotion: "reduce"',
             "width: 1280",
             "height: 900",
@@ -1044,7 +1102,10 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             "icons",
         ):
             self.assertIn(required, source)
-        self.assertIn("page.route", source)
+        self.assertIn("context.route", source)
+        self.assertNotIn('page.route("**/*"', source)
+        self.assertIn("javaScriptEnabled: false", source)
+        self.assertIn("route.fulfill", source)
         self.assertIn("locator.screenshot", source)
 
     def test_capture_cli_requires_all_three_paths(self):
@@ -1190,6 +1251,213 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             self.assertFalse(output.exists())
             self.assertFalse(metadata.exists())
 
+    def test_capture_rejects_self_deleting_data_resource_script_without_outputs(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="diagram-core-script-", dir=build_root) as temp_dir:
+            root = Path(temp_dir).resolve()
+            malicious_input = root / "self-deleting-script.html"
+            source = (ROOT / "gallery" / "diagram-core" / "index.html").read_text(
+                encoding="utf-8"
+            )
+            probe = (
+                "<script>const probe=document.createElement('img');"
+                "probe.src='data:image/png;base64,iVBORw0KGgo=';"
+                "document.body.append(probe);probe.remove()</script>"
+            )
+            self.assertIn("</body>", source)
+            malicious_input.write_text(
+                source.replace("</body>", probe + "</body>", 1),
+                encoding="utf-8",
+            )
+            output = root / "candidate.png"
+            metadata = root / "candidate.json"
+
+            result = subprocess.run(
+                [
+                    "node", str(self.CAPTURE_SCRIPT),
+                    "--input", str(malicious_input),
+                    "--output", str(output),
+                    "--metadata", str(metadata),
+                ],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+
+            self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+            self.assertIn("forbidden", result.stderr)
+            self.assertFalse(output.exists())
+            self.assertFalse(metadata.exists())
+
+    def test_capture_rejects_data_srcset_without_outputs(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="diagram-core-srcset-", dir=build_root) as temp_dir:
+            root = Path(temp_dir).resolve()
+            malicious_input = root / "data-srcset.html"
+            source = (ROOT / "gallery/diagram-core/index.html").read_text(encoding="utf-8")
+            probe = '<img alt="" srcset="data:image/png;base64,iVBORw0KGgo= 1x">'
+            malicious_input.write_text(
+                source.replace("</body>", probe + "</body>", 1),
+                encoding="utf-8",
+            )
+            output = root / "candidate.png"
+            metadata = root / "candidate.json"
+
+            result = subprocess.run(
+                [
+                    "node", str(self.CAPTURE_SCRIPT),
+                    "--input", str(malicious_input),
+                    "--output", str(output),
+                    "--metadata", str(metadata),
+                ],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+
+            self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+            self.assertIn("forbidden", result.stderr)
+            self.assertFalse(output.exists())
+            self.assertFalse(metadata.exists())
+
+    def test_capture_rejects_data_adopted_stylesheet_without_outputs(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="diagram-core-adopted-", dir=build_root) as temp_dir:
+            root = Path(temp_dir).resolve()
+            malicious_input = root / "adopted-style.html"
+            source = (ROOT / "gallery/diagram-core/index.html").read_text(encoding="utf-8")
+            probe = (
+                "<script>const sheet=new CSSStyleSheet();"
+                "sheet.replaceSync('#diagram-core-regression-grid{"
+                "background-image:url(data:image/png;base64,iVBORw0KGgo=)}');"
+                "document.adoptedStyleSheets=[...document.adoptedStyleSheets,sheet]</script>"
+            )
+            malicious_input.write_text(
+                source.replace("</body>", probe + "</body>", 1),
+                encoding="utf-8",
+            )
+            output = root / "candidate.png"
+            metadata = root / "candidate.json"
+
+            result = subprocess.run(
+                [
+                    "node", str(self.CAPTURE_SCRIPT),
+                    "--input", str(malicious_input),
+                    "--output", str(output),
+                    "--metadata", str(metadata),
+                ],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+
+            self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+            self.assertIn("forbidden", result.stderr)
+            self.assertFalse(output.exists())
+            self.assertFalse(metadata.exists())
+
+    def test_capture_rejects_real_popup_http_target_without_outputs(self):
+        hits = []
+
+        class PopupHandler(http.server.BaseHTTPRequestHandler):
+            def do_GET(self):
+                hits.append(self.path)
+                body = b"<!doctype html><title>popup</title>"
+                self.send_response(200)
+                self.send_header("Content-Type", "text/html")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+
+            def log_message(self, format_string, *arguments):
+                del format_string, arguments
+
+        server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), PopupHandler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            build_root = ROOT / "build"
+            build_root.mkdir(exist_ok=True)
+            with tempfile.TemporaryDirectory(prefix="diagram-core-popup-", dir=build_root) as temp_dir:
+                root = Path(temp_dir).resolve()
+                malicious_input = root / "popup.html"
+                source = (ROOT / "gallery/diagram-core/index.html").read_text(encoding="utf-8")
+                popup_url = "http://127.0.0.1:{0}/popup".format(server.server_port)
+                probe = "<script>window.open({0}, '_blank')</script>".format(
+                    json.dumps(popup_url)
+                )
+                malicious_input.write_text(
+                    source.replace("</body>", probe + "</body>", 1),
+                    encoding="utf-8",
+                )
+                output = root / "candidate.png"
+                metadata = root / "candidate.json"
+
+                result = subprocess.run(
+                    [
+                        "node", str(self.CAPTURE_SCRIPT),
+                        "--input", str(malicious_input),
+                        "--output", str(output),
+                        "--metadata", str(metadata),
+                    ],
+                    cwd=ROOT,
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+
+                self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+                self.assertIn("forbidden", result.stderr)
+                self.assertFalse(output.exists())
+                self.assertFalse(metadata.exists())
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join(timeout=5)
+
+        self.assertEqual([], hits, "popup HTTP request must be blocked before reaching server")
+
+    def test_capture_rejects_late_scheduled_request_without_outputs(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="diagram-core-late-", dir=build_root) as temp_dir:
+            root = Path(temp_dir).resolve()
+            malicious_input = root / "late-request.html"
+            source = (ROOT / "gallery/diagram-core/index.html").read_text(encoding="utf-8")
+            probe = (
+                "<script>setTimeout(()=>fetch('data:text/plain,late'),10000)</script>"
+            )
+            malicious_input.write_text(
+                source.replace("</body>", probe + "</body>", 1),
+                encoding="utf-8",
+            )
+            output = root / "candidate.png"
+            metadata = root / "candidate.json"
+
+            result = subprocess.run(
+                [
+                    "node", str(self.CAPTURE_SCRIPT),
+                    "--input", str(malicious_input),
+                    "--output", str(output),
+                    "--metadata", str(metadata),
+                ],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+
+            self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+            self.assertIn("forbidden", result.stderr)
+            self.assertFalse(output.exists())
+            self.assertFalse(metadata.exists())
+
     def test_capture_pair_publish_rolls_back_when_second_rename_fails(self):
         build_root = ROOT / "build"
         build_root.mkdir(exist_ok=True)
@@ -1247,6 +1515,63 @@ if (residue.length !== 0) throw new Error(`temporary residue: ${residue.join(","
             )
             self.assertEqual(0, result.returncode, result.stderr)
 
+    def test_capture_publish_rejects_external_metadata_update_before_replace(self):
+        build_root = ROOT / "build"
+        build_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="diagram-core-cas-", dir=build_root) as temp_dir:
+            root = Path(temp_dir).resolve()
+            output = root / "candidate.png"
+            metadata = root / "candidate.json"
+            output.write_bytes(b"old-image")
+            metadata.write_bytes(b"old-metadata")
+            module_url = self.CAPTURE_SCRIPT.as_uri()
+            program = """
+import { rename, readFile, writeFile } from "node:fs/promises";
+const { publishCapture } = await import(%s);
+let calls = 0;
+const injectedRename = async (source, target) => {
+  calls += 1;
+  if (calls === 1) {
+    const result = await rename(source, target);
+    await writeFile(%s, "EXTERNAL-METADATA");
+    return result;
+  }
+  return rename(source, target);
+};
+let failure;
+try {
+  await publishCapture([
+    { target: %s, payload: Buffer.from("new-image") },
+    { target: %s, payload: Buffer.from("new-metadata") },
+  ], injectedRename);
+} catch (error) {
+  failure = error;
+}
+if (!failure) throw new Error("external update was overwritten");
+if ((await readFile(%s, "utf8")) !== "old-image") throw new Error("image rollback failed");
+if ((await readFile(%s, "utf8")) !== "EXTERNAL-METADATA") {
+  throw new Error("external metadata update was not preserved");
+}
+""" % tuple(
+                json.dumps(value)
+                for value in (
+                    module_url,
+                    str(metadata),
+                    str(output),
+                    str(metadata),
+                    str(output),
+                    str(metadata),
+                )
+            )
+            result = subprocess.run(
+                ["node", "--input-type=module", "--eval", program],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+
     def test_comparison_rejects_metadata_mismatch_and_hash_tampering(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir).resolve()
@@ -1255,6 +1580,9 @@ if (residue.length !== 0) throw new Error(`temporary residue: ${residue.join(","
             )
             candidate, candidate_metadata = self.write_capture_fixture(root, "candidate")
             candidate_payload = json.loads(candidate_metadata.read_text(encoding="utf-8"))
+            original_joint = candidate_payload["source_assets"]["joint_sha256"]
+            original_playwright = candidate_payload["browser"]["playwright_version"]
+            original_chromium = candidate_payload["browser"]["chromium_version"]
             candidate_payload["source_assets"]["joint_sha256"] = "d" * 64
             candidate_metadata.write_text(json.dumps(candidate_payload), encoding="utf-8")
             mismatch = self.comparator_command(
@@ -1266,7 +1594,7 @@ if (residue.length !== 0) throw new Error(`temporary residue: ${residue.join(","
             self.assertNotEqual(0, mismatch.returncode)
             self.assertIn("source asset digest", mismatch.stderr)
 
-            candidate_payload["source_assets"]["joint_sha256"] = "a" * 64
+            candidate_payload["source_assets"]["joint_sha256"] = original_joint
             candidate_payload["browser"]["playwright_version"] = "different"
             candidate_metadata.write_text(json.dumps(candidate_payload), encoding="utf-8")
             playwright_mismatch = self.comparator_command(
@@ -1278,7 +1606,7 @@ if (residue.length !== 0) throw new Error(`temporary residue: ${residue.join(","
             self.assertNotEqual(0, playwright_mismatch.returncode)
             self.assertIn("Playwright", playwright_mismatch.stderr)
 
-            candidate_payload["browser"]["playwright_version"] = "1.57.0"
+            candidate_payload["browser"]["playwright_version"] = original_playwright
             candidate_payload["browser"]["chromium_version"] = "different"
             candidate_metadata.write_text(json.dumps(candidate_payload), encoding="utf-8")
             browser_mismatch = self.comparator_command(
@@ -1290,7 +1618,7 @@ if (residue.length !== 0) throw new Error(`temporary residue: ${residue.join(","
             self.assertNotEqual(0, browser_mismatch.returncode)
             self.assertIn("Chromium", browser_mismatch.stderr)
 
-            candidate_payload["browser"]["chromium_version"] = "143.0.7499.4"
+            candidate_payload["browser"]["chromium_version"] = original_chromium
             candidate_payload["image"]["sha256"] = "0" * 64
             candidate_metadata.write_text(json.dumps(candidate_payload), encoding="utf-8")
             tampered = self.comparator_command(
@@ -1410,6 +1738,63 @@ if (residue.length !== 0) throw new Error(`temporary residue: ${residue.join(","
             )
             self.assertEqual(self.sha256(candidate), approval["approval"]["baseline_sha256"])
             self.assertEqual([], list(root.rglob("*.tmp")))
+
+    def test_accept_rejects_non_linux_capture(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            candidate, candidate_metadata = self.write_capture_fixture(root, "candidate")
+            payload = json.loads(candidate_metadata.read_text(encoding="utf-8"))
+            payload["platform"] = {"os": "darwin", "arch": "arm64"}
+            candidate_metadata.write_text(json.dumps(payload), encoding="utf-8")
+
+            result = self.comparator_command(
+                "--accept",
+                "--reviewer", "reviewer",
+                "--approval-note", "linux captures only",
+                "--candidate", str(candidate),
+                "--candidate-metadata", str(candidate_metadata),
+                "--baseline", str(root / "baseline.png"),
+                "--baseline-metadata", str(root / "baseline.json"),
+            )
+
+            self.assertEqual(2, result.returncode, result.stdout + result.stderr)
+            self.assertIn("linux", result.stderr.lower())
+            self.assertFalse((root / "baseline.png").exists())
+            self.assertFalse((root / "baseline.json").exists())
+
+    def test_accept_uses_candidate_bytes_frozen_during_validation(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            candidate, candidate_metadata = self.write_capture_fixture(root, "candidate")
+            original = candidate.read_bytes()
+            replacement = root / "replacement.png"
+            self.solid_image((10, 10), (220, 10, 10, 255)).save(replacement)
+            replacement_payload = replacement.read_bytes()
+            baseline = root / "baseline.png"
+            baseline_metadata = root / "baseline.json"
+            real_validate = visual_comparator._validate_capture_metadata
+
+            def replace_after_validation(metadata, image_path, label, require_approval=False):
+                result = real_validate(metadata, image_path, label, require_approval)
+                if label == "candidate":
+                    Path(image_path).write_bytes(replacement_payload)
+                return result
+
+            with mock.patch.object(
+                visual_comparator,
+                "_validate_capture_metadata",
+                side_effect=replace_after_validation,
+            ):
+                visual_comparator.accept_candidate(
+                    candidate,
+                    candidate_metadata,
+                    baseline,
+                    baseline_metadata,
+                    "reviewer",
+                    "frozen candidate bytes",
+                )
+
+            self.assertEqual(original, baseline.read_bytes())
 
     def test_accept_rolls_back_both_files_if_second_replace_succeeds_then_raises(self):
         with tempfile.TemporaryDirectory() as temp_dir:

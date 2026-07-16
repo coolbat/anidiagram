@@ -20,6 +20,24 @@ from PIL import Image
 
 CAPTURE_SCHEMA = "anidiagram.diagram-core.capture"
 CAPTURE_VERSION = 1
+REPO_ROOT = Path(__file__).resolve().parent.parent
+INDEX_RELATIVE_PATH = "gallery/diagram-core/index.html"
+SOURCE_ASSET_PATHS = tuple(
+    sorted(
+        [
+            "assets/diagram-core/catalog.json",
+            "assets/diagram-core/tokens.css",
+        ]
+        + [
+            "assets/diagram-core/{0}/{1}.{2}".format(directory, icon, suffix)
+            for icon in ("agent", "api", "database", "server")
+            for directory, suffix in (("icons", "svg"), ("manifests", "json"))
+        ]
+    )
+)
+VIEWPORT = {"width": 1280, "height": 900, "device_scale_factor": 1}
+LOCATOR_SELECTOR = "#diagram-core-regression-grid"
+EXPECTED_CELLS = 288
 
 
 class VisualComparisonError(ValueError):
@@ -32,6 +50,31 @@ class ComparisonReport:
     total_pixels: int
     diff_ratio: float
     passed: bool
+
+
+@dataclass(frozen=True)
+class FileSignature:
+    device: int
+    inode: int
+    size: int
+    mtime_ns: int
+    ctime_ns: int
+    mode: int
+
+
+@dataclass(frozen=True)
+class FileSnapshot:
+    path: Path
+    payload: bytes
+    mode: int
+    signature: FileSignature
+
+
+@dataclass(frozen=True)
+class ValidatedCapture:
+    snapshot: FileSnapshot
+    digest: str
+    image: Image.Image
 
 
 def _validate_thresholds(channel_tolerance, max_diff_ratio):
@@ -183,6 +226,87 @@ def _require_regular_file(path, label):
     return target
 
 
+def _file_signature(info):
+    return FileSignature(
+        device=info.st_dev,
+        inode=info.st_ino,
+        size=info.st_size,
+        mtime_ns=info.st_mtime_ns,
+        ctime_ns=info.st_ctime_ns,
+        mode=info.st_mode,
+    )
+
+
+def _replacement_signature(signature):
+    return (
+        signature.device,
+        signature.inode,
+        signature.size,
+        signature.mtime_ns,
+        signature.mode,
+    )
+
+
+def _read_file_snapshot(path, label):
+    """Read one immutable payload through a no-follow descriptor."""
+
+    target = _absolute(path)
+    _check_no_symlink_components(target)
+    flags = os.O_RDONLY
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+    descriptor = None
+    try:
+        descriptor = os.open(str(target), flags)
+        before = os.fstat(descriptor)
+        if not stat.S_ISREG(before.st_mode):
+            raise VisualComparisonError(
+                "{0} must be a regular file: {1}".format(label, path)
+            )
+        with os.fdopen(descriptor, "rb") as handle:
+            descriptor = None
+            payload = handle.read()
+            after = os.fstat(handle.fileno())
+    except FileNotFoundError as error:
+        raise VisualComparisonError(
+            "{0} does not exist: {1}".format(label, path)
+        ) from error
+    except OSError as error:
+        raise VisualComparisonError(
+            "{0} could not be read safely: {1}".format(label, path)
+        ) from error
+    finally:
+        if descriptor is not None:
+            os.close(descriptor)
+
+    before_signature = _file_signature(before)
+    after_signature = _file_signature(after)
+    if before_signature != after_signature or len(payload) != after.st_size:
+        raise VisualComparisonError("{0} changed while it was read".format(label))
+    try:
+        path_info = os.stat(str(target), follow_symlinks=False)
+    except (FileNotFoundError, OSError) as error:
+        raise VisualComparisonError("{0} changed while it was read".format(label)) from error
+    if _file_signature(path_info) != after_signature:
+        raise VisualComparisonError("{0} changed while it was read".format(label))
+    return FileSnapshot(
+        path=target,
+        payload=payload,
+        mode=stat.S_IMODE(after.st_mode),
+        signature=after_signature,
+    )
+
+
+def _ensure_snapshot_current(snapshot, label):
+    _check_no_symlink_components(snapshot.path)
+    try:
+        current = os.stat(str(snapshot.path), follow_symlinks=False)
+    except (FileNotFoundError, OSError) as error:
+        raise VisualComparisonError("{0} changed during comparison".format(label)) from error
+    if _file_signature(current) != snapshot.signature:
+        raise VisualComparisonError("{0} changed during comparison".format(label))
+
+
 def _paths_alias(left, right):
     left_path = _absolute(left)
     right_path = _absolute(right)
@@ -209,23 +333,19 @@ def _reject_aliases(labeled_paths):
                 )
 
 
-def _sha256_file(path):
-    digest = hashlib.sha256()
-    with Path(path).open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+def _sha256_bytes(payload):
+    return hashlib.sha256(payload).hexdigest()
 
 
-def _read_metadata(path, label):
-    metadata_path = _require_regular_file(path, label)
+def _read_metadata_snapshot(path, label):
+    snapshot = _read_file_snapshot(path, label)
     try:
-        payload = json.loads(metadata_path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeError, json.JSONDecodeError) as error:
+        payload = json.loads(snapshot.payload.decode("utf-8"))
+    except (UnicodeError, json.JSONDecodeError) as error:
         raise VisualComparisonError("{0} is not valid UTF-8 JSON".format(label)) from error
     if not isinstance(payload, dict):
         raise VisualComparisonError("{0} must contain a JSON object".format(label))
-    return payload
+    return payload, snapshot
 
 
 def _nested(metadata, keys, label):
@@ -239,63 +359,276 @@ def _nested(metadata, keys, label):
     return value
 
 
-def _validate_capture_metadata(metadata, image_path, label, require_approval=False):
-    if metadata.get("schema") != CAPTURE_SCHEMA or metadata.get("version") != CAPTURE_VERSION:
-        raise VisualComparisonError("{0} has an unsupported capture schema".format(label))
-    expected_hash = _nested(metadata, ("image", "sha256"), label)
-    actual_hash = _sha256_file(image_path)
-    if expected_hash != actual_hash:
+def _require_exact_keys(value, expected, label):
+    if not isinstance(value, dict) or set(value) != set(expected):
         raise VisualComparisonError(
-            "{0} image SHA-256 does not match metadata".format(label)
+            "{0} must contain exactly: {1}".format(label, ", ".join(sorted(expected)))
         )
+
+
+def _require_nonempty_string(value, label):
+    if not isinstance(value, str) or not value.strip():
+        raise VisualComparisonError("{0} must be a nonempty string".format(label))
+    return value
+
+
+def _require_sha256(value, label):
+    if (
+        not isinstance(value, str)
+        or len(value) != 64
+        or any(character not in "0123456789abcdef" for character in value)
+    ):
+        raise VisualComparisonError("{0} must be a lowercase SHA-256".format(label))
+    return value
+
+
+def _capture_metadata_digest(metadata):
+    capture = copy.deepcopy(metadata)
+    capture.pop("approval", None)
+    canonical = json.dumps(
+        capture,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return _sha256_bytes(canonical)
+
+
+def _metadata_image_path(path):
+    target = _absolute(path)
     try:
-        with Image.open(str(image_path)) as image:
-            actual_dimensions = [image.width, image.height]
+        return target.relative_to(REPO_ROOT).as_posix()
+    except ValueError:
+        return str(target)
+
+
+def _locked_playwright_version():
+    lock_snapshot = _read_file_snapshot(REPO_ROOT / "package-lock.json", "package lock")
+    try:
+        lock = json.loads(lock_snapshot.payload.decode("utf-8"))
+        version = lock["packages"]["node_modules/playwright"]["version"]
+    except (UnicodeError, json.JSONDecodeError, KeyError, TypeError) as error:
+        raise VisualComparisonError("package lock does not pin Playwright") from error
+    return _require_nonempty_string(version, "locked Playwright version")
+
+
+def _canonical_source_assets():
+    files = []
+    for relative_path in SOURCE_ASSET_PATHS:
+        snapshot = _read_file_snapshot(
+            REPO_ROOT / relative_path,
+            "canonical source asset {0}".format(relative_path),
+        )
+        files.append({"path": relative_path, "sha256": _sha256_bytes(snapshot.payload)})
+    joint_payload = "".join(
+        "{0}\0{1}\n".format(entry["path"], entry["sha256"])
+        for entry in files
+    ).encode("utf-8")
+    return {"files": files, "joint_sha256": _sha256_bytes(joint_payload)}
+
+
+def _decode_capture_image(snapshot, label):
+    try:
+        with Image.open(io.BytesIO(snapshot.payload)) as image:
             image.load()
+            return image.convert("RGBA")
     except (OSError, ValueError) as error:
         raise VisualComparisonError("{0} is not a readable image".format(label)) from error
-    expected_dimensions = [
-        _nested(metadata, ("image", "width"), label),
-        _nested(metadata, ("image", "height"), label),
-    ]
-    if expected_dimensions != actual_dimensions:
+
+
+def _validate_capture_metadata(metadata, image_path, label, require_approval=False):
+    top_level = {
+        "schema",
+        "version",
+        "browser",
+        "platform",
+        "viewport",
+        "locator",
+        "capture",
+        "input",
+        "image",
+        "source_assets",
+    }
+    if require_approval:
+        top_level.add("approval")
+    _require_exact_keys(metadata, top_level, "{0} metadata".format(label))
+    if metadata.get("schema") != CAPTURE_SCHEMA or metadata.get("version") != CAPTURE_VERSION:
+        raise VisualComparisonError("{0} has an unsupported capture schema".format(label))
+
+    browser = _nested(metadata, ("browser",), label)
+    _require_exact_keys(
+        browser,
+        {"playwright_version", "chromium_version"},
+        "{0} browser".format(label),
+    )
+    playwright_version = _require_nonempty_string(
+        browser["playwright_version"], "{0} Playwright version".format(label)
+    )
+    _require_nonempty_string(
+        browser["chromium_version"], "{0} Chromium version".format(label)
+    )
+    if playwright_version != _locked_playwright_version():
         raise VisualComparisonError(
-            "{0} image dimensions do not match metadata".format(label)
+            "{0} Playwright version does not match package-lock.json".format(label)
         )
+
+    platform = _nested(metadata, ("platform",), label)
+    _require_exact_keys(platform, {"os", "arch"}, "{0} platform".format(label))
+    _require_nonempty_string(platform["os"], "{0} platform.os".format(label))
+    _require_nonempty_string(platform["arch"], "{0} platform.arch".format(label))
+
+    if _nested(metadata, ("viewport",), label) != VIEWPORT:
+        raise VisualComparisonError("{0} viewport is not the locked viewport".format(label))
+
+    locator = _nested(metadata, ("locator",), label)
+    _require_exact_keys(
+        locator,
+        {"selector", "bounding_box", "cells"},
+        "{0} locator".format(label),
+    )
+    if locator["selector"] != LOCATOR_SELECTOR or locator["cells"] != EXPECTED_CELLS:
+        raise VisualComparisonError("{0} locator is not the locked capture locator".format(label))
+    bounds = locator["bounding_box"]
+    _require_exact_keys(bounds, {"x", "y", "width", "height"}, "{0} bounding box".format(label))
+    if bounds["x"] != 0 or bounds["y"] != 0:
+        raise VisualComparisonError("{0} locator must begin at the capture origin".format(label))
+
+    capture = _nested(metadata, ("capture",), label)
+    _require_exact_keys(
+        capture,
+        {
+            "timestamp_utc",
+            "external_requests",
+            "external_request_urls",
+            "animation_count",
+            "transition_count",
+        },
+        "{0} capture".format(label),
+    )
+    _require_nonempty_string(capture["timestamp_utc"], "{0} capture timestamp".format(label))
+    if capture["external_request_urls"] != []:
+        raise VisualComparisonError("{0} reports external request URLs".format(label))
     for key, description in (
         ("external_requests", "external requests"),
         ("animation_count", "animations"),
         ("transition_count", "transitions"),
     ):
-        if _nested(metadata, ("capture", key), label) != 0:
+        if capture[key] != 0:
             raise VisualComparisonError("{0} reports nonzero {1}".format(label, description))
-    for keys in (
-        ("browser", "playwright_version"),
-        ("browser", "chromium_version"),
-        ("source_assets", "joint_sha256"),
-    ):
-        value = _nested(metadata, keys, label)
-        if not isinstance(value, str) or not value.strip():
-            raise VisualComparisonError(
-                "{0} has an invalid {1}".format(label, ".".join(keys))
-            )
+
+    input_metadata = _nested(metadata, ("input",), label)
+    _require_exact_keys(input_metadata, {"path", "sha256"}, "{0} input".format(label))
+    index_snapshot = _read_file_snapshot(
+        REPO_ROOT / INDEX_RELATIVE_PATH,
+        "canonical Diagram Core index",
+    )
+    if input_metadata["path"] != INDEX_RELATIVE_PATH:
+        raise VisualComparisonError("{0} input path is not the canonical index".format(label))
+    if input_metadata["sha256"] != _sha256_bytes(index_snapshot.payload):
+        raise VisualComparisonError("{0} input SHA-256 is not current".format(label))
+
+    image_metadata = _nested(metadata, ("image",), label)
+    _require_exact_keys(
+        image_metadata,
+        {"path", "sha256", "width", "height"},
+        "{0} image".format(label),
+    )
+    image_snapshot = _read_file_snapshot(image_path, "{0} image".format(label))
+    if image_metadata["path"] != _metadata_image_path(image_path):
+        raise VisualComparisonError("{0} image path does not match the capture image".format(label))
+    expected_hash = _require_sha256(
+        image_metadata["sha256"], "{0} image SHA-256".format(label)
+    )
+    actual_hash = _sha256_bytes(image_snapshot.payload)
+    if expected_hash != actual_hash:
+        raise VisualComparisonError(
+            "{0} image SHA-256 does not match metadata".format(label)
+        )
+    capture_image = _decode_capture_image(image_snapshot, "{0} image".format(label))
+    actual_dimensions = [capture_image.width, capture_image.height]
+    expected_dimensions = [image_metadata["width"], image_metadata["height"]]
+    if expected_dimensions != actual_dimensions:
+        raise VisualComparisonError(
+            "{0} image dimensions do not match metadata".format(label)
+        )
+    if bounds["width"] != capture_image.width or bounds["height"] != capture_image.height:
+        raise VisualComparisonError("{0} bounding box does not match image dimensions".format(label))
+
+    source_assets = _nested(metadata, ("source_assets",), label)
+    _require_exact_keys(
+        source_assets,
+        {"files", "joint_sha256"},
+        "{0} source assets".format(label),
+    )
+    files = source_assets["files"]
+    if not isinstance(files, list) or len(files) != len(SOURCE_ASSET_PATHS):
+        raise VisualComparisonError("{0} must list exactly 10 source asset files".format(label))
+    expected_paths = list(SOURCE_ASSET_PATHS)
+    actual_paths = []
+    for index, entry in enumerate(files):
+        _require_exact_keys(
+            entry,
+            {"path", "sha256"},
+            "{0} source asset file {1}".format(label, index),
+        )
+        actual_paths.append(entry["path"])
+        _require_sha256(entry["sha256"], "{0} source asset SHA-256".format(label))
+    if actual_paths != expected_paths:
+        raise VisualComparisonError("{0} source asset files are not exact and sorted".format(label))
+    joint_payload = "".join(
+        "{0}\0{1}\n".format(entry["path"], entry["sha256"])
+        for entry in files
+    ).encode("utf-8")
+    joint_digest = _require_sha256(
+        source_assets["joint_sha256"], "{0} source asset digest".format(label)
+    )
+    if joint_digest != _sha256_bytes(joint_payload):
+        raise VisualComparisonError("{0} source asset digest does not match file list".format(label))
+    if source_assets != _canonical_source_assets():
+        raise VisualComparisonError("{0} source assets do not match current repository".format(label))
+
     if require_approval:
         approval = metadata.get("approval")
-        if not isinstance(approval, dict):
-            raise VisualComparisonError("baseline metadata is not explicitly approved")
-        for key in ("timestamp_utc", "reviewer", "note", "baseline_sha256"):
-            value = approval.get(key)
-            if not isinstance(value, str) or not value.strip():
-                raise VisualComparisonError(
-                    "baseline approval is missing {0}".format(key)
-                )
+        _require_exact_keys(
+            approval,
+            {
+                "timestamp_utc",
+                "reviewer",
+                "note",
+                "candidate_sha256",
+                "baseline_sha256",
+                "capture_metadata_sha256",
+                "playwright_version",
+                "chromium_version",
+                "source_assets_joint_sha256",
+            },
+            "baseline approval",
+        )
+        for key in ("timestamp_utc", "reviewer", "note"):
+            _require_nonempty_string(approval[key], "baseline approval {0}".format(key))
+        for key in ("candidate_sha256", "baseline_sha256", "capture_metadata_sha256"):
+            _require_sha256(approval[key], "baseline approval {0}".format(key))
+        if approval["candidate_sha256"] != actual_hash:
+            raise VisualComparisonError("baseline approval candidate hash does not match image")
         if approval["baseline_sha256"] != actual_hash:
             raise VisualComparisonError("baseline approval hash does not match baseline image")
-    return actual_hash
+        if approval["capture_metadata_sha256"] != _capture_metadata_digest(metadata):
+            raise VisualComparisonError("baseline approval capture metadata hash does not match")
+        for approval_key, metadata_value, description in (
+            ("playwright_version", browser["playwright_version"], "Playwright"),
+            ("chromium_version", browser["chromium_version"], "Chromium"),
+            ("source_assets_joint_sha256", joint_digest, "source asset digest"),
+        ):
+            if approval[approval_key] != metadata_value:
+                raise VisualComparisonError(
+                    "baseline approval {0} binding does not match".format(description)
+                )
+    return ValidatedCapture(image_snapshot, actual_hash, capture_image)
 
 
 def _ensure_capture_compatibility(baseline_metadata, candidate_metadata):
     fields = (
+        (("platform",), "platform"),
         (("source_assets", "joint_sha256"), "source asset digest"),
         (("browser", "playwright_version"), "Playwright version"),
         (("browser", "chromium_version"), "Chromium version"),
@@ -307,47 +640,162 @@ def _ensure_capture_compatibility(baseline_metadata, candidate_metadata):
             raise VisualComparisonError("{0} does not match approved baseline".format(label))
 
 
-def _snapshot(path):
-    target = Path(path)
-    if not target.exists():
+def _output_snapshot(path):
+    target = _absolute(path)
+    if not os.path.lexists(str(target)):
         return None
-    return target.read_bytes(), target.stat().st_mode & 0o777
+    return _read_file_snapshot(target, "approval output")
 
 
-def _restore(path, snapshot):
-    target = Path(path)
-    if snapshot is None:
-        try:
-            target.unlink()
-        except FileNotFoundError:
-            pass
+def _snapshots_equal(left, right):
+    if left is None or right is None:
+        return left is right
+    return left.signature == right.signature and left.payload == right.payload
+
+
+def _stage_approval_payload(target, payload, mode, suffix):
+    descriptor = None
+    temporary = None
+    try:
+        descriptor, temporary_name = tempfile.mkstemp(
+            prefix=".{0}.".format(Path(target).name),
+            suffix=suffix,
+            dir=str(Path(target).parent),
+        )
+        temporary = Path(temporary_name)
+        with os.fdopen(descriptor, "wb") as handle:
+            descriptor = None
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.chmod(str(temporary), mode)
+        info = os.lstat(str(temporary))
+        return temporary, _file_signature(info)
+    except BaseException:
+        if temporary is not None:
+            try:
+                temporary.unlink()
+            except FileNotFoundError:
+                pass
+        raise
+    finally:
+        if descriptor is not None:
+            os.close(descriptor)
+
+
+def _assert_approval_output_unchanged(record):
+    if not _snapshots_equal(_output_snapshot(record["target"]), record["snapshot"]):
+        raise VisualComparisonError(
+            "approval output changed before publish: {0}".format(record["target"])
+        )
+
+
+def _preserve_approval_backup(record, reason):
+    backup = record.get("backup")
+    if backup is not None and os.path.lexists(str(backup)):
+        record["backup"] = None
+        return "{0}; original backup preserved at {1}".format(reason, backup)
+    return reason
+
+
+def _rollback_approval_record(record):
+    current = _output_snapshot(record["target"])
+    if _snapshots_equal(current, record["snapshot"]):
         return
-    payload, mode = snapshot
-    _atomic_write_bytes(target, payload, mode=mode)
+    published_matches = (
+        current is not None
+        and _replacement_signature(current.signature)
+        == _replacement_signature(record["staged_signature"])
+        and current.payload == record["payload"]
+    )
+    if not published_matches:
+        raise VisualComparisonError(
+            _preserve_approval_backup(
+                record,
+                "rollback conflict at {0}: current output is neither original nor published".format(
+                    record["target"]
+                ),
+            )
+        )
+    if record["snapshot"] is None:
+        record["target"].unlink()
+        return
+    backup = record.get("backup")
+    if backup is None or not os.path.lexists(str(backup)):
+        raise VisualComparisonError(
+            "rollback backup is missing for {0}".format(record["target"])
+        )
+    try:
+        os.replace(str(backup), str(record["target"]))
+        record["backup"] = None
+    except BaseException as error:
+        restored = None
+        try:
+            restored = _output_snapshot(record["target"])
+        except (OSError, VisualComparisonError):
+            pass
+        if (
+            restored is not None
+            and _replacement_signature(restored.signature)
+            == _replacement_signature(record["backup_signature"])
+            and restored.payload == record["snapshot"].payload
+        ):
+            record["backup"] = None
+            return
+        raise VisualComparisonError(
+            _preserve_approval_backup(record, str(error))
+        ) from error
 
 
 def _publish_approval(baseline_path, baseline_payload, metadata_path, metadata_payload):
-    baseline_snapshot = _snapshot(baseline_path)
-    metadata_snapshot = _snapshot(metadata_path)
-    attempted_baseline = False
-    attempted_metadata = False
+    records = []
+    attempted = []
     try:
-        attempted_baseline = True
-        _atomic_write_bytes(baseline_path, baseline_payload)
-        attempted_metadata = True
-        _atomic_write_bytes(metadata_path, metadata_payload)
-    except Exception as error:
-        rollback_errors = []
-        for path, snapshot, attempted in (
-            (metadata_path, metadata_snapshot, attempted_metadata),
-            (baseline_path, baseline_snapshot, attempted_baseline),
+        for target, payload in (
+            (_absolute(baseline_path), bytes(baseline_payload)),
+            (_absolute(metadata_path), bytes(metadata_payload)),
         ):
-            if not attempted:
-                continue
+            snapshot = _output_snapshot(target)
+            mode = snapshot.mode if snapshot is not None else 0o644
+            staged, staged_signature = _stage_approval_payload(
+                target,
+                payload,
+                mode,
+                ".tmp",
+            )
+            record = {
+                "target": target,
+                "payload": payload,
+                "snapshot": snapshot,
+                "staged": staged,
+                "staged_signature": staged_signature,
+                "backup": None,
+                "backup_signature": None,
+            }
+            records.append(record)
+            if snapshot is not None:
+                backup, backup_signature = _stage_approval_payload(
+                    target,
+                    snapshot.payload,
+                    snapshot.mode,
+                    ".bak",
+                )
+                record["backup"] = backup
+                record["backup_signature"] = backup_signature
+        for record in records:
+            _assert_approval_output_unchanged(record)
+            attempted.append(record)
+            os.replace(str(record["staged"]), str(record["target"]))
+            record["staged"] = None
+    except BaseException as error:
+        rollback_errors = []
+        for record in reversed(attempted):
             try:
-                _restore(path, snapshot)
-            except Exception as rollback_error:  # pragma: no cover - catastrophic I/O
-                rollback_errors.append(str(rollback_error))
+                _rollback_approval_record(record)
+            except BaseException as rollback_error:
+                rollback_errors.append(
+                    _preserve_approval_backup(record, str(rollback_error))
+                )
         if rollback_errors:
             raise VisualComparisonError(
                 "approval publish failed and rollback was incomplete: {0}".format(
@@ -355,6 +803,15 @@ def _publish_approval(baseline_path, baseline_payload, metadata_path, metadata_p
                 )
             ) from error
         raise
+    finally:
+        for record in records:
+            for key in ("staged", "backup"):
+                residue = record.get(key)
+                if residue is not None:
+                    try:
+                        residue.unlink()
+                    except FileNotFoundError:
+                        pass
 
 
 def accept_candidate(
@@ -379,16 +836,21 @@ def accept_candidate(
             ("baseline metadata", baseline_metadata),
         )
     )
-    candidate_path = _require_regular_file(candidate, "candidate")
-    candidate_metadata_path = _require_regular_file(
-        candidate_metadata,
-        "candidate metadata",
-    )
+    candidate_path = _absolute(candidate)
+    candidate_metadata_path = _absolute(candidate_metadata)
     _prepare_output_path(baseline)
     _prepare_output_path(baseline_metadata)
-    metadata = _read_metadata(candidate_metadata_path, "candidate metadata")
-    digest = _validate_capture_metadata(metadata, candidate_path, "candidate")
+    metadata, metadata_snapshot = _read_metadata_snapshot(
+        candidate_metadata_path,
+        "candidate metadata",
+    )
+    validated = _validate_capture_metadata(metadata, candidate_path, "candidate")
+    if metadata["platform"]["os"] != "linux":
+        raise VisualComparisonError("only a linux capture may be accepted as baseline")
+    digest = validated.digest
     approved = copy.deepcopy(metadata)
+    approved["image"]["path"] = _metadata_image_path(baseline)
+    capture_metadata_sha256 = _capture_metadata_digest(approved)
     approved["approval"] = {
         "timestamp_utc": datetime.now(timezone.utc)
         .isoformat(timespec="milliseconds")
@@ -397,13 +859,18 @@ def accept_candidate(
         "note": note_value,
         "candidate_sha256": digest,
         "baseline_sha256": digest,
+        "capture_metadata_sha256": capture_metadata_sha256,
+        "playwright_version": approved["browser"]["playwright_version"],
+        "chromium_version": approved["browser"]["chromium_version"],
+        "source_assets_joint_sha256": approved["source_assets"]["joint_sha256"],
     }
     metadata_payload = (
         json.dumps(approved, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
     ).encode("utf-8")
+    _ensure_snapshot_current(metadata_snapshot, "candidate metadata")
     _publish_approval(
         _absolute(baseline),
-        candidate_path.read_bytes(),
+        validated.snapshot.payload,
         _absolute(baseline_metadata),
         metadata_payload,
     )
@@ -430,32 +897,43 @@ def compare_capture_files(
     _reject_aliases(paths)
     if diff_output is not None:
         _validate_output_path(diff_output)
-    baseline_path = _require_regular_file(baseline, "baseline")
-    candidate_path = _require_regular_file(candidate, "candidate")
-    baseline_payload = _read_metadata(baseline_metadata, "baseline metadata")
-    candidate_payload = _read_metadata(candidate_metadata, "candidate metadata")
-    _validate_capture_metadata(
+    baseline_path = _absolute(baseline)
+    candidate_path = _absolute(candidate)
+    baseline_payload, baseline_metadata_snapshot = _read_metadata_snapshot(
+        baseline_metadata,
+        "baseline metadata",
+    )
+    candidate_payload, candidate_metadata_snapshot = _read_metadata_snapshot(
+        candidate_metadata,
+        "candidate metadata",
+    )
+    baseline_validated = _validate_capture_metadata(
         baseline_payload,
         baseline_path,
         "baseline",
         require_approval=True,
     )
-    _validate_capture_metadata(candidate_payload, candidate_path, "candidate")
+    candidate_validated = _validate_capture_metadata(
+        candidate_payload,
+        candidate_path,
+        "candidate",
+    )
     _ensure_capture_compatibility(baseline_payload, candidate_payload)
-    try:
-        with Image.open(str(baseline_path)) as baseline_image:
-            baseline_rgba = baseline_image.convert("RGBA")
-        with Image.open(str(candidate_path)) as candidate_image:
-            candidate_rgba = candidate_image.convert("RGBA")
-    except (OSError, ValueError) as error:
-        raise VisualComparisonError("capture image could not be decoded") from error
-    return compare_images(
-        baseline_rgba,
-        candidate_rgba,
+    report = compare_images(
+        baseline_validated.image,
+        candidate_validated.image,
         channel_tolerance=channel_tolerance,
         max_diff_ratio=max_diff_ratio,
         diff_output=diff_output,
     )
+    for snapshot, label in (
+        (baseline_metadata_snapshot, "baseline metadata"),
+        (candidate_metadata_snapshot, "candidate metadata"),
+        (baseline_validated.snapshot, "baseline image"),
+        (candidate_validated.snapshot, "candidate image"),
+    ):
+        _ensure_snapshot_current(snapshot, label)
+    return report
 
 
 def _parser():
