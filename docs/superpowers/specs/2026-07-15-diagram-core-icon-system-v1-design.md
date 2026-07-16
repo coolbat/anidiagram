@@ -3,7 +3,8 @@
 ## Status
 
 - Design decision: approved
-- Written-spec review: pending user review
+- Written-spec review: approved
+- Written-spec approved on: 2026-07-16
 - Approved on: 2026-07-15
 - Public system name: `AniDiagram Diagram Core Icon System v1.0`
 - Canonical system id: `diagram-core-v1`
