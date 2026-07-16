@@ -9,9 +9,11 @@ import tempfile
 import unittest
 from html.parser import HTMLParser
 from pathlib import Path
+from unittest import mock
 from xml.etree import ElementTree
 
 from anidiagram.diagram_core.tokens import contrast_ratio
+from scripts import render_diagram_core_contact_sheet as contact_sheet_generator
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -135,6 +137,14 @@ def geometry_signature(element):
 
 
 class DiagramCoreVisualReviewTest(unittest.TestCase):
+    def assert_no_publish_residue(self, root):
+        residues = [
+            path
+            for path in Path(root).rglob("*")
+            if path.name.endswith((".tmp", ".bak"))
+        ]
+        self.assertEqual([], residues)
+
     def generator_command(self, output, html_output, recognition=True, icon="agent", extra=()):
         command = [
             sys.executable,
@@ -230,6 +240,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
         )
         for path in (output, html_output, recognition_output, cell_index):
             self.assertTrue(path.is_file(), path)
+            self.assertEqual(0o644, path.stat().st_mode & 0o777)
         return output, html_output, recognition_output, cell_index
 
     def test_benchmark_is_exact_ordered_288_cell_product_and_index_matches_dom(self):
@@ -771,6 +782,180 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                     self.assertNotEqual(0, result.returncode)
                     self.assertFalse(output.exists())
                     self.assertFalse(html_output.exists())
+
+    def test_benchmark_preflight_failure_never_modifies_any_output(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            for label, existing in (("new", False), ("existing", True)):
+                case = root / label
+                output = case / "sheet.svg"
+                html_output = case / "index.html"
+                recognition_output = case / "recognition.html"
+                cell_index = case / "cell-index.json"
+                recognition_output.mkdir(parents=True)
+                expected = {}
+                if existing:
+                    for path, payload in (
+                        (output, b"old-svg"),
+                        (html_output, b"old-index"),
+                        (cell_index, b"old-json"),
+                    ):
+                        path.parent.mkdir(parents=True, exist_ok=True)
+                        path.write_bytes(payload)
+                        expected[path] = payload
+
+                result = self.benchmark_generator_command(
+                    output,
+                    html_output,
+                    recognition_output,
+                    cell_index,
+                )
+                with self.subTest(existing=existing):
+                    self.assertNotEqual(0, result.returncode)
+                    for path in (output, html_output, cell_index):
+                        if existing:
+                            self.assertEqual(expected[path], path.read_bytes())
+                        else:
+                            self.assertFalse(path.exists())
+                    self.assertTrue(recognition_output.is_dir())
+                    self.assert_no_publish_residue(case)
+
+    def test_agent_preflight_failure_preserves_existing_first_output(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            output = root / "agent.svg"
+            html_output = root / "agent.html"
+            output.write_bytes(b"old-agent-svg")
+            html_output.mkdir()
+
+            result = self.generator_command(output, html_output)
+
+            self.assertNotEqual(0, result.returncode)
+            self.assertEqual(b"old-agent-svg", output.read_bytes())
+            self.assertTrue(html_output.is_dir())
+            self.assert_no_publish_residue(root)
+
+    def test_direct_target_symlink_is_rejected_without_touching_referent(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            external = root / "external.svg"
+            external.write_bytes(b"external-original")
+            output = root / "sheet.svg"
+            output.symlink_to(external)
+            html_output = root / "index.html"
+            recognition_output = root / "recognition.html"
+            cell_index = root / "cell-index.json"
+
+            result = self.benchmark_generator_command(
+                output,
+                html_output,
+                recognition_output,
+                cell_index,
+            )
+
+            self.assertNotEqual(0, result.returncode)
+            self.assertTrue(output.is_symlink())
+            self.assertEqual(b"external-original", external.read_bytes())
+            for path in (html_output, recognition_output, cell_index):
+                self.assertFalse(path.exists())
+            self.assert_no_publish_residue(root)
+
+    def test_parent_symlink_alias_is_rejected_before_any_output(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            real_parent = root / "real"
+            real_parent.mkdir()
+            alias_parent = root / "alias"
+            alias_parent.symlink_to(real_parent, target_is_directory=True)
+            output = root / "sheet.svg"
+            html_output = real_parent / "review.html"
+            recognition_output = alias_parent / "review.html"
+            cell_index = root / "cell-index.json"
+
+            result = self.benchmark_generator_command(
+                output,
+                html_output,
+                recognition_output,
+                cell_index,
+            )
+
+            self.assertNotEqual(0, result.returncode)
+            self.assertFalse(output.exists())
+            self.assertFalse(html_output.exists())
+            self.assertFalse(cell_index.exists())
+            self.assertTrue(alias_parent.is_symlink())
+            self.assert_no_publish_residue(root)
+
+    def test_hardlink_alias_is_rejected_without_partial_outputs(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            output = root / "sheet.svg"
+            html_output = root / "index.html"
+            recognition_output = root / "recognition.html"
+            cell_index = root / "cell-index.json"
+            html_output.write_bytes(b"shared-original")
+            os.link(html_output, recognition_output)
+
+            result = self.benchmark_generator_command(
+                output,
+                html_output,
+                recognition_output,
+                cell_index,
+            )
+
+            self.assertNotEqual(0, result.returncode)
+            self.assertEqual(b"shared-original", html_output.read_bytes())
+            self.assertEqual(b"shared-original", recognition_output.read_bytes())
+            self.assertTrue(os.path.samefile(html_output, recognition_output))
+            self.assertFalse(output.exists())
+            self.assertFalse(cell_index.exists())
+            self.assert_no_publish_residue(root)
+
+    def test_publish_replace_failure_rolls_back_bytes_modes_and_new_files(self):
+        publisher = getattr(contact_sheet_generator, "_publish_outputs", None)
+        self.assertIsNotNone(publisher, "generator must expose transactional publisher")
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            first = root / "one.svg"
+            second = root / "two.html"
+            third = root / "three.html"
+            fourth = root / "four.json"
+            first.write_bytes(b"old-one")
+            third.write_bytes(b"old-three")
+            first.chmod(0o640)
+            third.chmod(0o600)
+            real_replace = os.replace
+            calls = 0
+
+            def fail_third_replace(source, target):
+                nonlocal calls
+                calls += 1
+                if calls == 3:
+                    raise OSError("simulated third replace failure")
+                return real_replace(source, target)
+
+            outputs = (
+                (first, b"new-one"),
+                (second, b"new-two"),
+                (third, b"new-three"),
+                (fourth, b"new-four"),
+            )
+            with mock.patch.object(
+                contact_sheet_generator.os,
+                "replace",
+                side_effect=fail_third_replace,
+            ):
+                with self.assertRaisesRegex(OSError, "third replace"):
+                    publisher(outputs)
+
+            self.assertGreaterEqual(calls, 3)
+            self.assertEqual(b"old-one", first.read_bytes())
+            self.assertEqual(0o640, first.stat().st_mode & 0o777)
+            self.assertFalse(second.exists())
+            self.assertEqual(b"old-three", third.read_bytes())
+            self.assertEqual(0o600, third.stat().st_mode & 0o777)
+            self.assertFalse(fourth.exists())
+            self.assert_no_publish_residue(root)
 
 
 if __name__ == "__main__":

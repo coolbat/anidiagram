@@ -9,9 +9,11 @@ import html
 import json
 import os
 import re
+import stat
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Mapping, Sequence, Tuple
+from typing import Dict, Mapping, Optional, Sequence, Tuple
 from xml.etree import ElementTree
 
 from anidiagram.diagram_core.adapter import render_preview_icon
@@ -59,6 +61,21 @@ class ContactSheetCell:
     state: str
     cell_id: str
     instance_id: str
+
+
+@dataclass(frozen=True)
+class _OutputRecord:
+    target: Path
+    payload: bytes
+    resolved_key: str
+    parent_identity: Tuple[int, int]
+    target_signature: Optional[Tuple[int, int, int, int, int]]
+    original_bytes: Optional[bytes]
+    mode: int
+
+    @property
+    def existed(self) -> bool:
+        return self.target_signature is not None
 
 
 def _declarations(source: str, selector: str) -> Dict[str, str]:
@@ -807,6 +824,324 @@ def render_recognition_html(
     )
 
 
+def _lexical_path_key(path: Path) -> str:
+    return os.path.normcase(os.path.abspath(os.fspath(path)))
+
+
+def _resolved_path_key(path: Path) -> str:
+    try:
+        resolved = path.resolve(strict=False)
+    except (OSError, RuntimeError) as error:
+        raise ValueError(
+            "cannot resolve output path {0}: {1}".format(path, error)
+        ) from error
+    return os.path.normcase(os.path.abspath(os.fspath(resolved)))
+
+
+def _lstat_or_none(path: Path):
+    try:
+        return path.lstat()
+    except FileNotFoundError:
+        return None
+    except OSError as error:
+        raise ValueError(
+            "cannot inspect output path {0}: {1}".format(path, error)
+        ) from error
+
+
+def _validated_target_info(path: Path):
+    info = _lstat_or_none(path)
+    if info is None:
+        return None
+    if stat.S_ISLNK(info.st_mode):
+        raise ValueError("output targets must not be symbolic links: " + str(path))
+    if not stat.S_ISREG(info.st_mode):
+        raise ValueError("output targets must be regular files: " + str(path))
+    return info
+
+
+def _validate_existing_parent(path: Path) -> None:
+    candidate = path.parent
+    while not os.path.lexists(os.fspath(candidate)):
+        parent = candidate.parent
+        if parent == candidate:
+            raise ValueError("output path has no existing directory ancestor: " + str(path))
+        candidate = parent
+    try:
+        info = candidate.stat()
+    except OSError as error:
+        raise ValueError(
+            "cannot inspect output parent {0}: {1}".format(candidate, error)
+        ) from error
+    if not stat.S_ISDIR(info.st_mode):
+        raise ValueError("output parent must be a directory: " + str(candidate))
+
+
+def _validate_output_paths(paths: Sequence[Path]) -> Tuple[Path, ...]:
+    targets = tuple(Path(path) for path in paths)
+    if not targets:
+        raise ValueError("at least one output path is required")
+
+    lexical_keys = [_lexical_path_key(path) for path in targets]
+    if len(set(lexical_keys)) != len(lexical_keys):
+        raise ValueError("output files must use lexically distinct paths")
+
+    target_infos = []
+    resolved_keys = []
+    for target in targets:
+        _validate_existing_parent(target)
+        target_infos.append(_validated_target_info(target))
+        resolved_keys.append(_resolved_path_key(target))
+    if len(set(resolved_keys)) != len(resolved_keys):
+        raise ValueError("output files must resolve to distinct paths")
+
+    for left_index, left in enumerate(targets):
+        if target_infos[left_index] is None:
+            continue
+        for right_index in range(left_index + 1, len(targets)):
+            if target_infos[right_index] is None:
+                continue
+            try:
+                aliases = os.path.samefile(left, targets[right_index])
+            except OSError as error:
+                raise ValueError(
+                    "cannot compare output identities: {0}".format(error)
+                ) from error
+            if aliases:
+                raise ValueError("output files must not be hardlink aliases")
+    return targets
+
+
+def _stat_signature(info) -> Tuple[int, int, int, int, int]:
+    return (
+        info.st_dev,
+        info.st_ino,
+        info.st_mode,
+        info.st_size,
+        info.st_mtime_ns,
+    )
+
+
+def _read_original_bytes(path: Path, expected_info) -> bytes:
+    flags = os.O_RDONLY
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+    descriptor = os.open(os.fspath(path), flags)
+    try:
+        handle = os.fdopen(descriptor, "rb")
+        descriptor = -1
+        with handle:
+            before = os.fstat(handle.fileno())
+            if _stat_signature(before) != _stat_signature(expected_info):
+                raise RuntimeError("output changed while being snapshotted: " + str(path))
+            payload = handle.read()
+            after = os.fstat(handle.fileno())
+            if _stat_signature(after) != _stat_signature(expected_info):
+                raise RuntimeError("output changed while being snapshotted: " + str(path))
+            return payload
+    finally:
+        if descriptor >= 0:
+            os.close(descriptor)
+
+
+def _snapshot_output(target: Path, payload: bytes) -> _OutputRecord:
+    parent_info = target.parent.stat()
+    if not stat.S_ISDIR(parent_info.st_mode):
+        raise ValueError("output parent must be a directory: " + str(target.parent))
+    target_info = _validated_target_info(target)
+    if target_info is None:
+        signature = None
+        original_bytes = None
+        mode = 0o644
+    else:
+        signature = _stat_signature(target_info)
+        original_bytes = _read_original_bytes(target, target_info)
+        mode = stat.S_IMODE(target_info.st_mode)
+    return _OutputRecord(
+        target=target,
+        payload=payload,
+        resolved_key=_resolved_path_key(target),
+        parent_identity=(parent_info.st_dev, parent_info.st_ino),
+        target_signature=signature,
+        original_bytes=original_bytes,
+        mode=mode,
+    )
+
+
+def _assert_output_unchanged(record: _OutputRecord) -> None:
+    if _resolved_path_key(record.target) != record.resolved_key:
+        raise RuntimeError("output path resolution changed before publish")
+    parent_info = record.target.parent.stat()
+    if (
+        not stat.S_ISDIR(parent_info.st_mode)
+        or (parent_info.st_dev, parent_info.st_ino) != record.parent_identity
+    ):
+        raise RuntimeError("output parent changed before publish")
+    current = _validated_target_info(record.target)
+    if record.target_signature is None:
+        if current is not None:
+            raise RuntimeError("new output appeared before publish: " + str(record.target))
+    elif current is None or _stat_signature(current) != record.target_signature:
+        raise RuntimeError("existing output changed before publish: " + str(record.target))
+
+
+def _write_staged_file(
+    target: Path,
+    payload: bytes,
+    mode: int,
+    suffix: str,
+) -> Tuple[Path, Tuple[int, int]]:
+    descriptor, temp_name = tempfile.mkstemp(
+        prefix=".{0}.".format(target.name),
+        suffix=suffix,
+        dir=os.fspath(target.parent),
+    )
+    temp_path = Path(temp_name)
+    try:
+        handle = os.fdopen(descriptor, "wb")
+        descriptor = -1
+        with handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.chmod(temp_path, mode)
+        info = temp_path.lstat()
+        return temp_path, (info.st_dev, info.st_ino)
+    except BaseException:
+        try:
+            temp_path.unlink()
+        except FileNotFoundError:
+            pass
+        raise
+    finally:
+        if descriptor >= 0:
+            os.close(descriptor)
+
+
+def _cleanup_temp(path: Optional[Path]) -> None:
+    if path is None:
+        return
+    try:
+        path.unlink()
+    except FileNotFoundError:
+        pass
+
+
+def _rollback_outputs(
+    records: Sequence[_OutputRecord],
+    backups: Dict[Path, Optional[Path]],
+    staged_identities: Mapping[Path, Tuple[int, int]],
+) -> Tuple[str, ...]:
+    errors = []
+    for record in reversed(tuple(records)):
+        try:
+            current = _lstat_or_none(record.target)
+            current_identity = (
+                None if current is None else (current.st_dev, current.st_ino)
+            )
+            staged_identity = staged_identities[record.target]
+            if record.existed:
+                original_identity = (
+                    record.target_signature[0],
+                    record.target_signature[1],
+                )
+                if current is not None and (
+                    not stat.S_ISREG(current.st_mode)
+                    or current_identity not in {original_identity, staged_identity}
+                ):
+                    raise RuntimeError(
+                        "refusing to overwrite changed output during rollback"
+                    )
+                backup = backups.get(record.target)
+                if backup is None or not os.path.lexists(os.fspath(backup)):
+                    raise RuntimeError("rollback backup is missing")
+                os.replace(os.fspath(backup), os.fspath(record.target))
+                backups[record.target] = None
+            elif current is not None:
+                if (
+                    not stat.S_ISREG(current.st_mode)
+                    or current_identity != staged_identity
+                ):
+                    raise RuntimeError(
+                        "refusing to remove changed output during rollback"
+                    )
+                record.target.unlink()
+        except Exception as error:
+            errors.append("{0}: {1}".format(record.target, error))
+    return tuple(errors)
+
+
+def _publish_outputs(outputs: Sequence[Tuple[Path, bytes]]) -> None:
+    ordered = []
+    for target, payload in outputs:
+        if not isinstance(payload, bytes):
+            raise TypeError("published output payloads must be bytes")
+        ordered.append((Path(target), payload))
+    targets = _validate_output_paths(tuple(target for target, _ in ordered))
+    for target in targets:
+        target.parent.mkdir(parents=True, exist_ok=True)
+    _validate_output_paths(targets)
+    records = tuple(
+        _snapshot_output(target, payload) for target, payload in ordered
+    )
+
+    staged: Dict[Path, Optional[Path]] = {}
+    staged_identities: Dict[Path, Tuple[int, int]] = {}
+    backups: Dict[Path, Optional[Path]] = {}
+    publishing = False
+    try:
+        for record in records:
+            staged_path, staged_identity = _write_staged_file(
+                record.target,
+                record.payload,
+                record.mode,
+                ".tmp",
+            )
+            staged[record.target] = staged_path
+            staged_identities[record.target] = staged_identity
+        for record in records:
+            if record.existed:
+                backup_path, _ = _write_staged_file(
+                    record.target,
+                    record.original_bytes,
+                    record.mode,
+                    ".bak",
+                )
+                backups[record.target] = backup_path
+            else:
+                backups[record.target] = None
+
+        for record in records:
+            _assert_output_unchanged(record)
+        publishing = True
+        for record in records:
+            _assert_output_unchanged(record)
+            staged_path = staged[record.target]
+            if staged_path is None:
+                raise RuntimeError("staged output disappeared before publish")
+            os.replace(os.fspath(staged_path), os.fspath(record.target))
+            staged[record.target] = None
+    except BaseException as publish_error:
+        rollback_errors = ()
+        if publishing:
+            rollback_errors = _rollback_outputs(
+                records,
+                backups,
+                staged_identities,
+            )
+        if rollback_errors:
+            raise RuntimeError(
+                "output publication failed and rollback was incomplete: "
+                + "; ".join(rollback_errors)
+            ) from publish_error
+        raise
+    finally:
+        for path in staged.values():
+            _cleanup_temp(path)
+        for path in backups.values():
+            _cleanup_temp(path)
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Render static Diagram Core review surfaces."
@@ -839,6 +1174,10 @@ def main() -> int:
             parser.error(
                 "Agent checkpoint generation does not accept benchmark outputs"
             )
+        try:
+            _validate_output_paths((output, html_output))
+        except ValueError as error:
+            parser.error(str(error))
 
         contact_sheet = render_contact_sheet()
         contact_bytes = contact_sheet.encode("utf-8")
@@ -850,10 +1189,12 @@ def main() -> int:
         defaults, _ = _context_tokens(token_css())
         review_page = render_review_html(reference, digest, defaults)
 
-        output.parent.mkdir(parents=True, exist_ok=True)
-        html_output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_bytes(contact_bytes)
-        html_output.write_text(review_page, encoding="utf-8")
+        _publish_outputs(
+            (
+                (output, contact_bytes),
+                (html_output, review_page.encode("utf-8")),
+            )
+        )
         print(
             "icons=1 cells=72 unique=72 sizes=48,64,96 "
             "contexts=blue,dark,warm,green states=6"
@@ -880,9 +1221,10 @@ def main() -> int:
     if cell_index.suffix.lower() != ".json":
         parser.error("--cell-index must end in .json")
     paths = (output, html_output, recognition_output, cell_index)
-    absolute_paths = [path.absolute() for path in paths]
-    if len(set(absolute_paths)) != len(absolute_paths):
-        parser.error("benchmark output files must use distinct paths")
+    try:
+        _validate_output_paths(paths)
+    except ValueError as error:
+        parser.error(str(error))
 
     cells = build_contact_sheet_cells()
     contact_sheet = render_benchmark_contact_sheet(cells)
@@ -894,12 +1236,14 @@ def main() -> int:
     recognition_page = render_recognition_html(token_source, contexts)
     index_source = render_cell_index(cells)
 
-    for path in paths:
-        path.parent.mkdir(parents=True, exist_ok=True)
-    output.write_bytes(contact_bytes)
-    html_output.write_text(review_page, encoding="utf-8")
-    recognition_output.write_text(recognition_page, encoding="utf-8")
-    cell_index.write_text(index_source, encoding="utf-8")
+    _publish_outputs(
+        (
+            (output, contact_bytes),
+            (html_output, review_page.encode("utf-8")),
+            (recognition_output, recognition_page.encode("utf-8")),
+            (cell_index, index_source.encode("utf-8")),
+        )
+    )
     print(
         "icons=4 cells=288 unique=288 sizes=48,64,96 "
         "contexts=blue,dark,warm,green states=6"
