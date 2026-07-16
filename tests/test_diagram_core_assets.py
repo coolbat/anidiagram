@@ -3,6 +3,7 @@ import gzip
 import json
 import math
 import random
+import re
 import tempfile
 import unittest
 from dataclasses import FrozenInstanceError
@@ -10,6 +11,7 @@ from pathlib import Path
 
 from anidiagram.diagram_core.asset_loader import (
     AssetValidationError,
+    _declared_tokens as declared_tokens,
     load_asset,
     load_svg_source,
 )
@@ -18,6 +20,13 @@ from anidiagram.diagram_core.manifest import (
     load_manifest,
     validate_manifest_dict,
 )
+from anidiagram.diagram_core.tokens import (
+    contrast_ratio,
+    icon_tokens_for_style,
+    relative_luminance,
+    token_css,
+)
+from anidiagram.styles import load_style
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -61,6 +70,88 @@ MINIMAL_TOKENS = """:root {
   --icon-stroke: #14213d;
 }
 """
+
+REQUIRED_ICON_TOKENS = {
+    "--icon-surface-main",
+    "--icon-surface-secondary",
+    "--icon-surface-recessed",
+    "--icon-stroke",
+    "--icon-detail",
+    "--icon-accent",
+    "--icon-accent-secondary",
+    "--icon-status-idle",
+    "--icon-status-active",
+    "--icon-status-success",
+    "--icon-status-warning",
+    "--icon-status-error",
+}
+
+APPROVED_ICON_DEFAULTS = {
+    "--icon-surface-main": "#fffaf2",
+    "--icon-surface-secondary": "#eef1f5",
+    "--icon-surface-recessed": "#dfe5ec",
+    "--icon-stroke": "#14213d",
+    "--icon-detail": "#64748b",
+    "--icon-accent": "#7c5ce7",
+    "--icon-accent-secondary": "#45c5bd",
+    "--icon-status-idle": "#94a3b8",
+    "--icon-status-active": "#38bdf8",
+    "--icon-status-success": "#35b66f",
+    "--icon-status-warning": "#f3a53a",
+    "--icon-status-error": "#e65b65",
+}
+
+STATE_MARK_GEOMETRY = (
+    ("idle", "dot"),
+    ("active", "ring"),
+    ("processing", "split-arc"),
+    ("success", "check"),
+    ("warning", "triangle"),
+    ("error", "X"),
+)
+
+
+def css_declarations(source, selector):
+    match = re.search(re.escape(selector) + r"\s*\{([^{}]*)\}", source)
+    if match is None:
+        raise AssertionError("missing CSS declaration block: " + selector)
+    declarations = {}
+    for statement in match.group(1).split(";"):
+        if ":" not in statement:
+            continue
+        name, value = statement.split(":", 1)
+        declarations[name.strip()] = value.strip()
+    return declarations
+
+
+def state_scope_pairs(source):
+    scope_header = "@scope ([data-icon-state]) to ([data-icon-state])"
+    scope_start = source.find(scope_header)
+    if scope_start < 0:
+        raise AssertionError("state rules must stop at the next nested icon state")
+    block_start = source.find("{", scope_start + len(scope_header))
+    depth = 0
+    block_end = None
+    for index in range(block_start, len(source)):
+        if source[index] == "{":
+            depth += 1
+        elif source[index] == "}":
+            depth -= 1
+            if depth == 0:
+                block_end = index + 1
+                break
+    if block_start < 0 or block_end is None:
+        raise AssertionError("state scope must be a balanced CSS block")
+
+    selector_pattern = (
+        r':scope\[data-icon-state="([^"]+)"\]\s+'
+        r'\[data-state-mark="([^"]+)"\]'
+    )
+    scoped_pairs = re.findall(selector_pattern, source[block_start:block_end])
+    outside = source[:scope_start] + source[block_end:]
+    if re.search(selector_pattern.replace(":scope", "[^,{]*"), outside):
+        raise AssertionError("state reveal rules must not escape the nearest icon scope")
+    return scoped_pairs
 
 
 def valid_svg():
@@ -930,6 +1021,253 @@ class DiagramCoreAssetLoaderTest(unittest.TestCase):
                 load_asset("database", {"visual-review"}, bundle.root)
             self.assertIn(str(bundle.icon_path), str(raised.exception))
             self.assertIn("invalid XML", str(raised.exception))
+
+
+class DiagramCoreTokenTest(unittest.TestCase):
+    def test_token_css_defines_approved_defaults_and_four_review_contexts(self):
+        source = token_css()
+
+        self.assertTrue(REQUIRED_ICON_TOKENS.issubset(declared_tokens(source)))
+        root_tokens = css_declarations(source, ":root")
+        for token, value in APPROVED_ICON_DEFAULTS.items():
+            with self.subTest(token=token):
+                self.assertEqual(value, root_tokens[token])
+
+        expected_contexts = {
+            "blue": {
+                "--icon-accent": "#4f7cff",
+                "--icon-accent-secondary": "#45c5d8",
+            },
+            "dark": {
+                "--icon-surface-main": "#202838",
+                "--icon-surface-secondary": "#2c3749",
+                "--icon-surface-recessed": "#151c28",
+                "--icon-stroke": "#d6deeb",
+                "--icon-detail": "#8fa0b8",
+                "--icon-accent": "#65d8ff",
+                "--icon-accent-secondary": "#9f85ff",
+            },
+            "warm": {
+                "--icon-surface-main": "#fff8eb",
+                "--icon-surface-secondary": "#eee4d1",
+                "--icon-surface-recessed": "#ded0b8",
+                "--icon-stroke": "#40372f",
+                "--icon-detail": "#8a796a",
+                "--icon-accent": "#e38843",
+                "--icon-accent-secondary": "#d5af4b",
+            },
+            "green": {
+                "--icon-accent": "#38a967",
+                "--icon-accent-secondary": "#59c6a7",
+            },
+        }
+        for context, expected in expected_contexts.items():
+            selector = '[data-icon-theme="' + context + '"]'
+            with self.subTest(context=context):
+                self.assertEqual(expected, css_declarations(source, selector))
+
+    def test_static_state_selectors_are_nearest_scoped_and_geometry_distinct(self):
+        source = token_css()
+
+        self.assertEqual(
+            {"display": "none"},
+            css_declarations(source, "[data-state-mark]"),
+        )
+        pairs = state_scope_pairs(source)
+        expected_pairs = [(state, state) for state, _ in STATE_MARK_GEOMETRY]
+        self.assertEqual(expected_pairs, pairs)
+        for state, geometry in STATE_MARK_GEOMETRY:
+            with self.subTest(state=state):
+                selector = (
+                    ':scope[data-icon-state="'
+                    + state
+                    + '"] [data-state-mark="'
+                    + state
+                    + '"]'
+                )
+                self.assertEqual(
+                    {"display": "inline"},
+                    css_declarations(source, selector),
+                )
+                self.assertIn(state + " = " + geometry, source)
+        self.assertNotIn("::before", source)
+        self.assertNotIn("::after", source)
+        self.assertNotIn("content:", source)
+
+        # These mutations reproduce the two leak shapes the contract forbids:
+        # an outer state crossing a nested icon root, and an unscoped rule that
+        # can affect another icon subtree. The static guard must reject both.
+        without_nested_boundary = source.replace(
+            " to ([data-icon-state])",
+            "",
+            1,
+        )
+        unscoped_reveal = source + (
+            '\n[data-icon-state="error"] [data-state-mark="error"] {'
+            " display: inline; }\n"
+        )
+        for leaky_source in (without_nested_boundary, unscoped_reveal):
+            with self.subTest(leaky_source=leaky_source[-100:]):
+                with self.assertRaises(AssertionError):
+                    state_scope_pairs(leaky_source)
+
+    def test_review_and_reduced_motion_disable_transitions_and_animations(self):
+        source = token_css()
+
+        self.assertIn('[data-icon-review="true"]', source)
+        self.assertIn("@media (prefers-reduced-motion: reduce)", source)
+        self.assertGreaterEqual(source.count("animation: none !important;"), 2)
+        self.assertGreaterEqual(source.count("transition: none !important;"), 2)
+
+    def test_accent_off_neutralizes_accents_without_hiding_structure_or_state(self):
+        declarations = css_declarations(token_css(), '[data-icon-accent="off"]')
+
+        self.assertEqual("var(--icon-stroke)", declarations["--icon-accent"])
+        self.assertEqual(
+            "var(--icon-detail)",
+            declarations["--icon-accent-secondary"],
+        )
+        for forbidden in ("display", "visibility", "opacity"):
+            self.assertNotIn(forbidden, declarations)
+
+    def test_style_mapping_uses_existing_canvas_role_and_title_tokens(self):
+        style = load_style(ROOT / "styles" / "deep-tech.json")
+
+        mapped = icon_tokens_for_style(style, "agent")
+
+        self.assertEqual(style["roles"]["agent"]["fill"], mapped["--icon-surface-main"])
+        self.assertEqual(style["canvas"]["background"], mapped["--icon-surface-secondary"])
+        self.assertEqual(style["canvas"]["grid"], mapped["--icon-surface-recessed"])
+        self.assertEqual(style["canvas"]["text"], mapped["--icon-stroke"])
+        self.assertEqual(style["canvas"]["muted"], mapped["--icon-detail"])
+        self.assertEqual(style["roles"]["agent"]["stroke"], mapped["--icon-accent"])
+        self.assertEqual(style["title"]["accent"], mapped["--icon-accent-secondary"])
+        self.assertEqual(APPROVED_ICON_DEFAULTS["--icon-status-idle"], mapped["--icon-status-idle"])
+
+    def test_all_bundled_styles_return_complete_contrasting_mappings(self):
+        style_paths = sorted((ROOT / "styles").glob("*.json"))
+        style_paths = [path for path in style_paths if path.name != "catalog.json"]
+
+        self.assertGreater(len(style_paths), 0)
+        for style_path in style_paths:
+            style = load_style(style_path)
+            for role in style["roles"]:
+                with self.subTest(style=style_path.name, role=role):
+                    mapped = icon_tokens_for_style(style, role)
+                    self.assertEqual(REQUIRED_ICON_TOKENS, set(mapped))
+                    self.assertGreaterEqual(
+                        contrast_ratio(
+                            mapped["--icon-stroke"],
+                            mapped["--icon-surface-main"],
+                        ),
+                        3.0,
+                    )
+
+    def test_missing_and_unknown_roles_fall_back_to_neutral(self):
+        style = load_style(ROOT / "styles" / "deep-tech.json")
+        expected = style["roles"]["neutral"]
+        without_agent = copy.deepcopy(style)
+        del without_agent["roles"]["agent"]
+
+        for label, candidate, role in (
+            ("none", style, None),
+            ("unknown", style, "not-a-role"),
+            ("missing", without_agent, "agent"),
+        ):
+            with self.subTest(label=label):
+                mapped = icon_tokens_for_style(candidate, role)
+                self.assertEqual(expected["fill"], mapped["--icon-surface-main"])
+                self.assertEqual(expected["stroke"], mapped["--icon-accent"])
+
+    def test_explicit_status_overrides_are_copied_and_mapping_is_immutable(self):
+        style = load_style(ROOT / "styles" / "deep-tech.json")
+        overrides = {
+            "--icon-status-warning": "rgb(120, 80, 0)",
+            "--icon-status-error": "#123",
+        }
+        style["icon_tokens"] = overrides
+
+        mapped = icon_tokens_for_style(style, "agent")
+        overrides["--icon-status-warning"] = "#ffffff"
+
+        self.assertEqual("rgb(120, 80, 0)", mapped["--icon-status-warning"])
+        self.assertEqual("#123", mapped["--icon-status-error"])
+        self.assertEqual(
+            APPROVED_ICON_DEFAULTS["--icon-status-success"],
+            mapped["--icon-status-success"],
+        )
+        with self.assertRaises(TypeError):
+            mapped["--icon-status-error"] = "#ffffff"
+
+        fresh = icon_tokens_for_style(load_style(), "agent")
+        self.assertEqual(
+            APPROVED_ICON_DEFAULTS["--icon-status-warning"],
+            fresh["--icon-status-warning"],
+        )
+
+    def test_invalid_override_keys_and_unknown_color_formats_fail_closed(self):
+        style = load_style()
+        cases = (
+            {"--icon-accent": "#ffffff"},
+            {"--icon-status-error": "rgba(0, 0, 0, 0.5)"},
+            {"--icon-status-error": "not-a-color"},
+        )
+        for overrides in cases:
+            with self.subTest(overrides=overrides):
+                candidate = copy.deepcopy(style)
+                candidate["icon_tokens"] = overrides
+                with self.assertRaises(ValueError):
+                    icon_tokens_for_style(candidate, "agent")
+
+    def test_relative_luminance_accepts_opaque_hex_and_rgb_only(self):
+        self.assertEqual(0.0, relative_luminance("#000"))
+        self.assertEqual(1.0, relative_luminance("#FFFFFF"))
+        self.assertEqual(0.0, relative_luminance("rgb(0, 0, 0)"))
+        self.assertEqual(1.0, relative_luminance("rgb(255 255 255)"))
+
+        unsupported = (
+            "#00000080",
+            "rgba(0, 0, 0, 0.5)",
+            "rgb(0 0 0 / 50%)",
+            "rgb(256, 0, 0)",
+            "rgb(0.5, 0, 0)",
+            "hsl(0 0% 0%)",
+            "black",
+        )
+        for color in unsupported:
+            with self.subTest(color=color):
+                with self.assertRaises(ValueError):
+                    relative_luminance(color)
+
+    def test_contrast_uses_wcag_luminance_and_honors_three_to_one_boundary(self):
+        self.assertEqual(21.0, contrast_ratio("#000000", "#ffffff"))
+        self.assertAlmostEqual(
+            contrast_ratio("#777777", "#ffffff"),
+            4.478089453577214,
+        )
+        self.assertGreaterEqual(contrast_ratio("#949494", "#ffffff"), 3.0)
+        self.assertLess(contrast_ratio("#959595", "#ffffff"), 3.0)
+        self.assertEqual(
+            contrast_ratio("#14213d", "#fffaf2"),
+            contrast_ratio("#fffaf2", "#14213d"),
+        )
+
+    def test_review_contexts_keep_structural_boundary_at_three_to_one(self):
+        source = token_css()
+        defaults = css_declarations(source, ":root")
+
+        for context in ("blue", "dark", "warm", "green"):
+            overrides = css_declarations(
+                source,
+                '[data-icon-theme="' + context + '"]',
+            )
+            stroke = overrides.get("--icon-stroke", defaults["--icon-stroke"])
+            surface = overrides.get(
+                "--icon-surface-main",
+                defaults["--icon-surface-main"],
+            )
+            with self.subTest(context=context):
+                self.assertGreaterEqual(contrast_ratio(stroke, surface), 3.0)
 
 
 if __name__ == "__main__":
