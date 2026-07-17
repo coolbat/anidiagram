@@ -26,10 +26,9 @@ ICON_ID = "agent"
 BENCHMARK_ICONS = ("agent", "database", "api", "server")
 SIZES = (48, 64, 96)
 CONTEXTS = ("blue", "dark", "warm", "green")
-STATES = ("idle", "active", "processing", "success", "warning", "error")
 ASSET_LOCAL_TOKENS = frozenset({"--icon-surface-contrast"})
-SHEET_WIDTH = 1120
-SHEET_HEIGHT = 2496
+SHEET_WIDTH = 600
+SHEET_HEIGHT = 980
 CELL_X = 40
 CELL_STEP_X = 174
 CELL_WIDTH = 158
@@ -37,7 +36,7 @@ CELL_HEIGHT = 146
 MAIN_Y = 128
 ROW_STEP_Y = 160
 BENCHMARK_COLUMNS = len(BENCHMARK_ICONS) * len(SIZES)
-BENCHMARK_ROWS = len(CONTEXTS) * len(STATES)
+BENCHMARK_ROWS = len(CONTEXTS)
 BENCHMARK_CELL_SIZE = 104
 BENCHMARK_WIDTH = BENCHMARK_COLUMNS * BENCHMARK_CELL_SIZE
 BENCHMARK_HEIGHT = BENCHMARK_ROWS * BENCHMARK_CELL_SIZE
@@ -58,7 +57,6 @@ class ContactSheetCell:
     icon_id: str
     size: int
     context: str
-    state: str
     cell_id: str
     instance_id: str
 
@@ -176,7 +174,6 @@ def _asset_local_style(tokens: Mapping[str, str]) -> str:
 
 def _preview(
     instance_id: str,
-    state: str,
     size: int,
     x: float,
     y: float,
@@ -190,7 +187,6 @@ def _preview(
     return render_preview_icon(
         ICON_ID,
         instance_id,
-        state=state,
         size=size,
         x=x,
         y=y,
@@ -202,7 +198,6 @@ def _preview(
 def _main_cell(
     size: int,
     context: str,
-    state: str,
     column: int,
     row: int,
     tokens: Mapping[str, str],
@@ -211,17 +206,16 @@ def _main_cell(
     y = MAIN_Y + row * ROW_STEP_Y
     icon_x = x + (CELL_WIDTH - size) / 2
     icon_y = y + 36
-    cell_id = "agent-{0}-{1}-{2}".format(size, context, state)
-    label = "{0}px · {1} · {2}".format(size, context, state)
+    cell_id = "agent-{0}-{1}".format(size, context)
+    label = "{0}px · {1} · rest".format(size, context)
     preview = _preview(
-        "contact.main.{0}.{1}.{2}".format(size, context, state),
-        state,
+        "contact.main.{0}.{1}".format(size, context),
         size,
         icon_x,
         icon_y,
         tokens,
     )
-    return """  <g data-cell-kind="main" data-cell-id="{cell_id}" data-icon-id="agent" data-size="{size}" data-context="{context}" data-state="{state}" style="{local_style}">
+    return """  <g data-cell-kind="main" data-cell-id="{cell_id}" data-icon-id="agent" data-size="{size}" data-context="{context}" data-pose="authored-rest" style="{local_style}">
     <rect x="{x}" y="{y}" width="{width}" height="{height}" rx="14" fill="{surface}" stroke="{stroke}" stroke-width="1"/>
     <text x="{label_x}" y="{label_y}" fill="{stroke}" font-size="11" font-weight="650">{label}</text>
 {preview}
@@ -229,7 +223,6 @@ def _main_cell(
         cell_id=_escaped(cell_id),
         size=size,
         context=_escaped(context),
-        state=_escaped(state),
         local_style=_escaped(_asset_local_style(tokens)),
         x=x,
         y=y,
@@ -246,94 +239,77 @@ def _main_cell(
 
 def _recognition_row(
     mode: str,
+    column: int,
     row_y: int,
     tokens: Mapping[str, str],
 ) -> str:
-    cells = []
     compact_mode = "off" if mode == "accent-off" else "gray"
-    for column, state in enumerate(STATES):
-        x = CELL_X + column * CELL_STEP_X
-        size = 48
-        icon_x = x + (CELL_WIDTH - size) / 2
-        icon_y = row_y + 38
-        cell_id = "agent-recognition-{0}-{1}".format(mode, state)
-        preview = _preview(
-            "contact.recognition.{0}.{1}".format(mode, state),
-            state,
-            size,
-            icon_x,
-            icon_y,
-            tokens,
-        )
-        cells.append(
-            """    <g data-cell-kind="recognition" data-cell-id="{cell_id}" data-icon-id="agent" data-recognition-mode="{mode}" data-size="48" data-context="blue" data-state="{state}" style="{local_style}">
+    x = CELL_X + column * CELL_STEP_X
+    size = 48
+    icon_x = x + (CELL_WIDTH - size) / 2
+    icon_y = row_y + 38
+    cell_id = "agent-recognition-{0}".format(mode)
+    preview = _preview(
+        "contact.recognition.{0}".format(mode),
+        size,
+        icon_x,
+        icon_y,
+        tokens,
+    )
+    return """  <g data-recognition-row="{mode}">
+    <g data-cell-kind="recognition" data-cell-id="{cell_id}" data-icon-id="agent" data-recognition-mode="{mode}" data-size="48" data-context="blue" data-pose="authored-rest" style="{local_style}">
       <rect x="{x}" y="{y}" width="{width}" height="{height}" rx="14" fill="{surface}" stroke="{stroke}" stroke-width="1"/>
       <text x="{label_x}" y="{label_y}" fill="{stroke}" font-size="11" font-weight="650">{label}</text>
 {preview}
-    </g>""".format(
-                cell_id=_escaped(cell_id),
-                mode=_escaped(mode),
-                state=_escaped(state),
-                local_style=_escaped(_asset_local_style(tokens)),
-                x=x,
-                y=row_y,
-                width=CELL_WIDTH,
-                height=CELL_HEIGHT,
-                surface=_escaped(tokens["--icon-surface-main"]),
-                stroke=_escaped(tokens["--icon-stroke"]),
-                label_x=x + 12,
-                label_y=row_y + 21,
-                label=_escaped("48px · {0} · {1}".format(compact_mode, state)),
-                preview=preview,
-            )
-        )
-    return """  <g data-recognition-row="{mode}">
-{cells}
-  </g>""".format(mode=_escaped(mode), cells="\n".join(cells))
+    </g>
+  </g>""".format(
+        cell_id=_escaped(cell_id),
+        mode=_escaped(mode),
+        local_style=_escaped(_asset_local_style(tokens)),
+        x=x,
+        y=row_y,
+        width=CELL_WIDTH,
+        height=CELL_HEIGHT,
+        surface=_escaped(tokens["--icon-surface-main"]),
+        stroke=_escaped(tokens["--icon-stroke"]),
+        label_x=x + 12,
+        label_y=row_y + 21,
+        label=_escaped("48px · {0} · rest".format(compact_mode)),
+        preview=preview,
+    )
 
 
 def render_contact_sheet() -> str:
     source = token_css()
     defaults, contexts = _context_tokens(source)
-    state_rules = "\n".join(
-        '[data-icon-state="{0}"] [data-state-mark="{0}"] {{ display: inline; }}'.format(
-            state
-        )
-        for state in STATES
-    )
     cells = []
     for context_index, context in enumerate(CONTEXTS):
         for size_index, size in enumerate(SIZES):
-            row = context_index * len(SIZES) + size_index
-            for column, state in enumerate(STATES):
-                cells.append(
-                    _main_cell(
-                        size,
-                        context,
-                        state,
-                        column,
-                        row,
-                        contexts[context],
-                    )
+            cells.append(
+                _main_cell(
+                    size,
+                    context,
+                    size_index,
+                    context_index,
+                    contexts[context],
                 )
+            )
 
     accent_off = _accent_off_tokens(source, contexts["blue"])
     grayscale = _grayscale_tokens(contexts["blue"])
     recognition_rows = (
-        _recognition_row("accent-off", 2116, accent_off),
-        _recognition_row("grayscale", 2276, grayscale),
+        _recognition_row("accent-off", 0, 800, accent_off),
+        _recognition_row("grayscale", 1, 800, grayscale),
     )
-    return """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" width="{width}" height="{height}" role="img" aria-label="Agent icon benchmark across sizes, contexts, states, accent-off, and grayscale recognition" data-icon-review="true" data-main-cell-count="72" data-recognition-cell-count="12">
+    return """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" width="{width}" height="{height}" role="img" aria-label="Agent authored-rest benchmark across sizes and contexts, followed by accent-off and grayscale recognition" data-icon-review="true" data-main-cell-count="12" data-recognition-cell-count="2">
   <title>Agent static icon benchmark contact sheet</title>
   <style>
-[data-state-mark] {{ display: none; }}
-{state_rules}
 text {{ font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }}
   </style>
   <rect x="0" y="0" width="{width}" height="{height}" fill="{background}"/>
-  <text x="40" y="51" fill="{heading}" font-size="28" font-weight="750">Agent benchmark · 72-cell audit matrix</text>
-  <text x="40" y="82" fill="{heading}" font-size="14">3 sizes × 4 token contexts × 6 geometric states · deterministic static output</text>
-  <text x="40" y="2090" fill="{heading}" font-size="20" font-weight="700">48 px recognition checks · accent-off and grayscale</text>
+  <text x="40" y="51" fill="{heading}" font-size="28" font-weight="750">Agent benchmark · authored rest</text>
+  <text x="40" y="82" fill="{heading}" font-size="14">3 sizes × 4 token contexts · deterministic static output</text>
+  <text x="40" y="780" fill="{heading}" font-size="20" font-weight="700">48 px recognition checks · accent-off and grayscale</text>
 {cells}
 {recognition_rows}
 </svg>
@@ -342,7 +318,6 @@ text {{ font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont
         height=SHEET_HEIGHT,
         background=_escaped(defaults["--icon-surface-secondary"]),
         heading=_escaped(defaults["--icon-stroke"]),
-        state_rules=state_rules,
         cells="\n".join(cells),
         recognition_rows="\n".join(recognition_rows),
     )
@@ -389,8 +364,8 @@ def render_review_html(
     <section>
       <h2>Contact sheet</h2>
       <figure>
-        <img src="{contact_reference}" alt="Agent robot icon shown at 48, 64, and 96 pixels in four color contexts and six geometric states, followed by accent-off and grayscale recognition rows.">
-        <figcaption>72 primary cells plus two six-state recognition rows. Contact sheet SHA-256: <code>{contact_digest}</code>.</figcaption>
+        <img src="{contact_reference}" alt="Agent robot icon in its authored rest pose at 48, 64, and 96 pixels in four color contexts, followed by accent-off and grayscale recognition checks.">
+        <figcaption>12 primary cells plus two authored-rest recognition cells. Contact sheet SHA-256: <code>{contact_digest}</code>.</figcaption>
       </figure>
     </section>
     <section>
@@ -401,7 +376,7 @@ def render_review_html(
         <li><strong>Face readability:</strong> both eyes and the simple mouth remain distinct at the smallest size.</li>
         <li><strong>Accent-off recognition:</strong> identity survives when accent tokens collapse to neutral colors.</li>
         <li><strong>Four contexts:</strong> compare blue, dark, warm, and green token declarations.</li>
-        <li><strong>Six state marks:</strong> idle, active, processing, success, warning, and error differ by geometry.</li>
+        <li><strong>State deferral:</strong> no semantic-state glyph appears or is implied in this first-release asset.</li>
       </ul>
     </section>
     <section>
@@ -424,7 +399,7 @@ def render_review_html(
 def build_contact_sheet_cells(
     icons: Sequence[str] = BENCHMARK_ICONS,
 ) -> Tuple[ContactSheetCell, ...]:
-    """Return the locked row-major 12-column by 24-row benchmark matrix."""
+    """Return the locked row-major 12-column by 4-row authored-rest matrix."""
 
     normalized_icons = tuple(icons)
     if normalized_icons != BENCHMARK_ICONS:
@@ -434,50 +409,40 @@ def build_contact_sheet_cells(
     cells = []
     ordinal = 0
     for context_index, context in enumerate(CONTEXTS):
-        for state_index, state in enumerate(STATES):
-            row = context_index * len(STATES) + state_index
-            for icon_index, icon_id in enumerate(normalized_icons):
-                for size_index, size in enumerate(SIZES):
-                    column = icon_index * len(SIZES) + size_index
-                    cell_id = "{0}-{1}-{2}-{3}".format(
-                        icon_id,
-                        size,
-                        context,
-                        state,
+        for icon_index, icon_id in enumerate(normalized_icons):
+            for size_index, size in enumerate(SIZES):
+                column = icon_index * len(SIZES) + size_index
+                cell_id = "{0}-{1}-{2}".format(icon_id, size, context)
+                cells.append(
+                    ContactSheetCell(
+                        ordinal=ordinal,
+                        column=column,
+                        row=context_index,
+                        icon_id=icon_id,
+                        size=size,
+                        context=context,
+                        cell_id=cell_id,
+                        instance_id="benchmark.{0}.{1}.{2}.{3}".format(
+                            ordinal,
+                            icon_id,
+                            size,
+                            context,
+                        ),
                     )
-                    cells.append(
-                        ContactSheetCell(
-                            ordinal=ordinal,
-                            column=column,
-                            row=row,
-                            icon_id=icon_id,
-                            size=size,
-                            context=context,
-                            state=state,
-                            cell_id=cell_id,
-                            instance_id="benchmark.{0}.{1}.{2}.{3}.{4}".format(
-                                ordinal,
-                                icon_id,
-                                size,
-                                context,
-                                state,
-                            ),
-                        )
-                    )
-                    ordinal += 1
+                )
+                ordinal += 1
     return tuple(cells)
 
 
 def _static_preview(
     icon_id: str,
     instance_id: str,
-    state: str,
     size: int,
     x: float,
     y: float,
     tokens: Mapping[str, str],
 ) -> str:
-    """Render through the adapter, then freeze the requested state as attributes."""
+    """Render one authored-rest icon through the canonical preview adapter."""
 
     adapter_tokens = {
         token: value
@@ -487,20 +452,14 @@ def _static_preview(
     fragment = render_preview_icon(
         icon_id,
         instance_id,
-        state=state,
         size=size,
         x=x,
         y=y,
         tokens=adapter_tokens,
         asset_root=ASSET_ROOT,
     )
-    root = ElementTree.fromstring(fragment)
-    for element in root.iter():
-        mark = element.attrib.get("data-state-mark")
-        if mark is not None:
-            element.set("display", "inline" if mark == state else "none")
     return ElementTree.tostring(
-        root,
+        ElementTree.fromstring(fragment),
         encoding="unicode",
         short_empty_elements=True,
     )
@@ -517,13 +476,12 @@ def _benchmark_cell(
     preview = _static_preview(
         cell.icon_id,
         cell.instance_id,
-        cell.state,
         cell.size,
         icon_x,
         icon_y,
         tokens,
     )
-    return """  <g data-cell-kind="regression" data-cell-id="{cell_id}" data-icon-id="{icon_id}" data-size="{size}" data-context="{context}" data-state="{state}" role="img" aria-label="{label}" style="{local_style}">
+    return """  <g data-cell-kind="regression" data-cell-id="{cell_id}" data-icon-id="{icon_id}" data-size="{size}" data-context="{context}" data-pose="authored-rest" role="img" aria-label="{label}" style="{local_style}">
     <rect x="{x}" y="{y}" width="{cell_size}" height="{cell_size}" fill="{surface}" stroke="{border}" stroke-width="1"/>
 {preview}
   </g>""".format(
@@ -531,13 +489,11 @@ def _benchmark_cell(
         icon_id=_escaped(cell.icon_id),
         size=cell.size,
         context=_escaped(cell.context),
-        state=_escaped(cell.state),
         label=_escaped(
-            "{0} icon, {1} pixels, {2} context, {3} state".format(
+            "{0} icon, {1} pixels, {2} context, authored rest pose".format(
                 cell.icon_id,
                 cell.size,
                 cell.context,
-                cell.state,
             )
         ),
         local_style=_escaped(_asset_local_style(tokens)),
@@ -560,7 +516,7 @@ def render_benchmark_contact_sheet(
         build_contact_sheet_cells() if cells is None else tuple(cells)
     )
     if len(ordered_cells) != BENCHMARK_COLUMNS * BENCHMARK_ROWS:
-        raise ValueError("benchmark contact sheet requires exactly 288 cells")
+        raise ValueError("benchmark contact sheet requires exactly 48 cells")
     source = token_css()
     _, contexts = _context_tokens(source)
     rendered_cells = [
@@ -571,7 +527,7 @@ def render_benchmark_contact_sheet(
         if aria_labelledby
         else ""
     )
-    return """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" width="{width}" height="{height}" id="diagram-core-regression-grid" role="img" aria-label="Diagram Core benchmark: four icons, three sizes, four contexts, and six static states"{labelledby} data-icon-review-region="true" data-grid-columns="{columns}" data-grid-rows="{rows}" data-cell-count="{count}">
+    return """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" width="{width}" height="{height}" id="diagram-core-regression-grid" role="img" aria-label="Diagram Core authored-rest benchmark: four icons, three sizes, and four contexts"{labelledby} data-icon-review-region="true" data-grid-columns="{columns}" data-grid-rows="{rows}" data-cell-count="{count}">
 {cells}
 </svg>
 """.format(
@@ -605,7 +561,7 @@ def render_cell_index(
                 "icon_id": cell.icon_id,
                 "size": cell.size,
                 "context": cell.context,
-                "state": cell.state,
+                "pose": "authored-rest",
             }
             for cell in ordered_cells
         ],
@@ -634,11 +590,7 @@ def render_benchmark_review_html(
         for icon_id in BENCHMARK_ICONS
         for size in SIZES
     ]
-    row_labels = [
-        "{0} · {1}".format(context, state)
-        for context in CONTEXTS
-        for state in STATES
-    ]
+    row_labels = ["{0} · authored rest".format(context) for context in CONTEXTS]
     return """<!doctype html>
 <html lang="en">
 <head>
@@ -663,8 +615,9 @@ def render_benchmark_review_html(
 <body>
   <header>
     <h1 id="diagram-core-grid-title">Diagram Core static regression matrix</h1>
-    <p id="diagram-core-grid-description">A fixed 12-column by 24-row, 288-cell visual review surface. The screenshot locator contains icon geometry only; all labels and legends remain outside it.</p>
+    <p id="diagram-core-grid-description">A fixed 12-column by 4-row, 48-cell authored-rest visual review surface. The screenshot locator contains icon geometry only; all labels and legends remain outside it.</p>
     <p>Contact sheet SHA-256: <code>{digest}</code>.</p>
+    <p>Separate motion review: <code>gallery/diagram-core/showcase.html</code>.</p>
   </header>
   <main>
     <section class="legends" aria-label="Regression grid legends">
@@ -704,37 +657,33 @@ def render_benchmark_review_html(
 def _recognition_cell(
     mode: str,
     icon_id: str,
-    state: str,
     tokens: Mapping[str, str],
 ) -> str:
     size = 48
     offset = (BENCHMARK_CELL_SIZE - size) / 2
-    cell_id = "recognition-{0}-{1}-{2}".format(mode, icon_id, state)
+    cell_id = "recognition-{0}-{1}".format(mode, icon_id)
     preview = _static_preview(
         icon_id,
-        "recognition.{0}.{1}.{2}".format(mode, icon_id, state),
-        state,
+        "recognition.{0}.{1}".format(mode, icon_id),
         size,
         offset,
         offset,
         tokens,
     )
-    return """        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {cell_size} {cell_size}" width="{cell_size}" height="{cell_size}" role="img" aria-label="{label}" data-cell-kind="recognition" data-cell-id="{cell_id}" data-icon-id="{icon_id}" data-recognition-mode="{mode}" data-size="48" data-context="blue" data-state="{state}" style="{local_style}">
+    return """        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {cell_size} {cell_size}" width="{cell_size}" height="{cell_size}" role="img" aria-label="{label}" data-cell-kind="recognition" data-cell-id="{cell_id}" data-icon-id="{icon_id}" data-recognition-mode="{mode}" data-size="48" data-context="blue" data-pose="authored-rest" style="{local_style}">
           <rect x="0" y="0" width="{cell_size}" height="{cell_size}" fill="{surface}" stroke="{border}" stroke-width="1"/>
 {preview}
         </svg>""".format(
         cell_size=BENCHMARK_CELL_SIZE,
         label=_escaped(
-            "{0} icon, {1} state, {2} recognition view, 48 pixels".format(
+            "{0} icon, authored rest pose, {1} recognition view, 48 pixels".format(
                 icon_id,
-                state,
                 mode,
             )
         ),
         cell_id=_escaped(cell_id),
         icon_id=_escaped(icon_id),
         mode=_escaped(mode),
-        state=_escaped(state),
         local_style=_escaped(_asset_local_style(tokens)),
         surface=_escaped(tokens["--icon-surface-main"]),
         border=_escaped(tokens["--icon-surface-recessed"]),
@@ -756,8 +705,7 @@ def render_recognition_html(
     mode_groups = []
     for mode, tokens in modes:
         cells = [
-            _recognition_cell(mode, icon_id, state, tokens)
-            for state in STATES
+            _recognition_cell(mode, icon_id, tokens)
             for icon_id in BENCHMARK_ICONS
         ]
         mode_groups.append(
@@ -1240,8 +1188,8 @@ def main() -> int:
             )
         )
         print(
-            "icons=1 cells=72 unique=72 sizes=48,64,96 "
-            "contexts=blue,dark,warm,green states=6"
+            "icons=1 cells=12 unique=12 sizes=48,64,96 "
+            "contexts=blue,dark,warm,green pose=authored-rest"
         )
         print("OK")
         return 0
@@ -1289,8 +1237,8 @@ def main() -> int:
         )
     )
     print(
-        "icons=4 cells=288 unique=288 sizes=48,64,96 "
-        "contexts=blue,dark,warm,green states=6"
+        "icons=4 cells=48 unique=48 sizes=48,64,96 "
+        "contexts=blue,dark,warm,green pose=authored-rest"
     )
     print("OK")
     return 0

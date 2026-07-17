@@ -42,3 +42,42 @@ family baseline. It does not:
 
 Final lifecycle promotion remains gated by Checkpoint B and the approved
 four-icon contact sheet plus locked browser baseline.
+
+## 2026-07-17 Scope Amendment — Showcase presentation revision
+
+- Decision: approved product-scope change
+- Reviewer: coolbat
+- Effect: partially supersedes the state-mark portion of Checkpoint A and the
+  unapproved 288-cell Checkpoint B candidate
+- Public system version: unchanged (`diagram-core-v1` / Diagram Core v1.0)
+
+The reviewer changed the first-release target after inspecting the six-state
+matrix. The current release no longer implements `idle`, `active`, `processing`,
+`success`, `warning`, or `error` icon variants. Those semantics are deferred
+until Phase 2 defines the combined runtime-stage and execution-result flow.
+
+Checkpoint A remains authoritative for:
+
+- Agent silhouette and visual weight;
+- the two attached side ear caps;
+- face, antenna, core, outline, and family style;
+- use of Agent as the visual baseline for Database, API, and Server.
+
+Checkpoint A is superseded for:
+
+- the six geometric state marks;
+- any claim that benchmark manifests currently support six states;
+- the old 72-cell Agent and 288-cell four-icon state matrices.
+
+The replacement first-release review contract is:
+
+```text
+48-cell authored-rest matrix
++ one showcase Presentation Profile
++ four icon-specific showcase presentation performances
++ no-GSAP and reduced-motion authored-rest fallback
+```
+
+All four assets remain `visual-review`. The new Checkpoint B requires explicit
+human approval of both the authored-rest family and the live showcase motion
+before asset promotion, Server validation, or later renderer integration.

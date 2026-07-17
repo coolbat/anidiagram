@@ -12,14 +12,6 @@ from anidiagram.diagram_core.catalog import legacy_valid_icon_ids, load_catalog
 from anidiagram.diagram_core.tokens import contrast_ratio, token_contexts, token_css
 
 
-_STATE_TOKENS = (
-    "--icon-status-idle",
-    "--icon-status-active",
-    "--icon-status-active",
-    "--icon-status-success",
-    "--icon-status-warning",
-    "--icon-status-error",
-)
 _BENCHMARK_IDS = ("agent", "database", "api", "server")
 _DEFAULT_ASSET_ROOT = Path(__file__).resolve().parents[1] / "assets" / "diagram-core"
 
@@ -88,11 +80,6 @@ def _contrast_checks(asset_root):
         if contrast_ratio(tokens["--icon-stroke"], tokens["--icon-surface-main"]) < 3:
             raise ValueError("tokens.css structural contrast must be at least 3:1")
         checks += 1
-        contrast_surface = tokens["--icon-surface-contrast"]
-        for token in _STATE_TOKENS:
-            if contrast_ratio(tokens[token], contrast_surface) < 3:
-                raise ValueError("tokens.css state contrast must be at least 3:1")
-            checks += 1
     return checks
 
 

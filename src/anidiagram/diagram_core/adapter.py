@@ -486,7 +486,7 @@ def _resolved_token_style(tokens: Optional[Mapping]) -> Optional[str]:
 def _render_icon(
     icon_id: str,
     instance_id: str,
-    state: str,
+    state: Optional[str],
     size: Real,
     x: Real,
     y: Real,
@@ -496,14 +496,15 @@ def _render_icon(
 ) -> str:
     validated_kebab_token(icon_id)
     instance_key(instance_id)
-    validated_kebab_token(state)
+    if state is not None:
+        validated_kebab_token(state)
     _validated_number(x, "x")
     _validated_number(y, "y")
     _validated_number(size, "size", positive=True)
     style = _resolved_token_style(tokens)
 
     asset = load_asset(icon_id, allowed_statuses, asset_root)
-    if state not in asset.manifest.states:
+    if state is not None and state not in asset.manifest.states:
         raise ValueError(
             "unsupported state {0} for Diagram Core icon {1}".format(state, icon_id)
         )
@@ -518,7 +519,8 @@ def _render_icon(
         ),
     )
     wrapper.set("data-icon", icon_id)
-    wrapper.set("data-icon-state", state)
+    if state is not None:
+        wrapper.set("data-icon-state", state)
     wrapper.set("data-icon-source", CATALOG_SYSTEM_ID)
     wrapper.set("data-asset-revision", str(asset.manifest.asset_revision))
     wrapper.set("aria-hidden", "true")
@@ -534,7 +536,7 @@ def _render_icon(
 def render_preview_icon(
     icon_id,
     instance_id,
-    state="idle",
+    state=None,
     size=96,
     x=0,
     y=0,
@@ -559,7 +561,7 @@ def render_preview_icon(
 def render_approved_icon(
     icon_id,
     instance_id,
-    state="idle",
+    state=None,
     size=96,
     x=0,
     y=0,

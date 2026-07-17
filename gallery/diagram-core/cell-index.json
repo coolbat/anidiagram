@@ -2,2313 +2,393 @@
   "version": 1,
   "grid": {
     "columns": 12,
-    "rows": 24,
-    "cells": 288
+    "rows": 4,
+    "cells": 48
   },
   "cells": [
     {
       "ordinal": 0,
-      "cell_id": "agent-48-blue-idle",
+      "cell_id": "agent-48-blue",
       "icon_id": "agent",
       "size": 48,
       "context": "blue",
-      "state": "idle"
+      "pose": "authored-rest"
     },
     {
       "ordinal": 1,
-      "cell_id": "agent-64-blue-idle",
+      "cell_id": "agent-64-blue",
       "icon_id": "agent",
       "size": 64,
       "context": "blue",
-      "state": "idle"
+      "pose": "authored-rest"
     },
     {
       "ordinal": 2,
-      "cell_id": "agent-96-blue-idle",
+      "cell_id": "agent-96-blue",
       "icon_id": "agent",
       "size": 96,
       "context": "blue",
-      "state": "idle"
+      "pose": "authored-rest"
     },
     {
       "ordinal": 3,
-      "cell_id": "database-48-blue-idle",
+      "cell_id": "database-48-blue",
       "icon_id": "database",
       "size": 48,
       "context": "blue",
-      "state": "idle"
+      "pose": "authored-rest"
     },
     {
       "ordinal": 4,
-      "cell_id": "database-64-blue-idle",
+      "cell_id": "database-64-blue",
       "icon_id": "database",
       "size": 64,
       "context": "blue",
-      "state": "idle"
+      "pose": "authored-rest"
     },
     {
       "ordinal": 5,
-      "cell_id": "database-96-blue-idle",
+      "cell_id": "database-96-blue",
       "icon_id": "database",
       "size": 96,
       "context": "blue",
-      "state": "idle"
+      "pose": "authored-rest"
     },
     {
       "ordinal": 6,
-      "cell_id": "api-48-blue-idle",
+      "cell_id": "api-48-blue",
       "icon_id": "api",
       "size": 48,
       "context": "blue",
-      "state": "idle"
+      "pose": "authored-rest"
     },
     {
       "ordinal": 7,
-      "cell_id": "api-64-blue-idle",
+      "cell_id": "api-64-blue",
       "icon_id": "api",
       "size": 64,
       "context": "blue",
-      "state": "idle"
+      "pose": "authored-rest"
     },
     {
       "ordinal": 8,
-      "cell_id": "api-96-blue-idle",
+      "cell_id": "api-96-blue",
       "icon_id": "api",
       "size": 96,
       "context": "blue",
-      "state": "idle"
+      "pose": "authored-rest"
     },
     {
       "ordinal": 9,
-      "cell_id": "server-48-blue-idle",
+      "cell_id": "server-48-blue",
       "icon_id": "server",
       "size": 48,
       "context": "blue",
-      "state": "idle"
+      "pose": "authored-rest"
     },
     {
       "ordinal": 10,
-      "cell_id": "server-64-blue-idle",
+      "cell_id": "server-64-blue",
       "icon_id": "server",
       "size": 64,
       "context": "blue",
-      "state": "idle"
+      "pose": "authored-rest"
     },
     {
       "ordinal": 11,
-      "cell_id": "server-96-blue-idle",
+      "cell_id": "server-96-blue",
       "icon_id": "server",
       "size": 96,
       "context": "blue",
-      "state": "idle"
+      "pose": "authored-rest"
     },
     {
       "ordinal": 12,
-      "cell_id": "agent-48-blue-active",
+      "cell_id": "agent-48-dark",
       "icon_id": "agent",
       "size": 48,
-      "context": "blue",
-      "state": "active"
+      "context": "dark",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 13,
-      "cell_id": "agent-64-blue-active",
+      "cell_id": "agent-64-dark",
       "icon_id": "agent",
       "size": 64,
-      "context": "blue",
-      "state": "active"
+      "context": "dark",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 14,
-      "cell_id": "agent-96-blue-active",
+      "cell_id": "agent-96-dark",
       "icon_id": "agent",
       "size": 96,
-      "context": "blue",
-      "state": "active"
+      "context": "dark",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 15,
-      "cell_id": "database-48-blue-active",
+      "cell_id": "database-48-dark",
       "icon_id": "database",
       "size": 48,
-      "context": "blue",
-      "state": "active"
+      "context": "dark",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 16,
-      "cell_id": "database-64-blue-active",
+      "cell_id": "database-64-dark",
       "icon_id": "database",
       "size": 64,
-      "context": "blue",
-      "state": "active"
+      "context": "dark",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 17,
-      "cell_id": "database-96-blue-active",
+      "cell_id": "database-96-dark",
       "icon_id": "database",
       "size": 96,
-      "context": "blue",
-      "state": "active"
+      "context": "dark",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 18,
-      "cell_id": "api-48-blue-active",
+      "cell_id": "api-48-dark",
       "icon_id": "api",
       "size": 48,
-      "context": "blue",
-      "state": "active"
+      "context": "dark",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 19,
-      "cell_id": "api-64-blue-active",
+      "cell_id": "api-64-dark",
       "icon_id": "api",
       "size": 64,
-      "context": "blue",
-      "state": "active"
+      "context": "dark",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 20,
-      "cell_id": "api-96-blue-active",
+      "cell_id": "api-96-dark",
       "icon_id": "api",
       "size": 96,
-      "context": "blue",
-      "state": "active"
+      "context": "dark",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 21,
-      "cell_id": "server-48-blue-active",
+      "cell_id": "server-48-dark",
       "icon_id": "server",
       "size": 48,
-      "context": "blue",
-      "state": "active"
+      "context": "dark",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 22,
-      "cell_id": "server-64-blue-active",
+      "cell_id": "server-64-dark",
       "icon_id": "server",
       "size": 64,
-      "context": "blue",
-      "state": "active"
+      "context": "dark",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 23,
-      "cell_id": "server-96-blue-active",
+      "cell_id": "server-96-dark",
       "icon_id": "server",
       "size": 96,
-      "context": "blue",
-      "state": "active"
+      "context": "dark",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 24,
-      "cell_id": "agent-48-blue-processing",
+      "cell_id": "agent-48-warm",
       "icon_id": "agent",
       "size": 48,
-      "context": "blue",
-      "state": "processing"
+      "context": "warm",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 25,
-      "cell_id": "agent-64-blue-processing",
+      "cell_id": "agent-64-warm",
       "icon_id": "agent",
       "size": 64,
-      "context": "blue",
-      "state": "processing"
+      "context": "warm",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 26,
-      "cell_id": "agent-96-blue-processing",
+      "cell_id": "agent-96-warm",
       "icon_id": "agent",
       "size": 96,
-      "context": "blue",
-      "state": "processing"
+      "context": "warm",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 27,
-      "cell_id": "database-48-blue-processing",
+      "cell_id": "database-48-warm",
       "icon_id": "database",
       "size": 48,
-      "context": "blue",
-      "state": "processing"
+      "context": "warm",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 28,
-      "cell_id": "database-64-blue-processing",
+      "cell_id": "database-64-warm",
       "icon_id": "database",
       "size": 64,
-      "context": "blue",
-      "state": "processing"
+      "context": "warm",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 29,
-      "cell_id": "database-96-blue-processing",
+      "cell_id": "database-96-warm",
       "icon_id": "database",
       "size": 96,
-      "context": "blue",
-      "state": "processing"
+      "context": "warm",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 30,
-      "cell_id": "api-48-blue-processing",
+      "cell_id": "api-48-warm",
       "icon_id": "api",
       "size": 48,
-      "context": "blue",
-      "state": "processing"
+      "context": "warm",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 31,
-      "cell_id": "api-64-blue-processing",
+      "cell_id": "api-64-warm",
       "icon_id": "api",
       "size": 64,
-      "context": "blue",
-      "state": "processing"
+      "context": "warm",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 32,
-      "cell_id": "api-96-blue-processing",
+      "cell_id": "api-96-warm",
       "icon_id": "api",
       "size": 96,
-      "context": "blue",
-      "state": "processing"
+      "context": "warm",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 33,
-      "cell_id": "server-48-blue-processing",
+      "cell_id": "server-48-warm",
       "icon_id": "server",
       "size": 48,
-      "context": "blue",
-      "state": "processing"
+      "context": "warm",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 34,
-      "cell_id": "server-64-blue-processing",
+      "cell_id": "server-64-warm",
       "icon_id": "server",
       "size": 64,
-      "context": "blue",
-      "state": "processing"
+      "context": "warm",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 35,
-      "cell_id": "server-96-blue-processing",
+      "cell_id": "server-96-warm",
       "icon_id": "server",
       "size": 96,
-      "context": "blue",
-      "state": "processing"
+      "context": "warm",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 36,
-      "cell_id": "agent-48-blue-success",
+      "cell_id": "agent-48-green",
       "icon_id": "agent",
       "size": 48,
-      "context": "blue",
-      "state": "success"
+      "context": "green",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 37,
-      "cell_id": "agent-64-blue-success",
+      "cell_id": "agent-64-green",
       "icon_id": "agent",
       "size": 64,
-      "context": "blue",
-      "state": "success"
+      "context": "green",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 38,
-      "cell_id": "agent-96-blue-success",
+      "cell_id": "agent-96-green",
       "icon_id": "agent",
       "size": 96,
-      "context": "blue",
-      "state": "success"
+      "context": "green",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 39,
-      "cell_id": "database-48-blue-success",
+      "cell_id": "database-48-green",
       "icon_id": "database",
       "size": 48,
-      "context": "blue",
-      "state": "success"
+      "context": "green",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 40,
-      "cell_id": "database-64-blue-success",
+      "cell_id": "database-64-green",
       "icon_id": "database",
       "size": 64,
-      "context": "blue",
-      "state": "success"
+      "context": "green",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 41,
-      "cell_id": "database-96-blue-success",
+      "cell_id": "database-96-green",
       "icon_id": "database",
       "size": 96,
-      "context": "blue",
-      "state": "success"
+      "context": "green",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 42,
-      "cell_id": "api-48-blue-success",
+      "cell_id": "api-48-green",
       "icon_id": "api",
       "size": 48,
-      "context": "blue",
-      "state": "success"
+      "context": "green",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 43,
-      "cell_id": "api-64-blue-success",
+      "cell_id": "api-64-green",
       "icon_id": "api",
       "size": 64,
-      "context": "blue",
-      "state": "success"
+      "context": "green",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 44,
-      "cell_id": "api-96-blue-success",
+      "cell_id": "api-96-green",
       "icon_id": "api",
       "size": 96,
-      "context": "blue",
-      "state": "success"
+      "context": "green",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 45,
-      "cell_id": "server-48-blue-success",
+      "cell_id": "server-48-green",
       "icon_id": "server",
       "size": 48,
-      "context": "blue",
-      "state": "success"
+      "context": "green",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 46,
-      "cell_id": "server-64-blue-success",
+      "cell_id": "server-64-green",
       "icon_id": "server",
       "size": 64,
-      "context": "blue",
-      "state": "success"
+      "context": "green",
+      "pose": "authored-rest"
     },
     {
       "ordinal": 47,
-      "cell_id": "server-96-blue-success",
-      "icon_id": "server",
-      "size": 96,
-      "context": "blue",
-      "state": "success"
-    },
-    {
-      "ordinal": 48,
-      "cell_id": "agent-48-blue-warning",
-      "icon_id": "agent",
-      "size": 48,
-      "context": "blue",
-      "state": "warning"
-    },
-    {
-      "ordinal": 49,
-      "cell_id": "agent-64-blue-warning",
-      "icon_id": "agent",
-      "size": 64,
-      "context": "blue",
-      "state": "warning"
-    },
-    {
-      "ordinal": 50,
-      "cell_id": "agent-96-blue-warning",
-      "icon_id": "agent",
-      "size": 96,
-      "context": "blue",
-      "state": "warning"
-    },
-    {
-      "ordinal": 51,
-      "cell_id": "database-48-blue-warning",
-      "icon_id": "database",
-      "size": 48,
-      "context": "blue",
-      "state": "warning"
-    },
-    {
-      "ordinal": 52,
-      "cell_id": "database-64-blue-warning",
-      "icon_id": "database",
-      "size": 64,
-      "context": "blue",
-      "state": "warning"
-    },
-    {
-      "ordinal": 53,
-      "cell_id": "database-96-blue-warning",
-      "icon_id": "database",
-      "size": 96,
-      "context": "blue",
-      "state": "warning"
-    },
-    {
-      "ordinal": 54,
-      "cell_id": "api-48-blue-warning",
-      "icon_id": "api",
-      "size": 48,
-      "context": "blue",
-      "state": "warning"
-    },
-    {
-      "ordinal": 55,
-      "cell_id": "api-64-blue-warning",
-      "icon_id": "api",
-      "size": 64,
-      "context": "blue",
-      "state": "warning"
-    },
-    {
-      "ordinal": 56,
-      "cell_id": "api-96-blue-warning",
-      "icon_id": "api",
-      "size": 96,
-      "context": "blue",
-      "state": "warning"
-    },
-    {
-      "ordinal": 57,
-      "cell_id": "server-48-blue-warning",
-      "icon_id": "server",
-      "size": 48,
-      "context": "blue",
-      "state": "warning"
-    },
-    {
-      "ordinal": 58,
-      "cell_id": "server-64-blue-warning",
-      "icon_id": "server",
-      "size": 64,
-      "context": "blue",
-      "state": "warning"
-    },
-    {
-      "ordinal": 59,
-      "cell_id": "server-96-blue-warning",
-      "icon_id": "server",
-      "size": 96,
-      "context": "blue",
-      "state": "warning"
-    },
-    {
-      "ordinal": 60,
-      "cell_id": "agent-48-blue-error",
-      "icon_id": "agent",
-      "size": 48,
-      "context": "blue",
-      "state": "error"
-    },
-    {
-      "ordinal": 61,
-      "cell_id": "agent-64-blue-error",
-      "icon_id": "agent",
-      "size": 64,
-      "context": "blue",
-      "state": "error"
-    },
-    {
-      "ordinal": 62,
-      "cell_id": "agent-96-blue-error",
-      "icon_id": "agent",
-      "size": 96,
-      "context": "blue",
-      "state": "error"
-    },
-    {
-      "ordinal": 63,
-      "cell_id": "database-48-blue-error",
-      "icon_id": "database",
-      "size": 48,
-      "context": "blue",
-      "state": "error"
-    },
-    {
-      "ordinal": 64,
-      "cell_id": "database-64-blue-error",
-      "icon_id": "database",
-      "size": 64,
-      "context": "blue",
-      "state": "error"
-    },
-    {
-      "ordinal": 65,
-      "cell_id": "database-96-blue-error",
-      "icon_id": "database",
-      "size": 96,
-      "context": "blue",
-      "state": "error"
-    },
-    {
-      "ordinal": 66,
-      "cell_id": "api-48-blue-error",
-      "icon_id": "api",
-      "size": 48,
-      "context": "blue",
-      "state": "error"
-    },
-    {
-      "ordinal": 67,
-      "cell_id": "api-64-blue-error",
-      "icon_id": "api",
-      "size": 64,
-      "context": "blue",
-      "state": "error"
-    },
-    {
-      "ordinal": 68,
-      "cell_id": "api-96-blue-error",
-      "icon_id": "api",
-      "size": 96,
-      "context": "blue",
-      "state": "error"
-    },
-    {
-      "ordinal": 69,
-      "cell_id": "server-48-blue-error",
-      "icon_id": "server",
-      "size": 48,
-      "context": "blue",
-      "state": "error"
-    },
-    {
-      "ordinal": 70,
-      "cell_id": "server-64-blue-error",
-      "icon_id": "server",
-      "size": 64,
-      "context": "blue",
-      "state": "error"
-    },
-    {
-      "ordinal": 71,
-      "cell_id": "server-96-blue-error",
-      "icon_id": "server",
-      "size": 96,
-      "context": "blue",
-      "state": "error"
-    },
-    {
-      "ordinal": 72,
-      "cell_id": "agent-48-dark-idle",
-      "icon_id": "agent",
-      "size": 48,
-      "context": "dark",
-      "state": "idle"
-    },
-    {
-      "ordinal": 73,
-      "cell_id": "agent-64-dark-idle",
-      "icon_id": "agent",
-      "size": 64,
-      "context": "dark",
-      "state": "idle"
-    },
-    {
-      "ordinal": 74,
-      "cell_id": "agent-96-dark-idle",
-      "icon_id": "agent",
-      "size": 96,
-      "context": "dark",
-      "state": "idle"
-    },
-    {
-      "ordinal": 75,
-      "cell_id": "database-48-dark-idle",
-      "icon_id": "database",
-      "size": 48,
-      "context": "dark",
-      "state": "idle"
-    },
-    {
-      "ordinal": 76,
-      "cell_id": "database-64-dark-idle",
-      "icon_id": "database",
-      "size": 64,
-      "context": "dark",
-      "state": "idle"
-    },
-    {
-      "ordinal": 77,
-      "cell_id": "database-96-dark-idle",
-      "icon_id": "database",
-      "size": 96,
-      "context": "dark",
-      "state": "idle"
-    },
-    {
-      "ordinal": 78,
-      "cell_id": "api-48-dark-idle",
-      "icon_id": "api",
-      "size": 48,
-      "context": "dark",
-      "state": "idle"
-    },
-    {
-      "ordinal": 79,
-      "cell_id": "api-64-dark-idle",
-      "icon_id": "api",
-      "size": 64,
-      "context": "dark",
-      "state": "idle"
-    },
-    {
-      "ordinal": 80,
-      "cell_id": "api-96-dark-idle",
-      "icon_id": "api",
-      "size": 96,
-      "context": "dark",
-      "state": "idle"
-    },
-    {
-      "ordinal": 81,
-      "cell_id": "server-48-dark-idle",
-      "icon_id": "server",
-      "size": 48,
-      "context": "dark",
-      "state": "idle"
-    },
-    {
-      "ordinal": 82,
-      "cell_id": "server-64-dark-idle",
-      "icon_id": "server",
-      "size": 64,
-      "context": "dark",
-      "state": "idle"
-    },
-    {
-      "ordinal": 83,
-      "cell_id": "server-96-dark-idle",
-      "icon_id": "server",
-      "size": 96,
-      "context": "dark",
-      "state": "idle"
-    },
-    {
-      "ordinal": 84,
-      "cell_id": "agent-48-dark-active",
-      "icon_id": "agent",
-      "size": 48,
-      "context": "dark",
-      "state": "active"
-    },
-    {
-      "ordinal": 85,
-      "cell_id": "agent-64-dark-active",
-      "icon_id": "agent",
-      "size": 64,
-      "context": "dark",
-      "state": "active"
-    },
-    {
-      "ordinal": 86,
-      "cell_id": "agent-96-dark-active",
-      "icon_id": "agent",
-      "size": 96,
-      "context": "dark",
-      "state": "active"
-    },
-    {
-      "ordinal": 87,
-      "cell_id": "database-48-dark-active",
-      "icon_id": "database",
-      "size": 48,
-      "context": "dark",
-      "state": "active"
-    },
-    {
-      "ordinal": 88,
-      "cell_id": "database-64-dark-active",
-      "icon_id": "database",
-      "size": 64,
-      "context": "dark",
-      "state": "active"
-    },
-    {
-      "ordinal": 89,
-      "cell_id": "database-96-dark-active",
-      "icon_id": "database",
-      "size": 96,
-      "context": "dark",
-      "state": "active"
-    },
-    {
-      "ordinal": 90,
-      "cell_id": "api-48-dark-active",
-      "icon_id": "api",
-      "size": 48,
-      "context": "dark",
-      "state": "active"
-    },
-    {
-      "ordinal": 91,
-      "cell_id": "api-64-dark-active",
-      "icon_id": "api",
-      "size": 64,
-      "context": "dark",
-      "state": "active"
-    },
-    {
-      "ordinal": 92,
-      "cell_id": "api-96-dark-active",
-      "icon_id": "api",
-      "size": 96,
-      "context": "dark",
-      "state": "active"
-    },
-    {
-      "ordinal": 93,
-      "cell_id": "server-48-dark-active",
-      "icon_id": "server",
-      "size": 48,
-      "context": "dark",
-      "state": "active"
-    },
-    {
-      "ordinal": 94,
-      "cell_id": "server-64-dark-active",
-      "icon_id": "server",
-      "size": 64,
-      "context": "dark",
-      "state": "active"
-    },
-    {
-      "ordinal": 95,
-      "cell_id": "server-96-dark-active",
-      "icon_id": "server",
-      "size": 96,
-      "context": "dark",
-      "state": "active"
-    },
-    {
-      "ordinal": 96,
-      "cell_id": "agent-48-dark-processing",
-      "icon_id": "agent",
-      "size": 48,
-      "context": "dark",
-      "state": "processing"
-    },
-    {
-      "ordinal": 97,
-      "cell_id": "agent-64-dark-processing",
-      "icon_id": "agent",
-      "size": 64,
-      "context": "dark",
-      "state": "processing"
-    },
-    {
-      "ordinal": 98,
-      "cell_id": "agent-96-dark-processing",
-      "icon_id": "agent",
-      "size": 96,
-      "context": "dark",
-      "state": "processing"
-    },
-    {
-      "ordinal": 99,
-      "cell_id": "database-48-dark-processing",
-      "icon_id": "database",
-      "size": 48,
-      "context": "dark",
-      "state": "processing"
-    },
-    {
-      "ordinal": 100,
-      "cell_id": "database-64-dark-processing",
-      "icon_id": "database",
-      "size": 64,
-      "context": "dark",
-      "state": "processing"
-    },
-    {
-      "ordinal": 101,
-      "cell_id": "database-96-dark-processing",
-      "icon_id": "database",
-      "size": 96,
-      "context": "dark",
-      "state": "processing"
-    },
-    {
-      "ordinal": 102,
-      "cell_id": "api-48-dark-processing",
-      "icon_id": "api",
-      "size": 48,
-      "context": "dark",
-      "state": "processing"
-    },
-    {
-      "ordinal": 103,
-      "cell_id": "api-64-dark-processing",
-      "icon_id": "api",
-      "size": 64,
-      "context": "dark",
-      "state": "processing"
-    },
-    {
-      "ordinal": 104,
-      "cell_id": "api-96-dark-processing",
-      "icon_id": "api",
-      "size": 96,
-      "context": "dark",
-      "state": "processing"
-    },
-    {
-      "ordinal": 105,
-      "cell_id": "server-48-dark-processing",
-      "icon_id": "server",
-      "size": 48,
-      "context": "dark",
-      "state": "processing"
-    },
-    {
-      "ordinal": 106,
-      "cell_id": "server-64-dark-processing",
-      "icon_id": "server",
-      "size": 64,
-      "context": "dark",
-      "state": "processing"
-    },
-    {
-      "ordinal": 107,
-      "cell_id": "server-96-dark-processing",
-      "icon_id": "server",
-      "size": 96,
-      "context": "dark",
-      "state": "processing"
-    },
-    {
-      "ordinal": 108,
-      "cell_id": "agent-48-dark-success",
-      "icon_id": "agent",
-      "size": 48,
-      "context": "dark",
-      "state": "success"
-    },
-    {
-      "ordinal": 109,
-      "cell_id": "agent-64-dark-success",
-      "icon_id": "agent",
-      "size": 64,
-      "context": "dark",
-      "state": "success"
-    },
-    {
-      "ordinal": 110,
-      "cell_id": "agent-96-dark-success",
-      "icon_id": "agent",
-      "size": 96,
-      "context": "dark",
-      "state": "success"
-    },
-    {
-      "ordinal": 111,
-      "cell_id": "database-48-dark-success",
-      "icon_id": "database",
-      "size": 48,
-      "context": "dark",
-      "state": "success"
-    },
-    {
-      "ordinal": 112,
-      "cell_id": "database-64-dark-success",
-      "icon_id": "database",
-      "size": 64,
-      "context": "dark",
-      "state": "success"
-    },
-    {
-      "ordinal": 113,
-      "cell_id": "database-96-dark-success",
-      "icon_id": "database",
-      "size": 96,
-      "context": "dark",
-      "state": "success"
-    },
-    {
-      "ordinal": 114,
-      "cell_id": "api-48-dark-success",
-      "icon_id": "api",
-      "size": 48,
-      "context": "dark",
-      "state": "success"
-    },
-    {
-      "ordinal": 115,
-      "cell_id": "api-64-dark-success",
-      "icon_id": "api",
-      "size": 64,
-      "context": "dark",
-      "state": "success"
-    },
-    {
-      "ordinal": 116,
-      "cell_id": "api-96-dark-success",
-      "icon_id": "api",
-      "size": 96,
-      "context": "dark",
-      "state": "success"
-    },
-    {
-      "ordinal": 117,
-      "cell_id": "server-48-dark-success",
-      "icon_id": "server",
-      "size": 48,
-      "context": "dark",
-      "state": "success"
-    },
-    {
-      "ordinal": 118,
-      "cell_id": "server-64-dark-success",
-      "icon_id": "server",
-      "size": 64,
-      "context": "dark",
-      "state": "success"
-    },
-    {
-      "ordinal": 119,
-      "cell_id": "server-96-dark-success",
-      "icon_id": "server",
-      "size": 96,
-      "context": "dark",
-      "state": "success"
-    },
-    {
-      "ordinal": 120,
-      "cell_id": "agent-48-dark-warning",
-      "icon_id": "agent",
-      "size": 48,
-      "context": "dark",
-      "state": "warning"
-    },
-    {
-      "ordinal": 121,
-      "cell_id": "agent-64-dark-warning",
-      "icon_id": "agent",
-      "size": 64,
-      "context": "dark",
-      "state": "warning"
-    },
-    {
-      "ordinal": 122,
-      "cell_id": "agent-96-dark-warning",
-      "icon_id": "agent",
-      "size": 96,
-      "context": "dark",
-      "state": "warning"
-    },
-    {
-      "ordinal": 123,
-      "cell_id": "database-48-dark-warning",
-      "icon_id": "database",
-      "size": 48,
-      "context": "dark",
-      "state": "warning"
-    },
-    {
-      "ordinal": 124,
-      "cell_id": "database-64-dark-warning",
-      "icon_id": "database",
-      "size": 64,
-      "context": "dark",
-      "state": "warning"
-    },
-    {
-      "ordinal": 125,
-      "cell_id": "database-96-dark-warning",
-      "icon_id": "database",
-      "size": 96,
-      "context": "dark",
-      "state": "warning"
-    },
-    {
-      "ordinal": 126,
-      "cell_id": "api-48-dark-warning",
-      "icon_id": "api",
-      "size": 48,
-      "context": "dark",
-      "state": "warning"
-    },
-    {
-      "ordinal": 127,
-      "cell_id": "api-64-dark-warning",
-      "icon_id": "api",
-      "size": 64,
-      "context": "dark",
-      "state": "warning"
-    },
-    {
-      "ordinal": 128,
-      "cell_id": "api-96-dark-warning",
-      "icon_id": "api",
-      "size": 96,
-      "context": "dark",
-      "state": "warning"
-    },
-    {
-      "ordinal": 129,
-      "cell_id": "server-48-dark-warning",
-      "icon_id": "server",
-      "size": 48,
-      "context": "dark",
-      "state": "warning"
-    },
-    {
-      "ordinal": 130,
-      "cell_id": "server-64-dark-warning",
-      "icon_id": "server",
-      "size": 64,
-      "context": "dark",
-      "state": "warning"
-    },
-    {
-      "ordinal": 131,
-      "cell_id": "server-96-dark-warning",
-      "icon_id": "server",
-      "size": 96,
-      "context": "dark",
-      "state": "warning"
-    },
-    {
-      "ordinal": 132,
-      "cell_id": "agent-48-dark-error",
-      "icon_id": "agent",
-      "size": 48,
-      "context": "dark",
-      "state": "error"
-    },
-    {
-      "ordinal": 133,
-      "cell_id": "agent-64-dark-error",
-      "icon_id": "agent",
-      "size": 64,
-      "context": "dark",
-      "state": "error"
-    },
-    {
-      "ordinal": 134,
-      "cell_id": "agent-96-dark-error",
-      "icon_id": "agent",
-      "size": 96,
-      "context": "dark",
-      "state": "error"
-    },
-    {
-      "ordinal": 135,
-      "cell_id": "database-48-dark-error",
-      "icon_id": "database",
-      "size": 48,
-      "context": "dark",
-      "state": "error"
-    },
-    {
-      "ordinal": 136,
-      "cell_id": "database-64-dark-error",
-      "icon_id": "database",
-      "size": 64,
-      "context": "dark",
-      "state": "error"
-    },
-    {
-      "ordinal": 137,
-      "cell_id": "database-96-dark-error",
-      "icon_id": "database",
-      "size": 96,
-      "context": "dark",
-      "state": "error"
-    },
-    {
-      "ordinal": 138,
-      "cell_id": "api-48-dark-error",
-      "icon_id": "api",
-      "size": 48,
-      "context": "dark",
-      "state": "error"
-    },
-    {
-      "ordinal": 139,
-      "cell_id": "api-64-dark-error",
-      "icon_id": "api",
-      "size": 64,
-      "context": "dark",
-      "state": "error"
-    },
-    {
-      "ordinal": 140,
-      "cell_id": "api-96-dark-error",
-      "icon_id": "api",
-      "size": 96,
-      "context": "dark",
-      "state": "error"
-    },
-    {
-      "ordinal": 141,
-      "cell_id": "server-48-dark-error",
-      "icon_id": "server",
-      "size": 48,
-      "context": "dark",
-      "state": "error"
-    },
-    {
-      "ordinal": 142,
-      "cell_id": "server-64-dark-error",
-      "icon_id": "server",
-      "size": 64,
-      "context": "dark",
-      "state": "error"
-    },
-    {
-      "ordinal": 143,
-      "cell_id": "server-96-dark-error",
-      "icon_id": "server",
-      "size": 96,
-      "context": "dark",
-      "state": "error"
-    },
-    {
-      "ordinal": 144,
-      "cell_id": "agent-48-warm-idle",
-      "icon_id": "agent",
-      "size": 48,
-      "context": "warm",
-      "state": "idle"
-    },
-    {
-      "ordinal": 145,
-      "cell_id": "agent-64-warm-idle",
-      "icon_id": "agent",
-      "size": 64,
-      "context": "warm",
-      "state": "idle"
-    },
-    {
-      "ordinal": 146,
-      "cell_id": "agent-96-warm-idle",
-      "icon_id": "agent",
-      "size": 96,
-      "context": "warm",
-      "state": "idle"
-    },
-    {
-      "ordinal": 147,
-      "cell_id": "database-48-warm-idle",
-      "icon_id": "database",
-      "size": 48,
-      "context": "warm",
-      "state": "idle"
-    },
-    {
-      "ordinal": 148,
-      "cell_id": "database-64-warm-idle",
-      "icon_id": "database",
-      "size": 64,
-      "context": "warm",
-      "state": "idle"
-    },
-    {
-      "ordinal": 149,
-      "cell_id": "database-96-warm-idle",
-      "icon_id": "database",
-      "size": 96,
-      "context": "warm",
-      "state": "idle"
-    },
-    {
-      "ordinal": 150,
-      "cell_id": "api-48-warm-idle",
-      "icon_id": "api",
-      "size": 48,
-      "context": "warm",
-      "state": "idle"
-    },
-    {
-      "ordinal": 151,
-      "cell_id": "api-64-warm-idle",
-      "icon_id": "api",
-      "size": 64,
-      "context": "warm",
-      "state": "idle"
-    },
-    {
-      "ordinal": 152,
-      "cell_id": "api-96-warm-idle",
-      "icon_id": "api",
-      "size": 96,
-      "context": "warm",
-      "state": "idle"
-    },
-    {
-      "ordinal": 153,
-      "cell_id": "server-48-warm-idle",
-      "icon_id": "server",
-      "size": 48,
-      "context": "warm",
-      "state": "idle"
-    },
-    {
-      "ordinal": 154,
-      "cell_id": "server-64-warm-idle",
-      "icon_id": "server",
-      "size": 64,
-      "context": "warm",
-      "state": "idle"
-    },
-    {
-      "ordinal": 155,
-      "cell_id": "server-96-warm-idle",
-      "icon_id": "server",
-      "size": 96,
-      "context": "warm",
-      "state": "idle"
-    },
-    {
-      "ordinal": 156,
-      "cell_id": "agent-48-warm-active",
-      "icon_id": "agent",
-      "size": 48,
-      "context": "warm",
-      "state": "active"
-    },
-    {
-      "ordinal": 157,
-      "cell_id": "agent-64-warm-active",
-      "icon_id": "agent",
-      "size": 64,
-      "context": "warm",
-      "state": "active"
-    },
-    {
-      "ordinal": 158,
-      "cell_id": "agent-96-warm-active",
-      "icon_id": "agent",
-      "size": 96,
-      "context": "warm",
-      "state": "active"
-    },
-    {
-      "ordinal": 159,
-      "cell_id": "database-48-warm-active",
-      "icon_id": "database",
-      "size": 48,
-      "context": "warm",
-      "state": "active"
-    },
-    {
-      "ordinal": 160,
-      "cell_id": "database-64-warm-active",
-      "icon_id": "database",
-      "size": 64,
-      "context": "warm",
-      "state": "active"
-    },
-    {
-      "ordinal": 161,
-      "cell_id": "database-96-warm-active",
-      "icon_id": "database",
-      "size": 96,
-      "context": "warm",
-      "state": "active"
-    },
-    {
-      "ordinal": 162,
-      "cell_id": "api-48-warm-active",
-      "icon_id": "api",
-      "size": 48,
-      "context": "warm",
-      "state": "active"
-    },
-    {
-      "ordinal": 163,
-      "cell_id": "api-64-warm-active",
-      "icon_id": "api",
-      "size": 64,
-      "context": "warm",
-      "state": "active"
-    },
-    {
-      "ordinal": 164,
-      "cell_id": "api-96-warm-active",
-      "icon_id": "api",
-      "size": 96,
-      "context": "warm",
-      "state": "active"
-    },
-    {
-      "ordinal": 165,
-      "cell_id": "server-48-warm-active",
-      "icon_id": "server",
-      "size": 48,
-      "context": "warm",
-      "state": "active"
-    },
-    {
-      "ordinal": 166,
-      "cell_id": "server-64-warm-active",
-      "icon_id": "server",
-      "size": 64,
-      "context": "warm",
-      "state": "active"
-    },
-    {
-      "ordinal": 167,
-      "cell_id": "server-96-warm-active",
-      "icon_id": "server",
-      "size": 96,
-      "context": "warm",
-      "state": "active"
-    },
-    {
-      "ordinal": 168,
-      "cell_id": "agent-48-warm-processing",
-      "icon_id": "agent",
-      "size": 48,
-      "context": "warm",
-      "state": "processing"
-    },
-    {
-      "ordinal": 169,
-      "cell_id": "agent-64-warm-processing",
-      "icon_id": "agent",
-      "size": 64,
-      "context": "warm",
-      "state": "processing"
-    },
-    {
-      "ordinal": 170,
-      "cell_id": "agent-96-warm-processing",
-      "icon_id": "agent",
-      "size": 96,
-      "context": "warm",
-      "state": "processing"
-    },
-    {
-      "ordinal": 171,
-      "cell_id": "database-48-warm-processing",
-      "icon_id": "database",
-      "size": 48,
-      "context": "warm",
-      "state": "processing"
-    },
-    {
-      "ordinal": 172,
-      "cell_id": "database-64-warm-processing",
-      "icon_id": "database",
-      "size": 64,
-      "context": "warm",
-      "state": "processing"
-    },
-    {
-      "ordinal": 173,
-      "cell_id": "database-96-warm-processing",
-      "icon_id": "database",
-      "size": 96,
-      "context": "warm",
-      "state": "processing"
-    },
-    {
-      "ordinal": 174,
-      "cell_id": "api-48-warm-processing",
-      "icon_id": "api",
-      "size": 48,
-      "context": "warm",
-      "state": "processing"
-    },
-    {
-      "ordinal": 175,
-      "cell_id": "api-64-warm-processing",
-      "icon_id": "api",
-      "size": 64,
-      "context": "warm",
-      "state": "processing"
-    },
-    {
-      "ordinal": 176,
-      "cell_id": "api-96-warm-processing",
-      "icon_id": "api",
-      "size": 96,
-      "context": "warm",
-      "state": "processing"
-    },
-    {
-      "ordinal": 177,
-      "cell_id": "server-48-warm-processing",
-      "icon_id": "server",
-      "size": 48,
-      "context": "warm",
-      "state": "processing"
-    },
-    {
-      "ordinal": 178,
-      "cell_id": "server-64-warm-processing",
-      "icon_id": "server",
-      "size": 64,
-      "context": "warm",
-      "state": "processing"
-    },
-    {
-      "ordinal": 179,
-      "cell_id": "server-96-warm-processing",
-      "icon_id": "server",
-      "size": 96,
-      "context": "warm",
-      "state": "processing"
-    },
-    {
-      "ordinal": 180,
-      "cell_id": "agent-48-warm-success",
-      "icon_id": "agent",
-      "size": 48,
-      "context": "warm",
-      "state": "success"
-    },
-    {
-      "ordinal": 181,
-      "cell_id": "agent-64-warm-success",
-      "icon_id": "agent",
-      "size": 64,
-      "context": "warm",
-      "state": "success"
-    },
-    {
-      "ordinal": 182,
-      "cell_id": "agent-96-warm-success",
-      "icon_id": "agent",
-      "size": 96,
-      "context": "warm",
-      "state": "success"
-    },
-    {
-      "ordinal": 183,
-      "cell_id": "database-48-warm-success",
-      "icon_id": "database",
-      "size": 48,
-      "context": "warm",
-      "state": "success"
-    },
-    {
-      "ordinal": 184,
-      "cell_id": "database-64-warm-success",
-      "icon_id": "database",
-      "size": 64,
-      "context": "warm",
-      "state": "success"
-    },
-    {
-      "ordinal": 185,
-      "cell_id": "database-96-warm-success",
-      "icon_id": "database",
-      "size": 96,
-      "context": "warm",
-      "state": "success"
-    },
-    {
-      "ordinal": 186,
-      "cell_id": "api-48-warm-success",
-      "icon_id": "api",
-      "size": 48,
-      "context": "warm",
-      "state": "success"
-    },
-    {
-      "ordinal": 187,
-      "cell_id": "api-64-warm-success",
-      "icon_id": "api",
-      "size": 64,
-      "context": "warm",
-      "state": "success"
-    },
-    {
-      "ordinal": 188,
-      "cell_id": "api-96-warm-success",
-      "icon_id": "api",
-      "size": 96,
-      "context": "warm",
-      "state": "success"
-    },
-    {
-      "ordinal": 189,
-      "cell_id": "server-48-warm-success",
-      "icon_id": "server",
-      "size": 48,
-      "context": "warm",
-      "state": "success"
-    },
-    {
-      "ordinal": 190,
-      "cell_id": "server-64-warm-success",
-      "icon_id": "server",
-      "size": 64,
-      "context": "warm",
-      "state": "success"
-    },
-    {
-      "ordinal": 191,
-      "cell_id": "server-96-warm-success",
-      "icon_id": "server",
-      "size": 96,
-      "context": "warm",
-      "state": "success"
-    },
-    {
-      "ordinal": 192,
-      "cell_id": "agent-48-warm-warning",
-      "icon_id": "agent",
-      "size": 48,
-      "context": "warm",
-      "state": "warning"
-    },
-    {
-      "ordinal": 193,
-      "cell_id": "agent-64-warm-warning",
-      "icon_id": "agent",
-      "size": 64,
-      "context": "warm",
-      "state": "warning"
-    },
-    {
-      "ordinal": 194,
-      "cell_id": "agent-96-warm-warning",
-      "icon_id": "agent",
-      "size": 96,
-      "context": "warm",
-      "state": "warning"
-    },
-    {
-      "ordinal": 195,
-      "cell_id": "database-48-warm-warning",
-      "icon_id": "database",
-      "size": 48,
-      "context": "warm",
-      "state": "warning"
-    },
-    {
-      "ordinal": 196,
-      "cell_id": "database-64-warm-warning",
-      "icon_id": "database",
-      "size": 64,
-      "context": "warm",
-      "state": "warning"
-    },
-    {
-      "ordinal": 197,
-      "cell_id": "database-96-warm-warning",
-      "icon_id": "database",
-      "size": 96,
-      "context": "warm",
-      "state": "warning"
-    },
-    {
-      "ordinal": 198,
-      "cell_id": "api-48-warm-warning",
-      "icon_id": "api",
-      "size": 48,
-      "context": "warm",
-      "state": "warning"
-    },
-    {
-      "ordinal": 199,
-      "cell_id": "api-64-warm-warning",
-      "icon_id": "api",
-      "size": 64,
-      "context": "warm",
-      "state": "warning"
-    },
-    {
-      "ordinal": 200,
-      "cell_id": "api-96-warm-warning",
-      "icon_id": "api",
-      "size": 96,
-      "context": "warm",
-      "state": "warning"
-    },
-    {
-      "ordinal": 201,
-      "cell_id": "server-48-warm-warning",
-      "icon_id": "server",
-      "size": 48,
-      "context": "warm",
-      "state": "warning"
-    },
-    {
-      "ordinal": 202,
-      "cell_id": "server-64-warm-warning",
-      "icon_id": "server",
-      "size": 64,
-      "context": "warm",
-      "state": "warning"
-    },
-    {
-      "ordinal": 203,
-      "cell_id": "server-96-warm-warning",
-      "icon_id": "server",
-      "size": 96,
-      "context": "warm",
-      "state": "warning"
-    },
-    {
-      "ordinal": 204,
-      "cell_id": "agent-48-warm-error",
-      "icon_id": "agent",
-      "size": 48,
-      "context": "warm",
-      "state": "error"
-    },
-    {
-      "ordinal": 205,
-      "cell_id": "agent-64-warm-error",
-      "icon_id": "agent",
-      "size": 64,
-      "context": "warm",
-      "state": "error"
-    },
-    {
-      "ordinal": 206,
-      "cell_id": "agent-96-warm-error",
-      "icon_id": "agent",
-      "size": 96,
-      "context": "warm",
-      "state": "error"
-    },
-    {
-      "ordinal": 207,
-      "cell_id": "database-48-warm-error",
-      "icon_id": "database",
-      "size": 48,
-      "context": "warm",
-      "state": "error"
-    },
-    {
-      "ordinal": 208,
-      "cell_id": "database-64-warm-error",
-      "icon_id": "database",
-      "size": 64,
-      "context": "warm",
-      "state": "error"
-    },
-    {
-      "ordinal": 209,
-      "cell_id": "database-96-warm-error",
-      "icon_id": "database",
-      "size": 96,
-      "context": "warm",
-      "state": "error"
-    },
-    {
-      "ordinal": 210,
-      "cell_id": "api-48-warm-error",
-      "icon_id": "api",
-      "size": 48,
-      "context": "warm",
-      "state": "error"
-    },
-    {
-      "ordinal": 211,
-      "cell_id": "api-64-warm-error",
-      "icon_id": "api",
-      "size": 64,
-      "context": "warm",
-      "state": "error"
-    },
-    {
-      "ordinal": 212,
-      "cell_id": "api-96-warm-error",
-      "icon_id": "api",
-      "size": 96,
-      "context": "warm",
-      "state": "error"
-    },
-    {
-      "ordinal": 213,
-      "cell_id": "server-48-warm-error",
-      "icon_id": "server",
-      "size": 48,
-      "context": "warm",
-      "state": "error"
-    },
-    {
-      "ordinal": 214,
-      "cell_id": "server-64-warm-error",
-      "icon_id": "server",
-      "size": 64,
-      "context": "warm",
-      "state": "error"
-    },
-    {
-      "ordinal": 215,
-      "cell_id": "server-96-warm-error",
-      "icon_id": "server",
-      "size": 96,
-      "context": "warm",
-      "state": "error"
-    },
-    {
-      "ordinal": 216,
-      "cell_id": "agent-48-green-idle",
-      "icon_id": "agent",
-      "size": 48,
-      "context": "green",
-      "state": "idle"
-    },
-    {
-      "ordinal": 217,
-      "cell_id": "agent-64-green-idle",
-      "icon_id": "agent",
-      "size": 64,
-      "context": "green",
-      "state": "idle"
-    },
-    {
-      "ordinal": 218,
-      "cell_id": "agent-96-green-idle",
-      "icon_id": "agent",
-      "size": 96,
-      "context": "green",
-      "state": "idle"
-    },
-    {
-      "ordinal": 219,
-      "cell_id": "database-48-green-idle",
-      "icon_id": "database",
-      "size": 48,
-      "context": "green",
-      "state": "idle"
-    },
-    {
-      "ordinal": 220,
-      "cell_id": "database-64-green-idle",
-      "icon_id": "database",
-      "size": 64,
-      "context": "green",
-      "state": "idle"
-    },
-    {
-      "ordinal": 221,
-      "cell_id": "database-96-green-idle",
-      "icon_id": "database",
-      "size": 96,
-      "context": "green",
-      "state": "idle"
-    },
-    {
-      "ordinal": 222,
-      "cell_id": "api-48-green-idle",
-      "icon_id": "api",
-      "size": 48,
-      "context": "green",
-      "state": "idle"
-    },
-    {
-      "ordinal": 223,
-      "cell_id": "api-64-green-idle",
-      "icon_id": "api",
-      "size": 64,
-      "context": "green",
-      "state": "idle"
-    },
-    {
-      "ordinal": 224,
-      "cell_id": "api-96-green-idle",
-      "icon_id": "api",
-      "size": 96,
-      "context": "green",
-      "state": "idle"
-    },
-    {
-      "ordinal": 225,
-      "cell_id": "server-48-green-idle",
-      "icon_id": "server",
-      "size": 48,
-      "context": "green",
-      "state": "idle"
-    },
-    {
-      "ordinal": 226,
-      "cell_id": "server-64-green-idle",
-      "icon_id": "server",
-      "size": 64,
-      "context": "green",
-      "state": "idle"
-    },
-    {
-      "ordinal": 227,
-      "cell_id": "server-96-green-idle",
+      "cell_id": "server-96-green",
       "icon_id": "server",
       "size": 96,
       "context": "green",
-      "state": "idle"
-    },
-    {
-      "ordinal": 228,
-      "cell_id": "agent-48-green-active",
-      "icon_id": "agent",
-      "size": 48,
-      "context": "green",
-      "state": "active"
-    },
-    {
-      "ordinal": 229,
-      "cell_id": "agent-64-green-active",
-      "icon_id": "agent",
-      "size": 64,
-      "context": "green",
-      "state": "active"
-    },
-    {
-      "ordinal": 230,
-      "cell_id": "agent-96-green-active",
-      "icon_id": "agent",
-      "size": 96,
-      "context": "green",
-      "state": "active"
-    },
-    {
-      "ordinal": 231,
-      "cell_id": "database-48-green-active",
-      "icon_id": "database",
-      "size": 48,
-      "context": "green",
-      "state": "active"
-    },
-    {
-      "ordinal": 232,
-      "cell_id": "database-64-green-active",
-      "icon_id": "database",
-      "size": 64,
-      "context": "green",
-      "state": "active"
-    },
-    {
-      "ordinal": 233,
-      "cell_id": "database-96-green-active",
-      "icon_id": "database",
-      "size": 96,
-      "context": "green",
-      "state": "active"
-    },
-    {
-      "ordinal": 234,
-      "cell_id": "api-48-green-active",
-      "icon_id": "api",
-      "size": 48,
-      "context": "green",
-      "state": "active"
-    },
-    {
-      "ordinal": 235,
-      "cell_id": "api-64-green-active",
-      "icon_id": "api",
-      "size": 64,
-      "context": "green",
-      "state": "active"
-    },
-    {
-      "ordinal": 236,
-      "cell_id": "api-96-green-active",
-      "icon_id": "api",
-      "size": 96,
-      "context": "green",
-      "state": "active"
-    },
-    {
-      "ordinal": 237,
-      "cell_id": "server-48-green-active",
-      "icon_id": "server",
-      "size": 48,
-      "context": "green",
-      "state": "active"
-    },
-    {
-      "ordinal": 238,
-      "cell_id": "server-64-green-active",
-      "icon_id": "server",
-      "size": 64,
-      "context": "green",
-      "state": "active"
-    },
-    {
-      "ordinal": 239,
-      "cell_id": "server-96-green-active",
-      "icon_id": "server",
-      "size": 96,
-      "context": "green",
-      "state": "active"
-    },
-    {
-      "ordinal": 240,
-      "cell_id": "agent-48-green-processing",
-      "icon_id": "agent",
-      "size": 48,
-      "context": "green",
-      "state": "processing"
-    },
-    {
-      "ordinal": 241,
-      "cell_id": "agent-64-green-processing",
-      "icon_id": "agent",
-      "size": 64,
-      "context": "green",
-      "state": "processing"
-    },
-    {
-      "ordinal": 242,
-      "cell_id": "agent-96-green-processing",
-      "icon_id": "agent",
-      "size": 96,
-      "context": "green",
-      "state": "processing"
-    },
-    {
-      "ordinal": 243,
-      "cell_id": "database-48-green-processing",
-      "icon_id": "database",
-      "size": 48,
-      "context": "green",
-      "state": "processing"
-    },
-    {
-      "ordinal": 244,
-      "cell_id": "database-64-green-processing",
-      "icon_id": "database",
-      "size": 64,
-      "context": "green",
-      "state": "processing"
-    },
-    {
-      "ordinal": 245,
-      "cell_id": "database-96-green-processing",
-      "icon_id": "database",
-      "size": 96,
-      "context": "green",
-      "state": "processing"
-    },
-    {
-      "ordinal": 246,
-      "cell_id": "api-48-green-processing",
-      "icon_id": "api",
-      "size": 48,
-      "context": "green",
-      "state": "processing"
-    },
-    {
-      "ordinal": 247,
-      "cell_id": "api-64-green-processing",
-      "icon_id": "api",
-      "size": 64,
-      "context": "green",
-      "state": "processing"
-    },
-    {
-      "ordinal": 248,
-      "cell_id": "api-96-green-processing",
-      "icon_id": "api",
-      "size": 96,
-      "context": "green",
-      "state": "processing"
-    },
-    {
-      "ordinal": 249,
-      "cell_id": "server-48-green-processing",
-      "icon_id": "server",
-      "size": 48,
-      "context": "green",
-      "state": "processing"
-    },
-    {
-      "ordinal": 250,
-      "cell_id": "server-64-green-processing",
-      "icon_id": "server",
-      "size": 64,
-      "context": "green",
-      "state": "processing"
-    },
-    {
-      "ordinal": 251,
-      "cell_id": "server-96-green-processing",
-      "icon_id": "server",
-      "size": 96,
-      "context": "green",
-      "state": "processing"
-    },
-    {
-      "ordinal": 252,
-      "cell_id": "agent-48-green-success",
-      "icon_id": "agent",
-      "size": 48,
-      "context": "green",
-      "state": "success"
-    },
-    {
-      "ordinal": 253,
-      "cell_id": "agent-64-green-success",
-      "icon_id": "agent",
-      "size": 64,
-      "context": "green",
-      "state": "success"
-    },
-    {
-      "ordinal": 254,
-      "cell_id": "agent-96-green-success",
-      "icon_id": "agent",
-      "size": 96,
-      "context": "green",
-      "state": "success"
-    },
-    {
-      "ordinal": 255,
-      "cell_id": "database-48-green-success",
-      "icon_id": "database",
-      "size": 48,
-      "context": "green",
-      "state": "success"
-    },
-    {
-      "ordinal": 256,
-      "cell_id": "database-64-green-success",
-      "icon_id": "database",
-      "size": 64,
-      "context": "green",
-      "state": "success"
-    },
-    {
-      "ordinal": 257,
-      "cell_id": "database-96-green-success",
-      "icon_id": "database",
-      "size": 96,
-      "context": "green",
-      "state": "success"
-    },
-    {
-      "ordinal": 258,
-      "cell_id": "api-48-green-success",
-      "icon_id": "api",
-      "size": 48,
-      "context": "green",
-      "state": "success"
-    },
-    {
-      "ordinal": 259,
-      "cell_id": "api-64-green-success",
-      "icon_id": "api",
-      "size": 64,
-      "context": "green",
-      "state": "success"
-    },
-    {
-      "ordinal": 260,
-      "cell_id": "api-96-green-success",
-      "icon_id": "api",
-      "size": 96,
-      "context": "green",
-      "state": "success"
-    },
-    {
-      "ordinal": 261,
-      "cell_id": "server-48-green-success",
-      "icon_id": "server",
-      "size": 48,
-      "context": "green",
-      "state": "success"
-    },
-    {
-      "ordinal": 262,
-      "cell_id": "server-64-green-success",
-      "icon_id": "server",
-      "size": 64,
-      "context": "green",
-      "state": "success"
-    },
-    {
-      "ordinal": 263,
-      "cell_id": "server-96-green-success",
-      "icon_id": "server",
-      "size": 96,
-      "context": "green",
-      "state": "success"
-    },
-    {
-      "ordinal": 264,
-      "cell_id": "agent-48-green-warning",
-      "icon_id": "agent",
-      "size": 48,
-      "context": "green",
-      "state": "warning"
-    },
-    {
-      "ordinal": 265,
-      "cell_id": "agent-64-green-warning",
-      "icon_id": "agent",
-      "size": 64,
-      "context": "green",
-      "state": "warning"
-    },
-    {
-      "ordinal": 266,
-      "cell_id": "agent-96-green-warning",
-      "icon_id": "agent",
-      "size": 96,
-      "context": "green",
-      "state": "warning"
-    },
-    {
-      "ordinal": 267,
-      "cell_id": "database-48-green-warning",
-      "icon_id": "database",
-      "size": 48,
-      "context": "green",
-      "state": "warning"
-    },
-    {
-      "ordinal": 268,
-      "cell_id": "database-64-green-warning",
-      "icon_id": "database",
-      "size": 64,
-      "context": "green",
-      "state": "warning"
-    },
-    {
-      "ordinal": 269,
-      "cell_id": "database-96-green-warning",
-      "icon_id": "database",
-      "size": 96,
-      "context": "green",
-      "state": "warning"
-    },
-    {
-      "ordinal": 270,
-      "cell_id": "api-48-green-warning",
-      "icon_id": "api",
-      "size": 48,
-      "context": "green",
-      "state": "warning"
-    },
-    {
-      "ordinal": 271,
-      "cell_id": "api-64-green-warning",
-      "icon_id": "api",
-      "size": 64,
-      "context": "green",
-      "state": "warning"
-    },
-    {
-      "ordinal": 272,
-      "cell_id": "api-96-green-warning",
-      "icon_id": "api",
-      "size": 96,
-      "context": "green",
-      "state": "warning"
-    },
-    {
-      "ordinal": 273,
-      "cell_id": "server-48-green-warning",
-      "icon_id": "server",
-      "size": 48,
-      "context": "green",
-      "state": "warning"
-    },
-    {
-      "ordinal": 274,
-      "cell_id": "server-64-green-warning",
-      "icon_id": "server",
-      "size": 64,
-      "context": "green",
-      "state": "warning"
-    },
-    {
-      "ordinal": 275,
-      "cell_id": "server-96-green-warning",
-      "icon_id": "server",
-      "size": 96,
-      "context": "green",
-      "state": "warning"
-    },
-    {
-      "ordinal": 276,
-      "cell_id": "agent-48-green-error",
-      "icon_id": "agent",
-      "size": 48,
-      "context": "green",
-      "state": "error"
-    },
-    {
-      "ordinal": 277,
-      "cell_id": "agent-64-green-error",
-      "icon_id": "agent",
-      "size": 64,
-      "context": "green",
-      "state": "error"
-    },
-    {
-      "ordinal": 278,
-      "cell_id": "agent-96-green-error",
-      "icon_id": "agent",
-      "size": 96,
-      "context": "green",
-      "state": "error"
-    },
-    {
-      "ordinal": 279,
-      "cell_id": "database-48-green-error",
-      "icon_id": "database",
-      "size": 48,
-      "context": "green",
-      "state": "error"
-    },
-    {
-      "ordinal": 280,
-      "cell_id": "database-64-green-error",
-      "icon_id": "database",
-      "size": 64,
-      "context": "green",
-      "state": "error"
-    },
-    {
-      "ordinal": 281,
-      "cell_id": "database-96-green-error",
-      "icon_id": "database",
-      "size": 96,
-      "context": "green",
-      "state": "error"
-    },
-    {
-      "ordinal": 282,
-      "cell_id": "api-48-green-error",
-      "icon_id": "api",
-      "size": 48,
-      "context": "green",
-      "state": "error"
-    },
-    {
-      "ordinal": 283,
-      "cell_id": "api-64-green-error",
-      "icon_id": "api",
-      "size": 64,
-      "context": "green",
-      "state": "error"
-    },
-    {
-      "ordinal": 284,
-      "cell_id": "api-96-green-error",
-      "icon_id": "api",
-      "size": 96,
-      "context": "green",
-      "state": "error"
-    },
-    {
-      "ordinal": 285,
-      "cell_id": "server-48-green-error",
-      "icon_id": "server",
-      "size": 48,
-      "context": "green",
-      "state": "error"
-    },
-    {
-      "ordinal": 286,
-      "cell_id": "server-64-green-error",
-      "icon_id": "server",
-      "size": 64,
-      "context": "green",
-      "state": "error"
-    },
-    {
-      "ordinal": 287,
-      "cell_id": "server-96-green-error",
-      "icon_id": "server",
-      "size": 96,
-      "context": "green",
-      "state": "error"
+      "pose": "authored-rest"
     }
   ]
 }

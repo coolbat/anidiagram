@@ -49,6 +49,7 @@ TOKEN_VALUES = {
 
 CANONICAL_BENCHMARK_PARTS = {
     "agent": (
+        "body",
         "shell",
         "face-screen",
         "eye-left",
@@ -59,6 +60,7 @@ CANONICAL_BENCHMARK_PARTS = {
         "indicator",
     ),
     "database": (
+        "body",
         "shell",
         "top-ring",
         "layer-top",
@@ -68,6 +70,7 @@ CANONICAL_BENCHMARK_PARTS = {
         "indicator",
     ),
     "api": (
+        "body",
         "shell",
         "header",
         "input-interface",
@@ -76,6 +79,7 @@ CANONICAL_BENCHMARK_PARTS = {
         "indicator-group",
     ),
     "server": (
+        "body",
         "shell",
         "tray-top",
         "tray-bottom",
@@ -86,8 +90,6 @@ CANONICAL_BENCHMARK_PARTS = {
         "base",
     ),
 }
-
-CANONICAL_STATES = ("idle", "active", "processing", "success", "warning", "error")
 
 
 def run_part_checker(*arguments):
@@ -160,7 +162,7 @@ def synthetic_agent_svg():
     return (
         '<svg xmlns="{0}" viewBox="0 0 96 96" role="img" '
         'focusable="false" aria-label="Synthetic agent icon" data-icon="agent">\n'
-        "{1}\n</svg>\n"
+        '  <g data-part="body">\n{1}\n  </g>\n</svg>\n'
     ).format(SVG_NAMESPACE, "\n".join(children))
 
 
@@ -319,6 +321,7 @@ class DiagramCoreAdapterTest(unittest.TestCase):
         loaded = load_asset("agent", {"visual-review"}, self.bundle.root)
         self.assertEqual(
             (
+                "body",
                 "shell",
                 "face-screen",
                 "eye-left",
@@ -337,7 +340,6 @@ class DiagramCoreAdapterTest(unittest.TestCase):
         markup = render_preview_icon(
             "agent",
             "数据库.1",
-            state="processing",
             size=64,
             x=12.5,
             y=-0.0,
@@ -347,7 +349,6 @@ class DiagramCoreAdapterTest(unittest.TestCase):
         second_markup = render_preview_icon(
             "agent",
             "数据库.1",
-            state="processing",
             size=64,
             x=12.5,
             y=-0.0,
@@ -362,9 +363,9 @@ class DiagramCoreAdapterTest(unittest.TestCase):
         self.assertFalse(any(local_name(element.tag) == "svg" for element in root.iter()))
         self.assertEqual(part_dom_id("数据库.1", "agent", "root"), root.attrib["id"])
         self.assertEqual("agent", root.attrib["data-icon"])
-        self.assertEqual("processing", root.attrib["data-icon-state"])
+        self.assertNotIn("data-icon-state", root.attrib)
         self.assertEqual("diagram-core-v1", root.attrib["data-icon-source"])
-        self.assertEqual("1", root.attrib["data-asset-revision"])
+        self.assertEqual("2", root.attrib["data-asset-revision"])
         self.assertEqual("true", root.attrib["aria-hidden"])
         self.assertEqual(
             "translate(12.5 0) scale(0.666666666666667)",
@@ -386,7 +387,7 @@ class DiagramCoreAdapterTest(unittest.TestCase):
             for element in root.iter()
             if "data-part" in element.attrib
         }
-        self.assertEqual(8, len(parts))
+        self.assertEqual(9, len(parts))
         for part_name, identifier in parts.items():
             self.assertEqual(
                 part_dom_id("数据库.1", "agent", part_name),
@@ -395,7 +396,7 @@ class DiagramCoreAdapterTest(unittest.TestCase):
         identifiers = [
             element.attrib["id"] for element in root.iter() if "id" in element.attrib
         ]
-        self.assertEqual(9, len(identifiers))
+        self.assertEqual(10, len(identifiers))
         self.assertEqual(len(identifiers), len(set(identifiers)))
         self.assertTrue(all(identifier.count("__") == 2 for identifier in identifiers))
 
@@ -403,13 +404,11 @@ class DiagramCoreAdapterTest(unittest.TestCase):
         first_markup = render_preview_icon(
             "agent",
             "agent.left",
-            state="idle",
             asset_root=self.bundle.root,
         )
         second_markup = render_preview_icon(
             "agent",
             "agent-left",
-            state="success",
             asset_root=self.bundle.root,
         )
         document = parse_svg_fragment(first_markup + second_markup)
@@ -424,7 +423,7 @@ class DiagramCoreAdapterTest(unittest.TestCase):
         self.assertTrue(id_sets[1])
         self.assertTrue(id_sets[0].isdisjoint(id_sets[1]))
         all_ids = id_sets[0] | id_sets[1]
-        self.assertEqual(18, len(all_ids))
+        self.assertEqual(20, len(all_ids))
         self.assertTrue(all(identifier.count("__") == 2 for identifier in all_ids))
         for root, instance_id in zip(roots, ("agent.left", "agent-left")):
             for element in root.iter():
@@ -450,8 +449,8 @@ class DiagramCoreAdapterTest(unittest.TestCase):
         with self.assertRaises(AssetValidationError):
             render_approved_icon("agent", "scene", asset_root=self.bundle.root)
 
-    def test_state_identity_numbers_and_size_fail_closed(self):
-        invalid_states = (None, "", "Processing", "not-supported", "idle\n")
+    def test_explicit_state_identity_numbers_and_size_fail_closed(self):
+        invalid_states = ("idle", "", "Processing", "not-supported", "idle\n")
         for state in invalid_states:
             with self.subTest(state=repr(state)):
                 with self.assertRaises(ValueError):
@@ -527,49 +526,41 @@ class DiagramCoreAdapterTest(unittest.TestCase):
                         asset_root=self.bundle.root,
                     )
 
-    def test_canonical_benchmarks_render_each_static_state_through_preview_adapter(self):
+    def test_canonical_benchmarks_render_authored_rest_pose_through_preview_adapter(self):
         asset_root = ROOT / "assets" / "diagram-core"
         for icon_id, expected_parts in CANONICAL_BENCHMARK_PARTS.items():
-            for state in CANONICAL_STATES:
-                with self.subTest(icon_id=icon_id, state=state):
-                    instance_id = "canonical-{0}-{1}".format(icon_id, state)
-                    markup = render_preview_icon(
+            with self.subTest(icon_id=icon_id):
+                instance_id = "canonical-{0}".format(icon_id)
+                markup = render_preview_icon(
+                    icon_id,
+                    instance_id,
+                    size=48,
+                    asset_root=asset_root,
+                )
+                self.assertEqual(
+                    markup,
+                    render_preview_icon(
                         icon_id,
                         instance_id,
-                        state=state,
                         size=48,
                         asset_root=asset_root,
-                    )
-                    self.assertEqual(
-                        markup,
-                        render_preview_icon(
-                            icon_id,
-                            instance_id,
-                            state=state,
-                            size=48,
-                            asset_root=asset_root,
-                        ),
-                    )
-                    root = parse_single_root(markup)
-                    self.assertEqual(icon_id, root.attrib["data-icon"])
-                    self.assertEqual(state, root.attrib["data-icon-state"])
-                    self.assertEqual("diagram-core-v1", root.attrib["data-icon-source"])
-                    self.assertEqual(
-                        expected_parts,
-                        tuple(
-                            element.attrib["data-part"]
-                            for element in root.iter()
-                            if "data-part" in element.attrib
-                        ),
-                    )
-                    self.assertEqual(
-                        set(CANONICAL_STATES),
-                        {
-                            element.attrib["data-state-mark"]
-                            for element in root.iter()
-                            if "data-state-mark" in element.attrib
-                        },
-                    )
+                    ),
+                )
+                root = parse_single_root(markup)
+                self.assertEqual(icon_id, root.attrib["data-icon"])
+                self.assertNotIn("data-icon-state", root.attrib)
+                self.assertEqual("diagram-core-v1", root.attrib["data-icon-source"])
+                self.assertEqual(
+                    expected_parts,
+                    tuple(
+                        element.attrib["data-part"]
+                        for element in root.iter()
+                        if "data-part" in element.attrib
+                    ),
+                )
+                self.assertFalse(
+                    any("data-state-mark" in element.attrib for element in root.iter())
+                )
 
     def test_new_canonical_benchmarks_have_disjoint_repeated_instance_ids(self):
         asset_root = ROOT / "assets" / "diagram-core"
@@ -580,13 +571,11 @@ class DiagramCoreAdapterTest(unittest.TestCase):
                 render_preview_icon(
                     icon_id,
                     first_instance,
-                    state="idle",
                     asset_root=asset_root,
                 )
                 + render_preview_icon(
                     icon_id,
                     second_instance,
-                    state="error",
                     asset_root=asset_root,
                 )
             )

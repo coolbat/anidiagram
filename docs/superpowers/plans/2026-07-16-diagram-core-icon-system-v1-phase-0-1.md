@@ -1,5 +1,12 @@
 # Diagram Core Icon System v1 Phase 0–1 Implementation Plan
 
+> **2026-07-17 scope amendment:** This plan is historical through Checkpoint A.
+> Its six-state static-mark requirement, 72/288-cell matrices, and prohibition on
+> all Phase 1 motion are superseded by
+> `2026-07-17-diagram-core-v1-showcase-motion-revision.md`. Approved Agent
+> silhouette, ear caps, family weight, source-of-truth, compatibility, and
+> fail-closed constraints remain in force.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Freeze the Diagram Core v1 asset contract and ship four manually approved, static, theme-aware benchmark icons—agent, database, api, and server—without changing AniDiagram’s default icon system or starting Phase 2 motion work.

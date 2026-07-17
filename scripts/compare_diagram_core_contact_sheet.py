@@ -38,9 +38,9 @@ SOURCE_ASSET_PATHS = tuple(
 )
 VIEWPORT = {"width": 1280, "height": 900, "device_scale_factor": 1}
 LOCATOR_SELECTOR = "#diagram-core-regression-grid"
-EXPECTED_CELLS = 288
+EXPECTED_CELLS = 48
 EXPECTED_WIDTH = 1248
-EXPECTED_HEIGHT = 2496
+EXPECTED_HEIGHT = 416
 
 
 class VisualComparisonError(ValueError):

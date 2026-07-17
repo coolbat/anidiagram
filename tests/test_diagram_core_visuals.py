@@ -34,9 +34,8 @@ TOKENS_PATH = ROOT / "assets" / "diagram-core" / "tokens.css"
 ICONS = ("agent", "database", "api", "server")
 SIZES = (48, 64, 96)
 CONTEXTS = ("blue", "dark", "warm", "green")
-STATES = ("idle", "active", "processing", "success", "warning", "error")
 ASSET_LOCAL_TOKENS = {"--icon-surface-contrast"}
-CAPTURE_SIZE = (1248, 2496)
+CAPTURE_SIZE = (1248, 416)
 FORBIDDEN_SVG_TAGS = {
     "animate",
     "animateMotion",
@@ -203,8 +202,8 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
         result = self.generator_command(output, html_output)
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertEqual(
-            "icons=1 cells=72 unique=72 sizes=48,64,96 "
-            "contexts=blue,dark,warm,green states=6\nOK\n",
+            "icons=1 cells=12 unique=12 sizes=48,64,96 "
+            "contexts=blue,dark,warm,green pose=authored-rest\nOK\n",
             result.stdout,
         )
         self.assertTrue(output.is_file())
@@ -260,8 +259,8 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
         )
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertEqual(
-            "icons=4 cells=288 unique=288 sizes=48,64,96 "
-            "contexts=blue,dark,warm,green states=6\nOK\n",
+            "icons=4 cells=48 unique=48 sizes=48,64,96 "
+            "contexts=blue,dark,warm,green pose=authored-rest\nOK\n",
             result.stdout,
         )
         for path in (output, html_output, recognition_output, cell_index):
@@ -269,27 +268,26 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             self.assertEqual(0o644, path.stat().st_mode & 0o777)
         return output, html_output, recognition_output, cell_index
 
-    def test_benchmark_is_exact_ordered_288_cell_product_and_index_matches_dom(self):
+    def test_benchmark_is_exact_ordered_48_cell_product_and_index_matches_dom(self):
         expected = [
-            (icon_id, size, context, state)
-            for context, state, icon_id, size in itertools.product(
+            (icon_id, size, context)
+            for context, icon_id, size in itertools.product(
                 CONTEXTS,
-                STATES,
                 ICONS,
                 SIZES,
             )
         ]
-        self.assertEqual(288, len(expected))
-        self.assertEqual(288, len(set(expected)))
+        self.assertEqual(48, len(expected))
+        self.assertEqual(48, len(set(expected)))
         with tempfile.TemporaryDirectory() as temp_dir:
             output, html_output, _, cell_index = self.generate_benchmark(temp_dir)
             root = ElementTree.parse(output).getroot()
             self.assertEqual("diagram-core-regression-grid", root.attrib.get("id"))
             self.assertEqual("12", root.attrib.get("data-grid-columns"))
-            self.assertEqual("24", root.attrib.get("data-grid-rows"))
-            self.assertEqual("288", root.attrib.get("data-cell-count"))
+            self.assertEqual("4", root.attrib.get("data-grid-rows"))
+            self.assertEqual("48", root.attrib.get("data-cell-count"))
             self.assertEqual("1248", root.attrib.get("width"))
-            self.assertEqual("2496", root.attrib.get("height"))
+            self.assertEqual("416", root.attrib.get("height"))
             cells = [
                 element
                 for element in root.iter()
@@ -309,17 +307,16 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                     cell.attrib["data-icon-id"],
                     int(cell.attrib["data-size"]),
                     cell.attrib["data-context"],
-                    cell.attrib["data-state"],
                 )
                 for cell in cells
             ]
             self.assertEqual(expected, actual)
             cell_ids = [cell.attrib["data-cell-id"] for cell in cells]
-            self.assertEqual(288, len(set(cell_ids)))
+            self.assertEqual(48, len(set(cell_ids)))
 
             index = json.loads(cell_index.read_text(encoding="utf-8"))
             self.assertEqual(1, index["version"])
-            self.assertEqual({"columns": 12, "rows": 24, "cells": 288}, index["grid"])
+            self.assertEqual({"columns": 12, "rows": 4, "cells": 48}, index["grid"])
             self.assertEqual(
                 [
                     {
@@ -328,9 +325,9 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                         "icon_id": icon_id,
                         "size": size,
                         "context": context,
-                        "state": state,
+                        "pose": "authored-rest",
                     }
-                    for ordinal, (icon_id, size, context, state) in enumerate(expected)
+                    for ordinal, (icon_id, size, context) in enumerate(expected)
                 ],
                 index["cells"],
             )
@@ -364,7 +361,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             }
             self.assertEqual({"columns", "rows"}, legends)
             visible_text = " ".join(audit.text).lower()
-            for label in ICONS + CONTEXTS + STATES:
+            for label in ICONS + CONTEXTS:
                 self.assertIn(label, visible_text)
             for size in SIZES:
                 self.assertIn(str(size) + " px", visible_text)
@@ -401,7 +398,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                 self.assertNotRegex(lowered, r"\b(?:animation|transition)\s*:")
                 self.assertNotRegex(lowered, r"\bon[a-z]+\s*=")
 
-    def test_recognition_surfaces_keep_four_silhouettes_and_six_state_geometries(self):
+    def test_recognition_surfaces_keep_four_authored_rest_silhouettes(self):
         modes = ("label-hidden", "accent-off", "grayscale", "node-context")
         with tempfile.TemporaryDirectory() as temp_dir:
             _, _, recognition_output, _ = self.generate_benchmark(temp_dir)
@@ -409,22 +406,21 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             audit = StaticGridHTMLAudit()
             audit.feed(source)
             self.assertEqual([], audit.review_region_text)
-            self.assertEqual(96, len(audit.recognition_cells))
+            self.assertEqual(16, len(audit.recognition_cells))
             for mode in modes:
                 cells = [
                     cell
                     for cell in audit.recognition_cells
                     if cell["data-recognition-mode"] == mode
                 ]
-                self.assertEqual(24, len(cells), mode)
-                self.assertEqual(
-                    set(itertools.product(ICONS, STATES)),
-                    {
-                        (cell["data-icon-id"], cell["data-state"])
-                        for cell in cells
-                    },
-                )
+                self.assertEqual(4, len(cells), mode)
+                self.assertEqual(set(ICONS), {cell["data-icon-id"] for cell in cells})
                 self.assertEqual({"48"}, {cell["data-size"] for cell in cells})
+                self.assertEqual(
+                    {"authored-rest"},
+                    {cell["data-pose"] for cell in cells},
+                )
+                self.assertTrue(all("data-state" not in cell for cell in cells))
                 self.assertTrue(all(cell.get("aria-label", "").strip() for cell in cells))
 
             ids = [
@@ -435,7 +431,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             self.assertEqual(len(ids), len(set(ids)))
             self.assertNotRegex(source.lower(), r"\bfilter\s*:")
 
-    def test_each_icon_has_six_distinct_rendered_state_geometry_signatures(self):
+    def test_static_benchmark_defers_semantic_state_geometry(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             output, _, _, _ = self.generate_benchmark(temp_dir)
             root = ElementTree.parse(output).getroot()
@@ -446,28 +442,19 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                 and element.attrib.get("data-size") == "48"
                 and element.attrib.get("data-context") == "blue"
             ]
-            for icon_id in ICONS:
-                signatures = {}
-                for state in STATES:
-                    cell = next(
-                        cell
-                        for cell in cells
-                        if cell.attrib["data-icon-id"] == icon_id
-                        and cell.attrib["data-state"] == state
-                    )
-                    wrapper = next(
-                        element
-                        for element in cell.iter()
-                        if element.attrib.get("data-icon-source") == "diagram-core-v1"
-                    )
-                    state_marks = [
-                        element
-                        for element in wrapper.iter()
-                        if element.attrib.get("data-state-mark") == state
-                    ]
-                    self.assertEqual(1, len(state_marks), (icon_id, state))
-                    signatures[state] = geometry_signature(copy.deepcopy(state_marks[0]))
-                self.assertEqual(6, len(set(signatures.values())), icon_id)
+            self.assertEqual(set(ICONS), {cell.attrib["data-icon-id"] for cell in cells})
+            for cell in cells:
+                self.assertEqual("authored-rest", cell.attrib["data-pose"])
+                self.assertNotIn("data-state", cell.attrib)
+                wrapper = next(
+                    element
+                    for element in cell.iter()
+                    if element.attrib.get("data-icon-source") == "diagram-core-v1"
+                )
+                self.assertNotIn("data-icon-state", wrapper.attrib)
+                self.assertFalse(
+                    any("data-state-mark" in element.attrib for element in wrapper.iter())
+                )
 
     def test_contact_sheet_has_exact_unique_matrix_and_real_context_tokens(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -495,24 +482,23 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                 for element in root.iter()
                 if element.attrib.get("data-cell-kind") == "main"
             ]
-            self.assertEqual(72, len(cells))
+            self.assertEqual(12, len(cells))
             cell_ids = [cell.attrib["data-cell-id"] for cell in cells]
-            self.assertEqual(72, len(set(cell_ids)))
+            self.assertEqual(12, len(set(cell_ids)))
             self.assertEqual(set(SIZES), {int(cell.attrib["data-size"]) for cell in cells})
             self.assertEqual(set(CONTEXTS), {cell.attrib["data-context"] for cell in cells})
-            self.assertEqual(set(STATES), {cell.attrib["data-state"] for cell in cells})
+            self.assertEqual({"authored-rest"}, {cell.attrib["data-pose"] for cell in cells})
+            self.assertTrue(all("data-state" not in cell.attrib for cell in cells))
             self.assertEqual(
                 {
-                    (size, context, state)
+                    (size, context)
                     for size in SIZES
                     for context in CONTEXTS
-                    for state in STATES
                 },
                 {
                     (
                         int(cell.attrib["data-size"]),
                         cell.attrib["data-context"],
-                        cell.attrib["data-state"],
                     )
                     for cell in cells
                 },
@@ -522,18 +508,8 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                 for element in root.iter()
                 if local_name(element.tag) == "style"
             )
-            self.assertEqual(
-                "none",
-                css_declarations(style_text, "[data-state-mark]")["display"],
-            )
-            for state in STATES:
-                selector = '[data-icon-state="{0}"] [data-state-mark="{0}"]'.format(
-                    state
-                )
-                self.assertEqual(
-                    "inline",
-                    css_declarations(style_text, selector)["display"],
-                )
+            self.assertNotIn("data-state-mark", style_text)
+            self.assertNotIn("data-icon-state", style_text)
 
             token_source = TOKENS_PATH.read_text(encoding="utf-8")
             defaults = css_declarations(token_source, ":root")
@@ -565,7 +541,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                     self.assertEqual(1, len(wrappers))
                     wrapper = wrappers[0]
                     self.assertEqual("agent", wrapper.attrib["data-icon"])
-                    self.assertEqual(cell.attrib["data-state"], wrapper.attrib["data-icon-state"])
+                    self.assertNotIn("data-icon-state", wrapper.attrib)
                     self.assertEqual(
                         expected_local_tokens,
                         inline_declarations(cell.attrib.get("style", "")),
@@ -582,7 +558,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                     )
                     self.assertIn(cell.attrib["data-size"] + "px", label)
                     self.assertIn(context, label)
-                    self.assertIn(cell.attrib["data-state"], label)
+                    self.assertIn("rest", label)
 
             script_source = SCRIPT.read_text(encoding="utf-8")
             self.assertIn("render_preview_icon(", script_source)
@@ -615,9 +591,10 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                     for element in row.iter()
                     if element.attrib.get("data-cell-kind") == "recognition"
                 ]
-                self.assertEqual(set(STATES), {cell.attrib["data-state"] for cell in cells})
-                self.assertEqual(6, len(cells))
+                self.assertEqual(1, len(cells))
                 for cell in cells:
+                    self.assertEqual("authored-rest", cell.attrib["data-pose"])
+                    self.assertNotIn("data-state", cell.attrib)
                     label = " ".join(
                         element.text or ""
                         for element in cell.iter()
@@ -625,7 +602,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                     )
                     compact_mode = "off" if mode == "accent-off" else "gray"
                     self.assertEqual(
-                        "48px · {0} · {1}".format(compact_mode, cell.attrib["data-state"]),
+                        "48px · {0} · rest".format(compact_mode),
                         label,
                     )
                     wrappers = [
@@ -763,7 +740,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                 "face readability",
                 "accent-off recognition",
                 "four contexts",
-                "six state marks",
+                "state deferral",
             ):
                 self.assertIn(phrase, visible_text)
             lowered = source.lower()
@@ -1015,7 +992,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                     "width": image_size[0],
                     "height": image_size[1],
                 },
-                "cells": 288,
+                "cells": 48,
             },
             "capture": {
                 "timestamp_utc": "2026-07-16T00:00:00.000Z",
@@ -1204,7 +1181,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             "left: 0 !important",
             "data-cell-kind=\"regression\"",
             "1248",
-            "2496",
+            "416",
             "source_assets",
             "joint_sha256",
             "catalog.json",
@@ -1597,9 +1574,9 @@ if (Date.now() - sessionStarted > 300) {
             malicious_input.write_text(
                 "<!doctype html><style>"
                 '@import "data:text/css,body%7Bcolor%3Ared%7D";'
-                "#diagram-core-regression-grid{width:1248px;height:2496px}"
+                "#diagram-core-regression-grid{width:1248px;height:416px}"
                 "</style><div id=\"diagram-core-regression-grid\"></div>"
-                "<script>for(let i=0;i<288;i++){const c=document.createElement('i');"
+                "<script>for(let i=0;i<48;i++){const c=document.createElement('i');"
                 "c.dataset.cellKind='regression';document.querySelector("
                 "'#diagram-core-regression-grid').append(c)}</script>",
                 encoding="utf-8",
@@ -1698,7 +1675,7 @@ if (Date.now() - sessionStarted > 300) {
                 '</linearGradient><g id="local-shape">'
                 '<rect width="1" height="1" fill="url(#local-paint)"/>'
                 "</g></defs>"
-                '<use href="#local-shape" x="1247" y="2495"/>'
+                '<use href="#local-shape" x="1247" y="415"/>'
             )
             input_path.write_text(
                 source.replace("</svg>", probe + "</svg>", 1),
@@ -1710,7 +1687,7 @@ if (Date.now() - sessionStarted > 300) {
             result = self.capture_command(input_path, output, metadata)
 
             self.assertEqual(0, result.returncode, result.stdout + result.stderr)
-            self.assertIn("cells=288 dpr=1 requests=0 animations=0", result.stdout)
+            self.assertIn("cells=48 dpr=1 requests=0 animations=0", result.stdout)
             self.assertTrue(output.is_file())
             self.assertTrue(metadata.is_file())
 
@@ -1837,7 +1814,7 @@ if (Date.now() - sessionStarted > 300) {
         ).replace(
             '<svg xmlns="http://www.w3.org/2000/svg"',
             '<div id="diagram-core-regression-grid" '
-            'style="display:block;width:1248px;height:2496px;position:relative">'
+            'style="display:block;width:1248px;height:416px;position:relative">'
             '<svg xmlns="http://www.w3.org/2000/svg"',
             1,
         )
@@ -3138,16 +3115,16 @@ if (residue.length !== 0) throw new Error(`publish residue: ${residue.join(",")}
                 (("viewport", "width"), 1280.0),
                 (("viewport", "height"), True),
                 (("viewport", "device_scale_factor"), True),
-                (("locator", "cells"), 288.0),
+                (("locator", "cells"), 48.0),
                 (("locator", "bounding_box", "x"), False),
                 (("locator", "bounding_box", "y"), 0.0),
                 (("locator", "bounding_box", "width"), 1248.0),
-                (("locator", "bounding_box", "height"), 2496.0),
+                (("locator", "bounding_box", "height"), 416.0),
                 (("capture", "external_requests"), False),
                 (("capture", "animation_count"), 0.0),
                 (("capture", "transition_count"), False),
                 (("image", "width"), 1248.0),
-                (("image", "height"), 2496.0),
+                (("image", "height"), 416.0),
             )
             for keys, invalid_value in cases:
                 payload = copy.deepcopy(original)

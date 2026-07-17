@@ -5,6 +5,7 @@
 - Design decision: approved
 - Written-spec review: approved
 - Written-spec approved on: 2026-07-16
+- Scope amendment: 2026-07-17 showcase presentation revision approved by the user
 - Approved on: 2026-07-15
 - Public system name: `AniDiagram Diagram Core Icon System v1.0`
 - Canonical system id: `diagram-core-v1`
@@ -33,8 +34,10 @@ motion policy, export behavior, and runtime orchestration.
 
 1. **An icon identifies a node before it decorates it.** Its static silhouette
    must remain recognizable at 48, 64, and 96 px.
-2. **Motion explains change.** It must communicate a state transition or a
-   technical action; it must not exist only to keep the screen moving.
+2. **Motion explains change or deliberate presentation.** Semantic motion must
+   communicate a state transition or technical action. An explicit presentation
+   profile may use stronger motion to expose icon identity and movable parts,
+   but it must not masquerade as runtime state.
 3. **One semantic asset has one source of truth.** Python, browser runtime, and
    future React adapters must not maintain independent geometry.
 4. **A scene owns layout; an icon owns its internals.** Connection routing and
@@ -45,6 +48,8 @@ motion policy, export behavior, and runtime orchestration.
    scenes must keep rendering throughout the migration.
 7. **Public naming stays simple.** Draft labels and legacy implementation ids do
    not become user-facing product versions.
+8. **Presentation and runtime semantics stay separate.** `showcase` is a scene
+   presentation profile, never a seventh state or a fabricated action.
 
 ## Scope
 
@@ -56,6 +61,8 @@ motion policy, export behavior, and runtime orchestration.
 - Existing style-token integration.
 - Icon asset manifests and compilation into the existing scene Motion Manifest.
 - State, action, and performance semantics.
+- One first-release `showcase` presentation profile with four icon-specific
+  presentation performances.
 - Reduced-motion, static fallback, quality checks, and visual regression.
 - Compatibility aliases for existing icon-system ids during migration.
 
@@ -317,6 +324,18 @@ and injected effects without becoming visible connection anchors.
 
 Motion is divided into three layers.
 
+### Presentation profile
+
+The first release implements one presentation profile:
+
+```text
+showcase
+```
+
+It selects expressive, icon-specific motion for gallery, hero, single-icon, or
+scene-policy-selected nodes. It carries no operational meaning and must not be
+stored in `states` or `actions`.
+
 ### State
 
 A persistent condition:
@@ -324,6 +343,10 @@ A persistent condition:
 ```text
 idle active processing success warning error paused offline waiting
 ```
+
+These remain the future semantic vocabulary. Phase 1 benchmark manifests
+declare `states: []`; the first six are implemented only after Phase 2 defines
+the combined runtime-stage and execution-result flow.
 
 ### Action
 
@@ -348,13 +371,28 @@ api.process               -> api.request-response-v1
 server.process            -> server.compute-v1
 ```
 
-Every performance follows the same semantic lifecycle:
+Performance definitions declare `kind: semantic | presentation`.
+
+The first-release presentation performances are:
+
+```text
+showcase -> agent.showcase-loop-v1
+showcase -> database.showcase-loop-v1
+showcase -> api.showcase-loop-v1
+showcase -> server.showcase-loop-v1
+```
+
+Presentation performances declare `profile`, `rest_pose`, repeat, cancellation,
+and reduced-motion behavior. They do not fabricate `action`, `initial_state`, or
+`final_state` values.
+
+Every semantic performance follows this lifecycle:
 
 ```text
 prepare -> action -> confirm -> settle
 ```
 
-Every performance definition declares:
+Every semantic performance definition declares:
 
 ```text
 id
@@ -370,13 +408,19 @@ reduced_motion_behavior
 parameters
 ```
 
+A presentation performance instead declares `id`, `kind`, `profile`,
+`required_parts`, `optional_parts`, `rest_pose`, `duration`, `repeat_policy`,
+`cancel_behavior`, `reduced_motion_behavior`, and optional `parameters`.
+
 ### Motion rules
 
-- The icon shell and node layout remain stable.
+- Node layout and connection anchors remain stable. A presentation performance
+  may move or deform an internal body group within the authored safe zone.
 - A performance moves one to three meaningful parts whenever possible.
 - `idle` is a state, not a mandatory infinite animation.
 - Ambient repetition is enabled only by a scene motion profile such as
-  `runtime-loop`; it is not hard-coded inside the asset.
+  `showcase` or `runtime-loop`; it is not hard-coded inside the asset and must
+  include a visible rest interval.
 - Scene motion policy owns concurrency and focus. Icons do not independently
   decide to animate at the same time.
 - One-shot success, warning, and error feedback must settle into the declared
@@ -384,7 +428,19 @@ parameters
 - Cancellation restores declared rest transforms and opacities.
 - With `prefers-reduced-motion: reduce`, the browser creates no transform,
   particle, travelling-payload, or repeating icon timeline. State changes apply
-  immediately or through a restrained opacity/color transition.
+  immediately or through a restrained opacity/color transition; `showcase`
+  resolves directly to the authored rest pose.
+
+Showcase amplitude is deliberately stronger than later operational feedback:
+
+```text
+translation peak: 6-10 units on the 96-unit grid
+rotation peak: 8-14 degrees
+body scale peak: 0.88-1.16
+small-part blink/pulse peak: 0.12-1.45, only when identity and clipping stay intact
+active segment: 1600-2400 ms
+rest interval: 800-1400 ms
+```
 
 Recommended timing ranges:
 
@@ -408,20 +464,20 @@ instance selectors:
 {
   "id": "database",
   "system": "diagram-core-v1",
-  "asset_revision": 1,
+  "asset_revision": 2,
   "viewBox": "0 0 96 96",
   "category": "data-knowledge",
-  "semantic_kind": "storage",
+  "semantic_kind": "database",
   "structural_prototype": "stacked-storage",
-  "parts": ["shell", "core", "mechanism", "indicator"],
+  "parts": ["body", "shell", "top-ring", "layer-top", "layer-middle", "layer-bottom", "core", "indicator"],
   "attachments": {
     "receive": {"x": 48, "y": 8},
     "send": {"x": 88, "y": 48},
-    "status": {"x": 48, "y": 78}
+    "status": {"x": 48, "y": 76}
   },
-  "states": ["idle", "active", "processing", "success", "warning", "error"],
-  "actions": ["receive", "read", "write", "search", "index", "send"],
-  "status": "approved"
+  "states": [],
+  "actions": ["receive", "write", "index", "search", "send"],
+  "status": "visual-review"
 }
 ```
 
@@ -472,17 +528,31 @@ portable and unchanged.
 - Freeze the SVG and Icon Asset Manifest schemas.
 - Record legacy id behavior.
 
-### Phase 1 — Four static benchmark icons
+### Phase 1A — Four static benchmark icons
 
 - Implement `agent`, `database`, `api`, and `server` as canonical SVG assets.
 - Validate 48, 64, and 96 px in blue, dark, warm, and green contexts.
-- Approve static silhouette, visual weight, family consistency, and token
-  behavior before starting icon performances.
+- Approve authored-rest silhouette, visual weight, family consistency, and token
+  behavior without shipping semantic state marks.
 
-### Phase 2 — Four-icon motion proof
+### Phase 1B — Four-icon showcase presentation proof
+
+- Implement one `showcase` presentation profile through the existing GSAP
+  runtime and four icon-specific presentation performances.
+- Keep canonical SVG assets free of animation code and runtime-only effects.
+- Prove exaggerated but bounded internal motion, authored-rest restoration,
+  no-GSAP fallback, reduced motion, repeated-instance isolation, and a quiet
+  interval between loops.
+- Produce a four-icon live review and deterministic timeline/DOM evidence. The
+  storyboard is generated only after visual approval during baseline promotion.
+  This proof does not implement semantic states.
+
+### Phase 2 — Semantic lifecycle and four-icon motion proof
 
 - Compile asset manifests into the existing Scene Motion Manifest.
 - Implement state/action/performance separation.
+- Define the runtime-stage plus execution-result flow before implementing
+  `idle`, `active`, `processing`, `success`, `warning`, and `error` marks.
 - Prove instance-safe repeated icons, cancellation, reset, static fallback, and
   reduced motion.
 - Produce an Agent Runtime Flow proof using the four benchmark icons.
@@ -534,8 +604,9 @@ performance definitions.
   during the recognition review.
 - All icons remain readable with accent color removed.
 - Blue, dark, warm, and green contexts preserve silhouette and hierarchy.
-- Essential state indicators reach 3:1 contrast against adjacent colors.
-- A benchmark contact sheet is manually approved before motion work begins.
+- Essential icon boundaries reach 3:1 contrast against adjacent colors.
+- A 48-cell authored-rest contact sheet and the showcase live review are
+  manually approved before semantic-state work begins.
 
 ### SVG and asset quality
 
@@ -552,8 +623,14 @@ performance definitions.
 
 ### Motion and runtime
 
-- Every performance declares required parts, lifecycle, duration, final state,
-  cancellation, and reduced-motion behavior.
+- `showcase` is emitted as a presentation profile/performance, not a state.
+- Every showcase performance returns to the authored rest pose before its quiet
+  interval and after cancellation, restart, or mode switch.
+- Every peak stays within the review cell and leaves node geometry and
+  connection anchors unchanged.
+- A semantic performance declares required parts, lifecycle, duration, final
+  state, cancellation, and reduced-motion behavior. A presentation performance
+  declares profile and rest pose instead of fake state/action values.
 - Closing or cancelling a performance restores the authored rest state.
 - `prefers-reduced-motion: reduce` creates no GSAP icon timeline.
 - A repeated-icon test proves that two instances of the same icon animate only
@@ -564,20 +641,24 @@ performance definitions.
 
 ### Visual regression
 
-The four-icon benchmark matrix covers:
+The four-icon static benchmark matrix covers:
 
 ```text
 4 icons
 x 3 sizes
 x 4 validation contexts
-x 6 persistent states: idle / active / processing / success / warning / error
-= 288 static cells
+= 48 authored-rest static cells
 ```
 
-Cells may be combined into deterministic contact sheets. Browser, viewport,
-device scale factor, fonts, animation state, and screenshot timing are locked.
-Automated pixel comparison uses a maximum one-percent differing-pixel ratio,
-while every baseline update still requires human visual approval.
+The motion gate is separate. During visual review it uses four live icons plus
+deterministic timeline/DOM evidence. After visual approval, baseline promotion
+adds four icons x three sizes x light/dark x four fixed phases (`rest`,
+`anticipation`, `peak`, `settle`) = 96 storyboard cells. Static capture continues
+with JavaScript and animation disabled; motion capture uses a locally pinned GSAP
+build and exact timeline seeks. Browser, viewport, device scale factor, fonts,
+runtime digest, and screenshot timing are locked. Automated pixel comparison
+uses a maximum one-percent differing-pixel ratio, while every baseline update
+still requires human visual approval.
 
 ## Documentation ownership
 
@@ -600,6 +681,8 @@ while every baseline update still requires human visual approval.
 - Stable part identity uses `data-part`; scene ids are instance-scoped.
 - Layout owns connection anchors; manifests own only effect attachments.
 - State, action, and performance are separate concepts.
-- Static approval precedes motion implementation.
+- Presentation profile is separate from State, Action, and Performance kind.
+- Authored-rest approval precedes showcase motion; semantic-state approval waits
+  for the Phase 2 lifecycle flow.
 - The default changes after the 14-asset compatibility gate, not after all 56
   icons are complete.

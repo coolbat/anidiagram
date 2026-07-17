@@ -36,10 +36,6 @@ _EXCEPTION_FIELDS = {"metric", "reason", "reviewer", "approved_on"}
 _EXCEPTION_METRICS = frozenset(
     {"raw-size", "gzip-size", "paintable-elements", "non-scaling-stroke"}
 )
-_BENCHMARK_IDS = frozenset({"agent", "database", "api", "server"})
-_BENCHMARK_STATES = frozenset(
-    {"idle", "active", "processing", "success", "warning", "error"}
-)
 
 
 @dataclass(frozen=True)
@@ -325,9 +321,6 @@ def validate_manifest_dict(raw: Any) -> IconManifest:
     ):
         _issue(issues, "$.status", "expected an implemented catalog lifecycle status")
     exceptions = _exceptions(raw["exceptions"], issues) if "exceptions" in raw else ()
-
-    if icon_id in _BENCHMARK_IDS and frozenset(states) != _BENCHMARK_STATES:
-        _issue(issues, "$.states", "benchmark assets require all six static review states")
 
     if issues:
         raise ManifestValidationError(tuple(issues))

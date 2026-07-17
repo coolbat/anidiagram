@@ -969,7 +969,108 @@
     ];
   }
 
+  const SHOWCASE_TIME_SCALE = 0.6;
+
+  function showcaseTimeline(gsap, config) {
+    if (!config || !Number.isFinite(config.rest_at) || !Number.isFinite(config.repeat_delay)) return null;
+    const tl = gsap.timeline({
+      repeat: -1,
+      repeatDelay: config.repeat_delay * SHOWCASE_TIME_SCALE,
+    });
+    tl.__anidiagramPresentation = "showcase";
+    return tl;
+  }
+
+  function markShowcaseRest(timeline, config) {
+    timeline.__anidiagramRestAt = config.rest_at;
+    timeline.timeScale(SHOWCASE_TIME_SCALE);
+    return timeline;
+  }
+
+  function playAgentShowcase({ config, parts, gsap }) {
+    const required = ["body", "antenna", "eyeLeft", "eyeRight", "core"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const eyes = [parts.eyeLeft, parts.eyeRight];
+    const tl = showcaseTimeline(gsap, config);
+    if (!tl) return null;
+    tl.to(parts.body, { y: 5, scaleX: 1.08, scaleY: 0.9, duration: 0.18, ease: "power2.in" }, 0)
+      .to(parts.body, { y: -7, scaleX: 0.94, scaleY: 1.12, duration: 0.28, ease: "power2.out" }, 0.18)
+      .to(parts.body, { y: 0, scaleX: 1, scaleY: 1, duration: 0.34, ease: "bounce.out" }, 0.48)
+      .to(parts.antenna, { rotate: -12, duration: 0.16, ease: "power2.inOut" }, 0.06)
+      .to(parts.antenna, { rotate: 14, duration: 0.24, ease: "power2.out" }, 0.22)
+      .to(parts.antenna, { rotate: 0, duration: 0.32, ease: "power2.inOut" }, 0.52)
+      .to(eyes, { scaleY: 0.16, duration: 0.1, ease: "power2.in" }, 0.14)
+      .to(eyes, { scaleY: 1.16, duration: 0.16, ease: "power2.out" }, 0.24)
+      .to(eyes, { scaleY: 1, duration: 0.2, ease: "power2.out" }, 0.42)
+      .to(parts.core, { scale: 1.38, duration: 0.2, ease: "power2.out" }, 0.62)
+      .to(parts.core, { scale: 0.92, duration: 0.16, ease: "power2.inOut" }, 0.82)
+      .to(parts.core, { scale: 1, duration: 0.26, ease: "elastic.out(1, 0.35)" }, 0.98);
+    return markShowcaseRest(tl, config);
+  }
+
+  function playDatabaseShowcase({ config, parts, gsap }) {
+    const required = ["body", "topRing", "layerTop", "layerMiddle", "layerBottom", "core"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const layers = [parts.layerTop, parts.layerMiddle, parts.layerBottom];
+    const tl = showcaseTimeline(gsap, config);
+    if (!tl) return null;
+    tl.to(parts.topRing, { y: -8, scaleX: 1.13, scaleY: 0.88, duration: 0.26, ease: "power2.out" }, 0)
+      .to(parts.topRing, { y: 0, scaleX: 1, scaleY: 1, duration: 0.34, ease: "bounce.out" }, 0.26)
+      .to(layers, { x: (index) => (index % 2 === 0 ? 6 : -6), scaleX: 1.08, duration: 0.18, stagger: 0.06, ease: "power2.out" }, 0.28)
+      .to(layers, { x: 0, scaleX: 1, duration: 0.3, stagger: 0.05, ease: "elastic.out(1, 0.4)" }, 0.58)
+      .to(parts.core, { scale: 1.4, duration: 0.2, ease: "power2.out" }, 0.62)
+      .to(parts.core, { scale: 1, duration: 0.3, ease: "elastic.out(1, 0.35)" }, 0.82);
+    return markShowcaseRest(tl, config);
+  }
+
+  function playApiShowcase({ config, parts, gsap }) {
+    const required = ["body", "inputInterface", "outputInterface", "processor", "indicatorGroup"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const tl = showcaseTimeline(gsap, config);
+    if (!tl) return null;
+    tl.to(parts.body, { scaleX: 0.91, scaleY: 1.06, duration: 0.2, ease: "power2.in" }, 0)
+      .to(parts.body, { scaleX: 1.05, scaleY: 0.97, duration: 0.22, ease: "back.out(3.5)" }, 0.2)
+      .to(parts.body, { scaleX: 1, scaleY: 1, duration: 0.34, ease: "elastic.out(1, 0.4)" }, 0.46)
+      .to(parts.inputInterface, { x: 9, scale: 1.14, duration: 0.22, ease: "power2.in" }, 0.04)
+      .to(parts.outputInterface, { x: -9, scale: 1.14, duration: 0.22, ease: "power2.in" }, 0.04)
+      .to(parts.inputInterface, { x: -4, scale: 0.96, duration: 0.24, ease: "back.out(4)" }, 0.3)
+      .to(parts.outputInterface, { x: 4, scale: 0.96, duration: 0.24, ease: "back.out(4)" }, 0.3)
+      .to([parts.inputInterface, parts.outputInterface], { x: 0, scale: 1, duration: 0.3, ease: "elastic.out(1, 0.35)" }, 0.58)
+      .to(parts.processor, { rotate: -12, scale: 1.18, duration: 0.22, ease: "power2.out" }, 0.26)
+      .to(parts.processor, { rotate: 7, scale: 0.96, duration: 0.18, ease: "power2.inOut" }, 0.5)
+      .to(parts.processor, { rotate: 0, scale: 1, duration: 0.3, ease: "elastic.out(1, 0.35)" }, 0.68)
+      .to(parts.indicatorGroup, { y: -7, scale: 1.16, duration: 0.22, ease: "power2.out" }, 0.8)
+      .to(parts.indicatorGroup, { y: 0, scale: 1, duration: 0.34, ease: "bounce.out" }, 1.02);
+    return markShowcaseRest(tl, config);
+  }
+
+  function playServerShowcase({ config, parts, gsap }) {
+    const required = ["body", "trayTop", "trayBottom", "indicatorTop", "indicatorBottom", "ventTop", "ventBottom"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const tl = showcaseTimeline(gsap, config);
+    if (!tl) return null;
+    tl.to(parts.trayTop, { x: 6, rotate: 5, duration: 0.24, ease: "back.out(3)" }, 0)
+      .to(parts.trayBottom, { x: -6, rotate: -5, duration: 0.24, ease: "back.out(3)" }, 0.08)
+      .to([parts.trayTop, parts.trayBottom], { x: 0, rotate: 0, duration: 0.38, ease: "elastic.out(1, 0.38)" }, 0.34)
+      .to(parts.indicatorTop, { scale: 1.42, duration: 0.18, ease: "power2.out" }, 0.72)
+      .to(parts.indicatorTop, { scale: 1, duration: 0.24, ease: "power2.out" }, 0.9)
+      .to(parts.indicatorBottom, { scale: 1.34, duration: 0.18, ease: "power2.out" }, 0.8)
+      .to(parts.indicatorBottom, { scale: 1, duration: 0.26, ease: "power2.out" }, 0.98)
+      .to([parts.ventTop, parts.ventBottom], { scaleX: 0.62, duration: 0.12, stagger: 0.04, ease: "power2.in" }, 0.72)
+      .to([parts.ventTop, parts.ventBottom], { scaleX: 1.14, duration: 0.16, stagger: 0.04, ease: "back.out(3)" }, 0.88)
+      .to([parts.ventTop, parts.ventBottom], { scaleX: 1, duration: 0.24, stagger: 0.04, ease: "elastic.out(1, 0.4)" }, 1.08);
+    return markShowcaseRest(tl, config);
+  }
+
   const performances = {
+    "agent-showcase-loop-v1": playAgentShowcase,
+    "database-showcase-loop-v1": playDatabaseShowcase,
+    "api-showcase-loop-v1": playApiShowcase,
+    "server-showcase-loop-v1": playServerShowcase,
     "token-intent-v2": playTokenIntent,
     "tool-run-v2": playToolRun,
     "output-reveal-v2": playOutputReveal,
@@ -1080,6 +1181,9 @@
       if (tl.__anidiagramCharacter && Number.isFinite(tl.__anidiagramCharacter.restAt)) {
         tl.pause();
         tl.seek(tl.__anidiagramCharacter.restAt, false);
+      } else if (Number.isFinite(tl.__anidiagramRestAt)) {
+        tl.pause();
+        tl.seek(tl.__anidiagramRestAt, false);
       }
     });
   }

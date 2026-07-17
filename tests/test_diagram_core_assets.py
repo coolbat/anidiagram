@@ -101,12 +101,13 @@ def asset_tree_snapshot(asset_root):
 VALID_MANIFEST = {
     "id": "database",
     "system": "diagram-core-v1",
-    "asset_revision": 1,
+    "asset_revision": 2,
     "viewBox": "0 0 96 96",
     "category": "data-knowledge",
     "semantic_kind": "database",
     "structural_prototype": "stacked-storage",
     "parts": [
+        "body",
         "shell",
         "top-ring",
         "layer-top",
@@ -120,14 +121,7 @@ VALID_MANIFEST = {
         "send": {"x": 88, "y": 48},
         "status": {"x": 48, "y": 78},
     },
-    "states": [
-        "idle",
-        "active",
-        "processing",
-        "success",
-        "warning",
-        "error",
-    ],
+    "states": [],
     "actions": ["receive", "write", "index", "search", "send"],
     "status": "visual-review",
 }
@@ -172,16 +166,8 @@ ASSET_LOCAL_TOKEN_DEFAULTS = {
     "--icon-surface-contrast": "#14213d",
 }
 
-STATE_MARK_GEOMETRY = (
-    ("idle", "dot"),
-    ("active", "ring"),
-    ("processing", "split-arc"),
-    ("success", "check"),
-    ("warning", "triangle"),
-    ("error", "X"),
-)
-
 AGENT_PARTS = {
+    "body",
     "shell",
     "face-screen",
     "eye-left",
@@ -193,6 +179,7 @@ AGENT_PARTS = {
 }
 
 AGENT_PART_ORDER = (
+    "body",
     "shell",
     "face-screen",
     "eye-left",
@@ -203,18 +190,10 @@ AGENT_PART_ORDER = (
     "indicator",
 )
 
-AGENT_STATES = (
-    "idle",
-    "active",
-    "processing",
-    "success",
-    "warning",
-    "error",
-)
-
 EXPECTED_BENCHMARK_PART_ORDER = {
     "agent": AGENT_PART_ORDER,
     "database": (
+        "body",
         "shell",
         "top-ring",
         "layer-top",
@@ -224,6 +203,7 @@ EXPECTED_BENCHMARK_PART_ORDER = {
         "indicator",
     ),
     "api": (
+        "body",
         "shell",
         "header",
         "input-interface",
@@ -232,6 +212,7 @@ EXPECTED_BENCHMARK_PART_ORDER = {
         "indicator-group",
     ),
     "server": (
+        "body",
         "shell",
         "tray-top",
         "tray-bottom",
@@ -582,89 +563,6 @@ def agent_filled_area(element):
     raise AssertionError("visible Agent fills must use auditable primitive geometry")
 
 
-def agent_state_geometry_signature(mark):
-    signature = []
-    for element in mark.iter():
-        geometry = tuple(
-            sorted(
-                (name, value)
-                for name, value in element.attrib.items()
-                if name
-                not in {
-                    "data-state-mark",
-                    "display",
-                    "fill",
-                    "stroke",
-                    "data-stroke-role",
-                }
-            )
-        )
-        signature.append((local_name(element.tag), geometry))
-    return tuple(signature)
-
-
-def benchmark_state_mark_kind(mark):
-    paintables = [
-        element
-        for element in mark.iter()
-        if local_name(element.tag) in SVG_PAINTABLE_TAGS
-    ]
-    tags = tuple(local_name(element.tag) for element in paintables)
-    state = mark.attrib["data-state-mark"]
-    if state == "idle":
-        return "dot" if tags == ("circle",) and paintables[0].attrib.get("fill") != "none" else None
-    if state == "active":
-        return (
-            "ring"
-            if tags == ("circle",)
-            and paintables[0].attrib.get("fill") == "none"
-            and paintables[0].attrib.get("stroke", "none") != "none"
-            else None
-        )
-    if state == "processing":
-        commands = tuple(
-            command
-            for element in paintables
-            for command in re.findall(r"[A-Za-z]", element.attrib.get("d", ""))
-        )
-        return (
-            "split-arc"
-            if tags in {("path",), ("path", "path")}
-            and commands == ("M", "C", "M", "C")
-            and all(element.attrib.get("fill") == "none" for element in paintables)
-            else None
-        )
-    if state == "success":
-        commands = re.findall(r"[A-Za-z]", paintables[0].attrib.get("d", "")) if tags == ("path",) else ()
-        return "check" if tuple(commands) == ("M", "L", "L") else None
-    if state == "warning":
-        values = re.findall(
-            r"-?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)",
-            paintables[0].attrib.get("points", ""),
-        ) if tags == ("polygon",) else ()
-        return "triangle" if len(values) == 6 else None
-    if state == "error":
-        commands = re.findall(r"[A-Za-z]", paintables[0].attrib.get("d", "")) if tags == ("path",) else ()
-        return "X" if tuple(commands) == ("M", "L", "M", "L") else None
-    return None
-
-
-def benchmark_state_bounds(mark):
-    bounds = [
-        benchmark_geometry_bounds(element)
-        for element in mark.iter()
-        if local_name(element.tag) in SVG_PAINTABLE_TAGS
-    ]
-    if not bounds:
-        raise AssertionError("benchmark state marks must contain paintable geometry")
-    return (
-        min(bound[0] for bound in bounds),
-        min(bound[1] for bound in bounds),
-        max(bound[2] for bound in bounds),
-        max(bound[3] for bound in bounds),
-    )
-
-
 def benchmark_parent_map(root):
     return {
         child: parent
@@ -697,56 +595,13 @@ def benchmark_filled_area(element):
     return agent_filled_area(element)
 
 
-def agent_state_bounds(mark):
-    bounds = [
-        agent_geometry_bounds(element)
-        for element in mark.iter()
-        if local_name(element.tag) in SVG_PAINTABLE_TAGS
-    ]
-    if not bounds:
-        raise AssertionError("Agent state marks must contain paintable geometry")
-    return (
-        min(bound[0] for bound in bounds),
-        min(bound[1] for bound in bounds),
-        max(bound[2] for bound in bounds),
-        max(bound[3] for bound in bounds),
-    )
-
-
-def agent_radial_extent(element, center_x, center_y):
-    stroke = element.attrib.get("stroke", "none").strip().lower()
-    stroke_extent = (
-        0.0 if stroke == "none" else float(element.attrib["stroke-width"]) / 2.0
-    )
-    tag = local_name(element.tag)
-    if tag == "circle":
-        center_distance = math.hypot(
-            float(element.attrib["cx"]) - center_x,
-            float(element.attrib["cy"]) - center_y,
-        )
-        return center_distance + float(element.attrib["r"]) + stroke_extent
-    if tag in {"path", "polygon", "polyline"}:
-        attribute = "d" if tag == "path" else "points"
-        values = [
-            float(value)
-            for value in re.findall(
-                r"-?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)",
-                element.attrib[attribute],
-            )
-        ]
-        return max(
-            math.hypot(x - center_x, y - center_y)
-            for x, y in zip(values[0::2], values[1::2])
-        ) + stroke_extent
-    raise AssertionError("state clearance uses explicit circle/path/point geometry")
-
-
 def css_declarations(source, selector):
     match = re.search(re.escape(selector) + r"\s*\{([^{}]*)\}", source)
     if match is None:
         raise AssertionError("missing CSS declaration block: " + selector)
     declarations = {}
-    for statement in match.group(1).split(";"):
+    declaration_source = re.sub(r"/\*.*?\*/", "", match.group(1), flags=re.DOTALL)
+    for statement in declaration_source.split(";"):
         if ":" not in statement:
             continue
         name, value = statement.split(":", 1)
@@ -754,46 +609,19 @@ def css_declarations(source, selector):
     return declarations
 
 
-def state_scope_pairs(source):
-    scope_header = "@scope ([data-icon-state]) to ([data-icon-state])"
-    scope_start = source.find(scope_header)
-    if scope_start < 0:
-        raise AssertionError("state rules must stop at the next nested icon state")
-    block_start = source.find("{", scope_start + len(scope_header))
-    depth = 0
-    block_end = None
-    for index in range(block_start, len(source)):
-        if source[index] == "{":
-            depth += 1
-        elif source[index] == "}":
-            depth -= 1
-            if depth == 0:
-                block_end = index + 1
-                break
-    if block_start < 0 or block_end is None:
-        raise AssertionError("state scope must be a balanced CSS block")
-
-    selector_pattern = (
-        r':scope\[data-icon-state="([^"]+)"\]\s+'
-        r'\[data-state-mark="([^"]+)"\]'
-    )
-    scoped_pairs = re.findall(selector_pattern, source[block_start:block_end])
-    outside = source[:scope_start] + source[block_end:]
-    if re.search(selector_pattern.replace(":scope", "[^,{]*"), outside):
-        raise AssertionError("state reveal rules must not escape the nearest icon scope")
-    return scoped_pairs
-
-
 def valid_svg():
     part_shapes = "\n".join(
-        '  <g data-part="{0}"><circle cx="48" cy="48" r="4" '
+        '    <g data-part="{0}"><circle cx="48" cy="48" r="4" '
         'fill="var(--icon-surface-main, #fffaf2)" '
         'stroke="var(--icon-stroke, #14213d)"/></g>'.format(part)
         for part in VALID_MANIFEST["parts"]
+        if part != "body"
     )
     return """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"
  role="img" focusable="false" aria-label="Database icon" data-icon="database">
+  <g data-part="body">
 {0}
+  </g>
 </svg>
 """.format(part_shapes)
 
@@ -866,7 +694,7 @@ class DiagramCoreManifestTest(unittest.TestCase):
             ("boolean revision", lambda value: value.__setitem__("asset_revision", True), "$.asset_revision"),
             ("zero revision", lambda value: value.__setitem__("asset_revision", 0), "$.asset_revision"),
             ("viewBox", lambda value: value.__setitem__("viewBox", "0 0 48 48"), "$.viewBox"),
-            ("duplicate part", lambda value: value["parts"].__setitem__(1, "shell"), "$.parts[1]"),
+            ("duplicate part", lambda value: value["parts"].__setitem__(2, "shell"), "$.parts[2]"),
             ("invalid attachment name", lambda value: value["attachments"].__setitem__("#send", {"x": 1, "y": 1}), "$.attachments.#send"),
             ("boolean coordinate", lambda value: value["attachments"]["send"].__setitem__("x", True), "$.attachments.send.x"),
             ("nan coordinate", lambda value: value["attachments"]["send"].__setitem__("x", math.nan), "$.attachments.send.x"),
@@ -880,14 +708,15 @@ class DiagramCoreManifestTest(unittest.TestCase):
                     validate_manifest_dict(invalid)
                 self.assertIn(expected_path, {issue.path for issue in raised.exception.issues})
 
-    def test_manifest_requires_all_six_benchmark_review_states(self):
-        invalid = copy.deepcopy(VALID_MANIFEST)
-        invalid["states"].remove("warning")
+    def test_manifest_accepts_empty_states_and_rejects_duplicate_future_states(self):
+        manifest = validate_manifest_dict(VALID_MANIFEST)
+        self.assertEqual((), manifest.states)
 
+        invalid = copy.deepcopy(VALID_MANIFEST)
+        invalid["states"] = ["idle", "idle"]
         with self.assertRaises(ManifestValidationError) as raised:
             validate_manifest_dict(invalid)
-
-        self.assertEqual({"$.states"}, {issue.path for issue in raised.exception.issues})
+        self.assertIn("$.states[1]", {issue.path for issue in raised.exception.issues})
 
     def test_manifest_rejects_boolean_incomplete_and_duplicate_exceptions(self):
         complete = {
@@ -1025,7 +854,7 @@ class DiagramCoreAssetLoaderTest(unittest.TestCase):
             self.assertEqual(tuple(VALID_MANIFEST["parts"]), asset.public_parts)
             self.assertEqual(0, asset.metrics.forbidden_elements)
             self.assertEqual(7, asset.metrics.paintable_elements)
-            self.assertEqual(15, asset.metrics.total_dom_elements)
+            self.assertEqual(16, asset.metrics.total_dom_elements)
             self.assertEqual(len(source_bytes), asset.metrics.raw_size_bytes)
             self.assertEqual(
                 len(gzip.compress(source_bytes, compresslevel=9, mtime=0)),
@@ -1274,7 +1103,7 @@ class DiagramCoreAssetLoaderTest(unittest.TestCase):
                 valid_svg().replace("<g data-part", '<g id="author-id" data-part', 1),
                 "authored id",
             )
-            self.assertTrue(any(issue.path.endswith("/g[1]/@id") for issue in error.issues))
+            self.assertTrue(any(issue.path.endswith("/svg/g/@id") for issue in error.issues))
 
     def test_public_parts_reject_anonymous_duplicate_missing_and_extra_values(self):
         cases = (
@@ -1493,7 +1322,7 @@ class DiagramCoreAssetLoaderTest(unittest.TestCase):
                         load_asset("database", {"visual-review"}, bundle.root)
                     self.assertTrue(
                         any(
-                            issue.path.endswith("/svg/g[1]/circle/@fill")
+                            issue.path.endswith("/svg/g/g[1]/circle/@fill")
                             and token in issue.message
                             and "not declared in tokens.css" in issue.message
                             for issue in raised.exception.issues
@@ -1573,7 +1402,7 @@ class DiagramCoreAssetLoaderTest(unittest.TestCase):
             bundle.icon_path.write_text(nonpaintable, encoding="utf-8")
             asset = load_asset("database", {"visual-review"}, bundle.root)
             self.assertEqual(7, asset.metrics.paintable_elements)
-            self.assertEqual(45, asset.metrics.total_dom_elements)
+            self.assertEqual(46, asset.metrics.total_dom_elements)
 
     def test_raw_and_gzip_budgets_are_measured_separately_and_waivable(self):
         cases = []
@@ -1616,10 +1445,10 @@ class DiagramCoreAssetLoaderTest(unittest.TestCase):
             ("semantic_kind", "semantic_kind", lambda value: "storage"),
             ("structural_prototype", "structural_prototype", lambda value: "storage-stack"),
             ("parts", "parts", lambda value: value[:-1] + ["status-mark"]),
-            ("supported_states", "states", lambda value: value[1:] + value[:1]),
+            ("supported_states", "states", lambda value: ["idle"]),
             ("supported_actions", "actions", lambda value: value[1:] + value[:1]),
             ("status", "status", lambda value: "approved"),
-            ("asset_revision", "asset_revision", lambda value: 2),
+            ("asset_revision", "asset_revision", lambda value: 3),
         )
         with tempfile.TemporaryDirectory() as temp_dir:
             bundle = TemporaryAssetBundle(temp_dir).write()
@@ -1694,7 +1523,7 @@ class CanonicalBenchmarkContractTest(unittest.TestCase):
     def assert_common_visual_contract(self, icon_id):
         asset = self.load_benchmark(icon_id)
         self.assertEqual("visual-review", asset.manifest.status)
-        self.assertEqual(AGENT_STATES, asset.manifest.states)
+        self.assertEqual((), asset.manifest.states)
         self.assertEqual((), asset.manifest.exceptions)
         self.assertEqual(0, asset.metrics.forbidden_elements)
         self.assertLessEqual(asset.metrics.paintable_elements, 24)
@@ -1707,7 +1536,7 @@ class CanonicalBenchmarkContractTest(unittest.TestCase):
         self.assertEqual("false", root.attrib.get("focusable"))
         self.assertTrue(root.attrib.get("aria-label", "").strip())
         self.assertEqual(icon_id, root.attrib.get("data-icon"))
-        self.assertEqual("idle", root.attrib.get("data-icon-state"))
+        self.assertNotIn("data-icon-state", root.attrib)
         self.assertFalse(any("id" in element.attrib for element in root.iter()))
         self.assertFalse(any("style" in element.attrib for element in root.iter()))
         self.assertFalse(any("transform" in element.attrib for element in root.iter()))
@@ -1727,24 +1556,7 @@ class CanonicalBenchmarkContractTest(unittest.TestCase):
             for element in root.iter()
             if "data-state-mark" in element.attrib
         ]
-        self.assertEqual(AGENT_STATES, tuple(mark.attrib["data-state-mark"] for mark in marks))
-        self.assertEqual(6, len(marks))
-        self.assertTrue(set(marks).issubset(set(indicator.iter())))
-        signatures = tuple(agent_state_geometry_signature(mark) for mark in marks)
-        self.assertEqual(6, len(set(signatures)))
-        self.assertEqual(
-            dict(STATE_MARK_GEOMETRY),
-            {
-                mark.attrib["data-state-mark"]: benchmark_state_mark_kind(mark)
-                for mark in marks
-            },
-        )
-        for mark in marks:
-            state = mark.attrib["data-state-mark"]
-            self.assertEqual(
-                "inline" if state == "idle" else "none",
-                mark.attrib.get("display"),
-            )
+        self.assertEqual([], marks)
 
         contrast_part = parts[EXPECTED_BENCHMARK_CONTRAST_PARTS[icon_id]]
         contrast_surfaces = [
@@ -1755,31 +1567,13 @@ class CanonicalBenchmarkContractTest(unittest.TestCase):
             == "var(--icon-surface-contrast, #14213d)"
         ]
         self.assertEqual(1, len(contrast_surfaces))
-        surface_bounds = benchmark_geometry_bounds(contrast_surfaces[0])
-        for mark in marks:
-            mark_bounds = benchmark_state_bounds(mark)
-            with self.subTest(icon_id=icon_id, state=mark.attrib["data-state-mark"]):
-                self.assertGreaterEqual(mark_bounds[0], surface_bounds[0])
-                self.assertGreaterEqual(mark_bounds[1], surface_bounds[1])
-                self.assertLessEqual(mark_bounds[2], surface_bounds[2])
-                self.assertLessEqual(mark_bounds[3], surface_bounds[3])
-
-        state_tokens = {
-            "idle": "--icon-status-idle",
-            "active": "--icon-status-active",
-            "processing": "--icon-status-active",
-            "success": "--icon-status-success",
-            "warning": "--icon-status-warning",
-            "error": "--icon-status-error",
-        }
-        for mark in marks:
-            paints = " ".join(
-                element.attrib.get(name, "")
-                for element in mark.iter()
-                if local_name(element.tag) in SVG_PAINTABLE_TAGS
-                for name in ("fill", "stroke")
-            )
-            self.assertIn(state_tokens[mark.attrib["data-state-mark"]], paints)
+        indicator_paints = " ".join(
+            element.attrib.get(name, "")
+            for element in indicator.iter()
+            if local_name(element.tag) in SVG_PAINTABLE_TAGS
+            for name in ("fill", "stroke")
+        )
+        self.assertIn("--icon-accent-secondary", indicator_paints)
 
         source = token_css()
         defaults = css_declarations(source, ":root")
@@ -1792,12 +1586,14 @@ class CanonicalBenchmarkContractTest(unittest.TestCase):
             )
             self.assertNotIn("--icon-surface-contrast", overrides)
             resolved.update(overrides)
-            for state, token in state_tokens.items():
-                with self.subTest(icon_id=icon_id, context=context, state=state):
-                    self.assertGreaterEqual(
-                        contrast_ratio(resolved[token], contrast_surface),
-                        3.0,
-                    )
+            with self.subTest(icon_id=icon_id, context=context):
+                self.assertGreaterEqual(
+                    contrast_ratio(
+                        resolved["--icon-accent-secondary"],
+                        contrast_surface,
+                    ),
+                    3.0,
+                )
 
         paintables = [
             element
@@ -2114,7 +1910,7 @@ class AgentBenchmarkAssetTest(unittest.TestCase):
             {"enter", "receive", "process", "send"},
             set(asset.manifest.actions),
         )
-        self.assertEqual(AGENT_STATES, asset.manifest.states)
+        self.assertEqual((), asset.manifest.states)
         self.assertEqual("visual-review", asset.manifest.status)
         self.assertEqual(
             {"receive": (18, 48), "send": (78, 48), "status": (48, 74)},
@@ -2133,7 +1929,7 @@ class AgentBenchmarkAssetTest(unittest.TestCase):
         self.assertEqual("false", root.attrib.get("focusable"))
         self.assertTrue(root.attrib.get("aria-label", "").strip())
         self.assertEqual("agent", root.attrib.get("data-icon"))
-        self.assertEqual("idle", root.attrib.get("data-icon-state"))
+        self.assertNotIn("data-icon-state", root.attrib)
 
         catalog = json.loads(
             (ROOT / "assets" / "diagram-core" / "catalog.json").read_text(
@@ -2157,7 +1953,7 @@ class AgentBenchmarkAssetTest(unittest.TestCase):
             manifest_values,
         )
 
-    def test_agent_state_marks_have_distinct_geometry_and_idle_standalone_visibility(self):
+    def test_agent_has_one_nonsemantic_indicator_and_no_state_marks(self):
         asset = self.load_agent()
         indicators = [
             element
@@ -2171,20 +1967,19 @@ class AgentBenchmarkAssetTest(unittest.TestCase):
             for element in asset.root.iter()
             if "data-state-mark" in element.attrib
         ]
-        self.assertEqual(set(AGENT_STATES), {mark.attrib["data-state-mark"] for mark in marks})
-        self.assertEqual(6, len(marks))
-        self.assertTrue(set(marks).issubset(set(indicator.iter())))
+        self.assertEqual([], marks)
+        indicator_paintables = [
+            element
+            for element in indicator.iter()
+            if local_name(element.tag) in SVG_PAINTABLE_TAGS
+        ]
+        self.assertEqual(1, len(indicator_paintables))
+        self.assertEqual(
+            "var(--icon-accent-secondary, #45c5bd)",
+            indicator_paintables[0].attrib.get("fill"),
+        )
 
-        signatures = {
-            mark.attrib["data-state-mark"]: agent_state_geometry_signature(mark)
-            for mark in marks
-        }
-        self.assertEqual(6, len(set(signatures.values())))
-        for mark in marks:
-            state = mark.attrib["data-state-mark"]
-            self.assertEqual("inline" if state == "idle" else "none", mark.attrib.get("display"))
-
-    def test_agent_core_and_state_footprints_are_frozen_for_48px_review(self):
+    def test_agent_core_and_indicator_footprints_are_frozen_for_48px_review(self):
         asset = self.load_agent()
         core = next(
             element
@@ -2198,54 +1993,17 @@ class AgentBenchmarkAssetTest(unittest.TestCase):
         outer_core, recessed_core = core_circles
         self.assertEqual(9.6, float(outer_core.attrib["r"]))
         self.assertEqual(6.7, float(recessed_core.attrib["r"]))
-
-        expected_bounds = {
-            "idle": (45.8, 66.8, 50.2, 71.2),
-            "active": (43.5125, 64.5125, 52.4875, 73.4875),
-            "processing": (43.7125, 64.5125, 52.2875, 73.4875),
-            "success": (43.2125, 65.5125, 52.7875, 72.6875),
-            "warning": (43.3125, 64.7125, 52.6875, 72.8875),
-            "error": (43.8125, 64.8125, 52.1875, 73.1875),
-        }
-        marks = {
-            element.attrib["data-state-mark"]: element
+        indicator = next(
+            element
             for element in asset.root.iter()
-            if "data-state-mark" in element.attrib
-        }
-        measured = {}
-        for state in AGENT_STATES:
-            bounds = agent_state_bounds(marks[state])
-            measured[state] = bounds
-            with self.subTest(state=state):
-                for actual, expected in zip(bounds, expected_bounds[state]):
-                    self.assertAlmostEqual(expected, actual, places=4)
-                radial_extent = max(
-                    agent_radial_extent(element, 48, 69)
-                    for element in marks[state].iter()
-                    if local_name(element.tag) in SVG_PAINTABLE_TAGS
-                )
-                self.assertGreaterEqual(
-                    float(recessed_core.attrib["r"]) - radial_extent,
-                    0.75,
-                )
-
-        footprints = {
-            state: (bounds[2] - bounds[0], bounds[3] - bounds[1])
-            for state, bounds in measured.items()
-        }
-        self.assertGreaterEqual(max(footprints["processing"]), 8.5)
-        self.assertGreaterEqual(max(footprints["success"]), 9.5)
-        self.assertGreaterEqual(max(footprints["error"]), 8.25)
-        self.assertLess(
-            abs(footprints["active"][0] - footprints["warning"][0]),
-            0.5,
+            if element.attrib.get("data-part") == "indicator"
         )
-        self.assertLess(
-            max(footprints["idle"]),
-            min(footprints["active"]) * 0.6,
-        )
+        self.assertEqual(1, len(indicator))
+        self.assertEqual("circle", local_name(indicator[0].tag))
+        self.assertEqual(3.2, float(indicator[0].attrib["r"]))
+        self.assertEqual((44.8, 65.8, 51.2, 72.2), agent_geometry_bounds(indicator[0]))
 
-    def test_agent_face_and_state_marks_keep_three_to_one_contrast_in_every_context(self):
+    def test_agent_face_details_keep_three_to_one_contrast_in_every_context(self):
         asset = self.load_agent()
         source = token_css()
         defaults = css_declarations(source, ":root")
@@ -2291,14 +2049,6 @@ class AgentBenchmarkAssetTest(unittest.TestCase):
             mouth[0].attrib["stroke"],
         )
 
-        state_tokens = {
-            "idle": "--icon-status-idle",
-            "active": "--icon-status-active",
-            "processing": "--icon-status-active",
-            "success": "--icon-status-success",
-            "warning": "--icon-status-warning",
-            "error": "--icon-status-error",
-        }
         contrast_surface = defaults["--icon-surface-contrast"]
         for context in ("blue", "dark", "warm", "green"):
             overrides = css_declarations(
@@ -2316,12 +2066,6 @@ class AgentBenchmarkAssetTest(unittest.TestCase):
                     ),
                     3.0,
                 )
-            for state, token in state_tokens.items():
-                with self.subTest(context=context, state=state):
-                    self.assertGreaterEqual(
-                        contrast_ratio(resolved[token], contrast_surface),
-                        3.0,
-                    )
 
     def test_agent_geometry_stays_in_safe_zone_and_strokes_are_role_bounded(self):
         asset = self.load_agent()
@@ -2650,50 +2394,24 @@ class DiagramCoreTokenTest(unittest.TestCase):
             with self.subTest(context=context):
                 self.assertEqual(expected, css_declarations(source, selector))
 
-    def test_static_state_selectors_are_nearest_scoped_and_geometry_distinct(self):
+    def test_state_tokens_are_reserved_without_shipping_state_selectors(self):
         source = token_css()
 
-        self.assertEqual(
-            {"display": "none"},
-            css_declarations(source, "[data-state-mark]"),
-        )
-        pairs = state_scope_pairs(source)
-        expected_pairs = [(state, state) for state, _ in STATE_MARK_GEOMETRY]
-        self.assertEqual(expected_pairs, pairs)
-        for state, geometry in STATE_MARK_GEOMETRY:
-            with self.subTest(state=state):
-                selector = (
-                    ':scope[data-icon-state="'
-                    + state
-                    + '"] [data-state-mark="'
-                    + state
-                    + '"]'
-                )
-                self.assertEqual(
-                    {"display": "inline"},
-                    css_declarations(source, selector),
-                )
-                self.assertIn(state + " = " + geometry, source)
+        self.assertIn("Phase 2 vocabulary", source)
+        self.assertNotIn("[data-state-mark]", source)
+        self.assertNotIn("[data-icon-state", source)
+        self.assertNotIn("@scope", source)
+        for token in (
+            "--icon-status-idle",
+            "--icon-status-active",
+            "--icon-status-success",
+            "--icon-status-warning",
+            "--icon-status-error",
+        ):
+            self.assertIn(token + ":", source)
         self.assertNotIn("::before", source)
         self.assertNotIn("::after", source)
         self.assertNotIn("content:", source)
-
-        # These mutations reproduce the two leak shapes the contract forbids:
-        # an outer state crossing a nested icon root, and an unscoped rule that
-        # can affect another icon subtree. The static guard must reject both.
-        without_nested_boundary = source.replace(
-            " to ([data-icon-state])",
-            "",
-            1,
-        )
-        unscoped_reveal = source + (
-            '\n[data-icon-state="error"] [data-state-mark="error"] {'
-            " display: inline; }\n"
-        )
-        for leaky_source in (without_nested_boundary, unscoped_reveal):
-            with self.subTest(leaky_source=leaky_source[-100:]):
-                with self.assertRaises(AssertionError):
-                    state_scope_pairs(leaky_source)
 
     def test_review_and_reduced_motion_disable_transitions_and_animations(self):
         source = token_css()
@@ -2703,7 +2421,7 @@ class DiagramCoreTokenTest(unittest.TestCase):
         self.assertGreaterEqual(source.count("animation: none !important;"), 2)
         self.assertGreaterEqual(source.count("transition: none !important;"), 2)
 
-    def test_accent_off_neutralizes_accents_without_hiding_structure_or_state(self):
+    def test_accent_off_neutralizes_accents_without_hiding_structure(self):
         declarations = css_declarations(token_css(), '[data-icon-accent="off"]')
 
         self.assertEqual("var(--icon-stroke)", declarations["--icon-accent"])
@@ -2876,18 +2594,18 @@ class DiagramCoreAssetValidatorCLITest(unittest.TestCase):
         self.assertEqual(0, report["approved"])
         self.assertEqual(52, report["planned"])
         self.assertEqual(
-            {"agent": 17, "api": 15, "database": 15, "server": 18},
+            {"agent": 12, "api": 9, "database": 9, "server": 12},
             report["paintable_elements_by_icon"],
         )
         self.assertEqual(
-            {"agent": 3347, "api": 3061, "database": 3087, "server": 3538},
+            {"agent": 2171, "api": 1742, "database": 1768, "server": 2219},
             report["raw_bytes_by_icon"],
         )
         self.assertEqual(
-            {"agent": 885, "api": 826, "database": 813, "server": 846},
+            {"agent": 596, "api": 536, "database": 528, "server": 550},
             report["gzip_bytes_by_icon"],
         )
-        self.assertGreater(report["contrast_checks"], 0)
+        self.assertEqual(4, report["contrast_checks"])
         self.assertEqual(0, report["warnings"])
 
     def test_review_rejects_later_context_override_with_low_contrast(self):
@@ -3023,10 +2741,10 @@ class DiagramCoreAssetValidatorCLITest(unittest.TestCase):
         self.assertEqual(
             "catalog=56 legacy_valid=13 approved=0 visual_review=4 "
             "planned=52 svg=4 manifests=4 "
-            'paintable_elements_by_icon={"agent":17,"api":15,"database":15,"server":18} '
-            'raw_bytes_by_icon={"agent":3347,"api":3061,"database":3087,"server":3538} '
-            'gzip_bytes_by_icon={"agent":885,"api":826,"database":813,"server":846} '
-            "contrast_checks=28 errors=0 warnings=0\n",
+            'paintable_elements_by_icon={"agent":12,"api":9,"database":9,"server":12} '
+            'raw_bytes_by_icon={"agent":2171,"api":1742,"database":1768,"server":2219} '
+            'gzip_bytes_by_icon={"agent":596,"api":536,"database":528,"server":550} '
+            "contrast_checks=4 errors=0 warnings=0\n",
             human_result.stdout,
         )
         json_report = json.loads(json_result.stdout)
@@ -3259,11 +2977,11 @@ class DiagramCoreAssetValidatorCLITest(unittest.TestCase):
                 entry.update(
                     {
                         "structural_prototype": "actor-character",
-                        "parts": ["shell"],
-                        "supported_states": ["idle"],
+                        "parts": ["body", "shell"],
+                        "supported_states": [],
                         "supported_actions": ["enter"],
                         "status": "approved",
-                        "asset_revision": 1,
+                        "asset_revision": 2,
                     }
                 )
 

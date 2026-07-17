@@ -47,18 +47,12 @@ _ICON_FIELDS = {
     "status",
     "asset_revision",
 }
-_BENCHMARK_STATES = (
-    "idle",
-    "active",
-    "processing",
-    "success",
-    "warning",
-    "error",
-)
+_BENCHMARK_STATES: Tuple[str, ...] = ()
 _BENCHMARKS = {
     "agent": (
         "actor-character",
         (
+            "body",
             "shell",
             "face-screen",
             "eye-left",
@@ -73,6 +67,7 @@ _BENCHMARKS = {
     "database": (
         "stacked-storage",
         (
+            "body",
             "shell",
             "top-ring",
             "layer-top",
@@ -86,6 +81,7 @@ _BENCHMARKS = {
     "api": (
         "interface-module",
         (
+            "body",
             "shell",
             "header",
             "input-interface",
@@ -98,6 +94,7 @@ _BENCHMARKS = {
     "server": (
         "compute-device",
         (
+            "body",
             "shell",
             "tray-top",
             "tray-bottom",
@@ -252,8 +249,8 @@ def _parse_catalog(raw: Any) -> Catalog:
     if raw["public_name"] != CATALOG_PUBLIC_NAME:
         _fail("$.public_name", f"expected {CATALOG_PUBLIC_NAME}")
     revision = raw["catalog_revision"]
-    if isinstance(revision, bool) or revision != 1:
-        _fail("$.catalog_revision", "expected integer 1")
+    if isinstance(revision, bool) or revision != 2:
+        _fail("$.catalog_revision", "expected integer 2")
     icons = raw["icons"]
     if not isinstance(icons, list):
         _fail("$.icons", "expected an array")

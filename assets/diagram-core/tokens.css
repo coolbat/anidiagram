@@ -1,3 +1,4 @@
+/* Reserved status colors are Phase 2 vocabulary, not a v1 asset capability. */
 :root {
   --icon-surface-main: #fffaf2;
   --icon-surface-secondary: #eef1f5;
@@ -49,44 +50,6 @@
   --icon-accent-secondary: var(--icon-detail);
 }
 
-/*
- * State geometry is authored in each canonical SVG; this stylesheet owns
- * visibility only. The standalone SVG keeps its authored idle fallback when
- * this external stylesheet is absent:
- * idle = dot; active = ring; processing = split-arc;
- * success = check; warning = triangle; error = X.
- */
-[data-state-mark] {
-  display: none;
-}
-
-/* Stop an outer icon state at the next nested icon state boundary. */
-@scope ([data-icon-state]) to ([data-icon-state]) {
-  :scope[data-icon-state="idle"] [data-state-mark="idle"] {
-    display: inline;
-  }
-
-  :scope[data-icon-state="active"] [data-state-mark="active"] {
-    display: inline;
-  }
-
-  :scope[data-icon-state="processing"] [data-state-mark="processing"] {
-    display: inline;
-  }
-
-  :scope[data-icon-state="success"] [data-state-mark="success"] {
-    display: inline;
-  }
-
-  :scope[data-icon-state="warning"] [data-state-mark="warning"] {
-    display: inline;
-  }
-
-  :scope[data-icon-state="error"] [data-state-mark="error"] {
-    display: inline;
-  }
-}
-
 [data-icon-review="true"],
 [data-icon-review="true"] * {
   animation: none !important;
@@ -94,8 +57,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-icon-state],
-  [data-icon-state] * {
+  [data-icon-presentation],
+  [data-icon-presentation] * {
     animation: none !important;
     transition: none !important;
   }

@@ -63,7 +63,7 @@ EXPECTED_BENCHMARKS = {
     "agent": {
         "prototype": "actor-character",
         "parts": (
-            "shell", "face-screen", "eye-left", "eye-right", "mouth",
+            "body", "shell", "face-screen", "eye-left", "eye-right", "mouth",
             "antenna", "core", "indicator",
         ),
         "actions": ("enter", "receive", "process", "send"),
@@ -71,7 +71,7 @@ EXPECTED_BENCHMARKS = {
     "database": {
         "prototype": "stacked-storage",
         "parts": (
-            "shell", "top-ring", "layer-top", "layer-middle",
+            "body", "shell", "top-ring", "layer-top", "layer-middle",
             "layer-bottom", "core", "indicator",
         ),
         "actions": ("receive", "write", "index", "search", "send"),
@@ -79,7 +79,7 @@ EXPECTED_BENCHMARKS = {
     "api": {
         "prototype": "interface-module",
         "parts": (
-            "shell", "header", "input-interface", "output-interface",
+            "body", "shell", "header", "input-interface", "output-interface",
             "processor", "indicator-group",
         ),
         "actions": ("receive", "process", "send", "stream"),
@@ -87,16 +87,14 @@ EXPECTED_BENCHMARKS = {
     "server": {
         "prototype": "compute-device",
         "parts": (
-            "shell", "tray-top", "tray-bottom", "indicator-top",
+            "body", "shell", "tray-top", "tray-bottom", "indicator-top",
             "indicator-bottom", "vent-top", "vent-bottom", "base",
         ),
         "actions": ("enter", "receive", "process", "send"),
     },
 }
 
-EXPECTED_STATES = (
-    "idle", "active", "processing", "success", "warning", "error",
-)
+EXPECTED_STATES = ()
 
 REQUIRED_ICON_FIELDS = {
     "id",
@@ -205,7 +203,7 @@ class DiagramCoreCatalogTest(unittest.TestCase):
             {
                 "system": "diagram-core-v1",
                 "public_name": "AniDiagram Diagram Core Icon System v1.0",
-                "catalog_revision": 1,
+                "catalog_revision": 2,
                 "icons": raw["icons"],
             },
             raw,
@@ -254,7 +252,7 @@ class DiagramCoreCatalogTest(unittest.TestCase):
                 self.assertEqual(EXPECTED_STATES, entry.supported_states)
                 self.assertEqual(expected["actions"], entry.supported_actions)
                 self.assertEqual("visual-review", entry.status)
-                self.assertEqual(1, entry.asset_revision)
+                self.assertEqual(2, entry.asset_revision)
 
     def test_all_legacy_ids_are_members_but_validity_follows_approval(self):
         catalog = load_catalog()
@@ -378,7 +376,7 @@ class DiagramCoreCatalogTest(unittest.TestCase):
         with self.assertRaises(FrozenInstanceError):
             entry.status = "approved"
         with self.assertRaises(FrozenInstanceError):
-            catalog.catalog_revision = 2
+            catalog.catalog_revision = 3
 
     def test_loader_uses_injected_asset_root_and_reports_precise_invalid_paths(self):
         source = json.loads(

@@ -2,9 +2,11 @@
   "name": "anidiagram-visual-tests",
   "private": true,
   "scripts": {
-    "capture:diagram-core": "node scripts/capture_diagram_core_contact_sheet.mjs"
+    "capture:diagram-core": "node scripts/capture_diagram_core_contact_sheet.mjs",
+    "verify:diagram-core-showcase": "node scripts/verify_diagram_core_showcase_motion.mjs"
   },
   "devDependencies": {
+    "gsap": "^3.13.0",
     "playwright": "1.61.1"
   }
 }

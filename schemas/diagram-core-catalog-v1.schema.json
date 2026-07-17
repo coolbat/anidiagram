@@ -8,7 +8,7 @@
   "properties": {
     "system": {"const": "diagram-core-v1"},
     "public_name": {"const": "AniDiagram Diagram Core Icon System v1.0"},
-    "catalog_revision": {"const": 1},
+    "catalog_revision": {"const": 2},
     "icons": {
       "type": "array",
       "minItems": 56,

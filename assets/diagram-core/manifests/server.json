@@ -1,12 +1,13 @@
 {
   "id": "server",
   "system": "diagram-core-v1",
-  "asset_revision": 1,
+  "asset_revision": 2,
   "viewBox": "0 0 96 96",
   "category": "compute-runtime",
   "semantic_kind": "server",
   "structural_prototype": "compute-device",
   "parts": [
+    "body",
     "shell",
     "tray-top",
     "tray-bottom",
@@ -21,14 +22,7 @@
     "send": {"x": 88, "y": 60},
     "status": {"x": 76, "y": 24}
   },
-  "states": [
-    "idle",
-    "active",
-    "processing",
-    "success",
-    "warning",
-    "error"
-  ],
+  "states": [],
   "actions": ["enter", "receive", "process", "send"],
   "status": "visual-review"
 }

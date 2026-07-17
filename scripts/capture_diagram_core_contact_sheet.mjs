@@ -25,9 +25,9 @@ import { chromium } from "playwright";
 
 
 const LOCATOR = "#diagram-core-regression-grid";
-const EXPECTED_CELLS = 288;
+const EXPECTED_CELLS = 48;
 const EXPECTED_WIDTH = 1248;
-const EXPECTED_HEIGHT = 2496;
+const EXPECTED_HEIGHT = 416;
 const VIEWPORT = Object.freeze({ width: 1280, height: 900 });
 const DEVICE_SCALE_FACTOR = 1;
 const PLAYWRIGHT_OPERATION_TIMEOUT_MS = 10_000;

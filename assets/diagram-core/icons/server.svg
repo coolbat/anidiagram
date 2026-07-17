@@ -1,4 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Server two tray compute icon" data-icon="server" data-icon-state="idle">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Server two tray compute icon" data-icon="server">
+  <g data-part="body">
   <g data-part="shell">
     <rect x="16" y="18" width="64" height="60" rx="10" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
   </g>
@@ -10,15 +11,7 @@
   </g>
   <g data-part="indicator-top">
     <circle cx="30" cy="34" r="8" fill="var(--icon-surface-contrast, #14213d)"/>
-    <circle data-state-mark="idle" display="inline" cx="30" cy="34" r="2.2" fill="var(--icon-status-idle, #94a3b8)"/>
-    <circle data-state-mark="active" display="none" cx="30" cy="34" r="3.8" fill="none" stroke="var(--icon-status-active, #38bdf8)" stroke-width="1.375" data-stroke-role="inner"/>
-    <g data-state-mark="processing" display="none">
-      <path d="M 26.4 33 C 26.9 31.1 28.3 30.2 30 30.2" fill="none" stroke="var(--icon-status-active, #38bdf8)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
-      <path d="M 33.6 35 C 33.1 36.9 31.7 37.8 30 37.8" fill="none" stroke="var(--icon-status-active, #38bdf8)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
-    </g>
-    <path data-state-mark="success" display="none" d="M 25.9 34.2 L 28.9 37 L 34.1 31.2" fill="none" stroke="var(--icon-status-success, #35b66f)" stroke-width="1.375" stroke-linecap="round" stroke-linejoin="round" data-stroke-role="inner"/>
-    <polygon data-state-mark="warning" display="none" points="30,30.4 34,37.2 26,37.2" fill="none" stroke="var(--icon-status-warning, #f3a53a)" stroke-width="1.375" stroke-linejoin="round" data-stroke-role="inner"/>
-    <path data-state-mark="error" display="none" d="M 26.5 30.5 L 33.5 37.5 M 33.5 30.5 L 26.5 37.5" fill="none" stroke="var(--icon-status-error, #e65b65)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    <circle cx="30" cy="34" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
   </g>
   <g data-part="indicator-bottom">
     <circle cx="30" cy="60" r="5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner"/>
@@ -34,5 +27,6 @@
   </g>
   <g data-part="base">
     <rect x="24" y="75" width="48" height="5" rx="2.5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
   </g>
 </svg>
