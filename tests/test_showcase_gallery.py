@@ -306,8 +306,10 @@ class ShowcaseGalleryTest(unittest.TestCase):
             self.assertIn("Expressive", source)
             self.assertIn("Readable", source)
             self.assertIn("Off", source)
-            self.assertIn("0.7", source)
             self.assertIn("gallery/character-themes.html", source)
+        self.assertIn("continu", readme.lower())
+        self.assertIn("持续", readme_zh)
+        self.assertIn("continu", html_runtime.lower())
         self.assertIn("node scripts/verify_stage_motion_modes.mjs", html_runtime)
         self.assertIn("prefers-reduced-motion: reduce", html_runtime)
 

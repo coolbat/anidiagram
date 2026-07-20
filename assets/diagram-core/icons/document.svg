@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Text document file icon" data-icon="document">
+  <g data-part="body">
+    <g data-part="page">
+      <path d="M 23 13 H 59 L 75 29 V 83 H 23 Z" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+    </g>
+    <g data-part="fold">
+      <polygon points="59,13 59,29 75,29" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+    </g>
+    <g data-part="line-top">
+      <rect x="31" y="37" width="34" height="8" rx="4" fill="var(--icon-accent-secondary, #45c5bd)"/>
+      <line x1="36" y1="41" x2="58" y2="41" stroke="var(--icon-surface-contrast, #14213d)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="line-middle">
+      <line x1="32" y1="53" x2="64" y2="53" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="line-bottom">
+      <line x1="32" y1="62" x2="54" y2="62" stroke="var(--icon-detail, #64748b)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="indicator">
+      <circle cx="66" cy="72" r="6" fill="var(--icon-surface-contrast, #14213d)"/>
+      <circle cx="66" cy="72" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+  </g>
+</svg>

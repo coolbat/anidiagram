@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Conveyor message queue icon" data-icon="message-queue">
+  <g data-part="body">
+    <g data-part="shell">
+      <path d="M 13 29 Q 13 21 21 21 H 77 Q 84 21 84 29 V 67 Q 84 75 76 75 H 21 Q 13 75 13 67 Z" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+      <path d="M 19 60 H 68" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="message-a">
+      <rect x="20" y="34" width="13" height="18" rx="4" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" data-stroke-role="inner"/>
+      <line x1="23" y1="40" x2="30" y2="40" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="message-b">
+      <rect x="38" y="34" width="13" height="18" rx="4" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" data-stroke-role="inner"/>
+      <line x1="41" y1="40" x2="48" y2="40" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="message-c">
+      <rect x="56" y="34" width="13" height="18" rx="4" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" data-stroke-role="inner"/>
+      <line x1="59" y1="40" x2="66" y2="40" stroke="var(--icon-surface-main, #fffaf2)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="consumer">
+      <path d="M 69 31 H 79 V 57 L 73 63 L 67 57 V 45 H 73" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+      <circle cx="73" cy="54" r="3" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+    <g data-part="indicator">
+      <circle cx="24" cy="67" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+  </g>
+</svg>

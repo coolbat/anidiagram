@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 
 Point = Tuple[float, float]
@@ -104,6 +104,7 @@ class Edge:
     target: str
     label: str = ""
     role: str = "neutral"
+    direction: str = "forward"
     route: str = "curved"
     step: Optional[int] = None
     points: Tuple[Point, ...] = field(default_factory=tuple)
@@ -133,6 +134,9 @@ class Scene:
     nodes: List[Node]
     edges: List[Edge]
     groups: List[Group]
+    icon_system: Optional[str] = None
+    composition_policy: Optional[str] = None
+    resolved_presentation: Dict[str, Any] = field(default_factory=dict)
     motion: SceneMotion = field(default_factory=SceneMotion)
     motion_policy: MotionPolicy = field(default_factory=MotionPolicy)
     preset: Optional[str] = None

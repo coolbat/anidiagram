@@ -1,0 +1,18 @@
+{
+  "id": "container",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "compute-runtime",
+  "semantic_kind": "container",
+  "structural_prototype": "isolated-runtime-container",
+  "parts": ["body", "shell", "door", "app-core", "boundary", "indicator"],
+  "attachments": {
+    "receive": {"x": 9, "y": 48},
+    "send": {"x": 87, "y": 48},
+    "status": {"x": 70, "y": 69}
+  },
+  "states": [],
+  "actions": ["receive", "isolate", "run", "send"],
+  "status": "approved"
+}

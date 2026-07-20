@@ -1,0 +1,18 @@
+{
+  "id": "dataset",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "data-knowledge",
+  "semantic_kind": "dataset",
+  "structural_prototype": "mixed-card-container",
+  "parts": ["body", "container", "cards", "filter", "record", "indicator"],
+  "attachments": {
+    "receive": {"x": 8, "y": 48},
+    "send": {"x": 88, "y": 48},
+    "status": {"x": 77, "y": 73}
+  },
+  "states": [],
+  "actions": ["receive", "filter", "sample", "send"],
+  "status": "approved"
+}

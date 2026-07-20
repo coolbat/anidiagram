@@ -2,18 +2,25 @@
 
 from __future__ import annotations
 
+import json
+from functools import lru_cache
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from .diagram_core.instance_ids import part_dom_id
+from .diagram_core.manifest import load_manifest
 from .effects import channel_effect
-from .icon_system import resolve_icon_system
+from .icon_system import icon_system_version, resolve_icon_system
 from .illustrated_character_icons import character_definition
-from .illustrated_character_v2_icons import character_v2_definition
-from .illustrated_icons import illustrated_definition, is_illustrated_style
+from .illustrated_registry import illustrated_definition
+from .illustrated_icons import illustrated_definition as legacy_illustrated_definition, is_illustrated_style
 from .model import EffectConfig, Node, Scene
+from .styles import deep_merge
 
 
 MOTION_MANIFEST_VERSION = "motion-manifest-0.1"
 DEFAULT_RUNTIME_MODE = "ambient"
+_MOTION_CATALOG_PATH = Path(__file__).resolve().parents[2] / "runtime" / "motion-catalog.json"
 
 ICON_PERFORMANCE_V2 = {
     "agent": "agent-think-act-v2",
@@ -62,9 +69,71 @@ CHARACTER_REST_AT = {
     "shield": 1.35,
     "token": 1.35,
 }
+ILLUSTRATED_V2_ICON_PERFORMANCES = {
+    "agent": "illustrated-agent-input-reason-result-v1",
+    "operator": "illustrated-operator-focus-operate-confirm-v1",
+    "tool": "illustrated-tool-prepare-execute-complete-v1",
+    "output": "illustrated-output-compose-deliver-confirm-v1",
+    "database": "illustrated-database-ingest-store-persist-v1",
+    "api": "illustrated-api-request-route-response-v1",
+    "search": "illustrated-search-query-scan-discover-v1",
+    "memory": "illustrated-memory-capture-index-recall-v1",
+}
+ILLUSTRATED_V2_REST_AT = {
+    "agent": 1.72,
+    "operator": 1.68,
+    "tool": 1.62,
+    "output": 1.70,
+    "database": 1.72,
+    "api": 1.66,
+    "search": 1.78,
+    "memory": 1.72,
+}
+ILLUSTRATED_V3_ADDITIONAL_ICON_PERFORMANCES = {
+    "file": "illustrated-file-prepare-attach-reference-v1",
+    "folder": "illustrated-folder-prepare-store-index-v1",
+    "cloud": "illustrated-cloud-prepare-transfer-sync-v1",
+    "shield": "illustrated-shield-prepare-lock-protect-v1",
+}
+ILLUSTRATED_V3_ADDITIONAL_REST_AT = {
+    "file": 1.58,
+    "folder": 1.66,
+    "cloud": 1.72,
+    "shield": 1.68,
+}
+ILLUSTRATED_V3_ICON_PERFORMANCES = {
+    **ILLUSTRATED_V2_ICON_PERFORMANCES,
+    **ILLUSTRATED_V3_ADDITIONAL_ICON_PERFORMANCES,
+}
+ILLUSTRATED_V3_REST_AT = {
+    **ILLUSTRATED_V2_REST_AT,
+    **ILLUSTRATED_V3_ADDITIONAL_REST_AT,
+}
+ILLUSTRATED_V4_REVIEW_ICON_PERFORMANCES = {
+    "user": "illustrated-user-request-interact-consume-v1",
+    "server": "illustrated-server-host-compute-serve-v1",
+    "ai-model": "illustrated-ai-model-infer-transform-predict-v1",
+    "message-queue": "illustrated-message-queue-buffer-order-deliver-v1",
+}
+ILLUSTRATED_V4_REVIEW_REST_AT = {
+    "user": 1.66,
+    "server": 1.70,
+    "ai-model": 1.80,
+    "message-queue": 1.76,
+}
+ILLUSTRATED_ICON_PERFORMANCES = {
+    **ILLUSTRATED_V3_ICON_PERFORMANCES,
+    **ILLUSTRATED_V4_REVIEW_ICON_PERFORMANCES,
+}
+ILLUSTRATED_REST_AT = {
+    **ILLUSTRATED_V3_REST_AT,
+    **ILLUSTRATED_V4_REVIEW_REST_AT,
+}
 STRONG_CHARACTER_INTENSITY = 1.5
 STRONG_CHARACTER_REST_AT = 1.2
 SUPPORTED_ICON_PERFORMANCES.update(CHARACTER_ICON_PERFORMANCES.values())
+SUPPORTED_ICON_PERFORMANCES.update(ILLUSTRATED_ICON_PERFORMANCES.values())
+SUPPORTED_ICON_PERFORMANCES.update(ILLUSTRATED_V4_REVIEW_ICON_PERFORMANCES.values())
 
 PERFORMANCE_PARTS = {
     "agent-think-act-v2": (
@@ -179,25 +248,32 @@ def build_motion_manifest(
     if mode != DEFAULT_RUNTIME_MODE:
         raise ValueError('HTML runtime mode must be "ambient" in the current release')
 
+    if scene.icon_system:
+        style = deep_merge(style, {"icon_system": scene.icon_system})
     icon_system = resolve_icon_system(style)
     illustrated = icon_system == "illustrated-v1"
     icons: List[Dict[str, Any]] = []
     for index, node in enumerate(scene.nodes):
         if not node.icon:
             continue
+        if icon_system == "diagram-core-v1":
+            definition = _diagram_core_presentations().get(node.icon)
+            if definition is not None and scene.motion.profile != "off":
+                icons.append(_diagram_core_manifest_entry(node, definition, index, scene))
+            continue
         effect = channel_effect(scene.motion, style, "node", node.effect)
         performance = icon_performance_for_node(node, effect, scene.motion.profile, icon_system)
         if not performance:
             continue
         character = character_definition(node.icon) if icon_system == "illustrated-character-v1" else None
-        character_v2 = character_v2_definition(node.icon) if icon_system == "illustrated-character-v2" else None
+        character_v2 = illustrated_definition(node.icon) if icon_system == "illustrated" else None
         definition = character or character_v2
         if character is not None:
             part_names = character.parts
         elif character_v2 is not None:
             part_names = character_v2.parts
         elif illustrated:
-            definition = illustrated_definition(node.icon)
+            definition = legacy_illustrated_definition(node.icon)
             part_names = PERFORMANCE_PARTS[performance]
             part_names = tuple(dict.fromkeys((*part_names, *definition.parts)))
         else:
@@ -225,7 +301,14 @@ def build_motion_manifest(
             else:
                 icon_entry["rest_at"] = CHARACTER_REST_AT[node.icon]
         elif character_v2 is not None:
-            icon_entry["concept_generation"] = "v2"
+            icon_entry["asset_version"] = icon_system_version("illustrated")
+            icon_entry["cancel_behavior"] = "restore-authored-rest-pose"
+            icon_entry["reduced_motion_behavior"] = "static-rest"
+            icon_entry["repeat_delay"] = 0.8
+            icon_entry["motion_contract"] = "illustrated-performance-v4"
+            icon_entry["motion_status"] = "approved"
+            icon_entry["selection_policy"] = "automatic-for-supported-showcase-icons"
+            icon_entry["rest_at"] = ILLUSTRATED_REST_AT[node.icon]
         if definition is not None:
             if hasattr(definition, "colors"):
                 icon_entry["colors"] = definition.colors
@@ -243,7 +326,7 @@ def build_motion_manifest(
     ]
     edge_limit = min(edge_limits) if edge_limits else None
     readable_edge_limit = min(edge_limit if edge_limit is not None else 2, 2)
-    stage_motion_enabled = scene.motion.profile in {"expressive", "teaching"} and scene.motion.intensity > 0
+    stage_motion_enabled = scene.motion.profile in {"expressive", "teaching", "showcase-v1"} and scene.motion.intensity > 0
     edges: List[Dict[str, Any]] = []
     eligible_edge_indices: List[int] = []
     for index, edge in enumerate(scene.edges):
@@ -308,15 +391,66 @@ def build_motion_manifest(
         "edges": edges,
     }
     manifest["icon_system"] = icon_system
+    resolved_icon_system_version = icon_system_version(icon_system)
+    if resolved_icon_system_version is not None:
+        manifest["icon_system_version"] = resolved_icon_system_version
     return manifest
+
+
+@lru_cache(maxsize=1)
+def _diagram_core_presentations() -> Dict[str, Dict[str, Any]]:
+    payload = json.loads(_MOTION_CATALOG_PATH.read_text(encoding="utf-8"))
+    definitions = payload.get("diagram_core_presentations", [])
+    return {
+        str(definition["icon"]): definition
+        for definition in definitions
+        if isinstance(definition, dict) and isinstance(definition.get("icon"), str)
+    }
+
+
+def _runtime_part_name(part_name: str) -> str:
+    head, *tail = part_name.split("-")
+    return head + "".join(value.title() for value in tail)
+
+
+def _diagram_core_manifest_entry(
+    node: Node,
+    definition: Dict[str, Any],
+    index: int,
+    scene: Scene,
+) -> Dict[str, Any]:
+    icon_id = str(node.icon)
+    instance_id = f"node.{node.node_id}"
+    parts = {
+        _runtime_part_name(part): f"#{part_dom_id(instance_id, icon_id, part)}"
+        for part in load_manifest(icon_id).parts
+    }
+    entry: Dict[str, Any] = {
+        "node_id": node.node_id,
+        "icon": icon_id,
+        "icon_system": "diagram-core-v1",
+        "performance": definition["runtime_id"],
+        "presentation_performance": definition["id"],
+        "presentation_profile": definition["profile"],
+        "trigger": "on-load",
+        "loop": "action-then-rest",
+        "delay": round(index * max(scene.motion.stagger, 0.08), 3),
+        "intensity": scene.motion.intensity,
+        "rest_at": definition["rest_at"],
+        "repeat_delay": definition["repeat_delay"],
+        "duration_ms": definition["duration_ms"],
+        "repeat_policy": definition["repeat_policy"],
+        "cancel_behavior": definition["cancel_behavior"],
+        "reduced_motion_behavior": definition["reduced_motion_behavior"],
+        "parts": parts,
+    }
+    if "recipe" in definition:
+        entry["recipe"] = definition["recipe"]
+    return entry
 
 
 def icon_performance_for_node(node: Node, effect: EffectConfig, profile: str, icon_system: str = "semantic-line-v1") -> Optional[str]:
     if profile == "off":
-        return None
-    if icon_system == "illustrated-character-v2":
-        # The first v2 slice is intentionally static so visual approval happens
-        # before a new motion contract is attached to the redesigned parts.
         return None
     explicit_node_effect = node.effect.explicit
     node_requests_icon_performance = (
@@ -326,9 +460,15 @@ def icon_performance_for_node(node: Node, effect: EffectConfig, profile: str, ic
     )
     if explicit_node_effect and not node_requests_icon_performance:
         return None
+    requested = effect.icon_motion or effect.icon
+    if icon_system == "illustrated":
+        if requested in ILLUSTRATED_ICON_PERFORMANCES.values():
+            return requested
+        if effect.preset == "icon-performance" or profile in {"showcase-v1", "expressive", "teaching"}:
+            return ILLUSTRATED_ICON_PERFORMANCES.get(node.icon or "")
+        return None
     if icon_system == "illustrated-character-v1" and node.icon in CHARACTER_ICON_PERFORMANCES:
         return CHARACTER_ICON_PERFORMANCES[node.icon]
-    requested = effect.icon_motion or effect.icon
     if requested in CHARACTER_ICON_PERFORMANCES.values() and icon_system != "illustrated-character-v1":
         requested = None
     if requested in SUPPORTED_ICON_PERFORMANCES:

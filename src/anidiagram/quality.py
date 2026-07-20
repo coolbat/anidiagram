@@ -6,9 +6,11 @@ from dataclasses import dataclass
 from typing import Dict, Iterable, List, Optional, Tuple
 
 from .effects import channel_effect, effect_active
+from .diagram_core.catalog import approved_icon_ids
 from .icon_system import resolve_icon_system
+from .styles import deep_merge
 from .illustrated_character_icons import character_icon_ids
-from .illustrated_character_v2_icons import character_v2_icon_ids
+from .illustrated_registry import illustrated_icon_ids
 from .model import Edge, Node, Point, Scene
 
 
@@ -68,11 +70,15 @@ def quality_report(scene: Scene, style: Optional[Dict[str, object]] = None) -> D
     _check_edge_node_collisions(scene.edges, nodes, issues)
     _check_motion_budget(scene, issues)
     if style is not None:
+        if scene.icon_system:
+            style = deep_merge(style, {"icon_system": scene.icon_system})
         icon_system = resolve_icon_system(style)
         if icon_system == "illustrated-character-v1":
             _check_character_icon_fallbacks(scene, issues, icon_system, character_icon_ids())
-        elif icon_system == "illustrated-character-v2":
-            _check_character_icon_fallbacks(scene, issues, icon_system, character_v2_icon_ids())
+        elif icon_system == "illustrated":
+            _check_character_icon_fallbacks(scene, issues, icon_system, illustrated_icon_ids())
+        elif icon_system == "diagram-core-v1":
+            _check_diagram_core_coverage(scene, issues)
     errors = sum(1 for issue in issues if issue.severity == "error")
     warnings = sum(1 for issue in issues if issue.severity == "warning")
     score = max(0, 100 - errors * 20 - warnings * 5)
@@ -99,6 +105,20 @@ def _check_character_icon_fallbacks(
                     "warning",
                     f"$.nodes[{index}].icon",
                     f"icon '{node.icon}' is not covered by {icon_system}; rendered with semantic-line-v1",
+                )
+            )
+
+
+def _check_diagram_core_coverage(scene: Scene, issues: List[QualityIssue]) -> None:
+    covered = approved_icon_ids()
+    for index, node in enumerate(scene.nodes):
+        if node.icon and node.icon not in covered:
+            issues.append(
+                QualityIssue(
+                    "diagram_core_icon_not_approved",
+                    "error",
+                    f"$.nodes[{index}].icon",
+                    f"icon '{node.icon}' is not an approved diagram-core-v1 asset",
                 )
             )
 

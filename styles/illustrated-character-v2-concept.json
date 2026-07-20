@@ -1,6 +1,6 @@
 {
   "name": "illustrated-character-v2-concept",
-  "icon_system": "illustrated-character-v2",
+  "icon_system": "illustrated",
   "canvas": {"background": "#fffaf0", "text": "#283047", "muted": "#6d7182", "grid": "#eee7d9"},
   "title": {"accent": "#8265d6", "highlight": "#eee8ff"},
   "node": {"radius": 28, "stroke_width": 2.5, "fill_mode": "solid"},

@@ -1,0 +1,83 @@
+{
+  "system": "illustrated",
+  "version": "2.1.0",
+  "status": "confirmed",
+  "accepted_at": "2026-07-20",
+  "static_acceptance": {
+    "status": "confirmed",
+    "scope": "eight-icon-static-system",
+    "review_artifacts": {
+      "svg": {
+        "path": "outputs/illustrated-expansion-batch-1/illustrated-expansion-batch-1.svg",
+        "sha256": "353a1da43bdc6f7c24fcdb105e8a928fb1437b9bfa567fc8d8d3c20b0d282174"
+      },
+      "png": {
+        "path": "outputs/illustrated-expansion-batch-1/illustrated-expansion-batch-1.png",
+        "sha256": "0d2a7c523eee60bf681ba9af30719ac896260f4da6934841cef6b54ca121d931"
+      }
+    }
+  },
+  "motion_acceptance": {
+    "status": "confirmed",
+    "scope": "database-api-search-memory-semantic-motion",
+    "review_artifacts": {
+      "html": {
+        "path": "outputs/illustrated-expansion-motion-review/illustrated-expansion-motion-review.html",
+        "sha256": "4326b364a6808e3d0f87a2eba06c999ad7cc45e38f36d9ba62ef0a1f6dd891d1"
+      },
+      "webp": {
+        "path": "outputs/illustrated-expansion-motion-review/illustrated-expansion-motion-review.webp",
+        "sha256": "188bdf00e48c76ed1c85be276705a7d23d34b2e5e1d4d98c3538e6b2b3010060"
+      }
+    }
+  },
+  "public_showcase": {
+    "status": "passed",
+    "icon_count": 8,
+    "motion_preset": "showcase-v1",
+    "automatic_motion_selection": true,
+    "spec": {
+      "path": "examples/illustrated-2.1-showcase.diagram.json",
+      "sha256": "cc10133f10254b264f5083b22169ef1e16586e4ad206ded1617c48f2e2e0f4d8"
+    },
+    "local_artifacts": {
+      "html": {
+        "path": "outputs/illustrated-2.1-showcase/illustrated-2.1-showcase.html",
+        "sha256": "6c9929874a329476628e59ec2d07373bc6d9e3ba64b79894e275db0f0ae70b26"
+      },
+      "svg": {
+        "path": "outputs/illustrated-2.1-showcase/illustrated-2.1-showcase.svg",
+        "sha256": "e6d63a5d8080886e30b519adcd591e6f637530955935a1f49f4c5f3181ea98aa"
+      },
+      "png": {
+        "path": "outputs/illustrated-2.1-showcase/illustrated-2.1-showcase.png",
+        "sha256": "32ead20469810f421d487a6d8f725312c42716d8f7bbac91ae36a721e646a368"
+      },
+      "webp": {
+        "path": "outputs/illustrated-2.1-showcase/illustrated-2.1-showcase.webp",
+        "sha256": "a1915dcb7a0b6e6e5f16095ab99f77269c2e1315f6a512238e5a743af40bdddf"
+      },
+      "quality": {
+        "path": "outputs/illustrated-2.1-showcase/illustrated-2.1-showcase.quality.json",
+        "sha256": "9fea906017bc128a143086d6a3fcb8bdd5a0b62937f0d69bbb5f186f39c2a57f"
+      }
+    },
+    "validation": {
+      "quality_errors": 0,
+      "quality_warnings": 0,
+      "quality_issues": 0,
+      "authored_rest": "8/8",
+      "reduced_motion": "8/8",
+      "stage_modes": [
+        "Expressive",
+        "Readable",
+        "Off",
+        "Expressive"
+      ]
+    }
+  },
+  "notes": [
+    "The review artifacts under outputs are local evidence and may be gitignored.",
+    "The tracked showcase spec, public motion contract, source manifests, and this acceptance record are the reproducible release authority."
+  ]
+}

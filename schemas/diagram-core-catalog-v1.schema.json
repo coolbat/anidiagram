@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anidiagram.dev/schemas/diagram-core-catalog-v1.schema.json",
+  "title": "AniDiagram Diagram Core Icon Catalog v1",
+  "type": "object",
+  "required": ["system", "public_name", "catalog_revision", "icons"],
+  "additionalProperties": false,
+  "properties": {
+    "system": {"const": "diagram-core-v1"},
+    "public_name": {"const": "AniDiagram Diagram Core Icon System v1.0"},
+    "catalog_revision": {"const": 3},
+    "icons": {
+      "type": "array",
+      "minItems": 56,
+      "maxItems": 56,
+      "items": {"$ref": "#/$defs/icon"}
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "identifier_list": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/identifier"}
+    },
+    "icon": {
+      "type": "object",
+      "required": [
+        "id",
+        "category",
+        "semantic_kind",
+        "structural_prototype",
+        "aliases",
+        "parts",
+        "supported_states",
+        "supported_actions",
+        "status",
+        "asset_revision"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "#/$defs/identifier"},
+        "category": {"$ref": "#/$defs/identifier"},
+        "semantic_kind": {"$ref": "#/$defs/identifier"},
+        "structural_prototype": {"$ref": "#/$defs/identifier"},
+        "aliases": {"$ref": "#/$defs/identifier_list"},
+        "parts": {"$ref": "#/$defs/identifier_list"},
+        "supported_states": {"$ref": "#/$defs/identifier_list"},
+        "supported_actions": {"$ref": "#/$defs/identifier_list"},
+        "status": {
+          "enum": ["planned", "visual-review", "approved", "deprecated"]
+        },
+        "asset_revision": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

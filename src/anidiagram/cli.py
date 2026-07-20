@@ -26,7 +26,7 @@ from .exporters import (
 from .planner import brief_to_plan, compile_plan
 from .presets import compile_preset, preset_names
 from .schema import DiagramScriptValidationError, compile_scene
-from .styles import load_style
+from .styles import deep_merge, load_style
 
 
 EXPORTERS = {
@@ -65,6 +65,7 @@ def main(argv: Optional[List[str]] = None) -> None:
     parser = argparse.ArgumentParser(description="Render DiagramScript JSON or clean-room presets.")
     source = parser.add_mutually_exclusive_group(required=False)
     source.add_argument("--spec", help="Path to DiagramScript JSON.")
+    source.add_argument("--plan", help="Path to DiagramPlan JSON to validate and compile.")
     source.add_argument("--preset", choices=preset_names(), help="Render a built-in preset.")
     source.add_argument("--brief", help="Path to a natural-language brief to compile into DiagramScript.")
     source.add_argument("--text", help="Inline natural-language brief to compile into DiagramScript.")
@@ -96,20 +97,26 @@ def main(argv: Optional[List[str]] = None) -> None:
     parser.add_argument("--quality", action="store_true", help="Also write a quality report JSON.")
     parser.add_argument("--result", help="Optional path for the structured CLI result JSON.")
     parser.add_argument("--plan-out", help="Optional path for a generated DiagramPlan JSON when using --brief or --text.")
-    parser.add_argument("--spec-out", help="Optional path for a generated DiagramScript JSON when using --brief or --text.")
+    parser.add_argument("--spec-out", help="Optional path for a compiled DiagramScript JSON when using --plan, --brief, or --text.")
     args = parser.parse_args(argv)
 
     if args.list_presets:
         print(json.dumps({"presets": preset_names()}, ensure_ascii=False, indent=2))
         return
-    if not args.spec and not args.preset and not args.brief and not args.text:
-        parser.error("one of --spec, --preset, --brief, or --text is required")
+    if not args.spec and not args.plan and not args.preset and not args.brief and not args.text:
+        parser.error("one of --spec, --plan, --preset, --brief, or --text is required")
 
     spec_path = Path(args.spec) if args.spec else None
     source_kind = "spec"
     generated_plan: Optional[Dict[str, Any]] = None
     if spec_path:
         spec = read_json(spec_path)
+    elif args.plan:
+        source_kind = "plan"
+        generated_plan = read_json(args.plan)
+        spec = compile_plan(generated_plan)
+        if args.spec_out:
+            write_json(args.spec_out, spec)
     elif args.preset:
         source_kind = "preset"
         spec = compile_preset(args.preset, title=args.title or "")
@@ -119,7 +126,7 @@ def main(argv: Optional[List[str]] = None) -> None:
         generated_plan = brief_to_plan(
             brief_text or "",
             title=args.title or "",
-            style=style_name_from_arg(args.style) or "sketch-board",
+            style=style_name_from_arg(args.style),
         )
         spec = compile_plan(generated_plan)
         if args.plan_out:
@@ -134,6 +141,8 @@ def main(argv: Optional[List[str]] = None) -> None:
         raise SystemExit(2)
 
     style = load_style(resolve_style_path(args.style, scene.style.name, spec_path))
+    if scene.icon_system:
+        style = deep_merge(style, {"icon_system": scene.icon_system})
     outdir = Path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
     formats = _requested_formats(args)
@@ -164,6 +173,7 @@ def main(argv: Optional[List[str]] = None) -> None:
         "schema": {"name": "DiagramScript", "version": scene.version},
         "source": source_kind,
         "preset": scene.preset,
+        "icon_system": scene.icon_system or style.get("icon_system"),
         "style": style.get("name", scene.style.name or "minimal-light"),
         "outputs": outputs,
         "stats": scene.stats(),
@@ -171,8 +181,11 @@ def main(argv: Optional[List[str]] = None) -> None:
     if generated_plan is not None:
         result["plan"] = {
             "schema": {"name": "DiagramPlan", "version": generated_plan["version"]},
-            "layout_strategy": generated_plan["layout_strategy"],
         }
+        if generated_plan.get("version") == "0.1":
+            result["plan"]["layout_strategy"] = generated_plan["layout_strategy"]
+        else:
+            result["plan"]["resolved_presentation"] = scene.resolved_presentation
     _emit_result(result, args.result)
 
 

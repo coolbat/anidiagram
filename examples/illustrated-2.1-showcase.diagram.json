@@ -1,0 +1,46 @@
+{
+  "version": "0.4",
+  "composition_policy": "composition-v1",
+  "resolved_presentation": {
+    "icon_system": {"value": "illustrated", "source": "explicit", "version": "2.1.0"},
+    "style": {"value": "deep-tech", "source": "explicit"},
+    "layout": {"value": "matrix", "source": "explicit"},
+    "motion": {"value": "showcase-v1", "source": "default"}
+  },
+  "preset": "illustrated-2.1-showcase",
+  "icon_system": "illustrated",
+  "canvas": {"width": 1480, "height": 840},
+  "style": "deep-tech",
+  "title": {
+    "text": "Illustrated 2.1 · Public Showcase",
+    "subtitle": "8 approved icons · automatic showcase-v1 performances"
+  },
+  "motion": {
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "stagger": 0.1,
+    "node": {"preset": "icon-performance"},
+    "edge": {"preset": "none"},
+    "group": {"preset": "none"},
+    "title": {"preset": "highlight-sweep"},
+    "reduced_motion": "static"
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "max_active_flow_edges": 0,
+    "max_particle_edges": 0,
+    "max_active_pulse_nodes": 8,
+    "max_scanning_groups": 0
+  },
+  "nodes": [
+    {"id": "agent", "label": "Agent", "caption": "receive • reason • deliver", "position": [50, 170], "size": [310, 230], "role": "agent", "icon": "agent", "effect": {"preset": "icon-performance"}},
+    {"id": "operator", "label": "Operator", "caption": "focus • operate • confirm", "position": [407, 170], "size": [310, 230], "role": "source", "icon": "operator", "effect": {"preset": "icon-performance"}},
+    {"id": "tool", "label": "Tool", "caption": "prepare • execute • complete", "position": [764, 170], "size": [310, 230], "role": "tool", "icon": "tool", "effect": {"preset": "icon-performance"}},
+    {"id": "output", "label": "Output", "caption": "compose • deliver • confirm", "position": [1121, 170], "size": [310, 230], "role": "output", "icon": "output", "effect": {"preset": "icon-performance"}},
+    {"id": "database", "label": "Database", "caption": "ingest • store • persist", "position": [50, 480], "size": [310, 230], "role": "memory", "icon": "database", "effect": {"preset": "icon-performance"}},
+    {"id": "api", "label": "API", "caption": "request • route • respond", "position": [407, 480], "size": [310, 230], "role": "source", "icon": "api", "effect": {"preset": "icon-performance"}},
+    {"id": "search", "label": "Search", "caption": "query • scan • discover", "position": [764, 480], "size": [310, 230], "role": "process", "icon": "search", "effect": {"preset": "icon-performance"}},
+    {"id": "memory", "label": "Memory", "caption": "capture • index • recall", "position": [1121, 480], "size": [310, 230], "role": "memory", "icon": "memory", "effect": {"preset": "icon-performance"}}
+  ]
+}

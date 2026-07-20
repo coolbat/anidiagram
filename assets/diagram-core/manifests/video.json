@@ -1,0 +1,18 @@
+{
+  "id": "video",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "files-content",
+  "semantic_kind": "video",
+  "structural_prototype": "video-frame-file",
+  "parts": ["body", "page", "fold", "play", "frame-a", "frame-b", "indicator"],
+  "attachments": {
+    "receive": {"x": 12, "y": 48},
+    "send": {"x": 84, "y": 48},
+    "status": {"x": 66, "y": 70}
+  },
+  "states": [],
+  "actions": ["receive", "play", "frame", "send"],
+  "status": "approved"
+}

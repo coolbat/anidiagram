@@ -1,0 +1,50 @@
+{
+  "system": "illustrated",
+  "version": "2.3.0",
+  "status": "static-confirmed-motion-pending",
+  "accepted_at": "2026-07-20",
+  "static_acceptance": {
+    "status": "confirmed",
+    "scope": "user-server-ai-model-message-queue-static-expansion",
+    "approved_icons": ["user", "server", "ai-model", "message-queue"],
+    "themes": ["canonical-warm", "deep-tech"],
+    "review_sizes": [64, 96, 120],
+    "static_instance_count": 20,
+    "unique_dom_ids": true,
+    "review_artifacts": {
+      "html": {
+        "path": "outputs/illustrated-expansion-batch-3/illustrated-expansion-batch-3.html",
+        "sha256": "f45fe0b00e9cf0a306ceafa85ccb3d877dc72129eefb4b15bb48be3ce8338f73"
+      },
+      "svg": {
+        "path": "outputs/illustrated-expansion-batch-3/illustrated-expansion-batch-3.svg",
+        "sha256": "ec1f6419f948a4a291fe28f00371b2f74c1533da04307d0bc82c7dc165954ad3"
+      },
+      "png": {
+        "path": "outputs/illustrated-expansion-batch-3/illustrated-expansion-batch-3.png",
+        "sha256": "79c9968710f4b0d7e843344f35e9c920a3b31fec5a3b22e0770c7ceb988427c4"
+      },
+      "result": {
+        "path": "outputs/illustrated-expansion-batch-3/result.json",
+        "sha256": "24472a3a1b98458ff7a766ed1c03ca1c5c2c75a137482c85428d92795c97478e"
+      }
+    }
+  },
+  "motion_acceptance": {
+    "status": "pending-human-review",
+    "scope": "user-server-ai-model-message-queue-semantic-motion",
+    "selection_policy": "explicit-review-only",
+    "review_contract": "illustrated-performance-v4-review"
+  },
+  "public_showcase": {
+    "static_icon_count": 16,
+    "automatic_motion_icon_count": 12,
+    "review_motion_icon_count": 4,
+    "review_motion_is_automatic": false
+  },
+  "notes": [
+    "The static review artifacts under outputs are local browser-visible evidence and may be gitignored.",
+    "This record approves the four static assets but does not approve their motion performances.",
+    "The public v3 motion contract remains unchanged for the twelve previously approved icons."
+  ]
+}

@@ -14,9 +14,24 @@ from anidiagram.exporters import _browser_capture_script
 from anidiagram.exporters import write_browser_capture
 from anidiagram.exporters import write_gif
 from anidiagram.illustrated_character_icons import character_definition, character_icon_ids
-from anidiagram.illustrated_character_v2_icons import character_v2_definition, character_v2_icon_ids
+from anidiagram.illustrated_registry import (
+    ILLUSTRATED_SYSTEM_METADATA,
+    illustrated_definition as character_v2_definition,
+    illustrated_icon_ids as character_v2_icon_ids,
+    illustrated_icon_status,
+)
+from anidiagram.illustrated_tokens import (
+    illustrated_geometry_tokens,
+    illustrated_token_document,
+    illustrated_tokens_for_style,
+)
 from anidiagram.icon_system import resolve_icon_system
-from anidiagram.motion_manifest import CHARACTER_ICON_PERFORMANCES, CHARACTER_REST_AT
+from anidiagram.motion_manifest import (
+    CHARACTER_ICON_PERFORMANCES,
+    CHARACTER_REST_AT,
+    ILLUSTRATED_ICON_PERFORMANCES,
+    ILLUSTRATED_REST_AT,
+)
 from anidiagram.planner import brief_to_plan
 from anidiagram.planner import compile_plan
 from anidiagram.presets import preset_names
@@ -25,6 +40,7 @@ from anidiagram.renderer_svg import icon_surface_accent
 from anidiagram.renderer_svg import icon_surface_fill
 from anidiagram.renderer_svg import render_svg
 from anidiagram.renderer_svg import render_html
+from anidiagram.renderer_illustrated_character_v2 import render_character_v2_icon
 from anidiagram.renderer_html_runtime import render_html_runtime
 from anidiagram.schema import KNOWN_ICONS, DiagramScriptValidationError, compile_scene
 from anidiagram.styles import deep_merge, load_style, validate_style_profile
@@ -90,12 +106,16 @@ class SvgRendererTest(unittest.TestCase):
         self.assertIn('data-icon-system="illustrated-character-v1"', svg)
         self.assertIn('id="icon-agent-chip"', svg)
 
-    def test_character_v2_is_explicit_static_concept_system(self):
+    def test_illustrated_keeps_static_svg_and_adds_approved_runtime_motion(self):
         self.assertEqual(
-            "illustrated-character-v2",
+            "illustrated",
             resolve_icon_system({"icon_system": "illustrated-character-v2"}),
         )
-        self.assertEqual({"agent", "operator", "tool", "output"}, set(character_v2_icon_ids()))
+        self.assertEqual("illustrated", resolve_icon_system({"icon_system": "illustrated"}))
+        self.assertEqual(
+            {"agent", "operator", "tool", "output", "database", "api", "search", "memory", "file", "folder", "cloud", "shield", "user", "server", "ai-model", "message-queue"},
+            set(character_v2_icon_ids()),
+        )
         for icon in character_v2_icon_ids():
             definition = character_v2_definition(icon)
             self.assertIsNotNone(definition, icon)
@@ -103,29 +123,276 @@ class SvgRendererTest(unittest.TestCase):
             self.assertEqual(len(definition.parts), len(set(definition.parts)), icon)
             self.assertEqual(set(definition.parts[1:]), {primitive.part for primitive in definition.primitives})
 
-        style = deep_merge(load_style(), {"icon_system": "illustrated-character-v2"})
+        style = deep_merge(load_style(), {"icon_system": "illustrated"})
         svg = render_svg(self._scene_with_icon("agent", motion={"profile": "off"}), style)
-        self.assertIn('data-icon-system="illustrated-character-v2"', svg)
-        self.assertIn('data-character-generation="v2-structured-concept"', svg)
-        self.assertIn('semantic-icon-illustrated-character-v2', svg)
+        self.assertIn('data-icon-system="illustrated"', svg)
+        self.assertIn('data-icon-system-version="2.3.0"', svg)
+        self.assertIn('semantic-icon-illustrated', svg)
+        self.assertNotIn("illustrated-character-v2", svg)
         for part in character_v2_definition("agent").parts:
             self.assertEqual(1, svg.count(f'id="icon-agent-{part}"'), part)
 
         manifest = self._manifest_from_html(
             render_html_runtime(self._scene_with_icon("agent"), style, runtime="gsap")
         )
-        self.assertEqual("illustrated-character-v2", manifest["icon_system"])
-        self.assertEqual([], manifest["icons"])
+        self.assertEqual("illustrated", manifest["icon_system"])
+        self.assertEqual("2.3.0", manifest["icon_system_version"])
+        self.assertEqual(1, len(manifest["icons"]))
+        self.assertEqual(ILLUSTRATED_ICON_PERFORMANCES["agent"], manifest["icons"][0]["performance"])
+        self.assertEqual(ILLUSTRATED_REST_AT["agent"], manifest["icons"][0]["rest_at"])
+
+    def test_illustrated_catalog_publishes_sixteen_assets_and_preserves_the_2_0_snapshot(self):
+        catalog = json.loads((ROOT / "assets" / "illustrated" / "catalog.json").read_text(encoding="utf-8"))
+        release = json.loads(
+            (ROOT / "assets" / "illustrated" / "releases" / "2.0.0.json").read_text(encoding="utf-8")
+        )
+
+        self.assertEqual(
+            {
+                "id": "illustrated",
+                "display_name": "Illustrated",
+                "display_name_zh": "插画",
+                "version": "2.3.0",
+                "static_status": "approved",
+                "motion_status": "approved",
+                "motion_contract": "illustrated-performance-v4",
+                "previous_motion_contract": "illustrated-performance-v3",
+                "archived_motion_review_contract": "illustrated-performance-v4-review",
+                "previous_archived_motion_review_contract": "illustrated-performance-v3-review",
+            },
+            ILLUSTRATED_SYSTEM_METADATA,
+        )
+        self.assertEqual("illustrated", catalog["system"])
+        self.assertEqual("2.3.0", catalog["version"])
+        self.assertEqual(["illustrated-character-v2"], catalog["legacy_aliases"])
+        self.assertEqual(set(character_v2_icon_ids()), {icon["id"] for icon in catalog["icons"]})
+        for icon in catalog["icons"]:
+            definition = character_v2_definition(icon["id"])
+            self.assertEqual("approved", icon["status"])
+            self.assertEqual("approved", illustrated_icon_status(icon["id"]))
+            self.assertEqual(definition.semantic_role, icon["semantic_role"])
+            self.assertEqual(list(definition.parts[1:]), icon["parts"])
+
+        self.assertEqual("frozen-static-baseline", release["status"])
+        self.assertEqual("confirmed", release["human_visual_acceptance"])
+        self.assertEqual("approved", catalog["motion_status"])
+        self.assertEqual("illustrated-performance-v4", catalog["motion_contract"]["id"])
+        self.assertEqual("approved", release["motion_status"])
+        self.assertEqual("illustrated-performance-v1", release["motion_contract"])
+        self.assertEqual(4, release["icon_count"])
+        frozen_files = {
+            "catalog_sha256": ROOT / "assets" / "illustrated" / "snapshots" / "catalog-2.0.0.json",
+            "registry_sha256": ROOT / "src" / "anidiagram" / "illustrated_character_v2_icons.py",
+            "tokens_sha256": ROOT / "assets" / "illustrated" / "tokens.json",
+            "renderer_sha256": ROOT / "src" / "anidiagram" / "renderer_illustrated_character_v2.py",
+            "visual_snapshot_sha256": ROOT / "assets" / "illustrated" / "previews" / "illustrated-2.0.0.svg",
+            "motion_contract_sha256": ROOT / "assets" / "illustrated" / "motion-contracts" / "illustrated-performance-v1.json",
+        }
+        for key, path in frozen_files.items():
+            self.assertEqual(release["hashes"][key], hashlib.sha256(path.read_bytes()).hexdigest(), key)
+
+    def test_illustrated_visual_tokens_are_versioned_and_geometry_locked(self):
+        document = illustrated_token_document()
+
+        self.assertEqual("illustrated", document["system"])
+        self.assertEqual("2.3.0", document["version"])
+        self.assertEqual(1, document["token_revision"])
+        self.assertEqual(
+            {
+                "view_box": 120,
+                "default_stroke_width": 3.4,
+                "stroke_linecap": "round",
+                "stroke_linejoin": "round",
+            },
+            dict(illustrated_geometry_tokens()),
+        )
+        self.assertEqual(set(document["colors"]), set(document["override_policy"]["allowed_color_tokens"]))
+        self.assertFalse(document["override_policy"]["geometry_overrides"])
+        with self.assertRaises(TypeError):
+            document["colors"]["ink"] = "#000000"
+
+    def test_illustrated_style_can_override_colors_without_changing_geometry(self):
+        definition = character_v2_definition("agent")
+        baseline = render_character_v2_icon(definition, "agent", 80, 80, 120)
+        palette = illustrated_tokens_for_style({"illustrated_tokens": {"ink": "#111111"}})
+        recolored = render_character_v2_icon(definition, "agent", 80, 80, 120, tokens=palette)
+
+        self.assertEqual(baseline.replace("#283047", "#111111"), recolored)
+        self.assertIn('transform="translate(20.0 20.0) scale(1.0000)"', recolored)
+
+    def test_illustrated_style_rejects_unknown_or_non_color_token_overrides(self):
+        for data in (
+            {"illustrated_tokens": {"geometry": "#111111"}},
+            {"illustrated_tokens": {"ink": "black"}},
+            {"illustrated_tokens": []},
+        ):
+            issues = validate_style_profile(data)
+            self.assertEqual(1, len(issues), data)
+            self.assertEqual("$.illustrated_tokens", issues[0].path)
+
+    def test_illustrated_deep_tech_public_style_changes_only_approved_colors(self):
+        public_style_path = ROOT / "styles" / "deep-tech.json"
+        public_style_source = json.loads(public_style_path.read_text(encoding="utf-8"))
+        public_style = load_style(public_style_path)
+        canonical = illustrated_tokens_for_style()
+        deep_tech = illustrated_tokens_for_style(public_style)
+
+        self.assertNotIn("icon_system", public_style_source)
+        self.assertEqual("illustrated-character-v1", public_style["icon_system"])
+        self.assertEqual(set(canonical), set(deep_tech))
+        self.assertEqual("#d8cebd", deep_tech["ink"])
+        self.assertEqual("#a78bfa", deep_tech["violet"])
+        self.assertEqual("#38bdf8", deep_tech["sky"])
+        self.assertEqual("#34d399", deep_tech["mint"])
+        self.assertEqual("#fbbf24", deep_tech["sun"])
+        self.assertEqual("#fb7185", deep_tech["coral"])
+        self.assertEqual(
+            {
+                "view_box": 120,
+                "default_stroke_width": 3.4,
+                "stroke_linecap": "round",
+                "stroke_linejoin": "round",
+            },
+            dict(illustrated_geometry_tokens()),
+        )
+
+    def test_illustrated_deep_tech_mapping_records_public_approval(self):
+        mapping = json.loads(
+            (ROOT / "assets" / "illustrated" / "template-mappings.json").read_text(encoding="utf-8")
+        )
+        public_style = json.loads((ROOT / "styles" / "deep-tech.json").read_text(encoding="utf-8"))
+
+        self.assertEqual("illustrated", mapping["system"])
+        self.assertEqual("2.3.0", mapping["version"])
+        self.assertEqual(7, mapping["mapping_revision"])
+        self.assertEqual("illustrated-performance-v4", mapping["public_motion_contract"])
+        self.assertEqual("illustrated-performance-v4-review", mapping["archived_motion_review_contract"])
+        self.assertEqual(1, len(mapping["mappings"]))
+        approved = mapping["mappings"][0]
+        self.assertEqual("deep-tech", approved["style"])
+        self.assertEqual("approved", approved["status"])
+        self.assertEqual("confirmed", approved["human_visual_acceptance"])
+        self.assertEqual("styles/deep-tech.json#illustrated_tokens", approved["token_source"])
+        self.assertEqual({"label": "ivory", "ink": "#d8cebd"}, approved["approved_outline"])
+        token_payload = json.dumps(
+            public_style["illustrated_tokens"], sort_keys=True, separators=(",", ":"), ensure_ascii=False
+        ).encode("utf-8")
+        self.assertEqual(approved["illustrated_tokens_sha256"], hashlib.sha256(token_payload).hexdigest())
+        self.assertEqual(
+            set(illustrated_token_document()["override_policy"]["allowed_color_tokens"]),
+            set(public_style["illustrated_tokens"]),
+        )
+        self.assertEqual(
+            {
+                "geometry_overrides": False,
+                "semantic_structure_overrides": False,
+                "public_style": True,
+            },
+            approved["constraints"],
+        )
+
+    def test_character_v2_agent_uses_ai_square_without_changing_outer_scene(self):
+        definition = character_v2_definition("agent")
+        primitives = {primitive.part: primitive for primitive in definition.primitives}
+
+        processor = primitives["processor"]
+        self.assertEqual("rect", processor.kind)
+        self.assertEqual(
+            {"x": "45", "y": "42", "width": "30", "height": "30", "rx": "6"},
+            {key: processor.attrs[key] for key in ("x", "y", "width", "height", "rx")},
+        )
+        ai_label = primitives["processor-core"]
+        self.assertEqual("path", ai_label.kind)
+        self.assertEqual("none", ai_label.attrs["fill"])
+        self.assertEqual("violet", ai_label.attrs["stroke"])
+        self.assertIn("M50 63", ai_label.attrs["d"])
+        self.assertIn("M62.5 50", ai_label.attrs["d"])
+
+        self.assertEqual(
+            {
+                "brain-left": "M57 27C45 18 30 25 31 38c-11 4-12 19-2 25-5 12 7 23 18 18 3 8 10 9 15 3V38c-1-5-2-8-5-11Z",
+                "brain-right": "M63 27c12-9 27-2 26 11 11 4 12 19 2 25 5 12-7 23-18 18-3 8-10 9-15 3V38c1-5 2-8 5-11Z",
+                "brain-detail": "M43 35c-5 4-3 9 1 11m-8 13c7-1 7 6 12 8m29-32c5 4 3 9-1 11m8 13c-7-1-7 6-12 8",
+                "output-path": "M90 54h10c5 0 7-3 7-7V35",
+                "result": "M107 16l3 8 8 3-8 3-3 8-3-8-8-3 8-3Z",
+            },
+            {
+                part: primitives[part].attrs["d"]
+                for part in ("brain-left", "brain-right", "brain-detail", "output-path", "result")
+            },
+        )
+
+    def test_character_v2_operator_keeps_character_details_and_adds_hands(self):
+        definition = character_v2_definition("operator")
+        primitives = {primitive.part: primitive for primitive in definition.primitives}
+
+        self.assertEqual(
+            "M41 36c-3-15 8-25 21-23 12 1 19 11 16 24l-9-5-6 4-9-5-7 6Z",
+            primitives["hair"].attrs["d"],
+        )
+        self.assertEqual(
+            "M43 38h13c0 6-3 9-7 9s-6-3-6-9Zm19 0h13c0 6-3 9-7 9s-6-3-6-9Zm-6 1h6",
+            primitives["glasses"].attrs["d"],
+        )
+        hands = primitives["hands"]
+        self.assertEqual("path", hands.kind)
+        self.assertEqual("peach", hands.attrs["fill"])
+        self.assertEqual("ink", hands.attrs["stroke"])
+        self.assertIn("M34 77", hands.attrs["d"])
+        self.assertIn("m34 0", hands.attrs["d"])
+
+    def test_character_v2_tool_has_a_clear_open_end_wrench(self):
+        definition = character_v2_definition("tool")
+        primitives = {primitive.part: primitive for primitive in definition.primitives}
+
+        wrench = primitives["wrench"]
+        self.assertEqual("path", wrench.kind)
+        self.assertEqual("sun", wrench.attrs["fill"])
+        self.assertEqual("ink", wrench.attrs["stroke"])
+        self.assertIn("l-13-6-7 7-9-9 7-7-6-13", wrench.attrs["d"])
+        self.assertEqual(
+            {"cx": "56", "cy": "71", "r": "4.5"},
+            {key: primitives["wrench-hole"].attrs[key] for key in ("cx", "cy", "r")},
+        )
+
+        self.assertEqual("M20 54h77l-7 46H27Z", primitives["toolbox"].attrs["d"])
+        self.assertEqual("M18 48h81v15H18Z", primitives["toolbox-lid"].attrs["d"])
+        self.assertEqual("M11 79l5-9 10 1 5 10-6 9-10-1Z", primitives["target"].attrs["d"])
+        self.assertEqual("M99 73l3 7 7 3-7 3-3 7-3-7-7-3 7-3Z", primitives["completion"].attrs["d"])
+
+    def test_character_v2_output_is_generic_artifact_delivery_not_email(self):
+        definition = character_v2_definition("output")
+        primitives = {primitive.part: primitive for primitive in definition.primitives}
+
+        self.assertEqual("artifact-deliver-confirm", definition.semantic_role)
+        self.assertNotIn("envelope", definition.parts)
+        self.assertNotIn("envelope-fold", definition.parts)
+        self.assertEqual(
+            {"delivery-tray", "delivery-lip"},
+            {part for part in definition.parts if part.startswith("delivery-")},
+        )
+        self.assertEqual("M15 66h27l9 11h13l9-11h27l7 35H8Z", primitives["delivery-tray"].attrs["d"])
+        self.assertEqual("sky", primitives["delivery-tray"].attrs["fill"])
+        self.assertEqual("M79 60c11-1 19-7 23-16m-8 4 8-4 1 9", primitives["send-path"].attrs["d"])
+        self.assertEqual("M98 27l5 5 10-12", primitives["check"].attrs["d"])
 
     def test_character_v2_quality_reports_only_uncovered_icons(self):
-        style = deep_merge(load_style(), {"icon_system": "illustrated-character-v2"})
+        style = deep_merge(load_style(), {"icon_system": "illustrated"})
         covered = quality_report(self._scene_with_icon("agent", motion={"profile": "off"}), style)
         self.assertEqual([], [item for item in covered["issues"] if item["code"] == "character_icon_fallback"])
 
-        uncovered = quality_report(self._scene_with_icon("database", motion={"profile": "off"}), style)
+        uncovered = quality_report(self._scene_with_icon("token", motion={"profile": "off"}), style)
         warnings = [item for item in uncovered["issues"] if item["code"] == "character_icon_fallback"]
         self.assertEqual(1, len(warnings))
-        self.assertIn("illustrated-character-v2", warnings[0]["message"])
+        self.assertIn("illustrated", warnings[0]["message"])
+
+    def test_character_v2_fallback_keeps_semantic_line_text_spacing(self):
+        style = deep_merge(load_style(), {"icon_system": "illustrated"})
+        covered_svg = render_svg(self._scene_with_icon("agent", motion={"profile": "off"}), style)
+        fallback_svg = render_svg(self._scene_with_icon("token", motion={"profile": "off"}), style)
+
+        self.assertIn('<text x="369.0" y="186.0"', covered_svg)
+        self.assertIn('<text x="328.0" y="186.0"', fallback_svg)
 
     def test_character_registry_and_manifest_cover_every_known_icon(self):
         self.assertEqual(set(character_icon_ids()), KNOWN_ICONS)
@@ -275,13 +542,14 @@ class SvgRendererTest(unittest.TestCase):
                 self.assertIn("repeatDelay: CHARACTER_REPEAT_DELAY", body, function_name)
             self.assertNotRegex(body, r"repeatDelay:\s*1\.")
 
-    def test_stage_runtime_contract_has_distinct_modes_and_quiet_packet_rhythm(self):
+    def test_stage_runtime_contract_has_distinct_modes_and_continuous_packet_rhythm(self):
         runtime_source = (ROOT / "runtime" / "anidiagram-runtime.js").read_text(encoding="utf-8")
         manifest_source = (ROOT / "src" / "anidiagram" / "motion_manifest.py").read_text(encoding="utf-8")
         verifier_source = (ROOT / "scripts" / "verify_stage_motion_modes.mjs").read_text(encoding="utf-8")
 
         self.assertIn("const EDGE_PACKET_COUNT = 1;", runtime_source)
-        self.assertIn("const EDGE_PACKET_REPEAT_DELAY = 0.7;", runtime_source)
+        self.assertIn("const EDGE_PACKET_REPEAT_DELAY = 0.0;", runtime_source)
+        self.assertIn("const SHORT_EDGE_THRESHOLD = 120;", runtime_source)
         self.assertIn("repeatDelay: EDGE_PACKET_REPEAT_DELAY", runtime_source)
         self.assertIn('__anidiagramStage = "edge-packet"', runtime_source)
         self.assertIn('__anidiagramStage = "title-entry"', runtime_source)
@@ -296,6 +564,10 @@ class SvgRendererTest(unittest.TestCase):
         self.assertIn("active_edge_indices", edge_body)
         self.assertNotIn("edgeGroups.slice(0", edge_body)
         self.assertIn("runtime-edge-effect-", edge_body)
+        self.assertIn('"stroke-dashoffset": -(flowDash + flowGap)', edge_body)
+        self.assertIn("runtime-edge-short-packet", edge_body)
+        self.assertIn("getPointAtLength", edge_body)
+        self.assertIn("fill: stroke", edge_body)
         self.assertNotIn('filter: "url(#particle-glow)"', edge_body)
         self.assertIn('"edge_limit"', manifest_source)
         self.assertIn('"readable_edge_limit"', manifest_source)
@@ -339,13 +611,15 @@ class SvgRendererTest(unittest.TestCase):
         reduced_source = (ROOT / "scripts" / "verify_character_reduced_motion.mjs").read_text(encoding="utf-8")
 
         self.assertIn("readCharacterManifest", rest_source)
-        self.assertIn('manifest.icon_system !== "illustrated-character-v1"', rest_source)
+        self.assertIn("manifest.icon_system !== expectedSystem", rest_source)
+        self.assertIn('process.argv[4] || "illustrated-character-v1"', rest_source)
         self.assertIn("FULL_GALLERY_CHARACTER_COUNT = 13", rest_source)
         self.assertIn("expected-character-icon-count", rest_source)
         self.assertIn("strong-loop cycle out of range", rest_source)
         self.assertNotIn("CHARACTER_PERFORMANCE_IDS", rest_source)
         self.assertIn("readCharacterManifest", reduced_source)
-        self.assertIn('manifest.icon_system !== "illustrated-character-v1"', reduced_source)
+        self.assertIn("manifest.icon_system !== expectedSystem", reduced_source)
+        self.assertIn('process.argv[4] || "illustrated-character-v1"', reduced_source)
         self.assertIn("expected-character-icon-count", reduced_source)
         self.assertIn("verified reduced motion for", reduced_source)
 
@@ -1367,16 +1641,19 @@ class SvgRendererTest(unittest.TestCase):
         report = quality_report(scene)
         svg = render_svg(scene, load_style(ROOT / "styles" / "sketch-board.json"))
 
-        self.assertEqual("0.1", plan["version"])
-        self.assertEqual("explainer-board", plan["layout_strategy"])
-        self.assertEqual("brief-explainer", scene.preset)
-        self.assertEqual("0.3", scene.version)
-        self.assertEqual({"nodes": 18, "edges": 14, "groups": 5}, scene.stats())
+        self.assertEqual("0.2", plan["version"])
+        self.assertEqual("layered", scene.preset)
+        self.assertEqual("diagram-core-v1", scene.icon_system)
+        self.assertEqual("0.4", scene.version)
+        self.assertEqual({"nodes": 18, "edges": 14, "groups": 0}, scene.stats())
         self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, report["summary"])
-        self.assertIn("node-decision-shape", svg)
+        self.assertIn('data-icon-source="diagram-core-v1"', svg)
         self.assertIn("edge-arrow-particle", svg)
-        self.assertLessEqual(svg.count('class="edge-particle edge-arrow-particle"'), 3)
-        self.assertIn("edge-flow-dynamic-dash", svg)
+        self.assertGreater(svg.count('class="edge-particle edge-arrow-particle"'), 3)
+
+        legacy = brief_to_plan(brief, version="0.1")
+        self.assertEqual("0.1", legacy["version"])
+        self.assertEqual("0.3", compile_plan(legacy)["version"])
 
     def test_cli_compiles_brief_to_plan_spec_and_outputs(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -1409,9 +1686,9 @@ class SvgRendererTest(unittest.TestCase):
 
             self.assertTrue(result["ok"])
             self.assertEqual("brief", result["source"])
-            self.assertEqual({"name": "DiagramPlan", "version": "0.1"}, result["plan"]["schema"])
-            self.assertEqual("explainer-board", plan["layout_strategy"])
-            self.assertEqual("0.3", spec["version"])
+            self.assertEqual({"name": "DiagramPlan", "version": "0.2"}, result["plan"]["schema"])
+            self.assertEqual("diagram-core-v1", result["icon_system"])
+            self.assertEqual("0.4", spec["version"])
             self.assertTrue(Path(result["outputs"]["svg"]["path"]).is_file())
             self.assertEqual(0, result["outputs"]["quality"]["summary"]["errors"])
             self.assertEqual(0, result["outputs"]["quality"]["summary"]["warnings"])

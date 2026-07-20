@@ -1,0 +1,504 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 980" width="600" height="980" role="img" aria-label="Agent authored-rest benchmark across sizes and contexts, followed by accent-off and grayscale recognition" data-icon-review="true" data-main-cell-count="12" data-recognition-cell-count="2">
+  <title>Agent static icon benchmark contact sheet</title>
+  <style>
+text { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  </style>
+  <rect x="0" y="0" width="600" height="980" fill="#eef1f5"/>
+  <text x="40" y="51" fill="#14213d" font-size="28" font-weight="750">Agent benchmark · authored rest</text>
+  <text x="40" y="82" fill="#14213d" font-size="14">3 sizes × 4 token contexts · deterministic static output</text>
+  <text x="40" y="780" fill="#14213d" font-size="20" font-weight="700">48 px recognition checks · accent-off and grayscale</text>
+  <g data-cell-kind="main" data-cell-id="agent-48-blue" data-icon-id="agent" data-size="48" data-context="blue" data-pose="authored-rest" style="--icon-surface-contrast:#14213d">
+    <rect x="40" y="128" width="158" height="146" rx="14" fill="#fffaf2" stroke="#14213d" stroke-width="1"/>
+    <text x="52" y="149" fill="#14213d" font-size="11" font-weight="650">48px · blue · rest</text>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(95 164) scale(0.5)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#4f7cff;--icon-accent-secondary:#45c5d8;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="contact_u2x2emain_u2x2e48_u2x2eblue__agent__root"><g data-part="body" id="contact_u2x2emain_u2x2e48_u2x2eblue__agent__body">
+  <g data-part="shell" id="contact_u2x2emain_u2x2e48_u2x2eblue__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="contact_u2x2emain_u2x2e48_u2x2eblue__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="contact_u2x2emain_u2x2e48_u2x2eblue__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="contact_u2x2emain_u2x2e48_u2x2eblue__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="contact_u2x2emain_u2x2e48_u2x2eblue__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="contact_u2x2emain_u2x2e48_u2x2eblue__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="contact_u2x2emain_u2x2e48_u2x2eblue__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="contact_u2x2emain_u2x2e48_u2x2eblue__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="main" data-cell-id="agent-64-blue" data-icon-id="agent" data-size="64" data-context="blue" data-pose="authored-rest" style="--icon-surface-contrast:#14213d">
+    <rect x="214" y="128" width="158" height="146" rx="14" fill="#fffaf2" stroke="#14213d" stroke-width="1"/>
+    <text x="226" y="149" fill="#14213d" font-size="11" font-weight="650">64px · blue · rest</text>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(261 164) scale(0.666666666666667)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#4f7cff;--icon-accent-secondary:#45c5d8;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="contact_u2x2emain_u2x2e64_u2x2eblue__agent__root"><g data-part="body" id="contact_u2x2emain_u2x2e64_u2x2eblue__agent__body">
+  <g data-part="shell" id="contact_u2x2emain_u2x2e64_u2x2eblue__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="contact_u2x2emain_u2x2e64_u2x2eblue__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="contact_u2x2emain_u2x2e64_u2x2eblue__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="contact_u2x2emain_u2x2e64_u2x2eblue__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="contact_u2x2emain_u2x2e64_u2x2eblue__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="contact_u2x2emain_u2x2e64_u2x2eblue__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="contact_u2x2emain_u2x2e64_u2x2eblue__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="contact_u2x2emain_u2x2e64_u2x2eblue__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="main" data-cell-id="agent-96-blue" data-icon-id="agent" data-size="96" data-context="blue" data-pose="authored-rest" style="--icon-surface-contrast:#14213d">
+    <rect x="388" y="128" width="158" height="146" rx="14" fill="#fffaf2" stroke="#14213d" stroke-width="1"/>
+    <text x="400" y="149" fill="#14213d" font-size="11" font-weight="650">96px · blue · rest</text>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(419 164) scale(1)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#4f7cff;--icon-accent-secondary:#45c5d8;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="contact_u2x2emain_u2x2e96_u2x2eblue__agent__root"><g data-part="body" id="contact_u2x2emain_u2x2e96_u2x2eblue__agent__body">
+  <g data-part="shell" id="contact_u2x2emain_u2x2e96_u2x2eblue__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="contact_u2x2emain_u2x2e96_u2x2eblue__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="contact_u2x2emain_u2x2e96_u2x2eblue__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="contact_u2x2emain_u2x2e96_u2x2eblue__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="contact_u2x2emain_u2x2e96_u2x2eblue__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="contact_u2x2emain_u2x2e96_u2x2eblue__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="contact_u2x2emain_u2x2e96_u2x2eblue__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="contact_u2x2emain_u2x2e96_u2x2eblue__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="main" data-cell-id="agent-48-dark" data-icon-id="agent" data-size="48" data-context="dark" data-pose="authored-rest" style="--icon-surface-contrast:#14213d">
+    <rect x="40" y="288" width="158" height="146" rx="14" fill="#202838" stroke="#d6deeb" stroke-width="1"/>
+    <text x="52" y="309" fill="#d6deeb" font-size="11" font-weight="650">48px · dark · rest</text>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(95 324) scale(0.5)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#65d8ff;--icon-accent-secondary:#9f85ff;--icon-detail:#8fa0b8;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#d6deeb;--icon-surface-main:#202838;--icon-surface-recessed:#151c28;--icon-surface-secondary:#2c3749" id="contact_u2x2emain_u2x2e48_u2x2edark__agent__root"><g data-part="body" id="contact_u2x2emain_u2x2e48_u2x2edark__agent__body">
+  <g data-part="shell" id="contact_u2x2emain_u2x2e48_u2x2edark__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="contact_u2x2emain_u2x2e48_u2x2edark__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="contact_u2x2emain_u2x2e48_u2x2edark__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="contact_u2x2emain_u2x2e48_u2x2edark__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="contact_u2x2emain_u2x2e48_u2x2edark__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="contact_u2x2emain_u2x2e48_u2x2edark__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="contact_u2x2emain_u2x2e48_u2x2edark__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="contact_u2x2emain_u2x2e48_u2x2edark__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="main" data-cell-id="agent-64-dark" data-icon-id="agent" data-size="64" data-context="dark" data-pose="authored-rest" style="--icon-surface-contrast:#14213d">
+    <rect x="214" y="288" width="158" height="146" rx="14" fill="#202838" stroke="#d6deeb" stroke-width="1"/>
+    <text x="226" y="309" fill="#d6deeb" font-size="11" font-weight="650">64px · dark · rest</text>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(261 324) scale(0.666666666666667)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#65d8ff;--icon-accent-secondary:#9f85ff;--icon-detail:#8fa0b8;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#d6deeb;--icon-surface-main:#202838;--icon-surface-recessed:#151c28;--icon-surface-secondary:#2c3749" id="contact_u2x2emain_u2x2e64_u2x2edark__agent__root"><g data-part="body" id="contact_u2x2emain_u2x2e64_u2x2edark__agent__body">
+  <g data-part="shell" id="contact_u2x2emain_u2x2e64_u2x2edark__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="contact_u2x2emain_u2x2e64_u2x2edark__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="contact_u2x2emain_u2x2e64_u2x2edark__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="contact_u2x2emain_u2x2e64_u2x2edark__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="contact_u2x2emain_u2x2e64_u2x2edark__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="contact_u2x2emain_u2x2e64_u2x2edark__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="contact_u2x2emain_u2x2e64_u2x2edark__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="contact_u2x2emain_u2x2e64_u2x2edark__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="main" data-cell-id="agent-96-dark" data-icon-id="agent" data-size="96" data-context="dark" data-pose="authored-rest" style="--icon-surface-contrast:#14213d">
+    <rect x="388" y="288" width="158" height="146" rx="14" fill="#202838" stroke="#d6deeb" stroke-width="1"/>
+    <text x="400" y="309" fill="#d6deeb" font-size="11" font-weight="650">96px · dark · rest</text>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(419 324) scale(1)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#65d8ff;--icon-accent-secondary:#9f85ff;--icon-detail:#8fa0b8;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#d6deeb;--icon-surface-main:#202838;--icon-surface-recessed:#151c28;--icon-surface-secondary:#2c3749" id="contact_u2x2emain_u2x2e96_u2x2edark__agent__root"><g data-part="body" id="contact_u2x2emain_u2x2e96_u2x2edark__agent__body">
+  <g data-part="shell" id="contact_u2x2emain_u2x2e96_u2x2edark__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="contact_u2x2emain_u2x2e96_u2x2edark__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="contact_u2x2emain_u2x2e96_u2x2edark__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="contact_u2x2emain_u2x2e96_u2x2edark__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="contact_u2x2emain_u2x2e96_u2x2edark__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="contact_u2x2emain_u2x2e96_u2x2edark__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="contact_u2x2emain_u2x2e96_u2x2edark__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="contact_u2x2emain_u2x2e96_u2x2edark__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="main" data-cell-id="agent-48-warm" data-icon-id="agent" data-size="48" data-context="warm" data-pose="authored-rest" style="--icon-surface-contrast:#14213d">
+    <rect x="40" y="448" width="158" height="146" rx="14" fill="#fff8eb" stroke="#40372f" stroke-width="1"/>
+    <text x="52" y="469" fill="#40372f" font-size="11" font-weight="650">48px · warm · rest</text>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(95 484) scale(0.5)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#e38843;--icon-accent-secondary:#d5af4b;--icon-detail:#8a796a;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#40372f;--icon-surface-main:#fff8eb;--icon-surface-recessed:#ded0b8;--icon-surface-secondary:#eee4d1" id="contact_u2x2emain_u2x2e48_u2x2ewarm__agent__root"><g data-part="body" id="contact_u2x2emain_u2x2e48_u2x2ewarm__agent__body">
+  <g data-part="shell" id="contact_u2x2emain_u2x2e48_u2x2ewarm__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="contact_u2x2emain_u2x2e48_u2x2ewarm__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="contact_u2x2emain_u2x2e48_u2x2ewarm__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="contact_u2x2emain_u2x2e48_u2x2ewarm__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="contact_u2x2emain_u2x2e48_u2x2ewarm__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="contact_u2x2emain_u2x2e48_u2x2ewarm__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="contact_u2x2emain_u2x2e48_u2x2ewarm__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="contact_u2x2emain_u2x2e48_u2x2ewarm__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="main" data-cell-id="agent-64-warm" data-icon-id="agent" data-size="64" data-context="warm" data-pose="authored-rest" style="--icon-surface-contrast:#14213d">
+    <rect x="214" y="448" width="158" height="146" rx="14" fill="#fff8eb" stroke="#40372f" stroke-width="1"/>
+    <text x="226" y="469" fill="#40372f" font-size="11" font-weight="650">64px · warm · rest</text>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(261 484) scale(0.666666666666667)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#e38843;--icon-accent-secondary:#d5af4b;--icon-detail:#8a796a;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#40372f;--icon-surface-main:#fff8eb;--icon-surface-recessed:#ded0b8;--icon-surface-secondary:#eee4d1" id="contact_u2x2emain_u2x2e64_u2x2ewarm__agent__root"><g data-part="body" id="contact_u2x2emain_u2x2e64_u2x2ewarm__agent__body">
+  <g data-part="shell" id="contact_u2x2emain_u2x2e64_u2x2ewarm__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="contact_u2x2emain_u2x2e64_u2x2ewarm__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="contact_u2x2emain_u2x2e64_u2x2ewarm__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="contact_u2x2emain_u2x2e64_u2x2ewarm__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="contact_u2x2emain_u2x2e64_u2x2ewarm__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="contact_u2x2emain_u2x2e64_u2x2ewarm__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="contact_u2x2emain_u2x2e64_u2x2ewarm__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="contact_u2x2emain_u2x2e64_u2x2ewarm__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="main" data-cell-id="agent-96-warm" data-icon-id="agent" data-size="96" data-context="warm" data-pose="authored-rest" style="--icon-surface-contrast:#14213d">
+    <rect x="388" y="448" width="158" height="146" rx="14" fill="#fff8eb" stroke="#40372f" stroke-width="1"/>
+    <text x="400" y="469" fill="#40372f" font-size="11" font-weight="650">96px · warm · rest</text>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(419 484) scale(1)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#e38843;--icon-accent-secondary:#d5af4b;--icon-detail:#8a796a;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#40372f;--icon-surface-main:#fff8eb;--icon-surface-recessed:#ded0b8;--icon-surface-secondary:#eee4d1" id="contact_u2x2emain_u2x2e96_u2x2ewarm__agent__root"><g data-part="body" id="contact_u2x2emain_u2x2e96_u2x2ewarm__agent__body">
+  <g data-part="shell" id="contact_u2x2emain_u2x2e96_u2x2ewarm__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="contact_u2x2emain_u2x2e96_u2x2ewarm__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="contact_u2x2emain_u2x2e96_u2x2ewarm__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="contact_u2x2emain_u2x2e96_u2x2ewarm__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="contact_u2x2emain_u2x2e96_u2x2ewarm__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="contact_u2x2emain_u2x2e96_u2x2ewarm__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="contact_u2x2emain_u2x2e96_u2x2ewarm__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="contact_u2x2emain_u2x2e96_u2x2ewarm__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="main" data-cell-id="agent-48-green" data-icon-id="agent" data-size="48" data-context="green" data-pose="authored-rest" style="--icon-surface-contrast:#14213d">
+    <rect x="40" y="608" width="158" height="146" rx="14" fill="#fffaf2" stroke="#14213d" stroke-width="1"/>
+    <text x="52" y="629" fill="#14213d" font-size="11" font-weight="650">48px · green · rest</text>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(95 644) scale(0.5)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#38a967;--icon-accent-secondary:#59c6a7;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="contact_u2x2emain_u2x2e48_u2x2egreen__agent__root"><g data-part="body" id="contact_u2x2emain_u2x2e48_u2x2egreen__agent__body">
+  <g data-part="shell" id="contact_u2x2emain_u2x2e48_u2x2egreen__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="contact_u2x2emain_u2x2e48_u2x2egreen__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="contact_u2x2emain_u2x2e48_u2x2egreen__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="contact_u2x2emain_u2x2e48_u2x2egreen__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="contact_u2x2emain_u2x2e48_u2x2egreen__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="contact_u2x2emain_u2x2e48_u2x2egreen__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="contact_u2x2emain_u2x2e48_u2x2egreen__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="contact_u2x2emain_u2x2e48_u2x2egreen__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="main" data-cell-id="agent-64-green" data-icon-id="agent" data-size="64" data-context="green" data-pose="authored-rest" style="--icon-surface-contrast:#14213d">
+    <rect x="214" y="608" width="158" height="146" rx="14" fill="#fffaf2" stroke="#14213d" stroke-width="1"/>
+    <text x="226" y="629" fill="#14213d" font-size="11" font-weight="650">64px · green · rest</text>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(261 644) scale(0.666666666666667)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#38a967;--icon-accent-secondary:#59c6a7;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="contact_u2x2emain_u2x2e64_u2x2egreen__agent__root"><g data-part="body" id="contact_u2x2emain_u2x2e64_u2x2egreen__agent__body">
+  <g data-part="shell" id="contact_u2x2emain_u2x2e64_u2x2egreen__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="contact_u2x2emain_u2x2e64_u2x2egreen__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="contact_u2x2emain_u2x2e64_u2x2egreen__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="contact_u2x2emain_u2x2e64_u2x2egreen__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="contact_u2x2emain_u2x2e64_u2x2egreen__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="contact_u2x2emain_u2x2e64_u2x2egreen__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="contact_u2x2emain_u2x2e64_u2x2egreen__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="contact_u2x2emain_u2x2e64_u2x2egreen__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="main" data-cell-id="agent-96-green" data-icon-id="agent" data-size="96" data-context="green" data-pose="authored-rest" style="--icon-surface-contrast:#14213d">
+    <rect x="388" y="608" width="158" height="146" rx="14" fill="#fffaf2" stroke="#14213d" stroke-width="1"/>
+    <text x="400" y="629" fill="#14213d" font-size="11" font-weight="650">96px · green · rest</text>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(419 644) scale(1)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#38a967;--icon-accent-secondary:#59c6a7;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="contact_u2x2emain_u2x2e96_u2x2egreen__agent__root"><g data-part="body" id="contact_u2x2emain_u2x2e96_u2x2egreen__agent__body">
+  <g data-part="shell" id="contact_u2x2emain_u2x2e96_u2x2egreen__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="contact_u2x2emain_u2x2e96_u2x2egreen__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="contact_u2x2emain_u2x2e96_u2x2egreen__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="contact_u2x2emain_u2x2e96_u2x2egreen__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="contact_u2x2emain_u2x2e96_u2x2egreen__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="contact_u2x2emain_u2x2e96_u2x2egreen__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="contact_u2x2emain_u2x2e96_u2x2egreen__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="contact_u2x2emain_u2x2e96_u2x2egreen__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-recognition-row="accent-off">
+    <g data-cell-kind="recognition" data-cell-id="agent-recognition-accent-off" data-icon-id="agent" data-recognition-mode="accent-off" data-size="48" data-context="blue" data-pose="authored-rest" style="--icon-surface-contrast:#14213d">
+      <rect x="40" y="800" width="158" height="146" rx="14" fill="#fffaf2" stroke="#14213d" stroke-width="1"/>
+      <text x="52" y="821" fill="#14213d" font-size="11" font-weight="650">48px · off · rest</text>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(95 838) scale(0.5)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#14213d;--icon-accent-secondary:#64748b;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="contact_u2x2erecognition_u2x2eaccent_u2x2doff__agent__root"><g data-part="body" id="contact_u2x2erecognition_u2x2eaccent_u2x2doff__agent__body">
+  <g data-part="shell" id="contact_u2x2erecognition_u2x2eaccent_u2x2doff__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="contact_u2x2erecognition_u2x2eaccent_u2x2doff__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="contact_u2x2erecognition_u2x2eaccent_u2x2doff__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="contact_u2x2erecognition_u2x2eaccent_u2x2doff__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="contact_u2x2erecognition_u2x2eaccent_u2x2doff__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="contact_u2x2erecognition_u2x2eaccent_u2x2doff__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="contact_u2x2erecognition_u2x2eaccent_u2x2doff__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="contact_u2x2erecognition_u2x2eaccent_u2x2doff__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+    </g>
+  </g>
+  <g data-recognition-row="grayscale">
+    <g data-cell-kind="recognition" data-cell-id="agent-recognition-grayscale" data-icon-id="agent" data-recognition-mode="grayscale" data-size="48" data-context="blue" data-pose="authored-rest" style="--icon-surface-contrast:#202020">
+      <rect x="214" y="800" width="158" height="146" rx="14" fill="#fafafa" stroke="#202020" stroke-width="1"/>
+      <text x="226" y="821" fill="#202020" font-size="11" font-weight="650">48px · gray · rest</text>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(269 838) scale(0.5)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#7c7c7c;--icon-accent-secondary:#ababab;--icon-detail:#727272;--icon-status-active:#a5a5a5;--icon-status-error:#797979;--icon-status-idle:#a1a1a1;--icon-status-success:#959595;--icon-status-warning:#aeaeae;--icon-stroke:#202020;--icon-surface-main:#fafafa;--icon-surface-recessed:#e4e4e4;--icon-surface-secondary:#f1f1f1" id="contact_u2x2erecognition_u2x2egrayscale__agent__root"><g data-part="body" id="contact_u2x2erecognition_u2x2egrayscale__agent__body">
+  <g data-part="shell" id="contact_u2x2erecognition_u2x2egrayscale__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="contact_u2x2erecognition_u2x2egrayscale__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="contact_u2x2erecognition_u2x2egrayscale__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="contact_u2x2erecognition_u2x2egrayscale__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="contact_u2x2erecognition_u2x2egrayscale__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="contact_u2x2erecognition_u2x2egrayscale__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="contact_u2x2erecognition_u2x2egrayscale__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="contact_u2x2erecognition_u2x2egrayscale__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+    </g>
+  </g>
+</svg>

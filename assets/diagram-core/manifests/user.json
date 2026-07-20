@@ -1,0 +1,18 @@
+{
+  "id": "user",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "actors",
+  "semantic_kind": "user",
+  "structural_prototype": "personal-user-request",
+  "parts": ["body", "profile", "head", "shoulders", "request-bubble", "indicator"],
+  "attachments": {
+    "receive": {"x": 9, "y": 48},
+    "send": {"x": 87, "y": 48},
+    "status": {"x": 73, "y": 66}
+  },
+  "states": [],
+  "actions": ["receive", "request", "decide", "send"],
+  "status": "approved"
+}

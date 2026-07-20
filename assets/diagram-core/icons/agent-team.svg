@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Coordinated agent team icon" data-icon="agent-team">
+  <g data-part="body">
+  <g data-part="leader">
+    <circle cx="48" cy="31" r="17" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <rect x="36" y="22" width="24" height="18" rx="7" fill="var(--icon-surface-contrast, #14213d)"/>
+    <circle cx="43" cy="31" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    <circle cx="53" cy="31" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    <line x1="48" y1="14" x2="48" y2="18" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+  </g>
+  <g data-part="member-left">
+    <circle cx="26" cy="67" r="14" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <rect x="16" y="60" width="20" height="14" rx="6" fill="var(--icon-surface-contrast, #14213d)"/>
+    <circle cx="22" cy="67" r="2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    <circle cx="30" cy="67" r="2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+  </g>
+  <g data-part="member-right">
+    <circle cx="70" cy="67" r="14" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <rect x="60" y="60" width="20" height="14" rx="6" fill="var(--icon-surface-contrast, #14213d)"/>
+    <circle cx="66" cy="67" r="2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    <circle cx="74" cy="67" r="2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+  </g>
+  <g data-part="link">
+    <path d="M 35 43 Q 25 47 22 53 M 61 43 Q 71 47 74 53 M 40 72 Q 48 78 56 72" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+  </g>
+  <g data-part="indicator">
+    <circle cx="48" cy="50" r="4" fill="var(--icon-surface-contrast, #14213d)"/>
+    <circle cx="48" cy="50" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+  </g>
+  </g>
+</svg>

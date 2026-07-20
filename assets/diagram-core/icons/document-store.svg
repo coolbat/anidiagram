@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Document drawer store icon" data-icon="document-store">
+  <g data-part="body">
+    <g data-part="shell">
+      <rect x="17" y="38" width="62" height="43" rx="6" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+      <line x1="22" y1="46" x2="74" y2="46" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="drawer">
+      <rect x="23" y="51" width="50" height="23" rx="4" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+      <rect x="31" y="57" width="24" height="9" rx="2" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner"/>
+      <line x1="59" y1="61.5" x2="66" y2="61.5" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="document-card-front">
+      <path d="M 27 18 L 53 14 L 57 45 L 31 48 Z" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+      <line x1="34" y1="25" x2="49" y2="23" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="inner"/>
+      <line x1="35" y1="33" x2="47" y2="31" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="document-card-back">
+      <path d="M 49 16 L 70 21 L 66 48 L 44 44 Z" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+      <line x1="54" y1="25" x2="65" y2="28" stroke="var(--icon-accent, #7c5ce7)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="inner"/>
+      <line x1="53" y1="33" x2="62" y2="35" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="indicator">
+      <circle cx="70" cy="72" r="6" fill="var(--icon-surface-contrast, #14213d)"/>
+      <circle cx="70" cy="72" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,24 @@
+{
+  "system": "illustrated",
+  "display_name": "Illustrated",
+  "display_name_zh": "插画",
+  "version": "2.0.0",
+  "status": "frozen-static-baseline",
+  "scope": "immutable-static-visual-snapshot",
+  "catalog_lifecycle_status": "approved",
+  "human_visual_acceptance": "confirmed",
+  "icon_count": 4,
+  "motion_status": "approved",
+  "motion_contract": "illustrated-performance-v1",
+  "motion_approved_at": "2026-07-20",
+  "legacy_aliases": ["illustrated-character-v2"],
+  "frozen_at": "2026-07-19",
+  "hashes": {
+    "catalog_sha256": "ffb0b05e4639062d906a019931a8367135ab223b31738573d03edad979e13943",
+    "registry_sha256": "ef3f875ac6be49276ed1195e8b2cfc725a651599cce4c4db7afd8ba912127b20",
+    "tokens_sha256": "dce56128fc462429c9dd83c0e572d757e3d5368061a48525dbb80e2ffc591f50",
+    "renderer_sha256": "735dfe60b519518c9b1e2fb1d5817f5d2f720c5cd8b5a2e1e26028caae7f9fa0",
+    "visual_snapshot_sha256": "00ea011a4e379d08e1b4ff18f5a046b34f71291b1bcf62e8d1678e8a669d3161",
+    "motion_contract_sha256": "88d0c5ca97cb659b1e628492815b1fb2d2610b4619ebd203c3378013adb9be81"
+  }
+}

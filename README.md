@@ -12,7 +12,7 @@ images, generated assets, or repository history from the projects listed in
 
 AniDiagram uses two complementary galleries:
 
-- **Style Showcase**: 12 signature cases, one for every visual style. This
+- **Style Showcase**: 13 signature cases, one for every public visual style. This
   answers "how can it look?"
 - **Layout Showcase**: 14 teaching cases, one for every clean-room layout
   preset. This answers "when should I use this layout?"
@@ -155,7 +155,7 @@ or runtime scheduling must be confirmed before implementation.
   animated paths without turning every element on at once.
 - Exports optional PNG, GIF, PDF, WebP, MP4, APNG, and Lottie files.
 - Produces quality reports for bounds, overlaps, text fit, and explicit paths.
-- Includes 14 clean-room preset compilers and 12 visual styles.
+- Includes 14 clean-room preset compilers and 13 public visual styles.
 
 SVG, debug viewer HTML, Lottie, and quality reports use the Python standard
 library. The primary `html` export writes a high-fidelity runtime page with a
@@ -202,6 +202,17 @@ PYTHONPATH=src python3 -m anidiagram.cli \
   --formats svg,html,quality \
   --plan-out outputs/loop-engineering.plan.json \
   --spec-out outputs/loop-engineering.diagram.json
+```
+
+Compile an authored DiagramPlan v0.2 into resolved DiagramScript v0.4:
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --plan examples/contracts/production-request-path.plan.json \
+  --spec-out outputs/production-request-path.diagram.json \
+  --outdir outputs \
+  --basename production-request-path \
+  --formats svg,html,quality
 ```
 
 Render the high-fidelity HTML runtime demo:
@@ -278,17 +289,24 @@ Schema files:
 - [schemas/diagram-script-v0.1.schema.json](./schemas/diagram-script-v0.1.schema.json)
 - [schemas/diagram-script-v0.2.schema.json](./schemas/diagram-script-v0.2.schema.json)
 - [schemas/diagram-script-v0.3.schema.json](./schemas/diagram-script-v0.3.schema.json)
+- [schemas/diagram-script-v0.4.schema.json](./schemas/diagram-script-v0.4.schema.json) — composition-v1 resolved output
 - [schemas/diagram-plan-v0.1.schema.json](./schemas/diagram-plan-v0.1.schema.json)
+- [schemas/diagram-plan-v0.2.schema.json](./schemas/diagram-plan-v0.2.schema.json) — implemented semantic-first composition contract
 - [schemas/style-profile-v0.1.schema.json](./schemas/style-profile-v0.1.schema.json)
 
 v0.2 adds route types, step badges, preset metadata, and stricter role
 validation. v0.3 adds structured effect objects, semantic icons, and node
-shapes. See
+shapes. v0.4 adds an independent top-level icon system, resolved presentation
+provenance, the Diagram Core default, and `showcase-v1`. See
 [docs/diagram-script.md](./docs/diagram-script.md).
 
-DiagramPlan v0.1 is the higher-level brief/LLM contract. The current local
-planner and compiler are documented in
+DiagramPlan v0.2 is the default higher-level brief/LLM contract; v0.1 remains
+available for legacy `explainer-board` compilation. The planner and compiler are documented in
 [docs/prompt-to-diagram-flow.md](./docs/prompt-to-diagram-flow.md).
+The implemented composition contract separates semantic content from icon,
+style, layout, and motion selection; see
+[docs/diagram-composition-contract.md](./docs/diagram-composition-contract.md)
+and [ADR-001](./docs/decisions/ADR-001-separate-semantic-content-from-presentation.md).
 
 ## Layout Presets
 
@@ -681,10 +699,10 @@ set covering all 13 schema icons (`agent`, `operator`, `search`, `tool`, `api`,
 `icons` and `flow` examples to preview it. `illustrated-v1` and
 `semantic-line-v1` remain explicit compatibility modes.
 
-Character v1 uses Motion Coordination v1.1 in HTML. `Expressive` keeps the
-character performances primary, limits each active edge to one logical packet,
-adds a `0.7 s` quiet gap between packet cycles, plays the title highlight once
-on entry, and keeps group frames on `soft-reveal` unless a scanning preset is
+Character v1 uses Motion Coordination v1.2 in HTML. `Expressive` keeps the
+character performances primary, gives each active edge a continuously moving
+low-opacity track plus one logical packet with no quiet gap, and plays the
+title highlight once on entry. Group frames stay on `soft-reveal` unless a scanning preset is
 explicitly requested. `Readable` keeps the semantic character actions but
 reduces stage motion to at most two key edges and removes decorative title and
 group effects. `Off` and operating-system reduced motion show the canonical

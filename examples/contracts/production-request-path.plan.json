@@ -1,0 +1,109 @@
+{
+  "version": "0.2",
+  "semantic": {
+    "title": "Production request path",
+    "subtitle": "Ingress, workload, and observability feedback",
+    "summary": "Show how an external request reaches a workload and how telemetry returns to operations.",
+    "intent": {
+      "diagram_kind": "architecture",
+      "primary_question": "How does a production request move through the system?",
+      "audience": ["technical"],
+      "scope": "Runtime request and observability paths"
+    },
+    "entities": [
+      {
+        "id": "client",
+        "label": "Client",
+        "kind": "user",
+        "role": "actor",
+        "importance": "context"
+      },
+      {
+        "id": "ingress",
+        "label": "Ingress",
+        "kind": "gateway",
+        "role": "source",
+        "importance": "primary"
+      },
+      {
+        "id": "workload",
+        "label": "Application workload",
+        "kind": "service",
+        "role": "process",
+        "importance": "primary",
+        "state": {
+          "phase": "running",
+          "result": "pending",
+          "availability": "online"
+        }
+      },
+      {
+        "id": "telemetry",
+        "label": "Telemetry",
+        "kind": "observability",
+        "role": "output",
+        "importance": "supporting"
+      }
+    ],
+    "relations": [
+      {
+        "id": "client-request",
+        "from": "client",
+        "to": "ingress",
+        "kind": "request-response",
+        "label": "HTTPS",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "ingress-route",
+        "from": "ingress",
+        "to": "workload",
+        "kind": "data-flow",
+        "label": "routed request",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "emit-telemetry",
+        "from": "workload",
+        "to": "telemetry",
+        "kind": "observability",
+        "label": "metrics and traces",
+        "direction": "forward",
+        "importance": "supporting"
+      }
+    ],
+    "groups": [
+      {
+        "id": "runtime",
+        "label": "Runtime path",
+        "kind": "system",
+        "members": ["ingress", "workload"],
+        "importance": "primary"
+      }
+    ],
+    "flows": [
+      {
+        "id": "primary-request",
+        "label": "Primary request path",
+        "relation_ids": ["client-request", "ingress-route"],
+        "importance": "primary",
+        "repeat": "event-driven"
+      },
+      {
+        "id": "telemetry-feedback",
+        "label": "Telemetry feedback",
+        "relation_ids": ["emit-telemetry"],
+        "importance": "supporting",
+        "repeat": "event-driven"
+      }
+    ]
+  },
+  "presentation": {
+    "icon_system": "auto",
+    "style": "auto",
+    "layout": "auto",
+    "motion": "showcase-v1"
+  }
+}

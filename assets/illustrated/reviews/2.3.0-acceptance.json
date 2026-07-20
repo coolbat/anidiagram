@@ -1,0 +1,94 @@
+{
+  "system": "illustrated",
+  "version": "2.3.0",
+  "status": "confirmed",
+  "accepted_at": "2026-07-20",
+  "static_acceptance": {
+    "status": "confirmed",
+    "record": "assets/illustrated/reviews/2.3.0-static-acceptance.json",
+    "record_sha256": "58b958dd28d718a0eda212a06630a373086a80ce5c3f83f85e1e33d82cafbebc",
+    "icon_count": 16,
+    "approved_batch_3_icons": ["user", "server", "ai-model", "message-queue"]
+  },
+  "motion_acceptance": {
+    "status": "confirmed",
+    "approved_at": "2026-07-20",
+    "approved_contract": "illustrated-performance-v4",
+    "review_contract": "illustrated-performance-v4-review",
+    "approved_icons": ["user", "server", "ai-model", "message-queue"],
+    "selection_policy": "automatic-for-supported-showcase-icons",
+    "review_validation": {
+      "rest_verified": 4,
+      "reduced_motion_verified": 4,
+      "stage_modes": ["Expressive", "Readable", "Off", "Expressive"]
+    },
+    "review_artifacts": {
+      "html": {
+        "path": "outputs/illustrated-expansion-batch-3-motion-review/illustrated-expansion-batch-3-motion-review.html",
+        "sha256": "6952261f940bb9a9e3e4c9a5c4062018c023b79e741738d95daed102cb267cb5"
+      },
+      "webp": {
+        "path": "outputs/illustrated-expansion-batch-3-motion-review/illustrated-expansion-batch-3-motion-review.webp",
+        "sha256": "b0c88111b7c08cd843755cdc20472588426407172179ce4552f2c434276ed1c0"
+      },
+      "quality": {
+        "path": "outputs/illustrated-expansion-batch-3-motion-review/illustrated-expansion-batch-3-motion-review.quality.json",
+        "sha256": "9fea906017bc128a143086d6a3fcb8bdd5a0b62937f0d69bbb5f186f39c2a57f"
+      },
+      "result": {
+        "path": "outputs/illustrated-expansion-batch-3-motion-review/result.json",
+        "sha256": "47f2a2c1232ddef159275ef6c28bc5160a6b03106957aa9682e54f4ea46782be"
+      }
+    }
+  },
+  "public_showcase": {
+    "spec": "examples/illustrated-2.3-showcase.diagram.json",
+    "static_icon_count": 16,
+    "automatic_motion_icon_count": 16,
+    "review_motion_icon_count": 0,
+    "manifest_verified": 16,
+    "rest_verified": 16,
+    "reduced_motion_verified": 16,
+    "stage_modes": ["Expressive", "Readable", "Off", "Expressive"],
+    "active_edges": 0,
+    "readable_edges": 0,
+    "quality": {"score": 100, "errors": 0, "warnings": 0, "issues": 0},
+    "artifacts": {
+      "html": {
+        "path": "outputs/illustrated-2.3-showcase/illustrated-2.3-showcase.html",
+        "sha256": "b044d327b83251e74aa48fc812b5a5c4dd98c85255604e2bccbba42313014126"
+      },
+      "svg": {
+        "path": "outputs/illustrated-2.3-showcase/illustrated-2.3-showcase.svg",
+        "sha256": "c75c64e9db58eaa5da27ddd15087b22dd4572feeea015cf16e3d50b2d257e031"
+      },
+      "png": {
+        "path": "outputs/illustrated-2.3-showcase/illustrated-2.3-showcase.png",
+        "sha256": "868bdec37ff5355168b526ec23ba3092888243e939d413ab75e0ca37c7e84aeb"
+      },
+      "webp": {
+        "path": "outputs/illustrated-2.3-showcase/illustrated-2.3-showcase.webp",
+        "sha256": "636fa75b4305857d546d186b3948b03378a736a2850cd9d8d28f671f60fdf690"
+      },
+      "quality": {
+        "path": "outputs/illustrated-2.3-showcase/illustrated-2.3-showcase.quality.json",
+        "sha256": "9fea906017bc128a143086d6a3fcb8bdd5a0b62937f0d69bbb5f186f39c2a57f"
+      },
+      "result": {
+        "path": "outputs/illustrated-2.3-showcase/result.json",
+        "sha256": "e08ece522c898eac531204e68e852413d6304f49b029993a180614ad2a748edb"
+      }
+    }
+  },
+  "archives": {
+    "stage_release": "assets/illustrated/releases/2.3.0.static-motion-review.json",
+    "stage_release_sha256": "6f898de2a734555dc973b8f9457b498dca59afb95caa7ab24dd4ecde39cbc308",
+    "review_contract_sha256": "4f89961475374a7b04ddf5201396d22069dbd8959903932ddfc2715c205d1104",
+    "review_spec_sha256": "7957ab687a6cd862ee928e24add19ac4d1a2f55d95091d331175d67c64734c20"
+  },
+  "notes": [
+    "Human visual approval promotes the four reviewed performances into the complete sixteen-icon public v4 contract.",
+    "The v4-review contract and static-motion-review stage remain immutable approval evidence.",
+    "New showcase diagrams select all sixteen public performances automatically without node-level icon_motion."
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "system": "illustrated",
+  "icon_system_version": "2.2.0",
+  "contract": "illustrated-performance-v3-review",
+  "extends": "illustrated-performance-v2",
+  "status": "visual-review",
+  "approved_static_batch": "illustrated-expansion-batch-2",
+  "public_showcase_enabled": false,
+  "selection_policy": "explicit-review-only",
+  "repeat_delay": 0.8,
+  "cancel_behavior": "restore-authored-rest-pose",
+  "reduced_motion_behavior": "static-rest",
+  "performances": [
+    {
+      "icon": "file",
+      "id": "illustrated-file-prepare-attach-reference-v1",
+      "semantic_sequence": ["prepare", "attach", "reference"],
+      "primary_parts": ["page", "paperclip", "content-lines"],
+      "rest_at": 1.58
+    },
+    {
+      "icon": "folder",
+      "id": "illustrated-folder-prepare-store-index-v1",
+      "semantic_sequence": ["prepare", "store", "index"],
+      "primary_parts": ["folder-back", "folder-tab", "document", "folder-front", "index-label"],
+      "rest_at": 1.66
+    },
+    {
+      "icon": "cloud",
+      "id": "illustrated-cloud-prepare-transfer-sync-v1",
+      "semantic_sequence": ["prepare", "transfer", "synchronize"],
+      "primary_parts": ["cloud-shell", "upload-arrow", "download-arrow"],
+      "directional_reveal": {
+        "upload-arrow": "bottom-to-top",
+        "download-arrow": "top-to-bottom",
+        "mode": "directional-clip-fade"
+      },
+      "rest_at": 1.72
+    },
+    {
+      "icon": "shield",
+      "id": "illustrated-shield-prepare-lock-protect-v1",
+      "semantic_sequence": ["prepare", "lock", "protect"],
+      "primary_parts": ["shield-shell", "inner-field", "lock-shackle", "security-lock", "keyhole"],
+      "rest_at": 1.68
+    }
+  ]
+}

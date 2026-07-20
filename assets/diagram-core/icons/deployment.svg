@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Package to runtime deployment icon" data-icon="deployment">
+  <g data-part="body">
+    <rect x="11" y="21" width="74" height="56" rx="19" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <g data-part="package">
+      <path d="M 20 39 L 33 32 L 46 39 L 33 46 Z" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+      <path d="M 20 39 V 55 L 33 63 V 46 Z M 46 39 V 55 L 33 63 V 46 Z" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" stroke-linejoin="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="path">
+      <path d="M 47 48 H 59" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="2.125" stroke-linecap="round" stroke-dasharray="3 4" data-stroke-role="outer"/>
+      <circle cx="53" cy="48" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+    <g data-part="target">
+      <rect x="59" y="32" width="20" height="32" rx="9" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+      <path d="M 63 58 H 75" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="release-core">
+      <circle cx="69" cy="46" r="7" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" data-stroke-role="inner"/>
+      <circle cx="69" cy="46" r="3" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+    <g data-part="indicator">
+      <circle cx="72" cy="70" r="5" fill="var(--icon-surface-contrast, #14213d)"/>
+      <circle cx="72" cy="70" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+  </g>
+</svg>

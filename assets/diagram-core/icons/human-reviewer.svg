@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Human reviewer inspecting a card icon" data-icon="human-reviewer">
+  <g data-part="body">
+  <g data-part="person">
+    <path d="M 10 77 C 12 58 21 49 33 49 C 45 49 53 58 55 77 Z" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+  </g>
+  <g data-part="head">
+    <circle cx="33" cy="35" r="10" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="review-card">
+    <rect x="47" y="18" width="36" height="50" rx="8" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <line x1="55" y1="29" x2="74" y2="29" stroke="var(--icon-accent, #7c5ce7)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="outer"/>
+    <line x1="55" y1="37" x2="69" y2="37" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+  </g>
+  <g data-part="lens">
+    <circle cx="63" cy="53" r="9" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <line x1="69" y1="59" x2="75" y2="65" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="outer"/>
+    <circle cx="63" cy="53" r="3" fill="var(--icon-accent-secondary, #45c5bd)"/>
+  </g>
+  <g data-part="indicator">
+    <circle cx="78" cy="23" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+  </g>
+  </g>
+</svg>

@@ -6,10 +6,13 @@ import math
 from dataclasses import dataclass
 from typing import Any, Dict, Iterable, List, Optional, Set
 
+from .composition import DIAGRAM_CORE_ICONS, ICON_SYSTEMS
+from .icon_system import canonical_icon_system_id, icon_system_version
+from .illustrated_registry import illustrated_icon_ids
 from .model import Bounds, Canvas, Edge, EffectConfig, Group, Motion, MotionPolicy, Node, Point, Scene, SceneMotion, Style, Title
 
 
-SUPPORTED_VERSIONS = ("0.1", "0.2", "0.3")
+SUPPORTED_VERSIONS = ("0.1", "0.2", "0.3", "0.4")
 KNOWN_ROLES = {
     "actor",
     "source",
@@ -22,7 +25,8 @@ KNOWN_ROLES = {
     "neutral",
 }
 KNOWN_ROUTES = {"curved", "straight", "hv", "vh", "orthogonal", "points"}
-KNOWN_MOTION_PROFILES = {"off", "subtle", "normal", "expressive", "teaching", "runtime-loop"}
+KNOWN_EDGE_DIRECTIONS = {"forward", "bidirectional", "undirected"}
+KNOWN_MOTION_PROFILES = {"off", "subtle", "normal", "expressive", "teaching", "runtime-loop", "showcase-v1"}
 KNOWN_MOTION_SEQUENCES = {"simultaneous", "step-stagger", "layered", "staged", "loop"}
 KNOWN_MOTION_EASES = {"linear", "calm", "snappy", "back-out", "elastic", "spring"}
 KNOWN_NODE_MOTION = {
@@ -118,10 +122,23 @@ def compile_scene(data: Dict[str, Any]) -> Scene:
     canvas = _parse_canvas(data.get("canvas", {}), "$.canvas", issues)
     title = _parse_title(data.get("title", {}), "$.title", issues)
     style = Style(name=_string(data, "style", "$.style", issues, required=False))
+    raw_icon_system = (
+        _enum(data, "icon_system", "$.icon_system", ICON_SYSTEMS, issues, default="diagram-core-v1")
+        if version == "0.4"
+        else None
+    )
+    icon_system = canonical_icon_system_id(raw_icon_system) if raw_icon_system is not None else None
+    composition_policy = _string(data, "composition_policy", "$.composition_policy", issues, required=False)
+    resolved_presentation = data.get("resolved_presentation", {})
+    if not isinstance(resolved_presentation, dict):
+        issues.append(ValidationIssue("$.resolved_presentation", "expected an object", "type"))
+        resolved_presentation = {}
+    _validate_resolved_icon_system(resolved_presentation, icon_system, issues)
     motion = _parse_scene_motion(data.get("motion", {}), "$.motion", issues)
     motion_policy = _parse_motion_policy(data.get("motion_policy"), "$.motion_policy", issues)
     groups = _parse_groups(data.get("groups", []), "$.groups", issues, canvas)
-    nodes = _parse_nodes(data.get("nodes"), "$.nodes", issues, canvas)
+    allowed_icons = _icons_for_system(icon_system)
+    nodes = _parse_nodes(data.get("nodes"), "$.nodes", issues, canvas, allowed_icons)
     node_ids = {node.node_id for node in nodes}
     edges = _parse_edges(data.get("edges", []), "$.edges", node_ids, issues)
     preset = _string(data, "preset", "$.preset", issues, required=False)
@@ -137,6 +154,9 @@ def compile_scene(data: Dict[str, Any]) -> Scene:
         nodes=nodes,
         edges=edges,
         groups=groups,
+        icon_system=icon_system,
+        composition_policy=composition_policy,
+        resolved_presentation=dict(resolved_presentation),
         motion=motion,
         motion_policy=motion_policy,
         preset=preset,
@@ -151,6 +171,36 @@ def validate_scene(data: Dict[str, Any]) -> Dict[str, Any]:
     except DiagramScriptValidationError as exc:
         return {"ok": False, "error": exc.to_result()}
     return {"ok": True, "schema": {"name": "DiagramScript", "version": scene.version}, "stats": scene.stats()}
+
+
+def _validate_resolved_icon_system(
+    resolved: Dict[str, Any], icon_system: Optional[str], issues: List[ValidationIssue]
+) -> None:
+    axis = resolved.get("icon_system")
+    if axis is None:
+        return
+    if not isinstance(axis, dict):
+        issues.append(ValidationIssue("$.resolved_presentation.icon_system", "expected an object", "type"))
+        return
+    value = axis.get("value")
+    if isinstance(value, str) and icon_system is not None and canonical_icon_system_id(value) != icon_system:
+        issues.append(
+            ValidationIssue(
+                "$.resolved_presentation.icon_system.value",
+                "must match $.icon_system",
+                "inconsistent_presentation",
+            )
+        )
+    expected_version = icon_system_version(icon_system) if icon_system is not None else None
+    declared_version = axis.get("version")
+    if expected_version is not None and declared_version is not None and declared_version != expected_version:
+        issues.append(
+            ValidationIssue(
+                "$.resolved_presentation.icon_system.version",
+                f"version {declared_version!r} is not renderable by the current {icon_system} {expected_version} runtime",
+                "unsupported_icon_system_version",
+            )
+        )
 
 
 def _parse_canvas(value: Any, path: str, issues: List[ValidationIssue]) -> Canvas:
@@ -233,6 +283,8 @@ def _motion_defaults(profile: str) -> SceneMotion:
         return _scene_motion("teaching", "staged", "spring", 0.14, 0.95, 1.15, "icon-pulse", "ghost-flow", "border-scan", "handwrite-reveal", "subtle")
     if profile == "runtime-loop":
         return _scene_motion("runtime-loop", "loop", "linear", 0.09, 1.0, 0.82, "icon-breathe", "signal-dot", "static", "breathe", "subtle")
+    if profile == "showcase-v1":
+        return _scene_motion("showcase-v1", "staged", "spring", 0.12, 1.0, 1.0, "icon-performance", "flow-arrow", "border-scan", "highlight-sweep", "subtle")
     return SceneMotion()
 
 
@@ -433,7 +485,13 @@ def _parse_groups(value: Any, path: str, issues: List[ValidationIssue], canvas: 
     return groups
 
 
-def _parse_nodes(value: Any, path: str, issues: List[ValidationIssue], canvas: Canvas) -> List[Node]:
+def _parse_nodes(
+    value: Any,
+    path: str,
+    issues: List[ValidationIssue],
+    canvas: Canvas,
+    allowed_icons: Set[str] = KNOWN_ICONS,
+) -> List[Node]:
     if not isinstance(value, list):
         issues.append(ValidationIssue(path, "expected a non-empty array", "type"))
         return []
@@ -467,7 +525,7 @@ def _parse_nodes(value: Any, path: str, issues: List[ValidationIssue], canvas: C
                 fill=_string(item, "fill", f"{item_path}.fill", issues, required=False),
                 stroke=_string(item, "stroke", f"{item_path}.stroke", issues, required=False),
                 stroke_width=_optional_number(item, "stroke_width", f"{item_path}.stroke_width", issues, positive=True),
-                icon=_icon(item, "icon", f"{item_path}.icon", issues),
+                icon=_icon(item, "icon", f"{item_path}.icon", issues, allowed_icons),
                 effect=_effect_config(item.get("effect"), f"{item_path}.effect", KNOWN_NODE_MOTION, issues, EffectConfig()),
             )
         )
@@ -507,6 +565,14 @@ def _parse_edges(value: Any, path: str, node_ids: Set[str], issues: List[Validat
                 target=target or "",
                 label=_string(item, "label", f"{item_path}.label", issues, required=False) or "",
                 role=_role(item, "role", f"{item_path}.role", issues),
+                direction=_enum(
+                    item,
+                    "direction",
+                    f"{item_path}.direction",
+                    KNOWN_EDGE_DIRECTIONS,
+                    issues,
+                    default="forward",
+                ),
                 route=route,
                 step=_optional_positive_int(item, "step", f"{item_path}.step", issues),
                 points=points,
@@ -519,14 +585,28 @@ def _parse_edges(value: Any, path: str, node_ids: Set[str], issues: List[Validat
     return edges
 
 
-def _icon(data: Dict[str, Any], key: str, path: str, issues: List[ValidationIssue]) -> Optional[str]:
+def _icon(
+    data: Dict[str, Any],
+    key: str,
+    path: str,
+    issues: List[ValidationIssue],
+    allowed_icons: Set[str] = KNOWN_ICONS,
+) -> Optional[str]:
     value = _string(data, key, path, issues, required=False)
     if value is None:
         return None
-    if value not in KNOWN_ICONS:
-        issues.append(ValidationIssue(path, f"expected one of: {', '.join(sorted(KNOWN_ICONS))}", "enum"))
+    if value not in allowed_icons:
+        issues.append(ValidationIssue(path, f"expected one of: {', '.join(sorted(allowed_icons))}", "enum"))
         return None
     return value
+
+
+def _icons_for_system(icon_system: Optional[str]) -> Set[str]:
+    if icon_system == "diagram-core-v1":
+        return set(DIAGRAM_CORE_ICONS)
+    if icon_system == "illustrated":
+        return set(illustrated_icon_ids())
+    return set(KNOWN_ICONS)
 
 
 def _role(data: Dict[str, Any], key: str, path: str, issues: List[ValidationIssue]) -> str:

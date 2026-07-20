@@ -1,0 +1,322 @@
+{
+  "version": "0.2",
+  "semantic": {
+    "title": "Enterprise RAG Production Architecture",
+    "subtitle": "Curated ingestion, policy-scoped retrieval, memory, and grounded response delivery",
+    "summary": "Show how enterprise documents are prepared for retrieval and how a governed RAG agent turns an API request into a grounded answer.",
+    "intent": {
+      "diagram_kind": "architecture",
+      "primary_question": "How does a production RAG system ingest approved enterprise knowledge and return policy-scoped grounded answers?",
+      "audience": [
+        "technical",
+        "product"
+      ],
+      "scope": "Document ingestion, policy enforcement, vector retrieval, conversation memory, agent orchestration, and response delivery",
+      "exclusions": "Model training, cluster infrastructure, observability internals, and vendor-specific services"
+    },
+    "entities": [
+      {
+        "id": "knowledge-owner",
+        "label": "Knowledge Owner",
+        "description": "Curates approved enterprise content",
+        "kind": "operator",
+        "role": "actor",
+        "importance": "primary"
+      },
+      {
+        "id": "source-files",
+        "label": "Source Files",
+        "description": "Policies, manuals, and records",
+        "kind": "file",
+        "role": "source",
+        "importance": "primary"
+      },
+      {
+        "id": "document-library",
+        "label": "Document Library",
+        "description": "Organized and versioned corpus",
+        "kind": "folder",
+        "role": "source",
+        "importance": "primary"
+      },
+      {
+        "id": "cloud-intake",
+        "label": "Cloud Intake",
+        "description": "Synchronizes approved content",
+        "kind": "cloud",
+        "role": "process",
+        "importance": "primary"
+      },
+      {
+        "id": "ingestion-toolchain",
+        "label": "Ingestion Toolchain",
+        "description": "Parses, chunks, and embeds",
+        "kind": "tool",
+        "role": "tool",
+        "importance": "primary"
+      },
+      {
+        "id": "vector-database",
+        "label": "Vector Database",
+        "description": "Stores searchable knowledge vectors",
+        "kind": "database",
+        "role": "memory",
+        "importance": "primary"
+      },
+      {
+        "id": "rag-api",
+        "label": "RAG API",
+        "description": "Receives application queries",
+        "kind": "api",
+        "role": "source",
+        "importance": "primary"
+      },
+      {
+        "id": "policy-guard",
+        "label": "Policy Guard",
+        "description": "Authenticates and scopes access",
+        "kind": "shield",
+        "role": "risk",
+        "importance": "primary"
+      },
+      {
+        "id": "rag-agent",
+        "label": "RAG Agent",
+        "description": "Plans retrieval and grounds answers",
+        "kind": "agent",
+        "role": "agent",
+        "importance": "primary"
+      },
+      {
+        "id": "retriever",
+        "label": "Semantic Retriever",
+        "description": "Finds the most relevant evidence",
+        "kind": "search",
+        "role": "tool",
+        "importance": "primary"
+      },
+      {
+        "id": "conversation-memory",
+        "label": "Conversation Memory",
+        "description": "Maintains authorized session context",
+        "kind": "memory",
+        "role": "memory",
+        "importance": "supporting"
+      },
+      {
+        "id": "grounded-answer",
+        "label": "Grounded Answer",
+        "description": "Returns a cited, policy-safe response",
+        "kind": "output",
+        "role": "output",
+        "importance": "primary",
+        "state": {
+          "phase": "ready",
+          "result": "success",
+          "availability": "online"
+        }
+      }
+    ],
+    "relations": [
+      {
+        "id": "upload-content",
+        "from": "knowledge-owner",
+        "to": "source-files",
+        "kind": "delivery",
+        "label": "upload",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "organize-corpus",
+        "from": "source-files",
+        "to": "document-library",
+        "kind": "transformation",
+        "label": "organize",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "sync-library",
+        "from": "document-library",
+        "to": "cloud-intake",
+        "kind": "transfer",
+        "label": "sync",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "prepare-knowledge",
+        "from": "cloud-intake",
+        "to": "ingestion-toolchain",
+        "kind": "tool-call",
+        "label": "parse + embed",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "index-vectors",
+        "from": "ingestion-toolchain",
+        "to": "vector-database",
+        "kind": "persistence",
+        "label": "index",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "receive-query",
+        "from": "rag-api",
+        "to": "policy-guard",
+        "kind": "request",
+        "label": "query + identity",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "authorize-query",
+        "from": "policy-guard",
+        "to": "rag-agent",
+        "kind": "security",
+        "label": "authorized scope",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "plan-retrieval",
+        "from": "rag-agent",
+        "to": "retriever",
+        "kind": "delegation",
+        "label": "retrieve",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "query-vectors",
+        "from": "retriever",
+        "to": "vector-database",
+        "kind": "retrieval",
+        "label": "semantic query",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "return-evidence",
+        "from": "vector-database",
+        "to": "rag-agent",
+        "kind": "feedback",
+        "label": "ranked evidence",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "maintain-context",
+        "from": "rag-agent",
+        "to": "conversation-memory",
+        "kind": "context",
+        "label": "read / write context",
+        "direction": "bidirectional",
+        "importance": "supporting"
+      },
+      {
+        "id": "deliver-answer",
+        "from": "rag-agent",
+        "to": "grounded-answer",
+        "kind": "delivery",
+        "label": "cited response",
+        "direction": "forward",
+        "importance": "primary"
+      }
+    ],
+    "groups": [
+      {
+        "id": "knowledge-ingestion-plane",
+        "label": "Knowledge Ingestion Plane",
+        "description": "Curated content becomes retrieval-ready knowledge",
+        "kind": "system",
+        "members": [
+          "knowledge-owner",
+          "source-files",
+          "document-library",
+          "cloud-intake",
+          "ingestion-toolchain",
+          "vector-database"
+        ],
+        "importance": "primary"
+      },
+      {
+        "id": "governed-rag-runtime",
+        "label": "Governed RAG Runtime",
+        "description": "Authorized requests retrieve evidence and produce grounded responses",
+        "kind": "system",
+        "members": [
+          "rag-api",
+          "policy-guard",
+          "rag-agent",
+          "retriever",
+          "conversation-memory",
+          "grounded-answer"
+        ],
+        "importance": "primary"
+      }
+    ],
+    "flows": [
+      {
+        "id": "knowledge-ingestion-flow",
+        "label": "Knowledge ingestion",
+        "description": "Approved enterprise documents become searchable vectors",
+        "relation_ids": [
+          "upload-content",
+          "organize-corpus",
+          "sync-library",
+          "prepare-knowledge",
+          "index-vectors"
+        ],
+        "importance": "primary",
+        "repeat": "event-driven"
+      },
+      {
+        "id": "governed-retrieval-flow",
+        "label": "Governed retrieval",
+        "description": "An authorized query is planned, retrieved, and matched to enterprise evidence",
+        "relation_ids": [
+          "receive-query",
+          "authorize-query",
+          "plan-retrieval",
+          "query-vectors"
+        ],
+        "importance": "primary",
+        "repeat": "event-driven"
+      },
+      {
+        "id": "grounded-response-flow",
+        "label": "Grounded response",
+        "description": "Ranked evidence returns to the agent and becomes a cited answer",
+        "relation_ids": [
+          "return-evidence",
+          "deliver-answer"
+        ],
+        "importance": "primary",
+        "repeat": "event-driven"
+      },
+      {
+        "id": "conversation-context-loop",
+        "label": "Conversation context",
+        "description": "The agent reads and updates authorized session context",
+        "relation_ids": [
+          "maintain-context"
+        ],
+        "importance": "supporting",
+        "repeat": "loop"
+      }
+    ]
+  },
+  "presentation": {
+    "icon_system": "illustrated",
+    "style": "minimal-light",
+    "layout": "layered",
+    "motion": "showcase-v1"
+  },
+  "presentation_sources": {
+    "style": "model"
+  }
+}

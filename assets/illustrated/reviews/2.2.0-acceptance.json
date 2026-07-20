@@ -1,0 +1,98 @@
+{
+  "system": "illustrated",
+  "version": "2.2.0",
+  "status": "confirmed",
+  "accepted_at": "2026-07-20",
+  "static_acceptance": {
+    "status": "confirmed",
+    "scope": "twelve-icon-static-system",
+    "prior_record": {
+      "path": "assets/illustrated/reviews/2.2.0-static-acceptance.json",
+      "sha256": "055f9b9d0fc2930edf0bec365f3830d4c5b65c0ff64df12bcbb703aec34e5e34"
+    }
+  },
+  "motion_acceptance": {
+    "status": "confirmed",
+    "scope": "file-folder-cloud-shield-semantic-motion",
+    "approved_contract": "illustrated-performance-v3",
+    "approved_icons": ["file", "folder", "cloud", "shield"],
+    "cloud_directional_reveal": {
+      "upload-arrow": "bottom-to-top",
+      "download-arrow": "top-to-bottom",
+      "mode": "directional-clip-fade"
+    },
+    "review_artifacts": {
+      "html": {
+        "path": "outputs/illustrated-expansion-batch-2-motion-review/illustrated-expansion-batch-2-motion-review.html",
+        "sha256": "860556cf2243ffae796ce388050d658f6b67363f53b1b65254a4ff50e93e9a52"
+      },
+      "webp": {
+        "path": "outputs/illustrated-expansion-batch-2-motion-review/illustrated-expansion-batch-2-motion-review.webp",
+        "sha256": "2ed4decb4a5694a2053046877508f263f9d715e8b920a47574c3774d0f323fe7"
+      },
+      "quality": {
+        "path": "outputs/illustrated-expansion-batch-2-motion-review/illustrated-expansion-batch-2-motion-review.quality.json",
+        "sha256": "9fea906017bc128a143086d6a3fcb8bdd5a0b62937f0d69bbb5f186f39c2a57f"
+      }
+    },
+    "validation": {
+      "authored_rest": "4/4",
+      "reduced_motion": "4/4",
+      "stage_modes": ["Expressive", "Readable", "Off", "Expressive"],
+      "quality_errors": 0,
+      "quality_warnings": 0,
+      "quality_issues": 0
+    }
+  },
+  "public_showcase": {
+    "status": "passed",
+    "icon_count": 12,
+    "motion_preset": "showcase-v1",
+    "motion_contract": "illustrated-performance-v3",
+    "automatic_motion_selection": true,
+    "explicit_icon_motion_count": 0,
+    "spec": {
+      "path": "examples/illustrated-2.2-showcase.diagram.json",
+      "sha256": "5dafac50ccfb8e6469cd89ce56c169abdf94ba43dd15c87a18e85e4e6054b5ef"
+    },
+    "local_artifacts": {
+      "html": {
+        "path": "outputs/illustrated-2.2-showcase/illustrated-2.2-showcase.html",
+        "sha256": "538e36337e236a28f30b3c7fa197352c4bdffe9e8fca80b5d61485f7f84721f4"
+      },
+      "svg": {
+        "path": "outputs/illustrated-2.2-showcase/illustrated-2.2-showcase.svg",
+        "sha256": "6ff4e8949d112b1ac6090cdd1ab35a5fa3df9fa0e3ce9976473b9f80351bd803"
+      },
+      "png": {
+        "path": "outputs/illustrated-2.2-showcase/illustrated-2.2-showcase.png",
+        "sha256": "4b91ca78e3ba2db7c3e9bffdc45ecec1450abca5bd1ee96fc29121e45bb88de7"
+      },
+      "webp": {
+        "path": "outputs/illustrated-2.2-showcase/illustrated-2.2-showcase.webp",
+        "sha256": "0bf8cdf77d2e836bf84478dfbce03a150a9143b6931806e7d2583733552c902a"
+      },
+      "quality": {
+        "path": "outputs/illustrated-2.2-showcase/illustrated-2.2-showcase.quality.json",
+        "sha256": "9fea906017bc128a143086d6a3fcb8bdd5a0b62937f0d69bbb5f186f39c2a57f"
+      },
+      "result": {
+        "path": "outputs/illustrated-2.2-showcase/result.json",
+        "sha256": "e2cb9b996e04f1c3637112be1c187044068a15677781c3be56177ba1ff4e4954"
+      }
+    },
+    "validation": {
+      "manifest_entries": "12/12",
+      "authored_rest": "12/12",
+      "reduced_motion": "12/12",
+      "stage_modes": ["Expressive", "Readable", "Off", "Expressive"],
+      "quality_errors": 0,
+      "quality_warnings": 0,
+      "quality_issues": 0
+    }
+  },
+  "notes": [
+    "The review and showcase artifacts under outputs are local evidence and may be gitignored.",
+    "The tracked public contract, showcase spec, source manifests, frozen snapshots, and this acceptance record are the reproducible release authority."
+  ]
+}

@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anidiagram.dev/schemas/diagram-plan-v0.2.schema.json",
+  "title": "DiagramPlan v0.2",
+  "description": "Semantic-first input contract compiled by composition-v1 into resolved DiagramScript v0.4.",
+  "type": "object",
+  "required": ["version", "semantic", "presentation"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {"const": "0.2"},
+    "semantic": {"$ref": "#/$defs/semantic"},
+    "presentation": {"$ref": "#/$defs/presentation"},
+    "presentation_sources": {"$ref": "#/$defs/presentation_sources"}
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "semantic_kind": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "role": {
+      "enum": ["actor", "source", "process", "agent", "memory", "tool", "output", "risk", "neutral"]
+    },
+    "importance": {
+      "enum": ["primary", "supporting", "context"]
+    },
+    "source_ref": {"$ref": "#/$defs/id"},
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "phase": {"type": "string", "minLength": 1},
+        "result": {"type": "string", "minLength": 1},
+        "availability": {"type": "string", "minLength": 1}
+      }
+    },
+    "intent": {
+      "type": "object",
+      "required": ["diagram_kind", "primary_question", "audience"],
+      "additionalProperties": false,
+      "properties": {
+        "diagram_kind": {"$ref": "#/$defs/semantic_kind"},
+        "primary_question": {"type": "string", "minLength": 1},
+        "audience": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "scope": {"type": "string"},
+        "exclusions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "entity": {
+      "type": "object",
+      "required": ["id", "label", "kind", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "label": {"type": "string", "minLength": 1},
+        "description": {"type": "string"},
+        "kind": {"$ref": "#/$defs/semantic_kind"},
+        "role": {"$ref": "#/$defs/role"},
+        "importance": {"$ref": "#/$defs/importance"},
+        "tags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "attributes": {"type": "object"},
+        "state": {"$ref": "#/$defs/state"},
+        "source_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/source_ref"}
+        }
+      }
+    },
+    "relation": {
+      "type": "object",
+      "required": ["id", "from", "to", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "from": {"$ref": "#/$defs/id"},
+        "to": {"$ref": "#/$defs/id"},
+        "kind": {"$ref": "#/$defs/semantic_kind"},
+        "label": {"type": "string"},
+        "description": {"type": "string"},
+        "direction": {"enum": ["forward", "bidirectional", "undirected"]},
+        "importance": {"$ref": "#/$defs/importance"},
+        "condition": {"type": "string"},
+        "protocol": {"type": "string"},
+        "attributes": {"type": "object"},
+        "source_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/source_ref"}
+        }
+      }
+    },
+    "group": {
+      "type": "object",
+      "required": ["id", "label", "kind", "members"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "label": {"type": "string", "minLength": 1},
+        "description": {"type": "string"},
+        "kind": {"$ref": "#/$defs/semantic_kind"},
+        "members": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "importance": {"$ref": "#/$defs/importance"},
+        "parent": {"$ref": "#/$defs/id"},
+        "source_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/source_ref"}
+        }
+      }
+    },
+    "flow": {
+      "type": "object",
+      "required": ["id", "label", "relation_ids"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "label": {"type": "string", "minLength": 1},
+        "description": {"type": "string"},
+        "relation_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "importance": {"$ref": "#/$defs/importance"},
+        "repeat": {"enum": ["once", "loop", "event-driven"]},
+        "source_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/source_ref"}
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["id", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "type": {"$ref": "#/$defs/semantic_kind"},
+        "title": {"type": "string"},
+        "uri": {"type": "string"},
+        "note": {"type": "string"}
+      }
+    },
+    "semantic": {
+      "type": "object",
+      "required": ["title", "intent", "entities"],
+      "additionalProperties": false,
+      "properties": {
+        "title": {"type": "string", "minLength": 1},
+        "subtitle": {"type": "string"},
+        "summary": {"type": "string"},
+        "intent": {"$ref": "#/$defs/intent"},
+        "entities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/entity"}
+        },
+        "relations": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/relation"}
+        },
+        "groups": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/group"}
+        },
+        "flows": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/flow"}
+        },
+        "sources": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/source"}
+        },
+        "annotations": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "presentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "icon_system": {"type": "string", "minLength": 1, "default": "auto"},
+        "style": {"type": "string", "minLength": 1, "default": "auto"},
+        "layout": {"type": "string", "minLength": 1, "default": "auto"},
+        "motion": {"type": "string", "minLength": 1, "default": "showcase-v1"}
+      }
+    },
+    "presentation_sources": {
+      "description": "Optional provenance for concrete choices made by the model; concrete values default to explicit user selection.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "icon_system": {"enum": ["explicit", "model"]},
+        "style": {"enum": ["explicit", "model"]},
+        "layout": {"enum": ["explicit", "model"]},
+        "motion": {"enum": ["explicit", "model"]}
+      }
+    }
+  }
+}

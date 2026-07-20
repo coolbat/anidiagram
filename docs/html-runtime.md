@@ -38,14 +38,14 @@ the browser.
 The runtime does not choreograph the whole diagram as a causal timeline by
 default.
 
-## Motion Coordination v1.1 controls
+## Motion Coordination v1.2 controls
 
 The toolbar exposes three behaviorally distinct modes:
 
 - `Expressive` runs the local character performances and policy-approved stage
-  effects. Each active edge owns one logical packet (a white halo and colored
-  core), and every packet cycle ends with a `0.7 s` quiet interval. The title
-  highlight is an entry-only accent. Character-theme group frames default to
+  effects. Each active edge owns a continuously moving low-opacity track plus
+  one logical packet (a white halo and colored core) with no quiet interval.
+  The title highlight is an entry-only accent. Character-theme group frames default to
   `soft-reveal`; scanning borders require an explicit, budgeted preset.
 - `Readable` preserves semantic character performances but removes the
   decorative title treatment, relation fields, and scanning group effects. It
@@ -245,11 +245,17 @@ performs one semantic action, confirms it, and settles back to rest. Browsers
 that request reduced motion register no GSAP timelines. `illustrated-v1` and
 `semantic-line-v1` remain explicit legacy icon-system modes.
 
-`illustrated-character-v2` is currently a static concept mode. It renders the
-four redesigned `agent`, `operator`, `tool`, and `output` structured semantic
-illustrations but
-intentionally contributes no icon entries to the Motion Manifest. This keeps
-the visual review separate from the later v2 animation contract.
+`illustrated` version `2.3.0` contains sixteen approved static icons. The
+separately versioned `illustrated-performance-v4` contract supplies approved
+performances for all sixteen and public `showcase-v1` maps them automatically.
+`illustrated-performance-v4-review` remains the immutable archived human-review
+source and is not emitted by new diagrams. `illustrated-performance-v3`
+remains the immutable twelve-icon 2.2.0 public-contract archive;
+`illustrated-performance-v2` remains the immutable eight-icon 2.1.0 archive;
+`illustrated-performance-v3-review` remains archived approval evidence. The
+four-icon `illustrated-performance-v1` contract remains the immutable 2.0.0
+archive. Static SVG, Off, cancel, and reduced-motion paths restore the authored
+rest pose.
 
 Character loops use a compact `0.8 s` repeat gap. During the handoff from the
 semantic action to that gap, a dedicated inner shell performs a restrained
@@ -279,8 +285,8 @@ the full 13-icon gallery and intentionally rejects any other count.
 - The Motion Manifest currently covers icon performances plus ambient stage
   edge flow and title sweep; it does not yet model camera choreography,
   edge-triggered node performances, or step mode.
-- The experimental `illustrated-character-v2` slice is static until its
-  silhouettes and family consistency are approved.
+- `illustrated` 2.3.0 freezes sixteen approved static icons and sixteen approved
+  automatic `showcase-v1` performances.
 - Video and animated image export require browser capture. MP4 also requires
   ffmpeg.
 - Browser-captured PNG/PDF use a settled runtime frame; GIF, WebP, APNG, MP4,

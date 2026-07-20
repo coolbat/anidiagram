@@ -1,0 +1,18 @@
+{
+  "id": "ai-model",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "ai-models",
+  "semantic_kind": "ai-model",
+  "structural_prototype": "layered-model-core",
+  "parts": ["body", "shell", "layer-back", "layer-front", "core", "ports", "indicator"],
+  "attachments": {
+    "receive": {"x": 8, "y": 48},
+    "send": {"x": 88, "y": 48},
+    "status": {"x": 48, "y": 76}
+  },
+  "states": [],
+  "actions": ["receive", "infer", "process", "send"],
+  "status": "approved"
+}

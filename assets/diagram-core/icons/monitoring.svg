@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Live metric monitor icon" data-icon="monitoring">
+  <g data-part="body">
+    <g data-part="shell">
+      <rect x="12" y="19" width="72" height="58" rx="16" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+      <path d="M 38 78 H 58" fill="none" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="outer"/>
+    </g>
+    <g data-part="screen">
+      <rect x="20" y="28" width="56" height="37" rx="10" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" data-stroke-role="inner"/>
+    </g>
+    <g data-part="scanner">
+      <rect x="26" y="33" width="5" height="27" rx="2.5" fill="var(--icon-accent, #7c5ce7)"/>
+      <path d="M 25 40 H 32" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="metric-line">
+      <path d="M 35 55 L 44 47 L 51 51 L 61 39 L 70 44" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="2.125" stroke-linecap="round" stroke-linejoin="round" data-stroke-role="outer"/>
+      <circle cx="61" cy="39" r="3.5" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" data-stroke-role="inner"/>
+    </g>
+    <g data-part="indicator">
+      <circle cx="72" cy="70" r="5" fill="var(--icon-surface-contrast, #14213d)"/>
+      <circle cx="72" cy="70" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+  </g>
+</svg>

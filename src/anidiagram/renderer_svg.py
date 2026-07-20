@@ -12,16 +12,19 @@ from dataclasses import dataclass, replace
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 from .effects import channel_effect, effect_active
-from .illustrated_icons import illustrated_definition, illustrated_palette, is_illustrated_style
+from .diagram_core.adapter import render_approved_icon
+from .diagram_core.tokens import icon_tokens_for_style
+from .illustrated_icons import illustrated_definition as legacy_illustrated_definition, illustrated_palette, is_illustrated_style
 from .illustrated_character_icons import character_definition
-from .illustrated_character_v2_icons import character_v2_definition
+from .illustrated_registry import illustrated_definition
+from .illustrated_tokens import illustrated_tokens_for_style
 from .model import Edge, EffectConfig, Group, MotionPolicy, Node, Scene, SceneMotion
 from .motion_manifest import icon_part_id
 from .renderer_illustrated_character import render_character_icon
 from .renderer_illustrated_character_v2 import render_character_v2_icon
 from .schema import compile_scene
-from .styles import role_style
-from .icon_system import resolve_icon_system
+from .styles import deep_merge, role_style
+from .icon_system import icon_system_version, resolve_icon_system
 
 
 Point = Tuple[float, float]
@@ -287,7 +290,7 @@ def render_illustrated_icon_backplate(
     secondary = palette["secondary"]
     tertiary = palette["tertiary"]
     offset = (index % 3 - 1) * half * 0.05
-    relation = illustrated_definition(icon).semantic_role
+    relation = legacy_illustrated_definition(icon).semantic_role
     return f"""
   <g class="illustrated-icon-backplate" data-semantic-role="{esc(relation)}" opacity="0.96">
     <circle id="{part("bubbleHalo")}" class="illustrated-icon-bubble-halo icon-runtime-part" cx="{cx + offset:.1f}" cy="{cy + half * 0.05:.1f}" r="{half * 1.48:.1f}"
@@ -809,8 +812,25 @@ def render_semantic_icon(
         return ""
     style = style or {}
     icon_system = resolve_icon_system(style)
+    if icon_system == "diagram-core-v1":
+        size = min(92, max(72, box.h * 0.78))
+        x = box.x + 10
+        y = box.y + (box.h - size) / 2
+        fragment = render_approved_icon(
+            icon,
+            f"node.{box.node_id}",
+            size=size,
+            x=x,
+            y=y,
+            tokens=icon_tokens_for_style(style),
+        )
+        return (
+            f'<g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" '
+            f'data-icon="{esc(icon)}" data-node-id="{esc(box.node_id)}" '
+            f'data-icon-presentation="showcase">{fragment}</g>'
+        )
     character = character_definition(icon) if icon_system == "illustrated-character-v1" else None
-    character_v2 = character_v2_definition(icon) if icon_system == "illustrated-character-v2" else None
+    character_v2 = illustrated_definition(icon) if icon_system == "illustrated" else None
     illustrated = illustrated_icons_enabled(style)
     cx = box.x + min(42, max(30, box.w * 0.22))
     cy = box.y + box.h / 2
@@ -829,8 +849,8 @@ def render_semantic_icon(
     if character_v2:
         cx = box.x + min(82, max(68, box.w * 0.16))
         size = min(118, max(88, box.h * 0.64))
-        return f'''<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-character-v2-wrap" data-icon="{esc(icon)}" data-node-id="{esc(box.node_id)}" opacity="1">
-  {render_character_v2_icon(character_v2, box.node_id, cx, cy, size)}
+        return f'''<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="{esc(icon)}" data-node-id="{esc(box.node_id)}" opacity="1">
+  {render_character_v2_icon(character_v2, box.node_id, cx, cy, size, illustrated_tokens_for_style(style))}
 </g>'''
     half = size / 2
     symbol_fill = icon_surface_fill(fill, stroke)
@@ -1295,7 +1315,9 @@ def render_node(
     text_width = box.w - 24
     if node.icon:
         icon_system = resolve_icon_system(style)
-        if icon_system == "illustrated-character-v2":
+        if icon_system == "diagram-core-v1":
+            text_x = box.x + min(116, max(98, box.w * 0.43))
+        elif icon_system == "illustrated" and illustrated_definition(node.icon or "") is not None:
             text_x = box.x + min(174, max(150, box.w * 0.31))
         elif illustrated_icons_enabled(style):
             text_x = box.x + min(86, max(68, box.w * 0.40))
@@ -1506,6 +1528,14 @@ def render_edge(
     mid_y = (start[1] + end[1]) / 2 - 14
     label = edge.label
     marker_id = f"arrow-{index}"
+    marker_orient = "auto-start-reverse" if edge.direction == "bidirectional" else "auto"
+    marker_attributes = (
+        ""
+        if edge.direction == "undirected"
+        else f' marker-start="url(#{marker_id})" marker-end="url(#{marker_id})"'
+        if edge.direction == "bidirectional"
+        else f' marker-end="url(#{marker_id})"'
+    )
     draw_begin = motion_delay(index, motion, "edge") + edge.motion.delay
     badge = ""
     if edge.step is not None:
@@ -1524,12 +1554,12 @@ def render_edge(
         edge_mode = edge_effect.preset
         edge_is_active = effect_active(motion, edge_effect) and edge.motion.enabled
     draw_markup = f"""  <path class="edge-draw" d="{path}" fill="none" stroke="{esc(stroke)}" stroke-width="{width:.1f}" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#{marker_id})" />"""
+        stroke-dasharray="1" stroke-dashoffset="0"{marker_attributes} />"""
     flow_markup = ""
     motion_markup = ""
     if edge_is_active and edge_mode in DRAW_ENTRY_EDGE_MOTION:
         draw_markup = f"""  <path class="edge-draw" d="{path}" fill="none" stroke="{esc(stroke)}" stroke-width="{width:.1f}" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#{marker_id})">
+        stroke-dasharray="1" stroke-dashoffset="1"{marker_attributes}>
     <animate attributeName="stroke-dashoffset" values="1;0" dur="{seconds(scaled_duration(0.9, motion))}" begin="{seconds(draw_begin)}" fill="freeze" />
   </path>"""
     if edge_is_active and edge_mode in {"pulse", "trace", "comet-flow", "dynamic-dash", "dash-flow", "ghost-flow", "glow-line", "comet"}:
@@ -1588,7 +1618,7 @@ def render_edge(
     label_motion_line = f"    {label_motion}\n" if label_motion else ""
     return f"""
 <defs>
-  <marker id="{marker_id}" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+  <marker id="{marker_id}" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="{marker_orient}" markerUnits="userSpaceOnUse">
     <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="{esc(stroke)}" />
   </marker>
 </defs>
@@ -1612,6 +1642,8 @@ def render_svg(
     suppress_icon_motion_node_ids: Optional[Iterable[str]] = None,
 ) -> str:
     scene = spec if isinstance(spec, Scene) else compile_scene(spec)
+    if scene.icon_system:
+        style = deep_merge(style, {"icon_system": scene.icon_system})
     if animation_mode not in {"smil", "runtime-stage"}:
         raise ValueError('animation_mode must be "smil" or "runtime-stage"')
     runtime_stage = animation_mode == "runtime-stage"
@@ -1731,7 +1763,11 @@ def render_svg(
 
     data_motion = scene.motion if runtime_stage else motion
     data_title_effect = channel_effect(data_motion, style, "title")
-    icon_system_attr = f' data-icon-system="{esc(resolve_icon_system(style))}"'
+    resolved_icon_system = resolve_icon_system(style)
+    icon_system_attr = f' data-icon-system="{esc(resolved_icon_system)}"'
+    resolved_icon_system_version = icon_system_version(resolved_icon_system)
+    if resolved_icon_system_version is not None:
+        icon_system_attr += f' data-icon-system-version="{esc(resolved_icon_system_version)}"'
 
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="{esc(data_motion.profile)}" data-motion-sequence="{esc(data_motion.sequence)}" data-motion-edge="{esc(data_motion.edge)}" data-motion-node="{esc(data_motion.node)}" data-motion-group="{esc(data_motion.group)}" data-motion-title="{esc(data_title_effect.preset)}" data-motion-reduced="{esc(data_motion.reduced_motion)}"{icon_system_attr}>
 <title id="diagram-title">{esc(title_text)}</title>

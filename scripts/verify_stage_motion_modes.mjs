@@ -32,7 +32,7 @@ async function snapshot(page) {
     return {
       mode: document.getElementById("viewer")?.className || "",
       total: timelines.length,
-      characters: timelines.filter((timeline) => timeline.__anidiagramCharacter).length,
+      characters: timelines.filter((timeline) => timeline.__anidiagramCharacter || timeline.__anidiagramPresentation).length,
       titleEntries: stageKinds.filter((kind) => kind === "title-entry").length,
       edgePackets: stageKinds.filter((kind) => kind === "edge-packet").length,
       edgeIndices: timelines.filter((timeline) => timeline.__anidiagramStage === "edge-packet").map((timeline) => timeline.__anidiagramEdgeIndex),
@@ -101,7 +101,7 @@ async function main() {
         logicalPackets: document.querySelectorAll(".runtime-edge-packet").length,
       };
     });
-    assert(cycleCheck.edgeRepeatDelays.every((value) => Math.abs(value - 0.7) < 0.001), `edge repeat delays: ${cycleCheck.edgeRepeatDelays}`);
+    assert(cycleCheck.edgeRepeatDelays.every((value) => Math.abs(value) < 0.001), `edge repeat delays: ${cycleCheck.edgeRepeatDelays}`);
     assert(cycleCheck.titleRepeats.every((value) => value === 0), `title repeats: ${cycleCheck.titleRepeats}`);
     assert(cycleCheck.logicalPackets === expressive.edgePackets, `duplicate packets after two cycles: ${cycleCheck.logicalPackets}/${expressive.edgePackets}`);
 
@@ -138,10 +138,12 @@ async function main() {
             scaleX: Number(window.gsap.getProperty(element, "scaleX")),
             scaleY: Number(window.gsap.getProperty(element, "scaleY")),
             opacity: Number(window.getComputedStyle(element).opacity),
+            strokeDashoffset: Number(window.gsap.getProperty(element, "strokeDashoffset")),
           };
           if (!approximately(values.x, 0) || !approximately(values.y, 0) || !approximately(values.rotation, 0)
               || !approximately(values.scaleX, 1) || !approximately(values.scaleY, 1)
-              || !approximately(values.opacity, restOpacity)) {
+              || !approximately(values.opacity, restOpacity)
+              || (Number.isFinite(values.strokeDashoffset) && !approximately(values.strokeDashoffset, 0))) {
             failures.push(`${selector}: ${JSON.stringify(values)}`);
           }
         }

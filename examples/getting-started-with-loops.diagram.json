@@ -1,0 +1,65 @@
+{
+  "version": "0.3",
+  "preset": "getting-started-with-loops",
+  "canvas": {"width": 1600, "height": 900},
+  "style": "claude-warm",
+  "title": {
+    "text": "Designing Agent Loops",
+    "subtitle": "Start with the simplest handoff; automate only when triggers, verification, and stop criteria are explicit"
+  },
+  "motion": {
+    "profile": "teaching",
+    "sequence": "staged",
+    "ease": "spring",
+    "stagger": 0.11,
+    "duration_scale": 0.95,
+    "intensity": 1.0,
+    "edge": {"preset": "ghost-flow", "particle": "soft-dot", "trail": true},
+    "node": {"preset": "icon-performance", "accent": "glow"},
+    "group": {"preset": "border-scan"},
+    "title": {"preset": "highlight-sweep"},
+    "reduced_motion": "subtle"
+  },
+  "motion_policy": {
+    "profile": "focused",
+    "motion_area": "small",
+    "max_active_flow_edges": 6,
+    "max_particle_edges": 4,
+    "particle_count_per_edge": 1,
+    "flow_trail_count": 1,
+    "max_active_pulse_nodes": 3,
+    "pulse_mode": "rotate",
+    "max_scanning_groups": 1
+  },
+  "groups": [
+    {"id": "modes", "label": "CHOOSE THE CONTROL MODE", "bounds": [50, 125, 1500, 175], "role": "neutral", "effect": {"preset": "static"}},
+    {"id": "cycle", "label": "SAME CYCLE · DIFFERENT TRIGGER + STOP POLICY", "bounds": [160, 325, 1280, 405], "role": "agent", "effect": {"preset": "border-scan"}},
+    {"id": "governance", "label": "QUALITY + USAGE GOVERNANCE", "bounds": [160, 755, 1280, 120], "role": "neutral", "effect": {"preset": "static"}}
+  ],
+  "nodes": [
+    {"id": "turn", "label": "Turn-based", "caption": "prompt · short tasks", "position": [80, 170], "size": [300, 92], "role": "actor", "icon": "operator", "effect": {"preset": "icon-performance"}},
+    {"id": "goal", "label": "Goal-based", "caption": "/goal · measurable exit", "position": [460, 170], "size": [300, 92], "role": "agent", "icon": "agent", "effect": {"preset": "icon-performance"}},
+    {"id": "time", "label": "Time-based", "caption": "/loop · recurring / external", "position": [840, 170], "size": [300, 92], "role": "source", "icon": "token", "effect": {"preset": "icon-performance"}},
+    {"id": "proactive", "label": "Proactive", "caption": "/schedule · defined work streams", "position": [1220, 170], "size": [300, 92], "role": "tool", "icon": "tool", "effect": {"preset": "icon-performance"}},
+
+    {"id": "trigger", "label": "Trigger", "caption": "prompt / interval / event", "position": [220, 455], "size": [230, 92], "role": "source", "icon": "token", "effect": {"preset": "icon-performance"}},
+    {"id": "context", "label": "Gather Context", "caption": "state / code / docs", "position": [490, 380], "size": [240, 96], "role": "memory", "icon": "search", "effect": {"preset": "icon-performance"}},
+    {"id": "act", "label": "Take Action", "caption": "edit / tools / workflow", "position": [790, 380], "size": [240, 96], "role": "tool", "icon": "tool", "effect": {"preset": "icon-performance"}},
+    {"id": "verify", "label": "Verify", "caption": "skills / hard checks", "position": [1080, 455], "size": [230, 92], "role": "risk", "icon": "shield", "effect": {"preset": "icon-performance"}},
+    {"id": "stop", "label": "Stop Condition", "caption": "met / capped / blocked", "position": [790, 585], "size": [240, 110], "shape": "decision", "role": "agent", "effect": {"preset": "pulse"}},
+    {"id": "improve", "label": "Improve System", "caption": "encode failed checks", "position": [490, 590], "size": [240, 100], "role": "memory", "icon": "memory", "effect": {"preset": "icon-performance"}},
+    {"id": "deliver", "label": "Deliver / Wait", "caption": "hand back / wait", "position": [1080, 590], "size": [230, 100], "role": "output", "icon": "output", "effect": {"preset": "icon-performance"}},
+
+    {"id": "quality", "label": "Quality Compounds", "caption": "clean code · docs · verifier · fresh review", "position": [200, 790], "size": [540, 64], "role": "risk", "icon": "shield", "effect": {"preset": "icon-performance"}},
+    {"id": "usage", "label": "Usage Stays Bounded", "caption": "right model · clear stop · pilot · scripts", "position": [860, 790], "size": [540, 64], "role": "tool", "icon": "token", "effect": {"preset": "icon-performance"}}
+  ],
+  "edges": [
+    {"from": "trigger", "to": "context", "role": "source", "route": "curved", "effect": {"preset": "signal-dot"}},
+    {"from": "context", "to": "act", "role": "memory", "route": "straight", "effect": {"preset": "dynamic-dash", "trail": false}},
+    {"from": "act", "to": "verify", "role": "tool", "route": "curved", "effect": {"preset": "signal-arrow"}},
+    {"from": "verify", "to": "stop", "role": "risk", "route": "curved", "effect": {"preset": "dynamic-dash", "trail": false}},
+    {"from": "stop", "to": "deliver", "label": "done", "role": "output", "route": "straight", "effect": {"preset": "signal-arrow"}, "animated": false},
+    {"from": "stop", "to": "improve", "label": "not done", "role": "agent", "route": "straight", "effect": {"preset": "signal-dot"}},
+    {"from": "improve", "to": "context", "role": "memory", "route": "points", "points": [[610, 590], [610, 515], [610, 476]], "effect": {"preset": "signal-arrow"}}
+  ]
+}

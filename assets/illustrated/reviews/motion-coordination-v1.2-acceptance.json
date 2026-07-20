@@ -1,0 +1,81 @@
+{
+  "system": "anidiagram-stage-motion",
+  "contract": "motion-coordination-v1.2",
+  "status": "confirmed",
+  "accepted_at": "2026-07-20",
+  "scope": "showcase-v1-continuous-edge-flow",
+  "human_visual_acceptance": "confirmed",
+  "acceptance_statement": "Expressive keeps every eligible edge visibly moving; short edges use an unoutlined solid role-colored dot and long edges use a moving packet segment.",
+  "behavior": {
+    "expressive": {
+      "eligible_edges": "all",
+      "continuous_track": true,
+      "packet_repeat_delay_seconds": 0,
+      "short_edge_threshold": 120,
+      "short_edge_packet": "solid-role-colored-dot-no-stroke",
+      "long_edge_packet": "bright-segment"
+    },
+    "readable": {
+      "eligible_edges": "policy-key-paths",
+      "runtime_ceiling": 2
+    },
+    "off": {
+      "active_timelines": 0,
+      "runtime_generated_elements": 0
+    }
+  },
+  "review_case": {
+    "title": "Enterprise RAG Production Architecture",
+    "theme": "minimal-light",
+    "plan": {
+      "path": "examples/enterprise-rag-production-illustrated.plan.json",
+      "sha256": "d2590a035c92108a5c8b397871bae7744c8a9adae7257a281decd31fba5e7980"
+    },
+    "spec": {
+      "path": "examples/enterprise-rag-production-illustrated.diagram.json",
+      "sha256": "99b8e92f75b6811e16ab665347a5683542e1a88475a5086c34c80bfb9a55a12f"
+    },
+    "html": {
+      "path": "outputs/enterprise-rag-production-illustrated/enterprise-rag-production-illustrated.html",
+      "sha256": "78d4c5a3dcbf56cde107f48f36caebb8e6c35d6267bec4c6b556796543bc42af"
+    },
+    "webp": {
+      "path": "outputs/enterprise-rag-production-illustrated/enterprise-rag-production-illustrated.webp",
+      "sha256": "188303f056fe3939eb4d3b098169bc5632846be6a245d0bc15bd7fbb1a8a50d1"
+    },
+    "quality": {
+      "path": "outputs/enterprise-rag-production-illustrated/enterprise-rag-production-illustrated.quality.json",
+      "sha256": "9fea906017bc128a143086d6a3fcb8bdd5a0b62937f0d69bbb5f186f39c2a57f"
+    }
+  },
+  "runtime": {
+    "path": "runtime/anidiagram-runtime.js",
+    "sha256": "6137e06ae57079f1bdf641dd3f9c29b5adf6fb3291716ccb79dffb3d5b89370c"
+  },
+  "motion_catalog": {
+    "path": "runtime/motion-catalog.json",
+    "sha256": "f6ce0155005255d6a49880aaa6063027a8c04bc50f34cea12ac3fafcbdb02607"
+  },
+  "validation": {
+    "expressive_edge_timelines": "12/12",
+    "expressive_continuous_tracks": "12/12",
+    "short_edge_solid_dots": "7/7",
+    "short_edge_motion_samples": "7/7",
+    "short_edge_stroke_attributes": 0,
+    "authored_rest": "12/12",
+    "reduced_motion": "12/12",
+    "stage_modes": [
+      "Expressive",
+      "Readable",
+      "Off",
+      "Expressive"
+    ],
+    "quality_errors": 0,
+    "quality_warnings": 0,
+    "quality_issues": 0
+  },
+  "notes": [
+    "The review artifacts under outputs are local browser-visible evidence.",
+    "This stage-motion acceptance does not change Illustrated 2.2.0 icon geometry or icon-specific performance contracts."
+  ]
+}

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Database stacked storage icon" data-icon="database">
+  <g data-part="body">
+  <g data-part="shell">
+    <rect x="20" y="18" width="56" height="66" rx="14" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="top-ring">
+    <ellipse cx="48" cy="24" rx="28" ry="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <ellipse cx="48" cy="24" rx="18" ry="4.5" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" data-stroke-role="inner"/>
+  </g>
+  <g data-part="layer-top">
+    <path d="M 20.5 39 C 31 45 65 45 75.5 39" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+  </g>
+  <g data-part="layer-middle">
+    <path d="M 20.5 51 C 31 57 65 57 75.5 51" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+  </g>
+  <g data-part="layer-bottom">
+    <path d="M 24 78 C 34 81 62 81 72 78" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+  </g>
+  <g data-part="core">
+    <circle cx="48" cy="65" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="indicator">
+    <circle cx="48" cy="65" r="6.7" fill="var(--icon-surface-contrast, #14213d)"/>
+    <circle cx="48" cy="65" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+  </g>
+  </g>
+</svg>

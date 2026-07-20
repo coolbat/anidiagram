@@ -1,0 +1,373 @@
+{
+  "version": "0.4",
+  "composition_policy": "composition-v1",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "explicit",
+      "version": "2.1.0"
+    },
+    "style": {
+      "value": "deep-tech",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "layered",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "explicit"
+    }
+  },
+  "icon_system": "illustrated",
+  "preset": "layered",
+  "canvas": {
+    "width": 1540,
+    "height": 860
+  },
+  "style": "deep-tech",
+  "title": {
+    "text": "Autonomous Software Delivery Architecture",
+    "subtitle": "Human intent → multi-agent planning → tool execution → verified outputs"
+  },
+  "motion": {
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "ease": "spring",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 1.0,
+    "edge": {
+      "preset": "flow-arrow"
+    },
+    "node": {
+      "preset": "icon-performance"
+    },
+    "group": {
+      "preset": "border-scan"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "subtle"
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  },
+  "groups": [
+    {
+      "id": "specialist-agents",
+      "label": "Specialist Agents",
+      "bounds": [
+        400,
+        220,
+        360,
+        490
+      ],
+      "role": "neutral",
+      "effect": {
+        "preset": "border-scan"
+      }
+    },
+    {
+      "id": "execution-plane",
+      "label": "Execution Plane",
+      "bounds": [
+        770,
+        220,
+        360,
+        490
+      ],
+      "role": "neutral",
+      "effect": {
+        "preset": "border-scan"
+      }
+    },
+    {
+      "id": "delivery-plane",
+      "label": "Delivery Surfaces",
+      "bounds": [
+        1140,
+        220,
+        360,
+        490
+      ],
+      "role": "neutral",
+      "effect": {
+        "preset": "border-scan"
+      }
+    }
+  ],
+  "nodes": [
+    {
+      "id": "operator",
+      "label": "Human Operator",
+      "caption": "Intent and acceptance criteria",
+      "position": [
+        70,
+        190
+      ],
+      "size": [
+        300,
+        142
+      ],
+      "role": "actor",
+      "icon": "operator",
+      "effect": {
+        "preset": "icon-performance"
+      },
+      "radius": 28,
+      "stroke_width": 2.5
+    },
+    {
+      "id": "orchestrator",
+      "label": "Agent Orchestrator",
+      "caption": "Routes goals and execution state",
+      "position": [
+        70,
+        520
+      ],
+      "size": [
+        300,
+        142
+      ],
+      "role": "agent",
+      "icon": "agent",
+      "effect": {
+        "preset": "icon-performance"
+      },
+      "radius": 28,
+      "stroke_width": 2.5
+    },
+    {
+      "id": "planner",
+      "label": "Planning Agent",
+      "caption": "Builds the task graph",
+      "position": [
+        430,
+        270
+      ],
+      "size": [
+        300,
+        142
+      ],
+      "role": "agent",
+      "icon": "agent",
+      "effect": {
+        "preset": "icon-performance"
+      },
+      "radius": 28,
+      "stroke_width": 2.5
+    },
+    {
+      "id": "executor",
+      "label": "Execution Agent",
+      "caption": "Coordinates work and checks",
+      "position": [
+        430,
+        520
+      ],
+      "size": [
+        300,
+        142
+      ],
+      "role": "agent",
+      "icon": "agent",
+      "effect": {
+        "preset": "icon-performance"
+      },
+      "radius": 28,
+      "stroke_width": 2.5
+    },
+    {
+      "id": "code-tools",
+      "label": "Code Toolchain",
+      "caption": "Edit, build, and package",
+      "position": [
+        800,
+        270
+      ],
+      "size": [
+        300,
+        142
+      ],
+      "role": "tool",
+      "icon": "tool",
+      "effect": {
+        "preset": "icon-performance"
+      },
+      "radius": 28,
+      "stroke_width": 2.5
+    },
+    {
+      "id": "validation-tools",
+      "label": "Validation Suite",
+      "caption": "Tests, policies, and runtime checks",
+      "position": [
+        800,
+        520
+      ],
+      "size": [
+        300,
+        142
+      ],
+      "role": "tool",
+      "icon": "tool",
+      "effect": {
+        "preset": "icon-performance"
+      },
+      "radius": 28,
+      "stroke_width": 2.5
+    },
+    {
+      "id": "release-package",
+      "label": "Release Package",
+      "caption": "Versioned deployment artifact",
+      "position": [
+        1170,
+        270
+      ],
+      "size": [
+        300,
+        142
+      ],
+      "role": "output",
+      "icon": "output",
+      "effect": {
+        "preset": "icon-performance"
+      },
+      "radius": 28,
+      "stroke_width": 2.5
+    },
+    {
+      "id": "verification-report",
+      "label": "Verification Report",
+      "caption": "Evidence and acceptance result",
+      "position": [
+        1170,
+        520
+      ],
+      "size": [
+        300,
+        142
+      ],
+      "role": "output",
+      "icon": "output",
+      "effect": {
+        "preset": "icon-performance"
+      },
+      "radius": 28,
+      "stroke_width": 2.5
+    }
+  ],
+  "edges": [
+    {
+      "from": "operator",
+      "to": "orchestrator",
+      "label": "goal + constraints",
+      "role": "process",
+      "direction": "forward",
+      "route": "curved",
+      "step": 1,
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "particle_count": 1,
+        "trail_count": 1
+      }
+    },
+    {
+      "from": "orchestrator",
+      "to": "planner",
+      "label": "decompose",
+      "role": "process",
+      "direction": "forward",
+      "route": "curved",
+      "step": 2,
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "particle_count": 1,
+        "trail_count": 1
+      }
+    },
+    {
+      "from": "orchestrator",
+      "to": "executor",
+      "label": "route",
+      "role": "process",
+      "direction": "forward",
+      "route": "curved",
+      "step": 3,
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "particle_count": 1,
+        "trail_count": 1
+      }
+    },
+    {
+      "from": "planner",
+      "to": "code-tools",
+      "label": "plan",
+      "role": "process",
+      "direction": "forward",
+      "route": "curved",
+      "step": 4,
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "particle_count": 1,
+        "trail_count": 1
+      }
+    },
+    {
+      "from": "executor",
+      "to": "validation-tools",
+      "label": "tests",
+      "role": "process",
+      "direction": "forward",
+      "route": "curved",
+      "step": 5,
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "particle_count": 1,
+        "trail_count": 1
+      }
+    },
+    {
+      "from": "code-tools",
+      "to": "release-package",
+      "label": "build",
+      "role": "process",
+      "direction": "forward",
+      "route": "curved",
+      "step": 6,
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "particle_count": 1,
+        "trail_count": 1
+      }
+    },
+    {
+      "from": "validation-tools",
+      "to": "verification-report",
+      "label": "proof",
+      "role": "output",
+      "direction": "forward",
+      "route": "curved",
+      "step": 7,
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "particle_count": 1,
+        "trail_count": 1
+      }
+    }
+  ]
+}

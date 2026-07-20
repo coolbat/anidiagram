@@ -1,0 +1,97 @@
+{
+  "system": "illustrated",
+  "display_name": "Illustrated",
+  "display_name_zh": "插画",
+  "version": "2.1.0",
+  "catalog_revision": 4,
+  "status": "approved",
+  "legacy_aliases": ["illustrated-character-v2"],
+  "motion_status": "approved",
+  "motion_contract": {
+    "id": "illustrated-performance-v2",
+    "status": "approved",
+    "source": "assets/illustrated/motion-contracts/illustrated-performance-v2.json"
+  },
+  "icons": [
+    {
+      "id": "agent",
+      "semantic_role": "input-reason-result",
+      "parts": ["wash", "brain-left", "brain-right", "brain-detail", "processor", "processor-core", "input-nodes", "input-path", "output-path", "result"],
+      "supported_states": [],
+      "supported_actions": ["receive", "reason", "deliver"],
+      "status": "approved",
+      "motion_status": "approved",
+      "asset_revision": 1
+    },
+    {
+      "id": "operator",
+      "semantic_role": "person-operate-status",
+      "parts": ["wash", "body", "head", "hair", "glasses", "laptop", "hands", "screen", "laptop-base", "input-cursor", "status", "status-check"],
+      "supported_states": [],
+      "supported_actions": ["observe", "operate", "confirm"],
+      "status": "approved",
+      "motion_status": "approved",
+      "asset_revision": 1
+    },
+    {
+      "id": "tool",
+      "semantic_role": "tool-action-complete",
+      "parts": ["wash", "toolbox", "toolbox-lid", "handle", "wrench", "wrench-hole", "target", "action-path", "completion"],
+      "supported_states": [],
+      "supported_actions": ["prepare", "execute", "complete"],
+      "status": "approved",
+      "motion_status": "approved",
+      "asset_revision": 1
+    },
+    {
+      "id": "output",
+      "semantic_role": "artifact-deliver-confirm",
+      "parts": ["wash", "card", "card-lines", "delivery-tray", "delivery-lip", "send-path", "check-badge", "check"],
+      "supported_states": [],
+      "supported_actions": ["compose", "deliver", "confirm"],
+      "status": "approved",
+      "motion_status": "approved",
+      "asset_revision": 1
+    },
+    {
+      "id": "database",
+      "semantic_role": "data-ingest-store-persist",
+      "parts": ["wash", "cylinder-body", "cylinder-top", "layer-top", "layer-bottom", "input-bead", "write-path", "commit-ripple", "stored-bead"],
+      "supported_states": [],
+      "supported_actions": ["ingest", "store", "persist"],
+      "status": "approved",
+      "motion_status": "approved",
+      "asset_revision": 1
+    },
+    {
+      "id": "api",
+      "semantic_role": "request-route-response",
+      "parts": ["wash", "gateway", "api-glyph", "request-path", "request-token", "response-path", "response-token"],
+      "supported_states": [],
+      "supported_actions": ["request", "route", "respond"],
+      "status": "approved",
+      "motion_status": "approved",
+      "asset_revision": 1
+    },
+    {
+      "id": "search",
+      "semantic_role": "query-scan-discover",
+      "parts": ["wash", "lens-glass", "lens", "handle", "scan-cross", "target-ring", "result-dot", "discovery"],
+      "supported_states": [],
+      "supported_actions": ["query", "scan", "discover"],
+      "status": "approved",
+      "motion_status": "approved",
+      "asset_revision": 1
+    },
+    {
+      "id": "memory",
+      "semantic_role": "context-capture-index-recall",
+      "parts": ["wash", "back-card", "front-card", "index-nodes", "trace", "input-token", "commit-path", "bookmark", "result"],
+      "supported_states": [],
+      "supported_actions": ["capture", "index", "recall"],
+      "status": "approved",
+      "motion_status": "approved",
+      "asset_revision": 1
+    }
+  ]
+}

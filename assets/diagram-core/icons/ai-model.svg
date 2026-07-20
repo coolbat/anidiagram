@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Layered AI model core icon" data-icon="ai-model">
+  <g data-part="body">
+  <g data-part="shell">
+    <rect x="17" y="18" width="62" height="62" rx="17" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="layer-back">
+    <rect x="25" y="29" width="46" height="32" rx="11" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner"/>
+  </g>
+  <g data-part="layer-front">
+    <rect x="29" y="39" width="38" height="31" rx="11" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="core">
+    <polygon points="48,44 58,54 48,64 38,54" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+    <circle cx="48" cy="54" r="4" fill="var(--icon-accent-secondary, #45c5bd)"/>
+  </g>
+  <g data-part="ports">
+    <line x1="23" y1="38" x2="30" y2="38" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="outer"/>
+    <line x1="66" y1="38" x2="73" y2="38" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="outer"/>
+    <circle cx="23" cy="38" r="3" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    <circle cx="73" cy="38" r="3" fill="var(--icon-accent-secondary, #45c5bd)"/>
+  </g>
+  <g data-part="indicator">
+    <circle cx="48" cy="76" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+  </g>
+  </g>
+</svg>

@@ -1,0 +1,206 @@
+{
+  "version": "0.2",
+  "semantic": {
+    "title": "Autonomous Software Delivery Architecture",
+    "subtitle": "Human intent → multi-agent planning → tool execution → verified outputs",
+    "summary": "Show how one delivery request is decomposed by agents, executed through tools, and returned as two verifiable outputs.",
+    "intent": {
+      "diagram_kind": "architecture",
+      "primary_question": "How does an autonomous software delivery system turn human intent into verified release outputs?",
+      "audience": ["technical", "product"],
+      "scope": "Control plane, execution tools, and delivery artifacts",
+      "exclusions": "Persistence, deployment infrastructure, and internal model serving"
+    },
+    "entities": [
+      {
+        "id": "operator",
+        "label": "Human Operator",
+        "description": "Intent and acceptance criteria",
+        "kind": "operator",
+        "role": "actor",
+        "importance": "primary"
+      },
+      {
+        "id": "orchestrator",
+        "label": "Agent Orchestrator",
+        "description": "Routes goals and execution state",
+        "kind": "agent",
+        "role": "agent",
+        "importance": "primary"
+      },
+      {
+        "id": "planner",
+        "label": "Planning Agent",
+        "description": "Builds the task graph",
+        "kind": "agent",
+        "role": "agent",
+        "importance": "primary"
+      },
+      {
+        "id": "executor",
+        "label": "Execution Agent",
+        "description": "Coordinates work and checks",
+        "kind": "agent",
+        "role": "agent",
+        "importance": "primary"
+      },
+      {
+        "id": "code-tools",
+        "label": "Code Toolchain",
+        "description": "Edit, build, and package",
+        "kind": "tool",
+        "role": "tool",
+        "importance": "primary"
+      },
+      {
+        "id": "validation-tools",
+        "label": "Validation Suite",
+        "description": "Tests, policies, and runtime checks",
+        "kind": "tool",
+        "role": "tool",
+        "importance": "primary"
+      },
+      {
+        "id": "release-package",
+        "label": "Release Package",
+        "description": "Versioned deployment artifact",
+        "kind": "output",
+        "role": "output",
+        "importance": "primary",
+        "state": {
+          "phase": "ready",
+          "result": "success",
+          "availability": "online"
+        }
+      },
+      {
+        "id": "verification-report",
+        "label": "Verification Report",
+        "description": "Evidence and acceptance result",
+        "kind": "output",
+        "role": "output",
+        "importance": "supporting",
+        "state": {
+          "phase": "verified",
+          "result": "success",
+          "availability": "online"
+        }
+      }
+    ],
+    "relations": [
+      {
+        "id": "submit-intent",
+        "from": "operator",
+        "to": "orchestrator",
+        "kind": "request",
+        "label": "goal + constraints",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "delegate-plan",
+        "from": "orchestrator",
+        "to": "planner",
+        "kind": "delegation",
+        "label": "decompose",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "delegate-execution",
+        "from": "orchestrator",
+        "to": "executor",
+        "kind": "delegation",
+        "label": "route",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "plan-tool-actions",
+        "from": "planner",
+        "to": "code-tools",
+        "kind": "tool-call",
+        "label": "plan",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "execute-validation",
+        "from": "executor",
+        "to": "validation-tools",
+        "kind": "tool-call",
+        "label": "tests",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "package-release",
+        "from": "code-tools",
+        "to": "release-package",
+        "kind": "delivery",
+        "label": "build",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "publish-evidence",
+        "from": "validation-tools",
+        "to": "verification-report",
+        "kind": "observability",
+        "label": "proof",
+        "direction": "forward",
+        "importance": "supporting"
+      }
+    ],
+    "groups": [
+      {
+        "id": "specialist-agents",
+        "label": "Specialist Agents",
+        "description": "Planning and coordinated execution",
+        "kind": "system",
+        "members": ["planner", "executor"],
+        "importance": "primary"
+      },
+      {
+        "id": "execution-plane",
+        "label": "Execution Plane",
+        "description": "Implementation and verification tools",
+        "kind": "system",
+        "members": ["code-tools", "validation-tools"],
+        "importance": "primary"
+      },
+      {
+        "id": "delivery-plane",
+        "label": "Delivery Surfaces",
+        "description": "Release and evidence outputs",
+        "kind": "system",
+        "members": ["release-package", "verification-report"],
+        "importance": "supporting"
+      }
+    ],
+    "flows": [
+      {
+        "id": "build-flow",
+        "label": "Build delivery flow",
+        "description": "Intent becomes a packaged release artifact",
+        "relation_ids": ["submit-intent", "delegate-plan", "plan-tool-actions", "package-release"],
+        "importance": "primary",
+        "repeat": "event-driven"
+      },
+      {
+        "id": "verification-flow",
+        "label": "Verification evidence flow",
+        "description": "The execution path produces traceable quality evidence",
+        "relation_ids": ["submit-intent", "delegate-execution", "execute-validation", "publish-evidence"],
+        "importance": "supporting",
+        "repeat": "event-driven"
+      }
+    ]
+  },
+  "presentation": {
+    "icon_system": "illustrated",
+    "style": "deep-tech",
+    "layout": "layered",
+    "motion": "showcase-v1"
+  }
+}

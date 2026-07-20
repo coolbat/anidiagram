@@ -1,0 +1,43 @@
+{
+  "system": "illustrated",
+  "icon_system_version": "2.3.0",
+  "contract": "illustrated-performance-v4-review",
+  "extends": "illustrated-performance-v3",
+  "status": "visual-review",
+  "approved_static_batch": "illustrated-expansion-batch-3",
+  "public_showcase_enabled": false,
+  "selection_policy": "explicit-review-only",
+  "repeat_delay": 0.8,
+  "cancel_behavior": "restore-authored-rest-pose",
+  "reduced_motion_behavior": "static-rest",
+  "performances": [
+    {
+      "icon": "user",
+      "id": "illustrated-user-request-interact-consume-v1",
+      "semantic_sequence": ["request", "interact", "consume"],
+      "primary_parts": ["portrait-body", "portrait-neck", "portrait-head", "portrait-hair", "face", "conversation-card", "conversation-lines"],
+      "rest_at": 1.66
+    },
+    {
+      "icon": "server",
+      "id": "illustrated-server-host-compute-serve-v1",
+      "semantic_sequence": ["host", "compute", "serve"],
+      "primary_parts": ["rack-shell", "upper-bay", "middle-bay", "lower-bay", "rack-ports", "activity-lights"],
+      "rest_at": 1.7
+    },
+    {
+      "icon": "ai-model",
+      "id": "illustrated-ai-model-infer-transform-predict-v1",
+      "semantic_sequence": ["infer", "transform", "predict"],
+      "primary_parts": ["model-card", "input-neurons", "network-links", "hidden-neurons", "output-neuron", "inference-band"],
+      "rest_at": 1.8
+    },
+    {
+      "icon": "message-queue",
+      "id": "illustrated-message-queue-buffer-order-deliver-v1",
+      "semantic_sequence": ["buffer", "order", "deliver"],
+      "primary_parts": ["queue-shell", "queue-rail", "message-one", "message-two", "message-three", "buffer-gates", "sequence-dots"],
+      "rest_at": 1.76
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "system": "illustrated",
+  "display_name": "Illustrated",
+  "display_name_zh": "插画",
+  "version": "2.1.0",
+  "status": "frozen-approved-release",
+  "scope": "eight-icon-static-and-motion-release",
+  "catalog_lifecycle_status": "approved",
+  "human_static_acceptance": "confirmed",
+  "static_approved_at": "2026-07-20",
+  "icon_count": 8,
+  "motion_status": "approved",
+  "public_motion_contract": "illustrated-performance-v2",
+  "public_motion_icon_count": 8,
+  "motion_human_acceptance": "confirmed",
+  "motion_approved_at": "2026-07-20",
+  "legacy_aliases": ["illustrated-character-v2"],
+  "hashes": {
+    "catalog_sha256": "1c387a77c87560bd8e9009ff52cce024396d22b5726dbe9a2573e1ddf5156175",
+    "registry_sha256": "680666666fc60bc223890daf6855c2589097ae653216c3f8ca80524a9b77970c",
+    "expansion_slice_sha256": "bae5b00a69c27baa101a51eccbf834a0d6e6812e89689d554cb227fc58392402",
+    "tokens_sha256": "9cd7d7ad10f7ea5f04641e2cba5e9bad7131d3821c3a2dd9d6944c357071ffc2",
+    "renderer_sha256": "735dfe60b519518c9b1e2fb1d5817f5d2f720c5cd8b5a2e1e26028caae7f9fa0",
+    "visual_snapshot_sha256": "7f7d769631268a7db9dcc71342de58ae6a7222e2a04f45315b97e195223557ac",
+    "quality_sha256": "2c91b2a219f1ee63664dedad0e3b35887088aa81e73af3c7c9fe12b2701c6c01",
+    "public_motion_contract_sha256": "3f28539adc121a621c0be1bff382119a8db0e184c15515f6a74111e18772b3d5",
+    "archived_motion_review_contract_sha256": "7bc150a1e9d10f818546ebce704820664cd1526fe472afe004d2e3eba6b62de0",
+    "motion_manifest_sha256": "b7a95b9dc14fb6328fdca5358cfd3a7bfd154d25a648d9c74b97b7f8dd699799",
+    "runtime_sha256": "946fa4aae06ac8403c934478e10c29cddf3a83a3f17b08738e85e42ef4f7b099",
+    "showcase_spec_sha256": "cc10133f10254b264f5083b22169ef1e16586e4ad206ded1617c48f2e2e0f4d8",
+    "acceptance_record_sha256": "eeb957944d3808c8154be9829282ce6d84fb5a6d1ca73069004269f1045b0248"
+  }
+}

@@ -505,9 +505,9 @@ AniDiagram 可以在概念层面参考已有项目和动画库，但代码、sch
 与两个 `illustrated-character-v1-*` 示例查看效果。旧的 `illustrated-v1` 和
 `semantic-line-v1` 仍需显式指定。
 
-Character v1 的 HTML 使用 Motion Coordination v1.1。`Expressive` 以角色动效
-为主，每条活动连线只显示一个语义数据包，数据包循环之间保留 `0.7 秒` 静止
-间隔，标题高光只在进入时播放一次；分组框默认使用 `soft-reveal`，只有显式
+Character v1 的 HTML 使用 Motion Coordination v1.2。`Expressive` 以角色动效
+为主，每条活动连线持续显示低亮度流线，并叠加一个无静默间隔的语义数据包；
+标题高光只在进入时播放一次。分组框默认使用 `soft-reveal`，只有显式
 指定时才持续扫描。`Readable` 保留角色的语义动作，但把舞台动效压缩到最多
 两条关键连线，并移除装饰性标题与分组动效。`Off` 与系统级 reduced motion
 均显示规范静态场景，不创建 GSAP timeline。

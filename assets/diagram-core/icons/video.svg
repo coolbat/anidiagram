@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Video frame file icon" data-icon="video">
+  <g data-part="body">
+    <g data-part="page">
+      <path d="M 23 13 H 59 L 75 29 V 83 H 23 Z" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+    </g>
+    <g data-part="fold">
+      <polygon points="59,13 59,29 75,29" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+    </g>
+    <g data-part="play">
+      <circle cx="49" cy="50" r="15" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+      <polygon points="46,42 46,58 58,50" fill="var(--icon-accent-secondary, #45c5bd)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" stroke-linejoin="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="frame-a">
+      <rect x="30" y="35" width="6" height="6" rx="1" fill="var(--icon-accent, #7c5ce7)"/>
+      <rect x="30" y="45" width="6" height="6" rx="1" fill="var(--icon-accent, #7c5ce7)"/>
+      <rect x="30" y="55" width="6" height="6" rx="1" fill="var(--icon-accent, #7c5ce7)"/>
+    </g>
+    <g data-part="frame-b">
+      <rect x="62" y="35" width="6" height="6" rx="1" fill="var(--icon-detail, #64748b)"/>
+      <rect x="62" y="45" width="6" height="6" rx="1" fill="var(--icon-detail, #64748b)"/>
+      <rect x="62" y="55" width="6" height="6" rx="1" fill="var(--icon-detail, #64748b)"/>
+    </g>
+    <g data-part="indicator">
+      <circle cx="66" cy="72" r="6" fill="var(--icon-surface-contrast, #14213d)"/>
+      <circle cx="66" cy="72" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+  </g>
+</svg>

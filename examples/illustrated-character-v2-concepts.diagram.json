@@ -4,8 +4,8 @@
   "canvas": {"width": 1440, "height": 840},
   "style": "illustrated-character-v2-concept",
   "title": {
-    "text": "Illustrated Character v2",
-    "subtitle": "Character-led micro-scenes with a readable rest pose before motion is added"
+    "text": "Illustrated",
+    "subtitle": "Icon system 2.0.0 · Approved static semantic micro-scenes"
   },
   "motion": {
     "profile": "off",

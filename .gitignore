@@ -10,3 +10,4 @@ outputs/
 .superpowers/
 .playwright-mcp/
 .worktrees/
+node_modules/

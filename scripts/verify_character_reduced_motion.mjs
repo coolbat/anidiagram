@@ -26,7 +26,7 @@ function loadPlaywright() {
   }
 }
 
-async function readCharacterManifest(page) {
+async function readCharacterManifest(page, expectedSystem) {
   const source = await page.evaluate(() => document.getElementById("anidiagram-motion-manifest")?.textContent);
   if (!source) throw new Error("missing Motion Manifest: #anidiagram-motion-manifest");
 
@@ -39,8 +39,8 @@ async function readCharacterManifest(page) {
   if (!manifest || typeof manifest !== "object" || Array.isArray(manifest)) {
     throw new Error("invalid Motion Manifest: expected an object");
   }
-  if (manifest.icon_system !== "illustrated-character-v1") {
-    throw new Error(`expected Motion Manifest icon_system illustrated-character-v1; received ${String(manifest.icon_system)}`);
+  if (manifest.icon_system !== expectedSystem) {
+    throw new Error(`expected Motion Manifest icon_system ${expectedSystem}; received ${String(manifest.icon_system)}`);
   }
   if (!Array.isArray(manifest.icons)) {
     throw new Error("invalid Motion Manifest: expected icons array");
@@ -54,7 +54,6 @@ function characterEntries(manifest, expectedCount) {
     throw new Error(`expected ${expectedCount} illustrated-character entries; received ${entries.length}`);
   }
   const nodeIds = new Set();
-  const icons = new Set();
   for (const entry of entries) {
     if (
       !entry
@@ -67,11 +66,10 @@ function characterEntries(manifest, expectedCount) {
     ) {
       throw new Error("invalid illustrated-character Motion Manifest entry");
     }
-    if (nodeIds.has(entry.node_id) || icons.has(entry.icon)) {
+    if (nodeIds.has(entry.node_id)) {
       throw new Error(`duplicate illustrated-character Motion Manifest entry: ${entry.node_id}/${entry.icon}`);
     }
     nodeIds.add(entry.node_id);
-    icons.add(entry.icon);
   }
   return entries;
 }
@@ -79,6 +77,7 @@ function characterEntries(manifest, expectedCount) {
 async function main() {
   const htmlPath = process.argv[2];
   const expectedCount = Number(process.argv[3]);
+  const expectedSystem = process.argv[4] || "illustrated-character-v1";
   if (!htmlPath || !fs.existsSync(htmlPath) || !Number.isInteger(expectedCount) || expectedCount < 1) {
     throw new Error("usage: verify_character_reduced_motion.mjs <runtime.html> <expected-character-icon-count>");
   }
@@ -89,18 +88,57 @@ async function main() {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto(pathToFileURL(htmlPath).href, { waitUntil: "load" });
     await page.waitForSelector("svg");
-    await page.waitForFunction(() => Boolean(window.AniDiagramRuntime) && Array.isArray(window.__ANIDIAGRAM_TIMELINES__));
-    const manifest = await readCharacterManifest(page);
+    await page.waitForFunction(() => Boolean(window.AniDiagramRuntime) && Boolean(window.gsap) && Array.isArray(window.__ANIDIAGRAM_TIMELINES__));
+    const manifest = await readCharacterManifest(page, expectedSystem);
     const expectedEntries = characterEntries(manifest, expectedCount);
-    const { timelines, roots } = await page.evaluate((entries) => ({
-      timelines: window.__ANIDIAGRAM_TIMELINES__.length,
-      roots: entries.filter((entry) => document.querySelector(entry.parts.root)).length,
-    }), expectedEntries);
+    const { timelines, roots, failures } = await page.evaluate((entries) => {
+      const failures = [];
+      const approximately = (actual, expected) => Math.abs(Number(actual) - expected) < 0.001;
+      entries.forEach((entry) => {
+        Object.entries(entry.parts || {}).forEach(([partName, selector]) => {
+          if (partName === "root") return;
+          const element = document.querySelector(selector);
+          if (!element) {
+            failures.push(`missing ${selector} for ${entry.node_id}`);
+            return;
+          }
+          const expectedOpacity = Number(element.dataset.restOpacity);
+          const properties = {
+            x: Number(window.gsap.getProperty(element, "x")),
+            y: Number(window.gsap.getProperty(element, "y")),
+            rotation: Number(window.gsap.getProperty(element, "rotation")),
+            scaleX: Number(window.gsap.getProperty(element, "scaleX")),
+            scaleY: Number(window.gsap.getProperty(element, "scaleY")),
+            opacity: Number(window.getComputedStyle(element).opacity),
+            strokeDashoffset: Number(window.gsap.getProperty(element, "strokeDashoffset")),
+          };
+          if (
+            !approximately(properties.x, 0)
+            || !approximately(properties.y, 0)
+            || !approximately(properties.rotation, 0)
+            || !approximately(properties.scaleX, 1)
+            || !approximately(properties.scaleY, 1)
+            || !approximately(properties.opacity, expectedOpacity)
+            || (Number.isFinite(properties.strokeDashoffset) && !approximately(properties.strokeDashoffset, 0))
+          ) {
+            failures.push(`${entry.node_id} ${selector} is not at authored rest: ${JSON.stringify(properties)}`);
+          }
+        });
+      });
+      return {
+        timelines: window.__ANIDIAGRAM_TIMELINES__.length,
+        roots: entries.filter((entry) => document.querySelector(entry.parts.root)).length,
+        failures,
+      };
+    }, expectedEntries);
     if (timelines !== 0) {
       throw new Error(`expected zero timelines under reduced motion; received ${timelines}`);
     }
     if (roots !== expectedEntries.length) {
       throw new Error(`expected ${expectedEntries.length} rendered illustrated-character roots; received ${roots}`);
+    }
+    if (failures.length) {
+      throw new Error(failures.join("\n"));
     }
     process.stdout.write(`verified reduced motion for ${roots}/${expectedEntries.length} illustrated-character entries\n`);
   } finally {

@@ -1,0 +1,18 @@
+{
+  "id": "shield",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "network-interfaces",
+  "semantic_kind": "shield",
+  "structural_prototype": "scanning-security-shield",
+  "parts": ["body", "shell", "scan", "core", "check"],
+  "attachments": {
+    "receive": {"x": 12, "y": 44},
+    "send": {"x": 84, "y": 44},
+    "status": {"x": 48, "y": 68}
+  },
+  "states": [],
+  "actions": ["receive", "scan", "validate", "send"],
+  "status": "approved"
+}

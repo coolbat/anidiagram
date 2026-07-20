@@ -20,5 +20,24 @@
     "output": {"stroke": "#4ade80", "fill": "#052e16", "text": "#f8fafc"},
     "risk": {"stroke": "#fb7185", "fill": "#2a0f16", "text": "#f8fafc"},
     "neutral": {"stroke": "#64748b", "fill": "#111827", "text": "#f8fafc"}
+  },
+  "illustrated_tokens": {
+    "ink": "#d8cebd",
+    "paper": "#111c33",
+    "mint": "#34d399",
+    "lavender": "#8b5cf6",
+    "lavender-dark": "#c4b5fd",
+    "violet": "#a78bfa",
+    "peach": "#f7b38a",
+    "sky": "#38bdf8",
+    "teal": "#14b8a6",
+    "teal-dark": "#5eead4",
+    "coral": "#fb7185",
+    "sun": "#fbbf24",
+    "shadow": "#020617",
+    "lavender-wash": "#251f4b",
+    "sky-wash": "#0b3047",
+    "sun-wash": "#382707",
+    "mint-wash": "#0a3027"
   }
 }

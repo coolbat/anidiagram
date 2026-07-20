@@ -1,0 +1,18 @@
+{
+  "id": "data-warehouse",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "data-knowledge",
+  "semantic_kind": "data-warehouse",
+  "structural_prototype": "aggregated-data-warehouse",
+  "parts": ["body", "shell", "roof", "bins", "door", "indicator"],
+  "attachments": {
+    "receive": {"x": 8, "y": 48},
+    "send": {"x": 88, "y": 48},
+    "status": {"x": 74, "y": 72}
+  },
+  "states": [],
+  "actions": ["receive", "aggregate", "store", "send"],
+  "status": "approved"
+}

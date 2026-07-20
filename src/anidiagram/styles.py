@@ -8,6 +8,7 @@ from typing import Any, Dict, Optional, Union
 
 from .schema import KNOWN_ROLES, ValidationIssue
 from .icon_system import DEFAULT_ICON_SYSTEM, SUPPORTED_ICON_SYSTEMS, resolve_icon_system
+from .illustrated_tokens import illustrated_tokens_for_style
 
 
 DEFAULT_STYLE: Dict[str, Any] = {
@@ -82,6 +83,11 @@ def validate_style_profile(data: Dict[str, Any]) -> list:
         issues.append(ValidationIssue("$.name", "expected a string", "type"))
     if "icon_system" in data:
         _validate_icon_system(data["icon_system"], "$.icon_system", issues)
+    if "illustrated_tokens" in data:
+        try:
+            illustrated_tokens_for_style(data)
+        except ValueError as error:
+            issues.append(ValidationIssue("$.illustrated_tokens", str(error), "token"))
     node = data.get("node", {})
     if node and not isinstance(node, dict):
         issues.append(ValidationIssue("$.node", "expected an object", "type"))

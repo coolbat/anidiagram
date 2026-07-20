@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Branching reasoning path icon" data-icon="reasoning">
+  <g data-part="body">
+  <g data-part="shell">
+    <rect x="13" y="17" width="70" height="62" rx="18" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="premise">
+    <circle cx="27" cy="52" r="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <circle cx="27" cy="52" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+  </g>
+  <g data-part="path">
+    <path d="M 35 52 H 48 Q 55 52 58 47 L 63 40" fill="none" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linecap="round" stroke-linejoin="round" data-stroke-role="outer"/>
+    <polyline points="46,48 51,52 46,56" fill="none" stroke="var(--icon-accent, #7c5ce7)" stroke-width="2.125" stroke-linecap="round" stroke-linejoin="round" data-stroke-role="outer"/>
+  </g>
+  <g data-part="branch">
+    <path d="M 47 52 Q 49 40 49 33" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    <circle cx="49" cy="29" r="5" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner"/>
+  </g>
+  <g data-part="result">
+    <circle cx="69" cy="35" r="10" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <polygon points="69,29 75,35 69,41 63,35" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" stroke-linejoin="round" data-stroke-role="inner"/>
+  </g>
+  <g data-part="indicator">
+    <circle cx="68" cy="65" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+  </g>
+  </g>
+</svg>

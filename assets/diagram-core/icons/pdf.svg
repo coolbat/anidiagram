@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Paginated bound file icon" data-icon="pdf">
+  <g data-part="body">
+    <g data-part="page">
+      <path d="M 23 13 H 59 L 75 29 V 83 H 23 Z" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+    </g>
+    <g data-part="fold">
+      <polygon points="59,13 59,29 75,29" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+    </g>
+    <g data-part="pages">
+      <line x1="29" y1="78" x2="69" y2="78" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+      <line x1="72" y1="35" x2="72" y2="72" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+      <path d="M 33 33 H 65 V 64 H 33" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="2.125" stroke-linecap="round" stroke-linejoin="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="spine">
+      <line x1="32" y1="32" x2="32" y2="66" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="inner"/>
+      <circle cx="32" cy="39" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" data-stroke-role="inner"/>
+      <circle cx="32" cy="49" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" data-stroke-role="inner"/>
+      <circle cx="32" cy="59" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" data-stroke-role="inner"/>
+    </g>
+    <g data-part="badge">
+      <rect x="43" y="39" width="17" height="15" rx="3" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" data-stroke-role="inner"/>
+      <line x1="47" y1="44" x2="56" y2="44" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+      <line x1="47" y1="49" x2="53" y2="49" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="indicator">
+      <circle cx="66" cy="72" r="6" fill="var(--icon-surface-contrast, #14213d)"/>
+      <circle cx="66" cy="72" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+  </g>
+</svg>

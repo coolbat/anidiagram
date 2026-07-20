@@ -1,43 +1,128 @@
 ---
 name: anidiagram
-description: Create, validate, render, and quality-check AniDiagram DiagramScript scenes. Use when the user asks to produce animated architecture diagrams, generate clean-room diagram presets, export SVG/HTML/PNG/GIF/PDF/WebP/MP4/APNG/Lottie assets, or maintain the AniDiagram project.
+description: Create, validate, render, and quality-check semantic-first AniDiagram architecture diagrams. Use for animated architecture summaries, DiagramPlan/DiagramScript generation, SVG/HTML/PNG/GIF/PDF/WebP/MP4/APNG/Lottie export, or AniDiagram project maintenance.
 ---
 
 # AniDiagram
 
-Use AniDiagram for clean-room animated architecture visuals.
+Use AniDiagram for clean-room animated architecture visuals. New work follows
+`composition-v1`: semantic content is independent from the icon system, visual
+style, layout, and motion system.
 
-## Workflow
+## Default workflow
 
-1. Write or update a DiagramScript JSON spec.
-2. For complex diagrams, set a `motion_policy` such as `focused` or `readable`
-   so only key paths, nodes, and borders animate continuously.
-3. Validate with `PYTHONPATH=src python3 -m anidiagram.cli --spec <file> --outdir outputs --basename <name> --quality`.
-4. Render the requested formats with `--formats svg,html,png,gif,pdf,webp,mp4,apng,lottie,quality` or `--all`.
-5. Inspect the CLI result JSON for skipped optional exports. Optional raster/video exports depend on Pillow and, for MP4, ffmpeg.
-6. Run `PYTHONPATH=src python3 -m unittest discover -s tests` before considering code changes complete.
+1. Read the source completely and extract a DiagramPlan v0.2. Keep only meaning
+   in `semantic`: intent, entities, relations, groups, flows, importance,
+   optional state, and source provenance. Do not place colors, SVG selectors,
+   coordinates, easing, duration, or animation-part names in `semantic`.
+2. Resolve the four presentation axes before rendering:
+   - Honor every explicit user choice.
+   - Use `icon_system: auto` when none was requested; it resolves to the
+     versioned default `diagram-core-v1`.
+   - Choose one concrete public style from the catalog when the user did not
+     choose. Record `presentation_sources.style: model`. Use `minimal-light`
+     only as the deterministic fallback.
+   - Choose one concrete layout from the 14-layout catalog when the user did
+     not choose. Record `presentation_sources.layout: model`. Use `layered`
+     only as the deterministic fallback.
+   - Use `motion: showcase-v1` unless the user explicitly requests another
+     profile. Showcase enables every eligible icon performance and keeps every
+     eligible data-flow edge visibly moving in Expressive mode, with authored
+     rest poses and reduced-motion support.
+3. Save the source plan as `<name>.plan.json`. Compile and validate it with:
 
-## Presets
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --plan <name>.plan.json \
+  --spec-out <name>.diagram.json \
+  --outdir outputs \
+  --basename <name> \
+  --formats svg,html,quality
+```
 
-Use `--preset <name>` for built-in clean-room templates:
+4. Inspect the structured CLI result and the rendered SVG/HTML. Quality must
+   report zero errors. Resolve collisions, text fit, missing mappings, and
+   runtime problems before presenting the work for acceptance.
+5. Add requested export formats with
+   `--formats svg,html,png,gif,pdf,webp,mp4,apng,lottie,quality` or `--all`.
+   Browser-recorded animated exports use `--export-renderer browser` and may
+   require Playwright and ffmpeg.
+6. For code or contract changes, run:
+
+```bash
+PYTHONPATH=src python3 scripts/validate_diagram_core_assets.py --strict --json
+PYTHONPATH=src python3 -m unittest discover -s tests
+```
+
+## Semantic layer
+
+Treat the semantic layer as the stable explanation of what the diagram means:
+
+- `intent`: diagram kind, primary question, audience, scope, exclusions;
+- `entities`: stable id, label, semantic kind, role, importance, state, sources;
+- `relations`: endpoints, relation kind, direction, label, condition, protocol;
+- `groups`: semantic containment only, not visual rectangles;
+- `flows`: ordered relation ids with once, loop, or event-driven behavior;
+- `sources` and `source_refs`: provenance for claims and model-inferred structure.
+
+The compiler serializes concrete coordinates and a
+`resolved_presentation` record into DiagramScript v0.4. Renderers consume that
+record; they do not choose a style, layout, icon system, or motion profile.
+
+## Presentation catalogs
+
+Public styles:
+
+`minimal-light`, `deep-tech`, `blueprint`, `flat-icon`, `dark-terminal`,
+`notion-clean`, `glassmorphism`, `claude-warm`, `openai-minimal`, `dark-luxury`,
+`aurora-orb`, `illustrated-semantic`, `sketch-board`.
+
+Choose by communication need: minimal styles for dense technical content;
+`deep-tech`/`blueprint`/`dark-terminal` for infrastructure; warm or sketch
+styles for teaching and narrative; glass, luxury, or aurora styles for
+presentation-led work.
+
+Layouts:
 
 `pipeline`, `loop`, `hub-spoke`, `layered`, `swimlane`, `compare`, `matrix`,
 `timeline`, `stack`, `funnel`, `sequence`, `er`, `network`, `agent-memory`.
 
-Example:
+Choose from semantic topology: ordered transformations use pipeline; feedback
+uses loop; central orchestration uses hub-spoke; tiers use layered; ownership
+uses swimlane; alternatives use compare; two dimensions use matrix; chronology
+uses timeline or sequence; hierarchy uses stack; convergence uses funnel;
+relationships use er or network; explicit memory interaction uses agent-memory.
 
-```bash
-PYTHONPATH=src python3 -m anidiagram.cli \
-  --preset agent-memory \
-  --style styles/blueprint.json \
-  --outdir outputs \
-  --basename agent-memory \
-  --formats svg,html,quality
-```
+Supported icon systems include `diagram-core-v1` (default),
+`illustrated-character-v1`, and `illustrated` (currently version `2.3.0`).
+`illustrated-character-v2` remains accepted only as a legacy alias for
+`illustrated`; new plans and resolved output use the stable `illustrated` id.
+Illustrated templates may override only the approved colors through the
+`illustrated_tokens` style field. They must not alter icon geometry, SVG part
+ids, or semantic roles.
+The public `deep-tech` style includes an approved multicolor mapping for
+Illustrated 2.3.0; use that public style rather than a review-only duplicate.
+Illustrated 2.3.0 contains sixteen approved static icons. The approved
+`illustrated-performance-v4` contract supplies public automatic `showcase-v1`
+performances for all sixteen icons. `illustrated-performance-v4-review` is
+retained only as the archived human-review source and must not be emitted by new
+diagrams. `illustrated-performance-v3` remains the immutable twelve-icon 2.2.0
+public-contract archive, while `illustrated-performance-v3-review` remains its
+archived approval source.
+`illustrated-performance-v2` remains the immutable eight-icon 2.1.0 archive.
+`illustrated-performance-v1` remains the immutable four-icon 2.0.0 archive.
+Never let a style file override an explicit DiagramScript v0.4 icon system.
+
+## Legacy compatibility
+
+Use `--spec` for existing DiagramScript v0.1-v0.3 files and `--preset` for the
+14 built-in clean-room preset compilers. Their legacy Illustrated Character v1
+resolution remains unchanged. Do not silently migrate pixel-stable legacy
+diagrams; create a separate v0.4 version unless the user asks to replace it.
 
 ## Gallery
 
-Generate the gallery with:
+Generate the legacy gallery with:
 
 ```bash
 PYTHONPATH=src python3 scripts/batch_render.py --outdir gallery --quality

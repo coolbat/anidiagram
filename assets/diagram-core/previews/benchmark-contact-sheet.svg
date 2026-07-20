@@ -1,0 +1,1490 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1248 416" width="1248" height="416" id="diagram-core-regression-grid" role="img" aria-label="Diagram Core authored-rest benchmark: four icons, three sizes, and four contexts" data-icon-review-region="true" data-grid-columns="12" data-grid-rows="4" data-cell-count="48">
+  <g data-cell-kind="regression" data-cell-id="agent-48-blue" data-icon-id="agent" data-size="48" data-context="blue" data-pose="authored-rest" role="img" aria-label="agent icon, 48 pixels, blue context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="0" y="0" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(28 28) scale(0.5)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#4f7cff;--icon-accent-secondary:#45c5d8;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e0_u2x2eagent_u2x2e48_u2x2eblue__agent__root"><g data-part="body" id="benchmark_u2x2e0_u2x2eagent_u2x2e48_u2x2eblue__agent__body">
+  <g data-part="shell" id="benchmark_u2x2e0_u2x2eagent_u2x2e48_u2x2eblue__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="benchmark_u2x2e0_u2x2eagent_u2x2e48_u2x2eblue__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="benchmark_u2x2e0_u2x2eagent_u2x2e48_u2x2eblue__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="benchmark_u2x2e0_u2x2eagent_u2x2e48_u2x2eblue__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="benchmark_u2x2e0_u2x2eagent_u2x2e48_u2x2eblue__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="benchmark_u2x2e0_u2x2eagent_u2x2e48_u2x2eblue__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e0_u2x2eagent_u2x2e48_u2x2eblue__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e0_u2x2eagent_u2x2e48_u2x2eblue__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="agent-64-blue" data-icon-id="agent" data-size="64" data-context="blue" data-pose="authored-rest" role="img" aria-label="agent icon, 64 pixels, blue context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="104" y="0" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(124 20) scale(0.666666666666667)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#4f7cff;--icon-accent-secondary:#45c5d8;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e1_u2x2eagent_u2x2e64_u2x2eblue__agent__root"><g data-part="body" id="benchmark_u2x2e1_u2x2eagent_u2x2e64_u2x2eblue__agent__body">
+  <g data-part="shell" id="benchmark_u2x2e1_u2x2eagent_u2x2e64_u2x2eblue__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="benchmark_u2x2e1_u2x2eagent_u2x2e64_u2x2eblue__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="benchmark_u2x2e1_u2x2eagent_u2x2e64_u2x2eblue__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="benchmark_u2x2e1_u2x2eagent_u2x2e64_u2x2eblue__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="benchmark_u2x2e1_u2x2eagent_u2x2e64_u2x2eblue__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="benchmark_u2x2e1_u2x2eagent_u2x2e64_u2x2eblue__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e1_u2x2eagent_u2x2e64_u2x2eblue__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e1_u2x2eagent_u2x2e64_u2x2eblue__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="agent-96-blue" data-icon-id="agent" data-size="96" data-context="blue" data-pose="authored-rest" role="img" aria-label="agent icon, 96 pixels, blue context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="208" y="0" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(212 4) scale(1)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#4f7cff;--icon-accent-secondary:#45c5d8;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e2_u2x2eagent_u2x2e96_u2x2eblue__agent__root"><g data-part="body" id="benchmark_u2x2e2_u2x2eagent_u2x2e96_u2x2eblue__agent__body">
+  <g data-part="shell" id="benchmark_u2x2e2_u2x2eagent_u2x2e96_u2x2eblue__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="benchmark_u2x2e2_u2x2eagent_u2x2e96_u2x2eblue__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="benchmark_u2x2e2_u2x2eagent_u2x2e96_u2x2eblue__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="benchmark_u2x2e2_u2x2eagent_u2x2e96_u2x2eblue__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="benchmark_u2x2e2_u2x2eagent_u2x2e96_u2x2eblue__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="benchmark_u2x2e2_u2x2eagent_u2x2e96_u2x2eblue__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e2_u2x2eagent_u2x2e96_u2x2eblue__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e2_u2x2eagent_u2x2e96_u2x2eblue__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="database-48-blue" data-icon-id="database" data-size="48" data-context="blue" data-pose="authored-rest" role="img" aria-label="database icon, 48 pixels, blue context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="312" y="0" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(340 28) scale(0.5)" data-icon="database" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#4f7cff;--icon-accent-secondary:#45c5d8;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e3_u2x2edatabase_u2x2e48_u2x2eblue__database__root"><g data-part="body" id="benchmark_u2x2e3_u2x2edatabase_u2x2e48_u2x2eblue__database__body">
+  <g data-part="shell" id="benchmark_u2x2e3_u2x2edatabase_u2x2e48_u2x2eblue__database__shell">
+    <rect x="20" y="18" width="56" height="66" rx="14" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="top-ring" id="benchmark_u2x2e3_u2x2edatabase_u2x2e48_u2x2eblue__database__top-ring">
+    <ellipse cx="48" cy="24" rx="28" ry="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <ellipse cx="48" cy="24" rx="18" ry="4.5" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-top" id="benchmark_u2x2e3_u2x2edatabase_u2x2e48_u2x2eblue__database__layer-top">
+    <path d="M 20.5 39 C 31 45 65 45 75.5 39" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-middle" id="benchmark_u2x2e3_u2x2edatabase_u2x2e48_u2x2eblue__database__layer-middle">
+    <path d="M 20.5 51 C 31 57 65 57 75.5 51" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-bottom" id="benchmark_u2x2e3_u2x2edatabase_u2x2e48_u2x2eblue__database__layer-bottom">
+    <path d="M 24 78 C 34 81 62 81 72 78" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e3_u2x2edatabase_u2x2e48_u2x2eblue__database__core">
+    <circle cx="48" cy="65" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e3_u2x2edatabase_u2x2e48_u2x2eblue__database__indicator">
+    <circle cx="48" cy="65" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="65" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="database-64-blue" data-icon-id="database" data-size="64" data-context="blue" data-pose="authored-rest" role="img" aria-label="database icon, 64 pixels, blue context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="416" y="0" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(436 20) scale(0.666666666666667)" data-icon="database" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#4f7cff;--icon-accent-secondary:#45c5d8;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e4_u2x2edatabase_u2x2e64_u2x2eblue__database__root"><g data-part="body" id="benchmark_u2x2e4_u2x2edatabase_u2x2e64_u2x2eblue__database__body">
+  <g data-part="shell" id="benchmark_u2x2e4_u2x2edatabase_u2x2e64_u2x2eblue__database__shell">
+    <rect x="20" y="18" width="56" height="66" rx="14" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="top-ring" id="benchmark_u2x2e4_u2x2edatabase_u2x2e64_u2x2eblue__database__top-ring">
+    <ellipse cx="48" cy="24" rx="28" ry="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <ellipse cx="48" cy="24" rx="18" ry="4.5" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-top" id="benchmark_u2x2e4_u2x2edatabase_u2x2e64_u2x2eblue__database__layer-top">
+    <path d="M 20.5 39 C 31 45 65 45 75.5 39" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-middle" id="benchmark_u2x2e4_u2x2edatabase_u2x2e64_u2x2eblue__database__layer-middle">
+    <path d="M 20.5 51 C 31 57 65 57 75.5 51" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-bottom" id="benchmark_u2x2e4_u2x2edatabase_u2x2e64_u2x2eblue__database__layer-bottom">
+    <path d="M 24 78 C 34 81 62 81 72 78" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e4_u2x2edatabase_u2x2e64_u2x2eblue__database__core">
+    <circle cx="48" cy="65" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e4_u2x2edatabase_u2x2e64_u2x2eblue__database__indicator">
+    <circle cx="48" cy="65" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="65" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="database-96-blue" data-icon-id="database" data-size="96" data-context="blue" data-pose="authored-rest" role="img" aria-label="database icon, 96 pixels, blue context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="520" y="0" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(524 4) scale(1)" data-icon="database" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#4f7cff;--icon-accent-secondary:#45c5d8;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e5_u2x2edatabase_u2x2e96_u2x2eblue__database__root"><g data-part="body" id="benchmark_u2x2e5_u2x2edatabase_u2x2e96_u2x2eblue__database__body">
+  <g data-part="shell" id="benchmark_u2x2e5_u2x2edatabase_u2x2e96_u2x2eblue__database__shell">
+    <rect x="20" y="18" width="56" height="66" rx="14" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="top-ring" id="benchmark_u2x2e5_u2x2edatabase_u2x2e96_u2x2eblue__database__top-ring">
+    <ellipse cx="48" cy="24" rx="28" ry="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <ellipse cx="48" cy="24" rx="18" ry="4.5" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-top" id="benchmark_u2x2e5_u2x2edatabase_u2x2e96_u2x2eblue__database__layer-top">
+    <path d="M 20.5 39 C 31 45 65 45 75.5 39" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-middle" id="benchmark_u2x2e5_u2x2edatabase_u2x2e96_u2x2eblue__database__layer-middle">
+    <path d="M 20.5 51 C 31 57 65 57 75.5 51" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-bottom" id="benchmark_u2x2e5_u2x2edatabase_u2x2e96_u2x2eblue__database__layer-bottom">
+    <path d="M 24 78 C 34 81 62 81 72 78" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e5_u2x2edatabase_u2x2e96_u2x2eblue__database__core">
+    <circle cx="48" cy="65" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e5_u2x2edatabase_u2x2e96_u2x2eblue__database__indicator">
+    <circle cx="48" cy="65" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="65" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="api-48-blue" data-icon-id="api" data-size="48" data-context="blue" data-pose="authored-rest" role="img" aria-label="api icon, 48 pixels, blue context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="624" y="0" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(652 28) scale(0.5)" data-icon="api" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#4f7cff;--icon-accent-secondary:#45c5d8;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e6_u2x2eapi_u2x2e48_u2x2eblue__api__root"><g data-part="body" id="benchmark_u2x2e6_u2x2eapi_u2x2e48_u2x2eblue__api__body">
+  <g data-part="shell" id="benchmark_u2x2e6_u2x2eapi_u2x2e48_u2x2eblue__api__shell">
+    <rect x="19" y="18" width="58" height="62" rx="12" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="header" id="benchmark_u2x2e6_u2x2eapi_u2x2e48_u2x2eblue__api__header">
+    <line x1="20.5" y1="36" x2="75.5" y2="36" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="input-interface" id="benchmark_u2x2e6_u2x2eapi_u2x2e48_u2x2eblue__api__input-interface">
+    <rect x="9.0625" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="output-interface" id="benchmark_u2x2e6_u2x2eapi_u2x2e48_u2x2eblue__api__output-interface">
+    <rect x="72.9375" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="processor" id="benchmark_u2x2e6_u2x2eapi_u2x2e48_u2x2eblue__api__processor">
+    <rect x="34" y="43" width="28" height="27" rx="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="56.5" r="6" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="48" cy="56.5" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-group" id="benchmark_u2x2e6_u2x2eapi_u2x2e48_u2x2eblue__api__indicator-group">
+    <rect x="37" y="20.5" width="22" height="14" rx="7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="27.5" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="api-64-blue" data-icon-id="api" data-size="64" data-context="blue" data-pose="authored-rest" role="img" aria-label="api icon, 64 pixels, blue context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="728" y="0" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(748 20) scale(0.666666666666667)" data-icon="api" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#4f7cff;--icon-accent-secondary:#45c5d8;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e7_u2x2eapi_u2x2e64_u2x2eblue__api__root"><g data-part="body" id="benchmark_u2x2e7_u2x2eapi_u2x2e64_u2x2eblue__api__body">
+  <g data-part="shell" id="benchmark_u2x2e7_u2x2eapi_u2x2e64_u2x2eblue__api__shell">
+    <rect x="19" y="18" width="58" height="62" rx="12" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="header" id="benchmark_u2x2e7_u2x2eapi_u2x2e64_u2x2eblue__api__header">
+    <line x1="20.5" y1="36" x2="75.5" y2="36" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="input-interface" id="benchmark_u2x2e7_u2x2eapi_u2x2e64_u2x2eblue__api__input-interface">
+    <rect x="9.0625" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="output-interface" id="benchmark_u2x2e7_u2x2eapi_u2x2e64_u2x2eblue__api__output-interface">
+    <rect x="72.9375" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="processor" id="benchmark_u2x2e7_u2x2eapi_u2x2e64_u2x2eblue__api__processor">
+    <rect x="34" y="43" width="28" height="27" rx="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="56.5" r="6" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="48" cy="56.5" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-group" id="benchmark_u2x2e7_u2x2eapi_u2x2e64_u2x2eblue__api__indicator-group">
+    <rect x="37" y="20.5" width="22" height="14" rx="7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="27.5" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="api-96-blue" data-icon-id="api" data-size="96" data-context="blue" data-pose="authored-rest" role="img" aria-label="api icon, 96 pixels, blue context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="832" y="0" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(836 4) scale(1)" data-icon="api" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#4f7cff;--icon-accent-secondary:#45c5d8;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e8_u2x2eapi_u2x2e96_u2x2eblue__api__root"><g data-part="body" id="benchmark_u2x2e8_u2x2eapi_u2x2e96_u2x2eblue__api__body">
+  <g data-part="shell" id="benchmark_u2x2e8_u2x2eapi_u2x2e96_u2x2eblue__api__shell">
+    <rect x="19" y="18" width="58" height="62" rx="12" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="header" id="benchmark_u2x2e8_u2x2eapi_u2x2e96_u2x2eblue__api__header">
+    <line x1="20.5" y1="36" x2="75.5" y2="36" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="input-interface" id="benchmark_u2x2e8_u2x2eapi_u2x2e96_u2x2eblue__api__input-interface">
+    <rect x="9.0625" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="output-interface" id="benchmark_u2x2e8_u2x2eapi_u2x2e96_u2x2eblue__api__output-interface">
+    <rect x="72.9375" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="processor" id="benchmark_u2x2e8_u2x2eapi_u2x2e96_u2x2eblue__api__processor">
+    <rect x="34" y="43" width="28" height="27" rx="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="56.5" r="6" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="48" cy="56.5" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-group" id="benchmark_u2x2e8_u2x2eapi_u2x2e96_u2x2eblue__api__indicator-group">
+    <rect x="37" y="20.5" width="22" height="14" rx="7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="27.5" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="server-48-blue" data-icon-id="server" data-size="48" data-context="blue" data-pose="authored-rest" role="img" aria-label="server icon, 48 pixels, blue context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="936" y="0" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(964 28) scale(0.5)" data-icon="server" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#4f7cff;--icon-accent-secondary:#45c5d8;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e9_u2x2eserver_u2x2e48_u2x2eblue__server__root"><g data-part="body" id="benchmark_u2x2e9_u2x2eserver_u2x2e48_u2x2eblue__server__body">
+  <g data-part="shell" id="benchmark_u2x2e9_u2x2eserver_u2x2e48_u2x2eblue__server__shell">
+    <rect x="16" y="18" width="64" height="60" rx="10" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-top" id="benchmark_u2x2e9_u2x2eserver_u2x2e48_u2x2eblue__server__tray-top">
+    <rect x="21" y="24" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-bottom" id="benchmark_u2x2e9_u2x2eserver_u2x2e48_u2x2eblue__server__tray-bottom">
+    <rect x="21" y="50" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator-top" id="benchmark_u2x2e9_u2x2eserver_u2x2e48_u2x2eblue__server__indicator-top">
+    <circle cx="30" cy="34" r="8" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="30" cy="34" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-bottom" id="benchmark_u2x2e9_u2x2eserver_u2x2e48_u2x2eblue__server__indicator-bottom">
+    <circle cx="30" cy="60" r="5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="30" cy="60" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="vent-top" id="benchmark_u2x2e9_u2x2eserver_u2x2e48_u2x2eblue__server__vent-top">
+    <line x1="48" y1="31" x2="66" y2="31" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="37" x2="66" y2="37" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="vent-bottom" id="benchmark_u2x2e9_u2x2eserver_u2x2e48_u2x2eblue__server__vent-bottom">
+    <line x1="48" y1="57" x2="66" y2="57" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="63" x2="66" y2="63" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="base" id="benchmark_u2x2e9_u2x2eserver_u2x2e48_u2x2eblue__server__base">
+    <rect x="24" y="75" width="48" height="5" rx="2.5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="server-64-blue" data-icon-id="server" data-size="64" data-context="blue" data-pose="authored-rest" role="img" aria-label="server icon, 64 pixels, blue context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="1040" y="0" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(1060 20) scale(0.666666666666667)" data-icon="server" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#4f7cff;--icon-accent-secondary:#45c5d8;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e10_u2x2eserver_u2x2e64_u2x2eblue__server__root"><g data-part="body" id="benchmark_u2x2e10_u2x2eserver_u2x2e64_u2x2eblue__server__body">
+  <g data-part="shell" id="benchmark_u2x2e10_u2x2eserver_u2x2e64_u2x2eblue__server__shell">
+    <rect x="16" y="18" width="64" height="60" rx="10" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-top" id="benchmark_u2x2e10_u2x2eserver_u2x2e64_u2x2eblue__server__tray-top">
+    <rect x="21" y="24" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-bottom" id="benchmark_u2x2e10_u2x2eserver_u2x2e64_u2x2eblue__server__tray-bottom">
+    <rect x="21" y="50" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator-top" id="benchmark_u2x2e10_u2x2eserver_u2x2e64_u2x2eblue__server__indicator-top">
+    <circle cx="30" cy="34" r="8" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="30" cy="34" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-bottom" id="benchmark_u2x2e10_u2x2eserver_u2x2e64_u2x2eblue__server__indicator-bottom">
+    <circle cx="30" cy="60" r="5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="30" cy="60" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="vent-top" id="benchmark_u2x2e10_u2x2eserver_u2x2e64_u2x2eblue__server__vent-top">
+    <line x1="48" y1="31" x2="66" y2="31" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="37" x2="66" y2="37" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="vent-bottom" id="benchmark_u2x2e10_u2x2eserver_u2x2e64_u2x2eblue__server__vent-bottom">
+    <line x1="48" y1="57" x2="66" y2="57" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="63" x2="66" y2="63" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="base" id="benchmark_u2x2e10_u2x2eserver_u2x2e64_u2x2eblue__server__base">
+    <rect x="24" y="75" width="48" height="5" rx="2.5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="server-96-blue" data-icon-id="server" data-size="96" data-context="blue" data-pose="authored-rest" role="img" aria-label="server icon, 96 pixels, blue context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="1144" y="0" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(1148 4) scale(1)" data-icon="server" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#4f7cff;--icon-accent-secondary:#45c5d8;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e11_u2x2eserver_u2x2e96_u2x2eblue__server__root"><g data-part="body" id="benchmark_u2x2e11_u2x2eserver_u2x2e96_u2x2eblue__server__body">
+  <g data-part="shell" id="benchmark_u2x2e11_u2x2eserver_u2x2e96_u2x2eblue__server__shell">
+    <rect x="16" y="18" width="64" height="60" rx="10" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-top" id="benchmark_u2x2e11_u2x2eserver_u2x2e96_u2x2eblue__server__tray-top">
+    <rect x="21" y="24" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-bottom" id="benchmark_u2x2e11_u2x2eserver_u2x2e96_u2x2eblue__server__tray-bottom">
+    <rect x="21" y="50" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator-top" id="benchmark_u2x2e11_u2x2eserver_u2x2e96_u2x2eblue__server__indicator-top">
+    <circle cx="30" cy="34" r="8" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="30" cy="34" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-bottom" id="benchmark_u2x2e11_u2x2eserver_u2x2e96_u2x2eblue__server__indicator-bottom">
+    <circle cx="30" cy="60" r="5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="30" cy="60" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="vent-top" id="benchmark_u2x2e11_u2x2eserver_u2x2e96_u2x2eblue__server__vent-top">
+    <line x1="48" y1="31" x2="66" y2="31" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="37" x2="66" y2="37" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="vent-bottom" id="benchmark_u2x2e11_u2x2eserver_u2x2e96_u2x2eblue__server__vent-bottom">
+    <line x1="48" y1="57" x2="66" y2="57" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="63" x2="66" y2="63" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="base" id="benchmark_u2x2e11_u2x2eserver_u2x2e96_u2x2eblue__server__base">
+    <rect x="24" y="75" width="48" height="5" rx="2.5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="agent-48-dark" data-icon-id="agent" data-size="48" data-context="dark" data-pose="authored-rest" role="img" aria-label="agent icon, 48 pixels, dark context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="0" y="104" width="104" height="104" fill="#202838" stroke="#151c28" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(28 132) scale(0.5)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#65d8ff;--icon-accent-secondary:#9f85ff;--icon-detail:#8fa0b8;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#d6deeb;--icon-surface-main:#202838;--icon-surface-recessed:#151c28;--icon-surface-secondary:#2c3749" id="benchmark_u2x2e12_u2x2eagent_u2x2e48_u2x2edark__agent__root"><g data-part="body" id="benchmark_u2x2e12_u2x2eagent_u2x2e48_u2x2edark__agent__body">
+  <g data-part="shell" id="benchmark_u2x2e12_u2x2eagent_u2x2e48_u2x2edark__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="benchmark_u2x2e12_u2x2eagent_u2x2e48_u2x2edark__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="benchmark_u2x2e12_u2x2eagent_u2x2e48_u2x2edark__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="benchmark_u2x2e12_u2x2eagent_u2x2e48_u2x2edark__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="benchmark_u2x2e12_u2x2eagent_u2x2e48_u2x2edark__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="benchmark_u2x2e12_u2x2eagent_u2x2e48_u2x2edark__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e12_u2x2eagent_u2x2e48_u2x2edark__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e12_u2x2eagent_u2x2e48_u2x2edark__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="agent-64-dark" data-icon-id="agent" data-size="64" data-context="dark" data-pose="authored-rest" role="img" aria-label="agent icon, 64 pixels, dark context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="104" y="104" width="104" height="104" fill="#202838" stroke="#151c28" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(124 124) scale(0.666666666666667)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#65d8ff;--icon-accent-secondary:#9f85ff;--icon-detail:#8fa0b8;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#d6deeb;--icon-surface-main:#202838;--icon-surface-recessed:#151c28;--icon-surface-secondary:#2c3749" id="benchmark_u2x2e13_u2x2eagent_u2x2e64_u2x2edark__agent__root"><g data-part="body" id="benchmark_u2x2e13_u2x2eagent_u2x2e64_u2x2edark__agent__body">
+  <g data-part="shell" id="benchmark_u2x2e13_u2x2eagent_u2x2e64_u2x2edark__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="benchmark_u2x2e13_u2x2eagent_u2x2e64_u2x2edark__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="benchmark_u2x2e13_u2x2eagent_u2x2e64_u2x2edark__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="benchmark_u2x2e13_u2x2eagent_u2x2e64_u2x2edark__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="benchmark_u2x2e13_u2x2eagent_u2x2e64_u2x2edark__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="benchmark_u2x2e13_u2x2eagent_u2x2e64_u2x2edark__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e13_u2x2eagent_u2x2e64_u2x2edark__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e13_u2x2eagent_u2x2e64_u2x2edark__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="agent-96-dark" data-icon-id="agent" data-size="96" data-context="dark" data-pose="authored-rest" role="img" aria-label="agent icon, 96 pixels, dark context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="208" y="104" width="104" height="104" fill="#202838" stroke="#151c28" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(212 108) scale(1)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#65d8ff;--icon-accent-secondary:#9f85ff;--icon-detail:#8fa0b8;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#d6deeb;--icon-surface-main:#202838;--icon-surface-recessed:#151c28;--icon-surface-secondary:#2c3749" id="benchmark_u2x2e14_u2x2eagent_u2x2e96_u2x2edark__agent__root"><g data-part="body" id="benchmark_u2x2e14_u2x2eagent_u2x2e96_u2x2edark__agent__body">
+  <g data-part="shell" id="benchmark_u2x2e14_u2x2eagent_u2x2e96_u2x2edark__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="benchmark_u2x2e14_u2x2eagent_u2x2e96_u2x2edark__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="benchmark_u2x2e14_u2x2eagent_u2x2e96_u2x2edark__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="benchmark_u2x2e14_u2x2eagent_u2x2e96_u2x2edark__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="benchmark_u2x2e14_u2x2eagent_u2x2e96_u2x2edark__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="benchmark_u2x2e14_u2x2eagent_u2x2e96_u2x2edark__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e14_u2x2eagent_u2x2e96_u2x2edark__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e14_u2x2eagent_u2x2e96_u2x2edark__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="database-48-dark" data-icon-id="database" data-size="48" data-context="dark" data-pose="authored-rest" role="img" aria-label="database icon, 48 pixels, dark context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="312" y="104" width="104" height="104" fill="#202838" stroke="#151c28" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(340 132) scale(0.5)" data-icon="database" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#65d8ff;--icon-accent-secondary:#9f85ff;--icon-detail:#8fa0b8;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#d6deeb;--icon-surface-main:#202838;--icon-surface-recessed:#151c28;--icon-surface-secondary:#2c3749" id="benchmark_u2x2e15_u2x2edatabase_u2x2e48_u2x2edark__database__root"><g data-part="body" id="benchmark_u2x2e15_u2x2edatabase_u2x2e48_u2x2edark__database__body">
+  <g data-part="shell" id="benchmark_u2x2e15_u2x2edatabase_u2x2e48_u2x2edark__database__shell">
+    <rect x="20" y="18" width="56" height="66" rx="14" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="top-ring" id="benchmark_u2x2e15_u2x2edatabase_u2x2e48_u2x2edark__database__top-ring">
+    <ellipse cx="48" cy="24" rx="28" ry="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <ellipse cx="48" cy="24" rx="18" ry="4.5" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-top" id="benchmark_u2x2e15_u2x2edatabase_u2x2e48_u2x2edark__database__layer-top">
+    <path d="M 20.5 39 C 31 45 65 45 75.5 39" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-middle" id="benchmark_u2x2e15_u2x2edatabase_u2x2e48_u2x2edark__database__layer-middle">
+    <path d="M 20.5 51 C 31 57 65 57 75.5 51" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-bottom" id="benchmark_u2x2e15_u2x2edatabase_u2x2e48_u2x2edark__database__layer-bottom">
+    <path d="M 24 78 C 34 81 62 81 72 78" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e15_u2x2edatabase_u2x2e48_u2x2edark__database__core">
+    <circle cx="48" cy="65" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e15_u2x2edatabase_u2x2e48_u2x2edark__database__indicator">
+    <circle cx="48" cy="65" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="65" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="database-64-dark" data-icon-id="database" data-size="64" data-context="dark" data-pose="authored-rest" role="img" aria-label="database icon, 64 pixels, dark context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="416" y="104" width="104" height="104" fill="#202838" stroke="#151c28" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(436 124) scale(0.666666666666667)" data-icon="database" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#65d8ff;--icon-accent-secondary:#9f85ff;--icon-detail:#8fa0b8;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#d6deeb;--icon-surface-main:#202838;--icon-surface-recessed:#151c28;--icon-surface-secondary:#2c3749" id="benchmark_u2x2e16_u2x2edatabase_u2x2e64_u2x2edark__database__root"><g data-part="body" id="benchmark_u2x2e16_u2x2edatabase_u2x2e64_u2x2edark__database__body">
+  <g data-part="shell" id="benchmark_u2x2e16_u2x2edatabase_u2x2e64_u2x2edark__database__shell">
+    <rect x="20" y="18" width="56" height="66" rx="14" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="top-ring" id="benchmark_u2x2e16_u2x2edatabase_u2x2e64_u2x2edark__database__top-ring">
+    <ellipse cx="48" cy="24" rx="28" ry="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <ellipse cx="48" cy="24" rx="18" ry="4.5" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-top" id="benchmark_u2x2e16_u2x2edatabase_u2x2e64_u2x2edark__database__layer-top">
+    <path d="M 20.5 39 C 31 45 65 45 75.5 39" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-middle" id="benchmark_u2x2e16_u2x2edatabase_u2x2e64_u2x2edark__database__layer-middle">
+    <path d="M 20.5 51 C 31 57 65 57 75.5 51" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-bottom" id="benchmark_u2x2e16_u2x2edatabase_u2x2e64_u2x2edark__database__layer-bottom">
+    <path d="M 24 78 C 34 81 62 81 72 78" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e16_u2x2edatabase_u2x2e64_u2x2edark__database__core">
+    <circle cx="48" cy="65" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e16_u2x2edatabase_u2x2e64_u2x2edark__database__indicator">
+    <circle cx="48" cy="65" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="65" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="database-96-dark" data-icon-id="database" data-size="96" data-context="dark" data-pose="authored-rest" role="img" aria-label="database icon, 96 pixels, dark context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="520" y="104" width="104" height="104" fill="#202838" stroke="#151c28" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(524 108) scale(1)" data-icon="database" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#65d8ff;--icon-accent-secondary:#9f85ff;--icon-detail:#8fa0b8;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#d6deeb;--icon-surface-main:#202838;--icon-surface-recessed:#151c28;--icon-surface-secondary:#2c3749" id="benchmark_u2x2e17_u2x2edatabase_u2x2e96_u2x2edark__database__root"><g data-part="body" id="benchmark_u2x2e17_u2x2edatabase_u2x2e96_u2x2edark__database__body">
+  <g data-part="shell" id="benchmark_u2x2e17_u2x2edatabase_u2x2e96_u2x2edark__database__shell">
+    <rect x="20" y="18" width="56" height="66" rx="14" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="top-ring" id="benchmark_u2x2e17_u2x2edatabase_u2x2e96_u2x2edark__database__top-ring">
+    <ellipse cx="48" cy="24" rx="28" ry="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <ellipse cx="48" cy="24" rx="18" ry="4.5" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-top" id="benchmark_u2x2e17_u2x2edatabase_u2x2e96_u2x2edark__database__layer-top">
+    <path d="M 20.5 39 C 31 45 65 45 75.5 39" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-middle" id="benchmark_u2x2e17_u2x2edatabase_u2x2e96_u2x2edark__database__layer-middle">
+    <path d="M 20.5 51 C 31 57 65 57 75.5 51" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-bottom" id="benchmark_u2x2e17_u2x2edatabase_u2x2e96_u2x2edark__database__layer-bottom">
+    <path d="M 24 78 C 34 81 62 81 72 78" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e17_u2x2edatabase_u2x2e96_u2x2edark__database__core">
+    <circle cx="48" cy="65" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e17_u2x2edatabase_u2x2e96_u2x2edark__database__indicator">
+    <circle cx="48" cy="65" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="65" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="api-48-dark" data-icon-id="api" data-size="48" data-context="dark" data-pose="authored-rest" role="img" aria-label="api icon, 48 pixels, dark context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="624" y="104" width="104" height="104" fill="#202838" stroke="#151c28" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(652 132) scale(0.5)" data-icon="api" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#65d8ff;--icon-accent-secondary:#9f85ff;--icon-detail:#8fa0b8;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#d6deeb;--icon-surface-main:#202838;--icon-surface-recessed:#151c28;--icon-surface-secondary:#2c3749" id="benchmark_u2x2e18_u2x2eapi_u2x2e48_u2x2edark__api__root"><g data-part="body" id="benchmark_u2x2e18_u2x2eapi_u2x2e48_u2x2edark__api__body">
+  <g data-part="shell" id="benchmark_u2x2e18_u2x2eapi_u2x2e48_u2x2edark__api__shell">
+    <rect x="19" y="18" width="58" height="62" rx="12" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="header" id="benchmark_u2x2e18_u2x2eapi_u2x2e48_u2x2edark__api__header">
+    <line x1="20.5" y1="36" x2="75.5" y2="36" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="input-interface" id="benchmark_u2x2e18_u2x2eapi_u2x2e48_u2x2edark__api__input-interface">
+    <rect x="9.0625" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="output-interface" id="benchmark_u2x2e18_u2x2eapi_u2x2e48_u2x2edark__api__output-interface">
+    <rect x="72.9375" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="processor" id="benchmark_u2x2e18_u2x2eapi_u2x2e48_u2x2edark__api__processor">
+    <rect x="34" y="43" width="28" height="27" rx="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="56.5" r="6" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="48" cy="56.5" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-group" id="benchmark_u2x2e18_u2x2eapi_u2x2e48_u2x2edark__api__indicator-group">
+    <rect x="37" y="20.5" width="22" height="14" rx="7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="27.5" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="api-64-dark" data-icon-id="api" data-size="64" data-context="dark" data-pose="authored-rest" role="img" aria-label="api icon, 64 pixels, dark context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="728" y="104" width="104" height="104" fill="#202838" stroke="#151c28" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(748 124) scale(0.666666666666667)" data-icon="api" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#65d8ff;--icon-accent-secondary:#9f85ff;--icon-detail:#8fa0b8;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#d6deeb;--icon-surface-main:#202838;--icon-surface-recessed:#151c28;--icon-surface-secondary:#2c3749" id="benchmark_u2x2e19_u2x2eapi_u2x2e64_u2x2edark__api__root"><g data-part="body" id="benchmark_u2x2e19_u2x2eapi_u2x2e64_u2x2edark__api__body">
+  <g data-part="shell" id="benchmark_u2x2e19_u2x2eapi_u2x2e64_u2x2edark__api__shell">
+    <rect x="19" y="18" width="58" height="62" rx="12" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="header" id="benchmark_u2x2e19_u2x2eapi_u2x2e64_u2x2edark__api__header">
+    <line x1="20.5" y1="36" x2="75.5" y2="36" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="input-interface" id="benchmark_u2x2e19_u2x2eapi_u2x2e64_u2x2edark__api__input-interface">
+    <rect x="9.0625" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="output-interface" id="benchmark_u2x2e19_u2x2eapi_u2x2e64_u2x2edark__api__output-interface">
+    <rect x="72.9375" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="processor" id="benchmark_u2x2e19_u2x2eapi_u2x2e64_u2x2edark__api__processor">
+    <rect x="34" y="43" width="28" height="27" rx="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="56.5" r="6" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="48" cy="56.5" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-group" id="benchmark_u2x2e19_u2x2eapi_u2x2e64_u2x2edark__api__indicator-group">
+    <rect x="37" y="20.5" width="22" height="14" rx="7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="27.5" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="api-96-dark" data-icon-id="api" data-size="96" data-context="dark" data-pose="authored-rest" role="img" aria-label="api icon, 96 pixels, dark context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="832" y="104" width="104" height="104" fill="#202838" stroke="#151c28" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(836 108) scale(1)" data-icon="api" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#65d8ff;--icon-accent-secondary:#9f85ff;--icon-detail:#8fa0b8;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#d6deeb;--icon-surface-main:#202838;--icon-surface-recessed:#151c28;--icon-surface-secondary:#2c3749" id="benchmark_u2x2e20_u2x2eapi_u2x2e96_u2x2edark__api__root"><g data-part="body" id="benchmark_u2x2e20_u2x2eapi_u2x2e96_u2x2edark__api__body">
+  <g data-part="shell" id="benchmark_u2x2e20_u2x2eapi_u2x2e96_u2x2edark__api__shell">
+    <rect x="19" y="18" width="58" height="62" rx="12" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="header" id="benchmark_u2x2e20_u2x2eapi_u2x2e96_u2x2edark__api__header">
+    <line x1="20.5" y1="36" x2="75.5" y2="36" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="input-interface" id="benchmark_u2x2e20_u2x2eapi_u2x2e96_u2x2edark__api__input-interface">
+    <rect x="9.0625" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="output-interface" id="benchmark_u2x2e20_u2x2eapi_u2x2e96_u2x2edark__api__output-interface">
+    <rect x="72.9375" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="processor" id="benchmark_u2x2e20_u2x2eapi_u2x2e96_u2x2edark__api__processor">
+    <rect x="34" y="43" width="28" height="27" rx="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="56.5" r="6" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="48" cy="56.5" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-group" id="benchmark_u2x2e20_u2x2eapi_u2x2e96_u2x2edark__api__indicator-group">
+    <rect x="37" y="20.5" width="22" height="14" rx="7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="27.5" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="server-48-dark" data-icon-id="server" data-size="48" data-context="dark" data-pose="authored-rest" role="img" aria-label="server icon, 48 pixels, dark context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="936" y="104" width="104" height="104" fill="#202838" stroke="#151c28" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(964 132) scale(0.5)" data-icon="server" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#65d8ff;--icon-accent-secondary:#9f85ff;--icon-detail:#8fa0b8;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#d6deeb;--icon-surface-main:#202838;--icon-surface-recessed:#151c28;--icon-surface-secondary:#2c3749" id="benchmark_u2x2e21_u2x2eserver_u2x2e48_u2x2edark__server__root"><g data-part="body" id="benchmark_u2x2e21_u2x2eserver_u2x2e48_u2x2edark__server__body">
+  <g data-part="shell" id="benchmark_u2x2e21_u2x2eserver_u2x2e48_u2x2edark__server__shell">
+    <rect x="16" y="18" width="64" height="60" rx="10" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-top" id="benchmark_u2x2e21_u2x2eserver_u2x2e48_u2x2edark__server__tray-top">
+    <rect x="21" y="24" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-bottom" id="benchmark_u2x2e21_u2x2eserver_u2x2e48_u2x2edark__server__tray-bottom">
+    <rect x="21" y="50" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator-top" id="benchmark_u2x2e21_u2x2eserver_u2x2e48_u2x2edark__server__indicator-top">
+    <circle cx="30" cy="34" r="8" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="30" cy="34" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-bottom" id="benchmark_u2x2e21_u2x2eserver_u2x2e48_u2x2edark__server__indicator-bottom">
+    <circle cx="30" cy="60" r="5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="30" cy="60" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="vent-top" id="benchmark_u2x2e21_u2x2eserver_u2x2e48_u2x2edark__server__vent-top">
+    <line x1="48" y1="31" x2="66" y2="31" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="37" x2="66" y2="37" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="vent-bottom" id="benchmark_u2x2e21_u2x2eserver_u2x2e48_u2x2edark__server__vent-bottom">
+    <line x1="48" y1="57" x2="66" y2="57" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="63" x2="66" y2="63" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="base" id="benchmark_u2x2e21_u2x2eserver_u2x2e48_u2x2edark__server__base">
+    <rect x="24" y="75" width="48" height="5" rx="2.5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="server-64-dark" data-icon-id="server" data-size="64" data-context="dark" data-pose="authored-rest" role="img" aria-label="server icon, 64 pixels, dark context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="1040" y="104" width="104" height="104" fill="#202838" stroke="#151c28" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(1060 124) scale(0.666666666666667)" data-icon="server" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#65d8ff;--icon-accent-secondary:#9f85ff;--icon-detail:#8fa0b8;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#d6deeb;--icon-surface-main:#202838;--icon-surface-recessed:#151c28;--icon-surface-secondary:#2c3749" id="benchmark_u2x2e22_u2x2eserver_u2x2e64_u2x2edark__server__root"><g data-part="body" id="benchmark_u2x2e22_u2x2eserver_u2x2e64_u2x2edark__server__body">
+  <g data-part="shell" id="benchmark_u2x2e22_u2x2eserver_u2x2e64_u2x2edark__server__shell">
+    <rect x="16" y="18" width="64" height="60" rx="10" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-top" id="benchmark_u2x2e22_u2x2eserver_u2x2e64_u2x2edark__server__tray-top">
+    <rect x="21" y="24" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-bottom" id="benchmark_u2x2e22_u2x2eserver_u2x2e64_u2x2edark__server__tray-bottom">
+    <rect x="21" y="50" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator-top" id="benchmark_u2x2e22_u2x2eserver_u2x2e64_u2x2edark__server__indicator-top">
+    <circle cx="30" cy="34" r="8" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="30" cy="34" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-bottom" id="benchmark_u2x2e22_u2x2eserver_u2x2e64_u2x2edark__server__indicator-bottom">
+    <circle cx="30" cy="60" r="5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="30" cy="60" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="vent-top" id="benchmark_u2x2e22_u2x2eserver_u2x2e64_u2x2edark__server__vent-top">
+    <line x1="48" y1="31" x2="66" y2="31" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="37" x2="66" y2="37" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="vent-bottom" id="benchmark_u2x2e22_u2x2eserver_u2x2e64_u2x2edark__server__vent-bottom">
+    <line x1="48" y1="57" x2="66" y2="57" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="63" x2="66" y2="63" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="base" id="benchmark_u2x2e22_u2x2eserver_u2x2e64_u2x2edark__server__base">
+    <rect x="24" y="75" width="48" height="5" rx="2.5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="server-96-dark" data-icon-id="server" data-size="96" data-context="dark" data-pose="authored-rest" role="img" aria-label="server icon, 96 pixels, dark context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="1144" y="104" width="104" height="104" fill="#202838" stroke="#151c28" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(1148 108) scale(1)" data-icon="server" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#65d8ff;--icon-accent-secondary:#9f85ff;--icon-detail:#8fa0b8;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#d6deeb;--icon-surface-main:#202838;--icon-surface-recessed:#151c28;--icon-surface-secondary:#2c3749" id="benchmark_u2x2e23_u2x2eserver_u2x2e96_u2x2edark__server__root"><g data-part="body" id="benchmark_u2x2e23_u2x2eserver_u2x2e96_u2x2edark__server__body">
+  <g data-part="shell" id="benchmark_u2x2e23_u2x2eserver_u2x2e96_u2x2edark__server__shell">
+    <rect x="16" y="18" width="64" height="60" rx="10" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-top" id="benchmark_u2x2e23_u2x2eserver_u2x2e96_u2x2edark__server__tray-top">
+    <rect x="21" y="24" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-bottom" id="benchmark_u2x2e23_u2x2eserver_u2x2e96_u2x2edark__server__tray-bottom">
+    <rect x="21" y="50" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator-top" id="benchmark_u2x2e23_u2x2eserver_u2x2e96_u2x2edark__server__indicator-top">
+    <circle cx="30" cy="34" r="8" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="30" cy="34" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-bottom" id="benchmark_u2x2e23_u2x2eserver_u2x2e96_u2x2edark__server__indicator-bottom">
+    <circle cx="30" cy="60" r="5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="30" cy="60" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="vent-top" id="benchmark_u2x2e23_u2x2eserver_u2x2e96_u2x2edark__server__vent-top">
+    <line x1="48" y1="31" x2="66" y2="31" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="37" x2="66" y2="37" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="vent-bottom" id="benchmark_u2x2e23_u2x2eserver_u2x2e96_u2x2edark__server__vent-bottom">
+    <line x1="48" y1="57" x2="66" y2="57" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="63" x2="66" y2="63" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="base" id="benchmark_u2x2e23_u2x2eserver_u2x2e96_u2x2edark__server__base">
+    <rect x="24" y="75" width="48" height="5" rx="2.5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="agent-48-warm" data-icon-id="agent" data-size="48" data-context="warm" data-pose="authored-rest" role="img" aria-label="agent icon, 48 pixels, warm context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="0" y="208" width="104" height="104" fill="#fff8eb" stroke="#ded0b8" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(28 236) scale(0.5)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#e38843;--icon-accent-secondary:#d5af4b;--icon-detail:#8a796a;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#40372f;--icon-surface-main:#fff8eb;--icon-surface-recessed:#ded0b8;--icon-surface-secondary:#eee4d1" id="benchmark_u2x2e24_u2x2eagent_u2x2e48_u2x2ewarm__agent__root"><g data-part="body" id="benchmark_u2x2e24_u2x2eagent_u2x2e48_u2x2ewarm__agent__body">
+  <g data-part="shell" id="benchmark_u2x2e24_u2x2eagent_u2x2e48_u2x2ewarm__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="benchmark_u2x2e24_u2x2eagent_u2x2e48_u2x2ewarm__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="benchmark_u2x2e24_u2x2eagent_u2x2e48_u2x2ewarm__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="benchmark_u2x2e24_u2x2eagent_u2x2e48_u2x2ewarm__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="benchmark_u2x2e24_u2x2eagent_u2x2e48_u2x2ewarm__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="benchmark_u2x2e24_u2x2eagent_u2x2e48_u2x2ewarm__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e24_u2x2eagent_u2x2e48_u2x2ewarm__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e24_u2x2eagent_u2x2e48_u2x2ewarm__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="agent-64-warm" data-icon-id="agent" data-size="64" data-context="warm" data-pose="authored-rest" role="img" aria-label="agent icon, 64 pixels, warm context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="104" y="208" width="104" height="104" fill="#fff8eb" stroke="#ded0b8" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(124 228) scale(0.666666666666667)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#e38843;--icon-accent-secondary:#d5af4b;--icon-detail:#8a796a;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#40372f;--icon-surface-main:#fff8eb;--icon-surface-recessed:#ded0b8;--icon-surface-secondary:#eee4d1" id="benchmark_u2x2e25_u2x2eagent_u2x2e64_u2x2ewarm__agent__root"><g data-part="body" id="benchmark_u2x2e25_u2x2eagent_u2x2e64_u2x2ewarm__agent__body">
+  <g data-part="shell" id="benchmark_u2x2e25_u2x2eagent_u2x2e64_u2x2ewarm__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="benchmark_u2x2e25_u2x2eagent_u2x2e64_u2x2ewarm__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="benchmark_u2x2e25_u2x2eagent_u2x2e64_u2x2ewarm__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="benchmark_u2x2e25_u2x2eagent_u2x2e64_u2x2ewarm__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="benchmark_u2x2e25_u2x2eagent_u2x2e64_u2x2ewarm__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="benchmark_u2x2e25_u2x2eagent_u2x2e64_u2x2ewarm__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e25_u2x2eagent_u2x2e64_u2x2ewarm__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e25_u2x2eagent_u2x2e64_u2x2ewarm__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="agent-96-warm" data-icon-id="agent" data-size="96" data-context="warm" data-pose="authored-rest" role="img" aria-label="agent icon, 96 pixels, warm context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="208" y="208" width="104" height="104" fill="#fff8eb" stroke="#ded0b8" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(212 212) scale(1)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#e38843;--icon-accent-secondary:#d5af4b;--icon-detail:#8a796a;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#40372f;--icon-surface-main:#fff8eb;--icon-surface-recessed:#ded0b8;--icon-surface-secondary:#eee4d1" id="benchmark_u2x2e26_u2x2eagent_u2x2e96_u2x2ewarm__agent__root"><g data-part="body" id="benchmark_u2x2e26_u2x2eagent_u2x2e96_u2x2ewarm__agent__body">
+  <g data-part="shell" id="benchmark_u2x2e26_u2x2eagent_u2x2e96_u2x2ewarm__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="benchmark_u2x2e26_u2x2eagent_u2x2e96_u2x2ewarm__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="benchmark_u2x2e26_u2x2eagent_u2x2e96_u2x2ewarm__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="benchmark_u2x2e26_u2x2eagent_u2x2e96_u2x2ewarm__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="benchmark_u2x2e26_u2x2eagent_u2x2e96_u2x2ewarm__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="benchmark_u2x2e26_u2x2eagent_u2x2e96_u2x2ewarm__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e26_u2x2eagent_u2x2e96_u2x2ewarm__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e26_u2x2eagent_u2x2e96_u2x2ewarm__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="database-48-warm" data-icon-id="database" data-size="48" data-context="warm" data-pose="authored-rest" role="img" aria-label="database icon, 48 pixels, warm context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="312" y="208" width="104" height="104" fill="#fff8eb" stroke="#ded0b8" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(340 236) scale(0.5)" data-icon="database" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#e38843;--icon-accent-secondary:#d5af4b;--icon-detail:#8a796a;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#40372f;--icon-surface-main:#fff8eb;--icon-surface-recessed:#ded0b8;--icon-surface-secondary:#eee4d1" id="benchmark_u2x2e27_u2x2edatabase_u2x2e48_u2x2ewarm__database__root"><g data-part="body" id="benchmark_u2x2e27_u2x2edatabase_u2x2e48_u2x2ewarm__database__body">
+  <g data-part="shell" id="benchmark_u2x2e27_u2x2edatabase_u2x2e48_u2x2ewarm__database__shell">
+    <rect x="20" y="18" width="56" height="66" rx="14" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="top-ring" id="benchmark_u2x2e27_u2x2edatabase_u2x2e48_u2x2ewarm__database__top-ring">
+    <ellipse cx="48" cy="24" rx="28" ry="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <ellipse cx="48" cy="24" rx="18" ry="4.5" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-top" id="benchmark_u2x2e27_u2x2edatabase_u2x2e48_u2x2ewarm__database__layer-top">
+    <path d="M 20.5 39 C 31 45 65 45 75.5 39" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-middle" id="benchmark_u2x2e27_u2x2edatabase_u2x2e48_u2x2ewarm__database__layer-middle">
+    <path d="M 20.5 51 C 31 57 65 57 75.5 51" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-bottom" id="benchmark_u2x2e27_u2x2edatabase_u2x2e48_u2x2ewarm__database__layer-bottom">
+    <path d="M 24 78 C 34 81 62 81 72 78" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e27_u2x2edatabase_u2x2e48_u2x2ewarm__database__core">
+    <circle cx="48" cy="65" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e27_u2x2edatabase_u2x2e48_u2x2ewarm__database__indicator">
+    <circle cx="48" cy="65" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="65" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="database-64-warm" data-icon-id="database" data-size="64" data-context="warm" data-pose="authored-rest" role="img" aria-label="database icon, 64 pixels, warm context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="416" y="208" width="104" height="104" fill="#fff8eb" stroke="#ded0b8" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(436 228) scale(0.666666666666667)" data-icon="database" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#e38843;--icon-accent-secondary:#d5af4b;--icon-detail:#8a796a;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#40372f;--icon-surface-main:#fff8eb;--icon-surface-recessed:#ded0b8;--icon-surface-secondary:#eee4d1" id="benchmark_u2x2e28_u2x2edatabase_u2x2e64_u2x2ewarm__database__root"><g data-part="body" id="benchmark_u2x2e28_u2x2edatabase_u2x2e64_u2x2ewarm__database__body">
+  <g data-part="shell" id="benchmark_u2x2e28_u2x2edatabase_u2x2e64_u2x2ewarm__database__shell">
+    <rect x="20" y="18" width="56" height="66" rx="14" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="top-ring" id="benchmark_u2x2e28_u2x2edatabase_u2x2e64_u2x2ewarm__database__top-ring">
+    <ellipse cx="48" cy="24" rx="28" ry="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <ellipse cx="48" cy="24" rx="18" ry="4.5" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-top" id="benchmark_u2x2e28_u2x2edatabase_u2x2e64_u2x2ewarm__database__layer-top">
+    <path d="M 20.5 39 C 31 45 65 45 75.5 39" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-middle" id="benchmark_u2x2e28_u2x2edatabase_u2x2e64_u2x2ewarm__database__layer-middle">
+    <path d="M 20.5 51 C 31 57 65 57 75.5 51" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-bottom" id="benchmark_u2x2e28_u2x2edatabase_u2x2e64_u2x2ewarm__database__layer-bottom">
+    <path d="M 24 78 C 34 81 62 81 72 78" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e28_u2x2edatabase_u2x2e64_u2x2ewarm__database__core">
+    <circle cx="48" cy="65" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e28_u2x2edatabase_u2x2e64_u2x2ewarm__database__indicator">
+    <circle cx="48" cy="65" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="65" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="database-96-warm" data-icon-id="database" data-size="96" data-context="warm" data-pose="authored-rest" role="img" aria-label="database icon, 96 pixels, warm context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="520" y="208" width="104" height="104" fill="#fff8eb" stroke="#ded0b8" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(524 212) scale(1)" data-icon="database" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#e38843;--icon-accent-secondary:#d5af4b;--icon-detail:#8a796a;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#40372f;--icon-surface-main:#fff8eb;--icon-surface-recessed:#ded0b8;--icon-surface-secondary:#eee4d1" id="benchmark_u2x2e29_u2x2edatabase_u2x2e96_u2x2ewarm__database__root"><g data-part="body" id="benchmark_u2x2e29_u2x2edatabase_u2x2e96_u2x2ewarm__database__body">
+  <g data-part="shell" id="benchmark_u2x2e29_u2x2edatabase_u2x2e96_u2x2ewarm__database__shell">
+    <rect x="20" y="18" width="56" height="66" rx="14" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="top-ring" id="benchmark_u2x2e29_u2x2edatabase_u2x2e96_u2x2ewarm__database__top-ring">
+    <ellipse cx="48" cy="24" rx="28" ry="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <ellipse cx="48" cy="24" rx="18" ry="4.5" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-top" id="benchmark_u2x2e29_u2x2edatabase_u2x2e96_u2x2ewarm__database__layer-top">
+    <path d="M 20.5 39 C 31 45 65 45 75.5 39" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-middle" id="benchmark_u2x2e29_u2x2edatabase_u2x2e96_u2x2ewarm__database__layer-middle">
+    <path d="M 20.5 51 C 31 57 65 57 75.5 51" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-bottom" id="benchmark_u2x2e29_u2x2edatabase_u2x2e96_u2x2ewarm__database__layer-bottom">
+    <path d="M 24 78 C 34 81 62 81 72 78" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e29_u2x2edatabase_u2x2e96_u2x2ewarm__database__core">
+    <circle cx="48" cy="65" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e29_u2x2edatabase_u2x2e96_u2x2ewarm__database__indicator">
+    <circle cx="48" cy="65" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="65" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="api-48-warm" data-icon-id="api" data-size="48" data-context="warm" data-pose="authored-rest" role="img" aria-label="api icon, 48 pixels, warm context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="624" y="208" width="104" height="104" fill="#fff8eb" stroke="#ded0b8" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(652 236) scale(0.5)" data-icon="api" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#e38843;--icon-accent-secondary:#d5af4b;--icon-detail:#8a796a;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#40372f;--icon-surface-main:#fff8eb;--icon-surface-recessed:#ded0b8;--icon-surface-secondary:#eee4d1" id="benchmark_u2x2e30_u2x2eapi_u2x2e48_u2x2ewarm__api__root"><g data-part="body" id="benchmark_u2x2e30_u2x2eapi_u2x2e48_u2x2ewarm__api__body">
+  <g data-part="shell" id="benchmark_u2x2e30_u2x2eapi_u2x2e48_u2x2ewarm__api__shell">
+    <rect x="19" y="18" width="58" height="62" rx="12" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="header" id="benchmark_u2x2e30_u2x2eapi_u2x2e48_u2x2ewarm__api__header">
+    <line x1="20.5" y1="36" x2="75.5" y2="36" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="input-interface" id="benchmark_u2x2e30_u2x2eapi_u2x2e48_u2x2ewarm__api__input-interface">
+    <rect x="9.0625" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="output-interface" id="benchmark_u2x2e30_u2x2eapi_u2x2e48_u2x2ewarm__api__output-interface">
+    <rect x="72.9375" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="processor" id="benchmark_u2x2e30_u2x2eapi_u2x2e48_u2x2ewarm__api__processor">
+    <rect x="34" y="43" width="28" height="27" rx="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="56.5" r="6" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="48" cy="56.5" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-group" id="benchmark_u2x2e30_u2x2eapi_u2x2e48_u2x2ewarm__api__indicator-group">
+    <rect x="37" y="20.5" width="22" height="14" rx="7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="27.5" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="api-64-warm" data-icon-id="api" data-size="64" data-context="warm" data-pose="authored-rest" role="img" aria-label="api icon, 64 pixels, warm context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="728" y="208" width="104" height="104" fill="#fff8eb" stroke="#ded0b8" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(748 228) scale(0.666666666666667)" data-icon="api" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#e38843;--icon-accent-secondary:#d5af4b;--icon-detail:#8a796a;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#40372f;--icon-surface-main:#fff8eb;--icon-surface-recessed:#ded0b8;--icon-surface-secondary:#eee4d1" id="benchmark_u2x2e31_u2x2eapi_u2x2e64_u2x2ewarm__api__root"><g data-part="body" id="benchmark_u2x2e31_u2x2eapi_u2x2e64_u2x2ewarm__api__body">
+  <g data-part="shell" id="benchmark_u2x2e31_u2x2eapi_u2x2e64_u2x2ewarm__api__shell">
+    <rect x="19" y="18" width="58" height="62" rx="12" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="header" id="benchmark_u2x2e31_u2x2eapi_u2x2e64_u2x2ewarm__api__header">
+    <line x1="20.5" y1="36" x2="75.5" y2="36" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="input-interface" id="benchmark_u2x2e31_u2x2eapi_u2x2e64_u2x2ewarm__api__input-interface">
+    <rect x="9.0625" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="output-interface" id="benchmark_u2x2e31_u2x2eapi_u2x2e64_u2x2ewarm__api__output-interface">
+    <rect x="72.9375" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="processor" id="benchmark_u2x2e31_u2x2eapi_u2x2e64_u2x2ewarm__api__processor">
+    <rect x="34" y="43" width="28" height="27" rx="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="56.5" r="6" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="48" cy="56.5" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-group" id="benchmark_u2x2e31_u2x2eapi_u2x2e64_u2x2ewarm__api__indicator-group">
+    <rect x="37" y="20.5" width="22" height="14" rx="7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="27.5" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="api-96-warm" data-icon-id="api" data-size="96" data-context="warm" data-pose="authored-rest" role="img" aria-label="api icon, 96 pixels, warm context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="832" y="208" width="104" height="104" fill="#fff8eb" stroke="#ded0b8" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(836 212) scale(1)" data-icon="api" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#e38843;--icon-accent-secondary:#d5af4b;--icon-detail:#8a796a;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#40372f;--icon-surface-main:#fff8eb;--icon-surface-recessed:#ded0b8;--icon-surface-secondary:#eee4d1" id="benchmark_u2x2e32_u2x2eapi_u2x2e96_u2x2ewarm__api__root"><g data-part="body" id="benchmark_u2x2e32_u2x2eapi_u2x2e96_u2x2ewarm__api__body">
+  <g data-part="shell" id="benchmark_u2x2e32_u2x2eapi_u2x2e96_u2x2ewarm__api__shell">
+    <rect x="19" y="18" width="58" height="62" rx="12" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="header" id="benchmark_u2x2e32_u2x2eapi_u2x2e96_u2x2ewarm__api__header">
+    <line x1="20.5" y1="36" x2="75.5" y2="36" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="input-interface" id="benchmark_u2x2e32_u2x2eapi_u2x2e96_u2x2ewarm__api__input-interface">
+    <rect x="9.0625" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="output-interface" id="benchmark_u2x2e32_u2x2eapi_u2x2e96_u2x2ewarm__api__output-interface">
+    <rect x="72.9375" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="processor" id="benchmark_u2x2e32_u2x2eapi_u2x2e96_u2x2ewarm__api__processor">
+    <rect x="34" y="43" width="28" height="27" rx="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="56.5" r="6" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="48" cy="56.5" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-group" id="benchmark_u2x2e32_u2x2eapi_u2x2e96_u2x2ewarm__api__indicator-group">
+    <rect x="37" y="20.5" width="22" height="14" rx="7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="27.5" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="server-48-warm" data-icon-id="server" data-size="48" data-context="warm" data-pose="authored-rest" role="img" aria-label="server icon, 48 pixels, warm context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="936" y="208" width="104" height="104" fill="#fff8eb" stroke="#ded0b8" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(964 236) scale(0.5)" data-icon="server" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#e38843;--icon-accent-secondary:#d5af4b;--icon-detail:#8a796a;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#40372f;--icon-surface-main:#fff8eb;--icon-surface-recessed:#ded0b8;--icon-surface-secondary:#eee4d1" id="benchmark_u2x2e33_u2x2eserver_u2x2e48_u2x2ewarm__server__root"><g data-part="body" id="benchmark_u2x2e33_u2x2eserver_u2x2e48_u2x2ewarm__server__body">
+  <g data-part="shell" id="benchmark_u2x2e33_u2x2eserver_u2x2e48_u2x2ewarm__server__shell">
+    <rect x="16" y="18" width="64" height="60" rx="10" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-top" id="benchmark_u2x2e33_u2x2eserver_u2x2e48_u2x2ewarm__server__tray-top">
+    <rect x="21" y="24" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-bottom" id="benchmark_u2x2e33_u2x2eserver_u2x2e48_u2x2ewarm__server__tray-bottom">
+    <rect x="21" y="50" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator-top" id="benchmark_u2x2e33_u2x2eserver_u2x2e48_u2x2ewarm__server__indicator-top">
+    <circle cx="30" cy="34" r="8" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="30" cy="34" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-bottom" id="benchmark_u2x2e33_u2x2eserver_u2x2e48_u2x2ewarm__server__indicator-bottom">
+    <circle cx="30" cy="60" r="5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="30" cy="60" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="vent-top" id="benchmark_u2x2e33_u2x2eserver_u2x2e48_u2x2ewarm__server__vent-top">
+    <line x1="48" y1="31" x2="66" y2="31" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="37" x2="66" y2="37" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="vent-bottom" id="benchmark_u2x2e33_u2x2eserver_u2x2e48_u2x2ewarm__server__vent-bottom">
+    <line x1="48" y1="57" x2="66" y2="57" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="63" x2="66" y2="63" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="base" id="benchmark_u2x2e33_u2x2eserver_u2x2e48_u2x2ewarm__server__base">
+    <rect x="24" y="75" width="48" height="5" rx="2.5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="server-64-warm" data-icon-id="server" data-size="64" data-context="warm" data-pose="authored-rest" role="img" aria-label="server icon, 64 pixels, warm context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="1040" y="208" width="104" height="104" fill="#fff8eb" stroke="#ded0b8" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(1060 228) scale(0.666666666666667)" data-icon="server" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#e38843;--icon-accent-secondary:#d5af4b;--icon-detail:#8a796a;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#40372f;--icon-surface-main:#fff8eb;--icon-surface-recessed:#ded0b8;--icon-surface-secondary:#eee4d1" id="benchmark_u2x2e34_u2x2eserver_u2x2e64_u2x2ewarm__server__root"><g data-part="body" id="benchmark_u2x2e34_u2x2eserver_u2x2e64_u2x2ewarm__server__body">
+  <g data-part="shell" id="benchmark_u2x2e34_u2x2eserver_u2x2e64_u2x2ewarm__server__shell">
+    <rect x="16" y="18" width="64" height="60" rx="10" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-top" id="benchmark_u2x2e34_u2x2eserver_u2x2e64_u2x2ewarm__server__tray-top">
+    <rect x="21" y="24" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-bottom" id="benchmark_u2x2e34_u2x2eserver_u2x2e64_u2x2ewarm__server__tray-bottom">
+    <rect x="21" y="50" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator-top" id="benchmark_u2x2e34_u2x2eserver_u2x2e64_u2x2ewarm__server__indicator-top">
+    <circle cx="30" cy="34" r="8" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="30" cy="34" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-bottom" id="benchmark_u2x2e34_u2x2eserver_u2x2e64_u2x2ewarm__server__indicator-bottom">
+    <circle cx="30" cy="60" r="5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="30" cy="60" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="vent-top" id="benchmark_u2x2e34_u2x2eserver_u2x2e64_u2x2ewarm__server__vent-top">
+    <line x1="48" y1="31" x2="66" y2="31" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="37" x2="66" y2="37" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="vent-bottom" id="benchmark_u2x2e34_u2x2eserver_u2x2e64_u2x2ewarm__server__vent-bottom">
+    <line x1="48" y1="57" x2="66" y2="57" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="63" x2="66" y2="63" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="base" id="benchmark_u2x2e34_u2x2eserver_u2x2e64_u2x2ewarm__server__base">
+    <rect x="24" y="75" width="48" height="5" rx="2.5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="server-96-warm" data-icon-id="server" data-size="96" data-context="warm" data-pose="authored-rest" role="img" aria-label="server icon, 96 pixels, warm context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="1144" y="208" width="104" height="104" fill="#fff8eb" stroke="#ded0b8" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(1148 212) scale(1)" data-icon="server" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#e38843;--icon-accent-secondary:#d5af4b;--icon-detail:#8a796a;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#40372f;--icon-surface-main:#fff8eb;--icon-surface-recessed:#ded0b8;--icon-surface-secondary:#eee4d1" id="benchmark_u2x2e35_u2x2eserver_u2x2e96_u2x2ewarm__server__root"><g data-part="body" id="benchmark_u2x2e35_u2x2eserver_u2x2e96_u2x2ewarm__server__body">
+  <g data-part="shell" id="benchmark_u2x2e35_u2x2eserver_u2x2e96_u2x2ewarm__server__shell">
+    <rect x="16" y="18" width="64" height="60" rx="10" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-top" id="benchmark_u2x2e35_u2x2eserver_u2x2e96_u2x2ewarm__server__tray-top">
+    <rect x="21" y="24" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-bottom" id="benchmark_u2x2e35_u2x2eserver_u2x2e96_u2x2ewarm__server__tray-bottom">
+    <rect x="21" y="50" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator-top" id="benchmark_u2x2e35_u2x2eserver_u2x2e96_u2x2ewarm__server__indicator-top">
+    <circle cx="30" cy="34" r="8" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="30" cy="34" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-bottom" id="benchmark_u2x2e35_u2x2eserver_u2x2e96_u2x2ewarm__server__indicator-bottom">
+    <circle cx="30" cy="60" r="5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="30" cy="60" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="vent-top" id="benchmark_u2x2e35_u2x2eserver_u2x2e96_u2x2ewarm__server__vent-top">
+    <line x1="48" y1="31" x2="66" y2="31" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="37" x2="66" y2="37" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="vent-bottom" id="benchmark_u2x2e35_u2x2eserver_u2x2e96_u2x2ewarm__server__vent-bottom">
+    <line x1="48" y1="57" x2="66" y2="57" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="63" x2="66" y2="63" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="base" id="benchmark_u2x2e35_u2x2eserver_u2x2e96_u2x2ewarm__server__base">
+    <rect x="24" y="75" width="48" height="5" rx="2.5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="agent-48-green" data-icon-id="agent" data-size="48" data-context="green" data-pose="authored-rest" role="img" aria-label="agent icon, 48 pixels, green context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="0" y="312" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(28 340) scale(0.5)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#38a967;--icon-accent-secondary:#59c6a7;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e36_u2x2eagent_u2x2e48_u2x2egreen__agent__root"><g data-part="body" id="benchmark_u2x2e36_u2x2eagent_u2x2e48_u2x2egreen__agent__body">
+  <g data-part="shell" id="benchmark_u2x2e36_u2x2eagent_u2x2e48_u2x2egreen__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="benchmark_u2x2e36_u2x2eagent_u2x2e48_u2x2egreen__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="benchmark_u2x2e36_u2x2eagent_u2x2e48_u2x2egreen__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="benchmark_u2x2e36_u2x2eagent_u2x2e48_u2x2egreen__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="benchmark_u2x2e36_u2x2eagent_u2x2e48_u2x2egreen__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="benchmark_u2x2e36_u2x2eagent_u2x2e48_u2x2egreen__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e36_u2x2eagent_u2x2e48_u2x2egreen__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e36_u2x2eagent_u2x2e48_u2x2egreen__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="agent-64-green" data-icon-id="agent" data-size="64" data-context="green" data-pose="authored-rest" role="img" aria-label="agent icon, 64 pixels, green context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="104" y="312" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(124 332) scale(0.666666666666667)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#38a967;--icon-accent-secondary:#59c6a7;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e37_u2x2eagent_u2x2e64_u2x2egreen__agent__root"><g data-part="body" id="benchmark_u2x2e37_u2x2eagent_u2x2e64_u2x2egreen__agent__body">
+  <g data-part="shell" id="benchmark_u2x2e37_u2x2eagent_u2x2e64_u2x2egreen__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="benchmark_u2x2e37_u2x2eagent_u2x2e64_u2x2egreen__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="benchmark_u2x2e37_u2x2eagent_u2x2e64_u2x2egreen__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="benchmark_u2x2e37_u2x2eagent_u2x2e64_u2x2egreen__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="benchmark_u2x2e37_u2x2eagent_u2x2e64_u2x2egreen__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="benchmark_u2x2e37_u2x2eagent_u2x2e64_u2x2egreen__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e37_u2x2eagent_u2x2e64_u2x2egreen__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e37_u2x2eagent_u2x2e64_u2x2egreen__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="agent-96-green" data-icon-id="agent" data-size="96" data-context="green" data-pose="authored-rest" role="img" aria-label="agent icon, 96 pixels, green context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="208" y="312" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(212 316) scale(1)" data-icon="agent" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#38a967;--icon-accent-secondary:#59c6a7;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e38_u2x2eagent_u2x2e96_u2x2egreen__agent__root"><g data-part="body" id="benchmark_u2x2e38_u2x2eagent_u2x2e96_u2x2egreen__agent__body">
+  <g data-part="shell" id="benchmark_u2x2e38_u2x2eagent_u2x2e96_u2x2egreen__agent__shell">
+    <rect data-detail="ear-left" x="16.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect data-detail="ear-right" x="73.5" y="38.5" width="6" height="13.5" rx="3" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="21" y="23.5" width="54" height="61" rx="20.5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="face-screen" id="benchmark_u2x2e38_u2x2eagent_u2x2e96_u2x2egreen__agent__face-screen">
+    <rect x="28" y="32.5" width="40" height="25" rx="9.5" fill="var(--icon-surface-contrast, #14213d)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="eye-left" id="benchmark_u2x2e38_u2x2eagent_u2x2e96_u2x2egreen__agent__eye-left">
+    <rect x="36.5" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="eye-right" id="benchmark_u2x2e38_u2x2eagent_u2x2e96_u2x2egreen__agent__eye-right">
+    <rect x="55" y="41" width="4.5" height="7" rx="2.25" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="mouth" id="benchmark_u2x2e38_u2x2eagent_u2x2e96_u2x2egreen__agent__mouth">
+    <path d="M 43.5 49 Q 48 53.5 52.5 49" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="antenna" id="benchmark_u2x2e38_u2x2eagent_u2x2e96_u2x2egreen__agent__antenna">
+    <line x1="48" y1="23.5" x2="48" y2="15.5" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <circle cx="48" cy="12.5" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e38_u2x2eagent_u2x2e96_u2x2egreen__agent__core">
+    <circle cx="48" cy="69" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="69" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e38_u2x2eagent_u2x2e96_u2x2egreen__agent__indicator">
+    <circle cx="48" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="database-48-green" data-icon-id="database" data-size="48" data-context="green" data-pose="authored-rest" role="img" aria-label="database icon, 48 pixels, green context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="312" y="312" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(340 340) scale(0.5)" data-icon="database" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#38a967;--icon-accent-secondary:#59c6a7;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e39_u2x2edatabase_u2x2e48_u2x2egreen__database__root"><g data-part="body" id="benchmark_u2x2e39_u2x2edatabase_u2x2e48_u2x2egreen__database__body">
+  <g data-part="shell" id="benchmark_u2x2e39_u2x2edatabase_u2x2e48_u2x2egreen__database__shell">
+    <rect x="20" y="18" width="56" height="66" rx="14" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="top-ring" id="benchmark_u2x2e39_u2x2edatabase_u2x2e48_u2x2egreen__database__top-ring">
+    <ellipse cx="48" cy="24" rx="28" ry="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <ellipse cx="48" cy="24" rx="18" ry="4.5" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-top" id="benchmark_u2x2e39_u2x2edatabase_u2x2e48_u2x2egreen__database__layer-top">
+    <path d="M 20.5 39 C 31 45 65 45 75.5 39" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-middle" id="benchmark_u2x2e39_u2x2edatabase_u2x2e48_u2x2egreen__database__layer-middle">
+    <path d="M 20.5 51 C 31 57 65 57 75.5 51" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-bottom" id="benchmark_u2x2e39_u2x2edatabase_u2x2e48_u2x2egreen__database__layer-bottom">
+    <path d="M 24 78 C 34 81 62 81 72 78" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e39_u2x2edatabase_u2x2e48_u2x2egreen__database__core">
+    <circle cx="48" cy="65" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e39_u2x2edatabase_u2x2e48_u2x2egreen__database__indicator">
+    <circle cx="48" cy="65" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="65" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="database-64-green" data-icon-id="database" data-size="64" data-context="green" data-pose="authored-rest" role="img" aria-label="database icon, 64 pixels, green context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="416" y="312" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(436 332) scale(0.666666666666667)" data-icon="database" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#38a967;--icon-accent-secondary:#59c6a7;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e40_u2x2edatabase_u2x2e64_u2x2egreen__database__root"><g data-part="body" id="benchmark_u2x2e40_u2x2edatabase_u2x2e64_u2x2egreen__database__body">
+  <g data-part="shell" id="benchmark_u2x2e40_u2x2edatabase_u2x2e64_u2x2egreen__database__shell">
+    <rect x="20" y="18" width="56" height="66" rx="14" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="top-ring" id="benchmark_u2x2e40_u2x2edatabase_u2x2e64_u2x2egreen__database__top-ring">
+    <ellipse cx="48" cy="24" rx="28" ry="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <ellipse cx="48" cy="24" rx="18" ry="4.5" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-top" id="benchmark_u2x2e40_u2x2edatabase_u2x2e64_u2x2egreen__database__layer-top">
+    <path d="M 20.5 39 C 31 45 65 45 75.5 39" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-middle" id="benchmark_u2x2e40_u2x2edatabase_u2x2e64_u2x2egreen__database__layer-middle">
+    <path d="M 20.5 51 C 31 57 65 57 75.5 51" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-bottom" id="benchmark_u2x2e40_u2x2edatabase_u2x2e64_u2x2egreen__database__layer-bottom">
+    <path d="M 24 78 C 34 81 62 81 72 78" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e40_u2x2edatabase_u2x2e64_u2x2egreen__database__core">
+    <circle cx="48" cy="65" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e40_u2x2edatabase_u2x2e64_u2x2egreen__database__indicator">
+    <circle cx="48" cy="65" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="65" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="database-96-green" data-icon-id="database" data-size="96" data-context="green" data-pose="authored-rest" role="img" aria-label="database icon, 96 pixels, green context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="520" y="312" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(524 316) scale(1)" data-icon="database" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#38a967;--icon-accent-secondary:#59c6a7;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e41_u2x2edatabase_u2x2e96_u2x2egreen__database__root"><g data-part="body" id="benchmark_u2x2e41_u2x2edatabase_u2x2e96_u2x2egreen__database__body">
+  <g data-part="shell" id="benchmark_u2x2e41_u2x2edatabase_u2x2e96_u2x2egreen__database__shell">
+    <rect x="20" y="18" width="56" height="66" rx="14" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="top-ring" id="benchmark_u2x2e41_u2x2edatabase_u2x2e96_u2x2egreen__database__top-ring">
+    <ellipse cx="48" cy="24" rx="28" ry="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <ellipse cx="48" cy="24" rx="18" ry="4.5" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-top" id="benchmark_u2x2e41_u2x2edatabase_u2x2e96_u2x2egreen__database__layer-top">
+    <path d="M 20.5 39 C 31 45 65 45 75.5 39" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-middle" id="benchmark_u2x2e41_u2x2edatabase_u2x2e96_u2x2egreen__database__layer-middle">
+    <path d="M 20.5 51 C 31 57 65 57 75.5 51" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-bottom" id="benchmark_u2x2e41_u2x2edatabase_u2x2e96_u2x2egreen__database__layer-bottom">
+    <path d="M 24 78 C 34 81 62 81 72 78" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="core" id="benchmark_u2x2e41_u2x2edatabase_u2x2e96_u2x2egreen__database__core">
+    <circle cx="48" cy="65" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator" id="benchmark_u2x2e41_u2x2edatabase_u2x2e96_u2x2egreen__database__indicator">
+    <circle cx="48" cy="65" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="65" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="api-48-green" data-icon-id="api" data-size="48" data-context="green" data-pose="authored-rest" role="img" aria-label="api icon, 48 pixels, green context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="624" y="312" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(652 340) scale(0.5)" data-icon="api" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#38a967;--icon-accent-secondary:#59c6a7;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e42_u2x2eapi_u2x2e48_u2x2egreen__api__root"><g data-part="body" id="benchmark_u2x2e42_u2x2eapi_u2x2e48_u2x2egreen__api__body">
+  <g data-part="shell" id="benchmark_u2x2e42_u2x2eapi_u2x2e48_u2x2egreen__api__shell">
+    <rect x="19" y="18" width="58" height="62" rx="12" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="header" id="benchmark_u2x2e42_u2x2eapi_u2x2e48_u2x2egreen__api__header">
+    <line x1="20.5" y1="36" x2="75.5" y2="36" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="input-interface" id="benchmark_u2x2e42_u2x2eapi_u2x2e48_u2x2egreen__api__input-interface">
+    <rect x="9.0625" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="output-interface" id="benchmark_u2x2e42_u2x2eapi_u2x2e48_u2x2egreen__api__output-interface">
+    <rect x="72.9375" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="processor" id="benchmark_u2x2e42_u2x2eapi_u2x2e48_u2x2egreen__api__processor">
+    <rect x="34" y="43" width="28" height="27" rx="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="56.5" r="6" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="48" cy="56.5" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-group" id="benchmark_u2x2e42_u2x2eapi_u2x2e48_u2x2egreen__api__indicator-group">
+    <rect x="37" y="20.5" width="22" height="14" rx="7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="27.5" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="api-64-green" data-icon-id="api" data-size="64" data-context="green" data-pose="authored-rest" role="img" aria-label="api icon, 64 pixels, green context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="728" y="312" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(748 332) scale(0.666666666666667)" data-icon="api" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#38a967;--icon-accent-secondary:#59c6a7;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e43_u2x2eapi_u2x2e64_u2x2egreen__api__root"><g data-part="body" id="benchmark_u2x2e43_u2x2eapi_u2x2e64_u2x2egreen__api__body">
+  <g data-part="shell" id="benchmark_u2x2e43_u2x2eapi_u2x2e64_u2x2egreen__api__shell">
+    <rect x="19" y="18" width="58" height="62" rx="12" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="header" id="benchmark_u2x2e43_u2x2eapi_u2x2e64_u2x2egreen__api__header">
+    <line x1="20.5" y1="36" x2="75.5" y2="36" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="input-interface" id="benchmark_u2x2e43_u2x2eapi_u2x2e64_u2x2egreen__api__input-interface">
+    <rect x="9.0625" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="output-interface" id="benchmark_u2x2e43_u2x2eapi_u2x2e64_u2x2egreen__api__output-interface">
+    <rect x="72.9375" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="processor" id="benchmark_u2x2e43_u2x2eapi_u2x2e64_u2x2egreen__api__processor">
+    <rect x="34" y="43" width="28" height="27" rx="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="56.5" r="6" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="48" cy="56.5" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-group" id="benchmark_u2x2e43_u2x2eapi_u2x2e64_u2x2egreen__api__indicator-group">
+    <rect x="37" y="20.5" width="22" height="14" rx="7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="27.5" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="api-96-green" data-icon-id="api" data-size="96" data-context="green" data-pose="authored-rest" role="img" aria-label="api icon, 96 pixels, green context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="832" y="312" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(836 316) scale(1)" data-icon="api" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#38a967;--icon-accent-secondary:#59c6a7;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e44_u2x2eapi_u2x2e96_u2x2egreen__api__root"><g data-part="body" id="benchmark_u2x2e44_u2x2eapi_u2x2e96_u2x2egreen__api__body">
+  <g data-part="shell" id="benchmark_u2x2e44_u2x2eapi_u2x2e96_u2x2egreen__api__shell">
+    <rect x="19" y="18" width="58" height="62" rx="12" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="header" id="benchmark_u2x2e44_u2x2eapi_u2x2e96_u2x2egreen__api__header">
+    <line x1="20.5" y1="36" x2="75.5" y2="36" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="input-interface" id="benchmark_u2x2e44_u2x2eapi_u2x2e96_u2x2egreen__api__input-interface">
+    <rect x="9.0625" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="output-interface" id="benchmark_u2x2e44_u2x2eapi_u2x2e96_u2x2egreen__api__output-interface">
+    <rect x="72.9375" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="processor" id="benchmark_u2x2e44_u2x2eapi_u2x2e96_u2x2egreen__api__processor">
+    <rect x="34" y="43" width="28" height="27" rx="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="56.5" r="6" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="48" cy="56.5" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-group" id="benchmark_u2x2e44_u2x2eapi_u2x2e96_u2x2egreen__api__indicator-group">
+    <rect x="37" y="20.5" width="22" height="14" rx="7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="27.5" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="server-48-green" data-icon-id="server" data-size="48" data-context="green" data-pose="authored-rest" role="img" aria-label="server icon, 48 pixels, green context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="936" y="312" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(964 340) scale(0.5)" data-icon="server" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#38a967;--icon-accent-secondary:#59c6a7;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e45_u2x2eserver_u2x2e48_u2x2egreen__server__root"><g data-part="body" id="benchmark_u2x2e45_u2x2eserver_u2x2e48_u2x2egreen__server__body">
+  <g data-part="shell" id="benchmark_u2x2e45_u2x2eserver_u2x2e48_u2x2egreen__server__shell">
+    <rect x="16" y="18" width="64" height="60" rx="10" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-top" id="benchmark_u2x2e45_u2x2eserver_u2x2e48_u2x2egreen__server__tray-top">
+    <rect x="21" y="24" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-bottom" id="benchmark_u2x2e45_u2x2eserver_u2x2e48_u2x2egreen__server__tray-bottom">
+    <rect x="21" y="50" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator-top" id="benchmark_u2x2e45_u2x2eserver_u2x2e48_u2x2egreen__server__indicator-top">
+    <circle cx="30" cy="34" r="8" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="30" cy="34" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-bottom" id="benchmark_u2x2e45_u2x2eserver_u2x2e48_u2x2egreen__server__indicator-bottom">
+    <circle cx="30" cy="60" r="5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="30" cy="60" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="vent-top" id="benchmark_u2x2e45_u2x2eserver_u2x2e48_u2x2egreen__server__vent-top">
+    <line x1="48" y1="31" x2="66" y2="31" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="37" x2="66" y2="37" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="vent-bottom" id="benchmark_u2x2e45_u2x2eserver_u2x2e48_u2x2egreen__server__vent-bottom">
+    <line x1="48" y1="57" x2="66" y2="57" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="63" x2="66" y2="63" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="base" id="benchmark_u2x2e45_u2x2eserver_u2x2e48_u2x2egreen__server__base">
+    <rect x="24" y="75" width="48" height="5" rx="2.5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="server-64-green" data-icon-id="server" data-size="64" data-context="green" data-pose="authored-rest" role="img" aria-label="server icon, 64 pixels, green context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="1040" y="312" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(1060 332) scale(0.666666666666667)" data-icon="server" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#38a967;--icon-accent-secondary:#59c6a7;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e46_u2x2eserver_u2x2e64_u2x2egreen__server__root"><g data-part="body" id="benchmark_u2x2e46_u2x2eserver_u2x2e64_u2x2egreen__server__body">
+  <g data-part="shell" id="benchmark_u2x2e46_u2x2eserver_u2x2e64_u2x2egreen__server__shell">
+    <rect x="16" y="18" width="64" height="60" rx="10" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-top" id="benchmark_u2x2e46_u2x2eserver_u2x2e64_u2x2egreen__server__tray-top">
+    <rect x="21" y="24" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-bottom" id="benchmark_u2x2e46_u2x2eserver_u2x2e64_u2x2egreen__server__tray-bottom">
+    <rect x="21" y="50" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator-top" id="benchmark_u2x2e46_u2x2eserver_u2x2e64_u2x2egreen__server__indicator-top">
+    <circle cx="30" cy="34" r="8" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="30" cy="34" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-bottom" id="benchmark_u2x2e46_u2x2eserver_u2x2e64_u2x2egreen__server__indicator-bottom">
+    <circle cx="30" cy="60" r="5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="30" cy="60" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="vent-top" id="benchmark_u2x2e46_u2x2eserver_u2x2e64_u2x2egreen__server__vent-top">
+    <line x1="48" y1="31" x2="66" y2="31" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="37" x2="66" y2="37" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="vent-bottom" id="benchmark_u2x2e46_u2x2eserver_u2x2e64_u2x2egreen__server__vent-bottom">
+    <line x1="48" y1="57" x2="66" y2="57" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="63" x2="66" y2="63" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="base" id="benchmark_u2x2e46_u2x2eserver_u2x2e64_u2x2egreen__server__base">
+    <rect x="24" y="75" width="48" height="5" rx="2.5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  </g>
+</g>
+  </g>
+  <g data-cell-kind="regression" data-cell-id="server-96-green" data-icon-id="server" data-size="96" data-context="green" data-pose="authored-rest" role="img" aria-label="server icon, 96 pixels, green context, authored rest pose" style="--icon-surface-contrast:#14213d">
+    <rect x="1144" y="312" width="104" height="104" fill="#fffaf2" stroke="#dfe5ec" stroke-width="1"/>
+<g xmlns="http://www.w3.org/2000/svg" transform="translate(1148 316) scale(1)" data-icon="server" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#38a967;--icon-accent-secondary:#59c6a7;--icon-detail:#64748b;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#14213d;--icon-surface-main:#fffaf2;--icon-surface-recessed:#dfe5ec;--icon-surface-secondary:#eef1f5" id="benchmark_u2x2e47_u2x2eserver_u2x2e96_u2x2egreen__server__root"><g data-part="body" id="benchmark_u2x2e47_u2x2eserver_u2x2e96_u2x2egreen__server__body">
+  <g data-part="shell" id="benchmark_u2x2e47_u2x2eserver_u2x2e96_u2x2egreen__server__shell">
+    <rect x="16" y="18" width="64" height="60" rx="10" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-top" id="benchmark_u2x2e47_u2x2eserver_u2x2e96_u2x2egreen__server__tray-top">
+    <rect x="21" y="24" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tray-bottom" id="benchmark_u2x2e47_u2x2eserver_u2x2e96_u2x2egreen__server__tray-bottom">
+    <rect x="21" y="50" width="54" height="20" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator-top" id="benchmark_u2x2e47_u2x2eserver_u2x2e96_u2x2egreen__server__indicator-top">
+    <circle cx="30" cy="34" r="8" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="30" cy="34" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-bottom" id="benchmark_u2x2e47_u2x2eserver_u2x2e96_u2x2egreen__server__indicator-bottom">
+    <circle cx="30" cy="60" r="5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="30" cy="60" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="vent-top" id="benchmark_u2x2e47_u2x2eserver_u2x2e96_u2x2egreen__server__vent-top">
+    <line x1="48" y1="31" x2="66" y2="31" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="37" x2="66" y2="37" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="vent-bottom" id="benchmark_u2x2e47_u2x2eserver_u2x2e96_u2x2egreen__server__vent-bottom">
+    <line x1="48" y1="57" x2="66" y2="57" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="63" x2="66" y2="63" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="base" id="benchmark_u2x2e47_u2x2eserver_u2x2e96_u2x2egreen__server__base">
+    <rect x="24" y="75" width="48" height="5" rx="2.5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  </g>
+</g>
+  </g>
+</svg>

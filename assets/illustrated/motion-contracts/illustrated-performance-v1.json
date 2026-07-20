@@ -1,0 +1,43 @@
+{
+  "system": "illustrated",
+  "icon_system_version": "2.0.0",
+  "contract": "illustrated-performance-v1",
+  "status": "approved",
+  "approved_at": "2026-07-20",
+  "human_visual_acceptance": "confirmed",
+  "public_showcase_enabled": true,
+  "selection_policy": "automatic-for-supported-showcase-icons",
+  "repeat_delay": 0.8,
+  "cancel_behavior": "restore-authored-rest-pose",
+  "reduced_motion_behavior": "static-rest",
+  "performances": [
+    {
+      "icon": "agent",
+      "id": "illustrated-agent-input-reason-result-v1",
+      "semantic_sequence": ["receive", "reason", "deliver"],
+      "primary_parts": ["input-nodes", "input-path", "brain-left", "brain-right", "processor", "processor-core", "output-path", "result"],
+      "rest_at": 1.72
+    },
+    {
+      "icon": "operator",
+      "id": "illustrated-operator-focus-operate-confirm-v1",
+      "semantic_sequence": ["focus", "operate", "confirm"],
+      "primary_parts": ["head", "hair", "glasses", "input-cursor", "hands", "laptop", "screen", "status", "status-check"],
+      "rest_at": 1.68
+    },
+    {
+      "icon": "tool",
+      "id": "illustrated-tool-prepare-execute-complete-v1",
+      "semantic_sequence": ["prepare", "execute", "complete"],
+      "primary_parts": ["target", "action-path", "wrench", "toolbox", "toolbox-lid", "completion"],
+      "rest_at": 1.62
+    },
+    {
+      "icon": "output",
+      "id": "illustrated-output-compose-deliver-confirm-v1",
+      "semantic_sequence": ["compose", "deliver", "confirm"],
+      "primary_parts": ["card", "card-lines", "delivery-tray", "delivery-lip", "send-path", "check-badge", "check"],
+      "rest_at": 1.7
+    }
+  ]
+}

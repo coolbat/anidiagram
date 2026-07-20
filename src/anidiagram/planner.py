@@ -6,6 +6,8 @@ import re
 from copy import deepcopy
 from typing import Any, Dict, Iterable, List, Mapping, Optional
 
+from .composition import compile_plan_v02
+
 
 PlanDict = Dict[str, Any]
 SpecDict = Dict[str, Any]
@@ -39,7 +41,22 @@ _STOP_WORDS = {
 }
 
 
-def brief_to_plan(brief: str, title: str = "", style: str = "sketch-board") -> PlanDict:
+def brief_to_plan(
+    brief: str,
+    title: str = "",
+    style: Optional[str] = None,
+    version: str = "0.2",
+) -> PlanDict:
+    """Create a deterministic plan; new calls default to composition-v1."""
+
+    if version == "0.1":
+        return _brief_to_plan_v01(brief, title=title, style=style or "sketch-board")
+    if version != "0.2":
+        raise ValueError("DiagramPlan version must be '0.1' or '0.2'")
+    return _brief_to_plan_v02(brief, title=title, style=style)
+
+
+def _brief_to_plan_v01(brief: str, title: str = "", style: str = "sketch-board") -> PlanDict:
     """Create a deterministic DiagramPlan v0.1 from a natural-language brief.
 
     This is intentionally model-free. A future LLM integration can replace the
@@ -167,11 +184,73 @@ def brief_to_plan(brief: str, title: str = "", style: str = "sketch-board") -> P
     }
 
 
+def _brief_to_plan_v02(brief: str, title: str = "", style: Optional[str] = None) -> PlanDict:
+    legacy = _brief_to_plan_v01(brief, title=title, style=style or "sketch-board")
+    legacy_spec = compile_plan(legacy)
+    entities = []
+    for node in legacy_spec["nodes"]:
+        entity = {
+            "id": str(node["id"]),
+            "label": str(node.get("label") or node["id"]),
+            "description": str(node.get("caption") or ""),
+            "kind": _semantic_kind(str(node.get("icon") or node.get("role") or "component")),
+            "role": str(node.get("role") or "neutral"),
+            "importance": "primary" if node.get("step") is not None else "supporting",
+            "source_refs": ["input-brief"],
+        }
+        entities.append(entity)
+    relations = []
+    for index, edge in enumerate(legacy_spec["edges"]):
+        relations.append(
+            {
+                "id": f"relation-{index + 1}",
+                "from": str(edge["from"]),
+                "to": str(edge["to"]),
+                "kind": "feedback" if str(edge.get("label") or "").lower().startswith("no") else "data-flow",
+                "label": str(edge.get("label") or ""),
+                "direction": "forward",
+                "importance": "primary" if edge.get("effect", {}).get("preset") == "flow-arrow" else "supporting",
+                "source_refs": ["input-brief"],
+            }
+        )
+    presentation = {
+        "icon_system": "auto",
+        "style": style or "auto",
+        "layout": "auto",
+        "motion": "showcase-v1",
+    }
+    return {
+        "version": "0.2",
+        "semantic": {
+            "title": str(legacy["title"]),
+            "subtitle": "Semantic-first brief compiled with composition-v1.",
+            "summary": str(legacy.get("source_summary") or ""),
+            "intent": {
+                "diagram_kind": "architecture",
+                "primary_question": str(legacy.get("source_summary") or legacy["title"]),
+                "audience": ["technical"],
+            },
+            "entities": entities,
+            "relations": relations,
+            "sources": [{"id": "input-brief", "type": "brief", "title": "Input brief"}],
+        },
+        "presentation": presentation,
+    }
+
+
+def _semantic_kind(value: str) -> str:
+    normalized = re.sub(r"[^a-z0-9-]+", "-", value.lower()).strip("-")
+    return normalized or "component"
+
+
 def compile_plan(plan: Mapping[str, Any]) -> SpecDict:
-    """Compile DiagramPlan v0.1 into freeform DiagramScript v0.3."""
+    """Compile a supported DiagramPlan into resolved DiagramScript."""
+
+    if plan.get("version") == "0.2":
+        return compile_plan_v02(plan)
 
     if plan.get("version") != "0.1":
-        raise ValueError("DiagramPlan version must be '0.1'")
+        raise ValueError("DiagramPlan version must be '0.1' or '0.2'")
     layout_strategy = str(plan.get("layout_strategy") or "explainer-board")
     if layout_strategy != "explainer-board":
         raise ValueError("only the 'explainer-board' layout_strategy is currently supported")

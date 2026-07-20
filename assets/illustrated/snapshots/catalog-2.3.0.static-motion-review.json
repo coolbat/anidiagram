@@ -1,0 +1,192 @@
+{
+  "system": "illustrated",
+  "display_name": "Illustrated",
+  "display_name_zh": "插画",
+  "version": "2.3.0",
+  "catalog_revision": 7,
+  "status": "approved",
+  "legacy_aliases": ["illustrated-character-v2"],
+  "motion_status": "partial-approved",
+  "motion_contract": {
+    "id": "illustrated-performance-v3",
+    "status": "approved",
+    "source": "assets/illustrated/motion-contracts/illustrated-performance-v3.json"
+  },
+  "motion_review_contract": {
+    "id": "illustrated-performance-v4-review",
+    "status": "visual-review",
+    "source": "assets/illustrated/motion-contracts/illustrated-performance-v4.review.json"
+  },
+  "archived_motion_review_contract": {
+    "id": "illustrated-performance-v3-review",
+    "status": "archived-after-approval",
+    "source": "assets/illustrated/motion-contracts/illustrated-performance-v3.review.json"
+  },
+  "previous_motion_contract": {
+    "id": "illustrated-performance-v2",
+    "status": "approved-archive",
+    "source": "assets/illustrated/motion-contracts/illustrated-performance-v2.json"
+  },
+  "icons": [
+    {
+      "id": "agent",
+      "semantic_role": "input-reason-result",
+      "parts": ["wash", "brain-left", "brain-right", "brain-detail", "processor", "processor-core", "input-nodes", "input-path", "output-path", "result"],
+      "supported_states": [],
+      "supported_actions": ["receive", "reason", "deliver"],
+      "status": "approved",
+      "motion_status": "approved",
+      "asset_revision": 1
+    },
+    {
+      "id": "operator",
+      "semantic_role": "person-operate-status",
+      "parts": ["wash", "body", "head", "hair", "glasses", "laptop", "hands", "screen", "laptop-base", "input-cursor", "status", "status-check"],
+      "supported_states": [],
+      "supported_actions": ["observe", "operate", "confirm"],
+      "status": "approved",
+      "motion_status": "approved",
+      "asset_revision": 1
+    },
+    {
+      "id": "tool",
+      "semantic_role": "tool-action-complete",
+      "parts": ["wash", "toolbox", "toolbox-lid", "handle", "wrench", "wrench-hole", "target", "action-path", "completion"],
+      "supported_states": [],
+      "supported_actions": ["prepare", "execute", "complete"],
+      "status": "approved",
+      "motion_status": "approved",
+      "asset_revision": 1
+    },
+    {
+      "id": "output",
+      "semantic_role": "artifact-deliver-confirm",
+      "parts": ["wash", "card", "card-lines", "delivery-tray", "delivery-lip", "send-path", "check-badge", "check"],
+      "supported_states": [],
+      "supported_actions": ["compose", "deliver", "confirm"],
+      "status": "approved",
+      "motion_status": "approved",
+      "asset_revision": 1
+    },
+    {
+      "id": "database",
+      "semantic_role": "data-ingest-store-persist",
+      "parts": ["wash", "cylinder-body", "cylinder-top", "layer-top", "layer-bottom", "input-bead", "write-path", "commit-ripple", "stored-bead"],
+      "supported_states": [],
+      "supported_actions": ["ingest", "store", "persist"],
+      "status": "approved",
+      "motion_status": "approved",
+      "asset_revision": 1
+    },
+    {
+      "id": "api",
+      "semantic_role": "request-route-response",
+      "parts": ["wash", "gateway", "api-glyph", "request-path", "request-token", "response-path", "response-token"],
+      "supported_states": [],
+      "supported_actions": ["request", "route", "respond"],
+      "status": "approved",
+      "motion_status": "approved",
+      "asset_revision": 1
+    },
+    {
+      "id": "search",
+      "semantic_role": "query-scan-discover",
+      "parts": ["wash", "lens-glass", "lens", "handle", "scan-cross", "target-ring", "result-dot", "discovery"],
+      "supported_states": [],
+      "supported_actions": ["query", "scan", "discover"],
+      "status": "approved",
+      "motion_status": "approved",
+      "asset_revision": 1
+    },
+    {
+      "id": "memory",
+      "semantic_role": "context-capture-index-recall",
+      "parts": ["wash", "back-card", "front-card", "index-nodes", "trace", "input-token", "commit-path", "bookmark", "result"],
+      "supported_states": [],
+      "supported_actions": ["capture", "index", "recall"],
+      "status": "approved",
+      "motion_status": "approved",
+      "asset_revision": 1
+    },
+    {
+      "id": "file",
+      "semantic_role": "document-content-attach-reference",
+      "parts": ["wash", "page", "paperclip", "content-lines"],
+      "supported_states": [],
+      "supported_actions": ["attach", "reference"],
+      "status": "approved",
+      "motion_status": "approved",
+      "asset_revision": 1
+    },
+    {
+      "id": "folder",
+      "semantic_role": "collection-store-index-organize",
+      "parts": ["wash", "folder-back", "folder-tab", "document", "folder-front", "index-label"],
+      "supported_states": [],
+      "supported_actions": ["collect", "store", "index"],
+      "status": "approved",
+      "motion_status": "approved",
+      "asset_revision": 1
+    },
+    {
+      "id": "cloud",
+      "semantic_role": "data-upload-download-sync",
+      "parts": ["wash", "cloud-shell", "upload-arrow", "download-arrow"],
+      "supported_states": [],
+      "supported_actions": ["upload", "download", "sync"],
+      "status": "approved",
+      "motion_status": "approved",
+      "asset_revision": 1
+    },
+    {
+      "id": "shield",
+      "semantic_role": "security-lock-protect",
+      "parts": ["wash", "shield-shell", "inner-field", "lock-shackle", "security-lock", "keyhole"],
+      "supported_states": [],
+      "supported_actions": ["lock", "secure", "protect"],
+      "status": "approved",
+      "motion_status": "approved",
+      "asset_revision": 1
+    },
+    {
+      "id": "user",
+      "semantic_role": "external-person-request-interact",
+      "parts": ["wash", "portrait-body", "portrait-neck", "portrait-head", "portrait-hair", "face", "conversation-card", "conversation-lines"],
+      "supported_states": [],
+      "supported_actions": ["request", "interact", "consume"],
+      "status": "approved",
+      "motion_status": "visual-review",
+      "asset_revision": 1
+    },
+    {
+      "id": "server",
+      "semantic_role": "compute-host-run-service",
+      "parts": ["wash", "rack-shell", "upper-bay", "middle-bay", "lower-bay", "rack-ports", "activity-lights"],
+      "supported_states": [],
+      "supported_actions": ["host", "compute", "serve"],
+      "status": "approved",
+      "motion_status": "visual-review",
+      "asset_revision": 1
+    },
+    {
+      "id": "ai-model",
+      "semantic_role": "model-inference-transform-predict",
+      "parts": ["wash", "model-card", "model-header", "network-links", "input-neurons", "hidden-neurons", "output-neuron", "inference-band"],
+      "supported_states": [],
+      "supported_actions": ["infer", "transform", "predict"],
+      "status": "approved",
+      "motion_status": "visual-review",
+      "asset_revision": 1
+    },
+    {
+      "id": "message-queue",
+      "semantic_role": "async-buffer-order-deliver",
+      "parts": ["wash", "queue-shell", "queue-rail", "message-one", "message-two", "message-three", "buffer-gates", "sequence-dots"],
+      "supported_states": [],
+      "supported_actions": ["buffer", "order", "deliver"],
+      "status": "approved",
+      "motion_status": "visual-review",
+      "asset_revision": 1
+    }
+  ]
+}

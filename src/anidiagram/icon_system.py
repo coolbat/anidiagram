@@ -6,7 +6,17 @@ from typing import Any, Dict, Tuple
 
 
 DEFAULT_ICON_SYSTEM = "illustrated-character-v1"
+ILLUSTRATED_ICON_SYSTEM = "illustrated"
+ILLUSTRATED_ICON_SYSTEM_VERSION = "2.3.0"
+ICON_SYSTEM_ALIASES = {
+    "illustrated-character-v2": ILLUSTRATED_ICON_SYSTEM,
+}
+ICON_SYSTEM_VERSIONS = {
+    ILLUSTRATED_ICON_SYSTEM: ILLUSTRATED_ICON_SYSTEM_VERSION,
+}
 SUPPORTED_ICON_SYSTEMS = {
+    "diagram-core-v1",
+    ILLUSTRATED_ICON_SYSTEM,
     "illustrated-character-v1",
     "illustrated-character-v2",
     "illustrated-v1",
@@ -35,4 +45,16 @@ def resolve_icon_system(style: Dict[str, Any]) -> str:
     if not isinstance(value, str) or value not in SUPPORTED_ICON_SYSTEMS:
         supported = ", ".join(sorted(SUPPORTED_ICON_SYSTEMS))
         raise ValueError(f"{path}: expected one of: {supported}")
-    return value
+    return canonical_icon_system_id(value)
+
+
+def canonical_icon_system_id(value: str) -> str:
+    """Resolve a supported public id or legacy alias to its stable identity."""
+
+    return ICON_SYSTEM_ALIASES.get(value, value)
+
+
+def icon_system_version(value: str) -> str | None:
+    """Return separately versioned metadata for a canonical icon-system id."""
+
+    return ICON_SYSTEM_VERSIONS.get(canonical_icon_system_id(value))

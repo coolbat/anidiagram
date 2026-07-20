@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Memory drawer icon" data-icon="memory">
+  <g data-part="body">
+  <g data-part="shell">
+    <rect x="17" y="17" width="62" height="66" rx="14" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="drawer-top">
+    <rect x="22" y="27" width="52" height="21" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="drawer-bottom">
+    <rect x="22" y="53" width="52" height="22" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="card">
+    <rect x="36" y="19" width="24" height="28" rx="5" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner"/>
+    <line x1="41" y1="27" x2="55" y2="27" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    <line x1="41" y1="33" x2="52" y2="33" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+  </g>
+  <g data-part="indicator">
+    <circle cx="48" cy="64" r="6.5" fill="var(--icon-surface-contrast, #14213d)"/>
+    <circle cx="48" cy="64" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+  </g>
+  </g>
+</svg>

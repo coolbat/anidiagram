@@ -1,0 +1,78 @@
+{
+  "version": "0.4",
+  "composition_policy": "composition-v1",
+  "resolved_presentation": {
+    "icon_system": {"value": "illustrated", "source": "explicit", "version": "2.3.0"},
+    "style": {"value": "deep-tech", "source": "explicit"},
+    "layout": {"value": "matrix", "source": "explicit"},
+    "motion": {"value": "showcase-v1", "source": "explicit"}
+  },
+  "preset": "illustrated-expansion-batch-3-motion-review",
+  "icon_system": "illustrated",
+  "canvas": {"width": 1440, "height": 840},
+  "style": "deep-tech",
+  "title": {
+    "text": "Illustrated 2.3 · Motion Review",
+    "subtitle": "User · Server · AI Model · Message Queue · explicit review only"
+  },
+  "motion": {
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "stagger": 0.12,
+    "node": {"preset": "icon-performance"},
+    "edge": {"preset": "none"},
+    "group": {"preset": "none"},
+    "title": {"preset": "highlight-sweep"},
+    "reduced_motion": "static"
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "max_active_flow_edges": 0,
+    "max_particle_edges": 0,
+    "max_active_pulse_nodes": 4,
+    "max_scanning_groups": 0
+  },
+  "nodes": [
+    {
+      "id": "user-review",
+      "label": "User",
+      "caption": "request • interact • consume",
+      "position": [70, 190],
+      "size": [620, 240],
+      "role": "actor",
+      "icon": "user",
+      "effect": {"preset": "icon-performance", "icon_motion": "illustrated-user-request-interact-consume-v1"}
+    },
+    {
+      "id": "server-review",
+      "label": "Server",
+      "caption": "host • compute • serve",
+      "position": [750, 190],
+      "size": [620, 240],
+      "role": "process",
+      "icon": "server",
+      "effect": {"preset": "icon-performance", "icon_motion": "illustrated-server-host-compute-serve-v1"}
+    },
+    {
+      "id": "ai-model-review",
+      "label": "AI Model",
+      "caption": "infer • transform • predict",
+      "position": [70, 500],
+      "size": [620, 240],
+      "role": "agent",
+      "icon": "ai-model",
+      "effect": {"preset": "icon-performance", "icon_motion": "illustrated-ai-model-infer-transform-predict-v1"}
+    },
+    {
+      "id": "message-queue-review",
+      "label": "Message Queue",
+      "caption": "buffer • order • deliver",
+      "position": [750, 500],
+      "size": [620, 240],
+      "role": "memory",
+      "icon": "message-queue",
+      "effect": {"preset": "icon-performance", "icon_motion": "illustrated-message-queue-buffer-order-deliver-v1"}
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Language context and attention stack icon" data-icon="llm">
+  <g data-part="body">
+  <g data-part="shell">
+    <rect x="14" y="16" width="68" height="65" rx="17" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="token-row">
+    <rect x="23" y="27" width="23" height="8" rx="4" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <rect x="30" y="38" width="27" height="8" rx="4" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <rect x="39" y="49" width="31" height="8" rx="4" fill="var(--icon-accent-secondary, #45c5bd)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="context-band">
+    <rect x="23" y="63" width="42" height="9" rx="4.5" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="attention-path">
+    <path d="M 46 31 Q 66 31 70 45 Q 73 58 65 67" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    <polyline points="65,62 65,68 71,68" fill="none" stroke="var(--icon-accent, #7c5ce7)" stroke-width="2.125" stroke-linecap="round" stroke-linejoin="round" data-stroke-role="outer"/>
+  </g>
+  <g data-part="indicator">
+    <circle cx="72" cy="72" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+  </g>
+  </g>
+</svg>

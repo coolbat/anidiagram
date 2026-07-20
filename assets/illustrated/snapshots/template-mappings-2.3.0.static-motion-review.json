@@ -1,0 +1,29 @@
+{
+  "system": "illustrated",
+  "version": "2.3.0",
+  "mapping_revision": 6,
+  "mappings": [
+    {
+      "style": "deep-tech",
+      "status": "approved",
+      "human_visual_acceptance": "confirmed",
+      "approved_at": "2026-07-20",
+      "token_source": "styles/deep-tech.json#illustrated_tokens",
+      "illustrated_tokens_sha256": "9d0a3abcf6950f2f43663cb2d74dcc4fb3a8ea85e60c375166844c7c0bb1461a",
+      "case_plan": "examples/illustrated-deep-tech-software-delivery.plan.json",
+      "visual_proof": "outputs/illustrated-deep-tech-software-delivery/illustrated-deep-tech-software-delivery.html",
+      "review_proof": "outputs/illustrated-deep-tech-outline-proof/illustrated-deep-tech-outline-proof.html",
+      "coverage_review": "outputs/illustrated-expansion-batch-3/illustrated-expansion-batch-3.html",
+      "previous_coverage_review": "outputs/illustrated-expansion-batch-2/illustrated-expansion-batch-2.html",
+      "motion_review": "outputs/illustrated-expansion-batch-3-motion-review/illustrated-expansion-batch-3-motion-review.html",
+      "previous_motion_review": "outputs/illustrated-expansion-batch-2-motion-review/illustrated-expansion-batch-2-motion-review.html",
+      "public_showcase": "outputs/illustrated-2.3-showcase/illustrated-2.3-showcase.html",
+      "approved_outline": {"label": "ivory", "ink": "#d8cebd"},
+      "constraints": {
+        "geometry_overrides": false,
+        "semantic_structure_overrides": false,
+        "public_style": true
+      }
+    }
+  ]
+}

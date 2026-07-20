@@ -1,0 +1,588 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anidiagram.dev/schemas/diagram-script-v0.4.schema.json",
+  "title": "DiagramScript v0.4",
+  "type": "object",
+  "required": [
+    "version",
+    "nodes"
+  ],
+  "properties": {
+    "version": {
+      "const": "0.4"
+    },
+    "preset": {
+      "type": "string"
+    },
+    "motion": {
+      "$ref": "#/$defs/motion"
+    },
+    "motion_policy": {
+      "$ref": "#/$defs/motion_policy"
+    },
+    "canvas": {
+      "type": "object",
+      "properties": {
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "style": {
+      "type": "string"
+    },
+    "title": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        }
+      }
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/group"
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/edge"
+      }
+    },
+    "composition_policy": {
+      "const": "composition-v1"
+    },
+    "icon_system": {
+      "enum": [
+        "diagram-core-v1",
+        "illustrated",
+        "illustrated-character-v1",
+        "illustrated-character-v2",
+        "illustrated-v1",
+        "semantic-line-v1"
+      ]
+    },
+    "resolved_presentation": {
+      "$ref": "#/$defs/resolved_presentation"
+    }
+  },
+  "$defs": {
+    "role": {
+      "enum": [
+        "actor",
+        "source",
+        "process",
+        "agent",
+        "memory",
+        "tool",
+        "output",
+        "risk",
+        "neutral"
+      ]
+    },
+    "route": {
+      "enum": [
+        "curved",
+        "straight",
+        "hv",
+        "vh",
+        "orthogonal",
+        "points"
+      ]
+    },
+    "icon": {
+      "enum": [
+        "user",
+        "developer",
+        "operator",
+        "agent",
+        "agent-team",
+        "assistant",
+        "human-reviewer",
+        "ai-model",
+        "llm",
+        "neural-network",
+        "reasoning",
+        "embedding",
+        "memory",
+        "tool",
+        "token",
+        "database",
+        "vector-database",
+        "data-warehouse",
+        "document-store",
+        "knowledge-base",
+        "dataset",
+        "search",
+        "file",
+        "folder",
+        "document",
+        "pdf",
+        "image",
+        "audio",
+        "video",
+        "code-file",
+        "output",
+        "api",
+        "webhook",
+        "http-request",
+        "gateway",
+        "load-balancer",
+        "message-queue",
+        "shield",
+        "server",
+        "server-cluster",
+        "cloud",
+        "container",
+        "function",
+        "edge-node",
+        "source-code",
+        "git-repository",
+        "branch",
+        "pull-request",
+        "ci-cd",
+        "deployment",
+        "task",
+        "scheduler",
+        "monitoring",
+        "logs",
+        "alert",
+        "debug"
+      ]
+    },
+    "node_shape": {
+      "enum": [
+        "rect",
+        "decision"
+      ]
+    },
+    "point": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "bounds": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "items": false,
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "effect": {
+      "type": "object",
+      "properties": {
+        "preset": {
+          "type": "string"
+        },
+        "line": {
+          "type": "string"
+        },
+        "particle": {
+          "type": "string"
+        },
+        "trail": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "particle_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "trail_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "entry": {
+          "type": "string"
+        },
+        "accent": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "icon_motion": {
+          "type": "string"
+        }
+      }
+    },
+    "motion_channel": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/effect"
+        }
+      ]
+    },
+    "node": {
+      "type": "object",
+      "required": [
+        "id",
+        "position",
+        "size"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string"
+        },
+        "caption": {
+          "type": "string"
+        },
+        "position": {
+          "$ref": "#/$defs/point"
+        },
+        "size": {
+          "$ref": "#/$defs/point"
+        },
+        "shape": {
+          "$ref": "#/$defs/node_shape"
+        },
+        "role": {
+          "$ref": "#/$defs/role"
+        },
+        "icon": {
+          "$ref": "#/$defs/icon"
+        },
+        "effect": {
+          "$ref": "#/$defs/effect"
+        },
+        "step": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "radius": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "fill": {
+          "type": "string"
+        },
+        "stroke": {
+          "type": "string"
+        },
+        "stroke_width": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "required": [
+        "from",
+        "to"
+      ],
+      "properties": {
+        "from": {
+          "type": "string",
+          "minLength": 1
+        },
+        "to": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/$defs/role"
+        },
+        "direction": {
+          "enum": [
+            "forward",
+            "bidirectional",
+            "undirected"
+          ]
+        },
+        "route": {
+          "$ref": "#/$defs/route"
+        },
+        "effect": {
+          "$ref": "#/$defs/effect"
+        },
+        "step": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "points": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/point"
+          }
+        },
+        "duration": {
+          "type": "string"
+        },
+        "delay": {
+          "type": "number"
+        },
+        "animated": {
+          "type": "boolean"
+        },
+        "width": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "stroke": {
+          "type": "string"
+        }
+      }
+    },
+    "group": {
+      "type": "object",
+      "required": [
+        "id",
+        "bounds"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string"
+        },
+        "bounds": {
+          "$ref": "#/$defs/bounds"
+        },
+        "role": {
+          "$ref": "#/$defs/role"
+        },
+        "effect": {
+          "$ref": "#/$defs/effect"
+        },
+        "fill": {
+          "type": "string"
+        },
+        "stroke": {
+          "type": "string"
+        }
+      }
+    },
+    "motion": {
+      "type": "object",
+      "properties": {
+        "profile": {
+          "enum": [
+            "off",
+            "subtle",
+            "normal",
+            "expressive",
+            "teaching",
+            "runtime-loop",
+            "showcase-v1"
+          ]
+        },
+        "sequence": {
+          "enum": [
+            "simultaneous",
+            "step-stagger",
+            "layered",
+            "staged",
+            "loop"
+          ]
+        },
+        "ease": {
+          "enum": [
+            "linear",
+            "calm",
+            "snappy",
+            "back-out",
+            "elastic",
+            "spring"
+          ]
+        },
+        "stagger": {
+          "type": "number",
+          "minimum": 0
+        },
+        "duration_scale": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "intensity": {
+          "type": "number",
+          "minimum": 0
+        },
+        "node": {
+          "$ref": "#/$defs/motion_channel"
+        },
+        "edge": {
+          "$ref": "#/$defs/motion_channel"
+        },
+        "group": {
+          "$ref": "#/$defs/motion_channel"
+        },
+        "title": {
+          "$ref": "#/$defs/motion_channel"
+        },
+        "reduced_motion": {
+          "enum": [
+            "static",
+            "subtle",
+            "pause"
+          ]
+        }
+      }
+    },
+    "motion_policy": {
+      "type": "object",
+      "properties": {
+        "profile": {
+          "enum": [
+            "unrestricted",
+            "readable",
+            "focused",
+            "expressive",
+            "readable-runtime"
+          ]
+        },
+        "motion_area": {
+          "enum": [
+            "auto",
+            "micro",
+            "small",
+            "medium",
+            "unrestricted"
+          ]
+        },
+        "max_active_flow_edges": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_particle_edges": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "particle_count_per_edge": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "flow_trail_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_active_pulse_nodes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pulse_mode": {
+          "enum": [
+            "all",
+            "rotate"
+          ]
+        },
+        "max_scanning_groups": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "resolution_source": {
+      "enum": [
+        "explicit",
+        "default",
+        "model",
+        "fallback",
+        "legacy"
+      ]
+    },
+    "resolved_axis": {
+      "type": "object",
+      "required": [
+        "value",
+        "source"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "$ref": "#/$defs/resolution_source"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        }
+      }
+    },
+    "resolved_presentation": {
+      "type": "object",
+      "required": [
+        "icon_system",
+        "style",
+        "layout",
+        "motion"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "icon_system": {
+          "$ref": "#/$defs/resolved_axis"
+        },
+        "style": {
+          "$ref": "#/$defs/resolved_axis"
+        },
+        "layout": {
+          "$ref": "#/$defs/resolved_axis"
+        },
+        "motion": {
+          "$ref": "#/$defs/resolved_axis"
+        }
+      }
+    }
+  }
+}

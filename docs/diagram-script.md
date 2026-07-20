@@ -3,6 +3,15 @@
 AniDiagram accepts DiagramScript JSON and compiles it into a typed Scene IR
 before rendering or exporting.
 
+## Composition contract
+
+DiagramScript v0.4 implements the independent icon system, visual style,
+layout, and motion contract. DiagramScript v0.1-v0.3 remain supported and keep
+their previous default behavior; v0.3 is not silently changed.
+
+See [the composition contract](./diagram-composition-contract.md) and
+[ADR-001](./decisions/ADR-001-separate-semantic-content-from-presentation.md).
+
 ## v0.1
 
 `0.1` is the compatibility schema. It supports:
@@ -57,6 +66,23 @@ requirements, and canvas bounds.
 
 Schema: `schemas/diagram-script-v0.3.schema.json`.
 
+## v0.4
+
+`0.4` adds `composition-v1` output fields:
+
+- top-level `icon_system`, independent from the style profile;
+- `composition_policy: "composition-v1"`;
+- `resolved_presentation`, recording the concrete icon, style, layout, and
+  motion values plus `explicit`, `default`, `model`, `fallback`, or `legacy`
+  provenance; icon systems such as `illustrated` MAY also record a separate
+  semantic version;
+- `showcase-v1`, which enables every eligible Diagram Core icon performance,
+  data-flow edge, group treatment, and title entry while preserving rest poses
+  and reduced-motion behavior;
+- the approved 56-icon `diagram-core-v1` catalog as the v0.4 default.
+
+Schema: `schemas/diagram-script-v0.4.schema.json`.
+
 Structured effect object example:
 
 ```json
@@ -66,7 +92,7 @@ Structured effect object example:
 }
 ```
 
-Supported semantic icons:
+Legacy v0.3 semantic icons:
 
 `database`, `file`, `folder`, `api`, `cloud`, `search`, `shield`, `agent`,
 `token`, `memory`, `tool`, `output`.
@@ -76,8 +102,9 @@ Supported node shapes:
 - `rect`: default rounded rectangle node.
 - `decision`: diamond-shaped decision node for branches and quality gates.
 
-DiagramPlan v0.1 is the higher-level brief/LLM contract that can compile into
-freeform DiagramScript v0.3. See
+DiagramPlan v0.2 is the default higher-level brief/LLM contract and compiles to
+resolved DiagramScript v0.4. DiagramPlan v0.1 remains available for explicit
+legacy `explainer-board` output to v0.3. See
 [prompt-to-diagram-flow.md](./prompt-to-diagram-flow.md).
 
 ## Motion Profiles
@@ -235,20 +262,40 @@ current limitations.
 
 ## Illustrated character icons
 
-`illustrated-character-v1` is the default icon system when a style omits
-`icon_system`. It clean-room covers all 13 schema icons: `agent`, `operator`,
+`illustrated-character-v1` remains the legacy v0.1-v0.3 default when a style
+omits `icon_system`. It clean-room covers all 13 legacy schema icons: `agent`, `operator`,
 `search`, `tool`, `api`, `memory`, `output`, `file`, `folder`, `cloud`,
 `shield`, `token`, and `database`. Set `icon_system` explicitly to
 `illustrated-v1` for the previous bubble treatment or `semantic-line-v1` for
 the original line-icon system.
 
-`illustrated-character-v2` is an explicit experimental system for static visual
-review. Its Draft B concept slice covers `agent`, `operator`, `tool`, and
-`output` as structured semantic illustrations without anthropomorphic objects.
-It is not the default and does not emit runtime icon performances yet;
-uncovered icons use the existing fallback and produce a quality warning. Review
+`illustrated` is the public id for the approved static Illustrated system. Its
+current implementation version is `2.3.0`, recorded separately in
+`resolved_presentation.icon_system.version`. It covers `agent`, `operator`,
+`tool`, `output`, `database`, `api`, `search`, `memory`, `file`, `folder`,
+`cloud`, `shield`, `user`, `server`, `ai-model`, and `message-queue` as
+structured semantic illustrations. It is not the default. All sixteen icons
+emit approved public `illustrated-performance-v4` runtime performances under
+`showcase-v1`. `illustrated-performance-v4-review` is the immutable archived
+human-review source and is not emitted by new diagrams. The former
+`illustrated-performance-v3` public contract and
+`illustrated-performance-v3-review` review contract remain 2.2.0 archives, and
+`illustrated-performance-v2` remains the immutable eight-icon 2.1.0 archive.
+Uncovered icons use the existing fallback and produce a quality
+warning. The legacy id
+`illustrated-character-v2` remains an input alias. Review
 [`illustrated-semantic-v2-structured.diagram.json`](../examples/illustrated-semantic-v2-structured.diagram.json)
 with the `illustrated-semantic-v2-structured` style before adopting the direction.
+
+Illustrated 2.3.0 visual constants live in
+[`assets/illustrated/tokens-2.3.0.json`](../assets/illustrated/tokens-2.3.0.json). A style
+can explicitly override approved colors with an `illustrated_tokens` object,
+for example `{"ink": "#172033", "paper": "#fffaf0"}`. The renderer rejects
+unknown token names and non-hex values. Geometry, paths, part ids, and semantic
+roles are not template-owned and remain frozen within version 2.3.0.
+The public `deep-tech` style contains the first approved Illustrated token
+mapping. It preserves separate violet, cyan, teal, green, amber, and coral
+semantic accents instead of applying one monochrome tint.
 
 The 13 quiet semantic performances are `brain-think-pulse-v1`,
 `operator-type-focus-v1`, `search-scout-find-v1`, `tool-kit-action-v1`,

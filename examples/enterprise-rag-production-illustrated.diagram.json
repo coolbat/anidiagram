@@ -1,0 +1,520 @@
+{
+  "version": "0.4",
+  "composition_policy": "composition-v1",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "explicit",
+      "version": "2.2.0"
+    },
+    "style": {
+      "value": "minimal-light",
+      "source": "model"
+    },
+    "layout": {
+      "value": "layered",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "explicit"
+    }
+  },
+  "icon_system": "illustrated",
+  "preset": "layered",
+  "canvas": {
+    "width": 1900,
+    "height": 1060
+  },
+  "style": "minimal-light",
+  "title": {
+    "text": "Enterprise RAG Production Architecture",
+    "subtitle": "Curated ingestion → policy-scoped retrieval → agent grounding → cited response"
+  },
+  "motion": {
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "ease": "spring",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 1.0,
+    "edge": {
+      "preset": "flow-arrow"
+    },
+    "node": {
+      "preset": "icon-performance"
+    },
+    "group": {
+      "preset": "border-scan"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "subtle"
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  },
+  "groups": [
+    {
+      "id": "knowledge-ingestion-plane",
+      "label": "Knowledge Ingestion Plane",
+      "bounds": [
+        38,
+        180,
+        1794,
+        292
+      ],
+      "role": "neutral",
+      "effect": {
+        "preset": "border-scan"
+      }
+    },
+    {
+      "id": "governed-rag-runtime",
+      "label": "Governed RAG Runtime",
+      "bounds": [
+        38,
+        510,
+        1794,
+        505
+      ],
+      "role": "neutral",
+      "effect": {
+        "preset": "border-scan"
+      }
+    }
+  ],
+  "nodes": [
+    {
+      "id": "knowledge-owner",
+      "label": "Knowledge Owner",
+      "caption": "Curates approved enterprise content",
+      "position": [
+        70,
+        245
+      ],
+      "size": [
+        230,
+        128
+      ],
+      "role": "actor",
+      "icon": "operator",
+      "effect": {
+        "preset": "icon-performance"
+      },
+      "radius": 26,
+      "stroke_width": 2.35
+    },
+    {
+      "id": "source-files",
+      "label": "Source Files",
+      "caption": "Policies, manuals, and records",
+      "position": [
+        370,
+        245
+      ],
+      "size": [
+        230,
+        128
+      ],
+      "role": "source",
+      "icon": "file",
+      "effect": {
+        "preset": "icon-performance"
+      },
+      "radius": 26,
+      "stroke_width": 2.35
+    },
+    {
+      "id": "document-library",
+      "label": "Document Library",
+      "caption": "Organized and versioned corpus",
+      "position": [
+        670,
+        245
+      ],
+      "size": [
+        230,
+        128
+      ],
+      "role": "source",
+      "icon": "folder",
+      "effect": {
+        "preset": "icon-performance"
+      },
+      "radius": 26,
+      "stroke_width": 2.35
+    },
+    {
+      "id": "cloud-intake",
+      "label": "Cloud Intake",
+      "caption": "Synchronizes approved content",
+      "position": [
+        970,
+        245
+      ],
+      "size": [
+        230,
+        128
+      ],
+      "role": "process",
+      "icon": "cloud",
+      "effect": {
+        "preset": "icon-performance"
+      },
+      "radius": 26,
+      "stroke_width": 2.35
+    },
+    {
+      "id": "ingestion-toolchain",
+      "label": "Ingestion Toolchain",
+      "caption": "Parses, chunks, and embeds",
+      "position": [
+        1270,
+        245
+      ],
+      "size": [
+        230,
+        128
+      ],
+      "role": "tool",
+      "icon": "tool",
+      "effect": {
+        "preset": "icon-performance"
+      },
+      "radius": 26,
+      "stroke_width": 2.35
+    },
+    {
+      "id": "vector-database",
+      "label": "Vector Database",
+      "caption": "Stores searchable knowledge vectors",
+      "position": [
+        1570,
+        245
+      ],
+      "size": [
+        230,
+        128
+      ],
+      "role": "memory",
+      "icon": "database",
+      "effect": {
+        "preset": "icon-performance"
+      },
+      "radius": 26,
+      "stroke_width": 2.35
+    },
+    {
+      "id": "rag-api",
+      "label": "RAG API",
+      "caption": "Receives application queries",
+      "position": [
+        70,
+        715
+      ],
+      "size": [
+        230,
+        128
+      ],
+      "role": "source",
+      "icon": "api",
+      "effect": {
+        "preset": "icon-performance"
+      },
+      "radius": 26,
+      "stroke_width": 2.35
+    },
+    {
+      "id": "policy-guard",
+      "label": "Policy Guard",
+      "caption": "Authenticates and scopes access",
+      "position": [
+        370,
+        715
+      ],
+      "size": [
+        230,
+        128
+      ],
+      "role": "risk",
+      "icon": "shield",
+      "effect": {
+        "preset": "icon-performance"
+      },
+      "radius": 26,
+      "stroke_width": 2.35
+    },
+    {
+      "id": "rag-agent",
+      "label": "RAG Agent",
+      "caption": "Plans retrieval and grounds answers",
+      "position": [
+        720,
+        715
+      ],
+      "size": [
+        230,
+        128
+      ],
+      "role": "agent",
+      "icon": "agent",
+      "effect": {
+        "preset": "icon-performance"
+      },
+      "radius": 26,
+      "stroke_width": 2.35
+    },
+    {
+      "id": "retriever",
+      "label": "Semantic Retriever",
+      "caption": "Finds the most relevant evidence",
+      "position": [
+        1080,
+        545
+      ],
+      "size": [
+        230,
+        128
+      ],
+      "role": "tool",
+      "icon": "search",
+      "effect": {
+        "preset": "icon-performance"
+      },
+      "radius": 26,
+      "stroke_width": 2.35
+    },
+    {
+      "id": "conversation-memory",
+      "label": "Conversation Memory",
+      "caption": "Maintains authorized session context",
+      "position": [
+        1080,
+        855
+      ],
+      "size": [
+        230,
+        128
+      ],
+      "role": "memory",
+      "icon": "memory",
+      "effect": {
+        "preset": "icon-performance"
+      },
+      "radius": 26,
+      "stroke_width": 2.35
+    },
+    {
+      "id": "grounded-answer",
+      "label": "Grounded Answer",
+      "caption": "Returns a cited, policy-safe response",
+      "position": [
+        1570,
+        715
+      ],
+      "size": [
+        230,
+        128
+      ],
+      "role": "output",
+      "icon": "output",
+      "effect": {
+        "preset": "icon-performance"
+      },
+      "radius": 26,
+      "stroke_width": 2.35
+    }
+  ],
+  "edges": [
+    {
+      "from": "knowledge-owner",
+      "to": "source-files",
+      "label": "upload",
+      "role": "actor",
+      "direction": "forward",
+      "route": "straight",
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "particle_count": 1,
+        "trail_count": 1
+      }
+    },
+    {
+      "from": "source-files",
+      "to": "document-library",
+      "label": "organize",
+      "role": "source",
+      "direction": "forward",
+      "route": "straight",
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "particle_count": 1,
+        "trail_count": 1
+      }
+    },
+    {
+      "from": "document-library",
+      "to": "cloud-intake",
+      "label": "sync",
+      "role": "source",
+      "direction": "forward",
+      "route": "straight",
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "particle_count": 1,
+        "trail_count": 1
+      }
+    },
+    {
+      "from": "cloud-intake",
+      "to": "ingestion-toolchain",
+      "label": "parse + embed",
+      "role": "tool",
+      "direction": "forward",
+      "route": "straight",
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "particle_count": 1,
+        "trail_count": 1
+      }
+    },
+    {
+      "from": "ingestion-toolchain",
+      "to": "vector-database",
+      "label": "index",
+      "role": "memory",
+      "direction": "forward",
+      "route": "straight",
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "particle_count": 1,
+        "trail_count": 1
+      }
+    },
+    {
+      "from": "rag-api",
+      "to": "policy-guard",
+      "label": "query + identity",
+      "role": "source",
+      "direction": "forward",
+      "route": "straight",
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "particle_count": 1,
+        "trail_count": 1
+      }
+    },
+    {
+      "from": "policy-guard",
+      "to": "rag-agent",
+      "label": "authorized scope",
+      "role": "risk",
+      "direction": "forward",
+      "route": "straight",
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "particle_count": 1,
+        "trail_count": 1
+      }
+    },
+    {
+      "from": "rag-agent",
+      "to": "retriever",
+      "label": "retrieve",
+      "role": "agent",
+      "direction": "forward",
+      "route": "straight",
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "particle_count": 1,
+        "trail_count": 1
+      }
+    },
+    {
+      "from": "retriever",
+      "to": "vector-database",
+      "label": "semantic query",
+      "role": "memory",
+      "direction": "forward",
+      "route": "straight",
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "particle_count": 1,
+        "trail_count": 1
+      }
+    },
+    {
+      "from": "vector-database",
+      "to": "rag-agent",
+      "label": "ranked evidence",
+      "role": "output",
+      "direction": "forward",
+      "route": "points",
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "particle_count": 1,
+        "trail_count": 1
+      },
+      "points": [
+        [
+          1685,
+          373
+        ],
+        [
+          1685,
+          485
+        ],
+        [
+          835,
+          485
+        ],
+        [
+          835,
+          715
+        ]
+      ]
+    },
+    {
+      "from": "rag-agent",
+      "to": "conversation-memory",
+      "label": "read / write context",
+      "role": "memory",
+      "direction": "bidirectional",
+      "route": "straight",
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "particle_count": 1,
+        "trail_count": 1
+      }
+    },
+    {
+      "from": "rag-agent",
+      "to": "grounded-answer",
+      "label": "cited response",
+      "role": "output",
+      "direction": "forward",
+      "route": "straight",
+      "effect": {
+        "preset": "flow-arrow",
+        "particle": "soft-arrow",
+        "particle_count": 1,
+        "trail_count": 1
+      }
+    }
+  ]
+}

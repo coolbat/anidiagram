@@ -1,0 +1,18 @@
+{
+  "id": "branch",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "development-delivery",
+  "semantic_kind": "branch",
+  "structural_prototype": "forked-commit-line",
+  "parts": ["body", "main-line", "branch-line", "commit-a", "commit-b", "commit-c", "indicator"],
+  "attachments": {
+    "receive": {"x": 9, "y": 48},
+    "send": {"x": 87, "y": 48},
+    "status": {"x": 72, "y": 69}
+  },
+  "states": [],
+  "actions": ["receive", "fork", "advance", "send"],
+  "status": "approved"
+}
