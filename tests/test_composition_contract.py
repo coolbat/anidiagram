@@ -34,6 +34,14 @@ class CompositionContractTest(unittest.TestCase):
         self.assertEqual("showcase-v1", spec["motion"]["profile"])
         self.assertEqual(
             {
+                "profile": "unrestricted",
+                "motion_area": "unrestricted",
+                "pulse_mode": "all",
+            },
+            spec["motion_policy"],
+        )
+        self.assertEqual(
+            {
                 "icon_system": {"value": "diagram-core-v1", "source": "default"},
                 "style": {"value": "minimal-light", "source": "fallback"},
                 "layout": {"value": "layered", "source": "fallback"},
@@ -50,6 +58,9 @@ class CompositionContractTest(unittest.TestCase):
         self.assertEqual("diagram-core-v1", scene.icon_system)
         self.assertEqual("showcase-v1", scene.motion.profile)
         self.assertEqual("layered", scene.preset)
+        self.assertEqual("unrestricted", scene.motion_policy.profile)
+        self.assertEqual("unrestricted", scene.motion_policy.motion_area)
+        self.assertEqual("all", scene.motion_policy.pulse_mode)
 
         svg = render_svg(scene, load_style())
         self.assertIn('data-icon-system="diagram-core-v1"', svg)
@@ -133,6 +144,44 @@ class CompositionContractTest(unittest.TestCase):
 
         self.assertEqual({"value": "deep-tech", "source": "model"}, spec["resolved_presentation"]["style"])
         self.assertEqual({"value": "pipeline", "source": "model"}, spec["resolved_presentation"]["layout"])
+
+    def test_v02_true_presentation_omission_uses_composition_defaults(self):
+        plan = self._plan()
+        plan["presentation"] = {}
+
+        spec = compile_plan(plan)
+
+        self.assertEqual(
+            {
+                "icon_system": {"value": "diagram-core-v1", "source": "default"},
+                "style": {"value": "minimal-light", "source": "fallback"},
+                "layout": {"value": "layered", "source": "fallback"},
+                "motion": {"value": "showcase-v1", "source": "default"},
+            },
+            spec["resolved_presentation"],
+        )
+        self.assertEqual("showcase-v1", spec["motion"]["profile"])
+        self.assertEqual("unrestricted", spec["motion_policy"]["profile"])
+
+    def test_direct_v04_omission_retains_manual_authoring_compatibility_defaults(self):
+        scene = compile_scene(
+            {
+                "version": "0.4",
+                "nodes": [
+                    {
+                        "id": "agent",
+                        "position": [40, 40],
+                        "size": [180, 96],
+                        "icon": "agent",
+                    }
+                ],
+            }
+        )
+
+        self.assertIsNone(scene.composition_policy)
+        self.assertEqual("diagram-core-v1", scene.icon_system)
+        self.assertEqual("expressive", scene.motion.profile)
+        self.assertEqual("unrestricted", scene.motion_policy.profile)
 
     def test_v02_rejects_dangling_semantic_relation(self):
         plan = self._plan()

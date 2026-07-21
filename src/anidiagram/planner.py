@@ -185,31 +185,144 @@ def _brief_to_plan_v01(brief: str, title: str = "", style: str = "sketch-board")
 
 
 def _brief_to_plan_v02(brief: str, title: str = "", style: Optional[str] = None) -> PlanDict:
-    legacy = _brief_to_plan_v01(brief, title=title, style=style or "sketch-board")
-    legacy_spec = compile_plan(legacy)
-    entities = []
-    for node in legacy_spec["nodes"]:
-        entity = {
-            "id": str(node["id"]),
-            "label": str(node.get("label") or node["id"]),
-            "description": str(node.get("caption") or ""),
-            "kind": _semantic_kind(str(node.get("icon") or node.get("role") or "component")),
-            "role": str(node.get("role") or "neutral"),
-            "importance": "primary" if node.get("step") is not None else "supporting",
+    """Extract a native semantic v0.2 plan without routing through v0.1 geometry."""
+
+    cleaned = " ".join(brief.split())
+    keywords = _keywords(cleaned)
+    plan_title = title or _title_from_brief(cleaned, keywords)
+    summary = _source_summary(cleaned)
+    has_memory = _contains(cleaned, ("memory", "context", "remember", "knowledge", "notes"))
+    has_tools = _contains(cleaned, ("tool", "api", "browser", "search", "call", "execute"))
+    has_safety = _contains(cleaned, ("safe", "guard", "policy", "risk", "validate", "budget", "constraint"))
+    has_loop = _contains(cleaned, ("loop", "iterate", "feedback", "retry", "observe", "reflect"))
+
+    entities: List[Dict[str, Any]] = [
+        {
+            "id": "request",
+            "label": "Request",
+            "description": _caption("input brief", keywords, 0),
+            "kind": "http-request",
+            "role": "source",
+            "importance": "primary",
+            "state": {"phase": "received"},
+            "source_refs": ["input-brief"],
+        },
+        {
+            "id": "agent",
+            "label": "Agent",
+            "description": _caption("reason and coordinate", keywords, 1),
+            "kind": "agent",
+            "role": "agent",
+            "importance": "primary",
+            "state": {"phase": "active", "result": "pending"},
+            "source_refs": ["input-brief"],
+        },
+    ]
+    if has_memory:
+        entities.append(
+            {
+                "id": "memory",
+                "label": "Memory",
+                "description": "read and update working context",
+                "kind": "memory",
+                "role": "memory",
+                "importance": "supporting",
+                "source_refs": ["input-brief"],
+            }
+        )
+    if has_tools:
+        entities.append(
+            {
+                "id": "tool",
+                "label": "Tool",
+                "description": _caption("execute external action", keywords, 2),
+                "kind": "search" if _contains(cleaned, ("search", "browser")) else "tool",
+                "role": "tool",
+                "importance": "primary",
+                "source_refs": ["input-brief"],
+            }
+        )
+    if has_safety:
+        entities.append(
+            {
+                "id": "guardrail",
+                "label": "Guardrail",
+                "description": "validate policy and constraints",
+                "kind": "shield",
+                "role": "risk",
+                "importance": "supporting",
+                "source_refs": ["input-brief"],
+            }
+        )
+    entities.append(
+        {
+            "id": "output",
+            "label": "Verified output",
+            "description": "deliver the checked result",
+            "kind": "output",
+            "role": "output",
+            "importance": "primary",
+            "state": {"result": "verified"},
             "source_refs": ["input-brief"],
         }
-        entities.append(entity)
-    relations = []
-    for index, edge in enumerate(legacy_spec["edges"]):
+    )
+
+    relations: List[Dict[str, Any]] = []
+
+    def add_relation(relation_id: str, source: str, target: str, kind: str, label: str, importance: str) -> str:
         relations.append(
             {
-                "id": f"relation-{index + 1}",
-                "from": str(edge["from"]),
-                "to": str(edge["to"]),
-                "kind": "feedback" if str(edge.get("label") or "").lower().startswith("no") else "data-flow",
-                "label": str(edge.get("label") or ""),
+                "id": relation_id,
+                "from": source,
+                "to": target,
+                "kind": kind,
+                "label": label,
                 "direction": "forward",
-                "importance": "primary" if edge.get("effect", {}).get("preset") == "flow-arrow" else "supporting",
+                "importance": importance,
+                "source_refs": ["input-brief"],
+            }
+        )
+        return relation_id
+
+    primary_relations = [add_relation("request-agent", "request", "agent", "request", "request", "primary")]
+    if has_memory:
+        primary_relations.extend(
+            [
+                add_relation("agent-memory", "agent", "memory", "context-read", "read context", "supporting"),
+                add_relation("memory-agent", "memory", "agent", "context-return", "context", "supporting"),
+            ]
+        )
+    previous = "agent"
+    if has_tools:
+        primary_relations.append(add_relation("agent-tool", "agent", "tool", "tool-call", "dispatch", "primary"))
+        previous = "tool"
+    if has_safety:
+        primary_relations.append(
+            add_relation("result-guardrail", previous, "guardrail", "validation", "validate", "supporting")
+        )
+        previous = "guardrail"
+    primary_relations.append(add_relation("result-output", previous, "output", "result", "verified result", "primary"))
+
+    flows: List[Dict[str, Any]] = [
+        {
+            "id": "primary-flow",
+            "label": "Primary request flow",
+            "description": "Ordered execution extracted directly from the brief.",
+            "relation_ids": primary_relations,
+            "importance": "primary",
+            "repeat": "event-driven",
+            "source_refs": ["input-brief"],
+        }
+    ]
+    if has_loop:
+        feedback_relation = add_relation("output-feedback", "output", "agent", "feedback", "retry", "supporting")
+        flows.append(
+            {
+                "id": "feedback-loop",
+                "label": "Feedback loop",
+                "relation_ids": [feedback_relation],
+                "importance": "supporting",
+                "repeat": "loop",
                 "source_refs": ["input-brief"],
             }
         )
@@ -222,17 +335,27 @@ def _brief_to_plan_v02(brief: str, title: str = "", style: Optional[str] = None)
     return {
         "version": "0.2",
         "semantic": {
-            "title": str(legacy["title"]),
+            "title": plan_title,
             "subtitle": "Semantic-first brief compiled with composition-v1.",
-            "summary": str(legacy.get("source_summary") or ""),
+            "summary": summary,
             "intent": {
-                "diagram_kind": "architecture",
-                "primary_question": str(legacy.get("source_summary") or legacy["title"]),
+                "diagram_kind": "workflow",
+                "primary_question": summary or plan_title,
                 "audience": ["technical"],
+                "scope": "Entities, relations, state, and execution flows stated or implied by the brief.",
+                "exclusions": [],
             },
             "entities": entities,
             "relations": relations,
-            "sources": [{"id": "input-brief", "type": "brief", "title": "Input brief"}],
+            "flows": flows,
+            "sources": [
+                {
+                    "id": "input-brief",
+                    "type": "brief",
+                    "title": "Input brief",
+                    "note": summary,
+                }
+            ],
         },
         "presentation": presentation,
     }

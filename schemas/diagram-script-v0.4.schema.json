@@ -7,12 +7,41 @@
     "version",
     "nodes"
   ],
+  "allOf": [
+    {
+      "if": {
+        "required": ["composition_policy"],
+        "properties": {"composition_policy": {"const": "composition-v1"}}
+      },
+      "then": {
+        "required": ["icon_system", "style", "motion", "resolved_presentation"]
+      }
+    }
+  ],
   "properties": {
     "version": {
       "const": "0.4"
     },
     "preset": {
       "type": "string"
+    },
+    "layout": {
+      "enum": [
+        "pipeline",
+        "loop",
+        "hub-spoke",
+        "layered",
+        "swimlane",
+        "compare",
+        "matrix",
+        "timeline",
+        "stack",
+        "funnel",
+        "sequence",
+        "er",
+        "network",
+        "agent-memory"
+      ]
     },
     "motion": {
       "$ref": "#/$defs/motion"
@@ -96,6 +125,23 @@
         "risk",
         "neutral"
       ]
+    },
+    "semantic_kind": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "importance": {
+      "enum": ["primary", "supporting", "context"]
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "phase": {"type": "string", "minLength": 1},
+        "result": {"type": "string", "minLength": 1},
+        "availability": {"type": "string", "minLength": 1}
+      }
     },
     "route": {
       "enum": [
@@ -294,6 +340,18 @@
         "icon": {
           "$ref": "#/$defs/icon"
         },
+        "semantic_kind": {
+          "$ref": "#/$defs/semantic_kind"
+        },
+        "icon_resolution": {
+          "enum": ["exact", "alias", "role-fallback"]
+        },
+        "importance": {
+          "$ref": "#/$defs/importance"
+        },
+        "state": {
+          "$ref": "#/$defs/state"
+        },
         "effect": {
           "$ref": "#/$defs/effect"
         },
@@ -377,6 +435,32 @@
         },
         "stroke": {
           "type": "string"
+        },
+        "semantic_relation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "semantic_kind": {
+          "$ref": "#/$defs/semantic_kind"
+        },
+        "importance": {
+          "$ref": "#/$defs/importance"
+        },
+        "condition": {
+          "type": "string"
+        },
+        "protocol": {
+          "type": "string"
+        },
+        "flow_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "flow_importance": {
+          "$ref": "#/$defs/importance"
+        },
+        "flow_repeat": {
+          "enum": ["once", "loop", "event-driven"]
         }
       }
     },
@@ -407,6 +491,15 @@
           "type": "string"
         },
         "stroke": {
+          "type": "string"
+        },
+        "semantic_kind": {
+          "$ref": "#/$defs/semantic_kind"
+        },
+        "importance": {
+          "$ref": "#/$defs/importance"
+        },
+        "parent": {
           "type": "string"
         }
       }
@@ -571,16 +664,62 @@
       "additionalProperties": false,
       "properties": {
         "icon_system": {
-          "$ref": "#/$defs/resolved_axis"
+          "allOf": [
+            {"$ref": "#/$defs/resolved_axis"},
+            {
+              "properties": {
+                "value": {
+                  "enum": [
+                    "diagram-core-v1", "illustrated", "illustrated-character-v1",
+                    "illustrated-character-v2", "illustrated-v1", "semantic-line-v1"
+                  ]
+                }
+              }
+            }
+          ]
         },
         "style": {
-          "$ref": "#/$defs/resolved_axis"
+          "allOf": [
+            {"$ref": "#/$defs/resolved_axis"},
+            {
+              "properties": {
+                "value": {
+                  "enum": [
+                    "minimal-light", "deep-tech", "blueprint", "flat-icon", "dark-terminal",
+                    "notion-clean", "glassmorphism", "claude-warm", "openai-minimal", "dark-luxury",
+                    "aurora-orb", "illustrated-semantic", "sketch-board"
+                  ]
+                }
+              }
+            }
+          ]
         },
         "layout": {
-          "$ref": "#/$defs/resolved_axis"
+          "allOf": [
+            {"$ref": "#/$defs/resolved_axis"},
+            {
+              "properties": {
+                "value": {
+                  "enum": [
+                    "pipeline", "loop", "hub-spoke", "layered", "swimlane", "compare", "matrix",
+                    "timeline", "stack", "funnel", "sequence", "er", "network", "agent-memory"
+                  ]
+                }
+              }
+            }
+          ]
         },
         "motion": {
-          "$ref": "#/$defs/resolved_axis"
+          "allOf": [
+            {"$ref": "#/$defs/resolved_axis"},
+            {
+              "properties": {
+                "value": {
+                  "enum": ["off", "subtle", "normal", "expressive", "teaching", "runtime-loop", "showcase-v1"]
+                }
+              }
+            }
+          ]
         }
       }
     }

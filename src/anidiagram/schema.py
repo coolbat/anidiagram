@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 import math
+import re
 from dataclasses import dataclass
 from typing import Any, Dict, Iterable, List, Optional, Set
 
-from .composition import DIAGRAM_CORE_ICONS, ICON_SYSTEMS
+from .composition import DIAGRAM_CORE_ICONS, ICON_SYSTEMS, LAYOUTS, MOTIONS, STYLES
 from .icon_system import canonical_icon_system_id, icon_system_version
 from .illustrated_registry import illustrated_icon_ids
 from .model import Bounds, Canvas, Edge, EffectConfig, Group, Motion, MotionPolicy, Node, Point, Scene, SceneMotion, Style, Title
@@ -69,6 +70,11 @@ KNOWN_NODE_SHAPES = {"rect", "decision"}
 KNOWN_MOTION_POLICY_PROFILES = {"unrestricted", "readable", "focused", "expressive", "readable-runtime"}
 KNOWN_PULSE_MODES = {"all", "rotate"}
 KNOWN_MOTION_AREAS = {"auto", "micro", "small", "medium", "unrestricted"}
+KNOWN_ICON_RESOLUTIONS = {"exact", "alias", "role-fallback"}
+KNOWN_IMPORTANCE = {"primary", "supporting", "context"}
+KNOWN_FLOW_REPEAT = {"once", "loop", "event-driven"}
+KNOWN_RESOLUTION_SOURCES = {"explicit", "model", "default", "fallback", "legacy"}
+SEMANTIC_KIND_PATTERN = re.compile(r"^[a-z][a-z0-9-]*$")
 
 
 @dataclass(frozen=True)
@@ -129,11 +135,28 @@ def compile_scene(data: Dict[str, Any]) -> Scene:
     )
     icon_system = canonical_icon_system_id(raw_icon_system) if raw_icon_system is not None else None
     composition_policy = _string(data, "composition_policy", "$.composition_policy", issues, required=False)
+    if composition_policy is not None and composition_policy != "composition-v1":
+        issues.append(
+            ValidationIssue(
+                "$.composition_policy",
+                "expected 'composition-v1'",
+                "enum",
+            )
+        )
+    if composition_policy == "composition-v1":
+        for required_field in ("icon_system", "style", "motion", "resolved_presentation"):
+            if required_field not in data:
+                issues.append(
+                    ValidationIssue(
+                        f"$.{required_field}",
+                        "is required for composition-v1",
+                        "required",
+                    )
+                )
     resolved_presentation = data.get("resolved_presentation", {})
     if not isinstance(resolved_presentation, dict):
         issues.append(ValidationIssue("$.resolved_presentation", "expected an object", "type"))
         resolved_presentation = {}
-    _validate_resolved_icon_system(resolved_presentation, icon_system, issues)
     motion = _parse_scene_motion(data.get("motion", {}), "$.motion", issues)
     motion_policy = _parse_motion_policy(data.get("motion_policy"), "$.motion_policy", issues)
     groups = _parse_groups(data.get("groups", []), "$.groups", issues, canvas)
@@ -142,6 +165,16 @@ def compile_scene(data: Dict[str, Any]) -> Scene:
     node_ids = {node.node_id for node in nodes}
     edges = _parse_edges(data.get("edges", []), "$.edges", node_ids, issues)
     preset = _string(data, "preset", "$.preset", issues, required=False)
+    layout = _optional_enum(data, "layout", "$.layout", LAYOUTS, issues)
+    _validate_resolved_presentation(
+        resolved_presentation,
+        icon_system=icon_system,
+        style=style.name,
+        layout=layout,
+        motion=motion.profile,
+        composition_policy=composition_policy,
+        issues=issues,
+    )
 
     if issues:
         raise DiagramScriptValidationError(issues)
@@ -160,6 +193,7 @@ def compile_scene(data: Dict[str, Any]) -> Scene:
         motion=motion,
         motion_policy=motion_policy,
         preset=preset,
+        layout=layout,
     )
 
 
@@ -173,34 +207,99 @@ def validate_scene(data: Dict[str, Any]) -> Dict[str, Any]:
     return {"ok": True, "schema": {"name": "DiagramScript", "version": scene.version}, "stats": scene.stats()}
 
 
-def _validate_resolved_icon_system(
-    resolved: Dict[str, Any], icon_system: Optional[str], issues: List[ValidationIssue]
+def _validate_resolved_presentation(
+    resolved: Dict[str, Any],
+    *,
+    icon_system: Optional[str],
+    style: Optional[str],
+    layout: Optional[str],
+    motion: str,
+    composition_policy: Optional[str],
+    issues: List[ValidationIssue],
 ) -> None:
+    required = composition_policy == "composition-v1"
+    actual = {
+        "icon_system": icon_system,
+        "style": style,
+        "layout": layout,
+        "motion": motion,
+    }
+    allowed_values = {
+        "icon_system": ICON_SYSTEMS,
+        "style": STYLES,
+        "layout": LAYOUTS,
+        "motion": MOTIONS,
+    }
+    for name, actual_value in actual.items():
+        path = f"$.resolved_presentation.{name}"
+        axis = resolved.get(name)
+        if axis is None:
+            if required:
+                issues.append(ValidationIssue(path, "is required for composition-v1", "required"))
+            continue
+        if not isinstance(axis, dict):
+            issues.append(ValidationIssue(path, "expected an object", "type"))
+            continue
+        unknown = sorted(set(axis) - {"value", "source", "version"})
+        for field in unknown:
+            issues.append(
+                ValidationIssue(
+                    f"{path}.{field}",
+                    "unsupported resolved axis field",
+                    "additional_property",
+                )
+            )
+        value = axis.get("value")
+        source = axis.get("source")
+        if not isinstance(value, str) or not value:
+            issues.append(ValidationIssue(f"{path}.value", "expected a non-empty string", "type"))
+        else:
+            resolved_value = canonical_icon_system_id(value) if name == "icon_system" else value
+            canonical_allowed = (
+                {canonical_icon_system_id(item) for item in allowed_values[name]}
+                if name == "icon_system"
+                else allowed_values[name]
+            )
+            if resolved_value not in canonical_allowed:
+                issues.append(ValidationIssue(f"{path}.value", "is not a registered presentation value", "enum"))
+            if actual_value is None and name != "layout":
+                issues.append(
+                    ValidationIssue(
+                        f"{path}.value",
+                        f"cannot be resolved without $.{name}",
+                        "inconsistent_presentation",
+                    )
+                )
+            elif actual_value is not None and resolved_value != actual_value:
+                target = f"$.{name}"
+                issues.append(
+                    ValidationIssue(
+                        f"{path}.value",
+                        f"must match {target}",
+                        "inconsistent_presentation",
+                    )
+                )
+        if source not in KNOWN_RESOLUTION_SOURCES:
+            issues.append(
+                ValidationIssue(
+                    f"{path}.source",
+                    f"expected one of: {', '.join(sorted(KNOWN_RESOLUTION_SOURCES))}",
+                    "enum",
+                )
+            )
+
     axis = resolved.get("icon_system")
-    if axis is None:
-        return
-    if not isinstance(axis, dict):
-        issues.append(ValidationIssue("$.resolved_presentation.icon_system", "expected an object", "type"))
-        return
-    value = axis.get("value")
-    if isinstance(value, str) and icon_system is not None and canonical_icon_system_id(value) != icon_system:
-        issues.append(
-            ValidationIssue(
-                "$.resolved_presentation.icon_system.value",
-                "must match $.icon_system",
-                "inconsistent_presentation",
+    if isinstance(axis, dict):
+        expected_version = icon_system_version(icon_system) if icon_system is not None else None
+        declared_version = axis.get("version")
+        if expected_version is not None and declared_version is not None and declared_version != expected_version:
+            issues.append(
+                ValidationIssue(
+                    "$.resolved_presentation.icon_system.version",
+                    f"version {declared_version!r} is not renderable by the current {icon_system} {expected_version} runtime",
+                    "unsupported_icon_system_version",
+                )
             )
-        )
-    expected_version = icon_system_version(icon_system) if icon_system is not None else None
-    declared_version = axis.get("version")
-    if expected_version is not None and declared_version is not None and declared_version != expected_version:
-        issues.append(
-            ValidationIssue(
-                "$.resolved_presentation.icon_system.version",
-                f"version {declared_version!r} is not renderable by the current {icon_system} {expected_version} runtime",
-                "unsupported_icon_system_version",
-            )
-        )
 
 
 def _parse_canvas(value: Any, path: str, issues: List[ValidationIssue]) -> Canvas:
@@ -479,6 +578,20 @@ def _parse_groups(value: Any, path: str, issues: List[ValidationIssue], canvas: 
                 role=_role(item, "role", f"{item_path}.role", issues),
                 fill=_string(item, "fill", f"{item_path}.fill", issues, required=False),
                 stroke=_string(item, "stroke", f"{item_path}.stroke", issues, required=False),
+                semantic_kind=_optional_semantic_kind(
+                    item,
+                    "semantic_kind",
+                    f"{item_path}.semantic_kind",
+                    issues,
+                ),
+                importance=_optional_enum(
+                    item,
+                    "importance",
+                    f"{item_path}.importance",
+                    KNOWN_IMPORTANCE,
+                    issues,
+                ),
+                parent=_string(item, "parent", f"{item_path}.parent", issues, required=False),
                 effect=_effect_config(item.get("effect"), f"{item_path}.effect", KNOWN_GROUP_MOTION, issues, EffectConfig()),
             )
         )
@@ -526,6 +639,27 @@ def _parse_nodes(
                 stroke=_string(item, "stroke", f"{item_path}.stroke", issues, required=False),
                 stroke_width=_optional_number(item, "stroke_width", f"{item_path}.stroke_width", issues, positive=True),
                 icon=_icon(item, "icon", f"{item_path}.icon", issues, allowed_icons),
+                semantic_kind=_optional_semantic_kind(
+                    item,
+                    "semantic_kind",
+                    f"{item_path}.semantic_kind",
+                    issues,
+                ),
+                icon_resolution=_optional_enum(
+                    item,
+                    "icon_resolution",
+                    f"{item_path}.icon_resolution",
+                    KNOWN_ICON_RESOLUTIONS,
+                    issues,
+                ),
+                importance=_optional_enum(
+                    item,
+                    "importance",
+                    f"{item_path}.importance",
+                    KNOWN_IMPORTANCE,
+                    issues,
+                ),
+                state=_parse_semantic_state(item.get("state"), f"{item_path}.state", issues),
                 effect=_effect_config(item.get("effect"), f"{item_path}.effect", KNOWN_NODE_MOTION, issues, EffectConfig()),
             )
         )
@@ -578,6 +712,43 @@ def _parse_edges(value: Any, path: str, node_ids: Set[str], issues: List[Validat
                 points=points,
                 stroke=_string(item, "stroke", f"{item_path}.stroke", issues, required=False),
                 width=_optional_number(item, "width", f"{item_path}.width", issues, positive=True),
+                semantic_relation_id=_string(
+                    item,
+                    "semantic_relation_id",
+                    f"{item_path}.semantic_relation_id",
+                    issues,
+                    required=False,
+                ),
+                semantic_kind=_optional_semantic_kind(
+                    item,
+                    "semantic_kind",
+                    f"{item_path}.semantic_kind",
+                    issues,
+                ),
+                importance=_optional_enum(
+                    item,
+                    "importance",
+                    f"{item_path}.importance",
+                    KNOWN_IMPORTANCE,
+                    issues,
+                ),
+                condition=_string(item, "condition", f"{item_path}.condition", issues, required=False),
+                protocol=_string(item, "protocol", f"{item_path}.protocol", issues, required=False),
+                flow_id=_string(item, "flow_id", f"{item_path}.flow_id", issues, required=False),
+                flow_importance=_optional_enum(
+                    item,
+                    "flow_importance",
+                    f"{item_path}.flow_importance",
+                    KNOWN_IMPORTANCE,
+                    issues,
+                ),
+                flow_repeat=_optional_enum(
+                    item,
+                    "flow_repeat",
+                    f"{item_path}.flow_repeat",
+                    KNOWN_FLOW_REPEAT,
+                    issues,
+                ),
                 motion=Motion(duration=duration, delay=delay, enabled=animated),
                 effect=_effect_config(item.get("effect"), f"{item_path}.effect", KNOWN_EDGE_MOTION, issues, EffectConfig()),
             )
@@ -611,6 +782,54 @@ def _icons_for_system(icon_system: Optional[str]) -> Set[str]:
 
 def _role(data: Dict[str, Any], key: str, path: str, issues: List[ValidationIssue]) -> str:
     return _enum(data, key, path, KNOWN_ROLES, issues, default="neutral")
+
+
+def _optional_enum(
+    data: Dict[str, Any],
+    key: str,
+    path: str,
+    allowed: Set[str],
+    issues: List[ValidationIssue],
+) -> Optional[str]:
+    value = _string(data, key, path, issues, required=False)
+    if value is None:
+        return None
+    if value not in allowed:
+        issues.append(ValidationIssue(path, f"expected one of: {', '.join(sorted(allowed))}", "enum"))
+        return None
+    return value
+
+
+def _optional_semantic_kind(
+    data: Dict[str, Any], key: str, path: str, issues: List[ValidationIssue]
+) -> Optional[str]:
+    value = _string(data, key, path, issues, required=False)
+    if value is None:
+        return None
+    if SEMANTIC_KIND_PATTERN.fullmatch(value) is None:
+        issues.append(ValidationIssue(path, "expected a lowercase semantic kind", "pattern"))
+        return None
+    return value
+
+
+def _parse_semantic_state(value: Any, path: str, issues: List[ValidationIssue]) -> Dict[str, str]:
+    if value is None:
+        return {}
+    if not isinstance(value, dict):
+        issues.append(ValidationIssue(path, "expected an object", "type"))
+        return {}
+    state: Dict[str, str] = {}
+    allowed = {"phase", "result", "availability"}
+    for key in value:
+        if key not in allowed:
+            issues.append(ValidationIssue(f"{path}.{key}", "unsupported state field", "additional_property"))
+            continue
+        item = value[key]
+        if not isinstance(item, str) or not item:
+            issues.append(ValidationIssue(f"{path}.{key}", "expected a non-empty string", "type"))
+            continue
+        state[key] = item
+    return state
 
 
 def _enum(

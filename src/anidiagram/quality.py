@@ -69,6 +69,7 @@ def quality_report(scene: Scene, style: Optional[Dict[str, object]] = None) -> D
     _check_text_fit(scene.nodes, issues)
     _check_edge_node_collisions(scene.edges, nodes, issues)
     _check_motion_budget(scene, issues)
+    _check_semantic_icon_fallbacks(scene, issues)
     if style is not None:
         if scene.icon_system:
             style = deep_merge(style, {"icon_system": scene.icon_system})
@@ -107,6 +108,22 @@ def _check_character_icon_fallbacks(
                     f"icon '{node.icon}' is not covered by {icon_system}; rendered with semantic-line-v1",
                 )
             )
+
+
+def _check_semantic_icon_fallbacks(scene: Scene, issues: List[QualityIssue]) -> None:
+    for index, node in enumerate(scene.nodes):
+        if node.icon_resolution != "role-fallback":
+            continue
+        semantic_kind = node.semantic_kind or "unknown"
+        rendered_icon = node.icon or "none"
+        issues.append(
+            QualityIssue(
+                "semantic_icon_fallback",
+                "warning",
+                f"$.nodes[{index}].icon_resolution",
+                f"semantic kind '{semantic_kind}' uses role-fallback icon '{rendered_icon}'",
+            )
+        )
 
 
 def _check_diagram_core_coverage(scene: Scene, issues: List[QualityIssue]) -> None:

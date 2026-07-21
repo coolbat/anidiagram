@@ -95,6 +95,10 @@ class Node:
     stroke: Optional[str] = None
     stroke_width: Optional[float] = None
     icon: Optional[str] = None
+    semantic_kind: Optional[str] = None
+    icon_resolution: Optional[str] = None
+    importance: Optional[str] = None
+    state: Dict[str, str] = field(default_factory=dict)
     effect: EffectConfig = field(default_factory=EffectConfig)
 
 
@@ -110,6 +114,14 @@ class Edge:
     points: Tuple[Point, ...] = field(default_factory=tuple)
     stroke: Optional[str] = None
     width: Optional[float] = None
+    semantic_relation_id: Optional[str] = None
+    semantic_kind: Optional[str] = None
+    importance: Optional[str] = None
+    condition: Optional[str] = None
+    protocol: Optional[str] = None
+    flow_id: Optional[str] = None
+    flow_importance: Optional[str] = None
+    flow_repeat: Optional[str] = None
     motion: Motion = field(default_factory=Motion)
     effect: EffectConfig = field(default_factory=EffectConfig)
 
@@ -122,6 +134,9 @@ class Group:
     role: str = "neutral"
     fill: Optional[str] = None
     stroke: Optional[str] = None
+    semantic_kind: Optional[str] = None
+    importance: Optional[str] = None
+    parent: Optional[str] = None
     effect: EffectConfig = field(default_factory=EffectConfig)
 
 
@@ -140,6 +155,7 @@ class Scene:
     motion: SceneMotion = field(default_factory=SceneMotion)
     motion_policy: MotionPolicy = field(default_factory=MotionPolicy)
     preset: Optional[str] = None
+    layout: Optional[str] = None
 
     def stats(self) -> dict:
         return {

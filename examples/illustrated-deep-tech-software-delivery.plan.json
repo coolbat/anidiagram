@@ -9,7 +9,11 @@
       "primary_question": "How does an autonomous software delivery system turn human intent into verified release outputs?",
       "audience": ["technical", "product"],
       "scope": "Control plane, execution tools, and delivery artifacts",
-      "exclusions": "Persistence, deployment infrastructure, and internal model serving"
+      "exclusions": [
+        "Persistence",
+        "deployment infrastructure",
+        "internal model serving"
+      ]
     },
     "entities": [
       {

@@ -199,6 +199,7 @@
         },
         "annotations": {
           "type": "array",
+          "uniqueItems": true,
           "items": {"type": "string", "minLength": 1}
         }
       }
@@ -207,10 +208,32 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "icon_system": {"type": "string", "minLength": 1, "default": "auto"},
-        "style": {"type": "string", "minLength": 1, "default": "auto"},
-        "layout": {"type": "string", "minLength": 1, "default": "auto"},
-        "motion": {"type": "string", "minLength": 1, "default": "showcase-v1"}
+        "icon_system": {
+          "enum": [
+            "auto", "diagram-core-v1", "illustrated", "illustrated-character-v1",
+            "illustrated-character-v2", "illustrated-v1", "semantic-line-v1"
+          ],
+          "default": "auto"
+        },
+        "style": {
+          "enum": [
+            "auto", "minimal-light", "deep-tech", "blueprint", "flat-icon", "dark-terminal",
+            "notion-clean", "glassmorphism", "claude-warm", "openai-minimal", "dark-luxury",
+            "aurora-orb", "illustrated-semantic", "sketch-board"
+          ],
+          "default": "auto"
+        },
+        "layout": {
+          "enum": [
+            "auto", "pipeline", "loop", "hub-spoke", "layered", "swimlane", "compare",
+            "matrix", "timeline", "stack", "funnel", "sequence", "er", "network", "agent-memory"
+          ],
+          "default": "auto"
+        },
+        "motion": {
+          "enum": ["auto", "off", "subtle", "normal", "expressive", "teaching", "runtime-loop", "showcase-v1"],
+          "default": "showcase-v1"
+        }
       }
     },
     "presentation_sources": {

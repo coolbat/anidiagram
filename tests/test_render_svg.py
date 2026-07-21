@@ -1643,9 +1643,12 @@ class SvgRendererTest(unittest.TestCase):
 
         self.assertEqual("0.2", plan["version"])
         self.assertEqual("layered", scene.preset)
+        self.assertEqual("layered", scene.layout)
         self.assertEqual("diagram-core-v1", scene.icon_system)
         self.assertEqual("0.4", scene.version)
-        self.assertEqual({"nodes": 18, "edges": 14, "groups": 0}, scene.stats())
+        self.assertEqual({"nodes": 6, "edges": 7, "groups": 0}, scene.stats())
+        self.assertEqual("input-brief", plan["semantic"]["sources"][0]["id"])
+        self.assertEqual(2, len(plan["semantic"]["flows"]))
         self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, report["summary"])
         self.assertIn('data-icon-source="diagram-core-v1"', svg)
         self.assertIn("edge-arrow-particle", svg)

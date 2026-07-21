@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections import defaultdict, deque
 from copy import deepcopy
+import math
 import re
 from typing import Any, Dict, Iterable, List, Mapping, Sequence, Tuple
 
@@ -137,16 +138,39 @@ def compile_plan_v02(plan: Mapping[str, Any]) -> Dict[str, Any]:
     icon_system = resolved["icon_system"]["value"]
     entities = list(semantic["entities"])
     relations = list(semantic.get("relations", []))
-    positions, canvas = _layout_entities(entities, relations, resolved["layout"]["value"])
-    nodes = [_compile_entity(entity, positions[str(entity["id"])], icon_system, index + 1) for index, entity in enumerate(entities)]
-    edges = [_compile_relation(relation, index + 1) for index, relation in enumerate(relations)]
-    groups = _compile_semantic_groups(semantic.get("groups", []), nodes)
+    flows = list(semantic.get("flows", []))
+    groups_semantic = list(semantic.get("groups", []))
+    entity_order = _ordered_entity_ids(entities, relations, flows)
+    positions, canvas = _layout_entities(
+        entities,
+        relations,
+        resolved["layout"]["value"],
+        flows=flows,
+        groups=groups_semantic,
+    )
+    step_by_entity = {entity_id: index + 1 for index, entity_id in enumerate(entity_order)}
+    nodes = [
+        _compile_entity(
+            entity,
+            positions[str(entity["id"])],
+            icon_system,
+            step_by_entity[str(entity["id"])],
+        )
+        for entity in entities
+    ]
+    flow_context = _flow_relation_context(flows)
+    edges = [
+        _compile_relation(relation, index + 1, flow_context.get(str(relation["id"])))
+        for index, relation in enumerate(relations)
+    ]
+    groups = _compile_semantic_groups(groups_semantic, nodes)
 
     return {
         "version": "0.4",
         "composition_policy": "composition-v1",
         "resolved_presentation": deepcopy(resolved),
         "icon_system": icon_system,
+        "layout": resolved["layout"]["value"],
         "preset": resolved["layout"]["value"],
         "canvas": canvas,
         "style": resolved["style"]["value"],
@@ -210,16 +234,19 @@ def _validate_plan(plan: Mapping[str, Any]) -> Mapping[str, Any]:
     if not isinstance(semantic, Mapping):
         raise ValueError("DiagramPlan v0.2 requires a semantic object")
     _assert_keys(semantic, _SEMANTIC_FIELDS, "semantic")
-    if not str(semantic.get("title") or "").strip():
-        raise ValueError("semantic.title must be non-empty")
+    _required_text(semantic, "title", "semantic.title")
+    for field in ("subtitle", "summary"):
+        _optional_text(semantic, field, f"semantic.{field}")
     intent = semantic.get("intent")
-    if not isinstance(intent, Mapping) or not str(intent.get("primary_question") or "").strip():
+    if not isinstance(intent, Mapping):
         raise ValueError("semantic.intent.primary_question must be non-empty")
     _assert_keys(intent, _INTENT_FIELDS, "semantic.intent")
+    _required_text(intent, "primary_question", "semantic.intent.primary_question")
     _semantic_kind_value(intent.get("diagram_kind"), "semantic.intent.diagram_kind")
-    audience = intent.get("audience")
-    if not isinstance(audience, Sequence) or isinstance(audience, (str, bytes)) or not audience:
-        raise ValueError("semantic.intent.audience must be a non-empty array")
+    _string_array(intent.get("audience"), "semantic.intent.audience", required=True)
+    _optional_text(intent, "scope", "semantic.intent.scope", allow_empty=True)
+    if "exclusions" in intent:
+        _string_array(intent["exclusions"], "semantic.intent.exclusions")
     entities = semantic.get("entities")
     if not isinstance(entities, Sequence) or isinstance(entities, (str, bytes)) or not entities:
         raise ValueError("semantic.entities must be a non-empty array")
@@ -233,8 +260,7 @@ def _validate_plan(plan: Mapping[str, Any]) -> Mapping[str, Any]:
         for index, item in enumerate(values):
             if not isinstance(item, Mapping):
                 raise ValueError(f"semantic.{collection}[{index}] must be an object")
-            item_id = str(item.get("id") or "")
-            _semantic_id(item_id, f"semantic.{collection}[{index}].id")
+            item_id = _semantic_id(item.get("id"), f"semantic.{collection}[{index}].id")
             if item_id in seen:
                 raise ValueError(f"duplicate semantic id {item_id!r} in {collection}; already used in {seen[item_id]}")
             seen[item_id] = collection
@@ -242,62 +268,75 @@ def _validate_plan(plan: Mapping[str, Any]) -> Mapping[str, Any]:
     for index, entity in enumerate(entities):
         path = f"semantic.entities[{index}]"
         _assert_keys(entity, _ENTITY_FIELDS, path)
-        if not str(entity.get("label") or "").strip():
-            raise ValueError(f"{path}.label must be non-empty")
+        _required_text(entity, "label", f"{path}.label")
+        _optional_text(entity, "description", f"{path}.description", allow_empty=True)
         _semantic_kind_value(entity.get("kind"), f"{path}.kind")
         if entity.get("role") not in _ROLES:
             raise ValueError(f"{path}.role must be a registered semantic role")
         _optional_importance(entity, path)
+        if "tags" in entity:
+            _string_array(entity["tags"], f"{path}.tags")
+        _optional_mapping(entity, "attributes", f"{path}.attributes")
+        _validate_state(entity.get("state"), f"{path}.state")
 
     entity_ids = {str(item["id"]) for item in entities}
     relations = list(semantic.get("relations", []))
     relation_by_id = {str(item["id"]): item for item in relations}
-    for relation in relations:
-        path = f"semantic.relations[{relations.index(relation)}]"
+    for index, relation in enumerate(relations):
+        path = f"semantic.relations[{index}]"
         _assert_keys(relation, _RELATION_FIELDS, path)
         _semantic_kind_value(relation.get("kind"), f"{path}.kind")
+        for field in ("label", "description", "condition", "protocol"):
+            _optional_text(relation, field, f"{path}.{field}", allow_empty=True)
+        _optional_mapping(relation, "attributes", f"{path}.attributes")
         if relation.get("direction", "forward") not in {"forward", "bidirectional", "undirected"}:
             raise ValueError(f"{path}.direction is not supported")
         _optional_importance(relation, path)
         for endpoint in ("from", "to"):
-            target = str(relation.get(endpoint) or "")
+            target = _semantic_id(relation.get(endpoint), f"{path}.{endpoint}")
             if target not in entity_ids:
                 raise ValueError(f"relation {relation['id']!r} references missing entity {target!r}")
 
     groups = list(semantic.get("groups", []))
     group_ids = {str(group["id"]) for group in groups}
     parents: Dict[str, str] = {}
-    for group in groups:
-        path = f"semantic.groups[{groups.index(group)}]"
+    for index, group in enumerate(groups):
+        path = f"semantic.groups[{index}]"
         _assert_keys(group, _GROUP_FIELDS, path)
-        if not str(group.get("label") or "").strip():
-            raise ValueError(f"{path}.label must be non-empty")
+        _required_text(group, "label", f"{path}.label")
+        _optional_text(group, "description", f"{path}.description", allow_empty=True)
         _semantic_kind_value(group.get("kind"), f"{path}.kind")
         _optional_importance(group, path)
         members = group.get("members")
         if not isinstance(members, Sequence) or isinstance(members, (str, bytes)) or not members:
             raise ValueError(f"group {group['id']!r} must contain at least one member")
+        _string_array(members, f"{path}.members", required=True)
+        for member_index, member in enumerate(members):
+            _semantic_id(member, f"{path}.members[{member_index}]")
         missing = [str(member) for member in members if str(member) not in entity_ids]
         if missing:
             raise ValueError(f"group {group['id']!r} references missing member(s): {', '.join(missing)}")
         if group.get("parent") is not None:
-            parent = str(group["parent"])
+            parent = _semantic_id(group["parent"], f"{path}.parent")
             if parent not in group_ids:
                 raise ValueError(f"group {group['id']!r} references missing parent {parent!r}")
             parents[str(group["id"])] = parent
     _validate_group_cycles(parents)
 
-    for flow in semantic.get("flows", []):
-        path = f"semantic.flows[{list(semantic.get('flows', [])).index(flow)}]"
+    for index, flow in enumerate(semantic.get("flows", [])):
+        path = f"semantic.flows[{index}]"
         _assert_keys(flow, _FLOW_FIELDS, path)
-        if not str(flow.get("label") or "").strip():
-            raise ValueError(f"{path}.label must be non-empty")
+        _required_text(flow, "label", f"{path}.label")
+        _optional_text(flow, "description", f"{path}.description", allow_empty=True)
         if flow.get("repeat", "once") not in {"once", "loop", "event-driven"}:
             raise ValueError(f"{path}.repeat is not supported")
         _optional_importance(flow, path)
         relation_ids = flow.get("relation_ids")
         if not isinstance(relation_ids, Sequence) or isinstance(relation_ids, (str, bytes)) or not relation_ids:
             raise ValueError(f"flow {flow['id']!r} must contain relation_ids")
+        _string_array(relation_ids, f"{path}.relation_ids", required=True)
+        for relation_index, relation_id in enumerate(relation_ids):
+            _semantic_id(relation_id, f"{path}.relation_ids[{relation_index}]")
         missing = [str(relation_id) for relation_id in relation_ids if str(relation_id) not in relation_by_id]
         if missing:
             raise ValueError(f"flow {flow['id']!r} references missing relation(s): {', '.join(missing)}")
@@ -312,16 +351,23 @@ def _validate_plan(plan: Mapping[str, Any]) -> Mapping[str, Any]:
         path = f"semantic.sources[{index}]"
         _assert_keys(source, _SOURCE_FIELDS, path)
         _semantic_kind_value(source.get("type"), f"{path}.type")
+        for field in ("title", "uri", "note"):
+            _optional_text(source, field, f"{path}.{field}", allow_empty=True)
     for collection in ("entities", "relations", "groups", "flows"):
         for index, item in enumerate(semantic.get(collection, [])):
             refs = item.get("source_refs", [])
             if not isinstance(refs, Sequence) or isinstance(refs, (str, bytes)):
                 raise ValueError(f"semantic.{collection}[{index}].source_refs must be an array")
+            _string_array(refs, f"semantic.{collection}[{index}].source_refs")
+            for ref_index, ref in enumerate(refs):
+                _semantic_id(ref, f"semantic.{collection}[{index}].source_refs[{ref_index}]")
             missing = [str(ref) for ref in refs if str(ref) not in source_ids]
             if missing:
                 raise ValueError(f"semantic.{collection}[{index}] references missing source(s): {', '.join(missing)}")
 
-    presentation = plan.get("presentation", {})
+    if "presentation" not in plan:
+        raise ValueError("DiagramPlan v0.2 requires a presentation object")
+    presentation = plan.get("presentation")
     if not isinstance(presentation, Mapping):
         raise ValueError("presentation must be an object")
     _assert_keys(presentation, {"icon_system", "style", "layout", "motion"}, "presentation")
@@ -334,6 +380,8 @@ def _validate_plan(plan: Mapping[str, Any]) -> Mapping[str, Any]:
         "presentation_sources",
     )
     resolve_presentation(presentation, presentation_sources)
+    if "annotations" in semantic:
+        _string_array(semantic["annotations"], "semantic.annotations")
     return semantic
 
 
@@ -360,6 +408,55 @@ def _optional_importance(value: Mapping[str, Any], path: str) -> None:
         raise ValueError(f"{path}.importance is not supported")
 
 
+def _required_text(value: Mapping[str, Any], field: str, path: str) -> str:
+    item = value.get(field)
+    if not isinstance(item, str) or not item.strip():
+        raise ValueError(f"{path} must be non-empty")
+    return item
+
+
+def _optional_text(
+    value: Mapping[str, Any], field: str, path: str, *, allow_empty: bool = False
+) -> None:
+    if field not in value:
+        return
+    item = value[field]
+    if not isinstance(item, str) or (not allow_empty and not item.strip()):
+        raise ValueError(f"{path} must be a string")
+
+
+def _string_array(value: Any, path: str, *, required: bool = False) -> None:
+    if not isinstance(value, Sequence) or isinstance(value, (str, bytes)):
+        suffix = " a non-empty array" if required else " an array"
+        raise ValueError(f"{path} must be{suffix}")
+    if required and not value:
+        raise ValueError(f"{path} must be a non-empty array")
+    if any(not isinstance(item, str) or not item.strip() for item in value):
+        raise ValueError(f"{path} must contain non-empty strings")
+    _unique_values(value, path)
+
+
+def _unique_values(value: Sequence[Any], path: str) -> None:
+    normalized = [str(item) for item in value]
+    if len(normalized) != len(set(normalized)):
+        raise ValueError(f"{path} must contain unique values")
+
+
+def _optional_mapping(value: Mapping[str, Any], field: str, path: str) -> None:
+    if field in value and not isinstance(value[field], Mapping):
+        raise ValueError(f"{path} must be an object")
+
+
+def _validate_state(value: Any, path: str) -> None:
+    if value is None:
+        return
+    if not isinstance(value, Mapping):
+        raise ValueError(f"{path} must be an object")
+    _assert_keys(value, {"phase", "result", "availability"}, path)
+    for field in value:
+        _required_text(value, field, f"{path}.{field}")
+
+
 def _validate_group_cycles(parents: Mapping[str, str]) -> None:
     for group_id in parents:
         path = set()
@@ -372,11 +469,104 @@ def _validate_group_cycles(parents: Mapping[str, str]) -> None:
 
 
 def _layout_entities(
-    entities: Sequence[Mapping[str, Any]], relations: Sequence[Mapping[str, Any]], layout: str
+    entities: Sequence[Mapping[str, Any]],
+    relations: Sequence[Mapping[str, Any]],
+    layout: str,
+    *,
+    flows: Sequence[Mapping[str, Any]] = (),
+    groups: Sequence[Mapping[str, Any]] = (),
 ) -> Tuple[Dict[str, Tuple[int, int]], Dict[str, int]]:
-    # v0.4 serializes a concrete layout choice; this deterministic graph layout
-    # supplies resolved coordinates until the individual layout engines evolve.
-    ids = [str(entity["id"]) for entity in entities]
+    """Dispatch every registered layout to deterministic, semantic-aware geometry."""
+
+    if layout not in LAYOUTS:
+        raise ValueError(f"unsupported layout {layout!r}")
+    ordered = _ordered_entity_ids(entities, relations, flows)
+    entity_by_id = {str(entity["id"]): entity for entity in entities}
+    dispatchers = {
+        "pipeline": lambda: _linear_layout(ordered, horizontal=True, x=70, y=260, gap=280, canvas_height=720),
+        "timeline": lambda: _timeline_layout(ordered),
+        "sequence": lambda: _sequence_layout(ordered),
+        "stack": lambda: _linear_layout(ordered, horizontal=False, x=110, y=135, gap=155, canvas_width=760),
+        "layered": lambda: _layered_layout(ordered, relations),
+        "swimlane": lambda: _swimlane_layout(ordered, entity_by_id, groups),
+        "compare": lambda: _compare_layout(ordered),
+        "matrix": lambda: _grid_layout(ordered, columns=2, x=90, y=145, x_gap=330, y_gap=170, canvas_width=900),
+        "hub-spoke": lambda: _radial_layout(ordered, relations, hub=True),
+        "network": lambda: _radial_layout(ordered, relations, hub=False, elliptical=True),
+        "loop": lambda: _radial_layout(list(reversed(ordered)), relations, hub=False, elliptical=False),
+        "funnel": lambda: _funnel_layout(ordered),
+        "er": lambda: _er_layout(ordered, relations),
+        "agent-memory": lambda: _agent_memory_layout(ordered, entity_by_id),
+    }
+    return dispatchers[layout]()
+
+
+def _ordered_entity_ids(
+    entities: Sequence[Mapping[str, Any]],
+    relations: Sequence[Mapping[str, Any]],
+    flows: Sequence[Mapping[str, Any]],
+) -> List[str]:
+    declared = [str(entity["id"]) for entity in entities]
+    relation_by_id = {str(relation["id"]): relation for relation in relations}
+    ordered: List[str] = []
+    importance_order = {"primary": 0, "supporting": 1, "context": 2}
+    ranked_flows = sorted(
+        enumerate(flows),
+        key=lambda item: (importance_order.get(str(item[1].get("importance") or "supporting"), 1), item[0]),
+    )
+    for _, flow in ranked_flows:
+        for relation_id in flow.get("relation_ids", []):
+            relation = relation_by_id.get(str(relation_id))
+            if relation is None:
+                continue
+            for entity_id in (str(relation["from"]), str(relation["to"])):
+                if entity_id not in ordered:
+                    ordered.append(entity_id)
+    for entity_id in declared:
+        if entity_id not in ordered:
+            ordered.append(entity_id)
+    return ordered
+
+
+def _linear_layout(
+    ordered: Sequence[str],
+    *,
+    horizontal: bool,
+    x: int,
+    y: int,
+    gap: int,
+    canvas_width: int = 960,
+    canvas_height: int = 720,
+) -> Tuple[Dict[str, Tuple[int, int]], Dict[str, int]]:
+    if horizontal:
+        positions = {item_id: (x + index * gap, y) for index, item_id in enumerate(ordered)}
+        width = max(canvas_width, x * 2 + 220 + max(0, len(ordered) - 1) * gap)
+        return positions, {"width": width, "height": canvas_height}
+    positions = {item_id: (x, y + index * gap) for index, item_id in enumerate(ordered)}
+    height = max(canvas_height, y + 150 + max(0, len(ordered) - 1) * gap)
+    return positions, {"width": canvas_width, "height": height}
+
+
+def _timeline_layout(ordered: Sequence[str]) -> Tuple[Dict[str, Tuple[int, int]], Dict[str, int]]:
+    positions = {
+        item_id: (85 + index * 275, 175 + (index % 2) * 230)
+        for index, item_id in enumerate(ordered)
+    }
+    return positions, {"width": max(1040, 390 + max(0, len(ordered) - 1) * 275), "height": 760}
+
+
+def _sequence_layout(ordered: Sequence[str]) -> Tuple[Dict[str, Tuple[int, int]], Dict[str, int]]:
+    positions = {
+        item_id: (260 + (index % 2) * 285, 125 + index * 150)
+        for index, item_id in enumerate(ordered)
+    }
+    return positions, {"width": 1040, "height": max(760, 275 + max(0, len(ordered) - 1) * 150)}
+
+
+def _layered_layout(
+    ordered: Sequence[str], relations: Sequence[Mapping[str, Any]]
+) -> Tuple[Dict[str, Tuple[int, int]], Dict[str, int]]:
+    ids = list(ordered)
     incoming = {item_id: 0 for item_id in ids}
     outgoing: Dict[str, List[str]] = defaultdict(list)
     for relation in relations:
@@ -396,7 +586,7 @@ def _layout_entities(
                 queue.append(target)
     for item_id in ids:
         if item_id not in visited:
-            rank[item_id] = max(rank.values(), default=0) + 1
+            rank[item_id] = max(rank.values(), default=0)
 
     by_rank: Dict[int, List[str]] = defaultdict(list)
     for item_id in ids:
@@ -415,47 +605,227 @@ def _layout_entities(
     return positions, {"width": width, "height": height}
 
 
+def _swimlane_layout(
+    ordered: Sequence[str], entity_by_id: Mapping[str, Mapping[str, Any]], groups: Sequence[Mapping[str, Any]]
+) -> Tuple[Dict[str, Tuple[int, int]], Dict[str, int]]:
+    lane_by_entity: Dict[str, str] = {}
+    for group in groups:
+        for member in group.get("members", []):
+            lane_by_entity.setdefault(str(member), str(group["id"]))
+    for item_id in ordered:
+        lane_by_entity.setdefault(item_id, str(entity_by_id[item_id].get("role") or "neutral"))
+    lanes: List[str] = []
+    for item_id in ordered:
+        lane = lane_by_entity[item_id]
+        if lane not in lanes:
+            lanes.append(lane)
+    counts: Dict[str, int] = defaultdict(int)
+    positions = {}
+    for item_id in ordered:
+        lane = lane_by_entity[item_id]
+        lane_index = lanes.index(lane)
+        positions[item_id] = (80 + counts[lane] * 300, 125 + lane_index * 185)
+        counts[lane] += 1
+    return positions, {
+        "width": max(1020, 380 + max(counts.values(), default=1) * 300),
+        "height": max(720, 270 + max(0, len(lanes) - 1) * 185),
+    }
+
+
+def _compare_layout(ordered: Sequence[str]) -> Tuple[Dict[str, Tuple[int, int]], Dict[str, int]]:
+    split = max(1, math.ceil(len(ordered) / 2))
+    positions = {}
+    for index, item_id in enumerate(ordered):
+        column = 0 if index < split else 1
+        row = index if column == 0 else index - split
+        positions[item_id] = (130 + column * 520, 150 + row * 170 + column * 28)
+    return positions, {"width": 1040, "height": max(720, 300 + max(0, split - 1) * 170)}
+
+
+def _grid_layout(
+    ordered: Sequence[str],
+    *,
+    columns: int,
+    x: int,
+    y: int,
+    x_gap: int,
+    y_gap: int,
+    canvas_width: int,
+) -> Tuple[Dict[str, Tuple[int, int]], Dict[str, int]]:
+    positions = {
+        item_id: (x + (index % columns) * x_gap, y + (index // columns) * y_gap)
+        for index, item_id in enumerate(ordered)
+    }
+    rows = max(1, math.ceil(len(ordered) / columns))
+    return positions, {"width": canvas_width, "height": max(700, y + 160 + (rows - 1) * y_gap)}
+
+
+def _radial_layout(
+    ordered: Sequence[str],
+    relations: Sequence[Mapping[str, Any]],
+    *,
+    hub: bool,
+    elliptical: bool = False,
+) -> Tuple[Dict[str, Tuple[int, int]], Dict[str, int]]:
+    width = 1120 if hub else (1180 if elliptical else 1060)
+    height = 760 if hub else (700 if elliptical else 820)
+    center = (width // 2 - 110, height // 2 - 54)
+    positions: Dict[str, Tuple[int, int]] = {}
+    ring = list(ordered)
+    if hub and ring:
+        degree = defaultdict(int)
+        for relation in relations:
+            degree[str(relation["from"])] += 1
+            degree[str(relation["to"])] += 1
+        hub_id = max(ring, key=lambda item_id: (degree[item_id], -ring.index(item_id)))
+        positions[hub_id] = center
+        ring = [item_id for item_id in ring if item_id != hub_id]
+    radius_x = 390 if elliptical else (330 if hub else 350)
+    radius_y = 215 if elliptical else (245 if hub else 295)
+    for index, item_id in enumerate(ring):
+        angle = -math.pi / 2 + (2 * math.pi * index / max(1, len(ring)))
+        positions[item_id] = (
+            round(center[0] + radius_x * math.cos(angle)),
+            round(center[1] + radius_y * math.sin(angle)),
+        )
+    return positions, {"width": width, "height": height}
+
+
+def _funnel_layout(ordered: Sequence[str]) -> Tuple[Dict[str, Tuple[int, int]], Dict[str, int]]:
+    positions = {
+        item_id: (130 + index * 95, 115 + index * 155)
+        for index, item_id in enumerate(ordered)
+    }
+    return positions, {"width": 920, "height": max(720, 265 + max(0, len(ordered) - 1) * 155)}
+
+
+def _er_layout(
+    ordered: Sequence[str], relations: Sequence[Mapping[str, Any]]
+) -> Tuple[Dict[str, Tuple[int, int]], Dict[str, int]]:
+    degree = defaultdict(int)
+    for relation in relations:
+        degree[str(relation["from"])] += 1
+        degree[str(relation["to"])] += 1
+    ranked = sorted(ordered, key=lambda item_id: (-degree[item_id], ordered.index(item_id)))
+    return _grid_layout(ranked, columns=3, x=75, y=175, x_gap=305, y_gap=190, canvas_width=1080)
+
+
+def _agent_memory_layout(
+    ordered: Sequence[str], entity_by_id: Mapping[str, Mapping[str, Any]]
+) -> Tuple[Dict[str, Tuple[int, int]], Dict[str, int]]:
+    columns = {"left": [], "core": [], "memory": []}
+    for item_id in ordered:
+        role = str(entity_by_id[item_id].get("role") or "neutral")
+        if role == "memory":
+            columns["memory"].append(item_id)
+        elif role in {"agent", "process", "tool"}:
+            columns["core"].append(item_id)
+        else:
+            columns["left"].append(item_id)
+    positions = {}
+    for key, x in (("left", 80), ("core", 410), ("memory", 750)):
+        for index, item_id in enumerate(columns[key]):
+            positions[item_id] = (x, 155 + index * 175)
+    return positions, {"width": 1080, "height": max(720, 305 + max((len(items) for items in columns.values()), default=1) * 175)}
+
+
 def _compile_entity(entity: Mapping[str, Any], position: Tuple[int, int], icon_system: str, step: int) -> Dict[str, Any]:
     role = str(entity.get("role") or "neutral")
-    return {
+    icon, resolution = _resolve_icon_for_entity(entity, icon_system)
+    compiled = {
         "id": str(entity["id"]),
         "label": str(entity.get("label") or entity["id"])[:42],
         "caption": str(entity.get("description") or entity.get("kind") or "")[:64],
         "position": [position[0], position[1]],
         "size": [220, 108],
         "role": role,
-        "icon": _icon_for_entity(entity, icon_system),
+        "icon": icon,
+        "semantic_kind": str(entity.get("kind") or "component"),
+        "icon_resolution": resolution,
+        "importance": str(entity.get("importance") or "supporting"),
         "step": step,
         "effect": {"preset": "icon-performance"},
     }
+    if entity.get("state") is not None:
+        compiled["state"] = deepcopy(entity["state"])
+    return compiled
 
 
 def _icon_for_entity(entity: Mapping[str, Any], icon_system: str) -> str:
+    return _resolve_icon_for_entity(entity, icon_system)[0]
+
+
+def _resolve_icon_for_entity(entity: Mapping[str, Any], icon_system: str) -> Tuple[str, str]:
     kind = str(entity.get("kind") or "")
     role = str(entity.get("role") or "neutral")
-    if icon_system == "diagram-core-v1":
-        candidate = _KIND_ALIASES.get(kind, kind)
-        return candidate if candidate in DIAGRAM_CORE_ICONS else _ROLE_FALLBACK.get(role, "server")
-    if icon_system == "illustrated":
-        candidate = _KIND_ALIASES.get(kind, kind)
-        return candidate if candidate in set(illustrated_icon_ids()) else _V2_ROLE_FALLBACK.get(role, "agent")
     candidate = _KIND_ALIASES.get(kind, kind)
-    return candidate if candidate in LEGACY_ICONS else _LEGACY_ROLE_FALLBACK.get(role, "file")
+    if icon_system == "diagram-core-v1":
+        if candidate in DIAGRAM_CORE_ICONS:
+            return candidate, "alias" if candidate != kind else "exact"
+        return _ROLE_FALLBACK.get(role, "server"), "role-fallback"
+    if icon_system == "illustrated":
+        if candidate in set(illustrated_icon_ids()):
+            return candidate, "alias" if candidate != kind else "exact"
+        return _V2_ROLE_FALLBACK.get(role, "agent"), "role-fallback"
+    if candidate in LEGACY_ICONS:
+        return candidate, "alias" if candidate != kind else "exact"
+    return _LEGACY_ROLE_FALLBACK.get(role, "file"), "role-fallback"
 
 
-def _compile_relation(relation: Mapping[str, Any], step: int) -> Dict[str, Any]:
+def _flow_relation_context(flows: Sequence[Mapping[str, Any]]) -> Dict[str, Dict[str, Any]]:
+    context: Dict[str, Dict[str, Any]] = {}
+    importance_order = {"primary": 0, "supporting": 1, "context": 2}
+    for flow_index, flow in enumerate(flows):
+        candidate = {
+            "flow_id": str(flow["id"]),
+            "importance": str(flow.get("importance") or "supporting"),
+            "repeat": str(flow.get("repeat") or "once"),
+            "flow_index": flow_index,
+        }
+        for step, relation_id in enumerate(flow.get("relation_ids", []), start=1):
+            relation_key = str(relation_id)
+            item = dict(candidate, step=step)
+            existing = context.get(relation_key)
+            if existing is None or (
+                importance_order[item["importance"]], item["flow_index"]
+            ) < (
+                importance_order[existing["importance"]], existing["flow_index"]
+            ):
+                context[relation_key] = item
+    return context
+
+
+def _compile_relation(
+    relation: Mapping[str, Any], step: int, flow: Mapping[str, Any] | None = None
+) -> Dict[str, Any]:
     importance = str(relation.get("importance") or "supporting")
-    effect = "flow-arrow" if importance in {"primary", "supporting"} else "draw"
-    return {
+    flow_importance = str(flow.get("importance")) if flow else importance
+    repeat = str(flow.get("repeat")) if flow else "once"
+    if repeat == "loop":
+        effect = "dynamic-dash"
+    else:
+        effect = "flow-arrow" if flow_importance in {"primary", "supporting"} else "draw"
+    compiled = {
         "from": str(relation["from"]),
         "to": str(relation["to"]),
         "label": str(relation.get("label") or "")[:44],
         "role": _relation_role(str(relation.get("kind") or ""), importance),
         "direction": str(relation.get("direction") or "forward"),
         "route": "straight",
-        "step": step,
+        "step": int(flow.get("step")) if flow else step,
+        "semantic_relation_id": str(relation["id"]),
+        "semantic_kind": str(relation.get("kind") or "relation"),
+        "importance": importance,
         "effect": {"preset": effect, "particle": "soft-arrow", "particle_count": 1, "trail_count": 1},
     }
+    for field in ("condition", "protocol"):
+        if relation.get(field) is not None:
+            compiled[field] = str(relation[field])
+    if flow:
+        compiled["flow_id"] = str(flow["flow_id"])
+        compiled["flow_importance"] = flow_importance
+        compiled["flow_repeat"] = repeat
+    return compiled
 
 
 def _relation_role(kind: str, importance: str) -> str:
@@ -475,15 +845,18 @@ def _compile_semantic_groups(groups: Any, nodes: Sequence[Mapping[str, Any]]) ->
         top = min(node["position"][1] for node in members) - 42
         right = max(node["position"][0] + node["size"][0] for node in members) + 26
         bottom = max(node["position"][1] + node["size"][1] for node in members) + 26
-        compiled.append(
-            {
-                "id": str(group["id"]),
-                "label": str(group.get("label") or group["id"]),
-                "bounds": [left, top, right - left, bottom - top],
-                "role": "neutral",
-                "effect": {"preset": "border-scan"},
-            }
-        )
+        compiled_group = {
+            "id": str(group["id"]),
+            "label": str(group.get("label") or group["id"]),
+            "bounds": [left, top, right - left, bottom - top],
+            "role": "neutral",
+            "semantic_kind": str(group.get("kind") or "group"),
+            "importance": str(group.get("importance") or "supporting"),
+            "effect": {"preset": "border-scan"},
+        }
+        if group.get("parent") is not None:
+            compiled_group["parent"] = str(group["parent"])
+        compiled.append(compiled_group)
     return compiled
 
 

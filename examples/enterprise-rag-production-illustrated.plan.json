@@ -12,7 +12,12 @@
         "product"
       ],
       "scope": "Document ingestion, policy enforcement, vector retrieval, conversation memory, agent orchestration, and response delivery",
-      "exclusions": "Model training, cluster infrastructure, observability internals, and vendor-specific services"
+      "exclusions": [
+        "Model training",
+        "cluster infrastructure",
+        "observability internals",
+        "vendor-specific services"
+      ]
     },
     "entities": [
       {
