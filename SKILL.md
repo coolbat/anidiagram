@@ -54,6 +54,30 @@ PYTHONPATH=src python3 scripts/validate_diagram_core_assets.py --strict --json
 PYTHONPATH=src python3 -m unittest discover -s tests
 ```
 
+For Diagram Core changes, the strict validator must report all 56 approved
+assets with zero errors and zero warnings. For Illustrated renderer, contract,
+or runtime changes, first regenerate the public 2.3.0 showcase, then run the
+sixteen-item browser gates:
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --spec examples/illustrated-2.3-showcase.diagram.json \
+  --outdir outputs/illustrated-2.3-showcase \
+  --basename illustrated-2.3-showcase \
+  --formats svg,html,quality
+node --check runtime/anidiagram-runtime.js
+node scripts/verify_character_motion_rest.mjs \
+  outputs/illustrated-2.3-showcase/illustrated-2.3-showcase.html 16 illustrated
+node scripts/verify_character_reduced_motion.mjs \
+  outputs/illustrated-2.3-showcase/illustrated-2.3-showcase.html 16 illustrated
+node scripts/verify_stage_motion_modes.mjs \
+  outputs/illustrated-2.3-showcase/illustrated-2.3-showcase.html
+```
+
+The regenerated quality report must contain zero errors. Do not replace an
+archived release, review contract, acceptance record, or snapshot while running
+these gates.
+
 ## Semantic layer
 
 Treat the semantic layer as the stable explanation of what the diagram means:
@@ -93,7 +117,7 @@ uses swimlane; alternatives use compare; two dimensions use matrix; chronology
 uses timeline or sequence; hierarchy uses stack; convergence uses funnel;
 relationships use er or network; explicit memory interaction uses agent-memory.
 
-Supported icon systems include `diagram-core-v1` (default),
+Supported icon systems include `diagram-core-v1` (the composition-v1 default),
 `illustrated-character-v1`, and `illustrated` (currently version `2.3.0`).
 `illustrated-character-v2` remains accepted only as a legacy alias for
 `illustrated`; new plans and resolved output use the stable `illustrated` id.

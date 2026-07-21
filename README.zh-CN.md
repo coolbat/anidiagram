@@ -10,7 +10,7 @@ AniDiagram 是一个 clean-room 的 DiagramScript 渲染器，用来生成可动
 
 AniDiagram 的 README 展示分成两套画廊：
 
-- **Style Showcase**：12 个签名案例，每个视觉风格一个，用来回答“它能长成什么气质？”
+- **Style Showcase**：13 个签名案例，每个公共视觉风格一个，用来回答“它能长成什么气质？”
 - **Layout Showcase**：14 个教学案例，每个布局 preset 一个，用来回答“这个布局适合什么场景？”
 
 画廊源文件：`gallery/index.html`
@@ -66,6 +66,8 @@ GitHub Pages 发布，README 按钮应链接到 Pages URL，而不是 GitHub 的
 | `aurora-orb` | `sketch-board` |
 | --- | --- |
 | [![aurora-orb style showcase](./gallery/styles/aurora-orb.svg)](./gallery/styles/aurora-orb.svg)<br>Creative Agent Studio | [![sketch-board style showcase](./gallery/styles/sketch-board.svg)](./gallery/styles/sketch-board.svg)<br>Attention Teaching Flow |
+
+补充公共风格：[`illustrated-semantic` — Semantic Delivery Pipeline](./gallery/styles/illustrated-semantic.svg)。
 
 完整风格画廊源文件：`gallery/styles/index.html`
 
@@ -129,18 +131,20 @@ GitHub Pages 发布，README 按钮应链接到 Pages URL，而不是 GitHub 的
 
 ## 能做什么
 
-- 校验 DiagramScript `0.1`、`0.2`、`0.3`。
-- 将自然语言 brief 编译成 DiagramPlan v0.1，再编译成 freeform DiagramScript v0.3。
+- 校验 DiagramScript `0.1` 到 `0.4`。
+- 将自然语言 brief 编译成语义优先的 DiagramPlan v0.2，再解析成
+  DiagramScript v0.4；v0.1 -> v0.3 planner 作为显式 legacy 路径保留。
 - 把 JSON spec 或内置 preset 编译成 typed Scene IR。
 - 输出 portable animated SVG 和高保真 HTML runtime。
 - 支持分层入场、路径绘制、流动粒子、节点发光、burst ring、动态分组边框等动效。
-- 高保真 HTML runtime 默认使用 `expressive` motion profile；`off`、
-  `subtle`、`normal` 等低动效 profile 仍保留给兼容和 fallback 输出。
+- composition-v1 输出使用 `showcase-v1`；直接 DiagramScript 未声明 motion
+  时保留兼容默认 `expressive`。`off`、`subtle`、`normal` 等低动效 profile
+  仍然可用。
 - 支持结构化 motion effect object，用于连线流动、箭头粒子、动态虚线、边框扫描、icon pulse、标题 reveal。
 - 支持 `motion_policy` 动效预算，控制同时运动的连线、节点和边框数量，避免复杂图变乱。
 - 可选输出 PNG、GIF、PDF、WebP、MP4、APNG、Lottie。
 - 生成 quality report，检查越界、重叠、文本溢出和显式路径碰撞。
-- 内置 14 个 clean-room 布局 preset 和 12 个视觉风格。
+- 内置 14 个 clean-room 布局 preset 和 13 个公共视觉风格。
 
 SVG、调试 viewer HTML、Lottie 和 quality report 只依赖 Python 标准库。主输出
 `html` 会写入高保真 runtime 页面，包含静态 SVG stage、命名 parts、Motion
@@ -186,6 +190,17 @@ PYTHONPATH=src python3 -m anidiagram.cli \
   --formats svg,html,quality \
   --plan-out outputs/loop-engineering.plan.json \
   --spec-out outputs/loop-engineering.diagram.json
+```
+
+把已编写的 DiagramPlan v0.2 编译为已解析的 DiagramScript v0.4：
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --plan examples/contracts/production-request-path.plan.json \
+  --spec-out outputs/production-request-path.diagram.json \
+  --outdir outputs \
+  --basename production-request-path \
+  --formats svg,html,quality
 ```
 
 渲染高保真 HTML Runtime 示例：
@@ -261,12 +276,30 @@ Schema 文件：
 - [schemas/diagram-script-v0.1.schema.json](./schemas/diagram-script-v0.1.schema.json)
 - [schemas/diagram-script-v0.2.schema.json](./schemas/diagram-script-v0.2.schema.json)
 - [schemas/diagram-script-v0.3.schema.json](./schemas/diagram-script-v0.3.schema.json)
+- [schemas/diagram-script-v0.4.schema.json](./schemas/diagram-script-v0.4.schema.json) — `composition-v1` 已解析输出
 - [schemas/diagram-plan-v0.1.schema.json](./schemas/diagram-plan-v0.1.schema.json)
+- [schemas/diagram-plan-v0.2.schema.json](./schemas/diagram-plan-v0.2.schema.json) — 语义优先的当前合约
 - [schemas/style-profile-v0.1.schema.json](./schemas/style-profile-v0.1.schema.json)
 
-`0.2` 增加 route、step badge、preset metadata 和更严格的 role 校验。`0.3` 增加结构化 effect object、语义 icon 和节点形状。更完整的字段说明见 [docs/diagram-script.md](./docs/diagram-script.md)。
+`0.2` 增加 route、step badge、preset metadata 和更严格的 role 校验。`0.3` 增加结构化 effect object、语义 icon 和节点形状。`0.4` 增加独立图标系统、解析来源记录、Diagram Core 默认值与 `showcase-v1`。更完整的字段说明见 [docs/diagram-script.md](./docs/diagram-script.md)。
 
-DiagramPlan v0.1 是更上层的 brief/LLM 合约。当前本地 planner 和编译器见 [docs/prompt-to-diagram-flow.md](./docs/prompt-to-diagram-flow.md)。
+DiagramPlan v0.2 是当前默认的上层 brief/LLM 合约，并通过
+`composition-v1` 编译到 DiagramScript v0.4。DiagramPlan v0.1 仅保留给显式
+legacy `explainer-board` 输出。当前本地 planner 和编译器见
+[docs/prompt-to-diagram-flow.md](./docs/prompt-to-diagram-flow.md)。
+
+不同输入路径的默认值必须分开理解：
+
+| 输入路径 | 默认图标系统 | 默认动效 |
+| --- | --- | --- |
+| DiagramPlan v0.2 经 `composition-v1` 编译到 DiagramScript v0.4 | `diagram-core-v1` | `showcase-v1` |
+| 不声明 `composition_policy` 的直接 DiagramScript v0.4 | `diagram-core-v1` | 未声明 `motion` 时使用 `expressive` |
+| DiagramScript v0.1-v0.3 或未声明 `icon_system` 的旧 style | `illustrated-character-v1` | scene 未声明 motion 时使用 `expressive` |
+
+`illustrated` 是显式选择、并非默认图标系统。当前实现版本为 2.3.0，16 枚
+图标在 `showcase-v1` 下自动使用正式的 `illustrated-performance-v4` 合约。
+当前、默认与 legacy 边界见
+[图标系统发布状态](./docs/icon-system-release-status.md)。
 
 ## 布局 Preset
 
@@ -344,9 +377,13 @@ timeline、stagger、path draw-on、flow particle、glow、burst ring 等概念�
 | `off` | 关闭主动动效，输出静态图。 |
 | `subtle` | 克制动效：节点 fade、边 draw、group soft reveal。 |
 | `normal` | 兼容型均衡动效：节点 glow-breathe、边 comet-flow、group marching boundary。 |
-| `expressive` | 默认高保真动效：节点 pop、边 comet-flow、标题扫光、动态分组边框。 |
+| `expressive` | 兼容路径默认高保真动效：节点 pop、边 comet-flow、标题扫光、动态分组边框。 |
 | `teaching` | 教学型动效：icon pulse、ghost-flow、border scan、title reveal。 |
 | `runtime-loop` | 运行态循环：结构基本静止，线条信号流动，图标轻微呼吸，标题轻微呼吸。 |
+| `showcase-v1` | composition-v1 默认：开启全部适用的图标表演和数据流动效，同时保留规范静止姿态与 reduced-motion 支持。 |
+
+`expressive` 是直接或旧版 DiagramScript 未声明 motion 时的兼容默认；新建
+DiagramPlan v0.2 会显式解析为 `showcase-v1`。
 
 ### 动效通道
 
@@ -389,7 +426,7 @@ DiagramScript `0.3` 支持结构化 effect object：
 
 | 字段 | 作用 |
 | --- | --- |
-| `profile` | `unrestricted`, `readable`, `focused`, `expressive` 预算档位。 |
+| `profile` | `unrestricted`, `readable`, `focused`, `expressive`, `readable-runtime` 预算档位。 |
 | `motion_area` | `auto`, `micro`, `small`, `medium`, `unrestricted`，先用于控制粒子尺寸和动效面积感。 |
 | `max_active_flow_edges` | 最多几条连线持续运动。 |
 | `max_particle_edges` | 最多几条连线显示移动粒子/箭头。 |
@@ -398,7 +435,11 @@ DiagramScript `0.3` 支持结构化 effect object：
 | `max_active_pulse_nodes` | 最多几个节点做 pulse/glow/float。 |
 | `max_scanning_groups` | 最多几个分组边框做扫描。 |
 
-常用建议：复杂架构图用 `readable`，教学拆解图用 `focused`，高保真 runtime 和展示型图默认用 `expressive`。
+常用建议：复杂架构图用 `readable`，教学拆解图用 `focused`，直接或旧版
+DiagramScript 的高保真预算用 `expressive`。composition-v1 的
+`showcase-v1` 是 `motion.profile`，不是 `motion_policy.profile`；编译器会把它
+与 `motion_policy.profile=unrestricted`、`motion_area=unrestricted`、
+`pulse_mode=all` 配对。
 
 运行态循环建议使用 `runtime-loop` + `readable-runtime`：
 
@@ -465,8 +506,9 @@ fallback，避免两套动效叠加：
 SVG part ID，例如 `#icon-agent-outline-left`、`#icon-api-request-token`。
 `html` runtime 会关闭 SVG 图标 fallback，避免同一个图标同时跑 SMIL 和 GSAP；
 它通过 CDN 加载 GSAP，不把 GSAP 变成 Python 依赖。
-当前默认 runtime mode 是 `ambient`，默认高保真 profile 是 `expressive`：
-各图标独立循环播放高保真局部表演，并带少量 stagger delay；浏览器 runtime
+当前默认 runtime mode 是 `ambient`。直接 DiagramScript 未声明 motion 时使用
+兼容 profile `expressive`；新 composition-v1 输出解析为 `showcase-v1`。runtime
+工具栏的 Expressive 模式下，各图标独立循环播放高保真局部表演，并带少量 stagger delay；浏览器 runtime
 还会生成由 GSAP 控制的 edge flow 粒子和标题扫光。全图 timeline、
 event-driven、state-machine、
 interactive、hybrid 都是后续路线图，不是默认行为。更多 runtime 所有权、
@@ -491,10 +533,25 @@ AniDiagram 可以在概念层面参考已有项目和动画库，但代码、sch
 
 如果未来明确引入第三方 MIT 代码或资产，必须先补充原始版权和许可声明。
 
-## Illustrated Character v1
+## Illustrated 2.3.0
 
-未显式指定图标系统时，默认使用 `illustrated-character-v1`：这是一套原创的
-完整 13 枚语义图标，覆盖 `agent`、`operator`、`search`、`tool`、`api`、
+`illustrated` 是当前插画图标系统的稳定公共 id，并非 composition-v1 默认值；
+需要插画语言时应显式选择。版本 2.3.0 包含 16 枚已批准图标：`agent`、
+`operator`、`tool`、`output`、`database`、`api`、`search`、`memory`、
+`file`、`folder`、`cloud`、`shield`、`user`、`server`、`ai-model` 和
+`message-queue`。
+
+公共 `showcase-v1` 会自动使用完整 16 项的正式
+`illustrated-performance-v4` 合约。`illustrated-performance-v4-review` 仅是
+不可变的人审归档证据，新图不得输出它。输入 alias
+`illustrated-character-v2` 会解析为 `illustrated`；新 plan 与 resolved output
+统一使用稳定公共 id。
+
+## Legacy：Illustrated Character v1
+
+对于 DiagramScript v0.1-v0.3 和未声明 `icon_system` 的旧 style，兼容默认仍是
+`illustrated-character-v1`：这是一套原创的完整 13 枚 legacy 语义图标，覆盖
+`agent`、`operator`、`search`、`tool`、`api`、
 `memory`、`output`、`file`、`folder`、`cloud`、`shield`、`token` 和
 `database`。其轻量 GSAP 动效依次为 `brain-think-pulse-v1`、
 `operator-type-focus-v1`、`search-scout-find-v1`、`tool-kit-action-v1`、

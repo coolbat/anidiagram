@@ -29,11 +29,12 @@ The runtime renderer builds:
 3. A GSAP-powered JavaScript runtime from `runtime/anidiagram-runtime.js`.
 4. Runtime-generated stage effects for expressive edge flow and title sweep.
 
-The default runtime mode is `ambient`, and the default high-fidelity motion
-profile is `expressive`. In this mode, each supported semantic icon plays its
-own local micro-performance loop with a small staggered delay. Expressive
-runtime pages also generate GSAP-owned edge flow particles and title sweep in
-the browser.
+The default runtime mode is `ambient`. A direct DiagramScript that omits motion
+uses the compatibility profile `expressive`; DiagramPlan v0.2 composition-v1
+output resolves `showcase-v1`. In the runtime's Expressive toolbar mode, each
+supported semantic icon plays its own local micro-performance loop with a small
+staggered delay. Expressive runtime pages also generate GSAP-owned edge flow
+particles and title sweep in the browser.
 
 The runtime does not choreograph the whole diagram as a causal timeline by
 default.
@@ -93,9 +94,11 @@ such as GitHub Pages. A repository link like
 `https://github.com/.../blob/main/gallery/hero/agent-runtime-flow.html` is a code
 view, not the runtime experience.
 
-## Current Performances
+## Legacy semantic runtime performances
 
-Built-in runtime performances:
+The original semantic-line and legacy illustrated runtime path maps these
+twelve high-fidelity v2 performances. Diagram Core and current Illustrated use
+their own versioned manifests instead of this table.
 
 | Icon | Performance |
 | --- | --- |
@@ -264,8 +267,8 @@ semantic action to that gap, a dedicated inner shell performs a restrained
 ## Verify illustrated character runtime
 
 After generating the illustrated-character examples, verify that the full
-gallery returns every character timeline to its declared rest state, then verify
-the reduced-motion contract for the 13-icon gallery and 8-icon flow:
+legacy gallery returns every character timeline to its declared rest state,
+then verify the reduced-motion contract for the 13-icon gallery and 8-icon flow:
 
 ```bash
 node scripts/verify_character_motion_rest.mjs outputs/illustrated-character-v1-icons/illustrated-character-v1-icons.html
@@ -273,10 +276,28 @@ node scripts/verify_character_reduced_motion.mjs outputs/illustrated-character-v
 node scripts/verify_character_reduced_motion.mjs outputs/illustrated-character-v1-flow/illustrated-character-v1-flow.html 8
 ```
 
-Both scripts validate the embedded Motion Manifest, require
-`illustrated-character-v1`, and fail if the declared character count or rendered
-roots are wrong. They resolve Playwright from a local project dependency first, then `npm root -g`; `NODE_PATH` is not required. The rest-state verifier is for
-the full 13-icon gallery and intentionally rejects any other count.
+For current Illustrated 2.3.0, verify all sixteen public v4 performances and the
+stage-mode rebuild contract:
+
+```bash
+node scripts/verify_character_motion_rest.mjs \
+  outputs/illustrated-2.3-showcase/illustrated-2.3-showcase.html 16 illustrated
+node scripts/verify_character_reduced_motion.mjs \
+  outputs/illustrated-2.3-showcase/illustrated-2.3-showcase.html 16 illustrated
+node scripts/verify_stage_motion_modes.mjs \
+  outputs/illustrated-2.3-showcase/illustrated-2.3-showcase.html
+```
+
+Both character scripts validate the embedded Motion Manifest and fail if the
+declared count or rendered roots are wrong. The optional fourth argument sets
+the expected icon-system id; it defaults to `illustrated-character-v1`, while
+current Illustrated verification passes `illustrated`. The rest-state verifier
+defaults to 13 entries but accepts an explicit positive count. The scripts
+resolve Playwright from a local project dependency first, then `npm root -g`;
+`NODE_PATH` is not required.
+
+See [icon-system-release-status.md](./icon-system-release-status.md) for the
+current public contracts and immutable archive boundary.
 
 ## Limits
 

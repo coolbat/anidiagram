@@ -76,9 +76,9 @@ Schema: `schemas/diagram-script-v0.3.schema.json`.
   motion values plus `explicit`, `default`, `model`, `fallback`, or `legacy`
   provenance; icon systems such as `illustrated` MAY also record a separate
   semantic version;
-- `showcase-v1`, which enables every eligible Diagram Core icon performance,
-  data-flow edge, group treatment, and title entry while preserving rest poses
-  and reduced-motion behavior;
+- `showcase-v1`, which enables every eligible performance from the resolved icon
+  system, data-flow edge, group treatment, and title entry while preserving
+  rest poses and reduced-motion behavior;
 - the approved 56-icon `diagram-core-v1` catalog as the v0.4 default.
 
 Schema: `schemas/diagram-script-v0.4.schema.json`.
@@ -138,6 +138,13 @@ Profiles:
 - `expressive`: layered sequence with stronger node and edge motion.
 - `teaching`: staged teaching motion with semantic icons, line flow, and title
   reveal defaults.
+- `runtime-loop`: static structure with looping signal flow and restrained icon
+  breathing.
+- `showcase-v1`: composition-v1 default with every eligible icon performance
+  and data-flow edge enabled.
+
+`expressive` remains the compatibility default when a direct DiagramScript
+omits `motion`. DiagramPlan v0.2 compilation resolves `showcase-v1` explicitly.
 
 Motion channels:
 
@@ -240,7 +247,7 @@ runtime path. `html-runtime` is accepted as a legacy alias for `html`. When
 those performances need to survive raster, video, PDF, or Lottie export, use
 `--export-renderer browser`; PNG, GIF, PDF, WebP, MP4, APNG, and frame-based
 Lottie are then captured from the real `html` page instead of the lightweight
-Python preview renderer. The first runtime
+Python preview renderer. The legacy high-fidelity semantic runtime
 performances are:
 
 | Icon | Runtime performance |
@@ -253,6 +260,10 @@ performances are:
 | `tool` | `tool-run-v2` |
 | `token` | `token-intent-v2` |
 | `output` | `output-reveal-v2` |
+| `file` | `file-lines-v2` |
+| `folder` | `folder-open-v2` |
+| `cloud` | `cloud-upload-v2` |
+| `shield` | `shield-check-v2` |
 
 The runtime manifest maps each performance to stable SVG part IDs such as
 `#icon-agent-outline-left`, `#icon-api-request-token`, and
@@ -260,7 +271,7 @@ The runtime manifest maps each performance to stable SVG part IDs such as
 See [html-runtime.md](./html-runtime.md) for the runtime ownership model and
 current limitations.
 
-## Illustrated character icons
+## Illustrated and legacy character icons
 
 `illustrated-character-v1` remains the legacy v0.1-v0.3 default when a style
 omits `icon_system`. It clean-room covers all 13 legacy schema icons: `agent`, `operator`,
@@ -274,18 +285,20 @@ current implementation version is `2.3.0`, recorded separately in
 `resolved_presentation.icon_system.version`. It covers `agent`, `operator`,
 `tool`, `output`, `database`, `api`, `search`, `memory`, `file`, `folder`,
 `cloud`, `shield`, `user`, `server`, `ai-model`, and `message-queue` as
-structured semantic illustrations. It is not the default. All sixteen icons
+structured semantic illustrations. It is not the composition-v1 default. All sixteen icons
 emit approved public `illustrated-performance-v4` runtime performances under
 `showcase-v1`. `illustrated-performance-v4-review` is the immutable archived
 human-review source and is not emitted by new diagrams. The former
 `illustrated-performance-v3` public contract and
 `illustrated-performance-v3-review` review contract remain 2.2.0 archives, and
-`illustrated-performance-v2` remains the immutable eight-icon 2.1.0 archive.
+`illustrated-performance-v2` remains the immutable eight-icon 2.1.0 archive,
+and `illustrated-performance-v1` remains the immutable four-icon 2.0.0 archive.
 Uncovered icons use the existing fallback and produce a quality
 warning. The legacy id
-`illustrated-character-v2` remains an input alias. Review
+`illustrated-character-v2` remains an input alias. The old
 [`illustrated-semantic-v2-structured.diagram.json`](../examples/illustrated-semantic-v2-structured.diagram.json)
-with the `illustrated-semantic-v2-structured` style before adopting the direction.
+example and its review style are historical design evidence, not current
+adoption guidance or a second public style.
 
 Illustrated 2.3.0 visual constants live in
 [`assets/illustrated/tokens-2.3.0.json`](../assets/illustrated/tokens-2.3.0.json). A style
@@ -317,6 +330,9 @@ The supported theme combinations are `illustrated-character`, `deep-tech`, and
 representative `agent-memory`, `high-fidelity-runtime`, pipeline, layered, and
 sequence examples for current default behavior. Explicit legacy demonstrations
 must set `icon_system` to `illustrated-v1` or `semantic-line-v1`.
+
+See [icon-system-release-status.md](./icon-system-release-status.md) for the
+current/default/legacy matrix and immutable release boundaries.
 
 The broader feature plan is documented in
 [motion-effects-feature-plan.md](./motion-effects-feature-plan.md).

@@ -1,0 +1,82 @@
+import unittest
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+class IconSystemDocumentationTest(unittest.TestCase):
+    def _read(self, relative: str) -> str:
+        return (ROOT / relative).read_text(encoding="utf-8")
+
+    def test_current_and_legacy_defaults_are_scoped(self):
+        for relative in (
+            "README.md",
+            "README.zh-CN.md",
+            "SKILL.md",
+            "docs/icon-system-release-status.md",
+        ):
+            source = self._read(relative)
+            with self.subTest(relative=relative):
+                self.assertIn("composition-v1", source)
+                self.assertIn("diagram-core-v1", source)
+                self.assertIn("showcase-v1", source)
+                self.assertIn("illustrated-character-v1", source)
+                self.assertIn("expressive", source.lower())
+
+        self.assertNotIn("The default semantic icon system is", self._read("README.md"))
+        self.assertNotIn("未显式指定图标系统时，默认使用", self._read("README.zh-CN.md"))
+
+    def test_illustrated_23_public_contract_is_current_and_non_default(self):
+        for relative in (
+            "README.md",
+            "README.zh-CN.md",
+            "SKILL.md",
+            "docs/diagram-script.md",
+            "docs/html-runtime.md",
+            "docs/icon-system-release-status.md",
+        ):
+            source = self._read(relative)
+            with self.subTest(relative=relative):
+                self.assertIn("2.3.0", source)
+                self.assertIn("illustrated-performance-v4", source)
+
+        status = self._read("docs/icon-system-release-status.md")
+        self.assertIn("No; select explicitly", status)
+        self.assertIn("sixteen performances", status)
+        self.assertIn("illustrated-performance-v4-review", status)
+
+    def test_sixteen_item_runtime_gates_are_documented(self):
+        for relative in (
+            "SKILL.md",
+            "docs/html-runtime.md",
+            "docs/icon-system-release-status.md",
+        ):
+            source = self._read(relative)
+            with self.subTest(relative=relative):
+                self.assertIn("verify_character_motion_rest.mjs", source)
+                self.assertIn("verify_character_reduced_motion.mjs", source)
+                self.assertIn("verify_stage_motion_modes.mjs", source)
+                self.assertGreaterEqual(source.count("16 illustrated"), 2)
+
+    def test_closeout_record_contains_observed_pass_evidence(self):
+        evidence = self._read("docs/release-evidence.md")
+        self.assertIn("Evidence E-COMP-01 — passed", evidence)
+        self.assertIn("176/176 Python tests passed", evidence)
+        self.assertIn("minimum of 3 distinct states for Diagram Core", evidence)
+        self.assertIn("Blocker class: none", evidence)
+
+    def test_showcase_motion_is_not_documented_as_a_motion_policy_profile(self):
+        readme = self._read("README.md")
+        policy = readme.split("### Motion Policy", 1)[1].split("### Node Motion Types", 1)[0]
+        self.assertIn("`motion_policy.profile=unrestricted`", policy)
+        self.assertNotIn("| `showcase-v1` |", policy)
+
+        readme_zh = self._read("README.zh-CN.md")
+        policy_zh = readme_zh.split("### 动效预算", 1)[1].split("### 节点动效", 1)[0]
+        self.assertIn("`motion_policy.profile=unrestricted`", policy_zh)
+        self.assertNotIn("| `showcase-v1` |", policy_zh)
+
+
+if __name__ == "__main__":
+    unittest.main()

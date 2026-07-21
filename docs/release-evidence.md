@@ -82,6 +82,91 @@
 - Next action: human review of the explicit unstaged handoff on `codex/illustrated-character-v1`.
 - Synchronized status: `Plan.md=M4 done`; `Documentation.md=Attempt 5`; `agent-loop-state.md=2026-07-13 12:11:50 CST`.
 
+## Current Composition and Icon-System Closeout
+
+This record closes the current composition-v1 and public icon-system stage. It
+records the exact uncommitted worktree that was independently verified; it does
+not claim that the changes have already been committed or published.
+
+### Evidence E-COMP-01 — passed
+
+- Milestone: composition-v1 defaults and Illustrated 2.3.0 public v4 closeout.
+- Attempt number: 1 final integrated run.
+- Recorded at: 2026-07-20 23:14:51 CST.
+- Source state: branch `main`, base commit
+  `017f635fc49a3ca554acf18475dff13f2e5a2347`; 27 task-scoped modified or
+  untracked paths, no commit created by this closeout.
+- Changed assumptions: DiagramPlan v0.2 / DiagramScript v0.4 defaults are
+  `diagram-core-v1` plus `showcase-v1`; DiagramScript v0.1-v0.3 and legacy style
+  omission retain `illustrated-character-v1` plus `expressive`; direct v0.4
+  without `composition_policy` uses Diagram Core plus `expressive` for manual
+  authoring compatibility; `illustrated` 2.3.0 is an explicit non-default
+  system with sixteen public v4 performances.
+- Resolved composition omission: icon system `diagram-core-v1/default`, style
+  `minimal-light/fallback`, layout `layered/fallback`, motion
+  `showcase-v1/default`. The compiled budget is
+  `motion_policy.profile=unrestricted`, `motion_area=unrestricted`, and
+  `pulse_mode=all`.
+- Commands executed:
+  - `PYTHONPATH=src python3 scripts/validate_diagram_core_assets.py --strict --json`
+  - `PYTHONPATH=src python3 -m unittest discover -s tests`
+  - `node --check runtime/anidiagram-runtime.js`
+  - `node scripts/verify_character_motion_rest.mjs outputs/illustrated-2.3-showcase/illustrated-2.3-showcase.html 16 illustrated`
+  - `node scripts/verify_character_reduced_motion.mjs outputs/illustrated-2.3-showcase/illustrated-2.3-showcase.html 16 illustrated`
+  - `node scripts/verify_stage_motion_modes.mjs outputs/illustrated-2.3-showcase/illustrated-2.3-showcase.html`
+  - `node scripts/verify_stage_motion_modes.mjs outputs/composition-v1-edge-stage/production-request-path.html`
+  - `PYTHONPATH=src python3 scripts/build_icon_system_release_evidence.py`
+  - `PYTHONPATH=src python3 scripts/build_icon_system_release_evidence.py --verify`
+  - `git diff --check` and an immutable-archive digest check.
+- Result: 176/176 Python tests passed; all 14 layouts produced distinct clean
+  geometry; Diagram Core strict reported 56 catalog entries, 56 SVGs, 56
+  manifests, 56 approved, 4 contrast checks, zero planned/visual-review,
+  zero warnings, and zero errors.
+- Public coverage: Gallery and runtime report Diagram Core 56/56 and Illustrated
+  2.3.0 16/16, each with zero quality issues. Illustrated rest and reduced
+  motion returned 16/16; its stage modes returned characters=16, edges=0. The
+  separate composition-v1 request-path proof returned characters=4, edges=3,
+  readable=2, so data-flow mode switching has nonzero edge coverage.
+- Export evidence: two systems x ten formats at browser 24 FPS, 108 frames, and
+  2x scale. GIF, WebP, APNG, MP4, and Lottie each contained 108 distinct whole
+  frames for both systems. Exact catalog/manifest identity passed. Per-icon
+  Lottie crop audit reported a minimum of 3 distinct states for Diagram Core
+  and 45 for Illustrated; issues were empty.
+- Artifact or output:
+  `outputs/release-evidence/icon-systems/public-icon-system-export-evidence.json`
+  (13,238 bytes, SHA-256
+  `7c4aa14a0fe2eefc10dcdf440f5d26449132936495d544887c8a72d48fa70ebc`),
+  `gallery/icon-systems/index.html`,
+  `outputs/composition-v1-edge-stage/production-request-path.html`, and browser
+  review captures under `outputs/playwright/`.
+- Browser proof: public index plus both release runtime pages loaded over HTTP;
+  Diagram Core exposed all 56 accessible icon labels, Illustrated exposed all
+  16, toolbar mode/zoom controls worked, and all checked consoles contained
+  zero warnings and zero errors.
+- Immutable authority digests remained unchanged:
+  Diagram Core v1 release
+  `5a594cbb155a421a7f820d594c52abeee1ecad9aa8aef6c8212f2328e0d9005e`;
+  Illustrated 2.3 release
+  `54851a06e6cf446c058d47b5aac563d399134bfc9e25cb409ba51f82e2cc8aed`;
+  Illustrated acceptance
+  `86b255c6a0b9c6c41c17811eecfbd1fc3c0725ff092c7c7786769d5f2ddc05f5`.
+- Known failure: the first ad hoc 14-layout audit passed style id
+  `minimal-light` where `load_style` required `styles/minimal-light.json`; the
+  corrected command passed all 14 layouts. No product code was changed for
+  this command-only error.
+- Blocker class: none.
+- Verdict: passed; no implementation or validation stage remains open in the
+  current scope.
+- Residual risk: the large binary export matrix is intentionally ignored local
+  evidence rather than a tracked release payload. The tracked builder and
+  evidence hashes make it reproducible, but distribution or CI retention is a
+  separate release operation.
+- Next action: commit and push this verified worktree only when explicitly
+  requested.
+
+Current icon-system status and immutable boundaries are indexed in
+[`icon-system-release-status.md`](./icon-system-release-status.md).
+
 ## Failure History
 
 ### Failure F-M1-01
