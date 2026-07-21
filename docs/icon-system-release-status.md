@@ -125,6 +125,25 @@ Verification requires exact catalog and motion-manifest identity, clean quality,
 browser renderer metadata, distinct whole frames, and visible per-icon pixel
 changes in the frame-based Lottie capture.
 
+## CI and evidence retention
+
+`.github/workflows/test.yml` protects pull requests and `main` with two levels
+of validation. The contract job runs the complete Python suite, strict 56-icon
+Diagram Core validation, JavaScript syntax checking, and a render smoke test.
+The browser job regenerates the current Illustrated showcase and a
+composition-v1 edge-flow proof, then checks all sixteen Illustrated rest poses,
+reduced motion, runtime mode switching, and nonzero edge-flow coverage in
+Chromium.
+
+The formal two-system export matrix is intentionally not generated on every
+pull request because the current evidence bundle is about 333 MB. Run
+`.github/workflows/icon-system-release-evidence.yml` through
+`workflow_dispatch` for a release candidate. It installs the pinned Playwright
+runtime plus ffmpeg, builds and independently verifies the complete matrix, and
+uploads `outputs/release-evidence/icon-systems` as a commit-addressed GitHub
+Actions artifact retained for 14 days. The artifact is CI evidence, not a
+tracked source release or a replacement for the immutable approval records.
+
 ## Updating this page
 
 Update current status only after the new public catalog, acceptance record,

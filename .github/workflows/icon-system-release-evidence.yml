@@ -1,0 +1,45 @@
+name: icon-system-release-evidence
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: icon-system-release-evidence-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - name: Install browser export dependencies
+        run: |
+          python3 -m pip install -e ".[raster]"
+          npm ci
+          npx playwright install --with-deps chromium
+          sudo apt-get update
+          sudo apt-get install --yes ffmpeg
+      - name: Build formal two-system export evidence
+        run: PYTHONPATH=src python3 scripts/build_icon_system_release_evidence.py
+      - name: Independently verify formal export evidence
+        run: PYTHONPATH=src python3 scripts/build_icon_system_release_evidence.py --verify
+      - name: Upload complete release evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: icon-system-release-evidence-${{ github.sha }}
+          path: outputs/release-evidence/icon-systems
+          if-no-files-found: error
+          retention-days: 14

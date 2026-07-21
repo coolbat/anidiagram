@@ -167,6 +167,35 @@ not claim that the changes have already been committed or published.
 Current icon-system status and immutable boundaries are indexed in
 [`icon-system-release-status.md`](./icon-system-release-status.md).
 
+### Evidence E-CI-01 — locally passed, remote activation pending
+
+- Milestone: icon-system release automation and CI evidence retention.
+- Attempt number: 1.
+- Changed assumptions: the 333 MB formal export matrix is a manually triggered
+  release operation, while pull requests and `main` use lower-cost structural,
+  unit, render, and real-browser runtime gates.
+- Artifact or output: `.github/workflows/test.yml`,
+  `.github/workflows/icon-system-release-evidence.yml`, and
+  `tests/test_release_workflows.py`.
+- Local verification: 179/179 Python tests; Diagram Core 56/56 approved with
+  zero warnings and errors; workflow YAML parsed cleanly; Illustrated rest and
+  reduced-motion checks passed 16/16; runtime modes reported
+  `characters=16, edges=0` for the icon showcase and
+  `characters=4, edges=3, readable=2` for the composition-v1 proof. A separate
+  verification replay of the existing formal evidence passed two systems x ten
+  formats, with 108 distinct frames in every animated format and no issues.
+- Acceptance contract: pull-request and `main` CI checks all 56 Diagram Core
+  assets, the full
+  Python suite, runtime JavaScript, all sixteen Illustrated public
+  performances, reduced motion, runtime modes, and a composition-v1 edge-flow
+  proof. `workflow_dispatch` builds and verifies the two-system, ten-format
+  matrix and retains it as a commit-addressed artifact for 14 days.
+- Blocker class: external activation only. A remote Actions run cannot exist
+  until these workflow files are explicitly committed and pushed; this record
+  does not claim that GitHub Actions has executed them.
+- Verdict: local workflow contract and repository validation passed; remote
+  release evidence remains an operator-triggered release action.
+
 ## Failure History
 
 ### Failure F-M1-01

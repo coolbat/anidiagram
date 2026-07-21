@@ -5,20 +5,94 @@ on:
     branches: ["main"]
   pull_request:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: test-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  unittest:
+  contract:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Run unit tests
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - name: Install Python package and raster support
+        run: python3 -m pip install -e ".[raster]"
+      - name: Run unit and contract tests
         run: PYTHONPATH=src python3 -m unittest discover -s tests
-      - name: Render preset smoke test
+      - name: Validate all approved Diagram Core assets
+        run: PYTHONPATH=src python3 scripts/validate_diagram_core_assets.py --strict --json
+      - name: Check runtime JavaScript syntax
+        run: node --check runtime/anidiagram-runtime.js
+      - name: Render composition smoke test
         run: |
           PYTHONPATH=src python3 -m anidiagram.cli \
             --preset agent-memory \
-            --outdir outputs \
+            --outdir build/ci/smoke \
             --basename agent-memory \
             --formats svg,html,quality
+
+  runtime-browser:
+    needs: contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - name: Install runtime test dependencies
+        run: |
+          python3 -m pip install -e ".[raster]"
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: Render current Illustrated public showcase
+        run: |
+          PYTHONPATH=src python3 -m anidiagram.cli \
+            --spec examples/illustrated-2.3-showcase.diagram.json \
+            --outdir build/ci/illustrated \
+            --basename illustrated-2.3-showcase \
+            --formats svg,html,quality
+      - name: Render composition-v1 edge-flow proof
+        run: |
+          PYTHONPATH=src python3 -m anidiagram.cli \
+            --plan examples/contracts/production-request-path.plan.json \
+            --spec-out build/ci/composition/production-request-path.diagram.json \
+            --outdir build/ci/composition \
+            --basename production-request-path \
+            --formats svg,html,quality
+      - name: Verify Illustrated rest poses and reduced motion
+        run: |
+          node scripts/verify_character_motion_rest.mjs \
+            build/ci/illustrated/illustrated-2.3-showcase.html 16 illustrated
+          node scripts/verify_character_reduced_motion.mjs \
+            build/ci/illustrated/illustrated-2.3-showcase.html 16 illustrated
+      - name: Verify runtime motion modes and edge coverage
+        run: |
+          node scripts/verify_stage_motion_modes.mjs \
+            build/ci/illustrated/illustrated-2.3-showcase.html
+          node scripts/verify_stage_motion_modes.mjs \
+            build/ci/composition/production-request-path.html
+      - name: Upload browser diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: runtime-browser-diagnostics-${{ github.sha }}
+          path: build/ci
+          if-no-files-found: ignore
+          retention-days: 7
