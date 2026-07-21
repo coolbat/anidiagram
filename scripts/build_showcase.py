@@ -855,7 +855,6 @@ def _build_character_theme_comparison(outdir: Path, quality: bool) -> Dict[str, 
         write_html(scene, style, html_path)
         if quality:
             write_quality(scene, style, quality_path)
-        webp_path = ROOT / "outputs" / "illustrated-character-theme-comparison" / f"{style_name}.webp"
         entries.append(
             {
                 "style": style_name,
@@ -863,7 +862,7 @@ def _build_character_theme_comparison(outdir: Path, quality: bool) -> Dict[str, 
                 "spec": _rel(source_path),
                 "svg": _rel(svg_path),
                 "html": _rel(html_path),
-                "webp": _rel(webp_path),
+                "preview": _rel(svg_path),
                 "quality": _rel(quality_path),
                 "icon_system": "illustrated-character-v1",
                 "motion_mode": "ambient / expressive",
@@ -873,9 +872,9 @@ def _build_character_theme_comparison(outdir: Path, quality: bool) -> Dict[str, 
     cards = "\n".join(
         f'<article><h2>{html_escape(entry["label"])}</h2>'
         f'<p><code>{html_escape(entry["style"])}</code> · <code>{entry["icon_system"]}</code> · <code>{entry["motion_mode"]}</code></p>'
-        f'<a href="{_path_for_html(entry["html"])}"><img src="{_path_from_gallery(entry["webp"])}" alt="{html_escape(entry["label"])} animated preview"></a>'
+        f'<a href="{_path_for_html(entry["html"])}"><img src="{_path_for_html(entry["preview"])}" alt="{html_escape(entry["label"])} static preview"></a>'
         f'<p><a href="{_path_for_html(entry["html"])}">HTML</a> · <a href="{_path_for_html(entry["svg"])}">SVG</a> · '
-        f'<a href="{_path_from_gallery(entry["webp"])}">WebP</a> · <a href="{_path_for_html(entry["quality"])}">Quality</a></p></article>'
+        f'<a href="{_path_for_html(entry["quality"])}">Quality</a></p></article>'
         for entry in entries
     )
     page_path.write_text(

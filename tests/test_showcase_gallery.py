@@ -118,7 +118,7 @@ class ShowcaseGalleryTest(unittest.TestCase):
         targets = (
             ROOT / "examples" / "agent-memory.diagram.json",
             ROOT / "examples" / "high-fidelity-runtime.diagram.json",
-            ROOT / "outputs" / "loop-engineering-architecture" / "loop-engineering-architecture.diagram.json",
+            ROOT / "examples" / "illustrated-character-strong-loop-cases.diagram.json",
             ROOT / "examples" / "showcase" / "layouts" / "pipeline-rag-ingestion-pipeline.diagram.json",
             ROOT / "examples" / "showcase" / "layouts" / "layered-llm-app-architecture-layers.diagram.json",
             ROOT / "examples" / "showcase" / "layouts" / "sequence-api-tool-calling-sequence.diagram.json",
@@ -177,8 +177,10 @@ class ShowcaseGalleryTest(unittest.TestCase):
         self.assertEqual(style_catalog["character_themes"], [entry["style"] for entry in comparison["themes"]])
         self.assertTrue((ROOT / comparison["page"]).is_file())
         for entry in comparison["themes"]:
-            for key in ("svg", "html", "webp", "quality"):
+            for key in ("svg", "html", "preview", "quality"):
                 self.assertTrue((ROOT / entry[key]).is_file(), entry[key])
+            self.assertEqual(entry["svg"], entry["preview"])
+            self.assertNotIn("webp", entry)
             summary = json.loads((ROOT / entry["quality"]).read_text(encoding="utf-8"))["summary"]
             self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, summary)
 

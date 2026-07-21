@@ -14,7 +14,9 @@ geometry or semantic performances.
 | `teaching-sketch-character` | Pass, supported | Softer instructional surface with stable frames and restrained edge motion. |
 
 The supported comparison surface is `gallery/character-themes.html`. Each entry
-links HTML, SVG, browser-captured animated WebP, and a clean quality report.
+uses its tracked SVG as the checkout-safe preview and links HTML, SVG, and a
+clean quality report. Browser-captured animated exports remain separate release
+evidence and are not required for a fresh checkout to render this gallery.
 
 ## Additional bundled-theme evaluation
 

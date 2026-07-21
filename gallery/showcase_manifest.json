@@ -2283,7 +2283,7 @@
         "spec": "examples/illustrated-character-v1-flow.diagram.json",
         "svg": "gallery/character-themes/illustrated-character.svg",
         "html": "gallery/character-themes/illustrated-character.html",
-        "webp": "outputs/illustrated-character-theme-comparison/illustrated-character.webp",
+        "preview": "gallery/character-themes/illustrated-character.svg",
         "quality": "gallery/character-themes/illustrated-character.quality.json",
         "icon_system": "illustrated-character-v1",
         "motion_mode": "ambient / expressive"
@@ -2294,7 +2294,7 @@
         "spec": "examples/illustrated-character-v1-flow.diagram.json",
         "svg": "gallery/character-themes/deep-tech.svg",
         "html": "gallery/character-themes/deep-tech.html",
-        "webp": "outputs/illustrated-character-theme-comparison/deep-tech.webp",
+        "preview": "gallery/character-themes/deep-tech.svg",
         "quality": "gallery/character-themes/deep-tech.quality.json",
         "icon_system": "illustrated-character-v1",
         "motion_mode": "ambient / expressive"
@@ -2305,7 +2305,7 @@
         "spec": "examples/illustrated-character-v1-flow.diagram.json",
         "svg": "gallery/character-themes/teaching-sketch-character.svg",
         "html": "gallery/character-themes/teaching-sketch-character.html",
-        "webp": "outputs/illustrated-character-theme-comparison/teaching-sketch-character.webp",
+        "preview": "gallery/character-themes/teaching-sketch-character.svg",
         "quality": "gallery/character-themes/teaching-sketch-character.quality.json",
         "icon_system": "illustrated-character-v1",
         "motion_mode": "ambient / expressive"
