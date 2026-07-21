@@ -1,0 +1,101 @@
+{
+  "version": "0.4",
+  "composition_policy": "composition-v1",
+  "resolved_presentation": {
+    "icon_system": {"value": "diagram-core-v1", "source": "explicit", "version": "1.0.0"},
+    "style": {"value": "minimal-light", "source": "explicit"},
+    "layout": {"value": "matrix", "source": "explicit"},
+    "motion": {"value": "showcase-v1", "source": "default"}
+  },
+  "preset": "diagram-core-v1-showcase",
+  "icon_system": "diagram-core-v1",
+  "canvas": {"width": 1480, "height": 1320},
+  "style": "minimal-light",
+  "title": {
+    "text": "Diagram Core v1 · Public Showcase",
+    "subtitle": "56 approved icons · automatic showcase-v1 performances"
+  },
+  "motion": {
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "stagger": 0.04,
+    "node": {"preset": "icon-performance"},
+    "edge": {"preset": "none"},
+    "group": {"preset": "none"},
+    "title": {"preset": "highlight-sweep"},
+    "reduced_motion": "subtle"
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "max_active_flow_edges": 0,
+    "max_particle_edges": 0,
+    "max_active_pulse_nodes": 56,
+    "max_scanning_groups": 0
+  },
+  "nodes": [
+    {"id": "core-user", "label": "User", "position": [45, 145], "size": [180, 105], "role": "actor", "icon": "user", "effect": {"preset": "icon-performance"}},
+    {"id": "core-developer", "label": "Developer", "position": [245, 145], "size": [180, 105], "role": "actor", "icon": "developer", "effect": {"preset": "icon-performance"}},
+    {"id": "core-operator", "label": "Operator", "position": [445, 145], "size": [180, 105], "role": "actor", "icon": "operator", "effect": {"preset": "icon-performance"}},
+    {"id": "core-agent", "label": "Agent", "position": [645, 145], "size": [180, 105], "role": "agent", "icon": "agent", "effect": {"preset": "icon-performance"}},
+    {"id": "core-agent-team", "label": "Agent Team", "position": [845, 145], "size": [180, 105], "role": "agent", "icon": "agent-team", "effect": {"preset": "icon-performance"}},
+    {"id": "core-assistant", "label": "Assistant", "position": [1045, 145], "size": [180, 105], "role": "agent", "icon": "assistant", "effect": {"preset": "icon-performance"}},
+    {"id": "core-human-reviewer", "label": "Human Reviewer", "position": [1245, 145], "size": [180, 105], "role": "actor", "icon": "human-reviewer", "effect": {"preset": "icon-performance"}},
+
+    {"id": "core-ai-model", "label": "AI Model", "position": [45, 285], "size": [180, 105], "role": "agent", "icon": "ai-model", "effect": {"preset": "icon-performance"}},
+    {"id": "core-llm", "label": "LLM", "position": [245, 285], "size": [180, 105], "role": "agent", "icon": "llm", "effect": {"preset": "icon-performance"}},
+    {"id": "core-neural-network", "label": "Neural Network", "position": [445, 285], "size": [180, 105], "role": "agent", "icon": "neural-network", "effect": {"preset": "icon-performance"}},
+    {"id": "core-reasoning", "label": "Reasoning", "position": [645, 285], "size": [180, 105], "role": "process", "icon": "reasoning", "effect": {"preset": "icon-performance"}},
+    {"id": "core-embedding", "label": "Embedding", "position": [845, 285], "size": [180, 105], "role": "process", "icon": "embedding", "effect": {"preset": "icon-performance"}},
+    {"id": "core-memory", "label": "Memory", "position": [1045, 285], "size": [180, 105], "role": "memory", "icon": "memory", "effect": {"preset": "icon-performance"}},
+    {"id": "core-tool", "label": "Tool", "position": [1245, 285], "size": [180, 105], "role": "tool", "icon": "tool", "effect": {"preset": "icon-performance"}},
+
+    {"id": "core-token", "label": "Token", "position": [45, 425], "size": [180, 105], "role": "source", "icon": "token", "effect": {"preset": "icon-performance"}},
+    {"id": "core-database", "label": "Database", "position": [245, 425], "size": [180, 105], "role": "memory", "icon": "database", "effect": {"preset": "icon-performance"}},
+    {"id": "core-vector-database", "label": "Vector Database", "position": [445, 425], "size": [180, 105], "role": "memory", "icon": "vector-database", "effect": {"preset": "icon-performance"}},
+    {"id": "core-data-warehouse", "label": "Data Warehouse", "position": [645, 425], "size": [180, 105], "role": "memory", "icon": "data-warehouse", "effect": {"preset": "icon-performance"}},
+    {"id": "core-document-store", "label": "Document Store", "position": [845, 425], "size": [180, 105], "role": "memory", "icon": "document-store", "effect": {"preset": "icon-performance"}},
+    {"id": "core-knowledge-base", "label": "Knowledge Base", "position": [1045, 425], "size": [180, 105], "role": "memory", "icon": "knowledge-base", "effect": {"preset": "icon-performance"}},
+    {"id": "core-dataset", "label": "Dataset", "position": [1245, 425], "size": [180, 105], "role": "source", "icon": "dataset", "effect": {"preset": "icon-performance"}},
+
+    {"id": "core-search", "label": "Search", "position": [45, 565], "size": [180, 105], "role": "process", "icon": "search", "effect": {"preset": "icon-performance"}},
+    {"id": "core-file", "label": "File", "position": [245, 565], "size": [180, 105], "role": "source", "icon": "file", "effect": {"preset": "icon-performance"}},
+    {"id": "core-folder", "label": "Folder", "position": [445, 565], "size": [180, 105], "role": "source", "icon": "folder", "effect": {"preset": "icon-performance"}},
+    {"id": "core-document", "label": "Document", "position": [645, 565], "size": [180, 105], "role": "source", "icon": "document", "effect": {"preset": "icon-performance"}},
+    {"id": "core-pdf", "label": "PDF", "position": [845, 565], "size": [180, 105], "role": "source", "icon": "pdf", "effect": {"preset": "icon-performance"}},
+    {"id": "core-image", "label": "Image", "position": [1045, 565], "size": [180, 105], "role": "source", "icon": "image", "effect": {"preset": "icon-performance"}},
+    {"id": "core-audio", "label": "Audio", "position": [1245, 565], "size": [180, 105], "role": "source", "icon": "audio", "effect": {"preset": "icon-performance"}},
+
+    {"id": "core-video", "label": "Video", "position": [45, 705], "size": [180, 105], "role": "source", "icon": "video", "effect": {"preset": "icon-performance"}},
+    {"id": "core-code-file", "label": "Code File", "position": [245, 705], "size": [180, 105], "role": "source", "icon": "code-file", "effect": {"preset": "icon-performance"}},
+    {"id": "core-output", "label": "Output", "position": [445, 705], "size": [180, 105], "role": "output", "icon": "output", "effect": {"preset": "icon-performance"}},
+    {"id": "core-api", "label": "API", "position": [645, 705], "size": [180, 105], "role": "source", "icon": "api", "effect": {"preset": "icon-performance"}},
+    {"id": "core-webhook", "label": "Webhook", "position": [845, 705], "size": [180, 105], "role": "source", "icon": "webhook", "effect": {"preset": "icon-performance"}},
+    {"id": "core-http-request", "label": "HTTP Request", "position": [1045, 705], "size": [180, 105], "role": "source", "icon": "http-request", "effect": {"preset": "icon-performance"}},
+    {"id": "core-gateway", "label": "Gateway", "position": [1245, 705], "size": [180, 105], "role": "source", "icon": "gateway", "effect": {"preset": "icon-performance"}},
+
+    {"id": "core-load-balancer", "label": "Load Balancer", "position": [45, 845], "size": [180, 105], "role": "source", "icon": "load-balancer", "effect": {"preset": "icon-performance"}},
+    {"id": "core-message-queue", "label": "Message Queue", "position": [245, 845], "size": [180, 105], "role": "memory", "icon": "message-queue", "effect": {"preset": "icon-performance"}},
+    {"id": "core-shield", "label": "Shield", "position": [445, 845], "size": [180, 105], "role": "risk", "icon": "shield", "effect": {"preset": "icon-performance"}},
+    {"id": "core-server", "label": "Server", "position": [645, 845], "size": [180, 105], "role": "process", "icon": "server", "effect": {"preset": "icon-performance"}},
+    {"id": "core-server-cluster", "label": "Server Cluster", "position": [845, 845], "size": [180, 105], "role": "process", "icon": "server-cluster", "effect": {"preset": "icon-performance"}},
+    {"id": "core-cloud", "label": "Cloud", "position": [1045, 845], "size": [180, 105], "role": "process", "icon": "cloud", "effect": {"preset": "icon-performance"}},
+    {"id": "core-container", "label": "Container", "position": [1245, 845], "size": [180, 105], "role": "process", "icon": "container", "effect": {"preset": "icon-performance"}},
+
+    {"id": "core-function", "label": "Function", "position": [45, 985], "size": [180, 105], "role": "process", "icon": "function", "effect": {"preset": "icon-performance"}},
+    {"id": "core-edge-node", "label": "Edge Node", "position": [245, 985], "size": [180, 105], "role": "process", "icon": "edge-node", "effect": {"preset": "icon-performance"}},
+    {"id": "core-source-code", "label": "Source Code", "position": [445, 985], "size": [180, 105], "role": "source", "icon": "source-code", "effect": {"preset": "icon-performance"}},
+    {"id": "core-git-repository", "label": "Git Repository", "position": [645, 985], "size": [180, 105], "role": "source", "icon": "git-repository", "effect": {"preset": "icon-performance"}},
+    {"id": "core-branch", "label": "Branch", "position": [845, 985], "size": [180, 105], "role": "source", "icon": "branch", "effect": {"preset": "icon-performance"}},
+    {"id": "core-pull-request", "label": "Pull Request", "position": [1045, 985], "size": [180, 105], "role": "source", "icon": "pull-request", "effect": {"preset": "icon-performance"}},
+    {"id": "core-ci-cd", "label": "CI/CD", "position": [1245, 985], "size": [180, 105], "role": "process", "icon": "ci-cd", "effect": {"preset": "icon-performance"}},
+
+    {"id": "core-deployment", "label": "Deployment", "position": [45, 1125], "size": [180, 105], "role": "process", "icon": "deployment", "effect": {"preset": "icon-performance"}},
+    {"id": "core-task", "label": "Task", "position": [245, 1125], "size": [180, 105], "role": "process", "icon": "task", "effect": {"preset": "icon-performance"}},
+    {"id": "core-scheduler", "label": "Scheduler", "position": [445, 1125], "size": [180, 105], "role": "process", "icon": "scheduler", "effect": {"preset": "icon-performance"}},
+    {"id": "core-monitoring", "label": "Monitoring", "position": [645, 1125], "size": [180, 105], "role": "output", "icon": "monitoring", "effect": {"preset": "icon-performance"}},
+    {"id": "core-logs", "label": "Logs", "position": [845, 1125], "size": [180, 105], "role": "output", "icon": "logs", "effect": {"preset": "icon-performance"}},
+    {"id": "core-alert", "label": "Alert", "position": [1045, 1125], "size": [180, 105], "role": "risk", "icon": "alert", "effect": {"preset": "icon-performance"}},
+    {"id": "core-debug", "label": "Debug", "position": [1245, 1125], "size": [180, 105], "role": "process", "icon": "debug", "effect": {"preset": "icon-performance"}}
+  ]
+}

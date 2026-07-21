@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AniDiagram Public Icon Systems</title>
+  <link rel="icon" href="data:,">
+  <style>
+    body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: #f8fafc; color: #172033; }
+    main { max-width: 1320px; margin: 0 auto; padding: 28px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    article { overflow: hidden; border: 1px solid #dfe3ec; border-radius: 12px; background: #fff; }
+    img { display: block; width: 100%; height: auto; background: #fff; }
+    .body { padding: 0 16px 14px; }
+    p { color: #526075; }
+    a { color: #315ac7; }
+    code { color: #5b48ae; }
+    @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body><main>
+  <p><a href="../index.html">Back to gallery</a> · <a href="../showcase_manifest.json">Manifest</a></p>
+  <h1>Public Icon Systems</h1>
+  <p>Current frozen releases with complete public showcase coverage. Full browser export matrices are produced separately as release evidence.</p>
+  <p><code>PYTHONPATH=src python3 scripts/build_icon_system_release_evidence.py</code><br>
+  Verify later with <code>PYTHONPATH=src python3 scripts/build_icon_system_release_evidence.py --verify</code>.</p>
+  <section class="grid"><article><a href="diagram-core-v1.html"><img src="diagram-core-v1.svg" alt="Diagram Core v1 public showcase"></a><div class="body"><h2>Diagram Core v1</h2><p><code>diagram-core-v1</code> · 56/56 icons · <code>showcase-v1</code></p><p>Infrastructure diagrams, Architecture systems, Technical operations</p><p><a href="diagram-core-v1.html">HTML</a> · <a href="diagram-core-v1.svg">SVG</a> · <a href="diagram-core-v1.quality.json">Quality</a> · <a href="../../examples/diagram-core-v1-showcase.diagram.json">Spec</a> · <a href="../../assets/diagram-core/releases/v1.0.0.json">Frozen release</a></p></div></article>
+<article><a href="illustrated-2.3.html"><img src="illustrated-2.3.svg" alt="Illustrated 2.3 public showcase"></a><div class="body"><h2>Illustrated 2.3</h2><p><code>illustrated</code> · 16/16 icons · <code>illustrated-performance-v4</code></p><p>AI explainers, Character-led workflows, Animated presentations</p><p><a href="illustrated-2.3.html">HTML</a> · <a href="illustrated-2.3.svg">SVG</a> · <a href="illustrated-2.3.quality.json">Quality</a> · <a href="../../examples/illustrated-2.3-showcase.diagram.json">Spec</a> · <a href="../../assets/illustrated/releases/2.3.0.json">Frozen release</a></p></div></article></section>
+</main></body>
+</html>

@@ -2311,5 +2311,63 @@
         "motion_mode": "ambient / expressive"
       }
     ]
-  }
+  },
+  "icon_system_releases": [
+    {
+      "id": "diagram-core-v1",
+      "title": "Diagram Core v1",
+      "basename": "diagram-core-v1",
+      "icon_system": "diagram-core-v1",
+      "version": "1.0.0",
+      "status": "frozen",
+      "icon_count": 56,
+      "rendered_icon_count": 56,
+      "automatic_motion_icon_count": 56,
+      "motion_contract": "showcase-v1",
+      "spec": "examples/diagram-core-v1-showcase.diagram.json",
+      "release": "assets/diagram-core/releases/v1.0.0.json",
+      "style": "minimal-light",
+      "svg": "gallery/icon-systems/diagram-core-v1.svg",
+      "html": "gallery/icon-systems/diagram-core-v1.html",
+      "quality": "gallery/icon-systems/diagram-core-v1.quality.json",
+      "best_for": [
+        "Infrastructure diagrams",
+        "Architecture systems",
+        "Technical operations"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "illustrated-2.3",
+      "title": "Illustrated 2.3",
+      "basename": "illustrated-2.3",
+      "icon_system": "illustrated",
+      "version": "2.3.0",
+      "status": "frozen-approved-release",
+      "icon_count": 16,
+      "rendered_icon_count": 16,
+      "automatic_motion_icon_count": 16,
+      "motion_contract": "illustrated-performance-v4",
+      "spec": "examples/illustrated-2.3-showcase.diagram.json",
+      "release": "assets/illustrated/releases/2.3.0.json",
+      "style": "deep-tech",
+      "svg": "gallery/icon-systems/illustrated-2.3.svg",
+      "html": "gallery/icon-systems/illustrated-2.3.html",
+      "quality": "gallery/icon-systems/illustrated-2.3.quality.json",
+      "best_for": [
+        "AI explainers",
+        "Character-led workflows",
+        "Animated presentations"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    }
+  ]
 }

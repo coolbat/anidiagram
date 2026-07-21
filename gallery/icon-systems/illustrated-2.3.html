@@ -1,0 +1,3237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Illustrated 2.3 · Public Showcase Runtime</title>
+  <link rel="icon" href="data:,">
+  <style>
+    body { margin: 0; background: #0b1020; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    main { min-height: 100vh; display: grid; grid-template-rows: auto 1fr; gap: 12px; padding: 16px; box-sizing: border-box; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    button, a { border: 1px solid #475569; background: #111827; color: #f8fafc; border-radius: 8px; padding: 8px 10px; font: inherit; text-decoration: none; cursor: pointer; }
+    button:hover, a:hover { background: #1f2937; }
+    button[aria-pressed="true"] { background: #475569; border-color: #94a3b8; }
+    .stage { width: 100%; min-height: 0; overflow: hidden; border: 1px solid #334155; border-radius: 12px; background: #020617; cursor: grab; }
+    .stage.dragging { cursor: grabbing; }
+    .viewport { transform-origin: 0 0; width: max-content; }
+    svg { display: block; max-width: none; height: auto; user-select: none; }
+    main.motion-readable .node-burst,
+    main.motion-readable .icon-breathe-halo { display: none; }
+    main.motion-readable .edge-flow { opacity: 0.08; }
+    main.motion-readable .semantic-icon-breathe { animation-duration: 4.2s; }
+    main.motion-off .edge-flow,
+    main.motion-off .edge-particle,
+    main.motion-off .node-burst,
+    main.motion-off .node-glow,
+    main.motion-off .icon-breathe-halo { display: none; }
+    main.motion-off .semantic-icon-breathe { animation: none !important; }
+  </style>
+</head>
+<body>
+  <main id="viewer" class="motion-expressive" data-runtime="gsap">
+    <div class="toolbar">
+      <button type="button" id="toggle">Pause</button>
+      <button type="button" id="restart">Restart</button>
+      <button type="button" class="motion-choice" data-motion="expressive" aria-pressed="true">Expressive</button>
+      <button type="button" class="motion-choice" data-motion="readable" aria-pressed="false">Readable</button>
+      <button type="button" class="motion-choice" data-motion="off" aria-pressed="false">Off</button>
+      <button type="button" id="zoom-in">Zoom In</button>
+      <button type="button" id="zoom-out">Zoom Out</button>
+      <button type="button" id="reset">Reset</button>
+      <a id="download" download="Illustrated 2.3 · Public Showcase.svg">Download SVG</a>
+    </div>
+    <div class="stage" id="stage">
+      <div class="viewport" id="viewport">
+<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="1450" viewBox="0 0 1480 1450" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="showcase-v1" data-motion-sequence="staged" data-motion-edge="none" data-motion-node="icon-performance" data-motion-group="none" data-motion-title="highlight-sweep" data-motion-reduced="static" data-icon-system="illustrated" data-icon-system-version="2.3.0">
+<title id="diagram-title">Illustrated 2.3 · Public Showcase</title>
+<desc id="diagram-desc">16 approved icons · automatic showcase-v1 performances</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .edge-flow { stroke-linecap: round; }
+  .edge-draw, .edge-base { stroke-linecap: butt; stroke-linejoin: round; }
+  .edge-particle { filter: url(#particle-glow); }
+  .edge-arrow-particle { filter: url(#particle-glow); }
+  .semantic-icon { vector-effect: non-scaling-stroke; }
+  .semantic-icon-breathe { transform-box: fill-box; transform-origin: center; animation: semanticIconBreathe 2.8s ease-in-out infinite; }
+  .icon-breathe-halo { pointer-events: none; filter: url(#particle-glow); }
+  .node-glow, .node-burst { pointer-events: none; }
+  #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
+  #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
+  @keyframes titlePulse { 0%, 100% { opacity: 0.76; } 50% { opacity: 1; } }
+  @keyframes titleSlide { 0%, 100% { transform: translateX(0); opacity: 0.9; } 50% { transform: translateX(8px); opacity: 1; } }
+  @keyframes semanticIconBreathe { 0%, 100% { transform: scale(0.96); opacity: 0.72; } 50% { transform: scale(1.08); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    #title-accent, #title-highlight, .semantic-icon-breathe { animation: none; }
+  }
+</style>
+<rect width="100%" height="100%" fill="#050816" />
+<defs>
+  <filter id="soft-glow" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="5" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <filter id="particle-glow" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="2.6" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#111c36" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="1424" height="1398" rx="26" fill="none" stroke="#64748b" stroke-width="1.4" opacity="1.00" />
+<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#22d3ee" style="animation:none" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#0f2742" style="animation:none" />
+
+<text id="main-title" x="90" y="84" class="title" fill="#f8fafc" opacity="1">
+  Illustrated 2.3 · Public Showcase
+</text>
+<text x="74" y="126" class="subtitle" fill="#cbd5e1" opacity="1">
+  16 approved icons · automatic showcase-v1 performances
+</text>
+
+
+
+<g id="node-agent" class="node motion-node" data-role="agent" opacity="1">
+
+
+
+
+  <rect x="50.0" y="160.0" width="310.0" height="230.0" rx="14.0"
+        fill="#1e1b4b" stroke="#a78bfa" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="agent" data-node-id="agent" opacity="1">
+  <g id="icon-agent-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.3.0" data-semantic-role="input-reason-result" data-rest-opacity="1" transform="translate(59.0 216.0) scale(0.9833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-agent-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="59" cy="61" r="49" fill="#251f4b" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-agent-brain-left" class="illustrated-part illustrated-brain-left" data-rest-opacity="1" d="M57 27C45 18 30 25 31 38c-11 4-12 19-2 25-5 12 7 23 18 18 3 8 10 9 15 3V38c-1-5-2-8-5-11Z" fill="#34d399" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-agent-brain-right" class="illustrated-part illustrated-brain-right" data-rest-opacity="1" d="M63 27c12-9 27-2 26 11 11 4 12 19 2 25 5 12-7 23-18 18-3 8-10 9-15 3V38c1-5 2-8 5-11Z" fill="#8b5cf6" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-agent-brain-detail" class="illustrated-part illustrated-brain-detail" data-rest-opacity="0.68" d="M43 35c-5 4-3 9 1 11m-8 13c7-1 7 6 12 8m29-32c5 4 3 9-1 11m8 13c-7-1-7 6-12 8" opacity="0.68" fill="none" stroke="#d8cebd" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-agent-processor" class="illustrated-part illustrated-processor" data-rest-opacity="1" x="45" y="42" width="30" height="30" rx="6" fill="#111c33" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-agent-processor-core" class="illustrated-part illustrated-processor-core" data-rest-opacity="1" d="M50 63l4.5-13L59 63m-7.3-5h5.6M62.5 50h7m-3.5 0v13m-3.5 0h7" fill="none" stroke="#a78bfa" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-agent-input-nodes" class="illustrated-part illustrated-input-nodes" data-rest-opacity="1" d="M8 45h12v12H8Zm0 26h12V59H8Z" fill="#fb7185" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-agent-input-path" class="illustrated-part illustrated-input-path" data-rest-opacity="1" d="M20 51h9m-9 14h7c4 0 5-3 5-7" fill="none" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-agent-output-path" class="illustrated-part illustrated-output-path" data-rest-opacity="1" d="M90 54h10c5 0 7-3 7-7V35" fill="none" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-agent-result" class="illustrated-part illustrated-result" data-rest-opacity="1" d="M107 16l3 8 8 3-8 3-3 8-3-8-8-3 8-3Z" fill="#fbbf24" stroke="#d8cebd" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="274.0" y="261.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="274.0" dy="18" class="node-title">Agent</tspan>
+<tspan x="274.0" dy="17" class="node-caption">receive • reason</tspan>
+<tspan x="274.0" dy="17" class="node-caption">• deliver</tspan>
+</text>
+</g>
+
+<g id="node-operator" class="node motion-node" data-role="source" opacity="1">
+
+
+
+
+  <rect x="407.0" y="160.0" width="310.0" height="230.0" rx="14.0"
+        fill="#071f2f" stroke="#22d3ee" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="operator" data-node-id="operator" opacity="1">
+  <g id="icon-operator-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.3.0" data-semantic-role="person-operate-status" data-rest-opacity="1" transform="translate(416.0 216.0) scale(0.9833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-operator-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="58" cy="61" r="49" fill="#0b3047" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-operator-body" class="illustrated-part illustrated-body" data-rest-opacity="1" d="M31 80c2-17 13-27 28-27 16 0 27 10 29 27Z" fill="#38bdf8" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-operator-head" class="illustrated-part illustrated-head" data-rest-opacity="1" cx="59" cy="36" r="18" fill="#f7b38a" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-operator-hair" class="illustrated-part illustrated-hair" data-rest-opacity="1" d="M41 36c-3-15 8-25 21-23 12 1 19 11 16 24l-9-5-6 4-9-5-7 6Z" fill="#a78bfa" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-operator-glasses" class="illustrated-part illustrated-glasses" data-rest-opacity="1" d="M43 38h13c0 6-3 9-7 9s-6-3-6-9Zm19 0h13c0 6-3 9-7 9s-6-3-6-9Zm-6 1h6" fill="#111c33" stroke="#d8cebd" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-operator-laptop" class="illustrated-part illustrated-laptop" data-rest-opacity="1" d="M26 70h68l-6 31H32Z" fill="#111c33" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-operator-hands" class="illustrated-part illustrated-hands" data-rest-opacity="1" d="M34 77c0-6 4-10 9-10s9 4 9 10Zm34 0c0-6 4-10 9-10s9 4 9 10Z" fill="#f7b38a" stroke="#d8cebd" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-operator-screen" class="illustrated-part illustrated-screen" data-rest-opacity="1" x="50" y="78" width="21" height="13" rx="3" fill="#34d399" stroke="#d8cebd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-operator-laptop-base" class="illustrated-part illustrated-laptop-base" data-rest-opacity="1" d="M20 102h80l-7 7H27Z" fill="#8b5cf6" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-operator-input-cursor" class="illustrated-part illustrated-input-cursor" data-rest-opacity="1" d="M18 64l13 6-6 3-3 7Z" fill="#fbbf24" stroke="#d8cebd" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-operator-status" class="illustrated-part illustrated-status" data-rest-opacity="1" cx="98" cy="29" r="13" fill="#34d399" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-operator-status-check" class="illustrated-part illustrated-status-check" data-rest-opacity="1" d="M91 29l5 5 10-12" fill="none" stroke="#d8cebd" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="631.0" y="261.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="631.0" dy="18" class="node-title">Operator</tspan>
+<tspan x="631.0" dy="17" class="node-caption">focus • operate</tspan>
+<tspan x="631.0" dy="17" class="node-caption">• confirm</tspan>
+</text>
+</g>
+
+<g id="node-tool" class="node motion-node" data-role="tool" opacity="1">
+
+
+
+
+  <rect x="764.0" y="160.0" width="310.0" height="230.0" rx="14.0"
+        fill="#21160a" stroke="#f59e0b" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="tool" data-node-id="tool" opacity="1">
+  <g id="icon-tool-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.3.0" data-semantic-role="tool-action-complete" data-rest-opacity="1" transform="translate(773.0 216.0) scale(0.9833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-tool-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="59" cy="61" r="49" fill="#382707" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-tool-toolbox" class="illustrated-part illustrated-toolbox" data-rest-opacity="1" d="M20 54h77l-7 46H27Z" fill="#14b8a6" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-tool-toolbox-lid" class="illustrated-part illustrated-toolbox-lid" data-rest-opacity="1" d="M18 48h81v15H18Z" fill="#8b5cf6" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-tool-handle" class="illustrated-part illustrated-handle" data-rest-opacity="1" d="M38 48c0-19 40-19 40 0" fill="none" stroke="#d8cebd" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-tool-wrench" class="illustrated-part illustrated-wrench" data-rest-opacity="1" d="M48 67l12 12 31-31c8 1 16-3 20-10l-13-6-7 7-9-9 7-7-6-13c-10 4-15 15-12 25Z" fill="#fbbf24" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-tool-wrench-hole" class="illustrated-part illustrated-wrench-hole" data-rest-opacity="1" cx="56" cy="71" r="4.5" fill="#111c33" stroke="#d8cebd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-tool-target" class="illustrated-part illustrated-target" data-rest-opacity="1" d="M11 79l5-9 10 1 5 10-6 9-10-1Z" fill="#fb7185" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-tool-action-path" class="illustrated-part illustrated-action-path" data-rest-opacity="1" d="M31 76c9-1 14-5 20-11" fill="none" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-tool-completion" class="illustrated-part illustrated-completion" data-rest-opacity="1" d="M99 73l3 7 7 3-7 3-3 7-3-7-7-3 7-3Z" fill="#34d399" stroke="#d8cebd" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="988.0" y="261.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="988.0" dy="18" class="node-title">Tool</tspan>
+<tspan x="988.0" dy="17" class="node-caption">prepare •</tspan>
+<tspan x="988.0" dy="17" class="node-caption">execute •</tspan>
+</text>
+</g>
+
+<g id="node-output" class="node motion-node" data-role="output" opacity="1">
+
+
+
+
+  <rect x="1121.0" y="160.0" width="310.0" height="230.0" rx="14.0"
+        fill="#052e16" stroke="#4ade80" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="output" data-node-id="output" opacity="1">
+  <g id="icon-output-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.3.0" data-semantic-role="artifact-deliver-confirm" data-rest-opacity="1" transform="translate(1130.0 216.0) scale(0.9833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-output-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="58" cy="61" r="49" fill="#0a3027" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-output-card" class="illustrated-part illustrated-card" data-rest-opacity="1" x="31" y="11" width="48" height="57" rx="7" fill="#111c33" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-output-card-lines" class="illustrated-part illustrated-card-lines" data-rest-opacity="1" d="M42 26h26m-26 11h20m-20 11h15" fill="none" stroke="#c4b5fd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-output-delivery-tray" class="illustrated-part illustrated-delivery-tray" data-rest-opacity="1" d="M15 66h27l9 11h13l9-11h27l7 35H8Z" fill="#38bdf8" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-output-delivery-lip" class="illustrated-part illustrated-delivery-lip" data-rest-opacity="1" d="M9 94h97M42 66l9 11h13l9-11" fill="none" stroke="#d8cebd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-output-send-path" class="illustrated-part illustrated-send-path" data-rest-opacity="1" d="M79 60c11-1 19-7 23-16m-8 4 8-4 1 9" fill="none" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-output-check-badge" class="illustrated-part illustrated-check-badge" data-rest-opacity="1" cx="105" cy="27" r="13" fill="#34d399" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-output-check" class="illustrated-part illustrated-check" data-rest-opacity="1" d="M98 27l5 5 10-12" fill="none" stroke="#d8cebd" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="1345.0" y="261.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="1345.0" dy="18" class="node-title">Output</tspan>
+<tspan x="1345.0" dy="17" class="node-caption">compose •</tspan>
+<tspan x="1345.0" dy="17" class="node-caption">deliver •</tspan>
+</text>
+</g>
+
+<g id="node-database" class="node motion-node" data-role="memory" opacity="1">
+
+
+
+
+  <rect x="50.0" y="470.0" width="310.0" height="230.0" rx="14.0"
+        fill="#052e24" stroke="#34d399" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="database" data-node-id="database" opacity="1">
+  <g id="icon-database-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.3.0" data-semantic-role="data-ingest-store-persist" data-rest-opacity="1" transform="translate(59.0 526.0) scale(0.9833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-database-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="59" cy="61" r="49" fill="#0b3047" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-database-cylinder-body" class="illustrated-part illustrated-cylinder-body" data-rest-opacity="1" d="M25 37v50c0 9 16 16 35 16s35-7 35-16V37Z" fill="#38bdf8" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <ellipse id="icon-database-cylinder-top" class="illustrated-part illustrated-cylinder-top" data-rest-opacity="1" cx="60" cy="37" rx="35" ry="14" fill="#8b5cf6" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-database-layer-top" class="illustrated-part illustrated-layer-top" data-rest-opacity="1" d="M25 58c0 9 16 16 35 16s35-7 35-16" fill="none" stroke="#d8cebd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-database-layer-bottom" class="illustrated-part illustrated-layer-bottom" data-rest-opacity="1" d="M25 78c0 9 16 16 35 16s35-7 35-16" fill="none" stroke="#d8cebd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-database-input-bead" class="illustrated-part illustrated-input-bead" data-rest-opacity="1" cx="14" cy="23" r="6" fill="#fb7185" stroke="#d8cebd" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-database-write-path" class="illustrated-part illustrated-write-path" data-rest-opacity="1" d="M20 25c11-4 17 0 24 8m-7-1 7 1-3-7" fill="none" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <ellipse id="icon-database-commit-ripple" class="illustrated-part illustrated-commit-ripple" data-rest-opacity="1" cx="60" cy="85" rx="13" ry="5" fill="none" stroke="#14b8a6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-database-stored-bead" class="illustrated-part illustrated-stored-bead" data-rest-opacity="1" cx="60" cy="84" r="4.5" fill="#34d399" stroke="#d8cebd" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="274.0" y="571.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="274.0" dy="18" class="node-title">Database</tspan>
+<tspan x="274.0" dy="17" class="node-caption">ingest • store •</tspan>
+<tspan x="274.0" dy="17" class="node-caption">persist</tspan>
+</text>
+</g>
+
+<g id="node-api" class="node motion-node" data-role="source" opacity="1">
+
+
+
+
+  <rect x="407.0" y="470.0" width="310.0" height="230.0" rx="14.0"
+        fill="#071f2f" stroke="#22d3ee" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="api" data-node-id="api" opacity="1">
+  <g id="icon-api-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.3.0" data-semantic-role="request-route-response" data-rest-opacity="1" transform="translate(416.0 526.0) scale(0.9833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-api-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="59" cy="61" r="49" fill="#251f4b" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-api-gateway" class="illustrated-part illustrated-gateway" data-rest-opacity="1" x="30" y="24" width="60" height="72" rx="16" fill="#111c33" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-api-api-glyph" class="illustrated-part illustrated-api-glyph" data-rest-opacity="1" d="M51 44 42 60l9 16m18-32 9 16-9 16M63 40l-7 40" fill="none" stroke="#a78bfa" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-api-request-path" class="illustrated-part illustrated-request-path" data-rest-opacity="1" d="M10 45h27m-8-7 8 7-8 7" fill="none" stroke="#14b8a6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-api-request-token" class="illustrated-part illustrated-request-token" data-rest-opacity="1" cx="12" cy="45" r="5" fill="#fb7185" stroke="#d8cebd" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-api-response-path" class="illustrated-part illustrated-response-path" data-rest-opacity="1" d="M110 76H83m8-7-8 7 8 7" fill="none" stroke="#c4b5fd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-api-response-token" class="illustrated-part illustrated-response-token" data-rest-opacity="1" cx="108" cy="76" r="5" fill="#fbbf24" stroke="#d8cebd" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="631.0" y="571.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="631.0" dy="18" class="node-title">API</tspan>
+<tspan x="631.0" dy="17" class="node-caption">request • route</tspan>
+<tspan x="631.0" dy="17" class="node-caption">• respond</tspan>
+</text>
+</g>
+
+<g id="node-search" class="node motion-node" data-role="process" opacity="1">
+
+
+
+
+  <rect x="764.0" y="470.0" width="310.0" height="230.0" rx="14.0"
+        fill="#0f172a" stroke="#38bdf8" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="search" data-node-id="search" opacity="1">
+  <g id="icon-search-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.3.0" data-semantic-role="query-scan-discover" data-rest-opacity="1" transform="translate(773.0 526.0) scale(0.9833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-search-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="58" cy="61" r="49" fill="#0b3047" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-search-lens-glass" class="illustrated-part illustrated-lens-glass" data-rest-opacity="1" cx="49" cy="48" r="29" fill="#111c33" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-search-lens" class="illustrated-part illustrated-lens" data-rest-opacity="1" cx="49" cy="48" r="30" fill="none" stroke="#d8cebd" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-search-handle" class="illustrated-part illustrated-handle" data-rest-opacity="1" d="M70 69l29 29" fill="none" stroke="#d8cebd" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-search-scan-cross" class="illustrated-part illustrated-scan-cross" data-rest-opacity="1" d="M49 34v28M35 48h28" fill="none" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-search-target-ring" class="illustrated-part illustrated-target-ring" data-rest-opacity="1" cx="93" cy="24" r="11" fill="#0a3027" stroke="#14b8a6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-search-result-dot" class="illustrated-part illustrated-result-dot" data-rest-opacity="1" cx="93" cy="24" r="4" fill="#34d399" stroke="#d8cebd" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-search-discovery" class="illustrated-part illustrated-discovery" data-rest-opacity="1" d="M20 79l3 8 8 3-8 3-3 8-3-8-8-3 8-3Z" fill="#fbbf24" stroke="#d8cebd" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="988.0" y="571.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="988.0" dy="18" class="node-title">Search</tspan>
+<tspan x="988.0" dy="17" class="node-caption">query • scan •</tspan>
+<tspan x="988.0" dy="17" class="node-caption">discover</tspan>
+</text>
+</g>
+
+<g id="node-memory" class="node motion-node" data-role="memory" opacity="1">
+
+
+
+
+  <rect x="1121.0" y="470.0" width="310.0" height="230.0" rx="14.0"
+        fill="#052e24" stroke="#34d399" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="memory" data-node-id="memory" opacity="1">
+  <g id="icon-memory-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.3.0" data-semantic-role="context-capture-index-recall" data-rest-opacity="1" transform="translate(1130.0 526.0) scale(0.9833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-memory-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="59" cy="61" r="49" fill="#0a3027" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-memory-back-card" class="illustrated-part illustrated-back-card" data-rest-opacity="1" x="21" y="22" width="66" height="68" rx="12" fill="#8b5cf6" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-memory-front-card" class="illustrated-part illustrated-front-card" data-rest-opacity="1" x="30" y="31" width="66" height="68" rx="12" fill="#111c33" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-memory-index-nodes" class="illustrated-part illustrated-index-nodes" data-rest-opacity="1" d="M45 53h9v9h-9Zm19-10h9v9h-9Zm12 25h9v9h-9Z" fill="#34d399" stroke="#d8cebd" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-memory-trace" class="illustrated-part illustrated-trace" data-rest-opacity="1" d="M54 57l14-10m1 5 11 20" fill="none" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-memory-input-token" class="illustrated-part illustrated-input-token" data-rest-opacity="1" cx="14" cy="76" r="6" fill="#fb7185" stroke="#d8cebd" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-memory-commit-path" class="illustrated-part illustrated-commit-path" data-rest-opacity="1" d="M20 76h18m-7-7 7 7-7 7" fill="none" stroke="#14b8a6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-memory-bookmark" class="illustrated-part illustrated-bookmark" data-rest-opacity="1" d="M72 31v24l8-6 8 6V31Z" fill="#fbbf24" stroke="#d8cebd" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-memory-result" class="illustrated-part illustrated-result" data-rest-opacity="1" d="M102 79l3 7 7 3-7 3-3 7-3-7-7-3 7-3Z" fill="#34d399" stroke="#d8cebd" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="1345.0" y="571.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="1345.0" dy="18" class="node-title">Memory</tspan>
+<tspan x="1345.0" dy="17" class="node-caption">capture • index</tspan>
+<tspan x="1345.0" dy="17" class="node-caption">• recall</tspan>
+</text>
+</g>
+
+<g id="node-file" class="node motion-node" data-role="source" opacity="1">
+
+
+
+
+  <rect x="50.0" y="780.0" width="310.0" height="230.0" rx="14.0"
+        fill="#071f2f" stroke="#22d3ee" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="file" data-node-id="file" opacity="1">
+  <g id="icon-file-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.3.0" data-semantic-role="document-content-attach-reference" data-rest-opacity="1" transform="translate(59.0 836.0) scale(0.9833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-file-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#251f4b" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-file-page" class="illustrated-part illustrated-page" data-rest-opacity="1" x="29" y="17" width="62" height="86" rx="8" fill="#111c33" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-file-paperclip" class="illustrated-part illustrated-paperclip" data-rest-opacity="1" d="M45 35v38c0 13 18 13 18 0V44c0-8-11-8-11 0v27c0 5 6 5 6 0V49" fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-file-content-lines" class="illustrated-part illustrated-content-lines" data-rest-opacity="1" d="M68 49h12M68 64h12" fill="none" stroke="#5eead4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="274.0" y="881.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="274.0" dy="18" class="node-title">File</tspan>
+<tspan x="274.0" dy="17" class="node-caption">prepare • attach</tspan>
+<tspan x="274.0" dy="17" class="node-caption">• reference</tspan>
+</text>
+</g>
+
+<g id="node-folder" class="node motion-node" data-role="memory" opacity="1">
+
+
+
+
+  <rect x="407.0" y="780.0" width="310.0" height="230.0" rx="14.0"
+        fill="#052e24" stroke="#34d399" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="folder" data-node-id="folder" opacity="1">
+  <g id="icon-folder-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.3.0" data-semantic-role="collection-store-index-organize" data-rest-opacity="1" transform="translate(416.0 836.0) scale(0.9833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-folder-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#382707" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-folder-folder-back" class="illustrated-part illustrated-folder-back" data-rest-opacity="1" d="M18 43h31l9 9h44v45H18Z" fill="#8b5cf6" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-folder-folder-tab" class="illustrated-part illustrated-folder-tab" data-rest-opacity="1" d="M18 43h31l9 9H18Z" fill="#fbbf24" stroke="#d8cebd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-folder-document" class="illustrated-part illustrated-document" data-rest-opacity="1" x="50" y="35" width="31" height="40" rx="5" fill="#111c33" stroke="#d8cebd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-folder-folder-front" class="illustrated-part illustrated-folder-front" data-rest-opacity="1" d="M18 60h86l-8 37H27Z" fill="#fbbf24" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-folder-index-label" class="illustrated-part illustrated-index-label" data-rest-opacity="1" x="44" y="70" width="34" height="15" rx="7.5" fill="#34d399" stroke="#d8cebd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="631.0" y="881.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="631.0" dy="18" class="node-title">Folder</tspan>
+<tspan x="631.0" dy="17" class="node-caption">prepare • store</tspan>
+<tspan x="631.0" dy="17" class="node-caption">• index</tspan>
+</text>
+</g>
+
+<g id="node-cloud" class="node motion-node" data-role="process" opacity="1">
+
+
+
+
+  <rect x="764.0" y="780.0" width="310.0" height="230.0" rx="14.0"
+        fill="#0f172a" stroke="#38bdf8" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="cloud" data-node-id="cloud" opacity="1">
+  <g id="icon-cloud-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.3.0" data-semantic-role="data-upload-download-sync" data-rest-opacity="1" transform="translate(773.0 836.0) scale(0.9833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-cloud-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="58" cy="63" r="49" fill="#0b3047" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-cloud-cloud-shell" class="illustrated-part illustrated-cloud-shell" data-rest-opacity="1" d="M28 91c-16 0-21-20-7-29-1-17 18-27 32-17 9-14 31-10 34 6 17-1 23 21 7 32Z" fill="#38bdf8" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-cloud-upload-arrow" class="illustrated-part illustrated-upload-arrow" data-rest-opacity="1" d="M44 80V49M34 59l10-10 10 10" fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-cloud-download-arrow" class="illustrated-part illustrated-download-arrow" data-rest-opacity="1" d="M76 47v31M66 68l10 10 10-10" fill="none" stroke="#5eead4" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="988.0" y="881.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="988.0" dy="18" class="node-title">Cloud</tspan>
+<tspan x="988.0" dy="17" class="node-caption">prepare •</tspan>
+<tspan x="988.0" dy="17" class="node-caption">transfer •</tspan>
+</text>
+</g>
+
+<g id="node-shield" class="node motion-node" data-role="risk" opacity="1">
+
+
+
+
+  <rect x="1121.0" y="780.0" width="310.0" height="230.0" rx="14.0"
+        fill="#2a0f16" stroke="#fb7185" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="shield" data-node-id="shield" opacity="1">
+  <g id="icon-shield-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.3.0" data-semantic-role="security-lock-protect" data-rest-opacity="1" transform="translate(1130.0 836.0) scale(0.9833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-shield-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="61" cy="61" r="49" fill="#251f4b" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-shield-shield-shell" class="illustrated-part illustrated-shield-shell" data-rest-opacity="1" d="M60 15l35 14v28c0 22-14 37-35 47-21-10-35-25-35-47V29Z" fill="#8b5cf6" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-shield-inner-field" class="illustrated-part illustrated-inner-field" data-rest-opacity="1" d="M60 29l22 9v18c0 14-9 24-22 31-13-7-22-17-22-31V38Z" fill="#111c33" stroke="#d8cebd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-shield-lock-shackle" class="illustrated-part illustrated-lock-shackle" data-rest-opacity="1" d="M49 59v-8c0-15 22-15 22 0v8" fill="none" stroke="#5eead4" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-shield-security-lock" class="illustrated-part illustrated-security-lock" data-rest-opacity="1" x="44" y="57" width="32" height="28" rx="7" fill="#34d399" stroke="#d8cebd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-shield-keyhole" class="illustrated-part illustrated-keyhole" data-rest-opacity="1" d="M60 66a4 4 0 1 0 .1 0M60 70v7" fill="none" stroke="#d8cebd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="1345.0" y="881.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="1345.0" dy="18" class="node-title">Shield</tspan>
+<tspan x="1345.0" dy="17" class="node-caption">prepare • lock •</tspan>
+<tspan x="1345.0" dy="17" class="node-caption">protect</tspan>
+</text>
+</g>
+
+<g id="node-user" class="node motion-node" data-role="actor" opacity="1">
+
+
+
+
+  <rect x="50.0" y="1090.0" width="310.0" height="230.0" rx="14.0"
+        fill="#1f1a0d" stroke="#fbbf24" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="user" data-node-id="user" opacity="1">
+  <g id="icon-user-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.3.0" data-semantic-role="external-person-request-interact" data-rest-opacity="1" transform="translate(59.0 1146.0) scale(0.9833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-user-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="58" cy="61" r="49" fill="#0b3047" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-user-portrait-body" class="illustrated-part illustrated-portrait-body" data-rest-opacity="1" d="M21 101c2-23 16-36 37-36s35 13 37 36Z" fill="#38bdf8" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-user-portrait-neck" class="illustrated-part illustrated-portrait-neck" data-rest-opacity="1" x="51" y="56" width="15" height="17" rx="6" fill="#f7b38a" stroke="#d8cebd" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-user-portrait-head" class="illustrated-part illustrated-portrait-head" data-rest-opacity="1" cx="58" cy="42" r="22" fill="#f7b38a" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-user-portrait-hair" class="illustrated-part illustrated-portrait-hair" data-rest-opacity="1" d="M37 43c-2-20 12-31 27-27 11 3 18 13 16 27l-8-8-9 4-10-6-9 8Z" fill="#8b5cf6" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-user-face" class="illustrated-part illustrated-face" data-rest-opacity="1" d="M48 47h2m15 0h2M51 56c5 4 10 4 15 0" fill="none" stroke="#d8cebd" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-user-conversation-card" class="illustrated-part illustrated-conversation-card" data-rest-opacity="1" d="M80 20h27c5 0 8 3 8 8v21c0 5-3 8-8 8H96l-8 8v-8h-8c-5 0-8-3-8-8V28c0-5 3-8 8-8Z" fill="#111c33" stroke="#d8cebd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-user-conversation-lines" class="illustrated-part illustrated-conversation-lines" data-rest-opacity="1" d="M83 34h20M83 43h14" fill="none" stroke="#5eead4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="274.0" y="1191.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="274.0" dy="18" class="node-title">User</tspan>
+<tspan x="274.0" dy="17" class="node-caption">request •</tspan>
+<tspan x="274.0" dy="17" class="node-caption">interact •</tspan>
+</text>
+</g>
+
+<g id="node-server" class="node motion-node" data-role="process" opacity="1">
+
+
+
+
+  <rect x="407.0" y="1090.0" width="310.0" height="230.0" rx="14.0"
+        fill="#0f172a" stroke="#38bdf8" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="server" data-node-id="server" opacity="1">
+  <g id="icon-server-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.3.0" data-semantic-role="compute-host-run-service" data-rest-opacity="1" transform="translate(416.0 1146.0) scale(0.9833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-server-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#0a3027" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-server-rack-shell" class="illustrated-part illustrated-rack-shell" data-rest-opacity="1" x="24" y="15" width="72" height="90" rx="14" fill="#111c33" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-server-upper-bay" class="illustrated-part illustrated-upper-bay" data-rest-opacity="1" x="31" y="25" width="58" height="20" rx="6" fill="#38bdf8" stroke="#d8cebd" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-server-middle-bay" class="illustrated-part illustrated-middle-bay" data-rest-opacity="1" x="31" y="50" width="58" height="20" rx="6" fill="#8b5cf6" stroke="#d8cebd" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-server-lower-bay" class="illustrated-part illustrated-lower-bay" data-rest-opacity="1" x="31" y="75" width="58" height="20" rx="6" fill="#fbbf24" stroke="#d8cebd" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-server-rack-ports" class="illustrated-part illustrated-rack-ports" data-rest-opacity="1" d="M40 35h17M40 60h17M40 85h17" fill="none" stroke="#d8cebd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-server-activity-lights" class="illustrated-part illustrated-activity-lights" data-rest-opacity="1" d="M77 35h0M77 60h0M77 85h0" fill="none" stroke="#5eead4" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="631.0" y="1191.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="631.0" dy="18" class="node-title">Server</tspan>
+<tspan x="631.0" dy="17" class="node-caption">host • compute •</tspan>
+<tspan x="631.0" dy="17" class="node-caption">serve</tspan>
+</text>
+</g>
+
+<g id="node-ai-model" class="node motion-node" data-role="agent" opacity="1">
+
+
+
+
+  <rect x="764.0" y="1090.0" width="310.0" height="230.0" rx="14.0"
+        fill="#1e1b4b" stroke="#a78bfa" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="ai-model" data-node-id="ai-model" opacity="1">
+  <g id="icon-ai-model-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.3.0" data-semantic-role="model-inference-transform-predict" data-rest-opacity="1" transform="translate(773.0 1146.0) scale(0.9833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-ai-model-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#251f4b" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-ai-model-model-card" class="illustrated-part illustrated-model-card" data-rest-opacity="1" x="18" y="18" width="84" height="84" rx="18" fill="#111c33" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-ai-model-model-header" class="illustrated-part illustrated-model-header" data-rest-opacity="1" d="M31 34h26M86 34h0" fill="none" stroke="#a78bfa" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-ai-model-network-links" class="illustrated-part illustrated-network-links" data-rest-opacity="0.78" d="M38 53 61 45m-23 8 23 16m-23 20 23-24m0-20 21 12M61 69l21-12M61 45l21 32M61 69l21 8" opacity="0.78" fill="none" stroke="#c4b5fd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-ai-model-input-neurons" class="illustrated-part illustrated-input-neurons" data-rest-opacity="1" d="M38 53h0M38 73h0" fill="none" stroke="#fb7185" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-ai-model-hidden-neurons" class="illustrated-part illustrated-hidden-neurons" data-rest-opacity="1" d="M61 45h0M61 69h0" fill="none" stroke="#a78bfa" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-ai-model-output-neuron" class="illustrated-part illustrated-output-neuron" data-rest-opacity="1" cx="82" cy="57" r="5" fill="#34d399" stroke="#d8cebd" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-ai-model-inference-band" class="illustrated-part illustrated-inference-band" data-rest-opacity="1" d="M35 88h50" fill="none" stroke="#5eead4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="988.0" y="1191.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="988.0" dy="18" class="node-title">AI Model</tspan>
+<tspan x="988.0" dy="17" class="node-caption">infer •</tspan>
+<tspan x="988.0" dy="17" class="node-caption">transform •</tspan>
+</text>
+</g>
+
+<g id="node-message-queue" class="node motion-node" data-role="memory" opacity="1">
+
+
+
+
+  <rect x="1121.0" y="1090.0" width="310.0" height="230.0" rx="14.0"
+        fill="#052e24" stroke="#34d399" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="message-queue" data-node-id="message-queue" opacity="1">
+  <g id="icon-message-queue-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.3.0" data-semantic-role="async-buffer-order-deliver" data-rest-opacity="1" transform="translate(1130.0 1146.0) scale(0.9833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-message-queue-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#382707" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-message-queue-queue-shell" class="illustrated-part illustrated-queue-shell" data-rest-opacity="1" x="15" y="27" width="90" height="67" rx="18" fill="#111c33" stroke="#d8cebd" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-message-queue-queue-rail" class="illustrated-part illustrated-queue-rail" data-rest-opacity="1" d="M26 72h68" fill="none" stroke="#d8cebd" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-message-queue-message-one" class="illustrated-part illustrated-message-one" data-rest-opacity="1" x="27" y="43" width="18" height="22" rx="6" fill="#fb7185" stroke="#d8cebd" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-message-queue-message-two" class="illustrated-part illustrated-message-two" data-rest-opacity="1" x="51" y="43" width="18" height="22" rx="6" fill="#8b5cf6" stroke="#d8cebd" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-message-queue-message-three" class="illustrated-part illustrated-message-three" data-rest-opacity="1" x="75" y="43" width="18" height="22" rx="6" fill="#34d399" stroke="#d8cebd" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-message-queue-buffer-gates" class="illustrated-part illustrated-buffer-gates" data-rest-opacity="1" d="M24 39v40M96 39v40" fill="none" stroke="#5eead4" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-message-queue-sequence-dots" class="illustrated-part illustrated-sequence-dots" data-rest-opacity="1" d="M36 83h0M60 83h0M84 83h0" fill="none" stroke="#a78bfa" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="1345.0" y="1191.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="1345.0" dy="18" class="node-title">Message</tspan>
+<tspan x="1345.0" dy="18" class="node-title">Queue</tspan>
+<tspan x="1345.0" dy="17" class="node-caption">buffer • order •</tspan>
+<tspan x="1345.0" dy="17" class="node-caption">deliver</tspan>
+</text>
+</g>
+</svg>
+
+      </div>
+    </div>
+  </main>
+  <script type="application/json" id="anidiagram-motion-manifest">
+{
+  "version": "motion-manifest-0.1",
+  "runtime": "gsap",
+  "mode": "ambient",
+  "profile": "showcase-v1",
+  "sequence": "independent-icon-loops",
+  "scene_sequence": "staged",
+  "reduced_motion": "static",
+  "stage": {
+    "edge_flow": false,
+    "title_sweep": true,
+    "edge_limit": 0,
+    "readable_edge_limit": 0,
+    "active_edge_indices": [],
+    "readable_edge_indices": []
+  },
+  "icons": [
+    {
+      "node_id": "agent",
+      "icon": "agent",
+      "performance": "illustrated-agent-input-reason-result-v1",
+      "trigger": "on-load",
+      "loop": "action-then-idle",
+      "delay": 0.0,
+      "intensity": 1.0,
+      "parts": {
+        "root": "#icon-agent-root",
+        "wash": "#icon-agent-wash",
+        "brain-left": "#icon-agent-brain-left",
+        "brain-right": "#icon-agent-brain-right",
+        "brain-detail": "#icon-agent-brain-detail",
+        "processor": "#icon-agent-processor",
+        "processor-core": "#icon-agent-processor-core",
+        "input-nodes": "#icon-agent-input-nodes",
+        "input-path": "#icon-agent-input-path",
+        "output-path": "#icon-agent-output-path",
+        "result": "#icon-agent-result"
+      },
+      "semantic_role": "input-reason-result",
+      "asset_version": "2.3.0",
+      "cancel_behavior": "restore-authored-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "repeat_delay": 0.8,
+      "motion_contract": "illustrated-performance-v4",
+      "motion_status": "approved",
+      "selection_policy": "automatic-for-supported-showcase-icons",
+      "rest_at": 1.72
+    },
+    {
+      "node_id": "operator",
+      "icon": "operator",
+      "performance": "illustrated-operator-focus-operate-confirm-v1",
+      "trigger": "on-load",
+      "loop": "action-then-idle",
+      "delay": 0.1,
+      "intensity": 1.0,
+      "parts": {
+        "root": "#icon-operator-root",
+        "wash": "#icon-operator-wash",
+        "body": "#icon-operator-body",
+        "head": "#icon-operator-head",
+        "hair": "#icon-operator-hair",
+        "glasses": "#icon-operator-glasses",
+        "laptop": "#icon-operator-laptop",
+        "hands": "#icon-operator-hands",
+        "screen": "#icon-operator-screen",
+        "laptop-base": "#icon-operator-laptop-base",
+        "input-cursor": "#icon-operator-input-cursor",
+        "status": "#icon-operator-status",
+        "status-check": "#icon-operator-status-check"
+      },
+      "semantic_role": "person-operate-status",
+      "asset_version": "2.3.0",
+      "cancel_behavior": "restore-authored-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "repeat_delay": 0.8,
+      "motion_contract": "illustrated-performance-v4",
+      "motion_status": "approved",
+      "selection_policy": "automatic-for-supported-showcase-icons",
+      "rest_at": 1.68
+    },
+    {
+      "node_id": "tool",
+      "icon": "tool",
+      "performance": "illustrated-tool-prepare-execute-complete-v1",
+      "trigger": "on-load",
+      "loop": "action-then-idle",
+      "delay": 0.2,
+      "intensity": 1.0,
+      "parts": {
+        "root": "#icon-tool-root",
+        "wash": "#icon-tool-wash",
+        "toolbox": "#icon-tool-toolbox",
+        "toolbox-lid": "#icon-tool-toolbox-lid",
+        "handle": "#icon-tool-handle",
+        "wrench": "#icon-tool-wrench",
+        "wrench-hole": "#icon-tool-wrench-hole",
+        "target": "#icon-tool-target",
+        "action-path": "#icon-tool-action-path",
+        "completion": "#icon-tool-completion"
+      },
+      "semantic_role": "tool-action-complete",
+      "asset_version": "2.3.0",
+      "cancel_behavior": "restore-authored-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "repeat_delay": 0.8,
+      "motion_contract": "illustrated-performance-v4",
+      "motion_status": "approved",
+      "selection_policy": "automatic-for-supported-showcase-icons",
+      "rest_at": 1.62
+    },
+    {
+      "node_id": "output",
+      "icon": "output",
+      "performance": "illustrated-output-compose-deliver-confirm-v1",
+      "trigger": "on-load",
+      "loop": "action-then-idle",
+      "delay": 0.3,
+      "intensity": 1.0,
+      "parts": {
+        "root": "#icon-output-root",
+        "wash": "#icon-output-wash",
+        "card": "#icon-output-card",
+        "card-lines": "#icon-output-card-lines",
+        "delivery-tray": "#icon-output-delivery-tray",
+        "delivery-lip": "#icon-output-delivery-lip",
+        "send-path": "#icon-output-send-path",
+        "check-badge": "#icon-output-check-badge",
+        "check": "#icon-output-check"
+      },
+      "semantic_role": "artifact-deliver-confirm",
+      "asset_version": "2.3.0",
+      "cancel_behavior": "restore-authored-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "repeat_delay": 0.8,
+      "motion_contract": "illustrated-performance-v4",
+      "motion_status": "approved",
+      "selection_policy": "automatic-for-supported-showcase-icons",
+      "rest_at": 1.7
+    },
+    {
+      "node_id": "database",
+      "icon": "database",
+      "performance": "illustrated-database-ingest-store-persist-v1",
+      "trigger": "on-load",
+      "loop": "action-then-idle",
+      "delay": 0.4,
+      "intensity": 1.0,
+      "parts": {
+        "root": "#icon-database-root",
+        "wash": "#icon-database-wash",
+        "cylinder-body": "#icon-database-cylinder-body",
+        "cylinder-top": "#icon-database-cylinder-top",
+        "layer-top": "#icon-database-layer-top",
+        "layer-bottom": "#icon-database-layer-bottom",
+        "input-bead": "#icon-database-input-bead",
+        "write-path": "#icon-database-write-path",
+        "commit-ripple": "#icon-database-commit-ripple",
+        "stored-bead": "#icon-database-stored-bead"
+      },
+      "semantic_role": "data-ingest-store-persist",
+      "asset_version": "2.3.0",
+      "cancel_behavior": "restore-authored-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "repeat_delay": 0.8,
+      "motion_contract": "illustrated-performance-v4",
+      "motion_status": "approved",
+      "selection_policy": "automatic-for-supported-showcase-icons",
+      "rest_at": 1.72
+    },
+    {
+      "node_id": "api",
+      "icon": "api",
+      "performance": "illustrated-api-request-route-response-v1",
+      "trigger": "on-load",
+      "loop": "action-then-idle",
+      "delay": 0.5,
+      "intensity": 1.0,
+      "parts": {
+        "root": "#icon-api-root",
+        "wash": "#icon-api-wash",
+        "gateway": "#icon-api-gateway",
+        "api-glyph": "#icon-api-api-glyph",
+        "request-path": "#icon-api-request-path",
+        "request-token": "#icon-api-request-token",
+        "response-path": "#icon-api-response-path",
+        "response-token": "#icon-api-response-token"
+      },
+      "semantic_role": "request-route-response",
+      "asset_version": "2.3.0",
+      "cancel_behavior": "restore-authored-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "repeat_delay": 0.8,
+      "motion_contract": "illustrated-performance-v4",
+      "motion_status": "approved",
+      "selection_policy": "automatic-for-supported-showcase-icons",
+      "rest_at": 1.66
+    },
+    {
+      "node_id": "search",
+      "icon": "search",
+      "performance": "illustrated-search-query-scan-discover-v1",
+      "trigger": "on-load",
+      "loop": "action-then-idle",
+      "delay": 0.6,
+      "intensity": 1.0,
+      "parts": {
+        "root": "#icon-search-root",
+        "wash": "#icon-search-wash",
+        "lens-glass": "#icon-search-lens-glass",
+        "lens": "#icon-search-lens",
+        "handle": "#icon-search-handle",
+        "scan-cross": "#icon-search-scan-cross",
+        "target-ring": "#icon-search-target-ring",
+        "result-dot": "#icon-search-result-dot",
+        "discovery": "#icon-search-discovery"
+      },
+      "semantic_role": "query-scan-discover",
+      "asset_version": "2.3.0",
+      "cancel_behavior": "restore-authored-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "repeat_delay": 0.8,
+      "motion_contract": "illustrated-performance-v4",
+      "motion_status": "approved",
+      "selection_policy": "automatic-for-supported-showcase-icons",
+      "rest_at": 1.78
+    },
+    {
+      "node_id": "memory",
+      "icon": "memory",
+      "performance": "illustrated-memory-capture-index-recall-v1",
+      "trigger": "on-load",
+      "loop": "action-then-idle",
+      "delay": 0.7,
+      "intensity": 1.0,
+      "parts": {
+        "root": "#icon-memory-root",
+        "wash": "#icon-memory-wash",
+        "back-card": "#icon-memory-back-card",
+        "front-card": "#icon-memory-front-card",
+        "index-nodes": "#icon-memory-index-nodes",
+        "trace": "#icon-memory-trace",
+        "input-token": "#icon-memory-input-token",
+        "commit-path": "#icon-memory-commit-path",
+        "bookmark": "#icon-memory-bookmark",
+        "result": "#icon-memory-result"
+      },
+      "semantic_role": "context-capture-index-recall",
+      "asset_version": "2.3.0",
+      "cancel_behavior": "restore-authored-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "repeat_delay": 0.8,
+      "motion_contract": "illustrated-performance-v4",
+      "motion_status": "approved",
+      "selection_policy": "automatic-for-supported-showcase-icons",
+      "rest_at": 1.72
+    },
+    {
+      "node_id": "file",
+      "icon": "file",
+      "performance": "illustrated-file-prepare-attach-reference-v1",
+      "trigger": "on-load",
+      "loop": "action-then-idle",
+      "delay": 0.8,
+      "intensity": 1.0,
+      "parts": {
+        "root": "#icon-file-root",
+        "wash": "#icon-file-wash",
+        "page": "#icon-file-page",
+        "paperclip": "#icon-file-paperclip",
+        "content-lines": "#icon-file-content-lines"
+      },
+      "semantic_role": "document-content-attach-reference",
+      "asset_version": "2.3.0",
+      "cancel_behavior": "restore-authored-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "repeat_delay": 0.8,
+      "motion_contract": "illustrated-performance-v4",
+      "motion_status": "approved",
+      "selection_policy": "automatic-for-supported-showcase-icons",
+      "rest_at": 1.58
+    },
+    {
+      "node_id": "folder",
+      "icon": "folder",
+      "performance": "illustrated-folder-prepare-store-index-v1",
+      "trigger": "on-load",
+      "loop": "action-then-idle",
+      "delay": 0.9,
+      "intensity": 1.0,
+      "parts": {
+        "root": "#icon-folder-root",
+        "wash": "#icon-folder-wash",
+        "folder-back": "#icon-folder-folder-back",
+        "folder-tab": "#icon-folder-folder-tab",
+        "document": "#icon-folder-document",
+        "folder-front": "#icon-folder-folder-front",
+        "index-label": "#icon-folder-index-label"
+      },
+      "semantic_role": "collection-store-index-organize",
+      "asset_version": "2.3.0",
+      "cancel_behavior": "restore-authored-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "repeat_delay": 0.8,
+      "motion_contract": "illustrated-performance-v4",
+      "motion_status": "approved",
+      "selection_policy": "automatic-for-supported-showcase-icons",
+      "rest_at": 1.66
+    },
+    {
+      "node_id": "cloud",
+      "icon": "cloud",
+      "performance": "illustrated-cloud-prepare-transfer-sync-v1",
+      "trigger": "on-load",
+      "loop": "action-then-idle",
+      "delay": 1.0,
+      "intensity": 1.0,
+      "parts": {
+        "root": "#icon-cloud-root",
+        "wash": "#icon-cloud-wash",
+        "cloud-shell": "#icon-cloud-cloud-shell",
+        "upload-arrow": "#icon-cloud-upload-arrow",
+        "download-arrow": "#icon-cloud-download-arrow"
+      },
+      "semantic_role": "data-upload-download-sync",
+      "asset_version": "2.3.0",
+      "cancel_behavior": "restore-authored-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "repeat_delay": 0.8,
+      "motion_contract": "illustrated-performance-v4",
+      "motion_status": "approved",
+      "selection_policy": "automatic-for-supported-showcase-icons",
+      "rest_at": 1.72
+    },
+    {
+      "node_id": "shield",
+      "icon": "shield",
+      "performance": "illustrated-shield-prepare-lock-protect-v1",
+      "trigger": "on-load",
+      "loop": "action-then-idle",
+      "delay": 1.1,
+      "intensity": 1.0,
+      "parts": {
+        "root": "#icon-shield-root",
+        "wash": "#icon-shield-wash",
+        "shield-shell": "#icon-shield-shield-shell",
+        "inner-field": "#icon-shield-inner-field",
+        "lock-shackle": "#icon-shield-lock-shackle",
+        "security-lock": "#icon-shield-security-lock",
+        "keyhole": "#icon-shield-keyhole"
+      },
+      "semantic_role": "security-lock-protect",
+      "asset_version": "2.3.0",
+      "cancel_behavior": "restore-authored-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "repeat_delay": 0.8,
+      "motion_contract": "illustrated-performance-v4",
+      "motion_status": "approved",
+      "selection_policy": "automatic-for-supported-showcase-icons",
+      "rest_at": 1.68
+    },
+    {
+      "node_id": "user",
+      "icon": "user",
+      "performance": "illustrated-user-request-interact-consume-v1",
+      "trigger": "on-load",
+      "loop": "action-then-idle",
+      "delay": 1.2,
+      "intensity": 1.0,
+      "parts": {
+        "root": "#icon-user-root",
+        "wash": "#icon-user-wash",
+        "portrait-body": "#icon-user-portrait-body",
+        "portrait-neck": "#icon-user-portrait-neck",
+        "portrait-head": "#icon-user-portrait-head",
+        "portrait-hair": "#icon-user-portrait-hair",
+        "face": "#icon-user-face",
+        "conversation-card": "#icon-user-conversation-card",
+        "conversation-lines": "#icon-user-conversation-lines"
+      },
+      "semantic_role": "external-person-request-interact",
+      "asset_version": "2.3.0",
+      "cancel_behavior": "restore-authored-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "repeat_delay": 0.8,
+      "motion_contract": "illustrated-performance-v4",
+      "motion_status": "approved",
+      "selection_policy": "automatic-for-supported-showcase-icons",
+      "rest_at": 1.66
+    },
+    {
+      "node_id": "server",
+      "icon": "server",
+      "performance": "illustrated-server-host-compute-serve-v1",
+      "trigger": "on-load",
+      "loop": "action-then-idle",
+      "delay": 1.3,
+      "intensity": 1.0,
+      "parts": {
+        "root": "#icon-server-root",
+        "wash": "#icon-server-wash",
+        "rack-shell": "#icon-server-rack-shell",
+        "upper-bay": "#icon-server-upper-bay",
+        "middle-bay": "#icon-server-middle-bay",
+        "lower-bay": "#icon-server-lower-bay",
+        "rack-ports": "#icon-server-rack-ports",
+        "activity-lights": "#icon-server-activity-lights"
+      },
+      "semantic_role": "compute-host-run-service",
+      "asset_version": "2.3.0",
+      "cancel_behavior": "restore-authored-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "repeat_delay": 0.8,
+      "motion_contract": "illustrated-performance-v4",
+      "motion_status": "approved",
+      "selection_policy": "automatic-for-supported-showcase-icons",
+      "rest_at": 1.7
+    },
+    {
+      "node_id": "ai-model",
+      "icon": "ai-model",
+      "performance": "illustrated-ai-model-infer-transform-predict-v1",
+      "trigger": "on-load",
+      "loop": "action-then-idle",
+      "delay": 1.4,
+      "intensity": 1.0,
+      "parts": {
+        "root": "#icon-ai-model-root",
+        "wash": "#icon-ai-model-wash",
+        "model-card": "#icon-ai-model-model-card",
+        "model-header": "#icon-ai-model-model-header",
+        "network-links": "#icon-ai-model-network-links",
+        "input-neurons": "#icon-ai-model-input-neurons",
+        "hidden-neurons": "#icon-ai-model-hidden-neurons",
+        "output-neuron": "#icon-ai-model-output-neuron",
+        "inference-band": "#icon-ai-model-inference-band"
+      },
+      "semantic_role": "model-inference-transform-predict",
+      "asset_version": "2.3.0",
+      "cancel_behavior": "restore-authored-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "repeat_delay": 0.8,
+      "motion_contract": "illustrated-performance-v4",
+      "motion_status": "approved",
+      "selection_policy": "automatic-for-supported-showcase-icons",
+      "rest_at": 1.8
+    },
+    {
+      "node_id": "message-queue",
+      "icon": "message-queue",
+      "performance": "illustrated-message-queue-buffer-order-deliver-v1",
+      "trigger": "on-load",
+      "loop": "action-then-idle",
+      "delay": 1.5,
+      "intensity": 1.0,
+      "parts": {
+        "root": "#icon-message-queue-root",
+        "wash": "#icon-message-queue-wash",
+        "queue-shell": "#icon-message-queue-queue-shell",
+        "queue-rail": "#icon-message-queue-queue-rail",
+        "message-one": "#icon-message-queue-message-one",
+        "message-two": "#icon-message-queue-message-two",
+        "message-three": "#icon-message-queue-message-three",
+        "buffer-gates": "#icon-message-queue-buffer-gates",
+        "sequence-dots": "#icon-message-queue-sequence-dots"
+      },
+      "semantic_role": "async-buffer-order-deliver",
+      "asset_version": "2.3.0",
+      "cancel_behavior": "restore-authored-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "repeat_delay": 0.8,
+      "motion_contract": "illustrated-performance-v4",
+      "motion_status": "approved",
+      "selection_policy": "automatic-for-supported-showcase-icons",
+      "rest_at": 1.76
+    }
+  ],
+  "edges": [],
+  "icon_system": "illustrated",
+  "icon_system_version": "2.3.0"
+}
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script>
+(function () {
+  function getManifest() {
+    const el = document.getElementById("anidiagram-motion-manifest");
+    if (!el) return null;
+    try {
+      return JSON.parse(el.textContent || "{}");
+    } catch (error) {
+      console.warn("AniDiagram runtime: invalid motion manifest", error);
+      return null;
+    }
+  }
+
+  function resolveParts(parts) {
+    const resolved = Object.create(null);
+    if (!isPlainObject(parts)) return null;
+    let entries;
+    try {
+      entries = Object.entries(parts);
+    } catch (error) {
+      return null;
+    }
+    for (const [key, selector] of entries) {
+      if (!isSafePartName(key) || typeof selector !== "string" || !selector) return null;
+      let part;
+      try {
+        part = document.querySelector(selector);
+      } catch (error) {
+        return null;
+      }
+      if (!(part instanceof Element)) return null;
+      resolved[key] = part;
+    }
+    return resolved;
+  }
+
+  function isSafePartName(name) {
+    return typeof name === "string"
+      && /^[a-z][A-Za-z0-9]*(?:-[a-z0-9]+)*$/.test(name)
+      && !["constructor", "prototype", "__proto__"].includes(name);
+  }
+
+  function resolveIconInstanceRoot(iconConfig, parts) {
+    if (!isPlainObject(iconConfig) || !parts) return null;
+    const partElements = Object.values(parts);
+    if (!partElements.length || partElements.some((part) => !(part instanceof Element))) return null;
+
+    let explicitRoot = Object.prototype.hasOwnProperty.call(parts, "root") ? parts.root : null;
+    if (Object.prototype.hasOwnProperty.call(iconConfig, "root")) {
+      if (typeof iconConfig.root !== "string" || !iconConfig.root) return null;
+      try {
+        explicitRoot = document.querySelector(iconConfig.root);
+      } catch (error) {
+        return null;
+      }
+      if (!(explicitRoot instanceof Element)) return null;
+    }
+
+    const strictPresentation = iconConfig.presentation_profile === "showcase";
+    if (strictPresentation) {
+      const roots = partElements.map((part) => part.closest("[data-icon][data-icon-presentation]"));
+      if (roots.some((root) => !(root instanceof Element))) return null;
+      const uniqueRoots = new Set(roots);
+      if (explicitRoot) uniqueRoots.add(explicitRoot);
+      if (uniqueRoots.size !== 1) return null;
+      const root = roots[0];
+      if (root.getAttribute("data-icon") !== iconConfig.icon) return null;
+      if (root.getAttribute("data-icon-presentation") !== iconConfig.presentation_profile) return null;
+      if (partElements.some((part) => !root.contains(part))) return null;
+      return root;
+    }
+
+    const root = explicitRoot || partElements[0].closest("[data-icon]");
+    if (!(root instanceof Element)) return null;
+    if (partElements.some((part) => !root.contains(part))) return null;
+    if (root.hasAttribute("data-icon") && root.getAttribute("data-icon") !== iconConfig.icon) return null;
+    return root;
+  }
+
+  function hasParts(parts, required) {
+    return required.every((name) => Boolean(parts[name]));
+  }
+
+  function setInitial(parts, gsap) {
+    Object.values(parts).forEach((part) => {
+      if (part) {
+        part.style.transformBox = "";
+        if (part.dataset.restOpacity === undefined) {
+          const opacity = Number(gsap.getProperty(part, "opacity"));
+          part.dataset.restOpacity = String(Number.isFinite(opacity) ? opacity : 1);
+        }
+      }
+    });
+    gsap.set(Object.values(parts).filter(Boolean), { transformOrigin: "center center" });
+  }
+
+  function pathLengths(paths) {
+    return new Map(paths.map((path) => [path, Math.max(1, path.getTotalLength ? path.getTotalLength() : 64)]));
+  }
+
+  function primeStrokeDraw(paths, gsap) {
+    const lengths = pathLengths(paths);
+    paths.forEach((path) => {
+      const length = lengths.get(path);
+      gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
+    });
+    return lengths;
+  }
+
+  function playIllustratedCommon(iconConfig, parts, gsap) {
+    if (iconConfig.icon_system !== "illustrated-v1" && !parts.bubble) return null;
+    const elements = [
+      parts.bubble,
+      parts.bubbleHalo,
+      parts.wash,
+      parts.accentMark,
+      parts.sparkle,
+      parts.orbitDot,
+    ].filter(Boolean);
+    if (!elements.length) return null;
+    setInitial(parts, gsap);
+    if (parts.accentMark && parts.accentMark.getTotalLength) {
+      primeStrokeDraw([parts.accentMark], gsap);
+    }
+    gsap.set([parts.bubble, parts.wash].filter(Boolean), { transformOrigin: "center center" });
+    gsap.set([parts.sparkle, parts.orbitDot].filter(Boolean), { transformOrigin: "center center" });
+    if (parts.bubbleHalo) gsap.set(parts.bubbleHalo, { opacity: 0.16, scale: 0.84 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.25 });
+    if (parts.bubble) {
+      tl.to(parts.bubble, { scale: 1.045, duration: 0.28, ease: "sine.inOut" }, 0)
+        .to(parts.bubble, { scale: 1, duration: 0.38, ease: "sine.inOut" }, 0.30);
+    }
+    if (parts.bubbleHalo) {
+      tl.fromTo(parts.bubbleHalo, { opacity: 0.20, scale: 0.82 }, { opacity: 0, scale: 1.42, duration: 0.68, ease: "power2.out" }, 0.08);
+    }
+    if (parts.wash) {
+      tl.to(parts.wash, { x: 1.5, y: -1.2, rotate: -2, duration: 0.46, ease: "sine.inOut" }, 0.12)
+        .to(parts.wash, { x: 0, y: 0, rotate: 0, duration: 0.52, ease: "sine.inOut" }, 0.60);
+    }
+    if (parts.accentMark) {
+      const length = parts.accentMark.getTotalLength ? parts.accentMark.getTotalLength() : 24;
+      tl.fromTo(parts.accentMark, { strokeDashoffset: length, opacity: 0.1 }, { strokeDashoffset: 0, opacity: 0.62, duration: 0.28, ease: "power2.out" }, 0.18)
+        .to(parts.accentMark, { opacity: 0.36, duration: 0.38 }, 0.88);
+    }
+    if (parts.sparkle) {
+      tl.fromTo(parts.sparkle, { scale: 0.45, opacity: 0.2 }, { scale: 1.18, opacity: 0.95, duration: 0.18, ease: "back.out(3)" }, 0.34)
+        .to(parts.sparkle, { scale: 0.86, opacity: 0.62, duration: 0.36, ease: "power2.out" }, 0.58);
+    }
+    if (parts.orbitDot) {
+      tl.to(parts.orbitDot, {
+        keyframes: [
+          { x: 6, y: -3, duration: 0.24 },
+          { x: 10, y: 5, duration: 0.24 },
+          { x: 0, y: 0, duration: 0.32 },
+        ],
+        ease: "sine.inOut",
+      }, 0.16);
+    }
+    return tl;
+  }
+
+  function playTokenIntent({ parts, gsap }) {
+    const required = ["shell", "core", "tickLeft", "tickRight", "tickTop", "tickBottom", "halo"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const ticks = [parts.tickLeft, parts.tickRight, parts.tickTop, parts.tickBottom];
+    const lengths = primeStrokeDraw(ticks, gsap);
+    gsap.set(parts.halo, { opacity: 0, scale: 0.6 });
+    gsap.set(parts.core, { scale: 0.55, opacity: 0.35 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.55 });
+    tl.fromTo(parts.shell, { scale: 0.82, rotate: -8, opacity: 0.72 }, { scale: 1, rotate: 0, opacity: 0.96, duration: 0.22, ease: "back.out(3)" })
+      .to(parts.core, { scale: 1.35, opacity: 0.95, duration: 0.16, ease: "power2.out" }, "-=0.08")
+      .to(parts.core, { scale: 1, opacity: 0.72, duration: 0.16, ease: "power2.inOut" })
+      .fromTo(ticks, { strokeDashoffset: (index, target) => lengths.get(target), opacity: 0 }, { strokeDashoffset: 0, opacity: 0.86, duration: 0.18, stagger: 0.035, ease: "power2.out" }, "-=0.08")
+      .fromTo(parts.halo, { opacity: 0.55, scale: 0.55 }, { opacity: 0, scale: 1.55, duration: 0.34, ease: "power2.out" }, "-=0.02")
+      .to(parts.shell, { scale: 0.98, duration: 0.45, ease: "power2.inOut" }, 1.05)
+      .to(ticks, { opacity: 0.56, duration: 0.45 }, 1.05);
+    return tl;
+  }
+
+  function playToolRun({ parts, gsap }) {
+    const required = ["chip", "glyph", "connector", "spark1", "spark2", "flash"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const sparks = [parts.spark1, parts.spark2];
+    const lengths = primeStrokeDraw(sparks, gsap);
+    gsap.set(parts.flash, { opacity: 0, scale: 0.45 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.55 });
+    tl.to(parts.chip, { y: 2, scale: 0.96, duration: 0.12, ease: "power2.in" })
+      .to(parts.chip, { y: -1, scale: 1.04, duration: 0.18, ease: "back.out(3)" })
+      .to(parts.chip, { y: 0, scale: 1, duration: 0.16, ease: "power2.out" })
+      .fromTo(parts.glyph, { scale: 0.82, opacity: 0.6 }, { scale: 1.12, opacity: 1, duration: 0.16, ease: "back.out(3)" }, 0.10)
+      .to(parts.glyph, { scale: 1, opacity: 0.92, duration: 0.18, ease: "power2.out" })
+      .fromTo(parts.connector, { x: -6, opacity: 0.35, scale: 0.55 }, { x: 4, opacity: 0.95, scale: 1.1, duration: 0.22, ease: "power2.out" }, 0.22)
+      .to(parts.connector, { x: 0, scale: 1, opacity: 0.72, duration: 0.18, ease: "power2.out" })
+      .fromTo(sparks, { strokeDashoffset: (index, target) => lengths.get(target), opacity: 0 }, { strokeDashoffset: 0, opacity: 0.95, duration: 0.16, stagger: 0.045, ease: "power2.out" }, 0.42)
+      .fromTo(parts.flash, { opacity: 0.62, scale: 0.45 }, { opacity: 0, scale: 1.6, duration: 0.26, ease: "power2.out" }, 0.48)
+      .to(sparks, { opacity: 0.42, duration: 0.5 }, 0.92);
+    return tl;
+  }
+
+  function playOutputReveal({ parts, gsap }) {
+    const required = ["card", "line1", "line2", "check", "flash"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const paths = [parts.line1, parts.line2, parts.check];
+    const lengths = primeStrokeDraw(paths, gsap);
+    gsap.set(parts.flash, { opacity: 0, scale: 0.45 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.75 });
+    tl.fromTo(parts.card, { y: 5, scale: 0.92, opacity: 0.75 }, { y: 0, scale: 1, opacity: 0.96, duration: 0.22, ease: "back.out(2.5)" })
+      .fromTo([parts.line1, parts.line2], { strokeDashoffset: (index, target) => lengths.get(target), opacity: 0 }, { strokeDashoffset: 0, opacity: 0.86, duration: 0.22, stagger: 0.07, ease: "power2.out" }, 0.14)
+      .fromTo(parts.check, { strokeDashoffset: lengths.get(parts.check), opacity: 0 }, { strokeDashoffset: 0, opacity: 1, duration: 0.26, ease: "power2.out" }, 0.42)
+      .to(parts.card, { scale: 1.04, duration: 0.12, ease: "power2.out" }, 0.62)
+      .to(parts.card, { scale: 1, duration: 0.18, ease: "power2.inOut" })
+      .fromTo(parts.flash, { opacity: 0.65, scale: 0.5 }, { opacity: 0, scale: 1.65, duration: 0.28, ease: "power2.out" }, 0.58)
+      .to([parts.line1, parts.line2, parts.check], { opacity: 0.68, duration: 0.55 }, 1.0);
+    return tl;
+  }
+
+  function playApiRequestResponse({ parts, gsap }) {
+    const required = ["leftEndpoint", "rightEndpoint", "requestToken", "responseToken", "targetRing", "status"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    gsap.set([parts.requestToken, parts.responseToken, parts.targetRing, parts.status], { opacity: 0, scale: 0.4 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.65 });
+    tl.to([parts.leftEndpoint, parts.rightEndpoint], { scaleY: 1.12, duration: 0.14, ease: "back.out(2)" })
+      .fromTo(parts.requestToken, { x: -18, opacity: 0, scale: 0.4 }, { x: 18, opacity: 1, scale: 1, duration: 0.36, ease: "power2.out" }, "<")
+      .to(parts.requestToken, { opacity: 0, scale: 0.35, duration: 0.12 })
+      .fromTo(parts.targetRing, { scale: 0.4, opacity: 0.8 }, { scale: 1.8, opacity: 0, duration: 0.34, ease: "power2.out" }, "-=0.05")
+      .fromTo(parts.responseToken, { x: 18, opacity: 0, scale: 0.4 }, { x: -18, opacity: 1, scale: 0.85, duration: 0.32, ease: "power2.inOut" }, "-=0.08")
+      .to(parts.responseToken, { opacity: 0, scale: 0.35, duration: 0.12 })
+      .fromTo(parts.status, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(2)" })
+      .to(parts.status, { opacity: 0.35, duration: 0.5 })
+      .to([parts.leftEndpoint, parts.rightEndpoint], { scaleY: 1, duration: 0.22, ease: "power2.out" }, "<");
+    return tl;
+  }
+
+  function playSearchDiscover({ parts, gsap }) {
+    const required = ["lens", "handle", "scan", "result1", "result2", "target"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    gsap.set([parts.scan, parts.result1, parts.result2, parts.target], { opacity: 0, scale: 0.35 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.7 });
+    tl.to([parts.lens, parts.handle], { rotate: -8, duration: 0.18, ease: "power2.out" })
+      .fromTo(parts.scan, { opacity: 0, x: -10, y: -7, rotate: -14 }, { opacity: 0.9, x: 12, y: 9, rotate: 12, duration: 0.42, ease: "power2.inOut" })
+      .to(parts.scan, { opacity: 0, duration: 0.12 })
+      .fromTo(parts.result1, { opacity: 0, scale: 0.25, y: 2 }, { opacity: 0.95, scale: 1, y: 0, duration: 0.16, ease: "back.out(3)" }, "-=0.06")
+      .fromTo(parts.result2, { opacity: 0, scale: 0.25, y: 2 }, { opacity: 0.72, scale: 0.82, y: 0, duration: 0.16, ease: "back.out(3)" }, "-=0.02")
+      .fromTo(parts.target, { opacity: 0, scale: 0.45 }, { opacity: 0.88, scale: 1.18, duration: 0.22, ease: "back.out(2.5)" })
+      .to(parts.target, { scale: 1, duration: 0.16, ease: "power2.out" })
+      .to([parts.lens, parts.handle], { rotate: 0, duration: 0.26, ease: "power2.out" }, "<")
+      .to([parts.result1, parts.result2, parts.target], { opacity: 0.28, duration: 0.55 });
+    return tl;
+  }
+
+  function playDatabaseWrite({ parts, gsap }) {
+    const required = ["lid", "body", "layer1", "layer2", "writeToken", "flash"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    gsap.set([parts.writeToken, parts.flash], { opacity: 0, scale: 0.35 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.8 });
+    tl.fromTo(parts.writeToken, { opacity: 0, x: -16, y: -18, scale: 0.35 }, { opacity: 1, x: 0, y: -3, scale: 1, duration: 0.28, ease: "power2.out" })
+      .to(parts.writeToken, { y: 7, scale: 0.82, duration: 0.16, ease: "power2.in" })
+      .to(parts.writeToken, { opacity: 0, scale: 0.25, duration: 0.1 })
+      .to(parts.lid, { scaleY: 0.68, y: 3, duration: 0.14, ease: "power2.in" }, "-=0.14")
+      .to(parts.body, { y: 2, scaleY: 0.96, duration: 0.14, ease: "power2.in" }, "<")
+      .to(parts.lid, { scaleY: 1.1, y: -2, duration: 0.18, ease: "back.out(3)" })
+      .to(parts.body, { y: 0, scaleY: 1, duration: 0.18, ease: "power2.out" }, "<")
+      .fromTo(parts.layer1, { opacity: 0.32 }, { opacity: 1, duration: 0.12, ease: "power1.out" })
+      .fromTo(parts.layer2, { opacity: 0.28 }, { opacity: 0.95, duration: 0.12, ease: "power1.out" }, "-=0.02")
+      .fromTo(parts.flash, { opacity: 0, scale: 0.4 }, { opacity: 0.85, scale: 1.35, duration: 0.18, ease: "power2.out" })
+      .to(parts.flash, { opacity: 0, scale: 1.85, duration: 0.26, ease: "power2.out" })
+      .to([parts.layer1, parts.layer2], { opacity: 0.64, duration: 0.45 });
+    return tl;
+  }
+
+  function playMemoryCommit({ parts, gsap }) {
+    const required = ["backCard", "frontCard", "trace1", "trace2", "trace3", "dot", "commitToken", "flash"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const traces = [parts.trace1, parts.trace2, parts.trace3];
+    gsap.set([parts.commitToken, parts.flash], { opacity: 0, scale: 0.35 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.8 });
+    tl.fromTo(parts.commitToken, { opacity: 0, x: -18, y: -15, scale: 0.35 }, { opacity: 1, x: -3, y: -4, scale: 1, duration: 0.24, ease: "power2.out" })
+      .to(parts.commitToken, { x: 6, y: 10, scale: 0.72, duration: 0.18, ease: "power2.in" })
+      .to(parts.commitToken, { opacity: 0, scale: 0.25, duration: 0.1 })
+      .to(parts.frontCard, { y: 2, scale: 0.98, duration: 0.14, ease: "power2.in" }, "-=0.12")
+      .to(parts.backCard, { x: 2, y: -2, duration: 0.14, ease: "power2.in" }, "<")
+      .to(parts.frontCard, { y: -1, scale: 1.03, duration: 0.18, ease: "back.out(3)" })
+      .to(parts.backCard, { x: 0, y: 0, duration: 0.18, ease: "power2.out" }, "<")
+      .fromTo(traces, { opacity: 0.2, x: -5 }, { opacity: 0.95, x: 0, duration: 0.2, stagger: 0.05, ease: "power2.out" }, "-=0.02")
+      .to(parts.dot, { scale: 1.45, opacity: 0.95, duration: 0.14, ease: "back.out(3)" }, "-=0.04")
+      .to(parts.dot, { scale: 1, opacity: 0.72, duration: 0.18, ease: "power2.out" })
+      .fromTo(parts.flash, { opacity: 0, scale: 0.45 }, { opacity: 0.75, scale: 1.2, duration: 0.16, ease: "power2.out" }, "-=0.12")
+      .to(parts.flash, { opacity: 0, scale: 1.7, duration: 0.24, ease: "power2.out" })
+      .to(traces, { opacity: 0.72, duration: 0.5 });
+    return tl;
+  }
+
+  function playAgentThinkAct({ parts, gsap }) {
+    const required = [
+      "outlineLeft",
+      "outlineRight",
+      "centerLine",
+      "branchLeft",
+      "branchRight",
+      "branchLower",
+      "nodeTopLeft",
+      "nodeTopRight",
+      "nodeLeft",
+      "nodeRight",
+      "nodeCenter",
+      "decisionToken",
+      "pulse",
+    ];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const paths = [
+      parts.outlineLeft,
+      parts.outlineRight,
+      parts.centerLine,
+      parts.branchLeft,
+      parts.branchRight,
+      parts.branchLower,
+    ];
+    const nodes = [
+      parts.nodeTopLeft,
+      parts.nodeTopRight,
+      parts.nodeLeft,
+      parts.nodeRight,
+      parts.nodeCenter,
+    ];
+    const lengths = primeStrokeDraw(paths, gsap);
+    gsap.set(paths, { opacity: 0.92 });
+    gsap.set(nodes, { opacity: 0.18, scale: 0.28 });
+    gsap.set(parts.pulse, { opacity: 0, scale: 0.55 });
+    gsap.set(parts.decisionToken, { opacity: 0, scale: 0.35, x: 0, y: 0 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.9 });
+    tl.fromTo([parts.outlineLeft, parts.outlineRight],
+        { strokeDashoffset: (index, target) => lengths.get(target) },
+        { strokeDashoffset: 0, duration: 0.46, ease: "power2.out" },
+        0
+      )
+      .fromTo(parts.centerLine,
+        { strokeDashoffset: lengths.get(parts.centerLine) },
+        { strokeDashoffset: 0, duration: 0.32, ease: "power2.out" },
+        0.08
+      )
+      .fromTo([parts.branchLeft, parts.branchRight, parts.branchLower],
+        { strokeDashoffset: (index, target) => lengths.get(target) },
+        { strokeDashoffset: 0, duration: 0.24, stagger: 0.045, ease: "power2.out" },
+        0.30
+      )
+      .fromTo(nodes,
+        { opacity: 0.12, scale: 0.25 },
+        { opacity: 0.9, scale: 1, duration: 0.18, stagger: 0.04, ease: "back.out(3)" },
+        0.56
+      )
+      .to(parts.nodeCenter, { scale: 1.45, opacity: 1, duration: 0.15, ease: "back.out(3)" }, 0.88)
+      .fromTo(parts.pulse,
+        { opacity: 0.68, scale: 0.62 },
+        { opacity: 0, scale: 1.55, duration: 0.34, ease: "power2.out" },
+        0.90
+      )
+      .to(parts.nodeCenter, { scale: 1, opacity: 0.88, duration: 0.20, ease: "power2.out" }, 1.04)
+      .fromTo(parts.decisionToken,
+        { opacity: 0, scale: 0.35, x: 0, y: 0 },
+        { opacity: 1, scale: 1.08, x: 14, y: -8, duration: 0.24, ease: "back.out(2.4)" },
+        1.08
+      )
+      .to(parts.decisionToken, { opacity: 0, scale: 0.52, x: 32, y: -18, duration: 0.22, ease: "power1.in" }, 1.34)
+      .to(paths, { opacity: 0.78, duration: 0.42 }, 1.38)
+      .to(nodes, { opacity: 0.68, scale: 0.92, duration: 0.42 }, 1.38);
+    return tl;
+  }
+
+  function playFileLines({ parts, gsap }) {
+    const required = ["sheet", "fold", "line1", "line2", "line3", "flash"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const lines = [parts.line1, parts.line2, parts.line3];
+    const lengths = primeStrokeDraw(lines, gsap);
+    gsap.set(lines, { opacity: 0 });
+    gsap.set(parts.flash, { opacity: 0, scale: 0.45 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.55 });
+    tl.fromTo(parts.sheet,
+        { x: -10, y: 10, scale: 0.84, opacity: 0.72 },
+        { x: 0, y: 0, scale: 1, opacity: 0.96, duration: 0.24, ease: "back.out(2.8)" }
+      )
+      .fromTo(parts.fold,
+        { rotate: -28, opacity: 0.55 },
+        { rotate: 0, opacity: 1, duration: 0.2, ease: "back.out(2.2)" },
+        "-=0.08"
+      )
+      .fromTo(lines,
+        { strokeDashoffset: (index, target) => lengths.get(target), opacity: 0 },
+        { strokeDashoffset: 0, opacity: 0.9, duration: 0.2, stagger: 0.055, ease: "power2.out" },
+        "-=0.02"
+      )
+      .fromTo(parts.flash, { opacity: 0.6, scale: 0.55 }, { opacity: 0, scale: 1.55, duration: 0.28, ease: "power2.out" }, 0.58)
+      .to(lines, { opacity: 0.62, duration: 0.55 }, 1.02)
+      .to(parts.sheet, { scale: 0.99, duration: 0.35, ease: "sine.inOut" }, 1.02);
+    return tl;
+  }
+
+  function playFolderOpen({ parts, gsap }) {
+    const required = ["body", "tab", "fileLine", "openToken", "flash"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const lengths = primeStrokeDraw([parts.fileLine], gsap);
+    gsap.set([parts.fileLine, parts.openToken, parts.flash], { opacity: 0 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.65 });
+    tl.to(parts.body, { y: 2, scaleY: 0.96, duration: 0.14, ease: "power2.in" })
+      .to(parts.tab, { rotate: -13, y: -3, opacity: 1, duration: 0.24, ease: "back.out(2.4)" }, "-=0.06")
+      .fromTo(parts.openToken,
+        { x: -12, y: -4, scale: 0.35, opacity: 0 },
+        { x: 2, y: 2, scale: 1, opacity: 0.92, duration: 0.22, ease: "power2.out" },
+        "-=0.14"
+      )
+      .to(parts.openToken, { opacity: 0, scale: 0.4, duration: 0.12, ease: "power1.in" })
+      .fromTo(parts.fileLine,
+        { strokeDashoffset: lengths.get(parts.fileLine), opacity: 0 },
+        { strokeDashoffset: 0, opacity: 0.86, duration: 0.22, ease: "power2.out" },
+        "-=0.04"
+      )
+      .fromTo(parts.flash, { opacity: 0.55, scale: 0.45 }, { opacity: 0, scale: 1.5, duration: 0.25, ease: "power2.out" }, "-=0.02")
+      .to(parts.tab, { rotate: 0, y: 0, duration: 0.3, ease: "power2.inOut" }, 0.92)
+      .to(parts.body, { y: 0, scaleY: 1, duration: 0.24, ease: "power2.out" }, "<")
+      .to(parts.fileLine, { opacity: 0.42, duration: 0.5 }, 0.95);
+    return tl;
+  }
+
+  function playCloudUpload({ parts, gsap }) {
+    const required = ["shell", "uploadArrow", "dot1", "dot2", "dot3", "statusRing"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const dots = [parts.dot1, parts.dot2, parts.dot3];
+    gsap.set([parts.uploadArrow, parts.statusRing, ...dots], { opacity: 0, scale: 0.45 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.6 });
+    tl.to(parts.shell, { scale: 1.04, y: -1, duration: 0.18, ease: "power2.out" })
+      .fromTo(parts.uploadArrow,
+        { y: 12, opacity: 0, scale: 0.72 },
+        { y: -8, opacity: 0.96, scale: 1, duration: 0.34, ease: "power2.out" },
+        "-=0.04"
+      )
+      .to(parts.uploadArrow, { y: -16, opacity: 0, scale: 0.82, duration: 0.18, ease: "power1.in" })
+      .fromTo(dots,
+        { y: 7, opacity: 0, scale: 0.35 },
+        { y: 0, opacity: 0.78, scale: 1, duration: 0.2, stagger: 0.055, ease: "back.out(2.4)" },
+        "-=0.12"
+      )
+      .fromTo(parts.statusRing,
+        { opacity: 0.7, scale: 0.45 },
+        { opacity: 0, scale: 1.75, duration: 0.32, ease: "power2.out" },
+        "-=0.02"
+      )
+      .to(parts.shell, { scale: 1, y: 0, duration: 0.28, ease: "power2.out" }, "-=0.18")
+      .to(dots, { opacity: 0.24, scale: 0.75, duration: 0.55 }, 0.95);
+    return tl;
+  }
+
+  function playShieldCheck({ parts, gsap }) {
+    const required = ["shell", "check", "pulse", "scan"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const lengths = primeStrokeDraw([parts.check, parts.scan], gsap);
+    gsap.set([parts.pulse, parts.scan], { opacity: 0, scale: 0.72 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.75 });
+    tl.to(parts.shell, { scale: 1.04, opacity: 1, duration: 0.16, ease: "power2.out" })
+      .fromTo(parts.scan,
+        { strokeDashoffset: lengths.get(parts.scan), opacity: 0, x: -8, y: -5 },
+        { strokeDashoffset: 0, opacity: 0.82, x: 7, y: 5, duration: 0.26, ease: "power2.inOut" },
+        "-=0.02"
+      )
+      .to(parts.scan, { opacity: 0, duration: 0.1 })
+      .fromTo(parts.check,
+        { strokeDashoffset: lengths.get(parts.check), opacity: 0 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.24, ease: "power2.out" },
+        "-=0.02"
+      )
+      .fromTo(parts.pulse,
+        { opacity: 0.45, scale: 0.84 },
+        { opacity: 0, scale: 1.42, duration: 0.34, ease: "power2.out" },
+        "-=0.04"
+      )
+      .to(parts.shell, { scale: 1, duration: 0.25, ease: "power2.out" }, "-=0.16")
+      .to(parts.check, { opacity: 0.72, duration: 0.55 }, 0.95);
+    return tl;
+  }
+
+  const CHARACTER_REPEAT_DELAY = 0.8;
+  const CHARACTER_IDLE_BREATHE_SCALE = 1.012;
+  const STRONG_CHARACTER_REPEAT_DELAY = 0.28;
+  const STRONG_CHARACTER_IDLE_BREATHE_SCALE = 1.028;
+
+  function isStrongCharacter(config) {
+    return config && config.performance_tier === "strong-loop";
+  }
+
+  function characterRepeatDelay(config) {
+    return isStrongCharacter(config) ? STRONG_CHARACTER_REPEAT_DELAY : CHARACTER_REPEAT_DELAY;
+  }
+
+  function finishCharacterAtRest(tl, parts, restAt, config = null) {
+    const targets = Object.entries(parts)
+      .filter(([name, part]) => name !== "root" && Boolean(part))
+      .map(([, part]) => part);
+    const motionShell = parts.root && parts.root.querySelector(".illustrated-character-motion-shell");
+    tl.set(targets, {
+      opacity: (index, target) => {
+        const authored = Number(target.dataset.restOpacity);
+        return Number.isFinite(authored) ? authored : 1;
+      },
+      x: 0,
+      y: 0,
+      rotation: 0,
+      scaleX: 1,
+      scaleY: 1,
+    }, restAt);
+    if (motionShell) {
+      const strong = isStrongCharacter(config);
+      const breatheScale = strong ? STRONG_CHARACTER_IDLE_BREATHE_SCALE : CHARACTER_IDLE_BREATHE_SCALE;
+      const breatheDuration = strong ? 0.15 : 0.22;
+      const breatheStart = restAt + (strong ? 0.02 : 0.04);
+      tl.set(motionShell, { scale: 1, transformOrigin: "center center" }, restAt)
+        .to(motionShell, { scale: breatheScale, duration: breatheDuration, ease: "sine.inOut" }, breatheStart)
+        .to(motionShell, { scale: 1, duration: breatheDuration, ease: "sine.inOut" }, breatheStart + breatheDuration);
+    } else {
+      tl.to({}, { duration: 0.01 }, restAt);
+    }
+    return tl;
+  }
+
+  function playBrainThinkPulse({ config, parts, gsap }) {
+    const required = ["brain-left", "brain-right", "chip", "signal", "spark"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const strong = isStrongCharacter(config);
+    const signalLength = primeStrokeDraw([parts.signal], gsap).get(parts.signal);
+    gsap.set([parts.signal, parts.spark], { opacity: 0 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: characterRepeatDelay(config) });
+    if (strong) {
+      tl.to(parts["brain-left"], { rotation: -4, scaleX: 1.09, scaleY: 0.96, duration: 0.16, ease: "back.out(2.6)" })
+        .to(parts["brain-right"], { rotation: 4, scaleX: 1.09, scaleY: 0.96, duration: 0.16, ease: "back.out(2.6)" }, "<")
+        .to(parts.chip, { scale: 1.16, y: -6, rotation: 3, duration: 0.16, ease: "back.out(2.8)" }, "<")
+        .fromTo(parts.signal, { x: -12, strokeDashoffset: signalLength, opacity: 0 }, { x: 8, strokeDashoffset: 0, opacity: 1, duration: 0.22, ease: "power2.out" })
+        .fromTo(parts.spark, { scale: 0.25, rotation: 0, opacity: 0 }, { scale: 1.45, rotation: 60, opacity: 1, duration: 0.14, ease: "back.out(3.2)" }, "-=0.04")
+        .to([parts["brain-left"], parts["brain-right"]], { rotation: 0, scaleX: 0.98, scaleY: 1.04, duration: 0.14, ease: "power2.inOut" })
+        .to([parts["brain-left"], parts["brain-right"]], { scaleX: 1, scaleY: 1, duration: 0.16, ease: "power2.out" })
+        .to(parts.chip, { scale: 1, y: 0, rotation: 0, duration: 0.16, ease: "power2.out" }, "<")
+        .to([parts.signal, parts.spark], { opacity: 0.7, duration: 0.12, ease: "sine.inOut" });
+      return finishCharacterAtRest(tl, parts, restAt, config);
+    }
+    tl.to([parts["brain-left"], parts["brain-right"]], { scale: 1.045, duration: 0.18, ease: "sine.inOut" })
+      .to(parts.chip, { scale: 1.08, y: -1, duration: 0.18, ease: "back.out(2.4)" }, "<")
+      .fromTo(parts.signal, { strokeDashoffset: signalLength, opacity: 0 }, { strokeDashoffset: 0, opacity: 0.88, duration: 0.26, ease: "power2.out" })
+      .fromTo(parts.spark, { scale: 0.35, opacity: 0 }, { scale: 1.2, opacity: 1, duration: 0.16, ease: "back.out(3)" }, "-=0.04")
+      .to([parts["brain-left"], parts["brain-right"]], { scale: 1, duration: 0.26, ease: "sine.inOut" })
+      .to(parts.chip, { scale: 1, y: 0, duration: 0.2, ease: "power2.out" }, "<")
+      .to([parts.signal, parts.spark], { opacity: 0.62, duration: 0.18, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playOperatorTypeFocus({ config, parts, gsap }) {
+    const required = ["hair", "face", "glasses", "hands", "laptop", "cursor"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const strong = isStrongCharacter(config);
+    gsap.set(parts.cursor, { opacity: 0, scale: 0.4 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: characterRepeatDelay(config) });
+    if (strong) {
+      tl.to(parts.hair, { y: -4, rotation: -3, duration: 0.15, ease: "back.out(2.6)" })
+        .to(parts.face, { y: -2, rotation: 2, duration: 0.15, ease: "back.out(2.6)" }, "<")
+        .to(parts.glasses, { scale: 1.16, y: -2, duration: 0.15, ease: "back.out(3)" }, "<")
+        .to(parts.hands, { y: 4, scaleY: 0.9, duration: 0.09, ease: "power2.in" })
+        .to(parts.laptop, { y: 2, scaleY: 0.93, duration: 0.09, ease: "power2.in" }, "<")
+        .to(parts.hands, { y: -3, scaleY: 1.08, duration: 0.11, ease: "power2.out" })
+        .to(parts.hands, { y: 3, scaleY: 0.92, duration: 0.09, ease: "power2.in" })
+        .to(parts.hands, { y: -1, scaleY: 1, duration: 0.11, ease: "power2.out" })
+        .to(parts.laptop, { y: 0, scaleY: 1, duration: 0.13, ease: "power2.out" }, "<")
+        .fromTo(parts.cursor, { x: -12, y: 9, opacity: 0, scale: 0.25 }, { x: 1, y: -1, opacity: 1, scale: 1.3, duration: 0.18, ease: "back.out(3.2)" })
+        .to([parts.hair, parts.face], { y: 0, rotation: 0, duration: 0.16, ease: "power2.out" })
+        .to(parts.glasses, { scale: 1, y: 0, duration: 0.16, ease: "power2.out" }, "<")
+        .to(parts.cursor, { scale: 1, opacity: 0.62, duration: 0.12, ease: "sine.inOut" });
+      return finishCharacterAtRest(tl, parts, restAt, config);
+    }
+    tl.to(parts.glasses, { scale: 1.08, duration: 0.16, ease: "back.out(2.4)" })
+      .to(parts.hands, { y: 2, duration: 0.12, ease: "power2.in" })
+      .to(parts.laptop, { y: 1, scaleY: 0.97, duration: 0.12, ease: "power2.in" }, "<")
+      .to(parts.hands, { y: -1, duration: 0.16, ease: "back.out(2.4)" })
+      .to(parts.laptop, { y: 0, scaleY: 1, duration: 0.16, ease: "power2.out" }, "<")
+      .fromTo(parts.cursor, { x: -5, y: 4, opacity: 0, scale: 0.4 }, { x: 0, y: 0, opacity: 1, scale: 1, duration: 0.2, ease: "back.out(3)" })
+      .to(parts.glasses, { scale: 1, duration: 0.2, ease: "power2.out" }, "<")
+      .to(parts.cursor, { opacity: 0.55, duration: 0.14, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playBucketIngestConfirm({ config, parts, gsap }) {
+    const required = ["hat", "bucket", "liquid", "bead", "check"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const checkLength = primeStrokeDraw([parts.check], gsap).get(parts.check);
+    gsap.set([parts.bead, parts.check], { opacity: 0 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to(parts.hat, { rotate: -8, y: -3, duration: 0.18, ease: "power2.out" })
+      .fromTo(parts.bead, { y: -16, opacity: 0, scale: 0.4 }, { y: 0, opacity: 1, scale: 1, duration: 0.28, ease: "power2.in" })
+      .to(parts.bead, { opacity: 0, scale: 0.25, duration: 0.1 })
+      .to(parts.liquid, { y: -3, scaleY: 1.08, duration: 0.16, ease: "power2.out" }, "-=0.06")
+      .fromTo(parts.check, { strokeDashoffset: checkLength, opacity: 0 }, { strokeDashoffset: 0, opacity: 1, duration: 0.22, ease: "power2.out" }, "-=0.04")
+      .to(parts.hat, { rotate: 0, y: 0, duration: 0.24, ease: "power2.out" })
+      .to(parts.liquid, { y: 0, scaleY: 1, duration: 0.22, ease: "sine.inOut" }, "<")
+      .to(parts.check, { opacity: 0.68, duration: 0.16, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playSearchScoutFind({ config, parts, gsap }) {
+    const required = ["lens", "scan", "marker", "spark"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    gsap.set([parts.marker, parts.spark], { opacity: 0, scale: 0.5 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to(parts.lens, { scale: 1.05, duration: 0.16, ease: "sine.inOut" })
+      .fromTo(parts.scan, { x: -10, opacity: 0.2 }, { x: 8, opacity: 1, duration: 0.28, ease: "power1.inOut" })
+      .fromTo(parts.marker, { y: -8, opacity: 0, scale: 0.5 }, { y: 0, opacity: 1, scale: 1, duration: 0.2, ease: "back.out(2.8)" })
+      .fromTo(parts.spark, { scale: 0.3, opacity: 0 }, { scale: 1.16, opacity: 1, duration: 0.16, ease: "back.out(3)" }, "-=0.04")
+      .to(parts.lens, { scale: 1, duration: 0.18, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playToolKitAction({ config, parts, gsap }) {
+    const required = ["bucket", "lid", "wrench", "spark"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const strong = isStrongCharacter(config);
+    gsap.set(parts.spark, { opacity: 0, scale: 0.4 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: characterRepeatDelay(config) });
+    if (strong) {
+      tl.to(parts.lid, { y: -8, rotation: -10, duration: 0.16, ease: "back.out(2.8)" })
+        .to(parts.wrench, { y: -3, rotation: 28, scale: 1.18, duration: 0.16, ease: "back.out(3)" }, "<")
+        .to(parts.wrench, { rotation: -12, duration: 0.14, ease: "power2.inOut" })
+        .to(parts.wrench, { rotation: 10, duration: 0.12, ease: "power2.inOut" })
+        .to(parts.bucket, { scaleX: 1.07, scaleY: 0.96, duration: 0.14, ease: "back.out(2.6)" }, "-=0.08")
+        .fromTo(parts.spark, { scale: 0.25, rotation: 0, opacity: 0 }, { scale: 1.45, rotation: 55, opacity: 1, duration: 0.14, ease: "back.out(3.2)" }, "-=0.04")
+        .to(parts.bucket, { scaleX: 1, scaleY: 1, duration: 0.16, ease: "power2.out" })
+        .to(parts.lid, { y: 0, rotation: 0, duration: 0.16, ease: "power2.out" }, "<")
+        .to(parts.wrench, { y: 0, rotation: 0, scale: 1, duration: 0.16, ease: "power2.out" }, "<");
+      return finishCharacterAtRest(tl, parts, restAt, config);
+    }
+    tl.to(parts.lid, { y: -4, rotation: -4, duration: 0.18, ease: "power2.out" })
+      .to(parts.wrench, { rotation: 14, scale: 1.08, duration: 0.2, ease: "back.out(2.4)" }, "<")
+      .to(parts.bucket, { scale: 1.035, duration: 0.16, ease: "sine.inOut" })
+      .fromTo(parts.spark, { scale: 0.3, opacity: 0 }, { scale: 1.18, opacity: 1, duration: 0.16, ease: "back.out(3)" }, "-=0.04")
+      .to(parts.bucket, { scale: 1, duration: 0.18, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playApiSignalReturn({ config, parts, gsap }) {
+    const required = ["interface", "request", "receipt", "status"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    gsap.set([parts.request, parts.receipt, parts.status], { opacity: 0, scale: 0.5 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to(parts.interface, { scale: 1.025, duration: 0.15, ease: "sine.inOut" })
+      .fromTo(parts.request, { x: -12, opacity: 0, scale: 0.5 }, { x: 0, opacity: 1, scale: 1, duration: 0.22, ease: "power2.out" })
+      .fromTo(parts.receipt, { x: 12, opacity: 0, scale: 0.5 }, { x: 0, opacity: 1, scale: 1, duration: 0.22, ease: "power2.out" })
+      .fromTo(parts.status, { scale: 0.35, opacity: 0 }, { scale: 1.2, opacity: 1, duration: 0.16, ease: "back.out(3)" }, "-=0.05")
+      .to(parts.interface, { scale: 1, duration: 0.18, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playMemoryIndexCommit({ config, parts, gsap }) {
+    const required = ["back-card", "front-card", "bookmark", "key-line"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    gsap.set([parts.bookmark, parts["key-line"]], { opacity: 0, scale: 0.6 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to(parts["back-card"], { x: -3, y: -2, duration: 0.16, ease: "power2.out" })
+      .to(parts["front-card"], { y: -4, scale: 1.04, duration: 0.2, ease: "back.out(2.4)" }, "<")
+      .fromTo(parts.bookmark, { y: -6, opacity: 0, scale: 0.6 }, { y: 0, opacity: 1, scale: 1, duration: 0.18, ease: "power2.out" })
+      .fromTo(parts["key-line"], { x: -8, opacity: 0 }, { x: 0, opacity: 1, duration: 0.2, ease: "power2.out" })
+      .to(parts["front-card"], { scale: 1, duration: 0.16, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playOutputEnvelopeReveal({ config, parts, gsap }) {
+    const required = ["envelope", "card", "check", "spark"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const strong = isStrongCharacter(config);
+    gsap.set([parts.card, parts.check, parts.spark], { opacity: 0, scale: 0.5 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: characterRepeatDelay(config) });
+    if (strong) {
+      tl.to(parts.envelope, { y: 3, scaleX: 1.08, scaleY: 0.94, duration: 0.15, ease: "power2.in" })
+        .fromTo(parts.card, { y: 20, opacity: 0, scale: 0.3 }, { y: -5, opacity: 1, scale: 1.12, duration: 0.22, ease: "back.out(3.2)" })
+        .to(parts.card, { y: 0, scale: 1, duration: 0.14, ease: "power2.out" })
+        .fromTo(parts.check, { scale: 0.2, rotation: -20, opacity: 0 }, { scale: 1.4, rotation: 8, opacity: 1, duration: 0.14, ease: "back.out(3.2)" }, "-=0.04")
+        .fromTo(parts.spark, { scale: 0.2, rotation: 0, opacity: 0 }, { scale: 1.42, rotation: 65, opacity: 1, duration: 0.14, ease: "back.out(3.2)" }, "-=0.08")
+        .to(parts.envelope, { y: 0, scaleX: 1, scaleY: 1, duration: 0.16, ease: "power2.out" })
+        .to([parts.check, parts.spark], { scale: 1, rotation: 0, opacity: 0.72, duration: 0.14, ease: "power2.out" }, "<");
+      return finishCharacterAtRest(tl, parts, restAt, config);
+    }
+    tl.to(parts.envelope, { scale: 1.035, duration: 0.16, ease: "sine.inOut" })
+      .fromTo(parts.card, { y: 12, opacity: 0, scale: 0.5 }, { y: 0, opacity: 1, scale: 1, duration: 0.24, ease: "back.out(2.6)" })
+      .fromTo(parts.check, { scale: 0.3, opacity: 0 }, { scale: 1.16, opacity: 1, duration: 0.16, ease: "back.out(3)" }, "-=0.04")
+      .fromTo(parts.spark, { scale: 0.3, opacity: 0 }, { scale: 1.14, opacity: 1, duration: 0.14, ease: "back.out(3)" }, "-=0.05")
+      .to(parts.envelope, { scale: 1, duration: 0.18, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playIllustratedAgentReason({ config, parts, gsap }) {
+    const required = ["wash", "brain-left", "brain-right", "brain-detail", "processor", "processor-core", "input-nodes", "input-path", "output-path", "result"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const paths = [parts["input-path"], parts["output-path"]];
+    const lengths = primeStrokeDraw(paths, gsap);
+    gsap.set(parts.result, { opacity: 0, scale: 0.3, rotation: -24 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.fromTo(parts["input-nodes"],
+        { x: -10, scale: 0.66, opacity: 0.25 },
+        { x: 0, scale: 1.16, opacity: 1, duration: 0.2, ease: "back.out(3)" },
+        0
+      )
+      .to(parts["input-nodes"], { scale: 1, duration: 0.14, ease: "power2.out" }, 0.2)
+      .fromTo(parts["input-path"],
+        { strokeDashoffset: lengths.get(parts["input-path"]), opacity: 0.2 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.28, ease: "power2.out" },
+        0.08
+      )
+      .to(parts["brain-left"], { x: -3, rotation: -5, scaleX: 1.1, scaleY: 0.94, duration: 0.2, ease: "back.out(2.8)" }, 0.3)
+      .to(parts["brain-right"], { x: 3, rotation: 5, scaleX: 1.1, scaleY: 0.94, duration: 0.2, ease: "back.out(2.8)" }, 0.3)
+      .to(parts.processor, { y: -4, scale: 1.18, duration: 0.18, ease: "back.out(3)" }, 0.42)
+      .to(parts["processor-core"], { scale: 1.16, duration: 0.16, ease: "back.out(3)" }, 0.48)
+      .to([parts["brain-left"], parts["brain-right"]], { x: 0, rotation: 0, scaleX: 0.98, scaleY: 1.05, duration: 0.14, ease: "power2.inOut" }, 0.62)
+      .to([parts["brain-left"], parts["brain-right"]], { scaleX: 1, scaleY: 1, duration: 0.18, ease: "elastic.out(1, 0.45)" }, 0.76)
+      .to([parts.processor, parts["processor-core"]], { y: 0, scale: 1, duration: 0.2, ease: "power2.out" }, 0.72)
+      .fromTo(parts["output-path"],
+        { strokeDashoffset: lengths.get(parts["output-path"]), opacity: 0.2 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.26, ease: "power2.out" },
+        0.78
+      )
+      .fromTo(parts.result,
+        { opacity: 0, scale: 0.3, rotation: -24 },
+        { opacity: 1, scale: 1.42, rotation: 42, duration: 0.18, ease: "back.out(3.2)" },
+        0.94
+      )
+      .to(parts.result, { scale: 1, rotation: 0, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 1.12)
+      .to(parts.wash, { scale: 1.035, duration: 0.18, ease: "sine.inOut" }, 1.06)
+      .to(parts.wash, { scale: 1, duration: 0.2, ease: "sine.inOut" }, 1.24);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedOperatorOperate({ config, parts, gsap }) {
+    const required = ["wash", "body", "head", "hair", "glasses", "laptop", "hands", "screen", "laptop-base", "input-cursor", "status", "status-check"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const checkLength = primeStrokeDraw([parts["status-check"]], gsap).get(parts["status-check"]);
+    gsap.set([parts.status, parts["status-check"]], { opacity: 0, scale: 0.35 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.to([parts.head, parts.hair, parts.glasses], { y: -4, rotation: -3, duration: 0.18, ease: "back.out(2.8)" }, 0)
+      .to(parts.glasses, { scale: 1.16, duration: 0.16, ease: "back.out(3)" }, 0.06)
+      .fromTo(parts["input-cursor"],
+        { x: -12, y: 8, rotation: -12, scale: 0.45, opacity: 0.25 },
+        { x: 7, y: 3, rotation: 8, scale: 1.2, opacity: 1, duration: 0.28, ease: "power2.out" },
+        0.2
+      )
+      .to(parts.hands, { y: 5, scaleY: 0.84, duration: 0.1, ease: "power2.in" }, 0.4)
+      .to(parts.laptop, { y: 2, scaleY: 0.94, duration: 0.1, ease: "power2.in" }, 0.4)
+      .to(parts.hands, { y: -3, scaleY: 1.12, duration: 0.12, ease: "back.out(3)" }, 0.5)
+      .to(parts.hands, { y: 4, scaleY: 0.88, duration: 0.1, ease: "power2.in" }, 0.62)
+      .to(parts.hands, { y: 0, scaleY: 1, duration: 0.14, ease: "back.out(2.6)" }, 0.72)
+      .to(parts.laptop, { y: 0, scaleY: 1, duration: 0.16, ease: "power2.out" }, 0.72)
+      .to(parts.screen, { scale: 1.34, duration: 0.16, ease: "back.out(3)" }, 0.7)
+      .to(parts.screen, { scale: 1, duration: 0.2, ease: "power2.out" }, 0.86)
+      .fromTo(parts.status,
+        { opacity: 0, scale: 0.35, rotation: -18 },
+        { opacity: 1, scale: 1.3, rotation: 8, duration: 0.18, ease: "back.out(3.2)" },
+        0.92
+      )
+      .fromTo(parts["status-check"],
+        { strokeDashoffset: checkLength, opacity: 0 },
+        { strokeDashoffset: 0, opacity: 1, scale: 1.12, duration: 0.22, ease: "power2.out" },
+        1.02
+      )
+      .to(parts.status, { scale: 1, rotation: 0, duration: 0.2, ease: "elastic.out(1, 0.42)" }, 1.1)
+      .to([parts.head, parts.hair, parts.glasses], { y: 0, rotation: 0, scale: 1, duration: 0.24, ease: "power2.out" }, 1.14)
+      .to(parts["input-cursor"], { x: 0, y: 0, rotation: 0, scale: 1, duration: 0.22, ease: "power2.out" }, 1.16);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedToolExecute({ config, parts, gsap }) {
+    const required = ["wash", "toolbox", "toolbox-lid", "handle", "wrench", "wrench-hole", "target", "action-path", "completion"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const actionLength = primeStrokeDraw([parts["action-path"]], gsap).get(parts["action-path"]);
+    gsap.set(parts.completion, { opacity: 0, scale: 0.3, rotation: -28 });
+    gsap.set(parts.wrench, { transformOrigin: "38% 72%" });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.fromTo(parts.target, { scale: 0.7, rotation: -12 }, { scale: 1.28, rotation: 12, duration: 0.18, ease: "back.out(3)" }, 0)
+      .to(parts.target, { scale: 1, rotation: 0, duration: 0.18, ease: "power2.out" }, 0.18)
+      .fromTo(parts["action-path"],
+        { strokeDashoffset: actionLength, opacity: 0.15 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.24, ease: "power2.out" },
+        0.12
+      )
+      .to(parts.wrench, { y: -5, rotation: -22, scale: 1.13, duration: 0.2, ease: "back.out(3)" }, 0.3)
+      .to(parts.wrench, { y: 2, rotation: 22, scale: 1.2, duration: 0.18, ease: "power2.inOut" }, 0.5)
+      .to(parts.wrench, { y: -2, rotation: -10, scale: 1.08, duration: 0.14, ease: "power2.inOut" }, 0.68)
+      .to(parts.wrench, { y: 0, rotation: 0, scale: 1, duration: 0.24, ease: "elastic.out(1, 0.35)" }, 0.82)
+      .to([parts.toolbox, parts["toolbox-lid"]], { y: 4, scaleY: 0.93, duration: 0.12, ease: "power2.in" }, 0.5)
+      .to([parts.toolbox, parts["toolbox-lid"]], { y: -2, scaleY: 1.05, duration: 0.16, ease: "back.out(3)" }, 0.64)
+      .to([parts.toolbox, parts["toolbox-lid"]], { y: 0, scaleY: 1, duration: 0.2, ease: "power2.out" }, 0.82)
+      .fromTo(parts.completion,
+        { opacity: 0, scale: 0.3, rotation: -28 },
+        { opacity: 1, scale: 1.5, rotation: 52, duration: 0.18, ease: "back.out(3.2)" },
+        0.9
+      )
+      .to(parts.completion, { scale: 1, rotation: 0, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 1.08)
+      .to(parts.handle, { scaleX: 1.08, duration: 0.14, ease: "sine.inOut" }, 1.0)
+      .to(parts.handle, { scaleX: 1, duration: 0.18, ease: "sine.inOut" }, 1.14);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedOutputDeliver({ config, parts, gsap }) {
+    const required = ["wash", "card", "card-lines", "delivery-tray", "delivery-lip", "send-path", "check-badge", "check"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const paths = [parts["card-lines"], parts["send-path"], parts.check];
+    const lengths = primeStrokeDraw(paths, gsap);
+    gsap.set([parts["check-badge"], parts.check], { opacity: 0, scale: 0.35 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.to([parts["delivery-tray"], parts["delivery-lip"]], { y: 4, scaleY: 0.94, duration: 0.14, ease: "power2.in" }, 0)
+      .fromTo(parts.card,
+        { y: 18, scale: 0.72, opacity: 0.4 },
+        { y: -10, scale: 1.14, opacity: 1, duration: 0.28, ease: "back.out(3.2)" },
+        0.06
+      )
+      .to(parts.card, { y: 0, scale: 1, duration: 0.18, ease: "power2.out" }, 0.34)
+      .fromTo(parts["card-lines"],
+        { strokeDashoffset: lengths.get(parts["card-lines"]), opacity: 0.15 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.28, ease: "power2.out" },
+        0.26
+      )
+      .to([parts["delivery-tray"], parts["delivery-lip"]], { y: -2, scaleY: 1.05, duration: 0.16, ease: "back.out(3)" }, 0.32)
+      .to([parts["delivery-tray"], parts["delivery-lip"]], { y: 0, scaleY: 1, duration: 0.18, ease: "power2.out" }, 0.48)
+      .fromTo(parts["send-path"],
+        { strokeDashoffset: lengths.get(parts["send-path"]), opacity: 0.15 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.26, ease: "power2.out" },
+        0.56
+      )
+      .to(parts.card, { x: 6, y: -5, rotation: 4, duration: 0.2, ease: "power2.inOut" }, 0.62)
+      .to(parts.card, { x: 0, y: 0, rotation: 0, duration: 0.22, ease: "power2.out" }, 0.82)
+      .fromTo(parts["check-badge"],
+        { opacity: 0, scale: 0.35, rotation: -18 },
+        { opacity: 1, scale: 1.35, rotation: 8, duration: 0.18, ease: "back.out(3.2)" },
+        0.86
+      )
+      .fromTo(parts.check,
+        { strokeDashoffset: lengths.get(parts.check), opacity: 0 },
+        { strokeDashoffset: 0, opacity: 1, scale: 1.14, duration: 0.22, ease: "power2.out" },
+        0.98
+      )
+      .to(parts["check-badge"], { scale: 1, rotation: 0, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 1.06)
+      .to(parts.wash, { scale: 1.035, duration: 0.18, ease: "sine.inOut" }, 1.08)
+      .to(parts.wash, { scale: 1, duration: 0.2, ease: "sine.inOut" }, 1.26);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedDatabasePersist({ config, parts, gsap }) {
+    const required = ["wash", "cylinder-body", "cylinder-top", "layer-top", "layer-bottom", "input-bead", "write-path", "commit-ripple", "stored-bead"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const writeLength = primeStrokeDraw([parts["write-path"]], gsap).get(parts["write-path"]);
+    gsap.set([parts["commit-ripple"], parts["stored-bead"]], { opacity: 0, scale: 0.35 });
+    const vessel = [parts["cylinder-body"], parts["cylinder-top"], parts["layer-top"], parts["layer-bottom"]];
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.fromTo(parts["input-bead"],
+        { x: -10, y: -5, scale: 0.55, opacity: 0.3 },
+        { x: 19, y: 10, scale: 1.12, opacity: 1, duration: 0.28, ease: "power2.out" },
+        0
+      )
+      .fromTo(parts["write-path"],
+        { strokeDashoffset: writeLength, opacity: 0.18 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.3, ease: "power2.out" },
+        0.08
+      )
+      .to(parts["input-bead"], { x: 31, y: 21, scale: 0.35, opacity: 0, duration: 0.2, ease: "power2.in" }, 0.3)
+      .to(vessel, { y: 3, scaleY: 0.95, duration: 0.14, ease: "power2.in" }, 0.38)
+      .to(vessel, { y: -2, scaleY: 1.04, duration: 0.18, ease: "back.out(3)" }, 0.52)
+      .to(vessel, { y: 0, scaleY: 1, duration: 0.2, ease: "power2.out" }, 0.7)
+      .fromTo(parts["stored-bead"],
+        { opacity: 0, scale: 0.35, y: -7 },
+        { opacity: 1, scale: 1.35, y: 0, duration: 0.2, ease: "back.out(3.2)" },
+        0.78
+      )
+      .to(parts["stored-bead"], { scale: 1, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 0.98)
+      .fromTo(parts["commit-ripple"],
+        { opacity: 0.8, scale: 0.35 },
+        { opacity: 0, scale: 1.55, duration: 0.34, ease: "power2.out" },
+        0.94
+      )
+      .to(parts.wash, { scale: 1.03, duration: 0.18, ease: "sine.inOut" }, 1.1)
+      .to(parts.wash, { scale: 1, duration: 0.2, ease: "sine.inOut" }, 1.28);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedApiRoute({ config, parts, gsap }) {
+    const required = ["wash", "gateway", "api-glyph", "request-path", "request-token", "response-path", "response-token"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const lengths = primeStrokeDraw([parts["request-path"], parts["response-path"]], gsap);
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.fromTo(parts["request-token"],
+        { x: -12, scale: 0.55, opacity: 0.3 },
+        { x: 24, scale: 1.15, opacity: 1, duration: 0.3, ease: "power2.out" },
+        0
+      )
+      .fromTo(parts["request-path"],
+        { strokeDashoffset: lengths.get(parts["request-path"]), opacity: 0.2 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.28, ease: "power2.out" },
+        0.06
+      )
+      .to(parts["request-token"], { x: 32, scale: 0.35, opacity: 0, duration: 0.16, ease: "power2.in" }, 0.3)
+      .to(parts.gateway, { scaleX: 0.93, scaleY: 1.06, duration: 0.16, ease: "power2.inOut" }, 0.36)
+      .to(parts["api-glyph"], { rotation: 10, scale: 1.16, duration: 0.18, ease: "back.out(3)" }, 0.42)
+      .to(parts["api-glyph"], { rotation: -6, scale: 0.97, duration: 0.16, ease: "power2.inOut" }, 0.6)
+      .to([parts.gateway, parts["api-glyph"]], { rotation: 0, scaleX: 1, scaleY: 1, scale: 1, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 0.76)
+      .fromTo(parts["response-path"],
+        { strokeDashoffset: lengths.get(parts["response-path"]), opacity: 0.2 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.28, ease: "power2.out" },
+        0.74
+      )
+      .fromTo(parts["response-token"],
+        { x: -24, scale: 0.35, opacity: 0 },
+        { x: 0, scale: 1.35, opacity: 1, duration: 0.22, ease: "back.out(3.2)" },
+        0.9
+      )
+      .to(parts["response-token"], { scale: 1, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 1.12)
+      .to(parts.wash, { scale: 1.03, duration: 0.18, ease: "sine.inOut" }, 1.1)
+      .to(parts.wash, { scale: 1, duration: 0.2, ease: "sine.inOut" }, 1.28);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedSearchDiscover({ config, parts, gsap }) {
+    const required = ["wash", "lens-glass", "lens", "handle", "scan-cross", "target-ring", "result-dot", "discovery"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const magnifier = [parts["lens-glass"], parts.lens, parts.handle];
+    gsap.set([parts["target-ring"], parts["result-dot"], parts.discovery], { transformOrigin: "center center" });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.to(magnifier, { x: 0, y: -5, duration: 0.12, ease: "sine.inOut" }, 0)
+      .to(magnifier, { x: 5, y: 0, duration: 0.12, ease: "sine.inOut" }, 0.12)
+      .to(magnifier, { x: 0, y: 5, duration: 0.12, ease: "sine.inOut" }, 0.24)
+      .to(magnifier, { x: -5, y: 0, duration: 0.12, ease: "sine.inOut" }, 0.36)
+      .to(magnifier, { x: 0, y: 0, duration: 0.14, ease: "power2.out" }, 0.48)
+      .to(parts["scan-cross"], { rotation: 360, duration: 0.46, ease: "power2.inOut" }, 0.6)
+      .fromTo(parts["target-ring"],
+        { scale: 0.55, opacity: 0.35 },
+        { scale: 1.28, opacity: 1, duration: 0.2, ease: "back.out(3)" },
+        0.92
+      )
+      .fromTo(parts["result-dot"],
+        { scale: 0.35, opacity: 0 },
+        { scale: 1.45, opacity: 1, duration: 0.18, ease: "back.out(3.2)" },
+        1.02
+      )
+      .to([parts["target-ring"], parts["result-dot"]], { scale: 1, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 1.2)
+      .fromTo(parts.discovery,
+        { scale: 0.3, rotation: -28, opacity: 0 },
+        { scale: 1.45, rotation: 45, opacity: 1, duration: 0.18, ease: "back.out(3.2)" },
+        1.12
+      )
+      .to(parts.discovery, { scale: 1, rotation: 0, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 1.3);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedMemoryRecall({ config, parts, gsap }) {
+    const required = ["wash", "back-card", "front-card", "index-nodes", "trace", "input-token", "commit-path", "bookmark", "result"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const lengths = primeStrokeDraw([parts["commit-path"], parts.trace], gsap);
+    gsap.set(parts.result, { opacity: 0, scale: 0.3, rotation: -28 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.fromTo(parts["input-token"],
+        { x: -12, scale: 0.55, opacity: 0.3 },
+        { x: 22, scale: 1.12, opacity: 1, duration: 0.28, ease: "power2.out" },
+        0
+      )
+      .fromTo(parts["commit-path"],
+        { strokeDashoffset: lengths.get(parts["commit-path"]), opacity: 0.2 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.28, ease: "power2.out" },
+        0.06
+      )
+      .to(parts["input-token"], { x: 31, scale: 0.35, opacity: 0, duration: 0.16, ease: "power2.in" }, 0.3)
+      .to(parts["front-card"], { x: 3, y: 3, scale: 0.97, duration: 0.16, ease: "power2.in" }, 0.36)
+      .to(parts["back-card"], { x: -3, y: -3, rotation: -3, duration: 0.18, ease: "back.out(3)" }, 0.42)
+      .to([parts["front-card"], parts["back-card"]], { x: 0, y: 0, rotation: 0, scale: 1, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 0.62)
+      .fromTo(parts.trace,
+        { strokeDashoffset: lengths.get(parts.trace), opacity: 0.2 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.3, ease: "power2.out" },
+        0.66
+      )
+      .to(parts["index-nodes"], { scale: 1.24, duration: 0.18, ease: "back.out(3)" }, 0.76)
+      .to(parts["index-nodes"], { scale: 1, duration: 0.2, ease: "power2.out" }, 0.94)
+      .to(parts.bookmark, { y: -6, scale: 1.16, duration: 0.18, ease: "back.out(3)" }, 0.9)
+      .to(parts.bookmark, { y: 0, scale: 1, duration: 0.22, ease: "bounce.out" }, 1.08)
+      .fromTo(parts.result,
+        { opacity: 0, scale: 0.3, rotation: -28 },
+        { opacity: 1, scale: 1.45, rotation: 48, duration: 0.18, ease: "back.out(3.2)" },
+        1.08
+      )
+      .to(parts.result, { scale: 1, rotation: 0, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 1.26);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedFileAttach({ config, parts, gsap }) {
+    const required = ["wash", "page", "paperclip", "content-lines"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const paperclipLength = primeStrokeDraw([parts.paperclip], gsap).get(parts.paperclip);
+    gsap.set(parts["content-lines"], { transformOrigin: "left center" });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.to(parts.page, { y: 2, scaleX: 1.03, scaleY: 0.97, duration: 0.16, ease: "power2.in" }, 0)
+      .to(parts.page, { y: 0, scaleX: 1, scaleY: 1, duration: 0.2, ease: "back.out(3)" }, 0.16)
+      .fromTo(parts.paperclip,
+        { y: -5, rotation: -3, opacity: 0.28, strokeDashoffset: paperclipLength },
+        { y: 0, rotation: 0, opacity: 1, strokeDashoffset: 0, duration: 0.4, ease: "power2.out" },
+        0.2
+      )
+      .fromTo(parts["content-lines"],
+        { scaleX: 0.5, opacity: 0.2 },
+        { scaleX: 1.08, opacity: 1, duration: 0.34, ease: "back.out(2.7)" },
+        0.56
+      )
+      .to(parts["content-lines"], { scaleX: 1, duration: 0.2, ease: "power2.out" }, 0.9)
+      .to(parts.page, { scale: 1.025, duration: 0.16, ease: "sine.inOut" }, 0.96)
+      .to(parts.page, { scale: 1, duration: 0.2, ease: "sine.inOut" }, 1.12);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedFolderStore({ config, parts, gsap }) {
+    const required = ["wash", "folder-back", "folder-tab", "document", "folder-front", "index-label"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const back = [parts["folder-back"], parts["folder-tab"]];
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.to(back, { y: -2, duration: 0.2, ease: "power2.out" }, 0)
+      .to(parts["folder-front"], { y: 3, scaleY: 0.97, duration: 0.2, ease: "power2.inOut" }, 0)
+      .fromTo(parts.document,
+        { y: -8, scale: 0.92, opacity: 0.45 },
+        { y: 4, scale: 1, opacity: 1, duration: 0.44, ease: "power2.out" },
+        0.18
+      )
+      .to(parts.document, { y: 0, duration: 0.2, ease: "power2.out" }, 0.62)
+      .to(back, { y: 0, duration: 0.22, ease: "back.out(2.6)" }, 0.62)
+      .to(parts["folder-front"], { y: 0, scaleY: 1, duration: 0.22, ease: "back.out(2.6)" }, 0.62)
+      .fromTo(parts["index-label"],
+        { scale: 0.55, opacity: 0.25 },
+        { scale: 1.25, opacity: 1, duration: 0.3, ease: "back.out(3)" },
+        0.78
+      )
+      .to(parts["index-label"], { scale: 1, duration: 0.22, ease: "elastic.out(1, 0.42)" }, 1.08)
+      .to(parts["folder-front"], { scaleY: 0.97, duration: 0.12, ease: "power2.in" }, 1.12)
+      .to(parts["folder-front"], { scaleY: 1, duration: 0.18, ease: "power2.out" }, 1.24);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedCloudTransfer({ config, parts, gsap }) {
+    const required = ["wash", "cloud-shell", "upload-arrow", "download-arrow"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const arrows = [parts["upload-arrow"], parts["download-arrow"]];
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.to(parts["cloud-shell"], { y: 2, scaleX: 1.04, scaleY: 0.96, duration: 0.15, ease: "power2.in" }, 0)
+      .to(parts["cloud-shell"], { y: 0, scaleX: 1, scaleY: 1, duration: 0.2, ease: "back.out(3)" }, 0.15)
+      .fromTo(parts["upload-arrow"],
+        { y: 3, opacity: 0, clipPath: "inset(100% 0% 0% 0%)" },
+        { y: 0, opacity: 1, clipPath: "inset(0% 0% 0% 0%)", duration: 0.48, ease: "power1.inOut" },
+        0.2
+      )
+      .fromTo(parts["download-arrow"],
+        { y: -3, opacity: 0, clipPath: "inset(0% 0% 100% 0%)" },
+        { y: 0, opacity: 1, clipPath: "inset(0% 0% 0% 0%)", duration: 0.48, ease: "power1.inOut" },
+        0.64
+      )
+      .to(arrows, { opacity: 0.82, duration: 0.14, ease: "sine.inOut" }, 1.12)
+      .to(arrows, { opacity: 1, duration: 0.18, ease: "sine.inOut" }, 1.26)
+      .to(parts["cloud-shell"], { scale: 1.025, duration: 0.16, ease: "sine.inOut" }, 1.12)
+      .to(parts["cloud-shell"], { scale: 1, duration: 0.22, ease: "sine.inOut" }, 1.28);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedShieldLock({ config, parts, gsap }) {
+    const required = ["wash", "shield-shell", "inner-field", "lock-shackle", "security-lock", "keyhole"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const shield = [parts["shield-shell"], parts["inner-field"]];
+    const lock = [parts["lock-shackle"], parts["security-lock"], parts.keyhole];
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.fromTo(shield,
+        { scale: 0.985 },
+        { scale: 1.025, duration: 0.22, ease: "power2.out" },
+        0
+      )
+      .to(shield, { scale: 1, duration: 0.2, ease: "power2.out" }, 0.22)
+      .to(lock, { y: 2, scaleY: 0.95, duration: 0.18, ease: "power2.in" }, 0.2)
+      .fromTo(parts["lock-shackle"],
+        { y: 4, scaleY: 0.78 },
+        { y: 0, scaleY: 1.08, duration: 0.36, ease: "back.out(3)" },
+        0.34
+      )
+      .to(lock, { y: 0, scaleY: 1, duration: 0.22, ease: "power2.out" }, 0.62)
+      .fromTo(parts.keyhole,
+        { scale: 0.45, opacity: 0.2 },
+        { scale: 1.3, opacity: 1, duration: 0.3, ease: "back.out(3)" },
+        0.62
+      )
+      .to(parts.keyhole, { scale: 1, duration: 0.2, ease: "power2.out" }, 0.92)
+      .to(parts["security-lock"], { scale: 1.12, duration: 0.16, ease: "sine.inOut" }, 0.86)
+      .to(parts["inner-field"], { scale: 1.035, duration: 0.16, ease: "sine.inOut" }, 0.86)
+      .to([parts["security-lock"], parts["inner-field"]], { scale: 1, duration: 0.22, ease: "sine.inOut" }, 1.08)
+      .to(parts["lock-shackle"], { y: 0, scaleY: 1, duration: 0.2, ease: "power2.out" }, 1.16);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedUserInteract({ config, parts, gsap }) {
+    const required = ["wash", "portrait-body", "portrait-neck", "portrait-head", "portrait-hair", "face", "conversation-card", "conversation-lines"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const head = [parts["portrait-neck"], parts["portrait-head"], parts["portrait-hair"], parts.face];
+    const lineLength = primeStrokeDraw([parts["conversation-lines"]], gsap).get(parts["conversation-lines"]);
+    gsap.set([parts["conversation-card"], parts["conversation-lines"]], { transformOrigin: "left bottom" });
+    gsap.set(head, { transformOrigin: "center center" });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.to(parts["portrait-body"], { y: 2, scale: 0.985, duration: 0.24, ease: "power2.out" }, 0)
+      .to(head, { rotation: -3, duration: 0.24, ease: "power2.out" }, 0)
+      .fromTo(parts["conversation-card"],
+        { y: 5, scale: 0.9, opacity: 0.35 },
+        { y: 0, scale: 1.04, opacity: 1, duration: 0.36, ease: "back.out(2.6)" },
+        0.18
+      )
+      .fromTo(parts["conversation-lines"],
+        { opacity: 0.18, strokeDashoffset: lineLength },
+        { opacity: 1, strokeDashoffset: 0, duration: 0.38, ease: "power2.out" },
+        0.44
+      )
+      .to(head, { y: 2, rotation: 3, duration: 0.16, ease: "power2.inOut" }, 0.82)
+      .to(head, { y: 0, rotation: 0, duration: 0.18, ease: "power2.out" }, 0.98)
+      .to(parts["conversation-card"], { scale: 1.035, duration: 0.15, ease: "sine.inOut" }, 1.04)
+      .to(parts["conversation-card"], { scale: 1, duration: 0.18, ease: "sine.inOut" }, 1.19)
+      .to(parts["portrait-body"], { y: 0, scale: 1, duration: 0.24, ease: "power2.out" }, 1.16);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedServerCompute({ config, parts, gsap }) {
+    const required = ["wash", "rack-shell", "upper-bay", "middle-bay", "lower-bay", "rack-ports", "activity-lights"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const bays = [parts["upper-bay"], parts["middle-bay"], parts["lower-bay"]];
+    gsap.set(parts["rack-ports"], { transformOrigin: "left center" });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.to(parts["rack-shell"], { scaleY: 0.97, duration: 0.12, ease: "power2.in" }, 0)
+      .to(parts["rack-shell"], { scaleY: 1.02, duration: 0.14, ease: "back.out(2.8)" }, 0.12)
+      .to(parts["rack-shell"], { scaleY: 1, duration: 0.14, ease: "power2.out" }, 0.26)
+      .to(bays, { scaleX: 1.07, duration: 0.18, stagger: 0.14, ease: "power2.out" }, 0.18)
+      .to(bays, { scaleX: 1, duration: 0.18, stagger: 0.14, ease: "power2.out" }, 0.36)
+      .fromTo(parts["rack-ports"],
+        { opacity: 0.35, scaleX: 0.25 },
+        { opacity: 1, scaleX: 1, duration: 0.46, ease: "power2.out" },
+        0.44
+      )
+      .fromTo(parts["activity-lights"],
+        { opacity: 0.25, scale: 0.6 },
+        { opacity: 1, scale: 1.42, duration: 0.24, ease: "back.out(3)" },
+        0.72
+      )
+      .to(parts["activity-lights"], { scale: 1, duration: 0.16, ease: "power2.out" }, 0.96)
+      .to(parts["activity-lights"], { scale: 1.32, duration: 0.14, ease: "sine.inOut" }, 1.08)
+      .to(parts["activity-lights"], { scale: 1, duration: 0.18, ease: "sine.inOut" }, 1.22)
+      .to(parts["rack-shell"], { scale: 1.018, duration: 0.16, ease: "sine.inOut" }, 1.12)
+      .to(parts["rack-shell"], { scale: 1, duration: 0.2, ease: "sine.inOut" }, 1.28);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedAiModelInfer({ config, parts, gsap }) {
+    const required = ["wash", "model-card", "model-header", "network-links", "input-neurons", "hidden-neurons", "output-neuron", "inference-band"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const lengths = primeStrokeDraw([parts["network-links"], parts["inference-band"]], gsap);
+    gsap.set([parts["input-neurons"], parts["hidden-neurons"], parts["output-neuron"]], { transformOrigin: "center center" });
+    gsap.set(parts["inference-band"], { transformOrigin: "left center" });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.fromTo(parts["model-card"], { scale: 0.985 }, { scale: 1.025, duration: 0.2, ease: "power2.out" }, 0)
+      .to(parts["model-card"], { scale: 1, duration: 0.16, ease: "power2.out" }, 0.2)
+      .fromTo(parts["input-neurons"],
+        { opacity: 0.4, scale: 0.72 },
+        { opacity: 1, scale: 1.32, duration: 0.26, ease: "back.out(3)" },
+        0.16
+      )
+      .to(parts["input-neurons"], { scale: 1, duration: 0.18, ease: "power2.out" }, 0.42)
+      .fromTo(parts["network-links"],
+        { opacity: 0.16, strokeDashoffset: lengths.get(parts["network-links"]) },
+        { opacity: 1, strokeDashoffset: 0, duration: 0.46, ease: "power1.inOut" },
+        0.28
+      )
+      .fromTo(parts["hidden-neurons"],
+        { opacity: 0.3, scale: 0.58 },
+        { opacity: 1, scale: 1.28, duration: 0.26, ease: "back.out(3.2)" },
+        0.54
+      )
+      .to(parts["hidden-neurons"], { scale: 1, duration: 0.2, ease: "elastic.out(1, 0.42)" }, 0.8)
+      .fromTo(parts["output-neuron"],
+        { opacity: 0.25, scale: 0.5 },
+        { opacity: 1, scale: 1.45, duration: 0.26, ease: "back.out(3.2)" },
+        0.74
+      )
+      .to(parts["output-neuron"], { scale: 1, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 1.0)
+      .fromTo(parts["inference-band"],
+        { opacity: 0.25, scaleX: 0.15, strokeDashoffset: lengths.get(parts["inference-band"]) },
+        { opacity: 1, scaleX: 1.06, strokeDashoffset: 0, duration: 0.34, ease: "power2.out" },
+        0.92
+      )
+      .to(parts["inference-band"], { scaleX: 1, duration: 0.18, ease: "power2.out" }, 1.26);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedMessageQueue({ config, parts, gsap }) {
+    const required = ["wash", "queue-shell", "queue-rail", "message-one", "message-two", "message-three", "buffer-gates", "sequence-dots"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const railLength = primeStrokeDraw([parts["queue-rail"]], gsap).get(parts["queue-rail"]);
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.to(parts["buffer-gates"], { scaleY: 0.93, duration: 0.13, ease: "power2.in" }, 0)
+      .to(parts["buffer-gates"], { scaleY: 1.05, duration: 0.13, ease: "back.out(3)" }, 0.13)
+      .to(parts["buffer-gates"], { scaleY: 1, duration: 0.16, ease: "power2.out" }, 0.26)
+      .fromTo(parts["queue-rail"],
+        { opacity: 0.2, strokeDashoffset: railLength },
+        { opacity: 1, strokeDashoffset: 0, duration: 0.76, ease: "power1.inOut" },
+        0.14
+      )
+      .to(parts["message-one"], { y: -4, scale: 1.12, duration: 0.13, ease: "power2.out" }, 0.18)
+      .to(parts["message-one"], { y: 0, scale: 1, duration: 0.13, ease: "power2.out" }, 0.31)
+      .to(parts["message-two"], { y: -4, scale: 1.12, duration: 0.13, ease: "power2.out" }, 0.42)
+      .to(parts["message-two"], { y: 0, scale: 1, duration: 0.13, ease: "power2.out" }, 0.55)
+      .to(parts["message-three"], { y: -4, scale: 1.12, duration: 0.13, ease: "power2.out" }, 0.66)
+      .to(parts["message-three"], { y: 0, scale: 1, duration: 0.13, ease: "power2.out" }, 0.79)
+      .to(parts["sequence-dots"], { scale: 1.18, opacity: 1, duration: 0.15, ease: "back.out(3)" }, 0.9)
+      .to(parts["sequence-dots"], { scale: 1, duration: 0.18, ease: "power2.out" }, 1.05)
+      .to(parts["queue-shell"], { scale: 1.018, duration: 0.16, ease: "sine.inOut" }, 1.08)
+      .to(parts["queue-shell"], { scale: 1, duration: 0.2, ease: "sine.inOut" }, 1.24);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playFileNoteWrite({ config, parts, gsap }) {
+    const required = ["page", "corner", "line-1", "line-2", "line-3", "dot"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const lines = [parts["line-1"], parts["line-2"], parts["line-3"]];
+    gsap.set([...lines, parts.dot], { opacity: 0, x: -6 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to(parts.page, { scale: 1.03, duration: 0.16, ease: "sine.inOut" })
+      .to(parts.corner, { rotation: 8, duration: 0.15, ease: "power2.out" }, "<")
+      .to(lines, { x: 0, opacity: 1, duration: 0.16, stagger: 0.06, ease: "power2.out" })
+      .fromTo(parts.dot, { scale: 0.3, opacity: 0, x: -6 }, { scale: 1.15, opacity: 1, x: 0, duration: 0.16, ease: "back.out(3)" })
+      .to(parts.page, { scale: 1, duration: 0.16, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playFolderFileStore({ config, parts, gsap }) {
+    const required = ["folder", "tab", "sheet", "seal"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    gsap.set([parts.sheet, parts.seal], { opacity: 0, scale: 0.5 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to(parts.tab, { y: -3, duration: 0.16, ease: "power2.out" })
+      .to(parts.folder, { scale: 1.035, duration: 0.16, ease: "sine.inOut" }, "<")
+      .fromTo(parts.sheet, { y: -10, opacity: 0, scale: 0.5 }, { y: 0, opacity: 1, scale: 1, duration: 0.2, ease: "back.out(2.6)" })
+      .fromTo(parts.seal, { scale: 0.3, opacity: 0 }, { scale: 1.16, opacity: 1, duration: 0.16, ease: "back.out(3)" }, "-=0.04")
+      .to(parts.folder, { scale: 1, duration: 0.16, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playCloudUplinkReady({ config, parts, gsap }) {
+    const required = ["cloud", "kite", "data-dot", "ready-light"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    gsap.set([parts["data-dot"], parts["ready-light"]], { opacity: 0, scale: 0.4 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to(parts.kite, { y: -7, rotation: 8, duration: 0.18, ease: "power2.out" })
+      .to(parts.cloud, { scale: 1.04, duration: 0.18, ease: "sine.inOut" }, "<")
+      .fromTo(parts["data-dot"], { y: 9, opacity: 0, scale: 0.4 }, { y: 0, opacity: 1, scale: 1, duration: 0.2, ease: "power2.out" })
+      .fromTo(parts["ready-light"], { scale: 0.3, opacity: 0 }, { scale: 1.18, opacity: 1, duration: 0.16, ease: "back.out(3)" }, "-=0.04")
+      .to(parts.cloud, { scale: 1, duration: 0.16, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playShieldGuardConfirm({ config, parts, gsap }) {
+    const required = ["shell", "core", "scan", "check"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    gsap.set([parts.scan, parts.check], { opacity: 0, scale: 0.5 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to(parts.shell, { scale: 1.05, duration: 0.16, ease: "sine.inOut" })
+      .to(parts.core, { scale: 1.1, duration: 0.16, ease: "back.out(2.4)" }, "<")
+      .fromTo(parts.scan, { x: -10, opacity: 0, scale: 0.5 }, { x: 8, opacity: 1, scale: 1, duration: 0.24, ease: "power1.inOut" })
+      .fromTo(parts.check, { scale: 0.3, opacity: 0 }, { scale: 1.15, opacity: 1, duration: 0.16, ease: "back.out(3)" }, "-=0.04")
+      .to(parts.shell, { scale: 1, duration: 0.16, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function playTokenIntentReady({ config, parts, gsap }) {
+    const required = ["shell", "core", "tick-left", "tick-right", "tick-top", "tick-bottom"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const ticks = [parts["tick-left"], parts["tick-right"], parts["tick-top"], parts["tick-bottom"]];
+    gsap.set([...ticks, parts.core], { opacity: 0, scale: 0.5 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: CHARACTER_REPEAT_DELAY });
+    tl.to(parts.shell, { rotation: 12, scale: 1.045, duration: 0.18, ease: "power2.out" })
+      .fromTo(parts.core, { scale: 0.4, opacity: 0 }, { scale: 1.16, opacity: 1, duration: 0.18, ease: "back.out(2.8)" })
+      .to(ticks, { opacity: 1, scale: 1, duration: 0.14, stagger: 0.04, ease: "power2.out" })
+      .to(parts.shell, { scale: 1, duration: 0.16, ease: "sine.inOut" });
+    return finishCharacterAtRest(tl, parts, restAt);
+  }
+
+  function createSvgElement(name, attrs) {
+    const el = document.createElementNS("http://www.w3.org/2000/svg", name);
+    Object.entries(attrs || {}).forEach(([key, value]) => {
+      el.setAttribute(key, String(value));
+    });
+    return el;
+  }
+
+  function numberAttr(el, name, fallback) {
+    const value = Number.parseFloat(el.getAttribute(name) || "");
+    return Number.isFinite(value) ? value : fallback;
+  }
+
+  const EDGE_PACKET_COUNT = 1;
+  const EDGE_PACKET_REPEAT_DELAY = 0.0;
+  const SHORT_EDGE_THRESHOLD = 120;
+  let currentMotionMode = "expressive";
+
+  function clearRuntimeStageEffects() {
+    document.querySelectorAll(".runtime-generated").forEach((el) => el.remove());
+    const highlight = document.querySelector("#viewport svg #title-highlight");
+    if (highlight && highlight.dataset.runtimeTitleWidth) {
+      highlight.setAttribute("x", highlight.dataset.runtimeTitleX || highlight.getAttribute("x") || "72");
+      highlight.setAttribute("width", highlight.dataset.runtimeTitleWidth);
+      highlight.style.removeProperty("opacity");
+      highlight.style.removeProperty("transform");
+      highlight.style.removeProperty("transform-origin");
+    }
+  }
+
+  function playTitleSweep(svg, manifest, gsap) {
+    if (!manifest.stage || !manifest.stage.title_sweep) return [];
+    const highlight = svg.querySelector("#title-highlight");
+    if (!highlight) return [];
+    const x = numberAttr(highlight, "x", 72);
+    const width = Math.max(120, numberAttr(highlight, "width", 360));
+    highlight.dataset.runtimeTitleX = String(x);
+    highlight.dataset.runtimeTitleWidth = String(width);
+    gsap.set(highlight, { attr: { x, width }, scaleX: 0, opacity: 0.08, transformOrigin: "left center" });
+    const tl = gsap.timeline();
+    tl.to(highlight, { scaleX: 1, opacity: 0.16, duration: 0.92, ease: "power2.out" });
+    tl.__anidiagramStage = "title-entry";
+    return [tl];
+  }
+
+  function playRuntimeEdgeFlow(svg, manifest, gsap, motionMode = "expressive") {
+    if (!manifest.stage || !manifest.stage.edge_flow) return [];
+    const edgeGroups = Array.from(svg.querySelectorAll("g.edge"));
+    const edgeEntries = Array.isArray(manifest.edges) ? manifest.edges : [];
+    const configuredIndices = motionMode === "readable"
+      ? manifest.stage.readable_edge_indices
+      : manifest.stage.active_edge_indices;
+    let activeEdges;
+    if (Array.isArray(configuredIndices)) {
+      activeEdges = configuredIndices
+        .filter((edgeIndex) => Number.isInteger(edgeIndex) && edgeIndex >= 0 && edgeGroups[edgeIndex])
+        .map((edgeIndex) => ({ group: edgeGroups[edgeIndex], edgeIndex, entry: edgeEntries[edgeIndex] || {} }));
+    } else {
+      const requestedLimit = motionMode === "readable" ? manifest.stage.readable_edge_limit : manifest.stage.edge_limit;
+      activeEdges = edgeGroups
+        .map((group, edgeIndex) => ({ group, edgeIndex, entry: edgeEntries[edgeIndex] || {} }))
+        .filter((item) => !Number.isInteger(requestedLimit) || item.edgeIndex < Math.max(0, requestedLimit));
+    }
+    const timelines = [];
+    activeEdges.forEach(({ group, edgeIndex, entry }) => {
+      const base = group.querySelector("path.edge-base");
+      if (!base || !base.getTotalLength) return;
+      const length = Math.max(1, base.getTotalLength());
+      const path = base.getAttribute("d");
+      if (!path) return;
+      const stroke = base.getAttribute("stroke") || "#38bdf8";
+      const width = Math.max(1, numberAttr(base, "stroke-width", 2.4));
+      const label = group.querySelector(".edge-label");
+      const effect = String(entry.effect || "signal-arrow").replace(/[^a-z0-9-]/gi, "-").toLowerCase();
+      const dotEffect = effect === "signal-dot" || effect === "flow-dot";
+      const dashEffect = effect === "dynamic-dash" || effect === "dash-flow" || effect === "trace" || effect === "draw";
+      const flowDash = Math.max(2.4, width * 1.4);
+      const flowGap = Math.max(12, width * 7);
+      const shortEdge = length <= SHORT_EDGE_THRESHOLD;
+      group.dataset.runtimeEdgeEffect = effect;
+      group.dataset.runtimeEdgePacketShape = shortEdge ? "dot" : "segment";
+      const flow = createSvgElement("path", {
+        class: `edge-flow runtime-edge-flow runtime-edge-effect-${effect} runtime-generated`,
+        d: path,
+        fill: "none",
+        stroke,
+        "stroke-width": Math.max(1.2, width * 0.86).toFixed(1),
+        "stroke-linecap": "round",
+        "stroke-dasharray": `${flowDash.toFixed(1)} ${flowGap.toFixed(1)}`,
+        "stroke-dashoffset": "0",
+        opacity: motionMode === "readable" ? "0.09" : "0.20",
+        "pointer-events": "none",
+      });
+      if (label) group.insertBefore(flow, label);
+      else group.appendChild(flow);
+      for (let particleIndex = 0; particleIndex < EDGE_PACKET_COUNT; particleIndex += 1) {
+        const packetLength = dotEffect
+          ? Math.max(1.8, width * 0.55)
+          : dashEffect
+            ? Math.max(8, Math.min(20, length * 0.18))
+            : Math.max(13, Math.min(34, length * 0.42));
+        const packetGap = Math.max(52, length + packetLength * 2.8);
+        const packet = shortEdge
+          ? createSvgElement("circle", {
+              class: `edge-particle runtime-edge-particle runtime-edge-packet runtime-edge-short-packet runtime-edge-effect-${effect} runtime-generated`,
+              cx: "0",
+              cy: "0",
+              r: Math.max(4.5, width * 2.2).toFixed(1),
+              fill: stroke,
+              opacity: "0",
+              "pointer-events": "none",
+            })
+          : createSvgElement("path", {
+              class: `edge-particle runtime-edge-particle runtime-edge-packet runtime-edge-effect-${effect} runtime-generated`,
+              d: path,
+              fill: "none",
+              stroke: "#ffffff",
+              "stroke-width": Math.max(4.2, width * (2.35 - particleIndex * 0.22)).toFixed(1),
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round",
+              "stroke-dasharray": `${packetLength.toFixed(1)} ${packetGap.toFixed(1)}`,
+              "stroke-dashoffset": packetGap.toFixed(1),
+              opacity: "0",
+              "pointer-events": "none",
+            });
+        const core = shortEdge
+          ? createSvgElement("circle", {
+              class: `edge-particle runtime-edge-particle runtime-edge-packet-core runtime-edge-short-packet-core runtime-edge-effect-${effect} runtime-generated`,
+              cx: "0",
+              cy: "0",
+              r: Math.max(3.0, width * 1.45).toFixed(1),
+              fill: stroke,
+              opacity: "0",
+              "pointer-events": "none",
+            })
+          : createSvgElement("path", {
+              class: `edge-particle runtime-edge-particle runtime-edge-packet-core runtime-edge-effect-${effect} runtime-generated`,
+              d: path,
+              fill: "none",
+              stroke,
+              "stroke-width": Math.max(2.6, width * (1.48 - particleIndex * 0.14)).toFixed(1),
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round",
+              "stroke-dasharray": `${(dotEffect ? Math.max(1.2, width * 0.35) : Math.max(6, packetLength * 0.62)).toFixed(1)} ${packetGap.toFixed(1)}`,
+              "stroke-dashoffset": packetGap.toFixed(1),
+              opacity: "0",
+              "pointer-events": "none",
+            });
+        if (label) {
+          group.insertBefore(packet, label);
+          group.insertBefore(core, label);
+        } else {
+          group.appendChild(packet);
+          group.appendChild(core);
+        }
+        const duration = 2.05 + ((edgeIndex + particleIndex) % 5) * 0.13;
+        const semanticDelay = Number.isFinite(Number(entry.delay)) ? Number(entry.delay) : 0;
+        const delay = semanticDelay;
+        const tl = gsap.timeline({ repeat: -1, repeatDelay: EDGE_PACKET_REPEAT_DELAY, delay });
+        tl.fromTo(
+          flow,
+          { attr: { "stroke-dashoffset": 0 } },
+          { attr: { "stroke-dashoffset": -(flowDash + flowGap) }, duration, ease: "none" },
+          0
+        );
+        if (shortEdge) {
+          const travel = { distance: 0 };
+          const placeDot = () => {
+            const point = base.getPointAtLength(travel.distance);
+            packet.setAttribute("cx", point.x.toFixed(2));
+            packet.setAttribute("cy", point.y.toFixed(2));
+            core.setAttribute("cx", point.x.toFixed(2));
+            core.setAttribute("cy", point.y.toFixed(2));
+          };
+          placeDot();
+          tl.to(travel, { distance: length, duration, ease: "none", onUpdate: placeDot }, 0);
+        } else {
+          tl.fromTo(
+            [packet, core],
+            { attr: { "stroke-dashoffset": packetGap + packetLength } },
+            { attr: { "stroke-dashoffset": -(length + packetLength) }, duration, ease: "none" },
+            0
+          );
+        }
+        tl.to(packet, { opacity: motionMode === "readable" ? 0.62 : 0.86, duration: 0.14, ease: "power1.out" }, 0)
+          .to(core, { opacity: motionMode === "readable" ? 0.82 : 1, duration: 0.14, ease: "power1.out" }, 0)
+          .to([packet, core], { opacity: 0, duration: 0.14, ease: "power1.in" }, Math.max(0, duration - 0.14));
+        tl.__anidiagramStage = "edge-packet";
+        tl.__anidiagramEdgeIndex = edgeIndex;
+        tl.__anidiagramEdgeEffect = effect;
+        timelines.push(tl);
+      }
+    });
+    return timelines;
+  }
+
+  function playRuntimeRelationCircles(svg, manifest, gsap) {
+    if (!manifest.stage || !manifest.stage.relation_circles) return [];
+    const timelines = [];
+    const edgeGroups = Array.from(svg.querySelectorAll("g.edge"));
+    const firstEdge = edgeGroups[0] || null;
+    edgeGroups.forEach((group, edgeIndex) => {
+      if (edgeIndex % 2 !== 0) return;
+      const base = group.querySelector("path.edge-base");
+      if (!base || !base.getBBox) return;
+      const box = base.getBBox();
+      const width = Math.max(44, box.width + 24);
+      const height = Math.max(32, box.height + 20);
+      if (width > 520 || height > 320) return;
+      const stroke = base.getAttribute("stroke") || "#7aa8ff";
+      const ring = createSvgElement("ellipse", {
+        class: "runtime-relation-circle runtime-generated",
+        cx: (box.x + box.width / 2).toFixed(1),
+        cy: (box.y + box.height / 2).toFixed(1),
+        rx: (width / 2).toFixed(1),
+        ry: (height / 2).toFixed(1),
+        fill: "none",
+        stroke,
+        "stroke-width": "1.5",
+        "stroke-dasharray": "7 8",
+        "stroke-dashoffset": "0",
+        opacity: "0.18",
+        "pointer-events": "none",
+      });
+      if (firstEdge) svg.insertBefore(ring, firstEdge);
+      else svg.appendChild(ring);
+      timelines.push(
+        gsap.to(ring, {
+          attr: { "stroke-dashoffset": -48 },
+          opacity: 0.34,
+          duration: 4.8 + (edgeIndex % 3) * 0.35,
+          yoyo: true,
+          repeat: -1,
+          ease: "sine.inOut",
+        })
+      );
+    });
+    return timelines;
+  }
+
+  function playRuntimeGroupFields(svg, manifest, gsap) {
+    if (!manifest.stage || !manifest.stage.group_fields) return [];
+    const timelines = [];
+    const groups = Array.from(svg.querySelectorAll("g.group"));
+    groups.forEach((group, groupIndex) => {
+      const rect = group.querySelector("rect");
+      if (!rect) return;
+      const stroke = rect.getAttribute("stroke") || "#7aa8ff";
+      const field = createSvgElement("rect", {
+        class: "runtime-group-field runtime-generated",
+        x: rect.getAttribute("x") || "0",
+        y: rect.getAttribute("y") || "0",
+        width: rect.getAttribute("width") || "0",
+        height: rect.getAttribute("height") || "0",
+        rx: rect.getAttribute("rx") || "22",
+        fill: stroke,
+        opacity: "0.045",
+        filter: "url(#soft-glow)",
+        "pointer-events": "none",
+      });
+      group.insertBefore(field, rect);
+      timelines.push(
+        gsap.to(field, {
+          opacity: 0.11,
+          x: groupIndex % 2 === 0 ? 3 : -3,
+          y: groupIndex % 2 === 0 ? -2 : 2,
+          duration: 3.8 + groupIndex * 0.28,
+          yoyo: true,
+          repeat: -1,
+          ease: "sine.inOut",
+        })
+      );
+    });
+    return timelines;
+  }
+
+  function playStageEffects(manifest, motionMode = "expressive") {
+    if (!window.gsap) return [];
+    const svg = document.querySelector("#viewport svg");
+    if (!svg) return [];
+    clearRuntimeStageEffects();
+    if (motionMode === "off") return [];
+    return [
+      ...(motionMode === "expressive" ? playTitleSweep(svg, manifest, window.gsap) : []),
+      ...playRuntimeEdgeFlow(svg, manifest, window.gsap, motionMode),
+      ...(motionMode === "expressive" ? playRuntimeRelationCircles(svg, manifest, window.gsap) : []),
+      ...(motionMode === "expressive" ? playRuntimeGroupFields(svg, manifest, window.gsap) : []),
+    ];
+  }
+
+  const SHOWCASE_TIME_SCALE = 0.6;
+
+  function showcaseTimeline(gsap, config) {
+    if (!config || !Number.isFinite(config.rest_at) || !Number.isFinite(config.repeat_delay)) return null;
+    const tl = gsap.timeline({
+      repeat: -1,
+      repeatDelay: config.repeat_delay * SHOWCASE_TIME_SCALE,
+    });
+    tl.__anidiagramPresentation = "showcase";
+    return tl;
+  }
+
+  function markShowcaseRest(timeline, config) {
+    timeline.__anidiagramRestAt = config.rest_at;
+    timeline.timeScale(SHOWCASE_TIME_SCALE);
+    return timeline;
+  }
+
+  const SHOWCASE_RECIPE_PROPERTIES = new Set(["x", "y", "rotate", "scale", "scaleX", "scaleY", "opacity"]);
+  const SHOWCASE_RECIPE_EASES = new Set([
+    "none",
+    "sine.in",
+    "sine.out",
+    "sine.inOut",
+    "power1.in",
+    "power1.out",
+    "power1.inOut",
+    "power2.in",
+    "power2.out",
+    "power2.inOut",
+    "power3.in",
+    "power3.out",
+    "power3.inOut",
+    "back.out(2.4)",
+    "back.out(2.8)",
+    "back.out(3)",
+    "back.out(3.5)",
+    "bounce.out",
+    "elastic.out(1, 0.35)",
+    "elastic.out(1, 0.4)",
+  ]);
+
+  function isPlainObject(value) {
+    return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+  }
+
+  function hasOnlyKeys(value, required, optional = []) {
+    if (!isPlainObject(value)) return false;
+    const allowed = new Set([...required, ...optional]);
+    const keys = Object.keys(value);
+    return required.every((key) => Object.prototype.hasOwnProperty.call(value, key))
+      && keys.every((key) => allowed.has(key));
+  }
+
+  function resolvedRecipePart(parts, name) {
+    if (!isSafePartName(name)) return null;
+    if (Object.prototype.hasOwnProperty.call(parts, name)) return parts[name];
+    const runtimeName = name.replace(/-([a-z0-9])/g, (_, character) => character.toUpperCase());
+    return Object.prototype.hasOwnProperty.call(parts, runtimeName)
+      ? parts[runtimeName]
+      : null;
+  }
+
+  function validRecipeProperty(name, value, rotationLimit) {
+    if (!SHOWCASE_RECIPE_PROPERTIES.has(name) || !Number.isFinite(value)) return false;
+    if ((name === "x" || name === "y") && Math.abs(value) > 10) return false;
+    if (name === "rotate" && Math.abs(value) > rotationLimit) return false;
+    if (["scale", "scaleX", "scaleY"].includes(name) && (value < 0.12 || value > 1.45)) return false;
+    if (name === "opacity" && (value < 0 || value > 1)) return false;
+    return true;
+  }
+
+  function validateShowcaseRecipe(config, parts) {
+    if (config.presentation_profile !== "showcase" || config.icon_system !== "diagram-core-v1") return null;
+    if (!hasOnlyKeys(config.recipe, ["tracks"])) return null;
+    if (!Number.isFinite(config.rest_at) || config.rest_at <= 0) return null;
+    const tracks = config.recipe.tracks;
+    if (!Array.isArray(tracks) || !tracks.length || tracks.length > 12) return null;
+    const compiled = [];
+    const seenTargets = new Set();
+    for (const track of tracks) {
+      if (!hasOnlyKeys(track, ["parts", "steps"])) return null;
+      if (!Array.isArray(track.parts) || !track.parts.length || track.parts.length > 4) return null;
+      if (track.parts.some((name) => typeof name !== "string") || new Set(track.parts).size !== track.parts.length) return null;
+      const targets = track.parts.map((name) => resolvedRecipePart(parts, name));
+      if (targets.some((target) => !target)) return null;
+      if (targets.some((target) => seenTargets.has(target))) return null;
+      targets.forEach((target) => seenTargets.add(target));
+      if (!Array.isArray(track.steps) || !track.steps.length || track.steps.length > 12) return null;
+      const rotationLimit = config.icon === "search"
+        && track.parts.length === 1
+        && track.parts[0] === "scan"
+        ? 360
+        : 14;
+      const steps = [];
+      for (const step of track.steps) {
+        if (!hasOnlyKeys(step, ["to", "duration", "ease", "at"], ["stagger"])) return null;
+        if (!isPlainObject(step.to) || !Object.keys(step.to).length) return null;
+        if (Object.entries(step.to).some(([name, value]) => !validRecipeProperty(name, value, rotationLimit))) return null;
+        if (!Number.isFinite(step.duration) || step.duration < 0.04 || step.duration > 0.8) return null;
+        if (!Number.isFinite(step.at) || step.at < 0) return null;
+        const stagger = step.stagger === undefined ? 0 : step.stagger;
+        if (!Number.isFinite(stagger) || stagger < 0 || stagger > 0.12) return null;
+        if (!SHOWCASE_RECIPE_EASES.has(step.ease)) return null;
+        if (step.at + step.duration + stagger * (targets.length - 1) > config.rest_at + 1e-9) return null;
+        steps.push(step);
+      }
+      compiled.push({ targets, steps });
+    }
+    return compiled;
+  }
+
+  function authoredRest(gsap, target) {
+    const number = (name, fallback) => {
+      const value = Number(gsap.getProperty(target, name));
+      return Number.isFinite(value) ? value : fallback;
+    };
+    return {
+      x: number("x", 0),
+      y: number("y", 0),
+      rotation: number("rotation", 0),
+      scaleX: number("scaleX", 1),
+      scaleY: number("scaleY", 1),
+      opacity: number("opacity", 1),
+    };
+  }
+
+  function playDeclarativeShowcase({ config, parts, gsap }) {
+    const compiled = validateShowcaseRecipe(config, parts);
+    if (!compiled) return null;
+    const targets = [...new Set(compiled.flatMap((track) => track.targets))];
+    const rest = new Map(targets.map((target) => [target, authoredRest(gsap, target)]));
+    setInitial(parts, gsap);
+    const tl = showcaseTimeline(gsap, config);
+    if (!tl) return null;
+    compiled.forEach((track) => {
+      track.steps.forEach((step) => {
+        const variables = {
+          ...step.to,
+          duration: step.duration,
+          ease: step.ease,
+        };
+        if (step.stagger !== undefined) variables.stagger = step.stagger;
+        tl.to(track.targets, variables, step.at);
+      });
+    });
+    targets.forEach((target) => tl.set(target, rest.get(target), config.rest_at));
+    return markShowcaseRest(tl, config);
+  }
+
+  function playAgentShowcase({ config, parts, gsap }) {
+    const required = ["body", "antenna", "eyeLeft", "eyeRight", "core"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const eyes = [parts.eyeLeft, parts.eyeRight];
+    const tl = showcaseTimeline(gsap, config);
+    if (!tl) return null;
+    tl.to(parts.body, { y: 5, scaleX: 1.08, scaleY: 0.9, duration: 0.18, ease: "power2.in" }, 0)
+      .to(parts.body, { y: -7, scaleX: 0.94, scaleY: 1.12, duration: 0.28, ease: "power2.out" }, 0.18)
+      .to(parts.body, { y: 0, scaleX: 1, scaleY: 1, duration: 0.34, ease: "bounce.out" }, 0.48)
+      .to(parts.antenna, { rotate: -12, duration: 0.16, ease: "power2.inOut" }, 0.06)
+      .to(parts.antenna, { rotate: 14, duration: 0.24, ease: "power2.out" }, 0.22)
+      .to(parts.antenna, { rotate: 0, duration: 0.32, ease: "power2.inOut" }, 0.52)
+      .to(eyes, { scaleY: 0.16, duration: 0.1, ease: "power2.in" }, 0.14)
+      .to(eyes, { scaleY: 1.16, duration: 0.16, ease: "power2.out" }, 0.24)
+      .to(eyes, { scaleY: 1, duration: 0.2, ease: "power2.out" }, 0.42)
+      .to(parts.core, { scale: 1.38, duration: 0.2, ease: "power2.out" }, 0.62)
+      .to(parts.core, { scale: 0.92, duration: 0.16, ease: "power2.inOut" }, 0.82)
+      .to(parts.core, { scale: 1, duration: 0.26, ease: "elastic.out(1, 0.35)" }, 0.98);
+    return markShowcaseRest(tl, config);
+  }
+
+  function playDatabaseShowcase({ config, parts, gsap }) {
+    const required = ["body", "topRing", "layerTop", "layerMiddle", "layerBottom", "core"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const layers = [parts.layerTop, parts.layerMiddle, parts.layerBottom];
+    const tl = showcaseTimeline(gsap, config);
+    if (!tl) return null;
+    tl.to(parts.topRing, { y: -8, scaleX: 1.13, scaleY: 0.88, duration: 0.26, ease: "power2.out" }, 0)
+      .to(parts.topRing, { y: 0, scaleX: 1, scaleY: 1, duration: 0.34, ease: "bounce.out" }, 0.26)
+      .to(layers, { y: -2, scaleX: 0.94, duration: 0.14, stagger: 0.07, ease: "power2.out" }, 0.28)
+      .to(layers, { y: 0, scaleX: 1.04, duration: 0.16, stagger: 0.07, ease: "power2.inOut" }, 0.48)
+      .to(layers, { scaleX: 1, duration: 0.18, stagger: 0.05, ease: "elastic.out(1, 0.4)" }, 0.68)
+      .to(parts.core, { scale: 1.4, duration: 0.2, ease: "power2.out" }, 0.62)
+      .to(parts.core, { scale: 1, duration: 0.3, ease: "elastic.out(1, 0.35)" }, 0.82);
+    return markShowcaseRest(tl, config);
+  }
+
+  function playApiShowcase({ config, parts, gsap }) {
+    const required = ["body", "inputInterface", "outputInterface", "processor", "indicatorGroup"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const tl = showcaseTimeline(gsap, config);
+    if (!tl) return null;
+    tl.to(parts.body, { scaleX: 0.91, scaleY: 1.06, duration: 0.2, ease: "power2.in" }, 0)
+      .to(parts.body, { scaleX: 1.05, scaleY: 0.97, duration: 0.22, ease: "back.out(3.5)" }, 0.2)
+      .to(parts.body, { scaleX: 1, scaleY: 1, duration: 0.34, ease: "elastic.out(1, 0.4)" }, 0.46)
+      .to(parts.inputInterface, { x: 9, scale: 1.14, duration: 0.22, ease: "power2.in" }, 0.04)
+      .to(parts.outputInterface, { x: -9, scale: 1.14, duration: 0.22, ease: "power2.in" }, 0.04)
+      .to(parts.inputInterface, { x: -4, scale: 0.96, duration: 0.24, ease: "back.out(4)" }, 0.3)
+      .to(parts.outputInterface, { x: 4, scale: 0.96, duration: 0.24, ease: "back.out(4)" }, 0.3)
+      .to([parts.inputInterface, parts.outputInterface], { x: 0, scale: 1, duration: 0.3, ease: "elastic.out(1, 0.35)" }, 0.58)
+      .to(parts.processor, { rotate: -12, scale: 1.18, duration: 0.22, ease: "power2.out" }, 0.26)
+      .to(parts.processor, { rotate: 7, scale: 0.96, duration: 0.18, ease: "power2.inOut" }, 0.5)
+      .to(parts.processor, { rotate: 0, scale: 1, duration: 0.3, ease: "elastic.out(1, 0.35)" }, 0.68)
+      .to(parts.indicatorGroup, { y: -7, scale: 1.16, duration: 0.22, ease: "power2.out" }, 0.8)
+      .to(parts.indicatorGroup, { y: 0, scale: 1, duration: 0.34, ease: "bounce.out" }, 1.02);
+    return markShowcaseRest(tl, config);
+  }
+
+  function playServerShowcase({ config, parts, gsap }) {
+    const required = ["body", "trayTop", "trayBottom", "indicatorTop", "indicatorBottom", "ventTop", "ventBottom"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const tl = showcaseTimeline(gsap, config);
+    if (!tl) return null;
+    tl.to(parts.trayTop, { x: 6, rotate: 5, duration: 0.24, ease: "back.out(3)" }, 0)
+      .to(parts.trayBottom, { x: -6, rotate: -5, duration: 0.24, ease: "back.out(3)" }, 0.08)
+      .to([parts.trayTop, parts.trayBottom], { x: 0, rotate: 0, duration: 0.38, ease: "elastic.out(1, 0.38)" }, 0.34)
+      .to(parts.indicatorTop, { scale: 1.42, duration: 0.18, ease: "power2.out" }, 0.72)
+      .to(parts.indicatorTop, { scale: 1, duration: 0.24, ease: "power2.out" }, 0.9)
+      .to(parts.indicatorBottom, { scale: 1.34, duration: 0.18, ease: "power2.out" }, 0.8)
+      .to(parts.indicatorBottom, { scale: 1, duration: 0.26, ease: "power2.out" }, 0.98)
+      .to([parts.ventTop, parts.ventBottom], { scaleX: 0.62, duration: 0.12, stagger: 0.04, ease: "power2.in" }, 0.72)
+      .to([parts.ventTop, parts.ventBottom], { scaleX: 1.14, duration: 0.16, stagger: 0.04, ease: "back.out(3)" }, 0.88)
+      .to([parts.ventTop, parts.ventBottom], { scaleX: 1, duration: 0.24, stagger: 0.04, ease: "elastic.out(1, 0.4)" }, 1.08);
+    return markShowcaseRest(tl, config);
+  }
+
+  const performances = {
+    "agent-showcase-loop-v1": playAgentShowcase,
+    "database-showcase-loop-v1": playDatabaseShowcase,
+    "api-showcase-loop-v1": playApiShowcase,
+    "server-showcase-loop-v1": playServerShowcase,
+    "token-intent-v2": playTokenIntent,
+    "tool-run-v2": playToolRun,
+    "output-reveal-v2": playOutputReveal,
+    "api-request-response-v2": playApiRequestResponse,
+    "search-discover-v2": playSearchDiscover,
+    "database-write-v2": playDatabaseWrite,
+    "memory-commit-v2": playMemoryCommit,
+    "agent-think-act-v2": playAgentThinkAct,
+    "file-lines-v2": playFileLines,
+    "folder-open-v2": playFolderOpen,
+    "cloud-upload-v2": playCloudUpload,
+    "shield-check-v2": playShieldCheck,
+    "brain-think-pulse-v1": playBrainThinkPulse,
+    "operator-type-focus-v1": playOperatorTypeFocus,
+    "bucket-ingest-confirm-v1": playBucketIngestConfirm,
+    "search-scout-find-v1": playSearchScoutFind,
+    "tool-kit-action-v1": playToolKitAction,
+    "api-signal-return-v1": playApiSignalReturn,
+    "memory-index-commit-v1": playMemoryIndexCommit,
+    "output-envelope-reveal-v1": playOutputEnvelopeReveal,
+    "illustrated-agent-input-reason-result-v1": playIllustratedAgentReason,
+    "illustrated-operator-focus-operate-confirm-v1": playIllustratedOperatorOperate,
+    "illustrated-tool-prepare-execute-complete-v1": playIllustratedToolExecute,
+    "illustrated-output-compose-deliver-confirm-v1": playIllustratedOutputDeliver,
+    "illustrated-database-ingest-store-persist-v1": playIllustratedDatabasePersist,
+    "illustrated-api-request-route-response-v1": playIllustratedApiRoute,
+    "illustrated-search-query-scan-discover-v1": playIllustratedSearchDiscover,
+    "illustrated-memory-capture-index-recall-v1": playIllustratedMemoryRecall,
+    "illustrated-file-prepare-attach-reference-v1": playIllustratedFileAttach,
+    "illustrated-folder-prepare-store-index-v1": playIllustratedFolderStore,
+    "illustrated-cloud-prepare-transfer-sync-v1": playIllustratedCloudTransfer,
+    "illustrated-shield-prepare-lock-protect-v1": playIllustratedShieldLock,
+    "illustrated-user-request-interact-consume-v1": playIllustratedUserInteract,
+    "illustrated-server-host-compute-serve-v1": playIllustratedServerCompute,
+    "illustrated-ai-model-infer-transform-predict-v1": playIllustratedAiModelInfer,
+    "illustrated-message-queue-buffer-order-deliver-v1": playIllustratedMessageQueue,
+    "file-note-write-v1": playFileNoteWrite,
+    "folder-file-store-v1": playFolderFileStore,
+    "cloud-uplink-ready-v1": playCloudUplinkReady,
+    "shield-guard-confirm-v1": playShieldGuardConfirm,
+    "token-intent-ready-v1": playTokenIntentReady,
+  };
+
+  const characterPerformanceIds = new Set([
+    "brain-think-pulse-v1",
+    "operator-type-focus-v1",
+    "bucket-ingest-confirm-v1",
+    "search-scout-find-v1",
+    "tool-kit-action-v1",
+    "api-signal-return-v1",
+    "memory-index-commit-v1",
+    "output-envelope-reveal-v1",
+    "file-note-write-v1",
+    "folder-file-store-v1",
+    "cloud-uplink-ready-v1",
+    "shield-guard-confirm-v1",
+    "token-intent-ready-v1",
+    "illustrated-agent-input-reason-result-v1",
+    "illustrated-operator-focus-operate-confirm-v1",
+    "illustrated-tool-prepare-execute-complete-v1",
+    "illustrated-output-compose-deliver-confirm-v1",
+    "illustrated-database-ingest-store-persist-v1",
+    "illustrated-api-request-route-response-v1",
+    "illustrated-search-query-scan-discover-v1",
+    "illustrated-memory-capture-index-recall-v1",
+    "illustrated-file-prepare-attach-reference-v1",
+    "illustrated-folder-prepare-store-index-v1",
+    "illustrated-cloud-prepare-transfer-sync-v1",
+    "illustrated-shield-prepare-lock-protect-v1",
+    "illustrated-user-request-interact-consume-v1",
+    "illustrated-server-host-compute-serve-v1",
+    "illustrated-ai-model-infer-transform-predict-v1",
+    "illustrated-message-queue-buffer-order-deliver-v1",
+  ]);
+
+  function playIcon(iconConfig) {
+    if (!window.gsap || !isPlainObject(iconConfig)) return null;
+    const fn = performances[iconConfig.performance];
+    const parts = resolveParts(iconConfig.parts);
+    if (!parts || !resolveIconInstanceRoot(iconConfig, parts)) return null;
+    const timelines = [];
+    const illustrated = playIllustratedCommon(iconConfig, parts, window.gsap);
+    if (illustrated) timelines.push(illustrated);
+    if (fn) {
+      const tl = fn({ config: iconConfig, parts, gsap: window.gsap });
+      if (tl) {
+        if (characterPerformanceIds.has(iconConfig.performance)) {
+          tl.__anidiagramCharacter = {
+            nodeId: iconConfig.node_id,
+            performance: iconConfig.performance,
+            restAt: iconConfig.rest_at,
+          };
+        }
+        timelines.push(tl);
+      }
+    } else if (iconConfig.recipe) {
+      const tl = playDeclarativeShowcase({ config: iconConfig, parts, gsap: window.gsap });
+      if (tl) timelines.push(tl);
+    }
+    timelines.forEach((tl) => {
+      if (iconConfig.delay) tl.delay(iconConfig.delay);
+    });
+    return timelines;
+  }
+
+  function play() {
+    window.__ANIDIAGRAM_TIMELINES__ = window.__ANIDIAGRAM_TIMELINES__ || [];
+    window.__ANIDIAGRAM_STAGE_TIMELINES__ = window.__ANIDIAGRAM_STAGE_TIMELINES__ || [];
+    window.__ANIDIAGRAM_ICON_TIMELINES__ = window.__ANIDIAGRAM_ICON_TIMELINES__ || [];
+    const manifest = getManifest();
+    if (!manifest || !Array.isArray(manifest.icons)) return [];
+    const mode = manifest.mode || "ambient";
+    if (mode !== "ambient") {
+      console.warn(`AniDiagram runtime: unsupported runtime mode "${mode}"; only ambient mode is available.`);
+      return [];
+    }
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      stop();
+      return [];
+    }
+    if (!window.gsap) {
+      console.warn("AniDiagram runtime: GSAP not loaded; high-fidelity motion disabled.");
+      return [];
+    }
+    stop();
+    if (currentMotionMode === "off") return [];
+    window.__ANIDIAGRAM_STAGE_TIMELINES__ = playStageEffects(manifest, currentMotionMode);
+    window.__ANIDIAGRAM_ICON_TIMELINES__ = manifest.icons.flatMap((iconConfig) => playIcon(iconConfig) || []);
+    return syncTimelineStore();
+  }
+
+  function syncTimelineStore() {
+    window.__ANIDIAGRAM_STAGE_TIMELINES__ = window.__ANIDIAGRAM_STAGE_TIMELINES__ || [];
+    window.__ANIDIAGRAM_ICON_TIMELINES__ = window.__ANIDIAGRAM_ICON_TIMELINES__ || [];
+    window.__ANIDIAGRAM_TIMELINES__ = [
+      ...window.__ANIDIAGRAM_STAGE_TIMELINES__,
+      ...window.__ANIDIAGRAM_ICON_TIMELINES__,
+    ];
+    return window.__ANIDIAGRAM_TIMELINES__;
+  }
+
+  function settleCharacterTimelines(timelines) {
+    (timelines || []).forEach((tl) => {
+      if (tl.__anidiagramCharacter && Number.isFinite(tl.__anidiagramCharacter.restAt)) {
+        tl.pause();
+        tl.seek(tl.__anidiagramCharacter.restAt, false);
+      } else if (Number.isFinite(tl.__anidiagramRestAt)) {
+        tl.pause();
+        tl.seek(tl.__anidiagramRestAt, false);
+      }
+    });
+  }
+
+  function stopStageTimelines() {
+    (window.__ANIDIAGRAM_STAGE_TIMELINES__ || []).forEach((tl) => tl.kill());
+    window.__ANIDIAGRAM_STAGE_TIMELINES__ = [];
+    clearRuntimeStageEffects();
+    syncTimelineStore();
+  }
+
+  function setRuntimeMotionMode(mode) {
+    currentMotionMode = mode;
+    const manifest = getManifest();
+    const reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!manifest || !window.gsap || reduced || mode === "off") {
+      stop();
+      return [];
+    }
+    if (!(window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length) {
+      window.__ANIDIAGRAM_ICON_TIMELINES__ = manifest.icons.flatMap((iconConfig) => playIcon(iconConfig) || []);
+    }
+    stopStageTimelines();
+    window.__ANIDIAGRAM_STAGE_TIMELINES__ = mode === "readable"
+      ? playStageEffects(manifest, "readable")
+      : playStageEffects(manifest, "expressive");
+    return syncTimelineStore();
+  }
+
+  function stop() {
+    settleCharacterTimelines(window.__ANIDIAGRAM_ICON_TIMELINES__ || []);
+    (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).forEach((tl) => tl.kill());
+    (window.__ANIDIAGRAM_STAGE_TIMELINES__ || []).forEach((tl) => tl.kill());
+    window.__ANIDIAGRAM_ICON_TIMELINES__ = [];
+    window.__ANIDIAGRAM_STAGE_TIMELINES__ = [];
+    window.__ANIDIAGRAM_TIMELINES__ = [];
+    clearRuntimeStageEffects();
+  }
+
+  function pause() {
+    (window.__ANIDIAGRAM_TIMELINES__ || []).forEach((tl) => tl.pause());
+  }
+
+  function resume() {
+    (window.__ANIDIAGRAM_TIMELINES__ || []).forEach((tl) => tl.resume());
+  }
+
+  function restart() {
+    (window.__ANIDIAGRAM_TIMELINES__ || []).forEach((tl) => tl.restart());
+  }
+
+  function wireViewer() {
+    const stage = document.getElementById("stage");
+    const viewer = document.getElementById("viewer");
+    const viewport = document.getElementById("viewport");
+    if (!stage || !viewer || !viewport) return;
+    const svg = viewport.querySelector("svg");
+    const download = document.getElementById("download");
+    let scale = 1;
+    let x = 0;
+    let y = 0;
+    let dragging = false;
+    let lastX = 0;
+    let lastY = 0;
+    function applyTransform() {
+      viewport.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+    }
+    function setDownload() {
+      if (!download || !svg) return;
+      const blob = new Blob([new XMLSerializer().serializeToString(svg)], { type: "image/svg+xml" });
+      download.href = URL.createObjectURL(blob);
+    }
+    const toggle = document.getElementById("toggle");
+    if (toggle && svg) {
+      toggle.addEventListener("click", (event) => {
+        const paused = svg.animationsPaused && svg.animationsPaused();
+        if (paused) {
+          svg.unpauseAnimations();
+          resume();
+          event.currentTarget.textContent = "Pause";
+        } else {
+          svg.pauseAnimations();
+          pause();
+          event.currentTarget.textContent = "Play";
+        }
+      });
+    }
+    const restartButton = document.getElementById("restart");
+    if (restartButton && svg) {
+      restartButton.addEventListener("click", () => {
+        svg.setCurrentTime(0);
+        svg.unpauseAnimations();
+        restart();
+        if (toggle) toggle.textContent = "Pause";
+      });
+    }
+    function setMotionMode(mode) {
+      viewer.classList.remove("motion-expressive", "motion-readable", "motion-off");
+      viewer.classList.add(`motion-${mode}`);
+      document.querySelectorAll(".motion-choice").forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.motion === mode));
+      });
+      if (!svg) return;
+      if (mode === "off") {
+        svg.pauseAnimations();
+        setRuntimeMotionMode("off");
+        if (toggle) toggle.textContent = "Play";
+      } else {
+        svg.unpauseAnimations();
+        setRuntimeMotionMode(mode);
+        if (toggle) toggle.textContent = "Pause";
+      }
+    }
+    document.querySelectorAll(".motion-choice").forEach((button) => {
+      button.addEventListener("click", () => setMotionMode(button.dataset.motion));
+    });
+    const zoomIn = document.getElementById("zoom-in");
+    const zoomOut = document.getElementById("zoom-out");
+    const reset = document.getElementById("reset");
+    if (zoomIn) zoomIn.addEventListener("click", () => { scale = Math.min(3, scale + 0.15); applyTransform(); });
+    if (zoomOut) zoomOut.addEventListener("click", () => { scale = Math.max(0.35, scale - 0.15); applyTransform(); });
+    if (reset) reset.addEventListener("click", () => { scale = 1; x = 0; y = 0; applyTransform(); });
+    stage.addEventListener("pointerdown", (event) => {
+      dragging = true;
+      stage.classList.add("dragging");
+      lastX = event.clientX;
+      lastY = event.clientY;
+      stage.setPointerCapture(event.pointerId);
+    });
+    stage.addEventListener("pointermove", (event) => {
+      if (!dragging) return;
+      x += event.clientX - lastX;
+      y += event.clientY - lastY;
+      lastX = event.clientX;
+      lastY = event.clientY;
+      applyTransform();
+    });
+    stage.addEventListener("pointerup", () => {
+      dragging = false;
+      stage.classList.remove("dragging");
+    });
+    setDownload();
+    if (svg && svg.dataset.motionProfile === "off") setMotionMode("off");
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) setMotionMode("readable");
+  }
+
+  window.AniDiagramRuntime = { play, pause, resume, restart, stop };
+  document.addEventListener("DOMContentLoaded", () => {
+    wireViewer();
+    play();
+  });
+})();
+
+  </script>
+</body>
+</html>

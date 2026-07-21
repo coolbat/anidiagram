@@ -94,6 +94,7 @@ def build_showcase(spec_root: Path, outdir: Path, quality: bool = True) -> Dict[
     runtime_overview = runtime_bundle["overview"]
     runtime_demos = runtime_bundle["demos"]
     character_theme_comparison = _build_character_theme_comparison(outdir, quality)
+    icon_system_releases = _build_icon_system_releases(outdir / "icon-systems", quality)
     manifest = {
         "hero": hero_entry,
         "styles": style_entries,
@@ -104,10 +105,19 @@ def build_showcase(spec_root: Path, outdir: Path, quality: bool = True) -> Dict[
         "runtime_motion_demos": runtime_demos,
         "runtime_motion": runtime_entries,
         "character_theme_comparison": character_theme_comparison,
+        "icon_system_releases": icon_system_releases,
     }
     (outdir / "showcase_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     _write_runtime_motion_index(outdir, runtime_catalog, runtime_entries, runtime_overview, runtime_demos)
-    _write_gallery_index(outdir, hero_entry, style_entries, layout_entries, runtime_entries, runtime_overview)
+    _write_gallery_index(
+        outdir,
+        hero_entry,
+        style_entries,
+        layout_entries,
+        runtime_entries,
+        runtime_overview,
+        icon_system_releases,
+    )
     return {
         "ok": True,
         "hero": hero_entry["id"],
@@ -115,9 +125,174 @@ def build_showcase(spec_root: Path, outdir: Path, quality: bool = True) -> Dict[
         "layouts": len(layout_entries),
         "runtime_motion": len(runtime_entries),
         "character_themes": len(character_theme_comparison["themes"]),
+        "icon_system_releases": len(icon_system_releases),
         "runtime_motion_page": str((outdir / "runtime-motion.html").resolve()),
         "manifest": str((outdir / "showcase_manifest.json").resolve()),
     }
+
+
+def _build_icon_system_releases(outdir: Path, quality: bool) -> List[Dict[str, Any]]:
+    outdir.mkdir(parents=True, exist_ok=True)
+    definitions = (
+        {
+            "id": "diagram-core-v1",
+            "title": "Diagram Core v1",
+            "icon_system": "diagram-core-v1",
+            "version": "1.0.0",
+            "motion_contract": "showcase-v1",
+            "spec": ROOT / "examples" / "diagram-core-v1-showcase.diagram.json",
+            "release": ROOT / "assets" / "diagram-core" / "releases" / "v1.0.0.json",
+            "catalog": ROOT / "assets" / "diagram-core" / "catalog.json",
+            "style": ROOT / "styles" / "minimal-light.json",
+            "best_for": ["Infrastructure diagrams", "Architecture systems", "Technical operations"],
+        },
+        {
+            "id": "illustrated-2.3",
+            "title": "Illustrated 2.3",
+            "icon_system": "illustrated",
+            "version": "2.3.0",
+            "motion_contract": "illustrated-performance-v4",
+            "spec": ROOT / "examples" / "illustrated-2.3-showcase.diagram.json",
+            "release": ROOT / "assets" / "illustrated" / "releases" / "2.3.0.json",
+            "catalog": ROOT / "assets" / "illustrated" / "catalog.json",
+            "motion_authority": ROOT / "assets" / "illustrated" / "motion-contracts" / "illustrated-performance-v4.json",
+            "style": ROOT / "styles" / "deep-tech.json",
+            "best_for": ["AI explainers", "Character-led workflows", "Animated presentations"],
+        },
+    )
+    entries = []
+    for definition in definitions:
+        spec = json.loads(definition["spec"].read_text(encoding="utf-8"))
+        release = json.loads(definition["release"].read_text(encoding="utf-8"))
+        scene = compile_scene(spec)
+        style = load_style(definition["style"])
+        basename = definition["id"]
+        svg_path = outdir / f"{basename}.svg"
+        html_path = outdir / f"{basename}.html"
+        quality_path = outdir / f"{basename}.quality.json"
+        write_svg(scene, style, svg_path)
+        write_html(scene, style, html_path)
+        report = quality_report(scene, style)
+        # Public release entries always carry their portable quality proof,
+        # even when the optional legacy-gallery quality flag is omitted.
+        write_quality(scene, style, quality_path)
+
+        catalog = json.loads(definition["catalog"].read_text(encoding="utf-8"))
+        expected_icons = {
+            item["id"] for item in catalog.get("icons", []) if item.get("status") == "approved"
+        }
+        spec_pairs = [(node["id"], node.get("icon")) for node in spec.get("nodes", [])]
+        motion_pairs = _html_motion_icon_pairs(html_path)
+        if definition.get("motion_authority"):
+            contract = json.loads(definition["motion_authority"].read_text(encoding="utf-8"))
+            contract_icons = [item.get("icon") for item in contract.get("performances", [])]
+            if len(contract_icons) != len(set(contract_icons)) or set(contract_icons) != expected_icons:
+                raise ValueError(f'{definition["id"]} public motion contract does not exactly cover its catalog')
+        _require_exact_icon_pairs(spec_pairs, expected_icons, f'{definition["id"]} spec')
+        _require_exact_icon_pairs(motion_pairs, expected_icons, f'{definition["id"]} motion manifest')
+        if set(spec_pairs) != set(motion_pairs):
+            raise ValueError(f'{definition["id"]} node/icon mappings differ between spec and motion manifest')
+        rendered_icon_count = len(spec_pairs)
+        automatic_motion_icon_count = len(motion_pairs)
+        expected_count = int(release["icon_count"])
+        if rendered_icon_count != expected_count or automatic_motion_icon_count != expected_count:
+            raise ValueError(
+                f'{definition["id"]} public showcase coverage is '
+                f"{rendered_icon_count}/{automatic_motion_icon_count}; expected {expected_count}/{expected_count}"
+            )
+        entries.append(
+            {
+                "id": definition["id"],
+                "title": definition["title"],
+                "basename": definition["id"],
+                "icon_system": definition["icon_system"],
+                "version": definition["version"],
+                "status": release["status"],
+                "icon_count": expected_count,
+                "rendered_icon_count": rendered_icon_count,
+                "automatic_motion_icon_count": automatic_motion_icon_count,
+                "motion_contract": definition["motion_contract"],
+                "spec": _rel(definition["spec"]),
+                "release": _rel(definition["release"]),
+                "style": spec["style"],
+                "svg": _rel(svg_path),
+                "html": _rel(html_path),
+                "quality": _rel(quality_path),
+                "best_for": definition["best_for"],
+                "summary": report["summary"],
+            }
+        )
+    _write_icon_system_release_index(outdir, entries)
+    return entries
+
+
+def _html_motion_icon_pairs(path: Path) -> List[tuple[str, str]]:
+    source = path.read_text(encoding="utf-8")
+    marker = '<script type="application/json" id="anidiagram-motion-manifest">'
+    start = source.index(marker) + len(marker)
+    manifest = json.loads(source[start : source.index("</script>", start)])
+    return [(item.get("node_id"), item.get("icon")) for item in manifest["icons"]]
+
+
+def _require_exact_icon_pairs(
+    pairs: List[tuple[str, str]], expected_icons: set[str], label: str
+) -> None:
+    node_ids = [node_id for node_id, _ in pairs]
+    icons = [icon for _, icon in pairs]
+    if any(not node_id for node_id in node_ids) or len(node_ids) != len(set(node_ids)):
+        raise ValueError(f"{label} has missing or duplicate node ids")
+    if len(icons) != len(set(icons)) or set(icons) != expected_icons:
+        raise ValueError(f"{label} does not exactly cover the approved icon catalog")
+
+
+def _write_icon_system_release_index(outdir: Path, entries: List[Dict[str, Any]]) -> None:
+    cards = "\n".join(
+        f'<article><a href="{Path(entry["html"]).name}"><img src="{Path(entry["svg"]).name}" '
+        f'alt="{html_escape(entry["title"])} public showcase"></a>'
+        f'<div class="body"><h2>{html_escape(entry["title"])}</h2>'
+        f'<p><code>{html_escape(entry["icon_system"])}</code> · {entry["rendered_icon_count"]}/{entry["icon_count"]} icons · '
+        f'<code>{html_escape(entry["motion_contract"])}</code></p>'
+        f'<p>{html_escape(", ".join(entry["best_for"]))}</p>'
+        f'<p><a href="{Path(entry["html"]).name}">HTML</a> · '
+        f'<a href="{Path(entry["svg"]).name}">SVG</a> · '
+        f'<a href="{Path(entry["quality"]).name}">Quality</a> · '
+        f'<a href="../../{entry["spec"]}">Spec</a> · '
+        f'<a href="../../{entry["release"]}">Frozen release</a></p></div></article>'
+        for entry in entries
+    )
+    (outdir / "index.html").write_text(
+        f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AniDiagram Public Icon Systems</title>
+  <link rel="icon" href="data:,">
+  <style>
+    body {{ margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: #f8fafc; color: #172033; }}
+    main {{ max-width: 1320px; margin: 0 auto; padding: 28px; }}
+    .grid {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }}
+    article {{ overflow: hidden; border: 1px solid #dfe3ec; border-radius: 12px; background: #fff; }}
+    img {{ display: block; width: 100%; height: auto; background: #fff; }}
+    .body {{ padding: 0 16px 14px; }}
+    p {{ color: #526075; }}
+    a {{ color: #315ac7; }}
+    code {{ color: #5b48ae; }}
+    @media (max-width: 760px) {{ .grid {{ grid-template-columns: 1fr; }} }}
+  </style>
+</head>
+<body><main>
+  <p><a href="../index.html">Back to gallery</a> · <a href="../showcase_manifest.json">Manifest</a></p>
+  <h1>Public Icon Systems</h1>
+  <p>Current frozen releases with complete public showcase coverage. Full browser export matrices are produced separately as release evidence.</p>
+  <p><code>PYTHONPATH=src python3 scripts/build_icon_system_release_evidence.py</code><br>
+  Verify later with <code>PYTHONPATH=src python3 scripts/build_icon_system_release_evidence.py --verify</code>.</p>
+  <section class="grid">{cards}</section>
+</main></body>
+</html>
+""",
+        encoding="utf-8",
+    )
 
 
 def load_runtime_motion_catalog(path: Path = MOTION_CATALOG_PATH) -> Dict[str, Any]:
@@ -1069,6 +1244,7 @@ def _write_gallery_index(
     layouts: List[Dict[str, Any]],
     runtime_motion: List[Dict[str, Any]],
     runtime_overview: Dict[str, Any],
+    icon_system_releases: List[Dict[str, Any]],
 ) -> None:
     style_cards = "\n".join(_entry_card_html(entry["style"], entry) for entry in styles)
     layout_cards = "\n".join(_entry_card_html(entry["preset"], entry) for entry in layouts)
@@ -1076,6 +1252,9 @@ def _write_gallery_index(
     hero_preview = hero.get("preview_webp") or hero["svg"]
     hero_link = hero.get("preview_mp4") or hero["html"]
     motion_cards = "\n".join(_motion_card_html(entry) for entry in runtime_motion)
+    icon_system_cards = "\n".join(
+        _entry_card_html(entry["title"], entry) for entry in icon_system_releases
+    )
     (outdir / "index.html").write_text(
         f"""<!doctype html>
 <html lang="en">
@@ -1107,6 +1286,14 @@ def _write_gallery_index(
   <main>
     <h1>AniDiagram Showcase</h1>
     <p>Style Showcase makes diagrams look right. Layout Showcase makes diagram purpose obvious. The hero preview is browser-captured runtime media when available; card images stay lightweight SVG previews.</p>
+    <section>
+      <h2>Public Icon Systems</h2>
+      <p>The current frozen Diagram Core v1 and Illustrated 2.3 public releases, each with complete static and automatic-motion coverage.</p>
+      <p class="links"><a href="icon-systems/index.html">Open public icon systems</a></p>
+      <div class="grid">
+{icon_system_cards}
+      </div>
+    </section>
     <section class="hero">
       <h2>Hero Demo</h2>
       <a href="{_path_for_html(hero_link)}"><img src="{_path_for_html(hero_preview)}" alt="{hero['title']}"></a>
