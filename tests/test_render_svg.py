@@ -1173,6 +1173,17 @@ class SvgRendererTest(unittest.TestCase):
         self.assertIn("window.__ANIDIAGRAM_TIMELINES__", script)
         self.assertIn("tl.totalTime(localSeconds % cycleSeconds, false)", script)
 
+    def test_browser_capture_timeout_scales_for_formal_ci_exports(self):
+        from anidiagram import exporters
+
+        timeout_for_formal_matrix = getattr(exporters, "_browser_capture_timeout_seconds", None)
+        self.assertIsNotNone(timeout_for_formal_matrix)
+        self.assertGreaterEqual(timeout_for_formal_matrix(108, 24, 2.0), 180)
+        self.assertGreater(
+            timeout_for_formal_matrix(216, 24, 2.0),
+            timeout_for_formal_matrix(108, 24, 2.0),
+        )
+
     def test_browser_capture_loop_blend_closes_the_sequence_seam(self):
         try:
             from PIL import Image

@@ -401,7 +401,7 @@ def _capture_browser_runtime(
             "timeoutMs": 30000,
         }
         config_path.write_text(json.dumps(config), encoding="utf-8")
-        timeout = max(45, int(frames / max(1, fps)) + 45)
+        timeout = _browser_capture_timeout_seconds(frames, fps, scale)
         completed = subprocess.run(
             [node, str(script_path), str(config_path)],
             stdout=subprocess.PIPE,
@@ -414,6 +414,23 @@ def _capture_browser_runtime(
         reason_text = (completed.stderr or completed.stdout).strip() or "browser capture failed"
         return {"status": "skipped", "reason": reason_text}
     return {"status": "written", "reason": ""}
+
+
+def _browser_capture_timeout_seconds(frames: int, fps: int, scale: float) -> int:
+    """Budget a whole browser capture, including per-frame SVG screenshots.
+
+    Screenshot encoding cost grows with both the number of frames and output
+    pixel density. Keep a generous fixed startup allowance, then scale the
+    deadline so slower CI runners do not terminate otherwise healthy formal
+    export captures.
+    """
+
+    frame_count = max(1, int(frames))
+    frame_rate = max(1, int(fps))
+    pixel_scale = max(1.0, float(scale))
+    playback_seconds = math.ceil(frame_count / frame_rate)
+    screenshot_seconds = math.ceil(frame_count * pixel_scale * 0.65)
+    return max(90, 45 + playback_seconds + screenshot_seconds)
 
 
 def _playwright_node_env() -> Tuple[str, Dict[str, str], str]:
