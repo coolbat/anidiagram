@@ -26,8 +26,10 @@ jobs:
         with:
           node-version: "20"
           cache: npm
-      - name: Install Python package and raster support
-        run: python3 -m pip install -e ".[raster]"
+      - name: Install contract dependencies
+        run: |
+          python3 -m pip install -e ".[raster]"
+          npm ci
       - name: Run unit and contract tests
         run: PYTHONPATH=src python3 -m unittest discover -s tests
       - name: Validate all approved Diagram Core assets

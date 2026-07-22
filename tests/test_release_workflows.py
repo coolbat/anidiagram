@@ -29,6 +29,16 @@ class ReleaseWorkflowContractTest(unittest.TestCase):
         self.assertIn("npm ci", workflow)
         self.assertIn("playwright install --with-deps chromium", workflow)
 
+    def test_contract_job_installs_node_dependencies_before_unit_tests(self):
+        workflow = self._read(".github/workflows/test.yml")
+        contract_job = workflow.split("  runtime-browser:", 1)[0]
+
+        self.assertIn("npm ci", contract_job)
+        self.assertLess(
+            contract_job.index("npm ci"),
+            contract_job.index("PYTHONPATH=src python3 -m unittest discover -s tests"),
+        )
+
     def test_manual_release_evidence_workflow_retains_the_formal_matrix(self):
         workflow = self._read(".github/workflows/icon-system-release-evidence.yml")
 
