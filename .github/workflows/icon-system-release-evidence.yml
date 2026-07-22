@@ -11,9 +11,13 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build-and-verify:
+  build-system-fragment:
+    strategy:
+      fail-fast: false
+      matrix:
+        system: ["diagram-core-v1", "illustrated-2.4"]
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -31,13 +35,45 @@ jobs:
           npx playwright install --with-deps chromium
           sudo apt-get update
           sudo apt-get install --yes ffmpeg
-      - name: Build formal two-system export evidence
-        timeout-minutes: 70
-        run: PYTHONPATH=src python3 scripts/build_icon_system_release_evidence.py
+      - name: Build one public icon-system evidence fragment
+        timeout-minutes: 20
+        run: PYTHONPATH=src python3 scripts/build_icon_system_release_evidence.py --system "${{ matrix.system }}"
+      - name: Upload public icon-system evidence fragment
+        uses: actions/upload-artifact@v4
+        with:
+          name: icon-system-release-fragment-${{ matrix.system }}-${{ github.sha }}
+          path: |
+            outputs/release-evidence/icon-systems/${{ matrix.system }}
+            outputs/release-evidence/icon-systems/${{ matrix.system }}-evidence-fragment.json
+          if-no-files-found: error
+          retention-days: 2
+
+  merge-and-verify:
+    needs: build-system-fragment
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install evidence verification dependencies
+        run: |
+          python3 -m pip install -e ".[raster]"
+          sudo apt-get update
+          sudo apt-get install --yes ffmpeg
+      - name: Download public icon-system evidence fragments
+        uses: actions/download-artifact@v4
+        with:
+          pattern: icon-system-release-fragment-*-${{ github.sha }}
+          path: outputs/release-evidence/icon-systems
+          merge-multiple: true
+      - name: Merge formal export evidence fragments
+        run: PYTHONPATH=src python3 scripts/build_icon_system_release_evidence.py --merge-fragments
       - name: Independently verify formal export evidence
         run: PYTHONPATH=src python3 scripts/build_icon_system_release_evidence.py --verify
       - name: Upload complete release evidence
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: icon-system-release-evidence-${{ github.sha }}

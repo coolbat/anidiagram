@@ -69,6 +69,8 @@ CASES = (
         ),
     },
 )
+FRAGMENT_SCHEMA = "public-icon-system-export-evidence-fragment-v1"
+EVIDENCE_SCHEMA = "public-icon-system-export-evidence-v1"
 
 
 def _positive_int(value: str) -> int:
@@ -101,10 +103,21 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--fps", type=_positive_int, default=24)
     parser.add_argument("--frames", type=_positive_int, default=108)
     parser.add_argument("--scale", type=_positive_float, default=2.0)
-    parser.add_argument(
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument(
         "--verify",
         action="store_true",
         help="Verify an existing evidence JSON and its artifacts without rendering.",
+    )
+    mode.add_argument(
+        "--system",
+        choices=[case["id"] for case in CASES],
+        help="Build one public icon-system fragment for parallel CI execution.",
+    )
+    mode.add_argument(
+        "--merge-fragments",
+        action="store_true",
+        help="Merge both public icon-system fragments and verify the complete matrix.",
     )
     return parser
 
@@ -115,6 +128,10 @@ def main() -> None:
     evidence_path = _rooted(args.evidence) if args.evidence else outdir / "public-icon-system-export-evidence.json"
     if args.verify:
         report = verify_evidence(evidence_path)
+    elif args.merge_fragments:
+        report = merge_fragments(outdir, evidence_path)
+    elif args.system:
+        report = build_fragment(args.system, outdir, args.fps, args.frames, args.scale)
     else:
         report = build_evidence(outdir, evidence_path, args.fps, args.frames, args.scale)
     print(json.dumps(report, ensure_ascii=False, indent=2))
@@ -124,80 +141,102 @@ def main() -> None:
 
 def build_evidence(outdir: Path, evidence_path: Path, fps: int, frames: int, scale: float) -> Dict[str, Any]:
     outdir.mkdir(parents=True, exist_ok=True)
-    systems = []
+    systems = [_build_case(case, outdir, fps, frames, scale) for case in CASES]
+    return _write_verified_evidence(evidence_path, systems, fps, frames, scale)
+
+
+def build_fragment(system_id: str, outdir: Path, fps: int, frames: int, scale: float) -> Dict[str, Any]:
+    outdir.mkdir(parents=True, exist_ok=True)
+    case = next(case for case in CASES if case["id"] == system_id)
+    system = _build_case(case, outdir, fps, frames, scale)
+    fragment_path = outdir / f"{system_id}-evidence-fragment.json"
+    fragment = {
+        "schema": FRAGMENT_SCHEMA,
+        "capture": {"renderer": "browser", "fps": fps, "frames": frames, "scale": scale},
+        "formats": list(EXPORT_FORMATS),
+        "system": system,
+    }
+    fragment_path.write_text(json.dumps(fragment, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return {
+        "ok": True,
+        "fragment": _display_path(fragment_path),
+        "system": system_id,
+        "formats": len(EXPORT_FORMATS),
+    }
+
+
+def merge_fragments(outdir: Path, evidence_path: Path) -> Dict[str, Any]:
+    fragments = []
     for case in CASES:
-        case_outdir = outdir / case["id"]
-        case_outdir.mkdir(parents=True, exist_ok=True)
-        result_path = case_outdir / "result.json"
-        arguments = [
-            "--spec",
-            str(case["spec"]),
-            "--style",
-            str(case["style"]),
-            "--outdir",
-            str(case_outdir),
-            "--basename",
-            case["id"],
-            "--formats",
-            ",".join(EXPORT_FORMATS),
-            "--html-runtime",
-            "gsap",
-            "--export-renderer",
-            "browser",
-            "--export-fps",
-            str(fps),
-            "--export-frames",
-            str(frames),
-            "--export-scale",
-            str(scale),
-            "--result",
-            str(result_path),
-        ]
-        with _progress_heartbeat(f'building {case["id"]}'):
-            with redirect_stdout(io.StringIO()):
-                render_main(arguments)
-        print(f'[release-evidence] completed {case["id"]}', file=sys.stderr, flush=True)
-        result = json.loads(result_path.read_text(encoding="utf-8"))
-        if not result.get("ok") or set(result["outputs"]) != set(EXPORT_FORMATS):
-            raise RuntimeError(f'{case["id"]} did not write the complete export matrix')
-        for format_name, output in result["outputs"].items():
-            if output.get("status") != "written":
-                raise RuntimeError(f'{case["id"]} {format_name}: {output}')
-
-        systems.append(
-            {
-                "id": case["id"],
-                "icon_system": case["icon_system"],
-                "version": case["version"],
-                "icon_count": case["icon_count"],
-                "motion_contract": case["motion_contract"],
-                "spec": _file_record(case["spec"]),
-                "catalog": _file_record(case["catalog"]),
-                "motion_authority": _file_record(case["motion_authority"]),
-                "authorities": [_file_record(path) for path in case["authorities"]],
-                "result": _file_record(result_path),
-                "artifacts": {
-                    format_name: {
-                        **_file_record(Path(output["path"])),
-                        "status": output["status"],
-                        **{
-                            key: output[key]
-                            for key in ("renderer", "fps", "frames", "scale", "loop_blend_frames")
-                            if key in output
-                        },
-                    }
-                    for format_name, output in result["outputs"].items()
-                },
+        fragment_path = outdir / f'{case["id"]}-evidence-fragment.json'
+        if not fragment_path.is_file():
+            return {
+                "ok": False,
+                "evidence": _display_path(evidence_path),
+                "issues": [f"missing fragment: {_display_path(fragment_path)}"],
             }
-        )
+        try:
+            fragments.append(json.loads(fragment_path.read_text(encoding="utf-8")))
+        except (OSError, UnicodeError, json.JSONDecodeError) as error:
+            return {"ok": False, "evidence": _display_path(evidence_path), "issues": [str(error)]}
+    try:
+        document = _merge_fragment_documents(fragments)
+    except ValueError as error:
+        return {"ok": False, "evidence": _display_path(evidence_path), "issues": [str(error)]}
+    return _write_verified_document(evidence_path, document)
 
+
+def _merge_fragment_documents(fragments: list[Dict[str, Any]]) -> Dict[str, Any]:
+    expected_ids = [case["id"] for case in CASES]
+    by_id: Dict[str, Dict[str, Any]] = {}
+    for fragment in fragments:
+        if fragment.get("schema") != FRAGMENT_SCHEMA:
+            raise ValueError("unexpected evidence fragment schema")
+        system = fragment.get("system")
+        system_id = system.get("id") if isinstance(system, dict) else None
+        if not isinstance(system_id, str) or system_id in by_id:
+            raise ValueError("evidence fragments require unique public system ids")
+        by_id[system_id] = fragment
+    if set(by_id) != set(expected_ids):
+        raise ValueError(f"expected fragments for: {', '.join(expected_ids)}")
+
+    first = by_id[expected_ids[0]]
+    capture = first.get("capture")
+    formats = first.get("formats")
+    if not isinstance(capture, dict) or tuple(formats or ()) != EXPORT_FORMATS:
+        raise ValueError("invalid fragment capture or format contract")
+    for system_id in expected_ids[1:]:
+        fragment = by_id[system_id]
+        if fragment.get("capture") != capture or fragment.get("formats") != formats:
+            raise ValueError("evidence fragments use incompatible capture contracts")
+
+    return {
+        "schema": EVIDENCE_SCHEMA,
+        "status": "generated",
+        "capture": capture,
+        "formats": formats,
+        "systems": [by_id[system_id]["system"] for system_id in expected_ids],
+    }
+
+
+def _write_verified_evidence(
+    evidence_path: Path,
+    systems: list[Dict[str, Any]],
+    fps: int,
+    frames: int,
+    scale: float,
+) -> Dict[str, Any]:
     document = {
-        "schema": "public-icon-system-export-evidence-v1",
+        "schema": EVIDENCE_SCHEMA,
         "status": "generated",
         "capture": {"renderer": "browser", "fps": fps, "frames": frames, "scale": scale},
         "formats": list(EXPORT_FORMATS),
         "systems": systems,
     }
+    return _write_verified_document(evidence_path, document)
+
+
+def _write_verified_document(evidence_path: Path, document: Dict[str, Any]) -> Dict[str, Any]:
     evidence_path.parent.mkdir(parents=True, exist_ok=True)
     evidence_path.write_text(json.dumps(document, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     report = verify_evidence(evidence_path, require_verified_status=False)
@@ -213,6 +252,71 @@ def build_evidence(outdir: Path, evidence_path: Path, fps: int, frames: int, sca
     return report
 
 
+def _build_case(case: Dict[str, Any], outdir: Path, fps: int, frames: int, scale: float) -> Dict[str, Any]:
+    case_outdir = outdir / case["id"]
+    case_outdir.mkdir(parents=True, exist_ok=True)
+    result_path = case_outdir / "result.json"
+    arguments = [
+        "--spec",
+        str(case["spec"]),
+        "--style",
+        str(case["style"]),
+        "--outdir",
+        str(case_outdir),
+        "--basename",
+        case["id"],
+        "--formats",
+        ",".join(EXPORT_FORMATS),
+        "--html-runtime",
+        "gsap",
+        "--export-renderer",
+        "browser",
+        "--export-fps",
+        str(fps),
+        "--export-frames",
+        str(frames),
+        "--export-scale",
+        str(scale),
+        "--result",
+        str(result_path),
+    ]
+    with _progress_heartbeat(f'building {case["id"]}'):
+        with redirect_stdout(io.StringIO()):
+            render_main(arguments)
+    print(f'[release-evidence] completed {case["id"]}', file=sys.stderr, flush=True)
+    result = json.loads(result_path.read_text(encoding="utf-8"))
+    if not result.get("ok") or set(result["outputs"]) != set(EXPORT_FORMATS):
+        raise RuntimeError(f'{case["id"]} did not write the complete export matrix')
+    for format_name, output in result["outputs"].items():
+        if output.get("status") != "written":
+            raise RuntimeError(f'{case["id"]} {format_name}: {output}')
+
+    return {
+        "id": case["id"],
+        "icon_system": case["icon_system"],
+        "version": case["version"],
+        "icon_count": case["icon_count"],
+        "motion_contract": case["motion_contract"],
+        "spec": _file_record(case["spec"]),
+        "catalog": _file_record(case["catalog"]),
+        "motion_authority": _file_record(case["motion_authority"]),
+        "authorities": [_file_record(path) for path in case["authorities"]],
+        "result": _file_record(result_path),
+        "artifacts": {
+            format_name: {
+                **_file_record(Path(output["path"])),
+                "status": output["status"],
+                **{
+                    key: output[key]
+                    for key in ("renderer", "fps", "frames", "scale", "loop_blend_frames")
+                    if key in output
+                },
+            }
+            for format_name, output in result["outputs"].items()
+        },
+    }
+
+
 def verify_evidence(evidence_path: Path, *, require_verified_status: bool = True) -> Dict[str, Any]:
     issues = []
     observations: Dict[str, Any] = {}
@@ -223,7 +327,7 @@ def verify_evidence(evidence_path: Path, *, require_verified_status: bool = True
     except (OSError, UnicodeError, json.JSONDecodeError) as error:
         return {"ok": False, "evidence": str(evidence_path), "issues": [str(error)]}
 
-    if document.get("schema") != "public-icon-system-export-evidence-v1":
+    if document.get("schema") != EVIDENCE_SCHEMA:
         issues.append("unexpected evidence schema")
     if require_verified_status and document.get("status") != "verified":
         issues.append("evidence status is not verified")
@@ -231,7 +335,7 @@ def verify_evidence(evidence_path: Path, *, require_verified_status: bool = True
         issues.append("export format matrix does not match the public contract")
     systems = document.get("systems", [])
     if [item.get("id") for item in systems] != [item["id"] for item in CASES]:
-        issues.append("expected Diagram Core v1 and Illustrated 2.3 evidence entries")
+        issues.append("expected Diagram Core v1 and Illustrated 2.4 evidence entries")
 
     capture = document.get("capture", {})
     if capture.get("renderer") != "browser":

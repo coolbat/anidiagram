@@ -1,6 +1,8 @@
 import unittest
 from pathlib import Path
 
+from scripts import build_icon_system_release_evidence as release_evidence
+
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -47,7 +49,11 @@ class ReleaseWorkflowContractTest(unittest.TestCase):
             "python3 -m pip install -e \".[raster]\"",
             "npm ci",
             "playwright install --with-deps chromium",
-            "scripts/build_icon_system_release_evidence.py",
+            'system: ["diagram-core-v1", "illustrated-2.4"]',
+            'scripts/build_icon_system_release_evidence.py --system "${{ matrix.system }}"',
+            "actions/download-artifact@v4",
+            "merge-multiple: true",
+            "scripts/build_icon_system_release_evidence.py --merge-fragments",
             "scripts/build_icon_system_release_evidence.py --verify",
             "actions/upload-artifact@v4",
             "outputs/release-evidence/icon-systems",
@@ -56,10 +62,44 @@ class ReleaseWorkflowContractTest(unittest.TestCase):
             with self.subTest(contract=contract):
                 self.assertIn(contract, workflow)
 
-        build_step = workflow.split("- name: Build formal two-system export evidence", 1)[1].split(
-            "- name: Independently verify formal export evidence", 1
+        build_step = workflow.split("- name: Build one public icon-system evidence fragment", 1)[1].split(
+            "- name: Upload public icon-system evidence fragment", 1
         )[0]
-        self.assertIn("timeout-minutes: 70", build_step)
+        self.assertIn("timeout-minutes: 20", build_step)
+
+    def test_release_evidence_fragments_merge_in_public_system_order(self):
+        capture = {"renderer": "browser", "fps": 24, "frames": 108, "scale": 2.0}
+        formats = list(release_evidence.EXPORT_FORMATS)
+        fragments = [
+            {
+                "schema": "public-icon-system-export-evidence-fragment-v1",
+                "capture": capture,
+                "formats": formats,
+                "system": {"id": "illustrated-2.4"},
+            },
+            {
+                "schema": "public-icon-system-export-evidence-fragment-v1",
+                "capture": capture,
+                "formats": formats,
+                "system": {"id": "diagram-core-v1"},
+            },
+        ]
+
+        merged = release_evidence._merge_fragment_documents(fragments)
+
+        self.assertEqual("public-icon-system-export-evidence-v1", merged["schema"])
+        self.assertEqual(["diagram-core-v1", "illustrated-2.4"], [item["id"] for item in merged["systems"]])
+
+    def test_release_evidence_fragments_require_both_public_systems(self):
+        fragment = {
+            "schema": "public-icon-system-export-evidence-fragment-v1",
+            "capture": {"renderer": "browser", "fps": 24, "frames": 108, "scale": 2.0},
+            "formats": list(release_evidence.EXPORT_FORMATS),
+            "system": {"id": "diagram-core-v1"},
+        }
+
+        with self.assertRaisesRegex(ValueError, "expected fragments"):
+            release_evidence._merge_fragment_documents([fragment])
 
     def test_release_status_documents_ci_scope_and_retention(self):
         status = self._read("docs/icon-system-release-status.md")
