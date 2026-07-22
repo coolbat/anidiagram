@@ -11,8 +11,9 @@ import json
 import shutil
 import subprocess
 import sys
-from contextlib import redirect_stdout
+from contextlib import contextmanager, redirect_stdout
 from pathlib import Path
+from threading import Event, Thread
 from typing import Any, Dict, Tuple
 
 
@@ -152,8 +153,10 @@ def build_evidence(outdir: Path, evidence_path: Path, fps: int, frames: int, sca
             "--result",
             str(result_path),
         ]
-        with redirect_stdout(io.StringIO()):
-            render_main(arguments)
+        with _progress_heartbeat(f'building {case["id"]}'):
+            with redirect_stdout(io.StringIO()):
+                render_main(arguments)
+        print(f'[release-evidence] completed {case["id"]}', file=sys.stderr, flush=True)
         result = json.loads(result_path.read_text(encoding="utf-8"))
         if not result.get("ok") or set(result["outputs"]) != set(EXPORT_FORMATS):
             raise RuntimeError(f'{case["id"]} did not write the complete export matrix')
@@ -517,6 +520,32 @@ def _resolve_path(value: str) -> Path:
 
 def _rooted(path: Path) -> Path:
     return path if path.is_absolute() else ROOT / path
+
+
+@contextmanager
+def _progress_heartbeat(label: str, interval_seconds: float = 60.0):
+    """Keep long browser-export steps observable on hosted CI runners."""
+
+    stopped = Event()
+
+    def report_progress() -> None:
+        elapsed = 0.0
+        while not stopped.wait(interval_seconds):
+            elapsed += interval_seconds
+            print(
+                f"[release-evidence] {label} ({int(elapsed)}s elapsed)",
+                file=sys.stderr,
+                flush=True,
+            )
+
+    print(f"[release-evidence] {label}", file=sys.stderr, flush=True)
+    reporter = Thread(target=report_progress, name="release-evidence-heartbeat", daemon=True)
+    reporter.start()
+    try:
+        yield
+    finally:
+        stopped.set()
+        reporter.join()
 
 
 if __name__ == "__main__":

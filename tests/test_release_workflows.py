@@ -56,6 +56,11 @@ class ReleaseWorkflowContractTest(unittest.TestCase):
             with self.subTest(contract=contract):
                 self.assertIn(contract, workflow)
 
+        build_step = workflow.split("- name: Build formal two-system export evidence", 1)[1].split(
+            "- name: Independently verify formal export evidence", 1
+        )[0]
+        self.assertIn("timeout-minutes: 70", build_step)
+
     def test_release_status_documents_ci_scope_and_retention(self):
         status = self._read("docs/icon-system-release-status.md")
 

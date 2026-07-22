@@ -32,6 +32,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install --yes ffmpeg
       - name: Build formal two-system export evidence
+        timeout-minutes: 70
         run: PYTHONPATH=src python3 scripts/build_icon_system_release_evidence.py
       - name: Independently verify formal export evidence
         run: PYTHONPATH=src python3 scripts/build_icon_system_release_evidence.py --verify
