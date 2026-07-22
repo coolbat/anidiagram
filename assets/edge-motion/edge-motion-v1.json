@@ -1,0 +1,87 @@
+{
+  "id": "edge-motion-v1",
+  "version": "1.0.0",
+  "status": "approved",
+  "lifecycle": "frozen",
+  "approved_at": "2026-07-22",
+  "scope": "connection-edges-only",
+  "principles": [
+    "one semantic effect maps to one visual primitive",
+    "packet motion never adds a moving dash track",
+    "comet motion uses one leading packet and three fading echoes without a moving dash track",
+    "stream motion never adds a moving particle",
+    "packet shape is length-invariant and has no outline",
+    "icon-internal arrows remain owned by icon performance contracts"
+  ],
+  "canonical_effects": {
+    "none": {
+      "kind": "static",
+      "meaning": "motion explicitly disabled"
+    },
+    "static": {
+      "kind": "static",
+      "meaning": "authored line and endpoint marker only"
+    },
+    "draw": {
+      "kind": "draw",
+      "meaning": "structural or contextual relation",
+      "visual": "one-shot source-to-target line reveal"
+    },
+    "packet-flow": {
+      "kind": "packet",
+      "meaning": "discrete data, command, event, or result transfer",
+      "visual": "one solid role-colored borderless dot travels on a static arrow"
+    },
+    "comet-flow": {
+      "kind": "comet",
+      "meaning": "explicitly emphasized burst or high-priority transfer",
+      "visual": "one borderless leading packet travels with three shrinking fading echoes on a static arrow"
+    },
+    "stream-flow": {
+      "kind": "stream",
+      "meaning": "continuous, repeated, or cyclic flow",
+      "visual": "one moving dashed stroke travels on a static arrow without particles"
+    }
+  },
+  "legacy_aliases": {
+    "pulse": "stream-flow",
+    "trace": "stream-flow",
+    "dynamic-dash": "stream-flow",
+    "dash-flow": "stream-flow",
+    "flow-dot": "packet-flow",
+    "flow-arrow": "packet-flow",
+    "signal-dot": "packet-flow",
+    "signal-arrow": "packet-flow",
+    "ghost-flow": "comet-flow",
+    "glow-line": "stream-flow",
+    "comet": "comet-flow"
+  },
+  "semantic_rules": [
+    {
+      "when": "motion is disabled",
+      "effect": "static"
+    },
+    {
+      "when": "flow.repeat is loop",
+      "effect": "stream-flow"
+    },
+    {
+      "when": "relation importance is primary or supporting",
+      "effect": "packet-flow"
+    },
+    {
+      "when": "burst or high-priority transfer emphasis is explicitly requested",
+      "effect": "comet-flow"
+    },
+    {
+      "when": "relation importance is context",
+      "effect": "draw"
+    }
+  ],
+  "mode_rules": {
+    "expressive": "all eligible edges",
+    "readable": "semantic-flow coverage first, then importance and authored order",
+    "off": "no generated edge motion",
+    "reduced_motion": "static authored arrows"
+  }
+}

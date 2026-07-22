@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, Optional
 
+from .edge_motion import canonical_edge_motion
 from .model import EffectConfig, SceneMotion
 
 
@@ -37,6 +38,48 @@ def channel_effect(motion: SceneMotion, style: Dict[str, Any], channel: str, ove
     if override and _has_effect(override):
         return merge_effects(base, override)
     return base
+
+
+def canonical_edge_effect(effect: EffectConfig) -> EffectConfig:
+    """Normalize every edge preset to one non-overlapping Edge Motion v1 recipe."""
+
+    preset = canonical_edge_motion(effect.preset)
+    if preset == "packet-flow":
+        return EffectConfig(
+            preset=preset,
+            explicit=effect.explicit,
+            line="static",
+            particle="solid-dot",
+            trail="none",
+            particle_count=1,
+            trail_count=0,
+            entry="none",
+        )
+    if preset == "comet-flow":
+        return EffectConfig(
+            preset=preset,
+            explicit=effect.explicit,
+            line="static",
+            particle="solid-dot",
+            trail="fading-echoes",
+            particle_count=1,
+            trail_count=3,
+            entry="none",
+        )
+    if preset == "stream-flow":
+        return EffectConfig(
+            preset=preset,
+            explicit=effect.explicit,
+            line="moving-dash",
+            particle="none",
+            trail="none",
+            particle_count=0,
+            trail_count=0,
+            entry="none",
+        )
+    if preset == "draw":
+        return EffectConfig(preset=preset, explicit=effect.explicit, line="draw", entry="draw")
+    return EffectConfig(preset=preset, explicit=effect.explicit, line="static", entry="none")
 
 
 def style_default_effect(style: Dict[str, Any], channel: str, fallback: EffectConfig) -> EffectConfig:

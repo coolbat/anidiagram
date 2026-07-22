@@ -71,10 +71,10 @@ class SceneMotion:
     duration_scale: float = 0.9
     intensity: float = 1.25
     node: str = "pop"
-    edge: str = "comet-flow"
+    edge: str = "packet-flow"
     group: str = "marching-ants"
     reduced_motion: str = "subtle"
-    edge_effect: EffectConfig = field(default_factory=lambda: EffectConfig("comet-flow"))
+    edge_effect: EffectConfig = field(default_factory=lambda: EffectConfig("packet-flow"))
     node_effect: EffectConfig = field(default_factory=lambda: EffectConfig("pop"))
     group_effect: EffectConfig = field(default_factory=lambda: EffectConfig("marching-ants"))
     title_effect: EffectConfig = field(default_factory=lambda: EffectConfig("highlight-sweep"))

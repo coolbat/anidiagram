@@ -53,18 +53,18 @@ CASES = (
         ),
     },
     {
-        "id": "illustrated-2.3",
+        "id": "illustrated-2.4",
         "icon_system": "illustrated",
-        "version": "2.3.0",
-        "icon_count": 16,
-        "motion_contract": "illustrated-performance-v4",
-        "spec": ROOT / "examples" / "illustrated-2.3-showcase.diagram.json",
+        "version": "2.4.0",
+        "icon_count": 20,
+        "motion_contract": "illustrated-performance-v5",
+        "spec": ROOT / "examples" / "illustrated-2.4-showcase.diagram.json",
         "style": ROOT / "styles" / "deep-tech.json",
         "catalog": ROOT / "assets" / "illustrated" / "catalog.json",
-        "motion_authority": ROOT / "assets" / "illustrated" / "motion-contracts" / "illustrated-performance-v4.json",
+        "motion_authority": ROOT / "assets" / "illustrated" / "motion-contracts" / "illustrated-performance-v5.json",
         "authorities": (
-            ROOT / "assets" / "illustrated" / "releases" / "2.3.0.json",
-            ROOT / "assets" / "illustrated" / "reviews" / "2.3.0-acceptance.json",
+            ROOT / "assets" / "illustrated" / "releases" / "2.4.0.json",
+            ROOT / "assets" / "illustrated" / "reviews" / "2.4.0-acceptance.json",
         ),
     },
 )
@@ -323,11 +323,11 @@ def verify_evidence(evidence_path: Path, *, require_verified_status: bool = True
                 if motion_pairs != spec_pairs:
                     issues.append(f"{system_id}/html: manifest node/icon mapping changed")
             if system.get("icon_system") == "illustrated" and not all(
-                item.get("motion_contract") == "illustrated-performance-v4"
+                item.get("motion_contract") == system.get("motion_contract")
                 and item.get("motion_status") == "approved"
                 for item in motion.get("icons", [])
             ):
-                issues.append(f"{system_id}/html: public v4 contract changed")
+                issues.append(f"{system_id}/html: public motion contract changed")
 
         for format_name in ANIMATED_FORMATS:
             record = artifacts.get(format_name)

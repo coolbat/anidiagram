@@ -43,7 +43,7 @@
     </div>
     <div class="stage" id="stage">
       <div class="viewport" id="viewport">
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="expressive" data-motion-sequence="step-stagger" data-motion-edge="ghost-flow" data-motion-node="pulse" data-motion-group="border-scan" data-motion-title="highlight-sweep" data-motion-reduced="subtle" data-icon-system="illustrated-character-v1">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="expressive" data-motion-sequence="step-stagger" data-motion-edge="comet-flow" data-motion-node="pulse" data-motion-group="border-scan" data-motion-title="highlight-sweep" data-motion-reduced="subtle" data-icon-system="illustrated-character-v1">
 <title id="diagram-title">Lead-to-Agent Automation Funnel</title>
 <desc id="diagram-desc">capture, qualify, enrich, score, and hand off the right lead</desc>
 <style>
@@ -319,7 +319,7 @@
   </main>
   <script type="application/json" id="anidiagram-motion-manifest">
 {
-  "version": "motion-manifest-0.1",
+  "version": "motion-manifest-0.2",
   "runtime": "gsap",
   "mode": "ambient",
   "profile": "expressive",
@@ -443,10 +443,14 @@
       "target": "qualify",
       "animated": true,
       "active": true,
-      "effect": "ghost-flow",
+      "effect": "comet-flow",
       "delay": 0.0,
-      "particle": "soft-dot",
-      "trail": "true"
+      "particle": "solid-dot",
+      "trail": "fading-echoes",
+      "motion_kind": "comet",
+      "duration": 1.85,
+      "line": "static",
+      "trail_count": 3
     },
     {
       "index": 1,
@@ -454,10 +458,14 @@
       "target": "enrich",
       "animated": true,
       "active": true,
-      "effect": "ghost-flow",
+      "effect": "comet-flow",
       "delay": 0.0,
-      "particle": "soft-dot",
-      "trail": "true"
+      "particle": "solid-dot",
+      "trail": "fading-echoes",
+      "motion_kind": "comet",
+      "duration": 1.85,
+      "line": "static",
+      "trail_count": 3
     },
     {
       "index": 2,
@@ -465,10 +473,14 @@
       "target": "score",
       "animated": true,
       "active": true,
-      "effect": "ghost-flow",
+      "effect": "comet-flow",
       "delay": 0.0,
-      "particle": "soft-dot",
-      "trail": "true"
+      "particle": "solid-dot",
+      "trail": "fading-echoes",
+      "motion_kind": "comet",
+      "duration": 1.85,
+      "line": "static",
+      "trail_count": 3
     },
     {
       "index": 3,
@@ -476,13 +488,19 @@
       "target": "handoff",
       "animated": true,
       "active": true,
-      "effect": "ghost-flow",
+      "effect": "comet-flow",
       "delay": 0.0,
-      "particle": "soft-dot",
-      "trail": "true"
+      "particle": "solid-dot",
+      "trail": "fading-echoes",
+      "motion_kind": "comet",
+      "duration": 1.85,
+      "line": "static",
+      "trail_count": 3
     }
   ],
-  "icon_system": "illustrated-character-v1"
+  "icon_system": "illustrated-character-v1",
+  "edge_motion_contract": "edge-motion-v1",
+  "edge_motion_version": "1.0.0"
 }
   </script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
@@ -500,11 +518,69 @@
   }
 
   function resolveParts(parts) {
-    const resolved = {};
-    Object.entries(parts || {}).forEach(([key, selector]) => {
-      resolved[key] = document.querySelector(selector);
-    });
+    const resolved = Object.create(null);
+    if (!isPlainObject(parts)) return null;
+    let entries;
+    try {
+      entries = Object.entries(parts);
+    } catch (error) {
+      return null;
+    }
+    for (const [key, selector] of entries) {
+      if (!isSafePartName(key) || typeof selector !== "string" || !selector) return null;
+      let part;
+      try {
+        part = document.querySelector(selector);
+      } catch (error) {
+        return null;
+      }
+      if (!(part instanceof Element)) return null;
+      resolved[key] = part;
+    }
     return resolved;
+  }
+
+  function isSafePartName(name) {
+    return typeof name === "string"
+      && /^[a-z][A-Za-z0-9]*(?:-[a-z0-9]+)*$/.test(name)
+      && !["constructor", "prototype", "__proto__"].includes(name);
+  }
+
+  function resolveIconInstanceRoot(iconConfig, parts) {
+    if (!isPlainObject(iconConfig) || !parts) return null;
+    const partElements = Object.values(parts);
+    if (!partElements.length || partElements.some((part) => !(part instanceof Element))) return null;
+
+    let explicitRoot = Object.prototype.hasOwnProperty.call(parts, "root") ? parts.root : null;
+    if (Object.prototype.hasOwnProperty.call(iconConfig, "root")) {
+      if (typeof iconConfig.root !== "string" || !iconConfig.root) return null;
+      try {
+        explicitRoot = document.querySelector(iconConfig.root);
+      } catch (error) {
+        return null;
+      }
+      if (!(explicitRoot instanceof Element)) return null;
+    }
+
+    const strictPresentation = iconConfig.presentation_profile === "showcase";
+    if (strictPresentation) {
+      const roots = partElements.map((part) => part.closest("[data-icon][data-icon-presentation]"));
+      if (roots.some((root) => !(root instanceof Element))) return null;
+      const uniqueRoots = new Set(roots);
+      if (explicitRoot) uniqueRoots.add(explicitRoot);
+      if (uniqueRoots.size !== 1) return null;
+      const root = roots[0];
+      if (root.getAttribute("data-icon") !== iconConfig.icon) return null;
+      if (root.getAttribute("data-icon-presentation") !== iconConfig.presentation_profile) return null;
+      if (partElements.some((part) => !root.contains(part))) return null;
+      return root;
+    }
+
+    const root = explicitRoot || partElements[0].closest("[data-icon]");
+    if (!(root instanceof Element)) return null;
+    if (partElements.some((part) => !root.contains(part))) return null;
+    if (root.hasAttribute("data-icon") && root.getAttribute("data-icon") !== iconConfig.icon) return null;
+    return root;
   }
 
   function hasParts(parts, required) {
@@ -513,7 +589,13 @@
 
   function setInitial(parts, gsap) {
     Object.values(parts).forEach((part) => {
-      if (part) part.style.transformBox = "";
+      if (part) {
+        part.style.transformBox = "";
+        if (part.dataset.restOpacity === undefined) {
+          const opacity = Number(gsap.getProperty(part, "opacity"));
+          part.dataset.restOpacity = String(Number.isFinite(opacity) ? opacity : 1);
+        }
+      }
     });
     gsap.set(Object.values(parts).filter(Boolean), { transformOrigin: "center center" });
   }
@@ -931,7 +1013,10 @@
       .map(([, part]) => part);
     const motionShell = parts.root && parts.root.querySelector(".illustrated-character-motion-shell");
     tl.set(targets, {
-      opacity: 1,
+      opacity: (index, target) => {
+        const authored = Number(target.dataset.restOpacity);
+        return Number.isFinite(authored) ? authored : 1;
+      },
       x: 0,
       y: 0,
       rotation: 0,
@@ -1136,6 +1221,671 @@
     return finishCharacterAtRest(tl, parts, restAt);
   }
 
+  function playIllustratedAgentReason({ config, parts, gsap }) {
+    const required = ["wash", "brain-left", "brain-right", "brain-detail", "processor", "processor-core", "input-nodes", "input-path", "output-path", "result"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const paths = [parts["input-path"], parts["output-path"]];
+    const lengths = primeStrokeDraw(paths, gsap);
+    gsap.set(parts.result, { opacity: 0, scale: 0.3, rotation: -24 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.fromTo(parts["input-nodes"],
+        { x: -10, scale: 0.66, opacity: 0.25 },
+        { x: 0, scale: 1.16, opacity: 1, duration: 0.2, ease: "back.out(3)" },
+        0
+      )
+      .to(parts["input-nodes"], { scale: 1, duration: 0.14, ease: "power2.out" }, 0.2)
+      .fromTo(parts["input-path"],
+        { strokeDashoffset: lengths.get(parts["input-path"]), opacity: 0.2 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.28, ease: "power2.out" },
+        0.08
+      )
+      .to(parts["brain-left"], { x: -3, rotation: -5, scaleX: 1.1, scaleY: 0.94, duration: 0.2, ease: "back.out(2.8)" }, 0.3)
+      .to(parts["brain-right"], { x: 3, rotation: 5, scaleX: 1.1, scaleY: 0.94, duration: 0.2, ease: "back.out(2.8)" }, 0.3)
+      .to(parts.processor, { y: -4, scale: 1.18, duration: 0.18, ease: "back.out(3)" }, 0.42)
+      .to(parts["processor-core"], { scale: 1.16, duration: 0.16, ease: "back.out(3)" }, 0.48)
+      .to([parts["brain-left"], parts["brain-right"]], { x: 0, rotation: 0, scaleX: 0.98, scaleY: 1.05, duration: 0.14, ease: "power2.inOut" }, 0.62)
+      .to([parts["brain-left"], parts["brain-right"]], { scaleX: 1, scaleY: 1, duration: 0.18, ease: "elastic.out(1, 0.45)" }, 0.76)
+      .to([parts.processor, parts["processor-core"]], { y: 0, scale: 1, duration: 0.2, ease: "power2.out" }, 0.72)
+      .fromTo(parts["output-path"],
+        { strokeDashoffset: lengths.get(parts["output-path"]), opacity: 0.2 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.26, ease: "power2.out" },
+        0.78
+      )
+      .fromTo(parts.result,
+        { opacity: 0, scale: 0.3, rotation: -24 },
+        { opacity: 1, scale: 1.42, rotation: 42, duration: 0.18, ease: "back.out(3.2)" },
+        0.94
+      )
+      .to(parts.result, { scale: 1, rotation: 0, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 1.12)
+      .to(parts.wash, { scale: 1.035, duration: 0.18, ease: "sine.inOut" }, 1.06)
+      .to(parts.wash, { scale: 1, duration: 0.2, ease: "sine.inOut" }, 1.24);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedOperatorOperate({ config, parts, gsap }) {
+    const required = ["wash", "body", "head", "hair", "glasses", "laptop", "hands", "screen", "laptop-base", "input-cursor", "status", "status-check"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const checkLength = primeStrokeDraw([parts["status-check"]], gsap).get(parts["status-check"]);
+    gsap.set([parts.status, parts["status-check"]], { opacity: 0, scale: 0.35 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.to([parts.head, parts.hair, parts.glasses], { y: -4, rotation: -3, duration: 0.18, ease: "back.out(2.8)" }, 0)
+      .to(parts.glasses, { scale: 1.16, duration: 0.16, ease: "back.out(3)" }, 0.06)
+      .fromTo(parts["input-cursor"],
+        { x: -12, y: 8, rotation: -12, scale: 0.45, opacity: 0.25 },
+        { x: 7, y: 3, rotation: 8, scale: 1.2, opacity: 1, duration: 0.28, ease: "power2.out" },
+        0.2
+      )
+      .to(parts.hands, { y: 5, scaleY: 0.84, duration: 0.1, ease: "power2.in" }, 0.4)
+      .to(parts.laptop, { y: 2, scaleY: 0.94, duration: 0.1, ease: "power2.in" }, 0.4)
+      .to(parts.hands, { y: -3, scaleY: 1.12, duration: 0.12, ease: "back.out(3)" }, 0.5)
+      .to(parts.hands, { y: 4, scaleY: 0.88, duration: 0.1, ease: "power2.in" }, 0.62)
+      .to(parts.hands, { y: 0, scaleY: 1, duration: 0.14, ease: "back.out(2.6)" }, 0.72)
+      .to(parts.laptop, { y: 0, scaleY: 1, duration: 0.16, ease: "power2.out" }, 0.72)
+      .to(parts.screen, { scale: 1.34, duration: 0.16, ease: "back.out(3)" }, 0.7)
+      .to(parts.screen, { scale: 1, duration: 0.2, ease: "power2.out" }, 0.86)
+      .fromTo(parts.status,
+        { opacity: 0, scale: 0.35, rotation: -18 },
+        { opacity: 1, scale: 1.3, rotation: 8, duration: 0.18, ease: "back.out(3.2)" },
+        0.92
+      )
+      .fromTo(parts["status-check"],
+        { strokeDashoffset: checkLength, opacity: 0 },
+        { strokeDashoffset: 0, opacity: 1, scale: 1.12, duration: 0.22, ease: "power2.out" },
+        1.02
+      )
+      .to(parts.status, { scale: 1, rotation: 0, duration: 0.2, ease: "elastic.out(1, 0.42)" }, 1.1)
+      .to([parts.head, parts.hair, parts.glasses], { y: 0, rotation: 0, scale: 1, duration: 0.24, ease: "power2.out" }, 1.14)
+      .to(parts["input-cursor"], { x: 0, y: 0, rotation: 0, scale: 1, duration: 0.22, ease: "power2.out" }, 1.16);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedToolExecute({ config, parts, gsap }) {
+    const required = ["wash", "toolbox", "toolbox-lid", "handle", "wrench", "wrench-hole", "target", "action-path", "completion"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const actionLength = primeStrokeDraw([parts["action-path"]], gsap).get(parts["action-path"]);
+    gsap.set(parts.completion, { opacity: 0, scale: 0.3, rotation: -28 });
+    gsap.set(parts.wrench, { transformOrigin: "38% 72%" });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.fromTo(parts.target, { scale: 0.7, rotation: -12 }, { scale: 1.28, rotation: 12, duration: 0.18, ease: "back.out(3)" }, 0)
+      .to(parts.target, { scale: 1, rotation: 0, duration: 0.18, ease: "power2.out" }, 0.18)
+      .fromTo(parts["action-path"],
+        { strokeDashoffset: actionLength, opacity: 0.15 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.24, ease: "power2.out" },
+        0.12
+      )
+      .to(parts.wrench, { y: -5, rotation: -22, scale: 1.13, duration: 0.2, ease: "back.out(3)" }, 0.3)
+      .to(parts.wrench, { y: 2, rotation: 22, scale: 1.2, duration: 0.18, ease: "power2.inOut" }, 0.5)
+      .to(parts.wrench, { y: -2, rotation: -10, scale: 1.08, duration: 0.14, ease: "power2.inOut" }, 0.68)
+      .to(parts.wrench, { y: 0, rotation: 0, scale: 1, duration: 0.24, ease: "elastic.out(1, 0.35)" }, 0.82)
+      .to([parts.toolbox, parts["toolbox-lid"]], { y: 4, scaleY: 0.93, duration: 0.12, ease: "power2.in" }, 0.5)
+      .to([parts.toolbox, parts["toolbox-lid"]], { y: -2, scaleY: 1.05, duration: 0.16, ease: "back.out(3)" }, 0.64)
+      .to([parts.toolbox, parts["toolbox-lid"]], { y: 0, scaleY: 1, duration: 0.2, ease: "power2.out" }, 0.82)
+      .fromTo(parts.completion,
+        { opacity: 0, scale: 0.3, rotation: -28 },
+        { opacity: 1, scale: 1.5, rotation: 52, duration: 0.18, ease: "back.out(3.2)" },
+        0.9
+      )
+      .to(parts.completion, { scale: 1, rotation: 0, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 1.08)
+      .to(parts.handle, { scaleX: 1.08, duration: 0.14, ease: "sine.inOut" }, 1.0)
+      .to(parts.handle, { scaleX: 1, duration: 0.18, ease: "sine.inOut" }, 1.14);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedOutputDeliver({ config, parts, gsap }) {
+    const required = ["wash", "card", "card-lines", "delivery-tray", "delivery-lip", "send-path", "check-badge", "check"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const paths = [parts["card-lines"], parts["send-path"], parts.check];
+    const lengths = primeStrokeDraw(paths, gsap);
+    gsap.set([parts["check-badge"], parts.check], { opacity: 0, scale: 0.35 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.to([parts["delivery-tray"], parts["delivery-lip"]], { y: 4, scaleY: 0.94, duration: 0.14, ease: "power2.in" }, 0)
+      .fromTo(parts.card,
+        { y: 18, scale: 0.72, opacity: 0.4 },
+        { y: -10, scale: 1.14, opacity: 1, duration: 0.28, ease: "back.out(3.2)" },
+        0.06
+      )
+      .to(parts.card, { y: 0, scale: 1, duration: 0.18, ease: "power2.out" }, 0.34)
+      .fromTo(parts["card-lines"],
+        { strokeDashoffset: lengths.get(parts["card-lines"]), opacity: 0.15 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.28, ease: "power2.out" },
+        0.26
+      )
+      .to([parts["delivery-tray"], parts["delivery-lip"]], { y: -2, scaleY: 1.05, duration: 0.16, ease: "back.out(3)" }, 0.32)
+      .to([parts["delivery-tray"], parts["delivery-lip"]], { y: 0, scaleY: 1, duration: 0.18, ease: "power2.out" }, 0.48)
+      .fromTo(parts["send-path"],
+        { strokeDashoffset: lengths.get(parts["send-path"]), opacity: 0.15 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.26, ease: "power2.out" },
+        0.56
+      )
+      .to(parts.card, { x: 6, y: -5, rotation: 4, duration: 0.2, ease: "power2.inOut" }, 0.62)
+      .to(parts.card, { x: 0, y: 0, rotation: 0, duration: 0.22, ease: "power2.out" }, 0.82)
+      .fromTo(parts["check-badge"],
+        { opacity: 0, scale: 0.35, rotation: -18 },
+        { opacity: 1, scale: 1.35, rotation: 8, duration: 0.18, ease: "back.out(3.2)" },
+        0.86
+      )
+      .fromTo(parts.check,
+        { strokeDashoffset: lengths.get(parts.check), opacity: 0 },
+        { strokeDashoffset: 0, opacity: 1, scale: 1.14, duration: 0.22, ease: "power2.out" },
+        0.98
+      )
+      .to(parts["check-badge"], { scale: 1, rotation: 0, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 1.06)
+      .to(parts.wash, { scale: 1.035, duration: 0.18, ease: "sine.inOut" }, 1.08)
+      .to(parts.wash, { scale: 1, duration: 0.2, ease: "sine.inOut" }, 1.26);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedDatabasePersist({ config, parts, gsap }) {
+    const required = ["wash", "cylinder-body", "cylinder-top", "layer-top", "layer-bottom", "input-bead", "write-path", "commit-ripple", "stored-bead"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const writeLength = primeStrokeDraw([parts["write-path"]], gsap).get(parts["write-path"]);
+    gsap.set([parts["commit-ripple"], parts["stored-bead"]], { opacity: 0, scale: 0.35 });
+    const vessel = [parts["cylinder-body"], parts["cylinder-top"], parts["layer-top"], parts["layer-bottom"]];
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.fromTo(parts["input-bead"],
+        { x: -10, y: -5, scale: 0.55, opacity: 0.3 },
+        { x: 19, y: 10, scale: 1.12, opacity: 1, duration: 0.28, ease: "power2.out" },
+        0
+      )
+      .fromTo(parts["write-path"],
+        { strokeDashoffset: writeLength, opacity: 0.18 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.3, ease: "power2.out" },
+        0.08
+      )
+      .to(parts["input-bead"], { x: 31, y: 21, scale: 0.35, opacity: 0, duration: 0.2, ease: "power2.in" }, 0.3)
+      .to(vessel, { y: 3, scaleY: 0.95, duration: 0.14, ease: "power2.in" }, 0.38)
+      .to(vessel, { y: -2, scaleY: 1.04, duration: 0.18, ease: "back.out(3)" }, 0.52)
+      .to(vessel, { y: 0, scaleY: 1, duration: 0.2, ease: "power2.out" }, 0.7)
+      .fromTo(parts["stored-bead"],
+        { opacity: 0, scale: 0.35, y: -7 },
+        { opacity: 1, scale: 1.35, y: 0, duration: 0.2, ease: "back.out(3.2)" },
+        0.78
+      )
+      .to(parts["stored-bead"], { scale: 1, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 0.98)
+      .fromTo(parts["commit-ripple"],
+        { opacity: 0.8, scale: 0.35 },
+        { opacity: 0, scale: 1.55, duration: 0.34, ease: "power2.out" },
+        0.94
+      )
+      .to(parts.wash, { scale: 1.03, duration: 0.18, ease: "sine.inOut" }, 1.1)
+      .to(parts.wash, { scale: 1, duration: 0.2, ease: "sine.inOut" }, 1.28);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedApiRoute({ config, parts, gsap }) {
+    const required = ["wash", "gateway", "api-glyph", "request-path", "request-token", "response-path", "response-token"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const lengths = primeStrokeDraw([parts["request-path"], parts["response-path"]], gsap);
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.fromTo(parts["request-token"],
+        { x: -12, scale: 0.55, opacity: 0.3 },
+        { x: 24, scale: 1.15, opacity: 1, duration: 0.3, ease: "power2.out" },
+        0
+      )
+      .fromTo(parts["request-path"],
+        { strokeDashoffset: lengths.get(parts["request-path"]), opacity: 0.2 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.28, ease: "power2.out" },
+        0.06
+      )
+      .to(parts["request-token"], { x: 32, scale: 0.35, opacity: 0, duration: 0.16, ease: "power2.in" }, 0.3)
+      .to(parts.gateway, { scaleX: 0.93, scaleY: 1.06, duration: 0.16, ease: "power2.inOut" }, 0.36)
+      .to(parts["api-glyph"], { rotation: 10, scale: 1.16, duration: 0.18, ease: "back.out(3)" }, 0.42)
+      .to(parts["api-glyph"], { rotation: -6, scale: 0.97, duration: 0.16, ease: "power2.inOut" }, 0.6)
+      .to([parts.gateway, parts["api-glyph"]], { rotation: 0, scaleX: 1, scaleY: 1, scale: 1, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 0.76)
+      .fromTo(parts["response-path"],
+        { strokeDashoffset: lengths.get(parts["response-path"]), opacity: 0.2 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.28, ease: "power2.out" },
+        0.74
+      )
+      .fromTo(parts["response-token"],
+        { x: -24, scale: 0.35, opacity: 0 },
+        { x: 0, scale: 1.35, opacity: 1, duration: 0.22, ease: "back.out(3.2)" },
+        0.9
+      )
+      .to(parts["response-token"], { scale: 1, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 1.12)
+      .to(parts.wash, { scale: 1.03, duration: 0.18, ease: "sine.inOut" }, 1.1)
+      .to(parts.wash, { scale: 1, duration: 0.2, ease: "sine.inOut" }, 1.28);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedSearchDiscover({ config, parts, gsap }) {
+    const required = ["wash", "lens-glass", "lens", "handle", "scan-cross", "target-ring", "result-dot", "discovery"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const magnifier = [parts["lens-glass"], parts.lens, parts.handle];
+    gsap.set([parts["target-ring"], parts["result-dot"], parts.discovery], { transformOrigin: "center center" });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.to(magnifier, { x: 0, y: -5, duration: 0.12, ease: "sine.inOut" }, 0)
+      .to(magnifier, { x: 5, y: 0, duration: 0.12, ease: "sine.inOut" }, 0.12)
+      .to(magnifier, { x: 0, y: 5, duration: 0.12, ease: "sine.inOut" }, 0.24)
+      .to(magnifier, { x: -5, y: 0, duration: 0.12, ease: "sine.inOut" }, 0.36)
+      .to(magnifier, { x: 0, y: 0, duration: 0.14, ease: "power2.out" }, 0.48)
+      .to(parts["scan-cross"], { rotation: 360, duration: 0.46, ease: "power2.inOut" }, 0.6)
+      .fromTo(parts["target-ring"],
+        { scale: 0.55, opacity: 0.35 },
+        { scale: 1.28, opacity: 1, duration: 0.2, ease: "back.out(3)" },
+        0.92
+      )
+      .fromTo(parts["result-dot"],
+        { scale: 0.35, opacity: 0 },
+        { scale: 1.45, opacity: 1, duration: 0.18, ease: "back.out(3.2)" },
+        1.02
+      )
+      .to([parts["target-ring"], parts["result-dot"]], { scale: 1, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 1.2)
+      .fromTo(parts.discovery,
+        { scale: 0.3, rotation: -28, opacity: 0 },
+        { scale: 1.45, rotation: 45, opacity: 1, duration: 0.18, ease: "back.out(3.2)" },
+        1.12
+      )
+      .to(parts.discovery, { scale: 1, rotation: 0, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 1.3);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedMemoryRecall({ config, parts, gsap }) {
+    const required = ["wash", "back-card", "front-card", "index-nodes", "trace", "input-token", "commit-path", "bookmark", "result"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const lengths = primeStrokeDraw([parts["commit-path"], parts.trace], gsap);
+    gsap.set(parts.result, { opacity: 0, scale: 0.3, rotation: -28 });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.fromTo(parts["input-token"],
+        { x: -12, scale: 0.55, opacity: 0.3 },
+        { x: 22, scale: 1.12, opacity: 1, duration: 0.28, ease: "power2.out" },
+        0
+      )
+      .fromTo(parts["commit-path"],
+        { strokeDashoffset: lengths.get(parts["commit-path"]), opacity: 0.2 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.28, ease: "power2.out" },
+        0.06
+      )
+      .to(parts["input-token"], { x: 31, scale: 0.35, opacity: 0, duration: 0.16, ease: "power2.in" }, 0.3)
+      .to(parts["front-card"], { x: 3, y: 3, scale: 0.97, duration: 0.16, ease: "power2.in" }, 0.36)
+      .to(parts["back-card"], { x: -3, y: -3, rotation: -3, duration: 0.18, ease: "back.out(3)" }, 0.42)
+      .to([parts["front-card"], parts["back-card"]], { x: 0, y: 0, rotation: 0, scale: 1, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 0.62)
+      .fromTo(parts.trace,
+        { strokeDashoffset: lengths.get(parts.trace), opacity: 0.2 },
+        { strokeDashoffset: 0, opacity: 1, duration: 0.3, ease: "power2.out" },
+        0.66
+      )
+      .to(parts["index-nodes"], { scale: 1.24, duration: 0.18, ease: "back.out(3)" }, 0.76)
+      .to(parts["index-nodes"], { scale: 1, duration: 0.2, ease: "power2.out" }, 0.94)
+      .to(parts.bookmark, { y: -6, scale: 1.16, duration: 0.18, ease: "back.out(3)" }, 0.9)
+      .to(parts.bookmark, { y: 0, scale: 1, duration: 0.22, ease: "bounce.out" }, 1.08)
+      .fromTo(parts.result,
+        { opacity: 0, scale: 0.3, rotation: -28 },
+        { opacity: 1, scale: 1.45, rotation: 48, duration: 0.18, ease: "back.out(3.2)" },
+        1.08
+      )
+      .to(parts.result, { scale: 1, rotation: 0, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 1.26);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedFileAttach({ config, parts, gsap }) {
+    const required = ["wash", "page", "paperclip", "content-lines"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const paperclipLength = primeStrokeDraw([parts.paperclip], gsap).get(parts.paperclip);
+    gsap.set(parts["content-lines"], { transformOrigin: "left center" });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.to(parts.page, { y: 2, scaleX: 1.03, scaleY: 0.97, duration: 0.16, ease: "power2.in" }, 0)
+      .to(parts.page, { y: 0, scaleX: 1, scaleY: 1, duration: 0.2, ease: "back.out(3)" }, 0.16)
+      .fromTo(parts.paperclip,
+        { y: -5, rotation: -3, opacity: 0.28, strokeDashoffset: paperclipLength },
+        { y: 0, rotation: 0, opacity: 1, strokeDashoffset: 0, duration: 0.4, ease: "power2.out" },
+        0.2
+      )
+      .fromTo(parts["content-lines"],
+        { scaleX: 0.5, opacity: 0.2 },
+        { scaleX: 1.08, opacity: 1, duration: 0.34, ease: "back.out(2.7)" },
+        0.56
+      )
+      .to(parts["content-lines"], { scaleX: 1, duration: 0.2, ease: "power2.out" }, 0.9)
+      .to(parts.page, { scale: 1.025, duration: 0.16, ease: "sine.inOut" }, 0.96)
+      .to(parts.page, { scale: 1, duration: 0.2, ease: "sine.inOut" }, 1.12);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedFolderStore({ config, parts, gsap }) {
+    const required = ["wash", "folder-back", "folder-tab", "document", "folder-front", "index-label"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const back = [parts["folder-back"], parts["folder-tab"]];
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.to(back, { y: -2, duration: 0.2, ease: "power2.out" }, 0)
+      .to(parts["folder-front"], { y: 3, scaleY: 0.97, duration: 0.2, ease: "power2.inOut" }, 0)
+      .fromTo(parts.document,
+        { y: -8, scale: 0.92, opacity: 0.45 },
+        { y: 4, scale: 1, opacity: 1, duration: 0.44, ease: "power2.out" },
+        0.18
+      )
+      .to(parts.document, { y: 0, duration: 0.2, ease: "power2.out" }, 0.62)
+      .to(back, { y: 0, duration: 0.22, ease: "back.out(2.6)" }, 0.62)
+      .to(parts["folder-front"], { y: 0, scaleY: 1, duration: 0.22, ease: "back.out(2.6)" }, 0.62)
+      .fromTo(parts["index-label"],
+        { scale: 0.55, opacity: 0.25 },
+        { scale: 1.25, opacity: 1, duration: 0.3, ease: "back.out(3)" },
+        0.78
+      )
+      .to(parts["index-label"], { scale: 1, duration: 0.22, ease: "elastic.out(1, 0.42)" }, 1.08)
+      .to(parts["folder-front"], { scaleY: 0.97, duration: 0.12, ease: "power2.in" }, 1.12)
+      .to(parts["folder-front"], { scaleY: 1, duration: 0.18, ease: "power2.out" }, 1.24);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedCloudTransfer({ config, parts, gsap }) {
+    const required = ["wash", "cloud-shell", "upload-arrow", "download-arrow"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const arrows = [parts["upload-arrow"], parts["download-arrow"]];
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.to(parts["cloud-shell"], { y: 2, scaleX: 1.04, scaleY: 0.96, duration: 0.15, ease: "power2.in" }, 0)
+      .to(parts["cloud-shell"], { y: 0, scaleX: 1, scaleY: 1, duration: 0.2, ease: "back.out(3)" }, 0.15)
+      .fromTo(parts["upload-arrow"],
+        { y: 3, opacity: 0, clipPath: "inset(100% 0% 0% 0%)" },
+        { y: 0, opacity: 1, clipPath: "inset(0% 0% 0% 0%)", duration: 0.48, ease: "power1.inOut" },
+        0.2
+      )
+      .fromTo(parts["download-arrow"],
+        { y: -3, opacity: 0, clipPath: "inset(0% 0% 100% 0%)" },
+        { y: 0, opacity: 1, clipPath: "inset(0% 0% 0% 0%)", duration: 0.48, ease: "power1.inOut" },
+        0.64
+      )
+      .to(arrows, { opacity: 0.82, duration: 0.14, ease: "sine.inOut" }, 1.12)
+      .to(arrows, { opacity: 1, duration: 0.18, ease: "sine.inOut" }, 1.26)
+      .to(parts["cloud-shell"], { scale: 1.025, duration: 0.16, ease: "sine.inOut" }, 1.12)
+      .to(parts["cloud-shell"], { scale: 1, duration: 0.22, ease: "sine.inOut" }, 1.28);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedShieldLock({ config, parts, gsap }) {
+    const required = ["wash", "shield-shell", "inner-field", "lock-shackle", "security-lock", "keyhole"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const shield = [parts["shield-shell"], parts["inner-field"]];
+    const lock = [parts["lock-shackle"], parts["security-lock"], parts.keyhole];
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.fromTo(shield,
+        { scale: 0.985 },
+        { scale: 1.025, duration: 0.22, ease: "power2.out" },
+        0
+      )
+      .to(shield, { scale: 1, duration: 0.2, ease: "power2.out" }, 0.22)
+      .to(lock, { y: 2, scaleY: 0.95, duration: 0.18, ease: "power2.in" }, 0.2)
+      .fromTo(parts["lock-shackle"],
+        { y: 4, scaleY: 0.78 },
+        { y: 0, scaleY: 1.08, duration: 0.36, ease: "back.out(3)" },
+        0.34
+      )
+      .to(lock, { y: 0, scaleY: 1, duration: 0.22, ease: "power2.out" }, 0.62)
+      .fromTo(parts.keyhole,
+        { scale: 0.45, opacity: 0.2 },
+        { scale: 1.3, opacity: 1, duration: 0.3, ease: "back.out(3)" },
+        0.62
+      )
+      .to(parts.keyhole, { scale: 1, duration: 0.2, ease: "power2.out" }, 0.92)
+      .to(parts["security-lock"], { scale: 1.12, duration: 0.16, ease: "sine.inOut" }, 0.86)
+      .to(parts["inner-field"], { scale: 1.035, duration: 0.16, ease: "sine.inOut" }, 0.86)
+      .to([parts["security-lock"], parts["inner-field"]], { scale: 1, duration: 0.22, ease: "sine.inOut" }, 1.08)
+      .to(parts["lock-shackle"], { y: 0, scaleY: 1, duration: 0.2, ease: "power2.out" }, 1.16);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedUserInteract({ config, parts, gsap }) {
+    const required = ["wash", "portrait-body", "portrait-neck", "portrait-head", "portrait-hair", "face", "conversation-card", "conversation-lines"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const head = [parts["portrait-neck"], parts["portrait-head"], parts["portrait-hair"], parts.face];
+    const lineLength = primeStrokeDraw([parts["conversation-lines"]], gsap).get(parts["conversation-lines"]);
+    gsap.set([parts["conversation-card"], parts["conversation-lines"]], { transformOrigin: "left bottom" });
+    gsap.set(head, { transformOrigin: "center center" });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.to(parts["portrait-body"], { y: 2, scale: 0.985, duration: 0.24, ease: "power2.out" }, 0)
+      .to(head, { rotation: -3, duration: 0.24, ease: "power2.out" }, 0)
+      .fromTo(parts["conversation-card"],
+        { y: 5, scale: 0.9, opacity: 0.35 },
+        { y: 0, scale: 1.04, opacity: 1, duration: 0.36, ease: "back.out(2.6)" },
+        0.18
+      )
+      .fromTo(parts["conversation-lines"],
+        { opacity: 0.18, strokeDashoffset: lineLength },
+        { opacity: 1, strokeDashoffset: 0, duration: 0.38, ease: "power2.out" },
+        0.44
+      )
+      .to(head, { y: 2, rotation: 3, duration: 0.16, ease: "power2.inOut" }, 0.82)
+      .to(head, { y: 0, rotation: 0, duration: 0.18, ease: "power2.out" }, 0.98)
+      .to(parts["conversation-card"], { scale: 1.035, duration: 0.15, ease: "sine.inOut" }, 1.04)
+      .to(parts["conversation-card"], { scale: 1, duration: 0.18, ease: "sine.inOut" }, 1.19)
+      .to(parts["portrait-body"], { y: 0, scale: 1, duration: 0.24, ease: "power2.out" }, 1.16);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedServerCompute({ config, parts, gsap }) {
+    const required = ["wash", "rack-shell", "upper-bay", "middle-bay", "lower-bay", "rack-ports", "activity-lights"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const bays = [parts["upper-bay"], parts["middle-bay"], parts["lower-bay"]];
+    gsap.set(parts["rack-ports"], { transformOrigin: "left center" });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.to(parts["rack-shell"], { scaleY: 0.97, duration: 0.12, ease: "power2.in" }, 0)
+      .to(parts["rack-shell"], { scaleY: 1.02, duration: 0.14, ease: "back.out(2.8)" }, 0.12)
+      .to(parts["rack-shell"], { scaleY: 1, duration: 0.14, ease: "power2.out" }, 0.26)
+      .to(bays, { scaleX: 1.07, duration: 0.18, stagger: 0.14, ease: "power2.out" }, 0.18)
+      .to(bays, { scaleX: 1, duration: 0.18, stagger: 0.14, ease: "power2.out" }, 0.36)
+      .fromTo(parts["rack-ports"],
+        { opacity: 0.35, scaleX: 0.25 },
+        { opacity: 1, scaleX: 1, duration: 0.46, ease: "power2.out" },
+        0.44
+      )
+      .fromTo(parts["activity-lights"],
+        { opacity: 0.25, scale: 0.6 },
+        { opacity: 1, scale: 1.42, duration: 0.24, ease: "back.out(3)" },
+        0.72
+      )
+      .to(parts["activity-lights"], { scale: 1, duration: 0.16, ease: "power2.out" }, 0.96)
+      .to(parts["activity-lights"], { scale: 1.32, duration: 0.14, ease: "sine.inOut" }, 1.08)
+      .to(parts["activity-lights"], { scale: 1, duration: 0.18, ease: "sine.inOut" }, 1.22)
+      .to(parts["rack-shell"], { scale: 1.018, duration: 0.16, ease: "sine.inOut" }, 1.12)
+      .to(parts["rack-shell"], { scale: 1, duration: 0.2, ease: "sine.inOut" }, 1.28);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedAiModelInfer({ config, parts, gsap }) {
+    const required = ["wash", "model-card", "model-header", "network-links", "input-neurons", "hidden-neurons", "output-neuron", "inference-band"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const lengths = primeStrokeDraw([parts["network-links"], parts["inference-band"]], gsap);
+    gsap.set([parts["input-neurons"], parts["hidden-neurons"], parts["output-neuron"]], { transformOrigin: "center center" });
+    gsap.set(parts["inference-band"], { transformOrigin: "left center" });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.fromTo(parts["model-card"], { scale: 0.985 }, { scale: 1.025, duration: 0.2, ease: "power2.out" }, 0)
+      .to(parts["model-card"], { scale: 1, duration: 0.16, ease: "power2.out" }, 0.2)
+      .fromTo(parts["input-neurons"],
+        { opacity: 0.4, scale: 0.72 },
+        { opacity: 1, scale: 1.32, duration: 0.26, ease: "back.out(3)" },
+        0.16
+      )
+      .to(parts["input-neurons"], { scale: 1, duration: 0.18, ease: "power2.out" }, 0.42)
+      .fromTo(parts["network-links"],
+        { opacity: 0.16, strokeDashoffset: lengths.get(parts["network-links"]) },
+        { opacity: 1, strokeDashoffset: 0, duration: 0.46, ease: "power1.inOut" },
+        0.28
+      )
+      .fromTo(parts["hidden-neurons"],
+        { opacity: 0.3, scale: 0.58 },
+        { opacity: 1, scale: 1.28, duration: 0.26, ease: "back.out(3.2)" },
+        0.54
+      )
+      .to(parts["hidden-neurons"], { scale: 1, duration: 0.2, ease: "elastic.out(1, 0.42)" }, 0.8)
+      .fromTo(parts["output-neuron"],
+        { opacity: 0.25, scale: 0.5 },
+        { opacity: 1, scale: 1.45, duration: 0.26, ease: "back.out(3.2)" },
+        0.74
+      )
+      .to(parts["output-neuron"], { scale: 1, duration: 0.22, ease: "elastic.out(1, 0.4)" }, 1.0)
+      .fromTo(parts["inference-band"],
+        { opacity: 0.25, scaleX: 0.15, strokeDashoffset: lengths.get(parts["inference-band"]) },
+        { opacity: 1, scaleX: 1.06, strokeDashoffset: 0, duration: 0.34, ease: "power2.out" },
+        0.92
+      )
+      .to(parts["inference-band"], { scaleX: 1, duration: 0.18, ease: "power2.out" }, 1.26);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedMessageQueue({ config, parts, gsap }) {
+    const required = ["wash", "queue-shell", "queue-rail", "message-one", "message-two", "message-three", "buffer-gates", "sequence-dots"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const restAt = config.rest_at;
+    const railLength = primeStrokeDraw([parts["queue-rail"]], gsap).get(parts["queue-rail"]);
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    tl.to(parts["buffer-gates"], { scaleY: 0.93, duration: 0.13, ease: "power2.in" }, 0)
+      .to(parts["buffer-gates"], { scaleY: 1.05, duration: 0.13, ease: "back.out(3)" }, 0.13)
+      .to(parts["buffer-gates"], { scaleY: 1, duration: 0.16, ease: "power2.out" }, 0.26)
+      .fromTo(parts["queue-rail"],
+        { opacity: 0.2, strokeDashoffset: railLength },
+        { opacity: 1, strokeDashoffset: 0, duration: 0.76, ease: "power1.inOut" },
+        0.14
+      )
+      .to(parts["message-one"], { y: -4, scale: 1.12, duration: 0.13, ease: "power2.out" }, 0.18)
+      .to(parts["message-one"], { y: 0, scale: 1, duration: 0.13, ease: "power2.out" }, 0.31)
+      .to(parts["message-two"], { y: -4, scale: 1.12, duration: 0.13, ease: "power2.out" }, 0.42)
+      .to(parts["message-two"], { y: 0, scale: 1, duration: 0.13, ease: "power2.out" }, 0.55)
+      .to(parts["message-three"], { y: -4, scale: 1.12, duration: 0.13, ease: "power2.out" }, 0.66)
+      .to(parts["message-three"], { y: 0, scale: 1, duration: 0.13, ease: "power2.out" }, 0.79)
+      .to(parts["sequence-dots"], { scale: 1.18, opacity: 1, duration: 0.15, ease: "back.out(3)" }, 0.9)
+      .to(parts["sequence-dots"], { scale: 1, duration: 0.18, ease: "power2.out" }, 1.05)
+      .to(parts["queue-shell"], { scale: 1.018, duration: 0.16, ease: "sine.inOut" }, 1.08)
+      .to(parts["queue-shell"], { scale: 1, duration: 0.2, ease: "sine.inOut" }, 1.24);
+    return finishCharacterAtRest(tl, parts, restAt, config);
+  }
+
+  function playIllustratedVectorDatabase({ config, parts, gsap }) {
+    const required = ["wash", "vector-store-body", "vector-store-top", "vector-field", "vector-links", "vector-points"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const linkLength = primeStrokeDraw([parts["vector-links"]], gsap).get(parts["vector-links"]);
+    gsap.set(parts["vector-store-top"], { transformOrigin: "center bottom" });
+    gsap.set([parts["vector-field"], parts["vector-points"]], { transformOrigin: "center center" });
+    const timeline = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    timeline.to(parts["vector-store-body"], { scaleY: 0.965, duration: 0.14, ease: "power2.in" }, 0)
+      .to(parts["vector-store-top"], { y: -6, scaleX: 1.055, duration: 0.22, ease: "back.out(2.8)" }, 0.1)
+      .to(parts["vector-store-body"], { scaleY: 1.015, duration: 0.18, ease: "back.out(2.6)" }, 0.16)
+      .to(parts["vector-store-body"], { scaleY: 1, duration: 0.18, ease: "power2.out" }, 0.34)
+      .fromTo(parts["vector-links"],
+        { opacity: 0.18, strokeDashoffset: linkLength },
+        { opacity: 1, strokeDashoffset: 0, duration: 0.52, ease: "power1.inOut" }, 0.28)
+      .fromTo(parts["vector-points"],
+        { opacity: 0.3, scale: 0.58 },
+        { opacity: 1, scale: 1.38, duration: 0.28, ease: "back.out(3.2)" }, 0.62)
+      .to(parts["vector-points"], { scale: 1, duration: 0.22, ease: "elastic.out(1, 0.42)" }, 0.9)
+      .to(parts["vector-field"], { scale: 1.035, y: -1.5, duration: 0.2, ease: "sine.inOut" }, 0.88)
+      .to(parts["vector-field"], { scale: 1, y: 0, duration: 0.22, ease: "sine.inOut" }, 1.08)
+      .to(parts["vector-store-top"], { y: 0, scaleX: 1, duration: 0.26, ease: "power2.out" }, 1.12);
+    return finishCharacterAtRest(timeline, parts, config.rest_at, config);
+  }
+
+  function playIllustratedKnowledgeBase({ config, parts, gsap }) {
+    const required = ["wash", "book-left", "book-right", "book-spine", "knowledge-links", "knowledge-points", "reference-lines"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const lengths = primeStrokeDraw([parts["knowledge-links"], parts["reference-lines"]], gsap);
+    gsap.set(parts["book-left"], { transformOrigin: "right bottom" });
+    gsap.set(parts["book-right"], { transformOrigin: "left bottom" });
+    gsap.set(parts["knowledge-points"], { transformOrigin: "center center" });
+    const timeline = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    timeline.to(parts["book-left"], { rotation: -6, x: -3, duration: 0.28, ease: "power2.out" }, 0)
+      .to(parts["book-right"], { rotation: 6, x: 3, duration: 0.28, ease: "power2.out" }, 0)
+      .to([parts["book-left"], parts["book-right"]], { rotation: 0, x: 0, duration: 0.3, ease: "back.out(2.4)" }, 0.28)
+      .fromTo(parts["knowledge-links"],
+        { opacity: 0.16, strokeDashoffset: lengths.get(parts["knowledge-links"]) },
+        { opacity: 1, strokeDashoffset: 0, duration: 0.58, ease: "power1.inOut" }, 0.32)
+      .fromTo(parts["knowledge-points"],
+        { opacity: 0.25, scale: 0.58 },
+        { opacity: 1, scale: 1.34, duration: 0.28, ease: "back.out(3.1)" }, 0.7)
+      .to(parts["knowledge-points"], { scale: 1, duration: 0.2, ease: "elastic.out(1, 0.42)" }, 0.98)
+      .fromTo(parts["reference-lines"],
+        { opacity: 0.2, strokeDashoffset: lengths.get(parts["reference-lines"]) },
+        { opacity: 1, strokeDashoffset: 0, duration: 0.34, ease: "power2.out" }, 0.92)
+      .to(parts["book-spine"], { scaleY: 1.06, duration: 0.16, ease: "sine.inOut" }, 1.18)
+      .to(parts["book-spine"], { scaleY: 1, duration: 0.2, ease: "sine.inOut" }, 1.34);
+    return finishCharacterAtRest(timeline, parts, config.rest_at, config);
+  }
+
+  function playIllustratedGateway({ config, parts, gsap }) {
+    const required = ["wash", "gateway-shell", "gateway-opening", "policy-window", "traffic-rails", "request-token", "response-token"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const railLength = primeStrokeDraw([parts["traffic-rails"]], gsap).get(parts["traffic-rails"]);
+    gsap.set([parts["request-token"], parts["response-token"], parts["policy-window"]], { transformOrigin: "center center" });
+    const timeline = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    timeline.to(parts["gateway-shell"], { scaleX: 0.975, scaleY: 1.025, duration: 0.16, ease: "power2.inOut" }, 0)
+      .to(parts["gateway-shell"], { scaleX: 1, scaleY: 1, duration: 0.2, ease: "back.out(2.4)" }, 0.16)
+      .fromTo(parts["traffic-rails"],
+        { opacity: 0.22, strokeDashoffset: railLength },
+        { opacity: 1, strokeDashoffset: 0, duration: 0.46, ease: "power1.inOut" }, 0.16)
+      .fromTo(parts["request-token"],
+        { y: 15, opacity: 0.25, scale: 0.7 },
+        { y: -10, opacity: 1, scale: 1.18, duration: 0.44, ease: "power2.inOut" }, 0.34)
+      .fromTo(parts["response-token"],
+        { y: -15, opacity: 0.25, scale: 0.7 },
+        { y: 10, opacity: 1, scale: 1.18, duration: 0.44, ease: "power2.inOut" }, 0.48)
+      .to([parts["request-token"], parts["response-token"]], { y: 0, scale: 1, duration: 0.28, ease: "power2.out" }, 0.92)
+      .to(parts["policy-window"], { scale: 1.22, duration: 0.18, ease: "back.out(3)" }, 1.0)
+      .to(parts["policy-window"], { scale: 1, duration: 0.22, ease: "power2.out" }, 1.18)
+      .to(parts["gateway-opening"], { scaleY: 1.025, duration: 0.16, ease: "sine.inOut" }, 1.22)
+      .to(parts["gateway-opening"], { scaleY: 1, duration: 0.2, ease: "sine.inOut" }, 1.38);
+    return finishCharacterAtRest(timeline, parts, config.rest_at, config);
+  }
+
+  function playIllustratedContainer({ config, parts, gsap }) {
+    const required = ["wash", "container-shell", "container-lid", "container-side", "container-ribs", "isolation-frame", "app-module", "runtime-slots", "container-feet"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    gsap.set([parts["isolation-frame"], parts["app-module"], parts["runtime-slots"]], { transformOrigin: "center center" });
+    const timeline = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    timeline.to(parts["container-shell"], { y: 3, scaleY: 0.965, duration: 0.14, ease: "power2.in" }, 0)
+      .to(parts["container-lid"], { y: -5, x: 2, duration: 0.22, ease: "back.out(2.8)" }, 0.1)
+      .to(parts["container-side"], { x: 3, duration: 0.22, ease: "power2.out" }, 0.14)
+      .to(parts["container-shell"], { y: 0, scaleY: 1, duration: 0.22, ease: "back.out(2.4)" }, 0.22)
+      .fromTo(parts["isolation-frame"],
+        { opacity: 0.45, scale: 0.84 },
+        { opacity: 1, scale: 1.08, duration: 0.28, ease: "back.out(2.8)" }, 0.38)
+      .fromTo(parts["app-module"],
+        { opacity: 0.28, scale: 0.58, y: 8 },
+        { opacity: 1, scale: 1.2, y: 0, duration: 0.32, ease: "back.out(3.2)" }, 0.58)
+      .to(parts["app-module"], { scale: 1, duration: 0.2, ease: "elastic.out(1, 0.4)" }, 0.9)
+      .fromTo(parts["runtime-slots"],
+        { opacity: 0.22, scaleX: 0.35 },
+        { opacity: 1, scaleX: 1.28, duration: 0.3, ease: "back.out(3)" }, 0.84)
+      .to(parts["runtime-slots"], { scaleX: 1, duration: 0.2, ease: "power2.out" }, 1.14)
+      .to(parts["isolation-frame"], { scale: 1, duration: 0.2, ease: "sine.inOut" }, 1.16)
+      .to([parts["container-lid"], parts["container-side"]], { x: 0, y: 0, duration: 0.26, ease: "power2.out" }, 1.24)
+      .to(parts["container-feet"], { scaleY: 1.08, duration: 0.14, ease: "sine.inOut" }, 1.3)
+      .to(parts["container-feet"], { scaleY: 1, duration: 0.18, ease: "sine.inOut" }, 1.44);
+    return finishCharacterAtRest(timeline, parts, config.rest_at, config);
+  }
+
   function playFileNoteWrite({ config, parts, gsap }) {
     const required = ["page", "corner", "line-1", "line-2", "line-3", "dot"];
     if (!hasParts(parts, required)) return null;
@@ -1226,7 +1976,8 @@
   }
 
   const EDGE_PACKET_COUNT = 1;
-  const EDGE_PACKET_REPEAT_DELAY = 0.7;
+  const EDGE_PACKET_REPEAT_DELAY = 0.0;
+  const SHORT_EDGE_THRESHOLD = 120;
   let currentMotionMode = "expressive";
 
   function clearRuntimeStageEffects() {
@@ -1287,7 +2038,11 @@
       const effect = String(entry.effect || "signal-arrow").replace(/[^a-z0-9-]/gi, "-").toLowerCase();
       const dotEffect = effect === "signal-dot" || effect === "flow-dot";
       const dashEffect = effect === "dynamic-dash" || effect === "dash-flow" || effect === "trace" || effect === "draw";
+      const flowDash = Math.max(2.4, width * 1.4);
+      const flowGap = Math.max(12, width * 7);
+      const shortEdge = length <= SHORT_EDGE_THRESHOLD;
       group.dataset.runtimeEdgeEffect = effect;
+      group.dataset.runtimeEdgePacketShape = shortEdge ? "dot" : "segment";
       const flow = createSvgElement("path", {
         class: `edge-flow runtime-edge-flow runtime-edge-effect-${effect} runtime-generated`,
         d: path,
@@ -1295,9 +2050,9 @@
         stroke,
         "stroke-width": Math.max(1.2, width * 0.86).toFixed(1),
         "stroke-linecap": "round",
-        "stroke-dasharray": `${Math.max(2.4, width * 1.4).toFixed(1)} ${Math.max(12, width * 7).toFixed(1)}`,
+        "stroke-dasharray": `${flowDash.toFixed(1)} ${flowGap.toFixed(1)}`,
         "stroke-dashoffset": "0",
-        opacity: motionMode === "readable" ? "0.07" : "0.11",
+        opacity: motionMode === "readable" ? "0.09" : "0.20",
         "pointer-events": "none",
       });
       if (label) group.insertBefore(flow, label);
@@ -1309,32 +2064,52 @@
             ? Math.max(8, Math.min(20, length * 0.18))
             : Math.max(13, Math.min(34, length * 0.42));
         const packetGap = Math.max(52, length + packetLength * 2.8);
-        const packet = createSvgElement("path", {
-          class: `edge-particle runtime-edge-particle runtime-edge-packet runtime-edge-effect-${effect} runtime-generated`,
-          d: path,
-          fill: "none",
-          stroke: "#ffffff",
-          "stroke-width": Math.max(4.2, width * (2.35 - particleIndex * 0.22)).toFixed(1),
-          "stroke-linecap": "round",
-          "stroke-linejoin": "round",
-          "stroke-dasharray": `${packetLength.toFixed(1)} ${packetGap.toFixed(1)}`,
-          "stroke-dashoffset": packetGap.toFixed(1),
-          opacity: "0",
-          "pointer-events": "none",
-        });
-        const core = createSvgElement("path", {
-          class: `edge-particle runtime-edge-particle runtime-edge-packet-core runtime-edge-effect-${effect} runtime-generated`,
-          d: path,
-          fill: "none",
-          stroke,
-          "stroke-width": Math.max(2.6, width * (1.48 - particleIndex * 0.14)).toFixed(1),
-          "stroke-linecap": "round",
-          "stroke-linejoin": "round",
-          "stroke-dasharray": `${(dotEffect ? Math.max(1.2, width * 0.35) : Math.max(6, packetLength * 0.62)).toFixed(1)} ${packetGap.toFixed(1)}`,
-          "stroke-dashoffset": packetGap.toFixed(1),
-          opacity: "0",
-          "pointer-events": "none",
-        });
+        const packet = shortEdge
+          ? createSvgElement("circle", {
+              class: `edge-particle runtime-edge-particle runtime-edge-packet runtime-edge-short-packet runtime-edge-effect-${effect} runtime-generated`,
+              cx: "0",
+              cy: "0",
+              r: Math.max(4.5, width * 2.2).toFixed(1),
+              fill: stroke,
+              opacity: "0",
+              "pointer-events": "none",
+            })
+          : createSvgElement("path", {
+              class: `edge-particle runtime-edge-particle runtime-edge-packet runtime-edge-effect-${effect} runtime-generated`,
+              d: path,
+              fill: "none",
+              stroke: "#ffffff",
+              "stroke-width": Math.max(4.2, width * (2.35 - particleIndex * 0.22)).toFixed(1),
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round",
+              "stroke-dasharray": `${packetLength.toFixed(1)} ${packetGap.toFixed(1)}`,
+              "stroke-dashoffset": packetGap.toFixed(1),
+              opacity: "0",
+              "pointer-events": "none",
+            });
+        const core = shortEdge
+          ? createSvgElement("circle", {
+              class: `edge-particle runtime-edge-particle runtime-edge-packet-core runtime-edge-short-packet-core runtime-edge-effect-${effect} runtime-generated`,
+              cx: "0",
+              cy: "0",
+              r: Math.max(3.0, width * 1.45).toFixed(1),
+              fill: stroke,
+              opacity: "0",
+              "pointer-events": "none",
+            })
+          : createSvgElement("path", {
+              class: `edge-particle runtime-edge-particle runtime-edge-packet-core runtime-edge-effect-${effect} runtime-generated`,
+              d: path,
+              fill: "none",
+              stroke,
+              "stroke-width": Math.max(2.6, width * (1.48 - particleIndex * 0.14)).toFixed(1),
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round",
+              "stroke-dasharray": `${(dotEffect ? Math.max(1.2, width * 0.35) : Math.max(6, packetLength * 0.62)).toFixed(1)} ${packetGap.toFixed(1)}`,
+              "stroke-dashoffset": packetGap.toFixed(1),
+              opacity: "0",
+              "pointer-events": "none",
+            });
         if (label) {
           group.insertBefore(packet, label);
           group.insertBefore(core, label);
@@ -1344,17 +2119,36 @@
         }
         const duration = 2.05 + ((edgeIndex + particleIndex) % 5) * 0.13;
         const semanticDelay = Number.isFinite(Number(entry.delay)) ? Number(entry.delay) : 0;
-        const delay = semanticDelay + (edgeIndex % 7) * 0.07 + particleIndex * 0.46;
+        const delay = semanticDelay;
         const tl = gsap.timeline({ repeat: -1, repeatDelay: EDGE_PACKET_REPEAT_DELAY, delay });
         tl.fromTo(
-          [packet, core],
-          { attr: { "stroke-dashoffset": packetGap + packetLength } },
-          { attr: { "stroke-dashoffset": -(length + packetLength) }, duration, ease: "none" },
+          flow,
+          { attr: { "stroke-dashoffset": 0 } },
+          { attr: { "stroke-dashoffset": -(flowDash + flowGap) }, duration, ease: "none" },
           0
-        )
-          .to(packet, { opacity: motionMode === "readable" ? 0.52 : 0.72, duration: 0.18, ease: "power1.out" }, 0)
-          .to(core, { opacity: motionMode === "readable" ? 0.72 : 0.94, duration: 0.18, ease: "power1.out" }, 0)
-          .to([packet, core], { opacity: 0, duration: 0.18, ease: "power1.in" }, Math.max(0, duration - 0.18));
+        );
+        if (shortEdge) {
+          const travel = { distance: 0 };
+          const placeDot = () => {
+            const point = base.getPointAtLength(travel.distance);
+            packet.setAttribute("cx", point.x.toFixed(2));
+            packet.setAttribute("cy", point.y.toFixed(2));
+            core.setAttribute("cx", point.x.toFixed(2));
+            core.setAttribute("cy", point.y.toFixed(2));
+          };
+          placeDot();
+          tl.to(travel, { distance: length, duration, ease: "none", onUpdate: placeDot }, 0);
+        } else {
+          tl.fromTo(
+            [packet, core],
+            { attr: { "stroke-dashoffset": packetGap + packetLength } },
+            { attr: { "stroke-dashoffset": -(length + packetLength) }, duration, ease: "none" },
+            0
+          );
+        }
+        tl.to(packet, { opacity: motionMode === "readable" ? 0.62 : 0.86, duration: 0.14, ease: "power1.out" }, 0)
+          .to(core, { opacity: motionMode === "readable" ? 0.82 : 1, duration: 0.14, ease: "power1.out" }, 0)
+          .to([packet, core], { opacity: 0, duration: 0.14, ease: "power1.in" }, Math.max(0, duration - 0.14));
         tl.__anidiagramStage = "edge-packet";
         tl.__anidiagramEdgeIndex = edgeIndex;
         tl.__anidiagramEdgeEffect = effect;
@@ -1458,7 +2252,241 @@
     ];
   }
 
+  const SHOWCASE_TIME_SCALE = 0.6;
+
+  function showcaseTimeline(gsap, config) {
+    if (!config || !Number.isFinite(config.rest_at) || !Number.isFinite(config.repeat_delay)) return null;
+    const tl = gsap.timeline({
+      repeat: -1,
+      repeatDelay: config.repeat_delay * SHOWCASE_TIME_SCALE,
+    });
+    tl.__anidiagramPresentation = "showcase";
+    return tl;
+  }
+
+  function markShowcaseRest(timeline, config) {
+    timeline.__anidiagramRestAt = config.rest_at;
+    timeline.timeScale(SHOWCASE_TIME_SCALE);
+    return timeline;
+  }
+
+  const SHOWCASE_RECIPE_PROPERTIES = new Set(["x", "y", "rotate", "scale", "scaleX", "scaleY", "opacity"]);
+  const SHOWCASE_RECIPE_EASES = new Set([
+    "none",
+    "sine.in",
+    "sine.out",
+    "sine.inOut",
+    "power1.in",
+    "power1.out",
+    "power1.inOut",
+    "power2.in",
+    "power2.out",
+    "power2.inOut",
+    "power3.in",
+    "power3.out",
+    "power3.inOut",
+    "back.out(2.4)",
+    "back.out(2.8)",
+    "back.out(3)",
+    "back.out(3.5)",
+    "bounce.out",
+    "elastic.out(1, 0.35)",
+    "elastic.out(1, 0.4)",
+  ]);
+
+  function isPlainObject(value) {
+    return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+  }
+
+  function hasOnlyKeys(value, required, optional = []) {
+    if (!isPlainObject(value)) return false;
+    const allowed = new Set([...required, ...optional]);
+    const keys = Object.keys(value);
+    return required.every((key) => Object.prototype.hasOwnProperty.call(value, key))
+      && keys.every((key) => allowed.has(key));
+  }
+
+  function resolvedRecipePart(parts, name) {
+    if (!isSafePartName(name)) return null;
+    if (Object.prototype.hasOwnProperty.call(parts, name)) return parts[name];
+    const runtimeName = name.replace(/-([a-z0-9])/g, (_, character) => character.toUpperCase());
+    return Object.prototype.hasOwnProperty.call(parts, runtimeName)
+      ? parts[runtimeName]
+      : null;
+  }
+
+  function validRecipeProperty(name, value, rotationLimit) {
+    if (!SHOWCASE_RECIPE_PROPERTIES.has(name) || !Number.isFinite(value)) return false;
+    if ((name === "x" || name === "y") && Math.abs(value) > 10) return false;
+    if (name === "rotate" && Math.abs(value) > rotationLimit) return false;
+    if (["scale", "scaleX", "scaleY"].includes(name) && (value < 0.12 || value > 1.45)) return false;
+    if (name === "opacity" && (value < 0 || value > 1)) return false;
+    return true;
+  }
+
+  function validateShowcaseRecipe(config, parts) {
+    if (config.presentation_profile !== "showcase" || config.icon_system !== "diagram-core-v1") return null;
+    if (!hasOnlyKeys(config.recipe, ["tracks"])) return null;
+    if (!Number.isFinite(config.rest_at) || config.rest_at <= 0) return null;
+    const tracks = config.recipe.tracks;
+    if (!Array.isArray(tracks) || !tracks.length || tracks.length > 12) return null;
+    const compiled = [];
+    const seenTargets = new Set();
+    for (const track of tracks) {
+      if (!hasOnlyKeys(track, ["parts", "steps"])) return null;
+      if (!Array.isArray(track.parts) || !track.parts.length || track.parts.length > 4) return null;
+      if (track.parts.some((name) => typeof name !== "string") || new Set(track.parts).size !== track.parts.length) return null;
+      const targets = track.parts.map((name) => resolvedRecipePart(parts, name));
+      if (targets.some((target) => !target)) return null;
+      if (targets.some((target) => seenTargets.has(target))) return null;
+      targets.forEach((target) => seenTargets.add(target));
+      if (!Array.isArray(track.steps) || !track.steps.length || track.steps.length > 12) return null;
+      const rotationLimit = config.icon === "search"
+        && track.parts.length === 1
+        && track.parts[0] === "scan"
+        ? 360
+        : 14;
+      const steps = [];
+      for (const step of track.steps) {
+        if (!hasOnlyKeys(step, ["to", "duration", "ease", "at"], ["stagger"])) return null;
+        if (!isPlainObject(step.to) || !Object.keys(step.to).length) return null;
+        if (Object.entries(step.to).some(([name, value]) => !validRecipeProperty(name, value, rotationLimit))) return null;
+        if (!Number.isFinite(step.duration) || step.duration < 0.04 || step.duration > 0.8) return null;
+        if (!Number.isFinite(step.at) || step.at < 0) return null;
+        const stagger = step.stagger === undefined ? 0 : step.stagger;
+        if (!Number.isFinite(stagger) || stagger < 0 || stagger > 0.12) return null;
+        if (!SHOWCASE_RECIPE_EASES.has(step.ease)) return null;
+        if (step.at + step.duration + stagger * (targets.length - 1) > config.rest_at + 1e-9) return null;
+        steps.push(step);
+      }
+      compiled.push({ targets, steps });
+    }
+    return compiled;
+  }
+
+  function authoredRest(gsap, target) {
+    const number = (name, fallback) => {
+      const value = Number(gsap.getProperty(target, name));
+      return Number.isFinite(value) ? value : fallback;
+    };
+    return {
+      x: number("x", 0),
+      y: number("y", 0),
+      rotation: number("rotation", 0),
+      scaleX: number("scaleX", 1),
+      scaleY: number("scaleY", 1),
+      opacity: number("opacity", 1),
+    };
+  }
+
+  function playDeclarativeShowcase({ config, parts, gsap }) {
+    const compiled = validateShowcaseRecipe(config, parts);
+    if (!compiled) return null;
+    const targets = [...new Set(compiled.flatMap((track) => track.targets))];
+    const rest = new Map(targets.map((target) => [target, authoredRest(gsap, target)]));
+    setInitial(parts, gsap);
+    const tl = showcaseTimeline(gsap, config);
+    if (!tl) return null;
+    compiled.forEach((track) => {
+      track.steps.forEach((step) => {
+        const variables = {
+          ...step.to,
+          duration: step.duration,
+          ease: step.ease,
+        };
+        if (step.stagger !== undefined) variables.stagger = step.stagger;
+        tl.to(track.targets, variables, step.at);
+      });
+    });
+    targets.forEach((target) => tl.set(target, rest.get(target), config.rest_at));
+    return markShowcaseRest(tl, config);
+  }
+
+  function playAgentShowcase({ config, parts, gsap }) {
+    const required = ["body", "antenna", "eyeLeft", "eyeRight", "core"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const eyes = [parts.eyeLeft, parts.eyeRight];
+    const tl = showcaseTimeline(gsap, config);
+    if (!tl) return null;
+    tl.to(parts.body, { y: 5, scaleX: 1.08, scaleY: 0.9, duration: 0.18, ease: "power2.in" }, 0)
+      .to(parts.body, { y: -7, scaleX: 0.94, scaleY: 1.12, duration: 0.28, ease: "power2.out" }, 0.18)
+      .to(parts.body, { y: 0, scaleX: 1, scaleY: 1, duration: 0.34, ease: "bounce.out" }, 0.48)
+      .to(parts.antenna, { rotate: -12, duration: 0.16, ease: "power2.inOut" }, 0.06)
+      .to(parts.antenna, { rotate: 14, duration: 0.24, ease: "power2.out" }, 0.22)
+      .to(parts.antenna, { rotate: 0, duration: 0.32, ease: "power2.inOut" }, 0.52)
+      .to(eyes, { scaleY: 0.16, duration: 0.1, ease: "power2.in" }, 0.14)
+      .to(eyes, { scaleY: 1.16, duration: 0.16, ease: "power2.out" }, 0.24)
+      .to(eyes, { scaleY: 1, duration: 0.2, ease: "power2.out" }, 0.42)
+      .to(parts.core, { scale: 1.38, duration: 0.2, ease: "power2.out" }, 0.62)
+      .to(parts.core, { scale: 0.92, duration: 0.16, ease: "power2.inOut" }, 0.82)
+      .to(parts.core, { scale: 1, duration: 0.26, ease: "elastic.out(1, 0.35)" }, 0.98);
+    return markShowcaseRest(tl, config);
+  }
+
+  function playDatabaseShowcase({ config, parts, gsap }) {
+    const required = ["body", "topRing", "layerTop", "layerMiddle", "layerBottom", "core"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const layers = [parts.layerTop, parts.layerMiddle, parts.layerBottom];
+    const tl = showcaseTimeline(gsap, config);
+    if (!tl) return null;
+    tl.to(parts.topRing, { y: -8, scaleX: 1.13, scaleY: 0.88, duration: 0.26, ease: "power2.out" }, 0)
+      .to(parts.topRing, { y: 0, scaleX: 1, scaleY: 1, duration: 0.34, ease: "bounce.out" }, 0.26)
+      .to(layers, { y: -2, scaleX: 0.94, duration: 0.14, stagger: 0.07, ease: "power2.out" }, 0.28)
+      .to(layers, { y: 0, scaleX: 1.04, duration: 0.16, stagger: 0.07, ease: "power2.inOut" }, 0.48)
+      .to(layers, { scaleX: 1, duration: 0.18, stagger: 0.05, ease: "elastic.out(1, 0.4)" }, 0.68)
+      .to(parts.core, { scale: 1.4, duration: 0.2, ease: "power2.out" }, 0.62)
+      .to(parts.core, { scale: 1, duration: 0.3, ease: "elastic.out(1, 0.35)" }, 0.82);
+    return markShowcaseRest(tl, config);
+  }
+
+  function playApiShowcase({ config, parts, gsap }) {
+    const required = ["body", "inputInterface", "outputInterface", "processor", "indicatorGroup"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const tl = showcaseTimeline(gsap, config);
+    if (!tl) return null;
+    tl.to(parts.body, { scaleX: 0.91, scaleY: 1.06, duration: 0.2, ease: "power2.in" }, 0)
+      .to(parts.body, { scaleX: 1.05, scaleY: 0.97, duration: 0.22, ease: "back.out(3.5)" }, 0.2)
+      .to(parts.body, { scaleX: 1, scaleY: 1, duration: 0.34, ease: "elastic.out(1, 0.4)" }, 0.46)
+      .to(parts.inputInterface, { x: 9, scale: 1.14, duration: 0.22, ease: "power2.in" }, 0.04)
+      .to(parts.outputInterface, { x: -9, scale: 1.14, duration: 0.22, ease: "power2.in" }, 0.04)
+      .to(parts.inputInterface, { x: -4, scale: 0.96, duration: 0.24, ease: "back.out(4)" }, 0.3)
+      .to(parts.outputInterface, { x: 4, scale: 0.96, duration: 0.24, ease: "back.out(4)" }, 0.3)
+      .to([parts.inputInterface, parts.outputInterface], { x: 0, scale: 1, duration: 0.3, ease: "elastic.out(1, 0.35)" }, 0.58)
+      .to(parts.processor, { rotate: -12, scale: 1.18, duration: 0.22, ease: "power2.out" }, 0.26)
+      .to(parts.processor, { rotate: 7, scale: 0.96, duration: 0.18, ease: "power2.inOut" }, 0.5)
+      .to(parts.processor, { rotate: 0, scale: 1, duration: 0.3, ease: "elastic.out(1, 0.35)" }, 0.68)
+      .to(parts.indicatorGroup, { y: -7, scale: 1.16, duration: 0.22, ease: "power2.out" }, 0.8)
+      .to(parts.indicatorGroup, { y: 0, scale: 1, duration: 0.34, ease: "bounce.out" }, 1.02);
+    return markShowcaseRest(tl, config);
+  }
+
+  function playServerShowcase({ config, parts, gsap }) {
+    const required = ["body", "trayTop", "trayBottom", "indicatorTop", "indicatorBottom", "ventTop", "ventBottom"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const tl = showcaseTimeline(gsap, config);
+    if (!tl) return null;
+    tl.to(parts.trayTop, { x: 6, rotate: 5, duration: 0.24, ease: "back.out(3)" }, 0)
+      .to(parts.trayBottom, { x: -6, rotate: -5, duration: 0.24, ease: "back.out(3)" }, 0.08)
+      .to([parts.trayTop, parts.trayBottom], { x: 0, rotate: 0, duration: 0.38, ease: "elastic.out(1, 0.38)" }, 0.34)
+      .to(parts.indicatorTop, { scale: 1.42, duration: 0.18, ease: "power2.out" }, 0.72)
+      .to(parts.indicatorTop, { scale: 1, duration: 0.24, ease: "power2.out" }, 0.9)
+      .to(parts.indicatorBottom, { scale: 1.34, duration: 0.18, ease: "power2.out" }, 0.8)
+      .to(parts.indicatorBottom, { scale: 1, duration: 0.26, ease: "power2.out" }, 0.98)
+      .to([parts.ventTop, parts.ventBottom], { scaleX: 0.62, duration: 0.12, stagger: 0.04, ease: "power2.in" }, 0.72)
+      .to([parts.ventTop, parts.ventBottom], { scaleX: 1.14, duration: 0.16, stagger: 0.04, ease: "back.out(3)" }, 0.88)
+      .to([parts.ventTop, parts.ventBottom], { scaleX: 1, duration: 0.24, stagger: 0.04, ease: "elastic.out(1, 0.4)" }, 1.08);
+    return markShowcaseRest(tl, config);
+  }
+
   const performances = {
+    "agent-showcase-loop-v1": playAgentShowcase,
+    "database-showcase-loop-v1": playDatabaseShowcase,
+    "api-showcase-loop-v1": playApiShowcase,
+    "server-showcase-loop-v1": playServerShowcase,
     "token-intent-v2": playTokenIntent,
     "tool-run-v2": playToolRun,
     "output-reveal-v2": playOutputReveal,
@@ -1479,6 +2507,26 @@
     "api-signal-return-v1": playApiSignalReturn,
     "memory-index-commit-v1": playMemoryIndexCommit,
     "output-envelope-reveal-v1": playOutputEnvelopeReveal,
+    "illustrated-agent-input-reason-result-v1": playIllustratedAgentReason,
+    "illustrated-operator-focus-operate-confirm-v1": playIllustratedOperatorOperate,
+    "illustrated-tool-prepare-execute-complete-v1": playIllustratedToolExecute,
+    "illustrated-output-compose-deliver-confirm-v1": playIllustratedOutputDeliver,
+    "illustrated-database-ingest-store-persist-v1": playIllustratedDatabasePersist,
+    "illustrated-api-request-route-response-v1": playIllustratedApiRoute,
+    "illustrated-search-query-scan-discover-v1": playIllustratedSearchDiscover,
+    "illustrated-memory-capture-index-recall-v1": playIllustratedMemoryRecall,
+    "illustrated-file-prepare-attach-reference-v1": playIllustratedFileAttach,
+    "illustrated-folder-prepare-store-index-v1": playIllustratedFolderStore,
+    "illustrated-cloud-prepare-transfer-sync-v1": playIllustratedCloudTransfer,
+    "illustrated-shield-prepare-lock-protect-v1": playIllustratedShieldLock,
+    "illustrated-user-request-interact-consume-v1": playIllustratedUserInteract,
+    "illustrated-server-host-compute-serve-v1": playIllustratedServerCompute,
+    "illustrated-ai-model-infer-transform-predict-v1": playIllustratedAiModelInfer,
+    "illustrated-message-queue-buffer-order-deliver-v1": playIllustratedMessageQueue,
+    "illustrated-vector-database-embed-index-retrieve-v1": playIllustratedVectorDatabase,
+    "illustrated-knowledge-base-curate-connect-reference-v1": playIllustratedKnowledgeBase,
+    "illustrated-gateway-admit-route-mediate-v1": playIllustratedGateway,
+    "illustrated-container-package-isolate-run-v1": playIllustratedContainer,
     "file-note-write-v1": playFileNoteWrite,
     "folder-file-store-v1": playFolderFileStore,
     "cloud-uplink-ready-v1": playCloudUplinkReady,
@@ -1500,12 +2548,33 @@
     "cloud-uplink-ready-v1",
     "shield-guard-confirm-v1",
     "token-intent-ready-v1",
+    "illustrated-agent-input-reason-result-v1",
+    "illustrated-operator-focus-operate-confirm-v1",
+    "illustrated-tool-prepare-execute-complete-v1",
+    "illustrated-output-compose-deliver-confirm-v1",
+    "illustrated-database-ingest-store-persist-v1",
+    "illustrated-api-request-route-response-v1",
+    "illustrated-search-query-scan-discover-v1",
+    "illustrated-memory-capture-index-recall-v1",
+    "illustrated-file-prepare-attach-reference-v1",
+    "illustrated-folder-prepare-store-index-v1",
+    "illustrated-cloud-prepare-transfer-sync-v1",
+    "illustrated-shield-prepare-lock-protect-v1",
+    "illustrated-user-request-interact-consume-v1",
+    "illustrated-server-host-compute-serve-v1",
+    "illustrated-ai-model-infer-transform-predict-v1",
+    "illustrated-message-queue-buffer-order-deliver-v1",
+    "illustrated-vector-database-embed-index-retrieve-v1",
+    "illustrated-knowledge-base-curate-connect-reference-v1",
+    "illustrated-gateway-admit-route-mediate-v1",
+    "illustrated-container-package-isolate-run-v1",
   ]);
 
   function playIcon(iconConfig) {
-    if (!window.gsap) return null;
+    if (!window.gsap || !isPlainObject(iconConfig)) return null;
     const fn = performances[iconConfig.performance];
     const parts = resolveParts(iconConfig.parts);
+    if (!parts || !resolveIconInstanceRoot(iconConfig, parts)) return null;
     const timelines = [];
     const illustrated = playIllustratedCommon(iconConfig, parts, window.gsap);
     if (illustrated) timelines.push(illustrated);
@@ -1521,6 +2590,9 @@
         }
         timelines.push(tl);
       }
+    } else if (iconConfig.recipe) {
+      const tl = playDeclarativeShowcase({ config: iconConfig, parts, gsap: window.gsap });
+      if (tl) timelines.push(tl);
     }
     timelines.forEach((tl) => {
       if (iconConfig.delay) tl.delay(iconConfig.delay);
@@ -1569,6 +2641,9 @@
       if (tl.__anidiagramCharacter && Number.isFinite(tl.__anidiagramCharacter.restAt)) {
         tl.pause();
         tl.seek(tl.__anidiagramCharacter.restAt, false);
+      } else if (Number.isFinite(tl.__anidiagramRestAt)) {
+        tl.pause();
+        tl.seek(tl.__anidiagramRestAt, false);
       }
     });
   }
@@ -1720,6 +2795,226 @@
     wireViewer();
     play();
   });
+})();
+
+(function () {
+  const EDGE_PACKET_DURATION = 1.65;
+  const EDGE_COMET_DURATION = 1.85;
+  const EDGE_STREAM_DURATION = 1.35;
+  const SVG_NS = "http://www.w3.org/2000/svg";
+  const manifestElement = document.getElementById("anidiagram-motion-manifest");
+  if (!manifestElement) return;
+  let manifest;
+  try {
+    manifest = JSON.parse(manifestElement.textContent || "{}");
+  } catch (error) {
+    console.warn("AniDiagram Edge Motion v1: invalid manifest", error);
+    return;
+  }
+  if (manifest.edge_motion_contract !== "edge-motion-v1") return;
+  window.__ANIDIAGRAM_EDGE_MOTION_MANIFEST__ = manifest;
+  const legacyManifest = JSON.parse(JSON.stringify(manifest));
+  if (legacyManifest.stage) legacyManifest.stage.edge_flow = false;
+  const edgeManifestSource = JSON.stringify(manifest);
+  const legacyManifestSource = JSON.stringify(legacyManifest);
+  manifestElement.textContent = legacyManifestSource;
+
+  function createSvgElement(name, attributes) {
+    const element = document.createElementNS(SVG_NS, name);
+    Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, String(value)));
+    return element;
+  }
+
+  function insertBeforeLabel(group, element) {
+    const label = group.querySelector(".edge-label");
+    if (label) group.insertBefore(element, label);
+    else group.appendChild(element);
+  }
+
+  function clear() {
+    document.querySelectorAll(".edge-motion-v1-generated").forEach((element) => element.remove());
+    document.querySelectorAll("[data-edge-motion-v1-opacity]").forEach((element) => {
+      const previous = element.dataset.edgeMotionV1Opacity;
+      if (previous) element.setAttribute("opacity", previous);
+      else element.removeAttribute("opacity");
+      delete element.dataset.edgeMotionV1Opacity;
+    });
+    (window.__ANIDIAGRAM_EDGE_MOTION_TIMELINES__ || []).forEach((timeline) => timeline.kill());
+    window.__ANIDIAGRAM_EDGE_MOTION_TIMELINES__ = [];
+  }
+
+  function sync(timelines) {
+    const previous = (window.__ANIDIAGRAM_STAGE_TIMELINES__ || []).filter(
+      (timeline) => timeline.__anidiagramStage !== "edge-motion"
+    );
+    window.__ANIDIAGRAM_EDGE_MOTION_TIMELINES__ = timelines;
+    window.__ANIDIAGRAM_STAGE_TIMELINES__ = [...previous, ...timelines];
+    window.__ANIDIAGRAM_TIMELINES__ = [
+      ...window.__ANIDIAGRAM_STAGE_TIMELINES__,
+      ...(window.__ANIDIAGRAM_ICON_TIMELINES__ || []),
+    ];
+    return timelines;
+  }
+
+  function playEdge(entry, group, mode) {
+    const base = group.querySelector("path.edge-base, path[id$='-path']");
+    if (!base || !base.getTotalLength || !window.gsap) return null;
+    const path = base.getAttribute("d");
+    if (!path) return null;
+    const length = Math.max(1, base.getTotalLength());
+    const stroke = entry.color || base.getAttribute("stroke") || "#38bdf8";
+    const width = Math.max(1, Number.parseFloat(base.getAttribute("stroke-width") || "2.4"));
+    const kind = entry.motion_kind || "packet";
+    const delay = Number(entry.delay) || 0;
+    let timeline;
+    if (kind === "stream") {
+      const authoredLine = group.querySelector("path.edge-draw");
+      if (authoredLine) {
+        authoredLine.dataset.edgeMotionV1Opacity = authoredLine.getAttribute("opacity") || "";
+        authoredLine.setAttribute("opacity", "0.24");
+      }
+      const stream = createSvgElement("path", {
+        class: "runtime-edge-stream edge-motion-v1-generated",
+        d: path,
+        fill: "none",
+        stroke,
+        "stroke-width": Math.max(1.2, width * 0.86).toFixed(1),
+        "stroke-linecap": "round",
+        "stroke-dasharray": "8 14",
+        opacity: mode === "readable" ? "0.68" : "0.88",
+        "pointer-events": "none",
+      });
+      insertBeforeLabel(group, stream);
+      timeline = window.gsap.timeline({ repeat: -1, repeatDelay: 0, delay });
+      timeline.fromTo(stream, { attr: { "stroke-dashoffset": 0 } }, {
+        attr: { "stroke-dashoffset": -44 },
+        duration: Number(entry.duration) || EDGE_STREAM_DURATION,
+        ease: "none",
+      }, 0);
+    } else if (kind === "draw") {
+      const authoredLine = group.querySelector("path.edge-draw");
+      if (authoredLine) {
+        authoredLine.dataset.edgeMotionV1Opacity = authoredLine.getAttribute("opacity") || "";
+        authoredLine.setAttribute("opacity", "0.18");
+      }
+      const draw = createSvgElement("path", {
+        class: "runtime-edge-draw edge-motion-v1-generated",
+        d: path,
+        fill: "none",
+        stroke,
+        "stroke-width": width.toFixed(1),
+        "stroke-linecap": "round",
+        "stroke-dasharray": length.toFixed(2),
+        "stroke-dashoffset": length.toFixed(2),
+        "pointer-events": "none",
+      });
+      insertBeforeLabel(group, draw);
+      timeline = window.gsap.timeline({ delay });
+      timeline.to(draw, { attr: { "stroke-dashoffset": 0 }, duration: 0.9, ease: "power1.out" }, 0);
+    } else if (kind === "comet") {
+      const comet = createSvgElement("g", {
+        class: "runtime-edge-comet edge-motion-v1-generated",
+        "pointer-events": "none",
+      });
+      const radii = [Math.max(5.2, width * 1.9), Math.max(3.8, width * 1.42), Math.max(2.7, width), Math.max(1.8, width * 0.68)];
+      const baseOpacities = mode === "readable" ? [0.82, 0.5, 0.3, 0.16] : [1, 0.62, 0.38, 0.2];
+      const parts = radii.map((radius, index) => {
+        const part = createSvgElement("circle", {
+          class: index === 0 ? "runtime-edge-comet-head" : "runtime-edge-comet-tail",
+          cx: "0",
+          cy: "0",
+          r: radius.toFixed(1),
+          fill: stroke,
+          stroke: "none",
+          opacity: "0",
+        });
+        comet.appendChild(part);
+        return part;
+      });
+      insertBeforeLabel(group, comet);
+      const travel = { progress: 0 };
+      const placeComet = () => {
+        parts.forEach((part, index) => {
+          const local = travel.progress - index * 0.045;
+          if (local < 0 || local > 1) {
+            part.setAttribute("opacity", "0");
+            return;
+          }
+          const point = base.getPointAtLength(local * length);
+          const edgeFade = Math.min(1, local / 0.055, (1 - local) / 0.055);
+          part.setAttribute("cx", point.x.toFixed(2));
+          part.setAttribute("cy", point.y.toFixed(2));
+          part.setAttribute("opacity", Math.max(0, baseOpacities[index] * edgeFade).toFixed(2));
+        });
+      };
+      placeComet();
+      timeline = window.gsap.timeline({ repeat: -1, repeatDelay: 0, delay });
+      timeline.to(travel, {
+        progress: 1,
+        duration: Number(entry.duration) || EDGE_COMET_DURATION,
+        ease: "none",
+        onUpdate: placeComet,
+      }, 0);
+    } else if (kind === "packet") {
+      const packet = createSvgElement("circle", {
+        class: "edge-particle runtime-edge-packet edge-motion-v1-generated",
+        cx: "0",
+        cy: "0",
+        r: Math.max(4.8, width * 1.8).toFixed(1),
+        fill: stroke,
+        stroke: "none",
+        opacity: "0",
+        "pointer-events": "none",
+      });
+      insertBeforeLabel(group, packet);
+      const travel = { distance: 0 };
+      const placePacket = () => {
+        const point = base.getPointAtLength(travel.distance);
+        packet.setAttribute("cx", point.x.toFixed(2));
+        packet.setAttribute("cy", point.y.toFixed(2));
+      };
+      placePacket();
+      const duration = Number(entry.duration) || EDGE_PACKET_DURATION;
+      timeline = window.gsap.timeline({ repeat: -1, repeatDelay: 0, delay });
+      timeline.to(travel, { distance: length, duration, ease: "none", onUpdate: placePacket }, 0)
+        .to(packet, { opacity: mode === "readable" ? 0.78 : 1, duration: 0.12, ease: "power1.out" }, 0)
+        .to(packet, { opacity: 0, duration: 0.12, ease: "power1.in" }, duration - 0.12);
+    } else {
+      return null;
+    }
+    timeline.__anidiagramStage = "edge-motion";
+    timeline.__anidiagramEdgeIndex = entry.index;
+    timeline.__anidiagramEdgeEffect = entry.effect;
+    timeline.__anidiagramEdgeKind = kind;
+    return timeline;
+  }
+
+  function play(mode = "expressive") {
+    clear();
+    const reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (mode === "off" || reduced || !manifest.stage || !manifest.stage.edge_flow) return sync([]);
+    const indices = mode === "readable"
+      ? manifest.stage.readable_edge_indices || []
+      : manifest.stage.active_edge_indices || [];
+    const groups = Array.from(document.querySelectorAll("#viewport svg g.edge, #stage svg g.edge"));
+    const entries = new Map((manifest.edges || []).map((entry) => [entry.index, entry]));
+    return sync(indices.map((index) => playEdge(entries.get(index) || {}, groups[index], mode)).filter(Boolean));
+  }
+
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest || !event.target.closest(".motion-choice")) return;
+    manifestElement.textContent = legacyManifestSource;
+    setTimeout(() => { manifestElement.textContent = edgeManifestSource; }, 0);
+  }, true);
+
+  document.addEventListener("DOMContentLoaded", () => {
+    manifestElement.textContent = edgeManifestSource;
+    play("expressive");
+    document.querySelectorAll(".motion-choice").forEach((button) => {
+      button.addEventListener("click", () => play(button.dataset.motion || "expressive"));
+    });
+  });
+  window.AniDiagramEdgeMotion = { play, clear };
 })();
 
   </script>

@@ -248,11 +248,12 @@ performs one semantic action, confirms it, and settles back to rest. Browsers
 that request reduced motion register no GSAP timelines. `illustrated-v1` and
 `semantic-line-v1` remain explicit legacy icon-system modes.
 
-`illustrated` version `2.3.0` contains sixteen approved static icons. The
-separately versioned `illustrated-performance-v4` contract supplies approved
-performances for all sixteen and public `showcase-v1` maps them automatically.
-`illustrated-performance-v4-review` remains the immutable archived human-review
-source and is not emitted by new diagrams. `illustrated-performance-v3`
+`illustrated` version `2.4.0` contains twenty approved static icons. The
+separately versioned `illustrated-performance-v5` contract supplies approved
+performances for all twenty and public `showcase-v1` maps them automatically.
+`illustrated-performance-v5-review` remains the immutable archived human-review
+source and is not emitted by new diagrams. `illustrated-performance-v4` and
+its v4-review source remain immutable 2.3.0 archives. `illustrated-performance-v3`
 remains the immutable twelve-icon 2.2.0 public-contract archive;
 `illustrated-performance-v2` remains the immutable eight-icon 2.1.0 archive;
 `illustrated-performance-v3-review` remains archived approval evidence. The
@@ -276,16 +277,16 @@ node scripts/verify_character_reduced_motion.mjs outputs/illustrated-character-v
 node scripts/verify_character_reduced_motion.mjs outputs/illustrated-character-v1-flow/illustrated-character-v1-flow.html 8
 ```
 
-For current Illustrated 2.3.0, verify all sixteen public v4 performances and the
+For current Illustrated 2.4.0, verify all twenty public v5 performances and the
 stage-mode rebuild contract:
 
 ```bash
 node scripts/verify_character_motion_rest.mjs \
-  outputs/illustrated-2.3-showcase/illustrated-2.3-showcase.html 16 illustrated
+  outputs/illustrated-2.4-showcase/illustrated-2.4-showcase.html 20 illustrated
 node scripts/verify_character_reduced_motion.mjs \
-  outputs/illustrated-2.3-showcase/illustrated-2.3-showcase.html 16 illustrated
+  outputs/illustrated-2.4-showcase/illustrated-2.4-showcase.html 20 illustrated
 node scripts/verify_stage_motion_modes.mjs \
-  outputs/illustrated-2.3-showcase/illustrated-2.3-showcase.html
+  outputs/illustrated-2.4-showcase/illustrated-2.4-showcase.html
 ```
 
 Both character scripts validate the embedded Motion Manifest and fail if the
@@ -306,7 +307,7 @@ current public contracts and immutable archive boundary.
 - The Motion Manifest currently covers icon performances plus ambient stage
   edge flow and title sweep; it does not yet model camera choreography,
   edge-triggered node performances, or step mode.
-- `illustrated` 2.3.0 freezes sixteen approved static icons and sixteen approved
+- `illustrated` 2.4.0 freezes twenty approved static icons and twenty approved
   automatic `showcase-v1` performances.
 - Video and animated image export require browser capture. MP4 also requires
   ffmpeg.

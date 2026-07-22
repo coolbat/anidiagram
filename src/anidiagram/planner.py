@@ -582,11 +582,11 @@ def _compile_core_edges() -> List[Dict[str, Any]]:
     return [
         {"from": "brief", "to": "clarify", "label": "request", "role": "source", "route": "points", "points": [[465, 241], [465, 278], [190, 278], [190, 370]], "effect": {"preset": "draw"}},
         {"from": "context", "to": "clarify", "label": "context", "role": "memory", "route": "points", "points": [[585, 241], [585, 292], [250, 292], [250, 370]], "effect": {"preset": "draw"}},
-        {"from": "clarify", "to": "plan", "label": "intent", "role": "agent", "route": "straight", "effect": {"preset": "flow-arrow", "particle": "soft-arrow", "particle_count": 1, "trail_count": 1}},
+        {"from": "clarify", "to": "plan", "label": "intent", "role": "agent", "route": "straight", "effect": {"preset": "packet-flow", "particle_count": 1}},
         {"from": "plan", "to": "act", "label": "steps", "role": "process", "route": "straight", "effect": {"preset": "draw"}},
-        {"from": "act", "to": "observe", "label": "execute", "role": "tool", "route": "straight", "effect": {"preset": "flow-arrow", "particle": "soft-arrow", "particle_count": 1, "trail_count": 1}},
+        {"from": "act", "to": "observe", "label": "execute", "role": "tool", "route": "straight", "effect": {"preset": "packet-flow", "particle_count": 1}},
         {"from": "observe", "to": "done", "label": "evidence", "role": "process", "route": "vh", "effect": {"preset": "draw"}},
-        {"from": "done", "to": "output", "label": "Yes", "role": "output", "route": "straight", "effect": {"preset": "flow-arrow", "particle": "soft-arrow", "particle_count": 1, "trail_count": 1}},
+        {"from": "done", "to": "output", "label": "Yes", "role": "output", "route": "straight", "effect": {"preset": "packet-flow", "particle_count": 1}},
         {"from": "policy", "to": "done", "label": "rules", "role": "risk", "route": "points", "points": [[825, 241], [825, 278], [685, 278], [685, 500]], "effect": {"preset": "draw"}},
     ]
 
@@ -607,7 +607,7 @@ def _default_motion_policy() -> Dict[str, Any]:
 def _compile_feedback_edges(feedback_paths: Any) -> List[Dict[str, Any]]:
     configured = _items(feedback_paths, [])
     edge_overrides = {
-        ("done", "plan"): {"route": "points", "points": [[685, 610], [685, 650], [300, 650], [300, 416], [360, 416]], "effect": {"preset": "dynamic-dash"}},
+        ("done", "plan"): {"route": "points", "points": [[685, 610], [685, 650], [300, 650], [300, 416], [360, 416]], "effect": {"preset": "stream-flow"}},
         ("working-memory", "plan"): {"route": "points", "points": [[315, 788], [330, 650], [455, 650], [455, 462]], "effect": {"preset": "draw"}},
         ("act", "tool-calls"): {"route": "points", "points": [[815, 416], [850, 650], [935, 650], [935, 788], [985, 788]], "effect": {"preset": "draw"}},
         ("tool-results", "observe"): {"route": "points", "points": [[985, 868], [930, 868], [930, 462]], "effect": {"preset": "draw"}},

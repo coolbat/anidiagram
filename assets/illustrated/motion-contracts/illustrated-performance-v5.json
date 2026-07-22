@@ -1,0 +1,162 @@
+{
+  "system": "illustrated",
+  "icon_system_version": "2.4.0",
+  "contract": "illustrated-performance-v5",
+  "supersedes": "illustrated-performance-v4",
+  "review_source": "illustrated-performance-v5-review",
+  "status": "approved",
+  "approved_at": "2026-07-22",
+  "human_visual_acceptance": "confirmed",
+  "public_showcase_enabled": true,
+  "selection_policy": "automatic-for-supported-showcase-icons",
+  "repeat_delay": 0.8,
+  "cancel_behavior": "restore-authored-rest-pose",
+  "reduced_motion_behavior": "static-rest",
+  "performances": [
+    {
+      "icon": "agent",
+      "id": "illustrated-agent-input-reason-result-v1",
+      "semantic_sequence": ["receive", "reason", "deliver"],
+      "primary_parts": ["input-nodes", "input-path", "brain-left", "brain-right", "processor", "processor-core", "output-path", "result"],
+      "rest_at": 1.72
+    },
+    {
+      "icon": "operator",
+      "id": "illustrated-operator-focus-operate-confirm-v1",
+      "semantic_sequence": ["focus", "operate", "confirm"],
+      "primary_parts": ["head", "hair", "glasses", "input-cursor", "hands", "laptop", "screen", "status", "status-check"],
+      "rest_at": 1.68
+    },
+    {
+      "icon": "tool",
+      "id": "illustrated-tool-prepare-execute-complete-v1",
+      "semantic_sequence": ["prepare", "execute", "complete"],
+      "primary_parts": ["target", "action-path", "wrench", "toolbox", "toolbox-lid", "completion"],
+      "rest_at": 1.62
+    },
+    {
+      "icon": "output",
+      "id": "illustrated-output-compose-deliver-confirm-v1",
+      "semantic_sequence": ["compose", "deliver", "confirm"],
+      "primary_parts": ["card", "card-lines", "delivery-tray", "delivery-lip", "send-path", "check-badge", "check"],
+      "rest_at": 1.7
+    },
+    {
+      "icon": "database",
+      "id": "illustrated-database-ingest-store-persist-v1",
+      "semantic_sequence": ["ingest", "store", "persist"],
+      "primary_parts": ["input-bead", "write-path", "cylinder-body", "cylinder-top", "layer-top", "layer-bottom", "stored-bead", "commit-ripple"],
+      "rest_at": 1.72
+    },
+    {
+      "icon": "api",
+      "id": "illustrated-api-request-route-response-v1",
+      "semantic_sequence": ["request", "route", "respond"],
+      "primary_parts": ["request-token", "request-path", "gateway", "api-glyph", "response-path", "response-token"],
+      "rest_at": 1.66
+    },
+    {
+      "icon": "search",
+      "id": "illustrated-search-query-scan-discover-v1",
+      "semantic_sequence": ["query", "scan", "discover"],
+      "primary_parts": ["lens-glass", "lens", "handle", "scan-cross", "target-ring", "result-dot", "discovery"],
+      "rest_at": 1.78
+    },
+    {
+      "icon": "memory",
+      "id": "illustrated-memory-capture-index-recall-v1",
+      "semantic_sequence": ["capture", "index", "recall"],
+      "primary_parts": ["input-token", "commit-path", "back-card", "front-card", "index-nodes", "trace", "bookmark", "result"],
+      "rest_at": 1.72
+    },
+    {
+      "icon": "file",
+      "id": "illustrated-file-prepare-attach-reference-v1",
+      "semantic_sequence": ["prepare", "attach", "reference"],
+      "primary_parts": ["page", "paperclip", "content-lines"],
+      "rest_at": 1.58
+    },
+    {
+      "icon": "folder",
+      "id": "illustrated-folder-prepare-store-index-v1",
+      "semantic_sequence": ["prepare", "store", "index"],
+      "primary_parts": ["folder-back", "folder-tab", "document", "folder-front", "index-label"],
+      "rest_at": 1.66
+    },
+    {
+      "icon": "cloud",
+      "id": "illustrated-cloud-prepare-transfer-sync-v1",
+      "semantic_sequence": ["prepare", "transfer", "synchronize"],
+      "primary_parts": ["cloud-shell", "upload-arrow", "download-arrow"],
+      "directional_reveal": {
+        "upload-arrow": "bottom-to-top",
+        "download-arrow": "top-to-bottom",
+        "mode": "directional-clip-fade"
+      },
+      "rest_at": 1.72
+    },
+    {
+      "icon": "shield",
+      "id": "illustrated-shield-prepare-lock-protect-v1",
+      "semantic_sequence": ["prepare", "lock", "protect"],
+      "primary_parts": ["shield-shell", "inner-field", "lock-shackle", "security-lock", "keyhole"],
+      "rest_at": 1.68
+    },
+    {
+      "icon": "user",
+      "id": "illustrated-user-request-interact-consume-v1",
+      "semantic_sequence": ["request", "interact", "consume"],
+      "primary_parts": ["portrait-body", "portrait-neck", "portrait-head", "portrait-hair", "face", "conversation-card", "conversation-lines"],
+      "rest_at": 1.66
+    },
+    {
+      "icon": "server",
+      "id": "illustrated-server-host-compute-serve-v1",
+      "semantic_sequence": ["host", "compute", "serve"],
+      "primary_parts": ["rack-shell", "upper-bay", "middle-bay", "lower-bay", "rack-ports", "activity-lights"],
+      "rest_at": 1.7
+    },
+    {
+      "icon": "ai-model",
+      "id": "illustrated-ai-model-infer-transform-predict-v1",
+      "semantic_sequence": ["infer", "transform", "predict"],
+      "primary_parts": ["model-card", "input-neurons", "network-links", "hidden-neurons", "output-neuron", "inference-band"],
+      "rest_at": 1.8
+    },
+    {
+      "icon": "message-queue",
+      "id": "illustrated-message-queue-buffer-order-deliver-v1",
+      "semantic_sequence": ["buffer", "order", "deliver"],
+      "primary_parts": ["queue-shell", "queue-rail", "message-one", "message-two", "message-three", "buffer-gates", "sequence-dots"],
+      "rest_at": 1.76
+    },
+    {
+      "icon": "vector-database",
+      "id": "illustrated-vector-database-embed-index-retrieve-v1",
+      "semantic_sequence": ["embed", "index", "retrieve"],
+      "primary_parts": ["vector-store-body", "vector-store-top", "vector-field", "vector-links", "vector-points"],
+      "rest_at": 1.78
+    },
+    {
+      "icon": "knowledge-base",
+      "id": "illustrated-knowledge-base-curate-connect-reference-v1",
+      "semantic_sequence": ["curate", "connect", "reference"],
+      "primary_parts": ["book-left", "book-right", "book-spine", "knowledge-links", "knowledge-points", "reference-lines"],
+      "rest_at": 1.82
+    },
+    {
+      "icon": "gateway",
+      "id": "illustrated-gateway-admit-route-mediate-v1",
+      "semantic_sequence": ["admit", "route", "mediate"],
+      "primary_parts": ["gateway-shell", "gateway-opening", "policy-window", "traffic-rails", "request-token", "response-token"],
+      "rest_at": 1.76
+    },
+    {
+      "icon": "container",
+      "id": "illustrated-container-package-isolate-run-v1",
+      "semantic_sequence": ["package", "isolate", "run"],
+      "primary_parts": ["container-shell", "container-lid", "container-side", "isolation-frame", "app-module", "runtime-slots"],
+      "rest_at": 1.8
+    }
+  ]
+}

@@ -45,7 +45,7 @@ class CompositionClosureTest(unittest.TestCase):
         self.assertLess(x_by_id["client"], x_by_id["ingress"])
         self.assertLess(x_by_id["ingress"], x_by_id["workload"])
         edge_by_relation = {edge["semantic_relation_id"]: edge for edge in spec["edges"]}
-        self.assertEqual("dynamic-dash", edge_by_relation["client-request"]["effect"]["preset"])
+        self.assertEqual("stream-flow", edge_by_relation["client-request"]["effect"]["preset"])
         self.assertEqual(1, edge_by_relation["client-request"]["step"])
         self.assertEqual(2, edge_by_relation["ingress-route"]["step"])
 
@@ -53,7 +53,7 @@ class CompositionClosureTest(unittest.TestCase):
         plan = self._plan()
         plan["presentation"]["icon_system"] = "illustrated"
         workload = next(entity for entity in plan["semantic"]["entities"] if entity["id"] == "workload")
-        workload["kind"] = "container"
+        workload["kind"] = "kubernetes-pod"
         plan["semantic"]["groups"].append(
             {
                 "id": "platform",
@@ -69,7 +69,7 @@ class CompositionClosureTest(unittest.TestCase):
         node = next(item for item in spec["nodes"] if item["id"] == "workload")
         group = next(item for item in spec["groups"] if item["id"] == "runtime")
 
-        self.assertEqual("container", node["semantic_kind"])
+        self.assertEqual("kubernetes-pod", node["semantic_kind"])
         self.assertEqual("role-fallback", node["icon_resolution"])
         self.assertEqual(workload["state"], node["state"])
         self.assertEqual("system", group["semantic_kind"])
@@ -79,7 +79,7 @@ class CompositionClosureTest(unittest.TestCase):
         scene = compile_scene(spec)
         scene_node = next(item for item in scene.nodes if item.node_id == "workload")
         scene_group = next(item for item in scene.groups if item.group_id == "runtime")
-        self.assertEqual("container", scene_node.semantic_kind)
+        self.assertEqual("kubernetes-pod", scene_node.semantic_kind)
         self.assertEqual("role-fallback", scene_node.icon_resolution)
         self.assertEqual(workload["state"], scene_node.state)
         self.assertEqual("platform", scene_group.parent)
@@ -87,7 +87,7 @@ class CompositionClosureTest(unittest.TestCase):
         report = quality_report(scene, load_style())
         fallback_issues = [issue for issue in report["issues"] if issue["code"] == "semantic_icon_fallback"]
         self.assertTrue(fallback_issues)
-        self.assertTrue(any("container" in issue["message"] for issue in fallback_issues))
+        self.assertTrue(any("kubernetes-pod" in issue["message"] for issue in fallback_issues))
 
     def test_composition_v1_rejects_any_stale_resolved_axis(self):
         spec = compile_plan(self._plan())

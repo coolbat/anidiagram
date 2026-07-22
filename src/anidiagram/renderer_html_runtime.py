@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from typing import Any, Dict
 
-from .motion_manifest import build_motion_manifest
+from .motion_manifest_v2 import build_motion_manifest
 from .renderer_svg import esc, render_svg
 from .model import Scene
 
@@ -82,4 +82,6 @@ def render_html_runtime(scene: Scene, style: Dict[str, Any], runtime: str = "gsa
 
 def _runtime_source() -> str:
     root = Path(__file__).resolve().parents[2]
-    return (root / "runtime" / "anidiagram-runtime.js").read_text(encoding="utf-8")
+    legacy = (root / "runtime" / "anidiagram-runtime.js").read_text(encoding="utf-8")
+    edge_motion = (root / "runtime" / "edge-motion-v1-runtime.js").read_text(encoding="utf-8")
+    return f"{legacy}\n{edge_motion}"

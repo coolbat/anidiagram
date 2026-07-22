@@ -8,7 +8,7 @@
   "style": "deep-tech",
   "title": {
     "text": "Edge Packet Flow",
-    "subtitle": "Bright packet segments travel along each edge path to show data or signal flow."
+    "subtitle": "A continuously moving low-opacity track keeps every enabled edge visibly active; short edges use a solid role-colored dot while longer paths use a bright packet segment."
   },
   "motion": {
     "profile": "expressive",

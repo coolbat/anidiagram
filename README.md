@@ -320,8 +320,8 @@ Current defaults are scoped by input contract:
 | Legacy DiagramScript v0.1-v0.3 or a style that omits `icon_system` | `illustrated-character-v1` | `expressive` when scene motion is omitted |
 
 `illustrated` is an explicit, non-default public icon-system choice. Its current
-implementation version is 2.3.0 and its sixteen icons use the approved
-`illustrated-performance-v4` contract automatically under `showcase-v1`. See
+implementation version is 2.4.0 and its twenty icons use the approved
+`illustrated-performance-v5` contract automatically under `showcase-v1`. See
 [the icon-system release status](./docs/icon-system-release-status.md) for the
 current/default/legacy matrix.
 
@@ -503,18 +503,13 @@ For composition-v1, `showcase-v1` is `motion.profile`, not a
 | `none` | No edge motion. |
 | `static` | Static line, useful as an explicit non-moving override. |
 | `draw` | Path draws on once. |
-| `pulse` | Animated overlay pulse on the line. |
-| `comet-flow` | Bright particle with a fading trail. |
-| `trace` | Moving trace dash along the path. |
-| `dynamic-dash` | Moving dashed stroke. |
-| `dash-flow` | Marching dashed arrow effect where the dash continuity appears to move forward. |
-| `flow-dot` | Soft circular particles move along the path. |
-| `flow-arrow` | Semi-transparent arrow particles move along the path. |
-| `signal-dot` | One small signal point moves along a complete static path. |
-| `signal-arrow` | One small arrow-like signal moves along a complete static path. |
-| `ghost-flow` | Particle trail with translucent echoes. |
-| `glow-line` | Low-frequency glow pulse on the line. |
-| `comet` | Alias-style comet preset for bright leading flow. |
+| `packet-flow` | One borderless solid packet moves along a static arrow. |
+| `comet-flow` | One borderless leading packet moves with three shrinking fading echoes. |
+| `stream-flow` | One moving dashed stroke communicates a continuous or cyclic flow. |
+
+The former edge presets remain valid input aliases and normalize to these
+non-overlapping recipes. Edge Motion v1.0.0 is the frozen, human-approved
+connection-line contract. See [Edge Motion v1](docs/edge-motion-v1.md).
 
 ### Group Motion Types
 
@@ -712,16 +707,17 @@ schema, assets, examples, and documentation are authored independently.
 If code or assets are ever copied from MIT-licensed references, this project
 must add their original license notices before release.
 
-## Illustrated 2.3.0
+## Illustrated 2.4.0
 
 `illustrated` is the stable public id for the current Illustrated icon system.
 It is not the composition-v1 default; select it explicitly when the illustration
-language is wanted. Version 2.3.0 contains sixteen approved icons: `agent`,
+language is wanted. Version 2.4.0 contains twenty approved icons: `agent`,
 `operator`, `tool`, `output`, `database`, `api`, `search`, `memory`, `file`,
-`folder`, `cloud`, `shield`, `user`, `server`, `ai-model`, and `message-queue`.
+`folder`, `cloud`, `shield`, `user`, `server`, `ai-model`, `message-queue`,
+`vector-database`, `knowledge-base`, `gateway`, and `container`.
 
-Public `showcase-v1` diagrams automatically use the approved sixteen-item
-`illustrated-performance-v4` contract. `illustrated-performance-v4-review` is
+Public `showcase-v1` diagrams automatically use the approved twenty-item
+`illustrated-performance-v5` contract. `illustrated-performance-v5-review` is
 archived human-review evidence and is never emitted by new diagrams. The input
 alias `illustrated-character-v2` resolves to `illustrated`; new plans and
 resolved output use the stable public id.

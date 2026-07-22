@@ -64,9 +64,9 @@ jobs:
       - name: Render current Illustrated public showcase
         run: |
           PYTHONPATH=src python3 -m anidiagram.cli \
-            --spec examples/illustrated-2.3-showcase.diagram.json \
+            --spec examples/illustrated-2.4-showcase.diagram.json \
             --outdir build/ci/illustrated \
-            --basename illustrated-2.3-showcase \
+            --basename illustrated-2.4-showcase \
             --formats svg,html,quality
       - name: Render composition-v1 edge-flow proof
         run: |
@@ -79,13 +79,13 @@ jobs:
       - name: Verify Illustrated rest poses and reduced motion
         run: |
           node scripts/verify_character_motion_rest.mjs \
-            build/ci/illustrated/illustrated-2.3-showcase.html 16 illustrated
+            build/ci/illustrated/illustrated-2.4-showcase.html 20 illustrated
           node scripts/verify_character_reduced_motion.mjs \
-            build/ci/illustrated/illustrated-2.3-showcase.html 16 illustrated
+            build/ci/illustrated/illustrated-2.4-showcase.html 20 illustrated
       - name: Verify runtime motion modes and edge coverage
         run: |
           node scripts/verify_stage_motion_modes.mjs \
-            build/ci/illustrated/illustrated-2.3-showcase.html
+            build/ci/illustrated/illustrated-2.4-showcase.html
           node scripts/verify_stage_motion_modes.mjs \
             build/ci/composition/production-request-path.html
       - name: Upload browser diagnostics on failure

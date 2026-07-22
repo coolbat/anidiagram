@@ -1,0 +1,63 @@
+{
+  "system": "illustrated",
+  "version": "2.4.0-candidate",
+  "status": "real-case-confirmed-public-registration-pending",
+  "accepted_at": "2026-07-21",
+  "motion_acceptance": {
+    "status": "confirmed",
+    "scope": "vector-database-knowledge-base-gateway-container-semantic-motion",
+    "approved_icons": ["vector-database", "knowledge-base", "gateway", "container"],
+    "approved_review_contract": "illustrated-performance-v5-review",
+    "selection_policy": "explicit-review-only",
+    "browser_gates": {
+      "authored_rest_pose": "4/4",
+      "reduced_motion": "4/4",
+      "stage_modes": "Expressive -> Readable -> Off -> Expressive",
+      "unit_tests": "189/189"
+    },
+    "review_artifacts": {
+      "html": {
+        "path": "outputs/illustrated-expansion-batch-4-motion-review/illustrated-expansion-batch-4-motion-review.html",
+        "sha256": "47071e938eacf305f2aab9e3a75c3d8b09f1fee30d1b6a38168e971cee6f3cad"
+      },
+      "svg": {
+        "path": "outputs/illustrated-expansion-batch-4-motion-review/illustrated-expansion-batch-4-motion-review.svg",
+        "sha256": "65182bffc91c84746d11f8d6521bdfe618582834f3788e45ebac7d9aaa24f887"
+      },
+      "png": {
+        "path": "outputs/illustrated-expansion-batch-4-motion-review/illustrated-expansion-batch-4-motion-review.png",
+        "sha256": "b4a9744b19e3db84d27d164207d7bb78c3243019b5fc7a7156a326c15b6490ab"
+      },
+      "webp": {
+        "path": "outputs/illustrated-expansion-batch-4-motion-review/illustrated-expansion-batch-4-motion-review.webp",
+        "sha256": "c4dce33095781809e00ca5a8982e119e29de652432cb011d6ffee99285daecde"
+      },
+      "result": {
+        "path": "outputs/illustrated-expansion-batch-4-motion-review/result.json",
+        "sha256": "bca0f5b1cd6b33375abea26e6fa49c13cab0ec2afd249d981f073cec337c1d92"
+      }
+    }
+  },
+  "real_case_acceptance": {
+    "status": "confirmed",
+    "accepted_at": "2026-07-22",
+    "record": {
+      "path": "assets/illustrated/reviews/2.4.0-real-case-review.json",
+      "sha256": "7cf8a5c8f6b72a07f9ad3c6450c9350e2fd0da215e2ccfa7be488983a3ea6373"
+    },
+    "required_icon_instances": 7,
+    "required_animated_edges": 7,
+    "required_motion_profile": "showcase-v1"
+  },
+  "public_showcase": {
+    "release": "2.3.0",
+    "static_icon_count": 16,
+    "automatic_motion_icon_count": 16,
+    "public_registry_changed": false
+  },
+  "approval_boundary": "Explicit public-registration approval is required before public 2.4.0 promotion.",
+  "notes": [
+    "Human real-case approval advances the four candidates to an explicit public-registration decision only.",
+    "Public 2.3.0 remains the release authority until public registration is explicitly approved."
+  ]
+}

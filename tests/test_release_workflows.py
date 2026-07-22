@@ -16,10 +16,10 @@ class ReleaseWorkflowContractTest(unittest.TestCase):
             "PYTHONPATH=src python3 -m unittest discover -s tests",
             "PYTHONPATH=src python3 scripts/validate_diagram_core_assets.py --strict --json",
             "node --check runtime/anidiagram-runtime.js",
-            "examples/illustrated-2.3-showcase.diagram.json",
+            "examples/illustrated-2.4-showcase.diagram.json",
             "verify_character_motion_rest.mjs",
             "verify_character_reduced_motion.mjs",
-            "16 illustrated",
+            "20 illustrated",
             "examples/contracts/production-request-path.plan.json",
             "verify_stage_motion_modes.mjs",
         ):

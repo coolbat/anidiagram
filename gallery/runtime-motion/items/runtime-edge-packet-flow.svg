@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="560" height="360" viewBox="0 0 560 360" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="expressive" data-motion-sequence="simultaneous" data-motion-edge="signal-arrow" data-motion-node="none" data-motion-group="static" data-motion-title="none" data-motion-reduced="subtle" data-icon-system="illustrated-character-v1">
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="360" viewBox="0 0 560 360" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="expressive" data-motion-sequence="simultaneous" data-motion-edge="packet-flow" data-motion-node="none" data-motion-group="static" data-motion-title="none" data-motion-reduced="subtle" data-icon-system="illustrated-character-v1">
 <title id="diagram-title">Edge Packet Flow</title>
-<desc id="diagram-desc">Bright packet segments travel along each edge path to show data or signal flow.</desc>
+<desc id="diagram-desc">A continuously moving low-opacity track keeps every enabled edge visibly active; short edges use a solid role-colored dot while longer paths use a bright packet segment.</desc>
 <style>
   .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
   .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
@@ -57,7 +57,7 @@
 </text>
 <text x="74" y="126" class="subtitle" fill="#cbd5e1" opacity="0">
   <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />
-  Bright packet segments travel along each edge path to show data or signal flow.
+  A continuously moving low-opacity track keeps every enabled edge visibly active; short edges use a solid role-colored dot while longer paths use a bright packet segment.
 </text>
 
 
@@ -71,10 +71,10 @@
   <path class="edge-draw" d="M 242.0 247.0 C 282.0 247.0, 278.0 247.0, 318.0 247.0" fill="none" stroke="#22d3ee" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-1)" />
 
-  <path class="edge-particle edge-arrow-particle" d="M -7.6 -4.5 L 7.6 0 L -7.6 4.5 Z" fill="#22d3ee" opacity="0.92">
-    <animateMotion dur="1.95s" repeatCount="indefinite" path="M 242.0 247.0 C 282.0 247.0, 278.0 247.0, 318.0 247.0" begin="-0.19s" rotate="auto" />
-    <animate attributeName="opacity" values="0;0.92;0" dur="1.95s" begin="-0.19s" repeatCount="indefinite" />
-  </path>
+  <circle class="edge-particle edge-packet" r="5.2" fill="#22d3ee" stroke="none" opacity="0.92">
+    <animateMotion dur="1.57s" repeatCount="indefinite" path="M 242.0 247.0 C 282.0 247.0, 278.0 247.0, 318.0 247.0" begin="-0.19s" />
+    <animate attributeName="opacity" values="0;0.92;0" dur="1.57s" begin="-0.19s" repeatCount="indefinite" />
+  </circle>
 
   <text x="280.0" y="233.0" class="edge-label" fill="#cbd5e1" opacity="1">
     data flow

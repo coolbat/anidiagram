@@ -1,0 +1,74 @@
+{
+  "system": "illustrated",
+  "version": "2.4.0-candidate",
+  "status": "confirmed-public-registration-pending",
+  "created_at": "2026-07-21",
+  "accepted_at": "2026-07-22",
+  "case": {
+    "title": "Cloud-Native Knowledge Retrieval Architecture",
+    "semantic_plan": "examples/cloud-native-knowledge-retrieval-illustrated-2.4-candidate.plan.json",
+    "review_spec": "examples/cloud-native-knowledge-retrieval-illustrated-2.4-candidate.diagram.json",
+    "style": "deep-tech",
+    "layout": "swimlane",
+    "motion": "showcase-v1",
+    "motion_contract": "illustrated-performance-v5-review",
+    "edge_motion_contract": "edge-motion-v1",
+    "edge_motion_version": "1.0.0",
+    "edge_effect": "packet-flow",
+    "readable_selection": "one-edge-per-semantic-flow",
+    "icon_instances": 7,
+    "animated_edges": 7,
+    "candidate_icons": ["vector-database", "knowledge-base", "gateway", "container"]
+  },
+  "automated_acceptance": {
+    "status": "passed",
+    "unit_tests": "202/202",
+    "diagram_core_strict": "56/56; 0 errors; 0 warnings",
+    "authored_rest_pose": "7/7",
+    "reduced_motion": "7/7",
+    "expressive_edge_flow": "7/7",
+    "readable_edge_flow": "2/7",
+    "mode_sequence": "Expressive -> Readable -> Off -> Expressive",
+    "animated_webp": "108 encoded frames; 108 distinct frames",
+    "quality": "0 errors; 0 warnings; 0 issues"
+  },
+  "human_visual_acceptance": {
+    "status": "confirmed",
+    "accepted_at": "2026-07-22",
+    "scope": "cloud-native-knowledge-retrieval-real-case",
+    "accepted_icon_instances": 7,
+    "accepted_animated_edges": 7,
+    "accepted_motion_profile": "showcase-v1",
+    "accepted_edge_motion_contract": "edge-motion-v1@1.0.0"
+  },
+  "review_artifacts": {
+    "html": {
+      "path": "outputs/cloud-native-knowledge-retrieval-illustrated-2.4-candidate/cloud-native-knowledge-retrieval-illustrated-2.4-candidate.html",
+      "sha256": "1c19b8985459a7be950e59785b38c0119181369f85f402b582aa9ce6fabe3325"
+    },
+    "svg": {
+      "path": "outputs/cloud-native-knowledge-retrieval-illustrated-2.4-candidate/cloud-native-knowledge-retrieval-illustrated-2.4-candidate.svg",
+      "sha256": "63b0f6a669e371a8240d688bb53d356bd70a68be49f79b2ecaedb4da535df957"
+    },
+    "png": {
+      "path": "outputs/cloud-native-knowledge-retrieval-illustrated-2.4-candidate/cloud-native-knowledge-retrieval-illustrated-2.4-candidate.png",
+      "sha256": "401c405467eadb8d08af96db05b248e24b56cf443eb63e5d671cfeee79ab4f19"
+    },
+    "webp": {
+      "path": "outputs/cloud-native-knowledge-retrieval-illustrated-2.4-candidate/cloud-native-knowledge-retrieval-illustrated-2.4-candidate.webp",
+      "sha256": "ba99a82a76459571fa140b81c8254eac8f52000d926970af3cf3263211c9f10f"
+    },
+    "result": {
+      "path": "outputs/cloud-native-knowledge-retrieval-illustrated-2.4-candidate/result.json",
+      "sha256": "104998701f9fd0a99d615ac5923961c9214c73210968283a965de62d941a1213"
+    },
+    "plan_sha256": "7f429e8f69e7a8227ab660af7a8ade7b7f8e40601a86b4ab2229bd4ebaaaf446",
+    "spec_sha256": "ff0c1e06549f6c196339cb75db05138c7575a9509279c357232e3f836581ca9b"
+  },
+  "public_showcase": {
+    "release": "2.3.0",
+    "public_registry_changed": false,
+    "public_motion_contract_changed": false
+  },
+  "approval_boundary": "Explicit public-registration approval is required before public 2.4.0 promotion."
+}

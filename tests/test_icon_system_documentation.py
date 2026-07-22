@@ -27,7 +27,7 @@ class IconSystemDocumentationTest(unittest.TestCase):
         self.assertNotIn("The default semantic icon system is", self._read("README.md"))
         self.assertNotIn("未显式指定图标系统时，默认使用", self._read("README.zh-CN.md"))
 
-    def test_illustrated_23_public_contract_is_current_and_non_default(self):
+    def test_illustrated_24_public_contract_is_current_and_non_default(self):
         for relative in (
             "README.md",
             "README.zh-CN.md",
@@ -38,15 +38,15 @@ class IconSystemDocumentationTest(unittest.TestCase):
         ):
             source = self._read(relative)
             with self.subTest(relative=relative):
-                self.assertIn("2.3.0", source)
-                self.assertIn("illustrated-performance-v4", source)
+                self.assertIn("2.4.0", source)
+                self.assertIn("illustrated-performance-v5", source)
 
         status = self._read("docs/icon-system-release-status.md")
         self.assertIn("No; select explicitly", status)
-        self.assertIn("sixteen performances", status)
-        self.assertIn("illustrated-performance-v4-review", status)
+        self.assertIn("twenty performances", status)
+        self.assertIn("illustrated-performance-v5-review", status)
 
-    def test_sixteen_item_runtime_gates_are_documented(self):
+    def test_twenty_item_runtime_gates_are_documented(self):
         for relative in (
             "SKILL.md",
             "docs/html-runtime.md",
@@ -57,7 +57,7 @@ class IconSystemDocumentationTest(unittest.TestCase):
                 self.assertIn("verify_character_motion_rest.mjs", source)
                 self.assertIn("verify_character_reduced_motion.mjs", source)
                 self.assertIn("verify_stage_motion_modes.mjs", source)
-                self.assertGreaterEqual(source.count("16 illustrated"), 2)
+                self.assertGreaterEqual(source.count("20 illustrated"), 2)
 
     def test_closeout_record_contains_observed_pass_evidence(self):
         evidence = self._read("docs/release-evidence.md")

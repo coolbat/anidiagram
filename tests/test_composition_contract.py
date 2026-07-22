@@ -95,7 +95,7 @@ class CompositionContractTest(unittest.TestCase):
         self.assertEqual("pipeline", spec["preset"])
         self.assertEqual("teaching", spec["motion"]["profile"])
         self.assertEqual(
-            {"value": "illustrated", "version": "2.3.0", "source": "explicit"},
+            {"value": "illustrated", "version": "2.4.0", "source": "explicit"},
             spec["resolved_presentation"]["icon_system"],
         )
 
@@ -107,7 +107,7 @@ class CompositionContractTest(unittest.TestCase):
 
         self.assertEqual("illustrated", spec["icon_system"])
         self.assertEqual(
-            {"value": "illustrated", "version": "2.3.0", "source": "explicit"},
+            {"value": "illustrated", "version": "2.4.0", "source": "explicit"},
             spec["resolved_presentation"]["icon_system"],
         )
 
@@ -130,7 +130,7 @@ class CompositionContractTest(unittest.TestCase):
 
         with self.assertRaisesRegex(
             DiagramScriptValidationError,
-            "not renderable by the current illustrated 2.3.0 runtime",
+            "not renderable by the current illustrated 2.4.0 runtime",
         ):
             compile_scene(spec)
 

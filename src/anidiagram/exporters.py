@@ -12,7 +12,7 @@ import tempfile
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
-from .effects import channel_effect, effect_active
+from .effects import canonical_edge_effect, channel_effect, effect_active
 from .model import Edge, Node, Point, Scene
 from .quality import quality_report
 from .renderer_html_runtime import render_html_runtime
@@ -685,7 +685,7 @@ def _draw_raster_particles(draw: Any, scene: Scene, style: Dict[str, Any], nodes
     for edge_index, edge in enumerate(scene.edges):
         if not edge.motion.enabled:
             continue
-        edge_effect = channel_effect(scene.motion, style, "edge", edge.effect)
+        edge_effect = canonical_edge_effect(channel_effect(scene.motion, style, "edge", edge.effect))
         if not effect_active(scene.motion, edge_effect):
             continue
         edge_mode = edge_effect.preset
@@ -697,11 +697,7 @@ def _draw_raster_particles(draw: Any, scene: Scene, style: Dict[str, Any], nodes
         if edge_mode in PARTICLE_EDGE_MOTION:
             particle_motion_rank += 1
             particle_rank = particle_motion_rank
-        if edge_mode not in PARTICLE_EDGE_MOTION:
-            continue
         if not policy_allows(active_rank, policy.max_active_flow_edges):
-            continue
-        if not policy_allows(particle_rank, policy.max_particle_edges):
             continue
         points = _edge_points(edge, nodes)
         if len(points) < 2:
@@ -709,19 +705,36 @@ def _draw_raster_particles(draw: Any, scene: Scene, style: Dict[str, Any], nodes
         role = role_style(style, edge.role)
         stroke = edge.stroke or role.get("stroke", "#64748b")
         color = _hex_to_rgba(stroke, 235)
-        glow = _hex_to_rgba(stroke, 72)
         phase = (frame / max(1, frames) + edge_index * 0.071 + edge.motion.delay * 0.03) % 1.0
-        particle_shape = edge_effect.particle or ("soft-arrow" if edge_mode in {"flow-arrow", "signal-arrow"} else "soft-dot")
+        if edge_mode == "stream-flow":
+            for dash_index in range(9):
+                start_progress = (phase + dash_index / 9) % 1.0
+                end_progress = (start_progress + 0.035) % 1.0
+                if end_progress < start_progress:
+                    continue
+                start = _point_along_polyline(points, start_progress)
+                end = _point_along_polyline(points, end_progress)
+                draw.line((start, end), fill=color, width=max(2, round(edge_width * 0.86)))
+            continue
+        if edge_mode not in PARTICLE_EDGE_MOTION:
+            continue
+        if not policy_allows(particle_rank, policy.max_particle_edges):
+            continue
+        particle_shape = "solid-dot"
         radii = particle_radii(edge_mode, particle_shape, edge_effect, policy)
         for trail_index, radius in enumerate(radii):
             progress = (phase - trail_index * 0.055) % 1.0
             x, y = _point_along_polyline(points, progress)
             scaled_radius = max(edge_width + 1.0, radius * intensity)
-            draw.ellipse(
-                (x - scaled_radius * 1.8, y - scaled_radius * 1.8, x + scaled_radius * 1.8, y + scaled_radius * 1.8),
-                fill=glow,
+            particle_color = (
+                _hex_to_rgba(stroke, (235, 150, 92, 48)[trail_index])
+                if edge_mode == "comet-flow"
+                else color
             )
-            draw.ellipse((x - scaled_radius, y - scaled_radius, x + scaled_radius, y + scaled_radius), fill=color)
+            draw.ellipse(
+                (x - scaled_radius, y - scaled_radius, x + scaled_radius, y + scaled_radius),
+                fill=particle_color,
+            )
 
 
 def _point_along_polyline(points: PointList, progress: float) -> Point:

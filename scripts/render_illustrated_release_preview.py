@@ -33,6 +33,10 @@ LABELS = {
     "server": "Server",
     "ai-model": "AI Model",
     "message-queue": "Message Queue",
+    "vector-database": "Vector Database",
+    "knowledge-base": "Knowledge Base",
+    "gateway": "Gateway",
+    "container": "Container",
 }
 
 
@@ -58,7 +62,7 @@ def render_svg() -> str:
     height = 172 + rows * 274
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="{height}" viewBox="0 0 1480 {height}" role="img" aria-labelledby="title desc">
 <title id="title">Illustrated {ILLUSTRATED_ICON_SYSTEM_VERSION} release preview</title>
-<desc id="desc">Sixteen approved static Illustrated icons.</desc>
+<desc id="desc">Twenty approved static Illustrated icons.</desc>
 <style>
   .title {{ font: 760 40px ui-sans-serif, system-ui, sans-serif; }}
   .subtitle {{ font: 430 16px ui-sans-serif, system-ui, sans-serif; }}
@@ -67,7 +71,7 @@ def render_svg() -> str:
 </style>
 <rect width="100%" height="100%" fill="#ececf3" />
 <text x="52" y="62" class="title" fill="#172033">Illustrated · {ILLUSTRATED_ICON_SYSTEM_VERSION}</text>
-<text x="52" y="94" class="subtitle" fill="#667085">16 approved icons · 16 public automatic performances</text>
+<text x="52" y="94" class="subtitle" fill="#667085">20 approved icons · 20 public automatic performances</text>
 {''.join(cards)}
 </svg>'''
 

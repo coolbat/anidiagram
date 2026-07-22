@@ -45,10 +45,7 @@ class IllustratedExpansionBatch3Test(unittest.TestCase):
         self.assertEqual("approved", ILLUSTRATED_EXPANSION_BATCH_3_METADATA["motion_status"])
         self.assertEqual("confirmed", ILLUSTRATED_EXPANSION_BATCH_3_METADATA["motion_human_acceptance"])
         self.assertEqual("2026-07-20", ILLUSTRATED_EXPANSION_BATCH_3_METADATA["motion_approved_at"])
-        self.assertEqual(
-            ("agent", "operator", "tool", "output", "database", "api", "search", "memory", "file", "folder", "cloud", "shield", *EXPECTED),
-            illustrated_icon_ids(),
-        )
+        self.assertEqual(EXPECTED, illustrated_icon_ids()[12:16])
         for icon_id in EXPECTED:
             self.assertIs(expansion_batch_3_definition(icon_id), illustrated_definition(icon_id))
 

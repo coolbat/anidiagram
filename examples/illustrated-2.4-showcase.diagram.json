@@ -1,0 +1,58 @@
+{
+  "version": "0.4",
+  "composition_policy": "composition-v1",
+  "resolved_presentation": {
+    "icon_system": {"value": "illustrated", "source": "explicit", "version": "2.4.0"},
+    "style": {"value": "deep-tech", "source": "explicit"},
+    "layout": {"value": "matrix", "source": "explicit"},
+    "motion": {"value": "showcase-v1", "source": "default"}
+  },
+  "preset": "illustrated-2.4-showcase",
+  "icon_system": "illustrated",
+  "canvas": {"width": 1480, "height": 1760},
+  "style": "deep-tech",
+  "title": {
+    "text": "Illustrated 2.4 · Public Showcase",
+    "subtitle": "20 approved icons · automatic showcase-v1 performances"
+  },
+  "motion": {
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "stagger": 0.1,
+    "node": {"preset": "icon-performance"},
+    "edge": {"preset": "none"},
+    "group": {"preset": "none"},
+    "title": {"preset": "highlight-sweep"},
+    "reduced_motion": "static"
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "max_active_flow_edges": 0,
+    "max_particle_edges": 0,
+    "max_active_pulse_nodes": 20,
+    "max_scanning_groups": 0
+  },
+  "nodes": [
+    {"id": "agent", "label": "Agent", "caption": "receive • reason • deliver", "position": [50, 160], "size": [310, 230], "role": "agent", "icon": "agent"},
+    {"id": "operator", "label": "Operator", "caption": "focus • operate • confirm", "position": [407, 160], "size": [310, 230], "role": "source", "icon": "operator"},
+    {"id": "tool", "label": "Tool", "caption": "prepare • execute • complete", "position": [764, 160], "size": [310, 230], "role": "tool", "icon": "tool"},
+    {"id": "output", "label": "Output", "caption": "compose • deliver • confirm", "position": [1121, 160], "size": [310, 230], "role": "output", "icon": "output"},
+    {"id": "database", "label": "Database", "caption": "ingest • store • persist", "position": [50, 470], "size": [310, 230], "role": "memory", "icon": "database"},
+    {"id": "api", "label": "API", "caption": "request • route • respond", "position": [407, 470], "size": [310, 230], "role": "source", "icon": "api"},
+    {"id": "search", "label": "Search", "caption": "query • scan • discover", "position": [764, 470], "size": [310, 230], "role": "process", "icon": "search"},
+    {"id": "memory", "label": "Memory", "caption": "capture • index • recall", "position": [1121, 470], "size": [310, 230], "role": "memory", "icon": "memory"},
+    {"id": "file", "label": "File", "caption": "prepare • attach • reference", "position": [50, 780], "size": [310, 230], "role": "source", "icon": "file"},
+    {"id": "folder", "label": "Folder", "caption": "prepare • store • index", "position": [407, 780], "size": [310, 230], "role": "memory", "icon": "folder"},
+    {"id": "cloud", "label": "Cloud", "caption": "prepare • transfer • synchronize", "position": [764, 780], "size": [310, 230], "role": "process", "icon": "cloud"},
+    {"id": "shield", "label": "Shield", "caption": "prepare • lock • protect", "position": [1121, 780], "size": [310, 230], "role": "risk", "icon": "shield"},
+    {"id": "user", "label": "User", "caption": "request • interact • consume", "position": [50, 1090], "size": [310, 230], "role": "actor", "icon": "user"},
+    {"id": "server", "label": "Server", "caption": "host • compute • serve", "position": [407, 1090], "size": [310, 230], "role": "process", "icon": "server"},
+    {"id": "ai-model", "label": "AI Model", "caption": "infer • transform • predict", "position": [764, 1090], "size": [310, 230], "role": "agent", "icon": "ai-model"},
+    {"id": "message-queue", "label": "Message Queue", "caption": "buffer • order • deliver", "position": [1121, 1090], "size": [310, 230], "role": "memory", "icon": "message-queue"},
+    {"id": "vector-database", "label": "Vector Database", "caption": "embed • index • retrieve", "position": [50, 1400], "size": [310, 230], "role": "memory", "icon": "vector-database"},
+    {"id": "knowledge-base", "label": "Knowledge Base", "caption": "curate • connect • reference", "position": [407, 1400], "size": [310, 230], "role": "memory", "icon": "knowledge-base"},
+    {"id": "gateway", "label": "Gateway", "caption": "admit • route • mediate", "position": [764, 1400], "size": [310, 230], "role": "process", "icon": "gateway"},
+    {"id": "container", "label": "Container", "caption": "package • isolate • run", "position": [1121, 1400], "size": [310, 230], "role": "process", "icon": "container"}
+  ]
+}

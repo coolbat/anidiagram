@@ -1,0 +1,43 @@
+{
+  "system": "illustrated",
+  "icon_system_version": "2.4.0-candidate",
+  "contract": "illustrated-performance-v5-review",
+  "extends": "illustrated-performance-v4",
+  "status": "visual-review",
+  "approved_static_batch": "illustrated-expansion-batch-4",
+  "public_showcase_enabled": false,
+  "selection_policy": "explicit-review-only",
+  "repeat_delay": 0.8,
+  "cancel_behavior": "restore-authored-rest-pose",
+  "reduced_motion_behavior": "static-rest",
+  "performances": [
+    {
+      "icon": "vector-database",
+      "id": "illustrated-vector-database-embed-index-retrieve-v1",
+      "semantic_sequence": ["embed", "index", "retrieve"],
+      "primary_parts": ["vector-store-body", "vector-store-top", "vector-field", "vector-links", "vector-points"],
+      "rest_at": 1.78
+    },
+    {
+      "icon": "knowledge-base",
+      "id": "illustrated-knowledge-base-curate-connect-reference-v1",
+      "semantic_sequence": ["curate", "connect", "reference"],
+      "primary_parts": ["book-left", "book-right", "book-spine", "knowledge-links", "knowledge-points", "reference-lines"],
+      "rest_at": 1.82
+    },
+    {
+      "icon": "gateway",
+      "id": "illustrated-gateway-admit-route-mediate-v1",
+      "semantic_sequence": ["admit", "route", "mediate"],
+      "primary_parts": ["gateway-shell", "gateway-opening", "policy-window", "traffic-rails", "request-token", "response-token"],
+      "rest_at": 1.76
+    },
+    {
+      "icon": "container",
+      "id": "illustrated-container-package-isolate-run-v1",
+      "semantic_sequence": ["package", "isolate", "run"],
+      "primary_parts": ["container-shell", "container-lid", "container-side", "isolation-frame", "app-module", "runtime-slots"],
+      "rest_at": 1.8
+    }
+  ]
+}

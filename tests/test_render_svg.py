@@ -113,7 +113,7 @@ class SvgRendererTest(unittest.TestCase):
         )
         self.assertEqual("illustrated", resolve_icon_system({"icon_system": "illustrated"}))
         self.assertEqual(
-            {"agent", "operator", "tool", "output", "database", "api", "search", "memory", "file", "folder", "cloud", "shield", "user", "server", "ai-model", "message-queue"},
+            {"agent", "operator", "tool", "output", "database", "api", "search", "memory", "file", "folder", "cloud", "shield", "user", "server", "ai-model", "message-queue", "vector-database", "knowledge-base", "gateway", "container"},
             set(character_v2_icon_ids()),
         )
         for icon in character_v2_icon_ids():
@@ -126,7 +126,7 @@ class SvgRendererTest(unittest.TestCase):
         style = deep_merge(load_style(), {"icon_system": "illustrated"})
         svg = render_svg(self._scene_with_icon("agent", motion={"profile": "off"}), style)
         self.assertIn('data-icon-system="illustrated"', svg)
-        self.assertIn('data-icon-system-version="2.3.0"', svg)
+        self.assertIn('data-icon-system-version="2.4.0"', svg)
         self.assertIn('semantic-icon-illustrated', svg)
         self.assertNotIn("illustrated-character-v2", svg)
         for part in character_v2_definition("agent").parts:
@@ -136,12 +136,12 @@ class SvgRendererTest(unittest.TestCase):
             render_html_runtime(self._scene_with_icon("agent"), style, runtime="gsap")
         )
         self.assertEqual("illustrated", manifest["icon_system"])
-        self.assertEqual("2.3.0", manifest["icon_system_version"])
+        self.assertEqual("2.4.0", manifest["icon_system_version"])
         self.assertEqual(1, len(manifest["icons"]))
         self.assertEqual(ILLUSTRATED_ICON_PERFORMANCES["agent"], manifest["icons"][0]["performance"])
         self.assertEqual(ILLUSTRATED_REST_AT["agent"], manifest["icons"][0]["rest_at"])
 
-    def test_illustrated_catalog_publishes_sixteen_assets_and_preserves_the_2_0_snapshot(self):
+    def test_illustrated_catalog_publishes_twenty_assets_and_preserves_the_2_0_snapshot(self):
         catalog = json.loads((ROOT / "assets" / "illustrated" / "catalog.json").read_text(encoding="utf-8"))
         release = json.loads(
             (ROOT / "assets" / "illustrated" / "releases" / "2.0.0.json").read_text(encoding="utf-8")
@@ -152,18 +152,18 @@ class SvgRendererTest(unittest.TestCase):
                 "id": "illustrated",
                 "display_name": "Illustrated",
                 "display_name_zh": "插画",
-                "version": "2.3.0",
+                "version": "2.4.0",
                 "static_status": "approved",
                 "motion_status": "approved",
-                "motion_contract": "illustrated-performance-v4",
-                "previous_motion_contract": "illustrated-performance-v3",
-                "archived_motion_review_contract": "illustrated-performance-v4-review",
-                "previous_archived_motion_review_contract": "illustrated-performance-v3-review",
+                "motion_contract": "illustrated-performance-v5",
+                "previous_motion_contract": "illustrated-performance-v4",
+                "archived_motion_review_contract": "illustrated-performance-v5-review",
+                "previous_archived_motion_review_contract": "illustrated-performance-v4-review",
             },
             ILLUSTRATED_SYSTEM_METADATA,
         )
         self.assertEqual("illustrated", catalog["system"])
-        self.assertEqual("2.3.0", catalog["version"])
+        self.assertEqual("2.4.0", catalog["version"])
         self.assertEqual(["illustrated-character-v2"], catalog["legacy_aliases"])
         self.assertEqual(set(character_v2_icon_ids()), {icon["id"] for icon in catalog["icons"]})
         for icon in catalog["icons"]:
@@ -176,7 +176,7 @@ class SvgRendererTest(unittest.TestCase):
         self.assertEqual("frozen-static-baseline", release["status"])
         self.assertEqual("confirmed", release["human_visual_acceptance"])
         self.assertEqual("approved", catalog["motion_status"])
-        self.assertEqual("illustrated-performance-v4", catalog["motion_contract"]["id"])
+        self.assertEqual("illustrated-performance-v5", catalog["motion_contract"]["id"])
         self.assertEqual("approved", release["motion_status"])
         self.assertEqual("illustrated-performance-v1", release["motion_contract"])
         self.assertEqual(4, release["icon_count"])
@@ -195,7 +195,7 @@ class SvgRendererTest(unittest.TestCase):
         document = illustrated_token_document()
 
         self.assertEqual("illustrated", document["system"])
-        self.assertEqual("2.3.0", document["version"])
+        self.assertEqual("2.4.0", document["version"])
         self.assertEqual(1, document["token_revision"])
         self.assertEqual(
             {
@@ -263,10 +263,10 @@ class SvgRendererTest(unittest.TestCase):
         public_style = json.loads((ROOT / "styles" / "deep-tech.json").read_text(encoding="utf-8"))
 
         self.assertEqual("illustrated", mapping["system"])
-        self.assertEqual("2.3.0", mapping["version"])
-        self.assertEqual(7, mapping["mapping_revision"])
-        self.assertEqual("illustrated-performance-v4", mapping["public_motion_contract"])
-        self.assertEqual("illustrated-performance-v4-review", mapping["archived_motion_review_contract"])
+        self.assertEqual("2.4.0", mapping["version"])
+        self.assertEqual(8, mapping["mapping_revision"])
+        self.assertEqual("illustrated-performance-v5", mapping["public_motion_contract"])
+        self.assertEqual("illustrated-performance-v5-review", mapping["archived_motion_review_contract"])
         self.assertEqual(1, len(mapping["mappings"]))
         approved = mapping["mappings"][0]
         self.assertEqual("deep-tech", approved["style"])
@@ -544,39 +544,31 @@ class SvgRendererTest(unittest.TestCase):
 
     def test_stage_runtime_contract_has_distinct_modes_and_continuous_packet_rhythm(self):
         runtime_source = (ROOT / "runtime" / "anidiagram-runtime.js").read_text(encoding="utf-8")
-        manifest_source = (ROOT / "src" / "anidiagram" / "motion_manifest.py").read_text(encoding="utf-8")
+        edge_runtime_source = (ROOT / "runtime" / "edge-motion-v1-runtime.js").read_text(encoding="utf-8")
+        manifest_source = (ROOT / "src" / "anidiagram" / "motion_manifest_v2.py").read_text(encoding="utf-8")
         verifier_source = (ROOT / "scripts" / "verify_stage_motion_modes.mjs").read_text(encoding="utf-8")
 
+        # The public 2.3 runtime remains frozen while new output uses Edge Motion v1.
         self.assertIn("const EDGE_PACKET_COUNT = 1;", runtime_source)
-        self.assertIn("const EDGE_PACKET_REPEAT_DELAY = 0.0;", runtime_source)
-        self.assertIn("const SHORT_EDGE_THRESHOLD = 120;", runtime_source)
-        self.assertIn("repeatDelay: EDGE_PACKET_REPEAT_DELAY", runtime_source)
-        self.assertIn('__anidiagramStage = "edge-packet"', runtime_source)
-        self.assertIn('__anidiagramStage = "title-entry"', runtime_source)
-        self.assertIn('playStageEffects(manifest, "readable")', runtime_source)
-        self.assertIn("settleCharacterTimelines", runtime_source)
-        title_body = self._javascript_function_body(runtime_source, "playTitleSweep")
-        self.assertNotIn("repeat: -1", title_body)
-        self.assertIn("scaleX", title_body)
-        edge_body = self._javascript_function_body(runtime_source, "playRuntimeEdgeFlow")
-        self.assertIn("EDGE_PACKET_COUNT", edge_body)
-        self.assertIn("readable_edge_indices", edge_body)
-        self.assertIn("active_edge_indices", edge_body)
-        self.assertNotIn("edgeGroups.slice(0", edge_body)
-        self.assertIn("runtime-edge-effect-", edge_body)
-        self.assertIn('"stroke-dashoffset": -(flowDash + flowGap)', edge_body)
-        self.assertIn("runtime-edge-short-packet", edge_body)
-        self.assertIn("getPointAtLength", edge_body)
-        self.assertIn("fill: stroke", edge_body)
-        self.assertNotIn('filter: "url(#particle-glow)"', edge_body)
-        self.assertIn('"edge_limit"', manifest_source)
+        self.assertIn("const EDGE_PACKET_DURATION = 1.65;", edge_runtime_source)
+        self.assertIn("const EDGE_COMET_DURATION = 1.85;", edge_runtime_source)
+        self.assertIn("const EDGE_STREAM_DURATION = 1.35;", edge_runtime_source)
+        self.assertIn('__anidiagramStage = "edge-motion"', edge_runtime_source)
+        self.assertIn("readable_edge_indices", edge_runtime_source)
+        self.assertIn("active_edge_indices", edge_runtime_source)
+        self.assertIn('stroke: "none"', edge_runtime_source)
+        self.assertIn("runtime-edge-stream", edge_runtime_source)
+        self.assertIn("runtime-edge-comet", edge_runtime_source)
+        self.assertNotIn("runtime-edge-packet-core", edge_runtime_source)
+        self.assertNotIn("runtime-edge-halo", edge_runtime_source)
+        self.assertNotIn("runtime-edge-trail", edge_runtime_source)
         self.assertIn('"readable_edge_limit"', manifest_source)
-        self.assertIn('"active_edge_indices"', manifest_source)
         self.assertIn('"readable_edge_indices"', manifest_source)
+        self.assertIn("_select_readable_edges", manifest_source)
         self.assertIn('require("playwright")', verifier_source)
         self.assertIn("edgeIndices", verifier_source)
         self.assertIn("Expressive -> Readable -> Off -> Expressive", verifier_source)
-        self.assertIn("duplicate runtime-generated stage elements", verifier_source)
+        self.assertIn("duplicate edge-motion elements", verifier_source)
 
     def test_character_theme_defaults_keep_frames_stable_and_group_reveal_soft(self):
         flow = json.loads((ROOT / "examples" / "illustrated-character-v1-flow.diagram.json").read_text(encoding="utf-8"))
@@ -832,7 +824,8 @@ class SvgRendererTest(unittest.TestCase):
         end = html.index("</script>", start)
         manifest = json.loads(html[start:end])
 
-        self.assertEqual("motion-manifest-0.1", manifest["version"])
+        self.assertEqual("motion-manifest-0.2", manifest["version"])
+        self.assertEqual("edge-motion-v1", manifest["edge_motion_contract"])
         self.assertEqual("gsap", manifest["runtime"])
         self.assertEqual("ambient", manifest["mode"])
         self.assertEqual("independent-icon-loops", manifest["sequence"])
@@ -844,9 +837,10 @@ class SvgRendererTest(unittest.TestCase):
         self.assertEqual([0, 1, 5, 6], manifest["stage"]["active_edge_indices"])
         self.assertEqual([0, 1], manifest["stage"]["readable_edge_indices"])
         self.assertEqual(
-            ["signal-dot", "signal-arrow", "signal-dot", "signal-dot"],
+            ["packet-flow", "packet-flow", "packet-flow", "packet-flow"],
             [edge["effect"] for edge in manifest["edges"][:4]],
         )
+        self.assertTrue(all(edge["motion_kind"] == "packet" for edge in manifest["edges"][:4]))
         self.assertEqual(
             {
                 "token-intent-ready-v1",
@@ -1291,7 +1285,7 @@ class SvgRendererTest(unittest.TestCase):
         svg = render_svg(scene, load_style(ROOT / "styles" / "minimal-light.json"))
 
         self.assertEqual(
-            "292eb6475dc1726e2e94f19fd2719015bb7299ca7461c09e337d1bbe03fa9197",
+            "93ec1da93169f635bfb7bb695b1f7f78b2c2fd209b61a4f32f0d56aa33e040ea",
             hashlib.sha256(svg.encode("utf-8")).hexdigest(),
         )
 
@@ -1328,6 +1322,8 @@ class SvgRendererTest(unittest.TestCase):
         self.assertIn("setMotionMode", html)
         self.assertIn("motion-subtle", html)
         self.assertIn("motion-off", html)
+        self.assertEqual(1, svg.count("edge-comet-head"))
+        self.assertEqual(3, svg.count("edge-comet-tail"))
 
     def test_structured_motion_effects_render_icons_and_effects(self):
         spec = {
@@ -1363,7 +1359,9 @@ class SvgRendererTest(unittest.TestCase):
         self.assertEqual("flow-arrow", scene.motion.edge_effect.preset)
         self.assertIn('data-motion-profile="teaching"', svg)
         self.assertIn('data-motion-title="handwrite-reveal"', svg)
-        self.assertIn("edge-arrow-particle", svg)
+        self.assertIn('class="edge-particle edge-packet"', svg)
+        self.assertIn('stroke="none"', svg)
+        self.assertNotIn('class="edge-particle edge-arrow-particle"', svg)
         self.assertIn("group-border-scan", svg)
         self.assertIn("title-handwrite", svg)
         self.assertIn("semantic-icon-search", svg)
@@ -1405,7 +1403,7 @@ class SvgRendererTest(unittest.TestCase):
         scene = compile_scene(spec)
         svg = render_svg(scene, load_style(ROOT / "styles" / "sketch-board.json"))
 
-        self.assertEqual(1, svg.count('class="edge-particle edge-arrow-particle"'))
+        self.assertEqual(1, svg.count('class="edge-particle edge-packet"'))
         self.assertEqual(2, svg.count('class="node-burst"'))
         self.assertNotIn("group-border-scan", svg)
 
@@ -1483,9 +1481,9 @@ class SvgRendererTest(unittest.TestCase):
         self.assertEqual("micro", scene.motion_policy.motion_area)
         self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, report["summary"])
         self.assertIn('data-motion-sequence="loop"', svg)
-        self.assertIn("edge-flow-dash-flow", svg)
-        self.assertIn('class="edge-particle"', svg)
-        self.assertIn('class="edge-particle edge-arrow-particle"', svg)
+        self.assertIn("edge-flow-stream-flow", svg)
+        self.assertIn('class="edge-particle edge-packet"', svg)
+        self.assertNotIn('class="edge-particle edge-arrow-particle"', svg)
         self.assertIn("semantic-icon-breathe", svg)
         self.assertIn("icon-breathe-halo", svg)
         self.assertIn("semanticIconBreathe", svg)
@@ -1651,8 +1649,8 @@ class SvgRendererTest(unittest.TestCase):
         self.assertEqual(2, len(plan["semantic"]["flows"]))
         self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, report["summary"])
         self.assertIn('data-icon-source="diagram-core-v1"', svg)
-        self.assertIn("edge-arrow-particle", svg)
-        self.assertGreater(svg.count('class="edge-particle edge-arrow-particle"'), 3)
+        self.assertIn("edge-packet", svg)
+        self.assertGreater(svg.count('class="edge-particle edge-packet"'), 3)
 
         legacy = brief_to_plan(brief, version="0.1")
         self.assertEqual("0.1", legacy["version"])
@@ -1821,9 +1819,10 @@ class SvgRendererTest(unittest.TestCase):
         self.assertTrue(report["ok"])
         self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, report["summary"])
         self.assertIn("semantic-icon-illustrated-character-v1", svg)
-        self.assertIn("edge-flow-ghost-flow", svg)
-        self.assertIn("edge-flow-dynamic-dash", svg)
-        self.assertIn("edge-flow-glow-line", svg)
+        self.assertIn('class="edge-particle edge-packet"', svg)
+        self.assertIn('class="edge-particle edge-comet edge-comet-head"', svg)
+        self.assertIn("edge-flow-stream-flow", svg)
+        self.assertNotIn("edge-flow-ghost-flow", svg)
 
     def test_quality_report_detects_overlap(self):
         spec = json.loads((ROOT / "tests" / "fixtures" / "minimal.diagram.json").read_text(encoding="utf-8"))

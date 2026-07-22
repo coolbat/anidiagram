@@ -1273,6 +1273,112 @@
     return finishCharacterAtRest(tl, parts, restAt, config);
   }
 
+  function playIllustratedVectorDatabase({ config, parts, gsap }) {
+    const required = ["wash", "vector-store-body", "vector-store-top", "vector-field", "vector-links", "vector-points"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const linkLength = primeStrokeDraw([parts["vector-links"]], gsap).get(parts["vector-links"]);
+    gsap.set(parts["vector-store-top"], { transformOrigin: "center bottom" });
+    gsap.set([parts["vector-field"], parts["vector-points"]], { transformOrigin: "center center" });
+    const timeline = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    timeline.to(parts["vector-store-body"], { scaleY: 0.965, duration: 0.14, ease: "power2.in" }, 0)
+      .to(parts["vector-store-top"], { y: -6, scaleX: 1.055, duration: 0.22, ease: "back.out(2.8)" }, 0.1)
+      .to(parts["vector-store-body"], { scaleY: 1.015, duration: 0.18, ease: "back.out(2.6)" }, 0.16)
+      .to(parts["vector-store-body"], { scaleY: 1, duration: 0.18, ease: "power2.out" }, 0.34)
+      .fromTo(parts["vector-links"],
+        { opacity: 0.18, strokeDashoffset: linkLength },
+        { opacity: 1, strokeDashoffset: 0, duration: 0.52, ease: "power1.inOut" }, 0.28)
+      .fromTo(parts["vector-points"],
+        { opacity: 0.3, scale: 0.58 },
+        { opacity: 1, scale: 1.38, duration: 0.28, ease: "back.out(3.2)" }, 0.62)
+      .to(parts["vector-points"], { scale: 1, duration: 0.22, ease: "elastic.out(1, 0.42)" }, 0.9)
+      .to(parts["vector-field"], { scale: 1.035, y: -1.5, duration: 0.2, ease: "sine.inOut" }, 0.88)
+      .to(parts["vector-field"], { scale: 1, y: 0, duration: 0.22, ease: "sine.inOut" }, 1.08)
+      .to(parts["vector-store-top"], { y: 0, scaleX: 1, duration: 0.26, ease: "power2.out" }, 1.12);
+    return finishCharacterAtRest(timeline, parts, config.rest_at, config);
+  }
+
+  function playIllustratedKnowledgeBase({ config, parts, gsap }) {
+    const required = ["wash", "book-left", "book-right", "book-spine", "knowledge-links", "knowledge-points", "reference-lines"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const lengths = primeStrokeDraw([parts["knowledge-links"], parts["reference-lines"]], gsap);
+    gsap.set(parts["book-left"], { transformOrigin: "right bottom" });
+    gsap.set(parts["book-right"], { transformOrigin: "left bottom" });
+    gsap.set(parts["knowledge-points"], { transformOrigin: "center center" });
+    const timeline = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    timeline.to(parts["book-left"], { rotation: -6, x: -3, duration: 0.28, ease: "power2.out" }, 0)
+      .to(parts["book-right"], { rotation: 6, x: 3, duration: 0.28, ease: "power2.out" }, 0)
+      .to([parts["book-left"], parts["book-right"]], { rotation: 0, x: 0, duration: 0.3, ease: "back.out(2.4)" }, 0.28)
+      .fromTo(parts["knowledge-links"],
+        { opacity: 0.16, strokeDashoffset: lengths.get(parts["knowledge-links"]) },
+        { opacity: 1, strokeDashoffset: 0, duration: 0.58, ease: "power1.inOut" }, 0.32)
+      .fromTo(parts["knowledge-points"],
+        { opacity: 0.25, scale: 0.58 },
+        { opacity: 1, scale: 1.34, duration: 0.28, ease: "back.out(3.1)" }, 0.7)
+      .to(parts["knowledge-points"], { scale: 1, duration: 0.2, ease: "elastic.out(1, 0.42)" }, 0.98)
+      .fromTo(parts["reference-lines"],
+        { opacity: 0.2, strokeDashoffset: lengths.get(parts["reference-lines"]) },
+        { opacity: 1, strokeDashoffset: 0, duration: 0.34, ease: "power2.out" }, 0.92)
+      .to(parts["book-spine"], { scaleY: 1.06, duration: 0.16, ease: "sine.inOut" }, 1.18)
+      .to(parts["book-spine"], { scaleY: 1, duration: 0.2, ease: "sine.inOut" }, 1.34);
+    return finishCharacterAtRest(timeline, parts, config.rest_at, config);
+  }
+
+  function playIllustratedGateway({ config, parts, gsap }) {
+    const required = ["wash", "gateway-shell", "gateway-opening", "policy-window", "traffic-rails", "request-token", "response-token"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    const railLength = primeStrokeDraw([parts["traffic-rails"]], gsap).get(parts["traffic-rails"]);
+    gsap.set([parts["request-token"], parts["response-token"], parts["policy-window"]], { transformOrigin: "center center" });
+    const timeline = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    timeline.to(parts["gateway-shell"], { scaleX: 0.975, scaleY: 1.025, duration: 0.16, ease: "power2.inOut" }, 0)
+      .to(parts["gateway-shell"], { scaleX: 1, scaleY: 1, duration: 0.2, ease: "back.out(2.4)" }, 0.16)
+      .fromTo(parts["traffic-rails"],
+        { opacity: 0.22, strokeDashoffset: railLength },
+        { opacity: 1, strokeDashoffset: 0, duration: 0.46, ease: "power1.inOut" }, 0.16)
+      .fromTo(parts["request-token"],
+        { y: 15, opacity: 0.25, scale: 0.7 },
+        { y: -10, opacity: 1, scale: 1.18, duration: 0.44, ease: "power2.inOut" }, 0.34)
+      .fromTo(parts["response-token"],
+        { y: -15, opacity: 0.25, scale: 0.7 },
+        { y: 10, opacity: 1, scale: 1.18, duration: 0.44, ease: "power2.inOut" }, 0.48)
+      .to([parts["request-token"], parts["response-token"]], { y: 0, scale: 1, duration: 0.28, ease: "power2.out" }, 0.92)
+      .to(parts["policy-window"], { scale: 1.22, duration: 0.18, ease: "back.out(3)" }, 1.0)
+      .to(parts["policy-window"], { scale: 1, duration: 0.22, ease: "power2.out" }, 1.18)
+      .to(parts["gateway-opening"], { scaleY: 1.025, duration: 0.16, ease: "sine.inOut" }, 1.22)
+      .to(parts["gateway-opening"], { scaleY: 1, duration: 0.2, ease: "sine.inOut" }, 1.38);
+    return finishCharacterAtRest(timeline, parts, config.rest_at, config);
+  }
+
+  function playIllustratedContainer({ config, parts, gsap }) {
+    const required = ["wash", "container-shell", "container-lid", "container-side", "container-ribs", "isolation-frame", "app-module", "runtime-slots", "container-feet"];
+    if (!hasParts(parts, required)) return null;
+    setInitial(parts, gsap);
+    gsap.set([parts["isolation-frame"], parts["app-module"], parts["runtime-slots"]], { transformOrigin: "center center" });
+    const timeline = gsap.timeline({ repeat: -1, repeatDelay: config.repeat_delay || CHARACTER_REPEAT_DELAY });
+    timeline.to(parts["container-shell"], { y: 3, scaleY: 0.965, duration: 0.14, ease: "power2.in" }, 0)
+      .to(parts["container-lid"], { y: -5, x: 2, duration: 0.22, ease: "back.out(2.8)" }, 0.1)
+      .to(parts["container-side"], { x: 3, duration: 0.22, ease: "power2.out" }, 0.14)
+      .to(parts["container-shell"], { y: 0, scaleY: 1, duration: 0.22, ease: "back.out(2.4)" }, 0.22)
+      .fromTo(parts["isolation-frame"],
+        { opacity: 0.45, scale: 0.84 },
+        { opacity: 1, scale: 1.08, duration: 0.28, ease: "back.out(2.8)" }, 0.38)
+      .fromTo(parts["app-module"],
+        { opacity: 0.28, scale: 0.58, y: 8 },
+        { opacity: 1, scale: 1.2, y: 0, duration: 0.32, ease: "back.out(3.2)" }, 0.58)
+      .to(parts["app-module"], { scale: 1, duration: 0.2, ease: "elastic.out(1, 0.4)" }, 0.9)
+      .fromTo(parts["runtime-slots"],
+        { opacity: 0.22, scaleX: 0.35 },
+        { opacity: 1, scaleX: 1.28, duration: 0.3, ease: "back.out(3)" }, 0.84)
+      .to(parts["runtime-slots"], { scaleX: 1, duration: 0.2, ease: "power2.out" }, 1.14)
+      .to(parts["isolation-frame"], { scale: 1, duration: 0.2, ease: "sine.inOut" }, 1.16)
+      .to([parts["container-lid"], parts["container-side"]], { x: 0, y: 0, duration: 0.26, ease: "power2.out" }, 1.24)
+      .to(parts["container-feet"], { scaleY: 1.08, duration: 0.14, ease: "sine.inOut" }, 1.3)
+      .to(parts["container-feet"], { scaleY: 1, duration: 0.18, ease: "sine.inOut" }, 1.44);
+    return finishCharacterAtRest(timeline, parts, config.rest_at, config);
+  }
+
   function playFileNoteWrite({ config, parts, gsap }) {
     const required = ["page", "corner", "line-1", "line-2", "line-3", "dot"];
     if (!hasParts(parts, required)) return null;
@@ -1910,6 +2016,10 @@
     "illustrated-server-host-compute-serve-v1": playIllustratedServerCompute,
     "illustrated-ai-model-infer-transform-predict-v1": playIllustratedAiModelInfer,
     "illustrated-message-queue-buffer-order-deliver-v1": playIllustratedMessageQueue,
+    "illustrated-vector-database-embed-index-retrieve-v1": playIllustratedVectorDatabase,
+    "illustrated-knowledge-base-curate-connect-reference-v1": playIllustratedKnowledgeBase,
+    "illustrated-gateway-admit-route-mediate-v1": playIllustratedGateway,
+    "illustrated-container-package-isolate-run-v1": playIllustratedContainer,
     "file-note-write-v1": playFileNoteWrite,
     "folder-file-store-v1": playFolderFileStore,
     "cloud-uplink-ready-v1": playCloudUplinkReady,
@@ -1947,6 +2057,10 @@
     "illustrated-server-host-compute-serve-v1",
     "illustrated-ai-model-infer-transform-predict-v1",
     "illustrated-message-queue-buffer-order-deliver-v1",
+    "illustrated-vector-database-embed-index-retrieve-v1",
+    "illustrated-knowledge-base-curate-connect-reference-v1",
+    "illustrated-gateway-admit-route-mediate-v1",
+    "illustrated-container-package-isolate-run-v1",
   ]);
 
   function playIcon(iconConfig) {

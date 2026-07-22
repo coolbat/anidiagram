@@ -11,7 +11,8 @@ import math
 from dataclasses import dataclass, replace
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
-from .effects import channel_effect, effect_active
+from .effects import canonical_edge_effect, channel_effect, effect_active
+from .edge_motion import CONTINUOUS_EDGE_MOTION, DRAW_ENTRY_EDGE_MOTION, PARTICLE_EDGE_MOTION
 from .diagram_core.adapter import render_approved_icon
 from .diagram_core.tokens import icon_tokens_for_style
 from .illustrated_icons import illustrated_definition as legacy_illustrated_definition, illustrated_palette, is_illustrated_style
@@ -30,33 +31,6 @@ from .icon_system import icon_system_version, resolve_icon_system
 Point = Tuple[float, float]
 EDGE_NODE_GAP = 12.0
 
-CONTINUOUS_EDGE_MOTION = {
-    "pulse",
-    "trace",
-    "comet-flow",
-    "dynamic-dash",
-    "dash-flow",
-    "flow-dot",
-    "flow-arrow",
-    "signal-dot",
-    "signal-arrow",
-    "ghost-flow",
-    "glow-line",
-    "comet",
-}
-DRAW_ENTRY_EDGE_MOTION = {
-    "draw",
-    "pulse",
-    "trace",
-    "comet-flow",
-    "dynamic-dash",
-    "flow-dot",
-    "flow-arrow",
-    "ghost-flow",
-    "glow-line",
-    "comet",
-}
-PARTICLE_EDGE_MOTION = {"comet-flow", "comet", "flow-dot", "flow-arrow", "signal-dot", "signal-arrow", "ghost-flow"}
 CONTINUOUS_NODE_MOTION = {
     "float",
     "glow-breathe",
@@ -71,7 +45,6 @@ CONTINUOUS_NODE_MOTION = {
     "micro-icon",
 }
 SCANNING_GROUP_MOTION = {"marching-ants", "border-scan", "corner-pulse"}
-RUNTIME_EDGE_MOTION = {"signal-dot", "signal-arrow", "dash-flow"}
 BREATHING_NODE_MOTION = {"icon-breathe", "micro-icon"}
 
 
@@ -138,17 +111,12 @@ def ranked_motion_modes(
 
 
 def particle_radii(edge_mode: str, particle_shape: str, effect: EffectConfig, policy: MotionPolicy) -> Tuple[float, ...]:
-    if edge_mode == "signal-dot":
-        base = (4.2,)
-    elif edge_mode == "signal-arrow":
-        base = (5.0,)
-    elif edge_mode == "ghost-flow":
-        base = (5.5, 3.5, 2.4, 1.8)
-    elif edge_mode == "flow-dot":
-        base = (6.0, 3.8)
-    else:
-        base = (5.5, 3.5, 2.4)
-    default_count = 1 if particle_shape == "soft-arrow" or edge_mode in {"signal-dot", "signal-arrow"} else len(base)
+    if edge_mode == "comet-flow":
+        radii = (5.8, 4.2, 3.0, 2.0)
+        trail_count = effect.trail_count if effect.trail_count is not None else 3
+        return radii[: 1 + max(0, min(3, trail_count))]
+    base = (5.5,)
+    default_count = 1
     count = effect.particle_count if effect.particle_count is not None else policy.particle_count_per_edge
     if count is None:
         count = default_count
@@ -1515,7 +1483,7 @@ def render_edge(
 ) -> str:
     start, end = edge_points(edge, nodes)
     path = edge_path(edge, nodes)
-    edge_effect = channel_effect(motion, style, "edge", edge.effect)
+    edge_effect = canonical_edge_effect(channel_effect(motion, style, "edge", edge.effect))
     role = role_style(style, edge.role)
     stroke = edge.stroke or role.get("stroke", "#64748b")
     width = float(edge.width if edge.width is not None else style.get("edge", {}).get("width", 2.4))
@@ -1541,8 +1509,13 @@ def render_edge(
     if edge.step is not None:
         badge = render_step_badge(mid_x - 22, mid_y - 5, edge.step, stroke, "#ffffff")
     edge_mode = edge_effect.preset if edge.motion.enabled else "none"
-    if edge_mode in RUNTIME_EDGE_MOTION and edge.motion.duration is None:
-        duration_value = 2.05
+    if edge.motion.duration is None:
+        if edge_mode == "packet-flow":
+            duration_value = 1.65
+        elif edge_mode == "comet-flow":
+            duration_value = 1.85
+        elif edge_mode == "stream-flow":
+            duration_value = 1.35
     edge_is_active = effect_active(motion, edge_effect) and edge.motion.enabled
     if edge_is_active and edge_mode in CONTINUOUS_EDGE_MOTION and not policy_allows(edge_motion_rank, policy.max_active_flow_edges):
         edge_effect = effect_with_preset(edge_effect, "draw")
@@ -1562,55 +1535,35 @@ def render_edge(
         stroke-dasharray="1" stroke-dashoffset="1"{marker_attributes}>
     <animate attributeName="stroke-dashoffset" values="1;0" dur="{seconds(scaled_duration(0.9, motion))}" begin="{seconds(draw_begin)}" fill="freeze" />
   </path>"""
-    if edge_is_active and edge_mode in {"pulse", "trace", "comet-flow", "dynamic-dash", "dash-flow", "ghost-flow", "glow-line", "comet"}:
-        dash = (
-            "4 22"
-            if edge_mode == "trace"
-            else "7 11"
-            if edge_mode == "dash-flow"
-            else "8 12"
-            if edge_mode == "dynamic-dash"
-            else "2 18"
-            if edge_mode == "ghost-flow"
-            else "9 18"
-        )
-        opacity = 0.42 if edge_mode == "trace" else 0.52 if edge_mode == "dash-flow" else 0.38 if edge_mode == "ghost-flow" else 0.55
-        flow_width = max(1, width * (1.8 if edge_mode == "glow-line" else 0.72))
-        glow_filter = ' filter="url(#soft-glow)"' if edge_mode == "glow-line" else ""
-        flow_markup = f"""  <path class="edge-flow edge-flow-{esc(edge_mode)}" d="{path}" fill="none" stroke="{esc(stroke)}" stroke-width="{max(1, width * 0.72):.1f}"
-        stroke-dasharray="{dash}" opacity="{opacity:.2f}"{glow_filter}>
-    <animate attributeName="stroke-dashoffset" values="0;-54" dur="{seconds(scaled_duration(max(1.25, duration_value * 0.72), motion))}" begin="{seconds(draw_begin + 0.2 if edge_mode != "dash-flow" else -((index * 0.11) % duration_value))}" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="{opacity * 0.70:.2f};{opacity:.2f};{opacity * 0.70:.2f}" dur="{seconds(scaled_duration(max(1.25, duration_value * 0.72), motion))}" begin="{seconds(draw_begin + 0.2 if edge_mode != "dash-flow" else -((index * 0.11) % duration_value))}" repeatCount="indefinite" />
+    if edge_is_active and edge_mode == "stream-flow":
+        stream_duration = scaled_duration(max(1.35, duration_value * 0.72), motion)
+        flow_markup = f"""  <path class="edge-flow edge-flow-stream-flow" d="{path}" fill="none" stroke="{esc(stroke)}" stroke-width="{max(1.2, width * 0.86):.1f}"
+        stroke-linecap="round" stroke-dasharray="8 14" opacity="0.58">
+    <animate attributeName="stroke-dashoffset" values="0;-44" dur="{seconds(stream_duration)}" begin="{seconds(-((index * 0.11 + edge.motion.delay) % max(stream_duration, 0.01)))}" repeatCount="indefinite" />
   </path>"""
-        if edge_mode == "glow-line":
-            flow_markup = flow_markup.replace(f'stroke-width="{max(1, width * 0.72):.1f}"', f'stroke-width="{flow_width:.1f}"')
     if edge_is_active and edge_mode in PARTICLE_EDGE_MOTION and particle_allowed:
         particles = []
         intensity = clamp(motion.intensity, 0.25, 1.8) * motion_area_scale(policy)
-        particle_shape = edge_effect.particle or ("soft-arrow" if edge_mode in {"flow-arrow", "signal-arrow"} else "soft-dot")
+        particle_shape = "solid-dot"
         radii = particle_radii(edge_mode, particle_shape, edge_effect, policy)
+        base_begin = -((index * 0.19 + edge.motion.delay) % duration_value)
         for particle_index, radius in enumerate(radii):
-            if edge_mode in RUNTIME_EDGE_MOTION:
-                begin = -((index * 0.19 + edge.motion.delay + particle_index * (duration_value / 2)) % duration_value)
+            if edge_mode == "comet-flow":
+                begin = base_begin + particle_index * 0.075
+                opacity = (1.0, 0.62, 0.38, 0.2)[particle_index]
+                particle_class = "edge-particle edge-comet edge-comet-head" if particle_index == 0 else "edge-particle edge-comet edge-comet-tail"
             else:
-                begin = index * 0.32 + edge.motion.delay + particle_index * (duration_value / 3)
-            opacity = 0.92 - particle_index * 0.18
-            if particle_shape == "soft-arrow":
-                particles.append(
-                    f"""  <path class="edge-particle edge-arrow-particle" d="M {-8 * intensity:.1f} {-4.8 * intensity:.1f} L {8 * intensity:.1f} 0 L {-8 * intensity:.1f} {4.8 * intensity:.1f} Z" fill="{esc(stroke)}" opacity="{opacity:.2f}">
-    <animateMotion dur="{seconds(scaled_duration(duration_value, motion))}" repeatCount="indefinite" path="{path}" begin="{seconds(begin)}" rotate="auto" />
-    <animate attributeName="opacity" values="0;{opacity:.2f};0" dur="{seconds(scaled_duration(duration_value, motion))}" begin="{seconds(begin)}" repeatCount="indefinite" />
-  </path>"""
-                )
-            else:
-                particles.append(
-                    f"""  <circle class="edge-particle" r="{radius * intensity:.1f}" fill="{esc(stroke)}" opacity="{opacity:.2f}">
+                begin = base_begin
+                opacity = 0.92
+                particle_class = "edge-particle edge-packet"
+            particles.append(
+                    f"""  <circle class="{particle_class}" r="{radius * intensity:.1f}" fill="{esc(stroke)}" stroke="none" opacity="{opacity:.2f}">
     <animateMotion dur="{seconds(scaled_duration(duration_value, motion))}" repeatCount="indefinite" path="{path}" begin="{seconds(begin)}" />
     <animate attributeName="opacity" values="0;{opacity:.2f};0" dur="{seconds(scaled_duration(duration_value, motion))}" begin="{seconds(begin)}" repeatCount="indefinite" />
   </circle>"""
-                )
+            )
         motion_markup = "\n".join(particles)
-    label_static = not edge_is_active or runtime_loop_active(motion) or edge_mode in RUNTIME_EDGE_MOTION
+    label_static = not edge_is_active or edge_mode in CONTINUOUS_EDGE_MOTION or runtime_loop_active(motion)
     label_opacity = "1" if label_static else "0"
     label_motion = ""
     if not label_static:
@@ -1680,7 +1633,7 @@ def render_svg(
     title_effect = channel_effect(motion, style, "title")
     edge_modes = []
     for index, edge in enumerate(scene.edges, start=1):
-        effect = channel_effect(motion, style, "edge", edge.effect)
+        effect = canonical_edge_effect(channel_effect(motion, style, "edge", edge.effect))
         edge_modes.append((index, effect, effect.preset if edge.motion.enabled else "none"))
     edge_motion_ranks = ranked_motion_modes(edge_modes, motion, CONTINUOUS_EDGE_MOTION)
     particle_motion_ranks = ranked_motion_modes(edge_modes, motion, PARTICLE_EDGE_MOTION)
@@ -1763,13 +1716,14 @@ def render_svg(
 
     data_motion = scene.motion if runtime_stage else motion
     data_title_effect = channel_effect(data_motion, style, "title")
+    data_edge_effect = canonical_edge_effect(channel_effect(data_motion, style, "edge"))
     resolved_icon_system = resolve_icon_system(style)
     icon_system_attr = f' data-icon-system="{esc(resolved_icon_system)}"'
     resolved_icon_system_version = icon_system_version(resolved_icon_system)
     if resolved_icon_system_version is not None:
         icon_system_attr += f' data-icon-system-version="{esc(resolved_icon_system_version)}"'
 
-    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="{esc(data_motion.profile)}" data-motion-sequence="{esc(data_motion.sequence)}" data-motion-edge="{esc(data_motion.edge)}" data-motion-node="{esc(data_motion.node)}" data-motion-group="{esc(data_motion.group)}" data-motion-title="{esc(data_title_effect.preset)}" data-motion-reduced="{esc(data_motion.reduced_motion)}"{icon_system_attr}>
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="{esc(data_motion.profile)}" data-motion-sequence="{esc(data_motion.sequence)}" data-motion-edge="{esc(data_edge_effect.preset)}" data-motion-node="{esc(data_motion.node)}" data-motion-group="{esc(data_motion.group)}" data-motion-title="{esc(data_title_effect.preset)}" data-motion-reduced="{esc(data_motion.reduced_motion)}"{icon_system_attr}>
 <title id="diagram-title">{esc(title_text)}</title>
 <desc id="diagram-desc">{esc(subtitle)}</desc>
 <style>

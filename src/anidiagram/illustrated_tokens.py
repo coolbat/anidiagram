@@ -12,7 +12,7 @@ from typing import Any, Mapping
 from .icon_system import ILLUSTRATED_ICON_SYSTEM, ILLUSTRATED_ICON_SYSTEM_VERSION
 
 
-_TOKEN_PATH = Path(__file__).resolve().parents[2] / "assets" / "illustrated" / "tokens-2.3.0.json"
+_TOKEN_PATH = Path(__file__).resolve().parents[2] / "assets" / "illustrated" / "tokens-2.4.0.json"
 _HEX_COLOR = re.compile(r"#[0-9a-fA-F]{6}\Z")
 _REQUIRED_GEOMETRY = {
     "view_box": 120,

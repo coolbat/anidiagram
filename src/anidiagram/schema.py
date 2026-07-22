@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, Iterable, List, Optional, Set
 
 from .composition import DIAGRAM_CORE_ICONS, ICON_SYSTEMS, LAYOUTS, MOTIONS, STYLES
+from .edge_motion import KNOWN_EDGE_MOTION
 from .icon_system import canonical_icon_system_id, icon_system_version
 from .illustrated_registry import illustrated_icon_ids
 from .model import Bounds, Canvas, Edge, EffectConfig, Group, Motion, MotionPolicy, Node, Point, Scene, SceneMotion, Style, Title
@@ -44,23 +45,6 @@ KNOWN_NODE_MOTION = {
     "icon-semantic",
     "icon-performance",
     "micro-icon",
-}
-KNOWN_EDGE_MOTION = {
-    "none",
-    "static",
-    "draw",
-    "pulse",
-    "comet-flow",
-    "trace",
-    "dynamic-dash",
-    "dash-flow",
-    "flow-dot",
-    "flow-arrow",
-    "signal-dot",
-    "signal-arrow",
-    "ghost-flow",
-    "glow-line",
-    "comet",
 }
 KNOWN_GROUP_MOTION = {"none", "static", "soft-reveal", "marching-ants", "border-scan", "corner-pulse"}
 KNOWN_REDUCED_MOTION = {"static", "subtle", "pause"}
@@ -375,15 +359,15 @@ def _motion_defaults(profile: str) -> SceneMotion:
     if profile == "subtle":
         return _scene_motion("subtle", "step-stagger", "calm", 0.08, 1.2, 0.55, "fade", "draw", "soft-reveal", "fade", "static")
     if profile == "normal":
-        return _scene_motion("normal", "step-stagger", "calm", 0.12, 1.0, 1.0, "glow-breathe", "comet-flow", "marching-ants", "fade", "subtle")
+        return _scene_motion("normal", "step-stagger", "calm", 0.12, 1.0, 1.0, "glow-breathe", "packet-flow", "marching-ants", "fade", "subtle")
     if profile == "expressive":
-        return _scene_motion("expressive", "layered", "spring", 0.16, 0.9, 1.25, "pop", "comet-flow", "marching-ants", "highlight-sweep", "subtle")
+        return _scene_motion("expressive", "layered", "spring", 0.16, 0.9, 1.25, "pop", "packet-flow", "marching-ants", "highlight-sweep", "subtle")
     if profile == "teaching":
-        return _scene_motion("teaching", "staged", "spring", 0.14, 0.95, 1.15, "icon-pulse", "ghost-flow", "border-scan", "handwrite-reveal", "subtle")
+        return _scene_motion("teaching", "staged", "spring", 0.14, 0.95, 1.15, "icon-pulse", "packet-flow", "border-scan", "handwrite-reveal", "subtle")
     if profile == "runtime-loop":
-        return _scene_motion("runtime-loop", "loop", "linear", 0.09, 1.0, 0.82, "icon-breathe", "signal-dot", "static", "breathe", "subtle")
+        return _scene_motion("runtime-loop", "loop", "linear", 0.09, 1.0, 0.82, "icon-breathe", "packet-flow", "static", "breathe", "subtle")
     if profile == "showcase-v1":
-        return _scene_motion("showcase-v1", "staged", "spring", 0.12, 1.0, 1.0, "icon-performance", "flow-arrow", "border-scan", "highlight-sweep", "subtle")
+        return _scene_motion("showcase-v1", "staged", "spring", 0.12, 1.0, 1.0, "icon-performance", "packet-flow", "border-scan", "highlight-sweep", "subtle")
     return SceneMotion()
 
 

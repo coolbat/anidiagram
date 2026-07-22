@@ -132,6 +132,11 @@ fade, or soft-reveal so the diagram remains readable.
 
 ## Effect Registry
 
+> Edge Motion v1 supersedes the historical edge recommendations below for new
+> output. See [`edge-motion-v1.md`](edge-motion-v1.md). The larger list remains
+> documented only as the compatibility vocabulary accepted from older specs.
+> Version 1.0.0 was frozen after human visual acceptance on 2026-07-22.
+
 The renderer should add an internal effect registry, likely in
 `src/anidiagram/effects.py`, with small render functions for each channel.
 The registry should return SVG markup for SVG/HTML and a raster strategy for

@@ -1,0 +1,53 @@
+{
+  "system": "illustrated",
+  "version": "2.4.0-candidate",
+  "status": "static-confirmed-motion-pending",
+  "accepted_at": "2026-07-21",
+  "static_acceptance": {
+    "status": "confirmed",
+    "scope": "vector-database-knowledge-base-gateway-container-static-expansion",
+    "approved_icons": ["vector-database", "knowledge-base", "gateway", "container"],
+    "themes": ["canonical-warm", "deep-tech"],
+    "review_sizes": [64, 96, 120],
+    "static_instance_count": 20,
+    "unique_dom_ids": true,
+    "review_artifacts": {
+      "html": {
+        "path": "outputs/illustrated-expansion-batch-4/illustrated-expansion-batch-4.html",
+        "sha256": "d717bef30c21fe7d28f9ac1cb1f6f10d3d2ad3e9db756e0ff1ffe20c673ef1f4"
+      },
+      "svg": {
+        "path": "outputs/illustrated-expansion-batch-4/illustrated-expansion-batch-4.svg",
+        "sha256": "0ac9a24a8244211714ba565ed386bd2397788262a4883dd13d9f99188849fb65"
+      },
+      "png": {
+        "path": "outputs/illustrated-expansion-batch-4/illustrated-expansion-batch-4.png",
+        "sha256": "c40f6adf9e5b2092b236d437606a6b20c732fbb832f2cfb4e7eb1995dd1ba178"
+      },
+      "result": {
+        "path": "outputs/illustrated-expansion-batch-4/result.json",
+        "sha256": "2be4673bfc0fff756e8f7df112703675a3996c59b2d85b06306db7a1cc8df94e"
+      }
+    }
+  },
+  "motion_acceptance": {
+    "status": "pending-human-review",
+    "scope": "vector-database-knowledge-base-gateway-container-semantic-motion",
+    "selection_policy": "explicit-review-only",
+    "review_contract": "illustrated-performance-v5-review"
+  },
+  "public_showcase": {
+    "release": "2.3.0",
+    "static_icon_count": 16,
+    "automatic_motion_icon_count": 16,
+    "candidate_static_icon_count": 4,
+    "review_motion_icon_count": 4,
+    "review_motion_is_automatic": false,
+    "public_registry_changed": false
+  },
+  "notes": [
+    "The reviewed static artifacts under outputs are local browser-visible evidence and may be gitignored.",
+    "This record approves the four static assets but does not approve their motion performances.",
+    "The public 2.3.0 registry and illustrated-performance-v4 contract remain unchanged."
+  ]
+}

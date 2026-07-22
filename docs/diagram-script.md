@@ -152,9 +152,12 @@ Motion channels:
 - `node`: `none`, `fade`, `float`, `glow-breathe`, `pop`, `pulse`,
   `ripple`, `status-blink`, `icon-pulse`, `icon-breathe`, `icon-semantic`,
   `icon-performance`, or `micro-icon`.
-- `edge`: `none`, `static`, `draw`, `pulse`, `comet-flow`, `trace`,
+- `edge`: new output uses `none`, `static`, `draw`, `packet-flow`,
+  `comet-flow`, or `stream-flow`. The legacy names `pulse`, `trace`,
   `dynamic-dash`, `dash-flow`, `flow-dot`, `flow-arrow`, `signal-dot`,
-  `signal-arrow`, `ghost-flow`, `glow-line`, or `comet`.
+  `signal-arrow`, `ghost-flow`, `glow-line`, and `comet` remain accepted and
+  normalize to the Edge Motion v1 recipes documented in
+  [`edge-motion-v1.md`](edge-motion-v1.md).
 - `group`: `none`, `static`, `soft-reveal`, `marching-ants`, `border-scan`,
   or `corner-pulse`.
 - `title`: `none`, `fade`, `breathe`, `handwrite-reveal`, or
@@ -281,15 +284,17 @@ omits `icon_system`. It clean-room covers all 13 legacy schema icons: `agent`, `
 the original line-icon system.
 
 `illustrated` is the public id for the approved static Illustrated system. Its
-current implementation version is `2.3.0`, recorded separately in
+current implementation version is `2.4.0`, recorded separately in
 `resolved_presentation.icon_system.version`. It covers `agent`, `operator`,
 `tool`, `output`, `database`, `api`, `search`, `memory`, `file`, `folder`,
-`cloud`, `shield`, `user`, `server`, `ai-model`, and `message-queue` as
-structured semantic illustrations. It is not the composition-v1 default. All sixteen icons
-emit approved public `illustrated-performance-v4` runtime performances under
-`showcase-v1`. `illustrated-performance-v4-review` is the immutable archived
+`cloud`, `shield`, `user`, `server`, `ai-model`, `message-queue`,
+`vector-database`, `knowledge-base`, `gateway`, and `container` as structured
+semantic illustrations. It is not the composition-v1 default. All twenty icons
+emit approved public `illustrated-performance-v5` runtime performances under
+`showcase-v1`. `illustrated-performance-v5-review` is the immutable archived
 human-review source and is not emitted by new diagrams. The former
-`illustrated-performance-v3` public contract and
+`illustrated-performance-v4` public contract and its v4-review source remain
+2.3.0 archives. The `illustrated-performance-v3` public contract and
 `illustrated-performance-v3-review` review contract remain 2.2.0 archives, and
 `illustrated-performance-v2` remains the immutable eight-icon 2.1.0 archive,
 and `illustrated-performance-v1` remains the immutable four-icon 2.0.0 archive.
@@ -300,12 +305,12 @@ warning. The legacy id
 example and its review style are historical design evidence, not current
 adoption guidance or a second public style.
 
-Illustrated 2.3.0 visual constants live in
-[`assets/illustrated/tokens-2.3.0.json`](../assets/illustrated/tokens-2.3.0.json). A style
+Illustrated 2.4.0 visual constants live in
+[`assets/illustrated/tokens-2.4.0.json`](../assets/illustrated/tokens-2.4.0.json). A style
 can explicitly override approved colors with an `illustrated_tokens` object,
 for example `{"ink": "#172033", "paper": "#fffaf0"}`. The renderer rejects
 unknown token names and non-hex values. Geometry, paths, part ids, and semantic
-roles are not template-owned and remain frozen within version 2.3.0.
+roles are not template-owned and remain frozen within version 2.4.0.
 The public `deep-tech` style contains the first approved Illustrated token
 mapping. It preserves separate violet, cyan, teal, green, amber, and coral
 semantic accents instead of applying one monochrome tint.

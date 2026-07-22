@@ -40,7 +40,7 @@ class IconSystemReleaseGalleryTest(unittest.TestCase):
 
     def test_manifest_exposes_both_current_public_icon_system_releases(self):
         releases = self.manifest["icon_system_releases"]
-        self.assertEqual(["diagram-core-v1", "illustrated-2.3"], [entry["id"] for entry in releases])
+        self.assertEqual(["diagram-core-v1", "illustrated-2.4"], [entry["id"] for entry in releases])
 
         core, illustrated = releases
         self.assertEqual("diagram-core-v1", core["icon_system"])
@@ -51,11 +51,11 @@ class IconSystemReleaseGalleryTest(unittest.TestCase):
         self.assertEqual("showcase-v1", core["motion_contract"])
 
         self.assertEqual("illustrated", illustrated["icon_system"])
-        self.assertEqual("2.3.0", illustrated["version"])
-        self.assertEqual(16, illustrated["icon_count"])
-        self.assertEqual(16, illustrated["rendered_icon_count"])
-        self.assertEqual(16, illustrated["automatic_motion_icon_count"])
-        self.assertEqual("illustrated-performance-v4", illustrated["motion_contract"])
+        self.assertEqual("2.4.0", illustrated["version"])
+        self.assertEqual(20, illustrated["icon_count"])
+        self.assertEqual(20, illustrated["rendered_icon_count"])
+        self.assertEqual(20, illustrated["automatic_motion_icon_count"])
+        self.assertEqual("illustrated-performance-v5", illustrated["motion_contract"])
 
     def test_diagram_core_showcase_covers_all_frozen_icons_without_explicit_motion(self):
         spec_path = ROOT / "examples" / "diagram-core-v1-showcase.diagram.json"
@@ -75,18 +75,18 @@ class IconSystemReleaseGalleryTest(unittest.TestCase):
         self.assertEqual(56, len(motion["icons"]))
         self.assertEqual({node["icon"] for node in spec["nodes"]}, {item["icon"] for item in motion["icons"]})
 
-    def test_illustrated_showcase_is_sixteen_icon_public_v4_without_explicit_motion(self):
-        source = (ROOT / "examples" / "illustrated-2.3-showcase.diagram.json").read_text(encoding="utf-8")
+    def test_illustrated_showcase_is_twenty_icon_public_v5_without_explicit_motion(self):
+        source = (ROOT / "examples" / "illustrated-2.4-showcase.diagram.json").read_text(encoding="utf-8")
         spec = json.loads(source)
         self.assertEqual("illustrated", spec["icon_system"])
-        self.assertEqual(16, len(spec["nodes"]))
+        self.assertEqual(20, len(spec["nodes"]))
         self.assertNotIn('"icon_motion"', source)
 
         entry = self.manifest["icon_system_releases"][1]
         html = (ROOT / entry["html"]).read_text(encoding="utf-8")
         motion = _motion_manifest(html)
-        self.assertEqual(16, len(motion["icons"]))
-        self.assertTrue(all(item["motion_contract"] == "illustrated-performance-v4" for item in motion["icons"]))
+        self.assertEqual(20, len(motion["icons"]))
+        self.assertTrue(all(item["motion_contract"] == "illustrated-performance-v5" for item in motion["icons"]))
         self.assertTrue(all(item["motion_status"] == "approved" for item in motion["icons"]))
 
     def test_release_gallery_artifacts_are_clean_and_links_are_local(self):
@@ -120,7 +120,7 @@ class IconSystemReleaseGalleryTest(unittest.TestCase):
         args = _parser().parse_args(["--verify", "--fps", "12", "--frames", "24", "--scale", "1"])
         self.assertTrue(args.verify)
         self.assertEqual((12, 24, 1.0), (args.fps, args.frames, args.scale))
-        self.assertEqual((56, 16), tuple(len(_expected_icon_ids(case)) for case in CASES))
+        self.assertEqual((56, 20), tuple(len(_expected_icon_ids(case)) for case in CASES))
 
     def test_export_verifier_rejects_unverified_non_browser_capture(self):
         from build_icon_system_release_evidence import EXPORT_FORMATS, verify_evidence

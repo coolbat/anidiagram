@@ -802,9 +802,9 @@ def _compile_relation(
     flow_importance = str(flow.get("importance")) if flow else importance
     repeat = str(flow.get("repeat")) if flow else "once"
     if repeat == "loop":
-        effect = "dynamic-dash"
+        effect = "stream-flow"
     else:
-        effect = "flow-arrow" if flow_importance in {"primary", "supporting"} else "draw"
+        effect = "packet-flow" if flow_importance in {"primary", "supporting"} else "draw"
     compiled = {
         "from": str(relation["from"]),
         "to": str(relation["to"]),
@@ -816,7 +816,7 @@ def _compile_relation(
         "semantic_relation_id": str(relation["id"]),
         "semantic_kind": str(relation.get("kind") or "relation"),
         "importance": importance,
-        "effect": {"preset": effect, "particle": "soft-arrow", "particle_count": 1, "trail_count": 1},
+        "effect": {"preset": effect, "particle_count": 1},
     }
     for field in ("condition", "protocol"):
         if relation.get(field) is not None:
@@ -870,7 +870,7 @@ def _motion_config(profile: str) -> Dict[str, Any]:
         "stagger": 0.12,
         "duration_scale": 1.0,
         "intensity": 1.0,
-        "edge": {"preset": "flow-arrow"},
+        "edge": {"preset": "packet-flow"},
         "node": {"preset": "icon-performance"},
         "group": {"preset": "border-scan"},
         "title": {"preset": "highlight-sweep"},

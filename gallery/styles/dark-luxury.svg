@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="expressive" data-motion-sequence="step-stagger" data-motion-edge="glow-line" data-motion-node="pulse" data-motion-group="border-scan" data-motion-title="highlight-sweep" data-motion-reduced="subtle" data-icon-system="illustrated-character-v1">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="expressive" data-motion-sequence="step-stagger" data-motion-edge="stream-flow" data-motion-node="pulse" data-motion-group="border-scan" data-motion-title="highlight-sweep" data-motion-reduced="subtle" data-icon-system="illustrated-character-v1">
 <title id="diagram-title">Executive Signal Network</title>
 <desc id="diagram-desc">market, finance, and product signals converge</desc>
 <style>
@@ -88,18 +88,14 @@
 <g class="edge" data-role="source">
   <path class="edge-base" d="M 373.1 215.9 L 496.9 352.1" fill="none" stroke="#38bdf8" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 373.1 215.9 L 496.9 352.1" fill="none" stroke="#38bdf8" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-1)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.47s" fill="freeze" />
-  </path>
-  <path class="edge-flow edge-flow-glow-line" d="M 373.1 215.9 L 496.9 352.1" fill="none" stroke="#38bdf8" stroke-width="4.3"
-        stroke-dasharray="9 18" opacity="0.55" filter="url(#soft-glow)">
-    <animate attributeName="stroke-dashoffset" values="0;-54" dur="3.02s" begin="0.67s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0.39;0.55;0.39" dur="3.02s" begin="0.67s" repeatCount="indefinite" />
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-1)" />
+  <path class="edge-flow edge-flow-stream-flow" d="M 373.1 215.9 L 496.9 352.1" fill="none" stroke="#38bdf8" stroke-width="2.1"
+        stroke-linecap="round" stroke-dasharray="8 14" opacity="0.58">
+    <animate attributeName="stroke-dashoffset" values="0;-44" dur="1.35s" begin="-0.11s" repeatCount="indefinite" />
   </path>
 
 
-  <text x="435.0" y="270.0" class="edge-label" fill="#a8a29e" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.61s" fill="freeze" />
+  <text x="435.0" y="270.0" class="edge-label" fill="#a8a29e" opacity="1">
     trend
   </text>
 </g>
@@ -112,18 +108,14 @@
 <g class="edge" data-role="memory">
   <path class="edge-base" d="M 373.3 498.3 L 496.7 369.7" fill="none" stroke="#34d399" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 373.3 498.3 L 496.7 369.7" fill="none" stroke="#34d399" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-2)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.59s" fill="freeze" />
-  </path>
-  <path class="edge-flow edge-flow-glow-line" d="M 373.3 498.3 L 496.7 369.7" fill="none" stroke="#34d399" stroke-width="4.3"
-        stroke-dasharray="9 18" opacity="0.55" filter="url(#soft-glow)">
-    <animate attributeName="stroke-dashoffset" values="0;-54" dur="3.02s" begin="0.79s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0.39;0.55;0.39" dur="3.02s" begin="0.79s" repeatCount="indefinite" />
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-2)" />
+  <path class="edge-flow edge-flow-stream-flow" d="M 373.3 498.3 L 496.7 369.7" fill="none" stroke="#34d399" stroke-width="2.1"
+        stroke-linecap="round" stroke-dasharray="8 14" opacity="0.58">
+    <animate attributeName="stroke-dashoffset" values="0;-44" dur="1.35s" begin="-0.22s" repeatCount="indefinite" />
   </path>
 
 
-  <text x="435.0" y="420.0" class="edge-label" fill="#a8a29e" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.73s" fill="freeze" />
+  <text x="435.0" y="420.0" class="edge-label" fill="#a8a29e" opacity="1">
     margin
   </text>
 </g>
@@ -136,18 +128,14 @@
 <g class="edge" data-role="tool">
   <path class="edge-base" d="M 817.8 216.6 L 717.2 351.4" fill="none" stroke="#f59e0b" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 817.8 216.6 L 717.2 351.4" fill="none" stroke="#f59e0b" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-3)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.71s" fill="freeze" />
-  </path>
-  <path class="edge-flow edge-flow-glow-line" d="M 817.8 216.6 L 717.2 351.4" fill="none" stroke="#f59e0b" stroke-width="4.3"
-        stroke-dasharray="9 18" opacity="0.55" filter="url(#soft-glow)">
-    <animate attributeName="stroke-dashoffset" values="0;-54" dur="3.02s" begin="0.91s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0.39;0.55;0.39" dur="3.02s" begin="0.91s" repeatCount="indefinite" />
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-3)" />
+  <path class="edge-flow edge-flow-stream-flow" d="M 817.8 216.6 L 717.2 351.4" fill="none" stroke="#f59e0b" stroke-width="2.1"
+        stroke-linecap="round" stroke-dasharray="8 14" opacity="0.58">
+    <animate attributeName="stroke-dashoffset" values="0;-44" dur="1.35s" begin="-0.33s" repeatCount="indefinite" />
   </path>
 
 
-  <text x="767.5" y="270.0" class="edge-label" fill="#a8a29e" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.85s" fill="freeze" />
+  <text x="767.5" y="270.0" class="edge-label" fill="#a8a29e" opacity="1">
     usage
   </text>
 </g>
@@ -160,17 +148,14 @@
 <g class="edge" data-role="output">
   <path class="edge-base" d="M 717.4 370.4 L 817.6 497.6" fill="none" stroke="#84cc16" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 717.4 370.4 L 817.6 497.6" fill="none" stroke="#84cc16" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-4)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.83s" fill="freeze" />
-  </path>
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-4)" />
 
-  <path class="edge-particle edge-arrow-particle" d="M -8.4 -5.0 L 8.4 0 L -8.4 5.0 Z" fill="#84cc16" opacity="0.92">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 717.4 370.4 L 817.6 497.6" begin="1.28s" rotate="auto" />
-    <animate attributeName="opacity" values="0;0.92;0" dur="4.20s" begin="1.28s" repeatCount="indefinite" />
-  </path>
+  <circle class="edge-particle edge-packet" r="5.8" fill="#84cc16" stroke="none" opacity="0.92">
+    <animateMotion dur="1.65s" repeatCount="indefinite" path="M 717.4 370.4 L 817.6 497.6" begin="-0.76s" />
+    <animate attributeName="opacity" values="0;0.92;0" dur="1.65s" begin="-0.76s" repeatCount="indefinite" />
+  </circle>
 
-  <text x="767.5" y="420.0" class="edge-label" fill="#a8a29e" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.97s" fill="freeze" />
+  <text x="767.5" y="420.0" class="edge-label" fill="#a8a29e" opacity="1">
     allocate
   </text>
 </g>
@@ -183,18 +168,14 @@
 <g class="edge" data-role="risk">
   <path class="edge-base" d="M 596.2 523.1 L 596.2 418.9 L 606.3 418.9" fill="none" stroke="#fb7185" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 596.2 523.1 L 596.2 418.9 L 606.3 418.9" fill="none" stroke="#fb7185" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-5)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.95s" fill="freeze" />
-  </path>
-  <path class="edge-flow edge-flow-glow-line" d="M 596.2 523.1 L 596.2 418.9 L 606.3 418.9" fill="none" stroke="#fb7185" stroke-width="4.3"
-        stroke-dasharray="9 18" opacity="0.55" filter="url(#soft-glow)">
-    <animate attributeName="stroke-dashoffset" values="0;-54" dur="3.02s" begin="1.15s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0.39;0.55;0.39" dur="3.02s" begin="1.15s" repeatCount="indefinite" />
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-5)" />
+  <path class="edge-flow edge-flow-stream-flow" d="M 596.2 523.1 L 596.2 418.9 L 606.3 418.9" fill="none" stroke="#fb7185" stroke-width="2.1"
+        stroke-linecap="round" stroke-dasharray="8 14" opacity="0.58">
+    <animate attributeName="stroke-dashoffset" values="0;-44" dur="1.35s" begin="-0.55s" repeatCount="indefinite" />
   </path>
 
 
-  <text x="601.2" y="457.0" class="edge-label" fill="#a8a29e" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="1.09s" fill="freeze" />
+  <text x="601.2" y="457.0" class="edge-label" fill="#a8a29e" opacity="1">
     check
   </text>
 </g>

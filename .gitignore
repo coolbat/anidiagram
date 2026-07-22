@@ -11,3 +11,9 @@ outputs/
 .playwright-mcp/
 .worktrees/
 node_modules/
+.next/
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem

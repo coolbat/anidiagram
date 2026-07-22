@@ -1,0 +1,46 @@
+{
+  "system": "anidiagram-edge-motion",
+  "display_name": "Edge Motion",
+  "version": "1.0.0",
+  "contract": "edge-motion-v1",
+  "status": "frozen-approved-release",
+  "scope": "connection-edge-motion-only",
+  "catalog_lifecycle_status": "approved",
+  "human_visual_acceptance": "confirmed",
+  "approved_at": "2026-07-22",
+  "canonical_effect_count": 6,
+  "canonical_dynamic_effect_count": 4,
+  "legacy_alias_count": 11,
+  "default_for_new_output": true,
+  "canonical_dynamic_effects": [
+    "packet-flow",
+    "comet-flow",
+    "stream-flow",
+    "draw"
+  ],
+  "hashes": {
+    "contract_sha256": "e99d3c2bf230b6cc8c9c4ea0736a3bf6cb1e1f63b708a6384d83d6d2e7de6c35",
+    "vocabulary_sha256": "7d5f9c9218dd76671c67a660016d19be42a6a8b9edaad0dbea3d3ec2b5c61237",
+    "effect_adapter_sha256": "e23ffdedf3d73c963d2f6940861a6f6d10bd72d3da56c793bb7e26889c848fbd",
+    "motion_manifest_adapter_sha256": "3d45ec072f7459aeddb3f92b0dde30b7ff70e80a4110ebe752da53ecc51cb99c",
+    "runtime_sha256": "62cf3cc7652b9e2197b0ebec9adae33a932cef37b1e82a764e9661edf9208cc1",
+    "documentation_sha256": "4f02c260bd4dbaa45ccceb3a284408f5bb8e6a21cb7c9196aa20beb37515650e",
+    "proof_spec_sha256": "d93e870ff23a79b1e8e7c71daee61acb293f4c4f7721b88fe00e4cc7f94f5a31",
+    "acceptance_record_sha256": "f524ac2859a56fadebc564e09bbdb5cef6d2a0db89d0b9406fb10ff08c662d6a"
+  },
+  "paths": {
+    "contract": "assets/edge-motion/edge-motion-v1.json",
+    "vocabulary": "src/anidiagram/edge_motion.py",
+    "effect_adapter": "src/anidiagram/effects.py",
+    "motion_manifest_adapter": "src/anidiagram/motion_manifest_v2.py",
+    "runtime": "runtime/edge-motion-v1-runtime.js",
+    "documentation": "docs/edge-motion-v1.md",
+    "proof_spec": "examples/edge-motion-v1-proof.diagram.json",
+    "acceptance_record": "assets/edge-motion/reviews/v1.0.0-acceptance.json"
+  },
+  "compatibility": {
+    "public_illustrated_2_3_runtime_frozen": true,
+    "public_illustrated_2_3_manifest_frozen": true,
+    "illustrated_2_4_candidate_promoted": false
+  }
+}

@@ -79,29 +79,26 @@
 <g class="edge" data-role="source">
   <path class="edge-base" d="M 700.8 182.5 C 700.8 222.5, 774.2 276.5, 774.2 316.5" fill="none" stroke="#0e7490" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 700.8 182.5 C 700.8 222.5, 774.2 276.5, 774.2 316.5" fill="none" stroke="#0e7490" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-1)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.47s" fill="freeze" />
-  </path>
-  <path class="edge-flow edge-flow-comet-flow" d="M 700.8 182.5 C 700.8 222.5, 774.2 276.5, 774.2 316.5" fill="none" stroke="#0e7490" stroke-width="1.7"
-        stroke-dasharray="9 18" opacity="0.55">
-    <animate attributeName="stroke-dashoffset" values="0;-54" dur="3.02s" begin="0.67s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0.39;0.55;0.39" dur="3.02s" begin="0.67s" repeatCount="indefinite" />
-  </path>
-  <circle class="edge-particle" r="5.0" fill="#0e7490" opacity="0.92">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 700.8 182.5 C 700.8 222.5, 774.2 276.5, 774.2 316.5" begin="0.32s" />
-    <animate attributeName="opacity" values="0;0.92;0" dur="4.20s" begin="0.32s" repeatCount="indefinite" />
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-1)" />
+
+  <circle class="edge-particle edge-comet edge-comet-head" r="5.2" fill="#0e7490" stroke="none" opacity="1.00">
+    <animateMotion dur="1.85s" repeatCount="indefinite" path="M 700.8 182.5 C 700.8 222.5, 774.2 276.5, 774.2 316.5" begin="-0.19s" />
+    <animate attributeName="opacity" values="0;1.00;0" dur="1.85s" begin="-0.19s" repeatCount="indefinite" />
   </circle>
-  <circle class="edge-particle" r="3.1" fill="#0e7490" opacity="0.74">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 700.8 182.5 C 700.8 222.5, 774.2 276.5, 774.2 316.5" begin="1.72s" />
-    <animate attributeName="opacity" values="0;0.74;0" dur="4.20s" begin="1.72s" repeatCount="indefinite" />
+  <circle class="edge-particle edge-comet edge-comet-tail" r="3.8" fill="#0e7490" stroke="none" opacity="0.62">
+    <animateMotion dur="1.85s" repeatCount="indefinite" path="M 700.8 182.5 C 700.8 222.5, 774.2 276.5, 774.2 316.5" begin="-0.12s" />
+    <animate attributeName="opacity" values="0;0.62;0" dur="1.85s" begin="-0.12s" repeatCount="indefinite" />
   </circle>
-  <circle class="edge-particle" r="2.2" fill="#0e7490" opacity="0.56">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 700.8 182.5 C 700.8 222.5, 774.2 276.5, 774.2 316.5" begin="3.12s" />
-    <animate attributeName="opacity" values="0;0.56;0" dur="4.20s" begin="3.12s" repeatCount="indefinite" />
+  <circle class="edge-particle edge-comet edge-comet-tail" r="2.7" fill="#0e7490" stroke="none" opacity="0.38">
+    <animateMotion dur="1.85s" repeatCount="indefinite" path="M 700.8 182.5 C 700.8 222.5, 774.2 276.5, 774.2 316.5" begin="-0.04s" />
+    <animate attributeName="opacity" values="0;0.38;0" dur="1.85s" begin="-0.04s" repeatCount="indefinite" />
+  </circle>
+  <circle class="edge-particle edge-comet edge-comet-tail" r="1.8" fill="#0e7490" stroke="none" opacity="0.20">
+    <animateMotion dur="1.85s" repeatCount="indefinite" path="M 700.8 182.5 C 700.8 222.5, 774.2 276.5, 774.2 316.5" begin="0.03s" />
+    <animate attributeName="opacity" values="0;0.20;0" dur="1.85s" begin="0.03s" repeatCount="indefinite" />
   </circle>
 
-  <text x="737.5" y="235.5" class="edge-label" fill="#706a61" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.61s" fill="freeze" />
+  <text x="737.5" y="235.5" class="edge-label" fill="#706a61" opacity="1">
     look up
   </text>
 </g>
@@ -114,29 +111,26 @@
 <g class="edge" data-role="source">
   <path class="edge-base" d="M 774.4 337.6 C 774.4 377.6, 700.6 436.4, 700.6 476.4" fill="none" stroke="#0e7490" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 774.4 337.6 C 774.4 377.6, 700.6 436.4, 700.6 476.4" fill="none" stroke="#0e7490" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-2)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.59s" fill="freeze" />
-  </path>
-  <path class="edge-flow edge-flow-comet-flow" d="M 774.4 337.6 C 774.4 377.6, 700.6 436.4, 700.6 476.4" fill="none" stroke="#0e7490" stroke-width="1.7"
-        stroke-dasharray="9 18" opacity="0.55">
-    <animate attributeName="stroke-dashoffset" values="0;-54" dur="3.02s" begin="0.79s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0.39;0.55;0.39" dur="3.02s" begin="0.79s" repeatCount="indefinite" />
-  </path>
-  <circle class="edge-particle" r="5.0" fill="#0e7490" opacity="0.92">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 774.4 337.6 C 774.4 377.6, 700.6 436.4, 700.6 476.4" begin="0.64s" />
-    <animate attributeName="opacity" values="0;0.92;0" dur="4.20s" begin="0.64s" repeatCount="indefinite" />
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-2)" />
+
+  <circle class="edge-particle edge-comet edge-comet-head" r="5.2" fill="#0e7490" stroke="none" opacity="1.00">
+    <animateMotion dur="1.85s" repeatCount="indefinite" path="M 774.4 337.6 C 774.4 377.6, 700.6 436.4, 700.6 476.4" begin="-0.38s" />
+    <animate attributeName="opacity" values="0;1.00;0" dur="1.85s" begin="-0.38s" repeatCount="indefinite" />
   </circle>
-  <circle class="edge-particle" r="3.1" fill="#0e7490" opacity="0.74">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 774.4 337.6 C 774.4 377.6, 700.6 436.4, 700.6 476.4" begin="2.04s" />
-    <animate attributeName="opacity" values="0;0.74;0" dur="4.20s" begin="2.04s" repeatCount="indefinite" />
+  <circle class="edge-particle edge-comet edge-comet-tail" r="3.8" fill="#0e7490" stroke="none" opacity="0.62">
+    <animateMotion dur="1.85s" repeatCount="indefinite" path="M 774.4 337.6 C 774.4 377.6, 700.6 436.4, 700.6 476.4" begin="-0.30s" />
+    <animate attributeName="opacity" values="0;0.62;0" dur="1.85s" begin="-0.30s" repeatCount="indefinite" />
   </circle>
-  <circle class="edge-particle" r="2.2" fill="#0e7490" opacity="0.56">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 774.4 337.6 C 774.4 377.6, 700.6 436.4, 700.6 476.4" begin="3.44s" />
-    <animate attributeName="opacity" values="0;0.56;0" dur="4.20s" begin="3.44s" repeatCount="indefinite" />
+  <circle class="edge-particle edge-comet edge-comet-tail" r="2.7" fill="#0e7490" stroke="none" opacity="0.38">
+    <animateMotion dur="1.85s" repeatCount="indefinite" path="M 774.4 337.6 C 774.4 377.6, 700.6 436.4, 700.6 476.4" begin="-0.23s" />
+    <animate attributeName="opacity" values="0;0.38;0" dur="1.85s" begin="-0.23s" repeatCount="indefinite" />
+  </circle>
+  <circle class="edge-particle edge-comet edge-comet-tail" r="1.8" fill="#0e7490" stroke="none" opacity="0.20">
+    <animateMotion dur="1.85s" repeatCount="indefinite" path="M 774.4 337.6 C 774.4 377.6, 700.6 436.4, 700.6 476.4" begin="-0.16s" />
+    <animate attributeName="opacity" values="0;0.20;0" dur="1.85s" begin="-0.16s" repeatCount="indefinite" />
   </circle>
 
-  <text x="737.5" y="393.0" class="edge-label" fill="#706a61" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.73s" fill="freeze" />
+  <text x="737.5" y="393.0" class="edge-label" fill="#706a61" opacity="1">
     evidence
   </text>
 </g>
@@ -149,18 +143,14 @@
 <g class="edge" data-role="risk">
   <path class="edge-base" d="M 509.4 476.4 C 509.4 436.4, 435.6 377.6, 435.6 337.6" fill="none" stroke="#b91c1c" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 509.4 476.4 C 509.4 436.4, 435.6 377.6, 435.6 337.6" fill="none" stroke="#b91c1c" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-3)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.71s" fill="freeze" />
-  </path>
-  <path class="edge-flow edge-flow-dynamic-dash" d="M 509.4 476.4 C 509.4 436.4, 435.6 377.6, 435.6 337.6" fill="none" stroke="#b91c1c" stroke-width="1.7"
-        stroke-dasharray="8 12" opacity="0.55">
-    <animate attributeName="stroke-dashoffset" values="0;-54" dur="3.02s" begin="0.91s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0.39;0.55;0.39" dur="3.02s" begin="0.91s" repeatCount="indefinite" />
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-3)" />
+  <path class="edge-flow edge-flow-stream-flow" d="M 509.4 476.4 C 509.4 436.4, 435.6 377.6, 435.6 337.6" fill="none" stroke="#b91c1c" stroke-width="2.1"
+        stroke-linecap="round" stroke-dasharray="8 14" opacity="0.58">
+    <animate attributeName="stroke-dashoffset" values="0;-44" dur="1.35s" begin="-0.33s" repeatCount="indefinite" />
   </path>
 
 
-  <text x="472.5" y="393.0" class="edge-label" fill="#706a61" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.85s" fill="freeze" />
+  <text x="472.5" y="393.0" class="edge-label" fill="#706a61" opacity="1">
     review
   </text>
 </g>
@@ -173,29 +163,26 @@
 <g class="edge" data-role="actor">
   <path class="edge-base" d="M 435.8 316.5 C 435.8 276.5, 509.2 222.5, 509.2 182.5" fill="none" stroke="#ea580c" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 435.8 316.5 C 435.8 276.5, 509.2 222.5, 509.2 182.5" fill="none" stroke="#ea580c" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-4)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.83s" fill="freeze" />
-  </path>
-  <path class="edge-flow edge-flow-comet-flow" d="M 435.8 316.5 C 435.8 276.5, 509.2 222.5, 509.2 182.5" fill="none" stroke="#ea580c" stroke-width="1.7"
-        stroke-dasharray="9 18" opacity="0.55">
-    <animate attributeName="stroke-dashoffset" values="0;-54" dur="3.02s" begin="1.03s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0.39;0.55;0.39" dur="3.02s" begin="1.03s" repeatCount="indefinite" />
-  </path>
-  <circle class="edge-particle" r="5.0" fill="#ea580c" opacity="0.92">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 435.8 316.5 C 435.8 276.5, 509.2 222.5, 509.2 182.5" begin="1.28s" />
-    <animate attributeName="opacity" values="0;0.92;0" dur="4.20s" begin="1.28s" repeatCount="indefinite" />
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-4)" />
+
+  <circle class="edge-particle edge-comet edge-comet-head" r="5.2" fill="#ea580c" stroke="none" opacity="1.00">
+    <animateMotion dur="1.85s" repeatCount="indefinite" path="M 435.8 316.5 C 435.8 276.5, 509.2 222.5, 509.2 182.5" begin="-0.76s" />
+    <animate attributeName="opacity" values="0;1.00;0" dur="1.85s" begin="-0.76s" repeatCount="indefinite" />
   </circle>
-  <circle class="edge-particle" r="3.1" fill="#ea580c" opacity="0.74">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 435.8 316.5 C 435.8 276.5, 509.2 222.5, 509.2 182.5" begin="2.68s" />
-    <animate attributeName="opacity" values="0;0.74;0" dur="4.20s" begin="2.68s" repeatCount="indefinite" />
+  <circle class="edge-particle edge-comet edge-comet-tail" r="3.8" fill="#ea580c" stroke="none" opacity="0.62">
+    <animateMotion dur="1.85s" repeatCount="indefinite" path="M 435.8 316.5 C 435.8 276.5, 509.2 222.5, 509.2 182.5" begin="-0.69s" />
+    <animate attributeName="opacity" values="0;0.62;0" dur="1.85s" begin="-0.69s" repeatCount="indefinite" />
   </circle>
-  <circle class="edge-particle" r="2.2" fill="#ea580c" opacity="0.56">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 435.8 316.5 C 435.8 276.5, 509.2 222.5, 509.2 182.5" begin="4.08s" />
-    <animate attributeName="opacity" values="0;0.56;0" dur="4.20s" begin="4.08s" repeatCount="indefinite" />
+  <circle class="edge-particle edge-comet edge-comet-tail" r="2.7" fill="#ea580c" stroke="none" opacity="0.38">
+    <animateMotion dur="1.85s" repeatCount="indefinite" path="M 435.8 316.5 C 435.8 276.5, 509.2 222.5, 509.2 182.5" begin="-0.61s" />
+    <animate attributeName="opacity" values="0;0.38;0" dur="1.85s" begin="-0.61s" repeatCount="indefinite" />
+  </circle>
+  <circle class="edge-particle edge-comet edge-comet-tail" r="1.8" fill="#ea580c" stroke="none" opacity="0.20">
+    <animateMotion dur="1.85s" repeatCount="indefinite" path="M 435.8 316.5 C 435.8 276.5, 509.2 222.5, 509.2 182.5" begin="-0.54s" />
+    <animate attributeName="opacity" values="0;0.20;0" dur="1.85s" begin="-0.54s" repeatCount="indefinite" />
   </circle>
 
-  <text x="472.5" y="235.5" class="edge-label" fill="#706a61" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="0.97s" fill="freeze" />
+  <text x="472.5" y="235.5" class="edge-label" fill="#706a61" opacity="1">
     revise
   </text>
 </g>
@@ -208,21 +195,14 @@
 <g class="edge" data-role="memory">
   <path class="edge-base" d="M 605.0 381.0 L 605.0 433.0" fill="none" stroke="#15803d" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 605.0 381.0 L 605.0 433.0" fill="none" stroke="#15803d" stroke-width="2.4" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1" marker-end="url(#arrow-5)">
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="0.90s" begin="0.95s" fill="freeze" />
-  </path>
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-5)" />
 
-  <circle class="edge-particle" r="5.4" fill="#15803d" opacity="0.92">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 605.0 381.0 L 605.0 433.0" begin="1.60s" />
-    <animate attributeName="opacity" values="0;0.92;0" dur="4.20s" begin="1.60s" repeatCount="indefinite" />
-  </circle>
-  <circle class="edge-particle" r="3.4" fill="#15803d" opacity="0.74">
-    <animateMotion dur="4.20s" repeatCount="indefinite" path="M 605.0 381.0 L 605.0 433.0" begin="3.00s" />
-    <animate attributeName="opacity" values="0;0.74;0" dur="4.20s" begin="3.00s" repeatCount="indefinite" />
+  <circle class="edge-particle edge-packet" r="5.0" fill="#15803d" stroke="none" opacity="0.92">
+    <animateMotion dur="1.65s" repeatCount="indefinite" path="M 605.0 381.0 L 605.0 433.0" begin="-0.95s" />
+    <animate attributeName="opacity" values="0;0.92;0" dur="1.65s" begin="-0.95s" repeatCount="indefinite" />
   </circle>
 
-  <text x="605.0" y="393.0" class="edge-label" fill="#706a61" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="1.09s" fill="freeze" />
+  <text x="605.0" y="393.0" class="edge-label" fill="#706a61" opacity="1">
     recall
   </text>
 </g>

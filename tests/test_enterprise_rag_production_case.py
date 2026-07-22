@@ -45,7 +45,7 @@ class EnterpriseRagProductionCaseTest(unittest.TestCase):
         report = quality_report(scene, style)
 
         self.assertEqual("illustrated", spec["icon_system"])
-        self.assertEqual("2.3.0", spec["resolved_presentation"]["icon_system"]["version"])
+        self.assertEqual("2.4.0", spec["resolved_presentation"]["icon_system"]["version"])
         self.assertEqual(
             {"value": "minimal-light", "source": "model"},
             spec["resolved_presentation"]["style"],
@@ -68,7 +68,7 @@ class EnterpriseRagProductionCaseTest(unittest.TestCase):
         self.assertEqual(12, len(manifest["icons"]))
         self.assertEqual(set(ILLUSTRATED_V3_ICON_PERFORMANCES), {entry["icon"] for entry in manifest["icons"]})
         self.assertEqual(
-            {"illustrated-performance-v4"},
+            {"illustrated-performance-v5"},
             {entry["motion_contract"] for entry in manifest["icons"]},
         )
         self.assertEqual({"approved"}, {entry["motion_status"] for entry in manifest["icons"]})

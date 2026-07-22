@@ -1,0 +1,79 @@
+{
+  "system": "anidiagram-edge-motion",
+  "contract": "edge-motion-v1",
+  "version": "1.0.0",
+  "status": "confirmed",
+  "accepted_at": "2026-07-22",
+  "scope": "connection-edge-motion-only",
+  "human_visual_acceptance": "confirmed",
+  "acceptance_statement": "Four non-overlapping connection-edge recipes are approved: packet, comet, stream, and draw.",
+  "canonical_dynamic_effects": [
+    "packet-flow",
+    "comet-flow",
+    "stream-flow",
+    "draw"
+  ],
+  "behavior": {
+    "packet-flow": "one borderless solid packet on a static arrow",
+    "comet-flow": "one borderless leading packet with three shrinking fading echoes on a static arrow",
+    "stream-flow": "one moving dashed stroke without particles",
+    "draw": "one-shot source-to-target reveal",
+    "expressive": "all eligible edges",
+    "readable": "semantic-flow coverage first, then importance and authored order",
+    "off": "no generated edge-motion elements",
+    "reduced_motion": "static authored arrows"
+  },
+  "review_case": {
+    "title": "Edge Motion v1",
+    "spec": {
+      "path": "examples/edge-motion-v1-proof.diagram.json",
+      "sha256": "d93e870ff23a79b1e8e7c71daee61acb293f4c4f7721b88fe00e4cc7f94f5a31"
+    },
+    "html": {
+      "path": "outputs/edge-motion-v1-proof/edge-motion-v1-proof.html",
+      "sha256": "94b6b59caf51795d88b764b7a22295458e73c32f3a330da46be5ff902876a738"
+    },
+    "svg": {
+      "path": "outputs/edge-motion-v1-proof/edge-motion-v1-proof.svg",
+      "sha256": "2e70171262be90ab75b1d251b57470d405020dfb7f53acc18fcabd52e27160a2"
+    },
+    "png": {
+      "path": "outputs/edge-motion-v1-proof/edge-motion-v1-proof.png",
+      "sha256": "999b48196ae1052621cba641ab67c9dbd18b166d8e0e9a8cfb33cdc6ba2b51b5"
+    },
+    "quality": {
+      "path": "outputs/edge-motion-v1-proof/edge-motion-v1-proof.quality.json",
+      "sha256": "9fea906017bc128a143086d6a3fcb8bdd5a0b62937f0d69bbb5f186f39c2a57f"
+    }
+  },
+  "validation": {
+    "unit_tests": "202/202",
+    "diagram_core_strict": "56/56; 0 errors; 0 warnings",
+    "proof_character_rest": "8/8",
+    "proof_reduced_motion": "8/8",
+    "proof_expressive_edges": "4/4",
+    "proof_readable_edges": "2/4",
+    "proof_comet_parts": "1 head + 3 shrinking borderless echoes",
+    "stage_modes": [
+      "Expressive",
+      "Readable",
+      "Off",
+      "Expressive"
+    ],
+    "illustrated_2_3_regression": "16/16",
+    "quality_errors": 0,
+    "quality_warnings": 0,
+    "quality_issues": 0,
+    "preview_http": "200 OK"
+  },
+  "release_boundary": {
+    "illustrated_2_4_candidate_promoted": false,
+    "illustrated_2_4_real_case_status": "pending-human-review",
+    "public_illustrated_2_3_changed": false
+  },
+  "notes": [
+    "Legacy ghost-flow and comet inputs normalize to the approved comet-flow recipe.",
+    "Comet emphasis remains opt-in and is not automatically assigned to every event-driven relation.",
+    "This acceptance freezes connection-edge motion only; it does not approve or publish the separate Illustrated 2.4 candidate."
+  ]
+}

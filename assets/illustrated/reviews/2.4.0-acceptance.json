@@ -1,0 +1,96 @@
+{
+  "system": "illustrated",
+  "version": "2.4.0",
+  "status": "confirmed",
+  "accepted_at": "2026-07-22",
+  "static_acceptance": {
+    "status": "confirmed",
+    "record": "assets/illustrated/reviews/2.4.0-static-acceptance.json",
+    "record_sha256": "7f3b618cc960e2dae4d7f5657055df1a573d27e070ef71c977ffbc61429509bd",
+    "icon_count": 20,
+    "approved_batch_4_icons": ["vector-database", "knowledge-base", "gateway", "container"]
+  },
+  "motion_acceptance": {
+    "status": "confirmed",
+    "approved_at": "2026-07-22",
+    "approved_contract": "illustrated-performance-v5",
+    "review_contract": "illustrated-performance-v5-review",
+    "approved_icons": ["vector-database", "knowledge-base", "gateway", "container"],
+    "selection_policy": "automatic-for-supported-showcase-icons",
+    "review_record": "assets/illustrated/reviews/2.4.0-motion-acceptance.json",
+    "review_record_sha256": "feeb507942fa94680c87406837e24a22d6369da27bb658b8ff13093693ee1a28",
+    "review_validation": {
+      "rest_verified": 4,
+      "reduced_motion_verified": 4,
+      "stage_modes": ["Expressive", "Readable", "Off", "Expressive"]
+    }
+  },
+  "real_case_acceptance": {
+    "status": "confirmed",
+    "accepted_at": "2026-07-22",
+    "record": "assets/illustrated/reviews/2.4.0-real-case-review.json",
+    "record_sha256": "7cf8a5c8f6b72a07f9ad3c6450c9350e2fd0da215e2ccfa7be488983a3ea6373",
+    "icon_instances": 7,
+    "animated_edges": 7,
+    "motion_profile": "showcase-v1",
+    "edge_motion_contract": "edge-motion-v1@1.0.0"
+  },
+  "public_registration": {
+    "status": "confirmed",
+    "approved_at": "2026-07-22",
+    "icon_count": 20,
+    "automatic_motion_icon_count": 20,
+    "public_motion_contract": "illustrated-performance-v5",
+    "public_registry_changed": true,
+    "previous_release": "2.3.0"
+  },
+  "public_showcase": {
+    "spec": "examples/illustrated-2.4-showcase.diagram.json",
+    "static_icon_count": 20,
+    "automatic_motion_icon_count": 20,
+    "review_motion_icon_count": 0,
+    "manifest_verified": 20,
+    "rest_verified": 20,
+    "reduced_motion_verified": 20,
+    "stage_modes": ["Expressive", "Readable", "Off", "Expressive"],
+    "active_edges": 0,
+    "readable_edges": 0,
+    "quality": {"score": 100, "errors": 0, "warnings": 0, "issues": 0},
+    "browser_capture": {"renderer": "browser", "fps": 24, "encoded_frames": 108, "distinct_frames": 108, "scale": 2.0},
+    "artifacts": {
+      "html": {
+        "path": "outputs/illustrated-2.4-showcase/illustrated-2.4-showcase.html",
+        "sha256": "4c91fb3abffaa1247ddf657a0b894edc29143bf004fa22f4e5e910203f9cfb4e"
+      },
+      "svg": {
+        "path": "outputs/illustrated-2.4-showcase/illustrated-2.4-showcase.svg",
+        "sha256": "7d47bc711c6130a9e17de72d9e48472007e50240a279b5b7f31ba07bf7a8cdce"
+      },
+      "png": {
+        "path": "outputs/illustrated-2.4-showcase/illustrated-2.4-showcase.png",
+        "sha256": "a0d99252db616c9bc05e7cdcdea1143772c01361f766e46b5b34b802bb94c8f7"
+      },
+      "webp": {
+        "path": "outputs/illustrated-2.4-showcase/illustrated-2.4-showcase.webp",
+        "sha256": "a3fbf84be817581bc6d89fbeeb4722d602c1e55a0d704e4630edecd1d57031cf"
+      },
+      "quality": {
+        "path": "outputs/illustrated-2.4-showcase/illustrated-2.4-showcase.quality.json",
+        "sha256": "9fea906017bc128a143086d6a3fcb8bdd5a0b62937f0d69bbb5f186f39c2a57f"
+      },
+      "result": {
+        "path": "outputs/illustrated-2.4-showcase/result.json",
+        "sha256": "78dc59b1d3c7b3c82180e6ab26952501769bad75e90f5b11c0ace4c30642e7f3"
+      }
+    }
+  },
+  "archives": {
+    "review_contract_sha256": "910f87179b43a675fde94e239b4071a230db2c183892669bb059688402b87509",
+    "previous_release_sha256": "54851a06e6cf446c058d47b5aac563d399134bfc9e25cb409ba51f82e2cc8aed"
+  },
+  "notes": [
+    "Human static, motion, and real-case approvals promote the four reviewed icons into the complete twenty-icon public v5 contract.",
+    "The v5-review contract and all 2.4 candidate-stage acceptance records remain immutable approval evidence.",
+    "New showcase diagrams select all twenty public performances automatically without node-level icon_motion."
+  ]
+}

@@ -5,7 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict, Iterable, List, Optional, Tuple
 
-from .effects import channel_effect, effect_active
+from .effects import canonical_edge_effect, channel_effect, effect_active
+from .edge_motion import CONTINUOUS_EDGE_MOTION, PARTICLE_EDGE_MOTION
 from .diagram_core.catalog import approved_icon_ids
 from .icon_system import resolve_icon_system
 from .styles import deep_merge
@@ -15,21 +16,6 @@ from .model import Edge, Node, Point, Scene
 
 
 Rect = Tuple[float, float, float, float]
-CONTINUOUS_EDGE_MOTION = {
-    "pulse",
-    "trace",
-    "comet-flow",
-    "dynamic-dash",
-    "dash-flow",
-    "flow-dot",
-    "flow-arrow",
-    "signal-dot",
-    "signal-arrow",
-    "ghost-flow",
-    "glow-line",
-    "comet",
-}
-PARTICLE_EDGE_MOTION = {"comet-flow", "comet", "flow-dot", "flow-arrow", "signal-dot", "signal-arrow", "ghost-flow"}
 CONTINUOUS_NODE_MOTION = {
     "float",
     "glow-breathe",
@@ -241,7 +227,7 @@ def _check_motion_budget(scene: Scene, issues: List[QualityIssue]) -> None:
     for edge in scene.edges:
         if not edge.motion.enabled:
             continue
-        effect = channel_effect(scene.motion, {}, "edge", edge.effect)
+        effect = canonical_edge_effect(channel_effect(scene.motion, {}, "edge", edge.effect))
         if not effect_active(scene.motion, effect):
             continue
         if effect.preset in CONTINUOUS_EDGE_MOTION:

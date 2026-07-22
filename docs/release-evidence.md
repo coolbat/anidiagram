@@ -167,6 +167,34 @@ not claim that the changes have already been committed or published.
 Current icon-system status and immutable boundaries are indexed in
 [`icon-system-release-status.md`](./icon-system-release-status.md).
 
+### Evidence E-ILL-2.4-01 — passed
+
+- Milestone: Illustrated 2.4.0 public registration and v5 release closeout.
+- Recorded at: 2026-07-22 CST.
+- Scope: promote `vector-database`, `knowledge-base`, `gateway`, and `container`
+  after static, motion, real-case, and explicit public-registration approval.
+- Public authority: 20 approved icons, 20 automatic
+  `illustrated-performance-v5` performances, `showcase-v1`, and
+  `edge-motion-v1@1.0.0`; 2.3.0 and v4 remain immutable archives.
+- Result: 208/208 Python tests passed; Diagram Core strict validation remained
+  56/56 with zero errors and warnings; public Illustrated rest and reduced
+  motion passed 20/20; mode switching returned
+  `Expressive -> Readable -> Off -> Expressive` with 20 characters. The
+  approved real-case regression remained 7/7 character timelines, 7 animated
+  edges, and 2 Readable edges.
+- Export evidence: two public systems x ten formats at browser 24 FPS, 108
+  frames, and 2x scale. WebP, GIF, APNG, MP4, and Lottie each contained 108
+  distinct frames for both systems. Minimum per-icon distinct frames were 3
+  for Diagram Core and 45 for Illustrated; issues were empty.
+- Artifact: `outputs/release-evidence/icon-systems/public-icon-system-export-evidence.json`
+  (13,356 bytes, SHA-256
+  `cecb8012211e888e63fe0e695c7f170259a3f68ee1944b402aaf014ee6daef5e`).
+- Release records: `assets/illustrated/releases/2.4.0.json` and
+  `assets/illustrated/reviews/2.4.0-acceptance.json`.
+- Blocker class: none for the local release. Git commit, push, and remote CI
+  activation remain separate explicit actions.
+- Verdict: passed; Illustrated 2.4.0 is the current local public release.
+
 ### Evidence E-CI-01 — locally passed, remote activation pending
 
 - Milestone: icon-system release automation and CI evidence retention.

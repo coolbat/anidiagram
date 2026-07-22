@@ -34,11 +34,19 @@ async function snapshot(page) {
       total: timelines.length,
       characters: timelines.filter((timeline) => timeline.__anidiagramCharacter || timeline.__anidiagramPresentation).length,
       titleEntries: stageKinds.filter((kind) => kind === "title-entry").length,
-      edgePackets: stageKinds.filter((kind) => kind === "edge-packet").length,
-      edgeIndices: timelines.filter((timeline) => timeline.__anidiagramStage === "edge-packet").map((timeline) => timeline.__anidiagramEdgeIndex),
-      edgeEffects: timelines.filter((timeline) => timeline.__anidiagramStage === "edge-packet").map((timeline) => timeline.__anidiagramEdgeEffect),
-      generated: document.querySelectorAll(".runtime-generated").length,
+      edgePackets: stageKinds.filter((kind) => kind === "edge-motion").length,
+      edgeIndices: timelines.filter((timeline) => timeline.__anidiagramStage === "edge-motion").map((timeline) => timeline.__anidiagramEdgeIndex),
+      edgeEffects: timelines.filter((timeline) => timeline.__anidiagramStage === "edge-motion").map((timeline) => timeline.__anidiagramEdgeEffect),
+      edgeKinds: timelines.filter((timeline) => timeline.__anidiagramStage === "edge-motion").map((timeline) => timeline.__anidiagramEdgeKind),
+      generated: document.querySelectorAll(".runtime-generated, .edge-motion-v1-generated").length,
+      edgeGenerated: document.querySelectorAll(".edge-motion-v1-generated").length,
       logicalPackets: document.querySelectorAll(".runtime-edge-packet").length,
+      logicalComets: document.querySelectorAll(".runtime-edge-comet").length,
+      cometPartCounts: Array.from(document.querySelectorAll(".runtime-edge-comet")).map((element) => element.querySelectorAll("circle").length),
+      cometRecipes: Array.from(document.querySelectorAll(".runtime-edge-comet")).map((element) => ({
+        radii: Array.from(element.querySelectorAll("circle")).map((part) => Number(part.getAttribute("r"))),
+        strokes: Array.from(element.querySelectorAll("circle")).map((part) => part.getAttribute("stroke")),
+      })),
       generatedKeys: Array.from(document.querySelectorAll(".runtime-generated")).map((element) => `${element.tagName}:${element.className.baseVal || element.className}`),
     };
   });
@@ -79,6 +87,18 @@ async function main() {
       : [];
     const expectedExpressivePackets = expectedExpressiveIndices.length;
     const expectedReadablePackets = expectedReadableIndices.length;
+    const edgeEntries = Array.isArray(manifest.edges) ? manifest.edges : [];
+    const packetCount = (indices) => indices.filter((index) => edgeEntries[index]?.motion_kind === "packet").length;
+    const cometCount = (indices) => indices.filter((index) => edgeEntries[index]?.motion_kind === "comet").length;
+    const expectedExpressiveLogicalPackets = packetCount(expectedExpressiveIndices);
+    const expectedReadableLogicalPackets = packetCount(expectedReadableIndices);
+    const expectedExpressiveLogicalComets = cometCount(expectedExpressiveIndices);
+    const expectedReadableLogicalComets = cometCount(expectedReadableIndices);
+    const assertCometRecipes = (state, label) => state.cometRecipes.forEach((recipe) => {
+      assert(recipe.radii.length === 4, `${label} comet radii: ${recipe.radii}`);
+      assert(recipe.radii.every((radius, index) => index === 0 || radius < recipe.radii[index - 1]), `${label} comet radii are not descending: ${recipe.radii}`);
+      assert(recipe.strokes.every((stroke) => stroke === "none"), `${label} comet outlines: ${recipe.strokes}`);
+    });
 
     // Expressive -> Readable -> Off -> Expressive
     const expressive = await snapshot(page);
@@ -86,9 +106,12 @@ async function main() {
     assert(expressive.titleEntries === (manifest.stage.title_sweep ? 1 : 0), `expressive title entries: ${expressive.titleEntries}`);
     assert(expressive.edgePackets === expectedExpressivePackets, `expressive edge packet timelines: ${expressive.edgePackets}/${expectedExpressivePackets}`);
     assert(JSON.stringify(expressive.edgeIndices) === JSON.stringify(expectedExpressiveIndices), `expressive edge indices: ${expressive.edgeIndices}/${expectedExpressiveIndices}`);
-    assert(expressive.logicalPackets === expressive.edgePackets, `logical packet mismatch: ${expressive.logicalPackets}/${expressive.edgePackets}`);
+    assert(expressive.logicalPackets === expectedExpressiveLogicalPackets, `logical packet mismatch: ${expressive.logicalPackets}/${expectedExpressiveLogicalPackets}`);
+    assert(expressive.logicalComets === expectedExpressiveLogicalComets, `logical comet mismatch: ${expressive.logicalComets}/${expectedExpressiveLogicalComets}`);
+    assert(expressive.cometPartCounts.every((count) => count === 4), `comet part counts: ${expressive.cometPartCounts}`);
+    assertCometRecipes(expressive, "expressive");
     const cycleCheck = await page.evaluate(() => {
-      const edgeTimelines = (window.__ANIDIAGRAM_STAGE_TIMELINES__ || []).filter((timeline) => timeline.__anidiagramStage === "edge-packet");
+      const edgeTimelines = (window.__ANIDIAGRAM_STAGE_TIMELINES__ || []).filter((timeline) => timeline.__anidiagramStage === "edge-motion");
       const titleTimelines = (window.__ANIDIAGRAM_STAGE_TIMELINES__ || []).filter((timeline) => timeline.__anidiagramStage === "title-entry");
       edgeTimelines.forEach((timeline) => {
         timeline.pause();
@@ -99,11 +122,13 @@ async function main() {
         edgeRepeatDelays: edgeTimelines.map((timeline) => timeline.repeatDelay()),
         titleRepeats: titleTimelines.map((timeline) => timeline.repeat()),
         logicalPackets: document.querySelectorAll(".runtime-edge-packet").length,
+        logicalComets: document.querySelectorAll(".runtime-edge-comet").length,
       };
     });
     assert(cycleCheck.edgeRepeatDelays.every((value) => Math.abs(value) < 0.001), `edge repeat delays: ${cycleCheck.edgeRepeatDelays}`);
     assert(cycleCheck.titleRepeats.every((value) => value === 0), `title repeats: ${cycleCheck.titleRepeats}`);
-    assert(cycleCheck.logicalPackets === expressive.edgePackets, `duplicate packets after two cycles: ${cycleCheck.logicalPackets}/${expressive.edgePackets}`);
+    assert(cycleCheck.logicalPackets === expectedExpressiveLogicalPackets, `duplicate packets after two cycles: ${cycleCheck.logicalPackets}/${expectedExpressiveLogicalPackets}`);
+    assert(cycleCheck.logicalComets === expectedExpressiveLogicalComets, `duplicate comets after two cycles: ${cycleCheck.logicalComets}/${expectedExpressiveLogicalComets}`);
 
     await page.locator("#restart").click();
     const restarted = await snapshot(page);
@@ -114,7 +139,10 @@ async function main() {
     assert(readable.titleEntries === 0, `readable title entries: ${readable.titleEntries}`);
     assert(readable.edgePackets === expectedReadablePackets, `readable edge packet timelines: ${readable.edgePackets}/${expectedReadablePackets}`);
     assert(JSON.stringify(readable.edgeIndices) === JSON.stringify(expectedReadableIndices), `readable edge indices: ${readable.edgeIndices}/${expectedReadableIndices}`);
-    assert(readable.logicalPackets === readable.edgePackets, `readable logical packet mismatch: ${readable.logicalPackets}/${readable.edgePackets}`);
+    assert(readable.logicalPackets === expectedReadableLogicalPackets, `readable logical packet mismatch: ${readable.logicalPackets}/${expectedReadableLogicalPackets}`);
+    assert(readable.logicalComets === expectedReadableLogicalComets, `readable logical comet mismatch: ${readable.logicalComets}/${expectedReadableLogicalComets}`);
+    assert(readable.cometPartCounts.every((count) => count === 4), `readable comet part counts: ${readable.cometPartCounts}`);
+    assertCometRecipes(readable, "readable");
 
     const off = await selectMode(page, "off");
     assert(off.total === 0, `off timelines: ${off.total}`);
@@ -157,8 +185,11 @@ async function main() {
     assert(expressiveAgain.edgePackets === expressive.edgePackets, `restored edge packets: ${expressiveAgain.edgePackets}/${expressive.edgePackets}`);
     assert(JSON.stringify(expressiveAgain.edgeIndices) === JSON.stringify(expectedExpressiveIndices), `restored edge indices: ${expressiveAgain.edgeIndices}/${expectedExpressiveIndices}`);
     assert(expressiveAgain.titleEntries === expressive.titleEntries, `restored title entries: ${expressiveAgain.titleEntries}/${expressive.titleEntries}`);
-    assert(expressiveAgain.logicalPackets === expressiveAgain.edgePackets, "duplicate runtime-generated stage elements");
-    assert(expressiveAgain.generated === expressiveAgain.edgePackets * 3, `duplicate runtime-generated stage elements: ${expressiveAgain.generated}/${expressiveAgain.edgePackets * 3}`);
+    assert(expressiveAgain.logicalPackets === expectedExpressiveLogicalPackets, "duplicate runtime-generated packet elements");
+    assert(expressiveAgain.logicalComets === expectedExpressiveLogicalComets, "duplicate runtime-generated comet elements");
+    assert(expressiveAgain.cometPartCounts.every((count) => count === 4), `restored comet part counts: ${expressiveAgain.cometPartCounts}`);
+    assertCometRecipes(expressiveAgain, "restored");
+    assert(expressiveAgain.edgeGenerated === expressiveAgain.edgePackets, `duplicate edge-motion elements: ${expressiveAgain.edgeGenerated}/${expressiveAgain.edgePackets}`);
 
     process.stdout.write(`verified stage modes Expressive -> Readable -> Off -> Expressive; characters=${expectedCharacters}; edges=${totalEdges}; readable=${readable.edgePackets}\n`);
   } finally {

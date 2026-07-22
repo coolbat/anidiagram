@@ -1,0 +1,205 @@
+{
+  "version": "0.2",
+  "semantic": {
+    "title": "Cloud-Native Knowledge Retrieval Architecture",
+    "subtitle": "Curated knowledge preparation and policy-mediated semantic retrieval",
+    "summary": "Show how curated knowledge becomes a vector index and how a governed containerized retrieval service returns cited grounding context.",
+    "intent": {
+      "diagram_kind": "architecture",
+      "primary_question": "How does a cloud-native retrieval platform prepare curated knowledge and serve policy-mediated semantic queries?",
+      "audience": ["technical", "product"],
+      "scope": "Knowledge preparation, containerized indexing, gateway admission, vector search, reference resolution, and grounded context delivery",
+      "exclusions": ["Model training", "cluster scheduling internals", "vendor-specific infrastructure"]
+    },
+    "entities": [
+      {
+        "id": "curated-knowledge",
+        "label": "Curated Knowledge Base",
+        "description": "Approved documents and source references",
+        "kind": "knowledge-base",
+        "role": "source",
+        "importance": "primary"
+      },
+      {
+        "id": "embedding-container",
+        "label": "Embedding Container",
+        "description": "Chunks, embeds, and publishes the index",
+        "kind": "container",
+        "role": "process",
+        "importance": "primary"
+      },
+      {
+        "id": "prepared-vector-index",
+        "label": "Prepared Vector Index",
+        "description": "Retrieval-ready semantic vectors",
+        "kind": "vector-database",
+        "role": "memory",
+        "importance": "primary"
+      },
+      {
+        "id": "client-application",
+        "label": "Client Application",
+        "description": "Query + identity context",
+        "kind": "client",
+        "role": "actor",
+        "importance": "primary"
+      },
+      {
+        "id": "policy-gateway",
+        "label": "Policy Gateway",
+        "description": "Admits, scopes, and routes the request",
+        "kind": "gateway",
+        "role": "risk",
+        "importance": "primary"
+      },
+      {
+        "id": "retrieval-container",
+        "label": "Retrieval Container",
+        "description": "Runs the retrieval and grounding workflow",
+        "kind": "container",
+        "role": "process",
+        "importance": "primary"
+      },
+      {
+        "id": "vector-search-view",
+        "label": "Vector Search",
+        "description": "Returns ranked semantic matches",
+        "kind": "vector-database",
+        "role": "memory",
+        "importance": "primary"
+      },
+      {
+        "id": "source-resolver",
+        "label": "Source Resolver",
+        "description": "Resolves matches to cited source passages",
+        "kind": "knowledge-base",
+        "role": "source",
+        "importance": "primary"
+      },
+      {
+        "id": "grounded-context",
+        "label": "Grounded Context",
+        "description": "Policy-safe cited evidence",
+        "kind": "output",
+        "role": "output",
+        "importance": "primary",
+        "state": {"phase": "ready", "result": "success"}
+      }
+    ],
+    "relations": [
+      {
+        "id": "publish-curated-content",
+        "from": "curated-knowledge",
+        "to": "embedding-container",
+        "kind": "transfer",
+        "label": "approved content",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "build-vector-index",
+        "from": "embedding-container",
+        "to": "prepared-vector-index",
+        "kind": "persistence",
+        "label": "embed + index",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "submit-query",
+        "from": "client-application",
+        "to": "policy-gateway",
+        "kind": "request",
+        "label": "query + identity",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "route-authorized-query",
+        "from": "policy-gateway",
+        "to": "retrieval-container",
+        "kind": "security",
+        "label": "admit + route",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "search-semantic-index",
+        "from": "retrieval-container",
+        "to": "vector-search-view",
+        "kind": "retrieval",
+        "label": "semantic search",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "resolve-source-passages",
+        "from": "vector-search-view",
+        "to": "source-resolver",
+        "kind": "reference",
+        "label": "ranked references",
+        "direction": "forward",
+        "importance": "primary"
+      },
+      {
+        "id": "deliver-grounded-context",
+        "from": "source-resolver",
+        "to": "grounded-context",
+        "kind": "delivery",
+        "label": "evidence + citations",
+        "direction": "forward",
+        "importance": "primary"
+      }
+    ],
+    "groups": [
+      {
+        "id": "knowledge-preparation-plane",
+        "label": "Knowledge Preparation Plane",
+        "description": "Curated content becomes retrieval-ready vectors",
+        "kind": "system",
+        "members": ["curated-knowledge", "embedding-container", "prepared-vector-index"],
+        "importance": "primary"
+      },
+      {
+        "id": "online-retrieval-plane",
+        "label": "Online Retrieval Plane",
+        "description": "Governed queries resolve semantic matches into cited context",
+        "kind": "system",
+        "members": ["client-application", "policy-gateway", "retrieval-container", "vector-search-view", "source-resolver", "grounded-context"],
+        "importance": "primary"
+      }
+    ],
+    "flows": [
+      {
+        "id": "knowledge-preparation-flow",
+        "label": "Knowledge preparation",
+        "description": "Approved sources are embedded and indexed",
+        "relation_ids": ["publish-curated-content", "build-vector-index"],
+        "importance": "primary",
+        "repeat": "event-driven"
+      },
+      {
+        "id": "online-retrieval-flow",
+        "label": "Online retrieval",
+        "description": "An authorized query becomes policy-safe cited context",
+        "relation_ids": ["submit-query", "route-authorized-query", "search-semantic-index", "resolve-source-passages", "deliver-grounded-context"],
+        "importance": "primary",
+        "repeat": "event-driven"
+      }
+    ]
+  },
+  "presentation": {
+    "icon_system": "illustrated",
+    "icon_system_version": "2.4.0-candidate",
+    "style": "deep-tech",
+    "layout": "swimlane",
+    "motion": "showcase-v1",
+    "candidate_motion_contract": "illustrated-performance-v5-review"
+  },
+  "presentation_sources": {
+    "icon_system": "explicit",
+    "style": "model",
+    "layout": "model",
+    "motion": "default"
+  }
+}

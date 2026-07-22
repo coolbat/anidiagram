@@ -1,0 +1,53 @@
+{
+  "system": "illustrated",
+  "version": "2.4.0",
+  "token_revision": 1,
+  "colors": {
+    "ink": "#283047",
+    "paper": "#fffaf0",
+    "mint": "#46caa0",
+    "lavender": "#c9bbff",
+    "lavender-dark": "#8067d8",
+    "violet": "#8265d6",
+    "peach": "#ffc39e",
+    "sky": "#6fd6eb",
+    "teal": "#43bdb7",
+    "teal-dark": "#1c8f91",
+    "coral": "#ff826e",
+    "sun": "#ffd45e",
+    "shadow": "#283047",
+    "lavender-wash": "#eee9ff",
+    "sky-wash": "#e8f8fb",
+    "sun-wash": "#fff3d8",
+    "mint-wash": "#e5f7ef"
+  },
+  "geometry": {
+    "view_box": 120,
+    "default_stroke_width": 3.4,
+    "stroke_linecap": "round",
+    "stroke_linejoin": "round"
+  },
+  "override_policy": {
+    "style_field": "illustrated_tokens",
+    "allowed_color_tokens": [
+      "ink",
+      "paper",
+      "mint",
+      "lavender",
+      "lavender-dark",
+      "violet",
+      "peach",
+      "sky",
+      "teal",
+      "teal-dark",
+      "coral",
+      "sun",
+      "shadow",
+      "lavender-wash",
+      "sky-wash",
+      "sun-wash",
+      "mint-wash"
+    ],
+    "geometry_overrides": false
+  }
+}

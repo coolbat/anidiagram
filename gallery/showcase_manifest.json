@@ -617,12 +617,11 @@
       "html": "gallery/runtime-motion/items/runtime-edge-packet-flow.html",
       "quality": "gallery/runtime-motion/items/runtime-edge-packet-flow.quality.json",
       "phases": [
-        "edge track stays quiet",
-        "one packet enters source side",
-        "bright core travels along path",
+        "moving track is immediately visible",
+        "solid packet enters source side",
+        "dot or segment travels along path",
         "packet exits near target",
-        "0.7 s quiet pause",
-        "loop restarts"
+        "loop restarts without a quiet gap"
       ],
       "parts": [],
       "selectors": [
@@ -630,7 +629,7 @@
         ".runtime-edge-packet",
         ".runtime-edge-packet-core"
       ],
-      "status": "frozen",
+      "status": "approved",
       "summary": {
         "errors": 0,
         "warnings": 0,
@@ -2342,22 +2341,22 @@
       }
     },
     {
-      "id": "illustrated-2.3",
-      "title": "Illustrated 2.3",
-      "basename": "illustrated-2.3",
+      "id": "illustrated-2.4",
+      "title": "Illustrated 2.4",
+      "basename": "illustrated-2.4",
       "icon_system": "illustrated",
-      "version": "2.3.0",
+      "version": "2.4.0",
       "status": "frozen-approved-release",
-      "icon_count": 16,
-      "rendered_icon_count": 16,
-      "automatic_motion_icon_count": 16,
-      "motion_contract": "illustrated-performance-v4",
-      "spec": "examples/illustrated-2.3-showcase.diagram.json",
-      "release": "assets/illustrated/releases/2.3.0.json",
+      "icon_count": 20,
+      "rendered_icon_count": 20,
+      "automatic_motion_icon_count": 20,
+      "motion_contract": "illustrated-performance-v5",
+      "spec": "examples/illustrated-2.4-showcase.diagram.json",
+      "release": "assets/illustrated/releases/2.4.0.json",
       "style": "deep-tech",
-      "svg": "gallery/icon-systems/illustrated-2.3.svg",
-      "html": "gallery/icon-systems/illustrated-2.3.html",
-      "quality": "gallery/icon-systems/illustrated-2.3.quality.json",
+      "svg": "gallery/icon-systems/illustrated-2.4.svg",
+      "html": "gallery/icon-systems/illustrated-2.4.html",
+      "quality": "gallery/icon-systems/illustrated-2.4.quality.json",
       "best_for": [
         "AI explainers",
         "Character-led workflows",

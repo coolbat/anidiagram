@@ -1,0 +1,35 @@
+{
+  "version": "0.3",
+  "preset": "edge-motion-v1-proof",
+  "canvas": {"width": 1180, "height": 810},
+  "style": "minimal-light",
+  "icon_system": "diagram-core-v1",
+  "title": {
+    "text": "Edge Motion v1",
+    "subtitle": "Four meanings, four non-overlapping visual recipes"
+  },
+  "motion": {
+    "profile": "showcase-v1",
+    "edge": {"preset": "packet-flow"},
+    "node": {"preset": "icon-performance"},
+    "group": {"preset": "static"},
+    "title": {"preset": "highlight-sweep"},
+    "reduced_motion": "static"
+  },
+  "nodes": [
+    {"id": "packet-source", "label": "Discrete Source", "caption": "request or result", "position": [90, 165], "size": [210, 86], "role": "source", "icon": "api"},
+    {"id": "packet-target", "label": "Packet Target", "caption": "single borderless dot", "position": [860, 165], "size": [230, 86], "role": "output", "icon": "output"},
+    {"id": "comet-source", "label": "Burst Source", "caption": "explicit emphasis", "position": [90, 305], "size": [210, 86], "role": "risk", "icon": "cloud"},
+    {"id": "comet-target", "label": "Comet Target", "caption": "three fading echoes", "position": [860, 305], "size": [230, 86], "role": "risk", "icon": "shield"},
+    {"id": "stream-source", "label": "Continuous Source", "caption": "loop or stream", "position": [90, 445], "size": [210, 86], "role": "agent", "icon": "memory"},
+    {"id": "stream-target", "label": "Stream Target", "caption": "moving dash only", "position": [860, 445], "size": [230, 86], "role": "memory", "icon": "database"},
+    {"id": "draw-source", "label": "Context Source", "caption": "structural relation", "position": [90, 585], "size": [210, 86], "role": "neutral", "icon": "file"},
+    {"id": "draw-target", "label": "Context Target", "caption": "one-shot reveal", "position": [860, 585], "size": [230, 86], "role": "neutral", "icon": "folder"}
+  ],
+  "edges": [
+    {"from": "packet-source", "to": "packet-target", "label": "packet-flow · discrete transfer", "role": "output", "route": "straight", "effect": {"preset": "packet-flow"}},
+    {"from": "comet-source", "to": "comet-target", "label": "comet-flow · emphasized burst", "role": "risk", "route": "straight", "effect": {"preset": "comet-flow"}},
+    {"from": "stream-source", "to": "stream-target", "label": "stream-flow · continuous or cyclic", "role": "memory", "route": "straight", "effect": {"preset": "stream-flow"}},
+    {"from": "draw-source", "to": "draw-target", "label": "draw · context relation", "role": "neutral", "route": "straight", "effect": {"preset": "draw"}}
+  ]
+}
