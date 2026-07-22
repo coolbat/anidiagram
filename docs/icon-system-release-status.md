@@ -166,10 +166,20 @@ The formal two-system export matrix is intentionally not generated on every
 pull request because the current evidence bundle is about 333 MB. Run
 `.github/workflows/icon-system-release-evidence.yml` through
 `workflow_dispatch` for a release candidate. It installs the pinned Playwright
-runtime plus ffmpeg, builds and independently verifies the complete matrix, and
-uploads `outputs/release-evidence/icon-systems` as a commit-addressed GitHub
-Actions artifact retained for 14 days. The artifact is CI evidence, not a
-tracked source release or a replacement for the immutable approval records.
+runtime plus ffmpeg, builds four bounded `system x format-shard` fragments,
+merges them back into the canonical two-system matrix, independently verifies
+the complete result, and uploads `outputs/release-evidence/icon-systems` as a
+commit-addressed GitHub Actions artifact retained for 14 days. Sharding changes
+only CI scheduling; the formal contract remains 10 formats at 24 FPS, 108
+frames, and 2x scale.
+
+The current remote evidence is GitHub Actions run
+[`29909815356`](https://github.com/coolbat/anidiagram/actions/runs/29909815356)
+for commit `2392226`. Its final 333,810,052-byte artifact passed both merge-time
+and independent verification with two systems, ten formats, and zero issues,
+and is retained through 2026-08-05 10:05:44 UTC. The artifact is CI evidence,
+not a tracked source release or a replacement for the immutable approval
+records.
 
 ## Updating this page
 

@@ -191,38 +191,64 @@ Current icon-system status and immutable boundaries are indexed in
   `cecb8012211e888e63fe0e695c7f170259a3f68ee1944b402aaf014ee6daef5e`).
 - Release records: `assets/illustrated/releases/2.4.0.json` and
   `assets/illustrated/reviews/2.4.0-acceptance.json`.
-- Blocker class: none for the local release. Git commit, push, and remote CI
-  activation remain separate explicit actions.
-- Verdict: passed; Illustrated 2.4.0 is the current local public release.
+- Blocker class: none. Commit, push, and remote CI closure are recorded in
+  Evidence E-CI-01 below.
+- Verdict: passed; Illustrated 2.4.0 is the current public release.
 
-### Evidence E-CI-01 — locally passed, remote activation pending
+### Evidence E-CI-01 — passed locally and remotely
 
 - Milestone: icon-system release automation and CI evidence retention.
-- Attempt number: 1.
+- Attempt number: 5 formal runs; final run passed.
+- Recorded at: 2026-07-22 18:05:59 CST.
+- Source state: branch `main`, commit
+  `23922269d0c654827ee0f1ee36e0547cacdd0fc2`.
 - Changed assumptions: the 333 MB formal export matrix is a manually triggered
   release operation, while pull requests and `main` use lower-cost structural,
-  unit, render, and real-browser runtime gates.
+  unit, render, and real-browser runtime gates. The observed hosted runner also
+  canceled a single long export step at about eight minutes, so the formal
+  matrix is built as four independent `system x format-shard` jobs and then
+  merged and verified twice without reducing frames, frame rate, scale, or
+  formats.
 - Artifact or output: `.github/workflows/test.yml`,
   `.github/workflows/icon-system-release-evidence.yml`, and
-  `tests/test_release_workflows.py`.
-- Local verification: 179/179 Python tests; Diagram Core 56/56 approved with
-  zero warnings and errors; workflow YAML parsed cleanly; Illustrated rest and
-  reduced-motion checks passed 16/16; runtime modes reported
-  `characters=16, edges=0` for the icon showcase and
-  `characters=4, edges=3, readable=2` for the composition-v1 proof. A separate
+  `tests/test_release_workflows.py`; implementation commits `a3dcdcf`,
+  `c16d861`, `baf82a8`, `d3232d6`, and `2392226`.
+- Local verification: 214/214 Python tests; Diagram Core 56/56 approved with
+  zero warnings and errors; workflow/fragment contract tests passed. A separate
   verification replay of the existing formal evidence passed two systems x ten
   formats, with 108 distinct frames in every animated format and no issues.
+- Remote normal CI: run
+  [`29909692099`](https://github.com/coolbat/anidiagram/actions/runs/29909692099)
+  passed on `2392226`; contract completed in 23 seconds and runtime-browser in
+  1 minute 10 seconds.
+- Remote formal evidence: run
+  [`29909815356`](https://github.com/coolbat/anidiagram/actions/runs/29909815356)
+  passed all four build fragments plus merge-and-verify. Both the merge audit
+  and the independent replay reported `ok=true`, `systems=2`, `formats=10`,
+  and `issues=[]`.
+- Retained artifact:
+  [`icon-system-release-evidence-23922269d0c654827ee0f1ee36e0547cacdd0fc2`](https://github.com/coolbat/anidiagram/actions/runs/29909815356/artifacts/8525690682),
+  333,810,052 bytes, upload ZIP SHA-256
+  `a33eb212c817f9fb2725a73db7a64ed9d91596f796a8da49750deb4487dfe535`,
+  retained through 2026-08-05 10:05:44 UTC.
 - Acceptance contract: pull-request and `main` CI checks all 56 Diagram Core
   assets, the full
-  Python suite, runtime JavaScript, all sixteen Illustrated public
+  Python suite, runtime JavaScript, all twenty Illustrated public
   performances, reduced motion, runtime modes, and a composition-v1 edge-flow
   proof. `workflow_dispatch` builds and verifies the two-system, ten-format
   matrix and retains it as a commit-addressed artifact for 14 days.
-- Blocker class: external activation only. A remote Actions run cannot exist
-  until these workflow files are explicitly committed and pushed; this record
-  does not claim that GitHub Actions has executed them.
-- Verdict: local workflow contract and repository validation passed; remote
-  release evidence remains an operator-triggered release action.
+- Known failures repaired: run `29900285229` lacked Node dependencies in its
+  contract job; formal runs `29904855437`, `29905495621`, `29906978101`, and
+  `29908730673` exposed browser-capture timeout and hosted-runner step limits.
+  Dependency installation, dynamic capture timeout, progress heartbeat, and
+  the final four-way format sharding repaired those failures.
+- Blocker class: none.
+- Verdict: passed; normal CI and the retained formal release evidence are both
+  verified remotely.
+- Residual risk: GitHub currently emits a Node.js 20 deprecation annotation for
+  `actions/checkout@v4`, `actions/setup-node@v4`, and `actions/setup-python@v5`
+  while executing them on Node.js 24. It is non-blocking and should be handled
+  as a later workflow-maintenance item.
 
 ## Failure History
 
