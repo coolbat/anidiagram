@@ -16,6 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         system: ["diagram-core-v1", "illustrated-2.4"]
+        shard: ["visual", "motion"]
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -37,14 +38,14 @@ jobs:
           sudo apt-get install --yes ffmpeg
       - name: Build one public icon-system evidence fragment
         timeout-minutes: 20
-        run: PYTHONPATH=src python3 scripts/build_icon_system_release_evidence.py --system "${{ matrix.system }}"
+        run: PYTHONPATH=src python3 scripts/build_icon_system_release_evidence.py --system "${{ matrix.system }}" --shard "${{ matrix.shard }}"
       - name: Upload public icon-system evidence fragment
         uses: actions/upload-artifact@v4
         with:
-          name: icon-system-release-fragment-${{ matrix.system }}-${{ github.sha }}
+          name: icon-system-release-fragment-${{ matrix.system }}-${{ matrix.shard }}-${{ github.sha }}
           path: |
             outputs/release-evidence/icon-systems/${{ matrix.system }}
-            outputs/release-evidence/icon-systems/${{ matrix.system }}-evidence-fragment.json
+            outputs/release-evidence/icon-systems/${{ matrix.system }}-${{ matrix.shard }}-evidence-fragment.json
           if-no-files-found: error
           retention-days: 2
 

@@ -37,6 +37,10 @@ EXPORT_FORMATS: Tuple[str, ...] = (
     "lottie",
     "quality",
 )
+FORMAT_SHARDS = {
+    "visual": EXPORT_FORMATS[:5],
+    "motion": EXPORT_FORMATS[5:],
+}
 ANIMATED_FORMATS = ("webp", "gif", "apng", "mp4", "lottie")
 CASES = (
     {
@@ -70,6 +74,7 @@ CASES = (
     },
 )
 FRAGMENT_SCHEMA = "public-icon-system-export-evidence-fragment-v1"
+SHARD_SCHEMA = "public-icon-system-export-evidence-shard-v1"
 EVIDENCE_SCHEMA = "public-icon-system-export-evidence-v1"
 
 
@@ -119,11 +124,18 @@ def _parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Merge both public icon-system fragments and verify the complete matrix.",
     )
+    parser.add_argument(
+        "--shard",
+        choices=list(FORMAT_SHARDS),
+        help="Build one format shard for the selected public icon system.",
+    )
     return parser
 
 
 def main() -> None:
     args = _parser().parse_args()
+    if args.shard and not args.system:
+        raise SystemExit("--shard requires --system")
     outdir = _rooted(args.outdir)
     evidence_path = _rooted(args.evidence) if args.evidence else outdir / "public-icon-system-export-evidence.json"
     if args.verify:
@@ -131,7 +143,7 @@ def main() -> None:
     elif args.merge_fragments:
         report = merge_fragments(outdir, evidence_path)
     elif args.system:
-        report = build_fragment(args.system, outdir, args.fps, args.frames, args.scale)
+        report = build_fragment(args.system, outdir, args.fps, args.frames, args.scale, shard_id=args.shard)
     else:
         report = build_evidence(outdir, evidence_path, args.fps, args.frames, args.scale)
     print(json.dumps(report, ensure_ascii=False, indent=2))
@@ -145,27 +157,54 @@ def build_evidence(outdir: Path, evidence_path: Path, fps: int, frames: int, sca
     return _write_verified_evidence(evidence_path, systems, fps, frames, scale)
 
 
-def build_fragment(system_id: str, outdir: Path, fps: int, frames: int, scale: float) -> Dict[str, Any]:
+def build_fragment(
+    system_id: str,
+    outdir: Path,
+    fps: int,
+    frames: int,
+    scale: float,
+    *,
+    shard_id: str | None = None,
+) -> Dict[str, Any]:
     outdir.mkdir(parents=True, exist_ok=True)
     case = next(case for case in CASES if case["id"] == system_id)
-    system = _build_case(case, outdir, fps, frames, scale)
-    fragment_path = outdir / f"{system_id}-evidence-fragment.json"
+    formats = FORMAT_SHARDS[shard_id] if shard_id else EXPORT_FORMATS
+    result_name = f"result-{shard_id}.json" if shard_id else "result.json"
+    system = _build_case(case, outdir, fps, frames, scale, formats=formats, result_name=result_name)
+    suffix = f"-{shard_id}" if shard_id else ""
+    fragment_path = outdir / f"{system_id}{suffix}-evidence-fragment.json"
     fragment = {
-        "schema": FRAGMENT_SCHEMA,
+        "schema": SHARD_SCHEMA if shard_id else FRAGMENT_SCHEMA,
         "capture": {"renderer": "browser", "fps": fps, "frames": frames, "scale": scale},
-        "formats": list(EXPORT_FORMATS),
+        "formats": list(formats),
         "system": system,
     }
+    if shard_id:
+        fragment["shard"] = shard_id
     fragment_path.write_text(json.dumps(fragment, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return {
         "ok": True,
         "fragment": _display_path(fragment_path),
         "system": system_id,
-        "formats": len(EXPORT_FORMATS),
+        "shard": shard_id,
+        "formats": len(formats),
     }
 
 
 def merge_fragments(outdir: Path, evidence_path: Path) -> Dict[str, Any]:
+    shard_paths = [
+        outdir / f'{case["id"]}-{shard_id}-evidence-fragment.json'
+        for case in CASES
+        for shard_id in FORMAT_SHARDS
+    ]
+    if all(path.is_file() for path in shard_paths):
+        try:
+            shard_fragments = [json.loads(path.read_text(encoding="utf-8")) for path in shard_paths]
+            document = _merge_shard_fragment_documents(shard_fragments, outdir)
+        except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as error:
+            return {"ok": False, "evidence": _display_path(evidence_path), "issues": [str(error)]}
+        return _write_verified_document(evidence_path, document)
+
     fragments = []
     for case in CASES:
         fragment_path = outdir / f'{case["id"]}-evidence-fragment.json'
@@ -184,6 +223,103 @@ def merge_fragments(outdir: Path, evidence_path: Path) -> Dict[str, Any]:
     except ValueError as error:
         return {"ok": False, "evidence": _display_path(evidence_path), "issues": [str(error)]}
     return _write_verified_document(evidence_path, document)
+
+
+def _merge_shard_fragment_documents(fragments: list[Dict[str, Any]], outdir: Path) -> Dict[str, Any]:
+    expected_pairs = [
+        (case["id"], shard_id)
+        for case in CASES
+        for shard_id in FORMAT_SHARDS
+    ]
+    by_pair: Dict[tuple[str, str], Dict[str, Any]] = {}
+    for fragment in fragments:
+        if fragment.get("schema") != SHARD_SCHEMA:
+            raise ValueError("unexpected evidence shard schema")
+        system = fragment.get("system")
+        system_id = system.get("id") if isinstance(system, dict) else None
+        shard_id = fragment.get("shard")
+        pair = (system_id, shard_id)
+        if not isinstance(system_id, str) or not isinstance(shard_id, str) or pair in by_pair:
+            raise ValueError("evidence shards require unique public system and shard ids")
+        by_pair[pair] = fragment
+    if set(by_pair) != set(expected_pairs):
+        expected = ", ".join(f"{system_id}/{shard_id}" for system_id, shard_id in expected_pairs)
+        raise ValueError(f"expected evidence shards for: {expected}")
+
+    first = by_pair[expected_pairs[0]]
+    capture = first.get("capture")
+    if not isinstance(capture, dict):
+        raise ValueError("invalid evidence shard capture contract")
+    systems = []
+    for case in CASES:
+        system_id = case["id"]
+        system_fragments = [by_pair[(system_id, shard_id)] for shard_id in FORMAT_SHARDS]
+        for shard_id, fragment in zip(FORMAT_SHARDS, system_fragments):
+            if fragment.get("capture") != capture or tuple(fragment.get("formats", ())) != FORMAT_SHARDS[shard_id]:
+                raise ValueError(f"{system_id}/{shard_id}: incompatible evidence shard contract")
+        systems.append(_merge_system_shards(system_id, system_fragments, outdir))
+
+    return {
+        "schema": EVIDENCE_SCHEMA,
+        "status": "generated",
+        "capture": capture,
+        "formats": list(EXPORT_FORMATS),
+        "systems": systems,
+    }
+
+
+def _merge_system_shards(
+    system_id: str,
+    fragments: list[Dict[str, Any]],
+    outdir: Path,
+) -> Dict[str, Any]:
+    systems = [fragment["system"] for fragment in fragments]
+    identity_keys = (
+        "id",
+        "icon_system",
+        "version",
+        "icon_count",
+        "motion_contract",
+        "spec",
+        "catalog",
+        "motion_authority",
+        "authorities",
+    )
+    baseline = {key: systems[0].get(key) for key in identity_keys}
+    if any({key: system.get(key) for key in identity_keys} != baseline for system in systems[1:]):
+        raise ValueError(f"{system_id}: evidence shard identities do not match")
+
+    artifacts: Dict[str, Dict[str, Any]] = {}
+    results = []
+    for system in systems:
+        for format_name, artifact in system.get("artifacts", {}).items():
+            if format_name in artifacts:
+                raise ValueError(f"{system_id}: duplicate artifact for {format_name}")
+            artifacts[format_name] = artifact
+        result_record = system.get("result")
+        if not isinstance(result_record, dict) or not result_record.get("path"):
+            raise ValueError(f"{system_id}: evidence shard result is missing")
+        result_path = _resolve_path(result_record["path"])
+        results.append(json.loads(result_path.read_text(encoding="utf-8")))
+    if tuple(artifacts) != EXPORT_FORMATS:
+        raise ValueError(f"{system_id}: evidence shards do not cover the formal export matrix")
+
+    result_identity = {key: value for key, value in results[0].items() if key != "outputs"}
+    if any({key: value for key, value in result.items() if key != "outputs"} != result_identity for result in results[1:]):
+        raise ValueError(f"{system_id}: shard render results do not match")
+    merged_result = dict(result_identity)
+    merged_result["outputs"] = {
+        format_name: next(result["outputs"][format_name] for result in results if format_name in result["outputs"])
+        for format_name in EXPORT_FORMATS
+    }
+    result_path = outdir / system_id / "result.json"
+    result_path.write_text(json.dumps(merged_result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    return {
+        **baseline,
+        "result": _file_record(result_path),
+        "artifacts": artifacts,
+    }
 
 
 def _merge_fragment_documents(fragments: list[Dict[str, Any]]) -> Dict[str, Any]:
@@ -252,10 +388,19 @@ def _write_verified_document(evidence_path: Path, document: Dict[str, Any]) -> D
     return report
 
 
-def _build_case(case: Dict[str, Any], outdir: Path, fps: int, frames: int, scale: float) -> Dict[str, Any]:
+def _build_case(
+    case: Dict[str, Any],
+    outdir: Path,
+    fps: int,
+    frames: int,
+    scale: float,
+    *,
+    formats: Tuple[str, ...] = EXPORT_FORMATS,
+    result_name: str = "result.json",
+) -> Dict[str, Any]:
     case_outdir = outdir / case["id"]
     case_outdir.mkdir(parents=True, exist_ok=True)
-    result_path = case_outdir / "result.json"
+    result_path = case_outdir / result_name
     arguments = [
         "--spec",
         str(case["spec"]),
@@ -266,7 +411,7 @@ def _build_case(case: Dict[str, Any], outdir: Path, fps: int, frames: int, scale
         "--basename",
         case["id"],
         "--formats",
-        ",".join(EXPORT_FORMATS),
+        ",".join(formats),
         "--html-runtime",
         "gsap",
         "--export-renderer",
@@ -285,7 +430,7 @@ def _build_case(case: Dict[str, Any], outdir: Path, fps: int, frames: int, scale
             render_main(arguments)
     print(f'[release-evidence] completed {case["id"]}', file=sys.stderr, flush=True)
     result = json.loads(result_path.read_text(encoding="utf-8"))
-    if not result.get("ok") or set(result["outputs"]) != set(EXPORT_FORMATS):
+    if not result.get("ok") or set(result["outputs"]) != set(formats):
         raise RuntimeError(f'{case["id"]} did not write the complete export matrix')
     for format_name, output in result["outputs"].items():
         if output.get("status") != "written":

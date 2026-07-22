@@ -1,3 +1,5 @@
+import json
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -50,7 +52,8 @@ class ReleaseWorkflowContractTest(unittest.TestCase):
             "npm ci",
             "playwright install --with-deps chromium",
             'system: ["diagram-core-v1", "illustrated-2.4"]',
-            'scripts/build_icon_system_release_evidence.py --system "${{ matrix.system }}"',
+            'shard: ["visual", "motion"]',
+            '--system "${{ matrix.system }}" --shard "${{ matrix.shard }}"',
             "actions/download-artifact@v4",
             "merge-multiple: true",
             "scripts/build_icon_system_release_evidence.py --merge-fragments",
@@ -100,6 +103,54 @@ class ReleaseWorkflowContractTest(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError, "expected fragments"):
             release_evidence._merge_fragment_documents([fragment])
+
+    def test_release_evidence_format_shards_partition_the_formal_matrix(self):
+        flattened = [
+            format_name
+            for formats in release_evidence.FORMAT_SHARDS.values()
+            for format_name in formats
+        ]
+
+        self.assertEqual(list(release_evidence.EXPORT_FORMATS), flattened)
+        self.assertEqual(len(flattened), len(set(flattened)))
+
+    def test_release_evidence_format_shards_merge_into_complete_system_results(self):
+        capture = {"renderer": "browser", "fps": 24, "frames": 108, "scale": 2.0}
+        with tempfile.TemporaryDirectory() as directory:
+            outdir = Path(directory)
+            fragments = []
+            for case in release_evidence.CASES:
+                case_outdir = outdir / case["id"]
+                case_outdir.mkdir()
+                for shard_id, formats in release_evidence.FORMAT_SHARDS.items():
+                    outputs = {format_name: {"status": "written"} for format_name in formats}
+                    result_path = case_outdir / f"result-{shard_id}.json"
+                    result_path.write_text(
+                        json.dumps({"ok": True, "icon_system": case["icon_system"], "outputs": outputs}),
+                        encoding="utf-8",
+                    )
+                    fragments.append(
+                        {
+                            "schema": release_evidence.SHARD_SCHEMA,
+                            "shard": shard_id,
+                            "capture": capture,
+                            "formats": list(formats),
+                            "system": {
+                                "id": case["id"],
+                                "icon_system": case["icon_system"],
+                                "result": {"path": str(result_path)},
+                                "artifacts": outputs,
+                            },
+                        }
+                    )
+
+            merged = release_evidence._merge_shard_fragment_documents(fragments, outdir)
+
+            self.assertEqual(2, len(merged["systems"]))
+            for system in merged["systems"]:
+                self.assertEqual(list(release_evidence.EXPORT_FORMATS), list(system["artifacts"]))
+                result = json.loads((outdir / system["id"] / "result.json").read_text(encoding="utf-8"))
+                self.assertEqual(set(release_evidence.EXPORT_FORMATS), set(result["outputs"]))
 
     def test_release_status_documents_ci_scope_and_retention(self):
         status = self._read("docs/icon-system-release-status.md")
