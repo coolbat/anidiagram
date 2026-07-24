@@ -1,0 +1,379 @@
+{
+  "version": "0.4",
+  "composition_policy": "composition-v1",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "explicit",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "deep-tech",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "layered",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "explicit"
+    }
+  },
+  "icon_system": "illustrated",
+  "layout": "layered",
+  "preset": "layered",
+  "canvas": {
+    "width": 1600,
+    "height": 900
+  },
+  "style": "deep-tech",
+  "title": {
+    "text": "Production AI Agent Request Lifecycle",
+    "subtitle": "One semantic diagram · three visual templates · unchanged content and geometry"
+  },
+  "motion": {
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "ease": "spring",
+    "stagger": 0.08,
+    "duration_scale": 1.0,
+    "intensity": 1.0,
+    "node": {
+      "preset": "icon-performance"
+    },
+    "edge": {
+      "preset": "packet-flow",
+      "particle": "high-contrast-dot",
+      "trail": false
+    },
+    "group": {
+      "preset": "none"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "static"
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "max_active_flow_edges": 9,
+    "max_particle_edges": 9,
+    "particle_count_per_edge": 1,
+    "flow_trail_count": 2,
+    "max_active_pulse_nodes": 9,
+    "pulse_mode": "all",
+    "max_scanning_groups": 0
+  },
+  "nodes": [
+    {
+      "id": "user",
+      "label": "User Request",
+      "caption": "goal and context",
+      "position": [
+        40,
+        215
+      ],
+      "size": [
+        240,
+        150
+      ],
+      "role": "actor",
+      "icon": "user",
+      "importance": "primary"
+    },
+    {
+      "id": "gateway",
+      "label": "API Gateway",
+      "caption": "authenticate and route",
+      "position": [
+        350,
+        215
+      ],
+      "size": [
+        240,
+        150
+      ],
+      "role": "risk",
+      "icon": "gateway",
+      "importance": "supporting"
+    },
+    {
+      "id": "agent",
+      "label": "Agent Runtime",
+      "caption": "plan and coordinate",
+      "position": [
+        660,
+        215
+      ],
+      "size": [
+        240,
+        150
+      ],
+      "role": "agent",
+      "icon": "agent",
+      "importance": "primary"
+    },
+    {
+      "id": "model",
+      "label": "Language Model",
+      "caption": "reason and generate",
+      "position": [
+        970,
+        215
+      ],
+      "size": [
+        240,
+        150
+      ],
+      "role": "agent",
+      "icon": "llm",
+      "importance": "primary"
+    },
+    {
+      "id": "output",
+      "label": "Verified Output",
+      "caption": "deliver and explain",
+      "position": [
+        1280,
+        215
+      ],
+      "size": [
+        240,
+        150
+      ],
+      "role": "output",
+      "icon": "output",
+      "importance": "primary"
+    },
+    {
+      "id": "knowledge",
+      "label": "Knowledge Base",
+      "caption": "retrieve trusted facts",
+      "position": [
+        195,
+        605
+      ],
+      "size": [
+        240,
+        150
+      ],
+      "role": "source",
+      "icon": "knowledge-base",
+      "importance": "supporting"
+    },
+    {
+      "id": "memory",
+      "label": "Working Memory",
+      "caption": "retain task context",
+      "position": [
+        505,
+        605
+      ],
+      "size": [
+        240,
+        150
+      ],
+      "role": "memory",
+      "icon": "memory",
+      "importance": "supporting"
+    },
+    {
+      "id": "tool",
+      "label": "Tool Execution",
+      "caption": "act on external systems",
+      "position": [
+        815,
+        605
+      ],
+      "size": [
+        240,
+        150
+      ],
+      "role": "tool",
+      "icon": "tool",
+      "importance": "supporting"
+    },
+    {
+      "id": "monitoring",
+      "label": "Runtime Monitoring",
+      "caption": "measure quality and cost",
+      "position": [
+        1125,
+        605
+      ],
+      "size": [
+        240,
+        150
+      ],
+      "role": "process",
+      "icon": "monitoring",
+      "importance": "supporting"
+    }
+  ],
+  "edges": [
+    {
+      "from": "user",
+      "to": "gateway",
+      "label": "request",
+      "role": "actor",
+      "route": "curved",
+      "animated": true,
+      "delay": 0.0,
+      "importance": "primary",
+      "flow_id": "request-lifecycle",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "effect": {
+        "preset": "packet-flow",
+        "particle": "high-contrast-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "gateway",
+      "to": "agent",
+      "label": "dispatch",
+      "role": "risk",
+      "route": "curved",
+      "animated": true,
+      "delay": 0.08,
+      "importance": "primary",
+      "flow_id": "request-lifecycle",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "effect": {
+        "preset": "comet-flow",
+        "particle": "high-contrast-dot",
+        "trail": true
+      }
+    },
+    {
+      "from": "agent",
+      "to": "model",
+      "label": "prompt",
+      "role": "agent",
+      "route": "curved",
+      "animated": true,
+      "delay": 0.16,
+      "importance": "primary",
+      "flow_id": "request-lifecycle",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "effect": {
+        "preset": "stream-flow",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "model",
+      "to": "output",
+      "label": "answer",
+      "role": "output",
+      "route": "curved",
+      "animated": true,
+      "delay": 0.24,
+      "importance": "primary",
+      "flow_id": "request-lifecycle",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "effect": {
+        "preset": "packet-flow",
+        "particle": "high-contrast-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "knowledge",
+      "to": "agent",
+      "label": "grounding",
+      "role": "source",
+      "route": "curved",
+      "animated": true,
+      "delay": 0.32,
+      "importance": "supporting",
+      "flow_id": "agent-context",
+      "flow_importance": "supporting",
+      "flow_repeat": "loop",
+      "effect": {
+        "preset": "comet-flow",
+        "particle": "high-contrast-dot",
+        "trail": true
+      }
+    },
+    {
+      "from": "memory",
+      "to": "agent",
+      "label": "recall",
+      "role": "memory",
+      "route": "curved",
+      "animated": true,
+      "delay": 0.4,
+      "importance": "supporting",
+      "flow_id": "agent-context",
+      "flow_importance": "supporting",
+      "flow_repeat": "loop",
+      "effect": {
+        "preset": "stream-flow",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "agent",
+      "to": "tool",
+      "label": "execute",
+      "role": "tool",
+      "route": "curved",
+      "animated": true,
+      "delay": 0.48,
+      "importance": "supporting",
+      "flow_id": "tool-loop",
+      "flow_importance": "supporting",
+      "flow_repeat": "loop",
+      "effect": {
+        "preset": "packet-flow",
+        "particle": "high-contrast-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "tool",
+      "to": "agent",
+      "label": "result",
+      "role": "tool",
+      "route": "curved",
+      "animated": true,
+      "delay": 0.56,
+      "importance": "supporting",
+      "flow_id": "tool-loop",
+      "flow_importance": "supporting",
+      "flow_repeat": "loop",
+      "effect": {
+        "preset": "comet-flow",
+        "particle": "high-contrast-dot",
+        "trail": true
+      }
+    },
+    {
+      "from": "agent",
+      "to": "monitoring",
+      "label": "telemetry",
+      "role": "process",
+      "route": "curved",
+      "animated": true,
+      "delay": 0.64,
+      "importance": "supporting",
+      "flow_id": "observability",
+      "flow_importance": "supporting",
+      "flow_repeat": "loop",
+      "effect": {
+        "preset": "stream-flow",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    }
+  ]
+}

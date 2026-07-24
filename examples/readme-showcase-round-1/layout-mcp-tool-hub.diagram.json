@@ -1,0 +1,292 @@
+{
+  "version": "0.4",
+  "composition_policy": "composition-v1",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "diagram-core-v1",
+      "source": "explicit"
+    },
+    "style": {
+      "value": "minimal-light",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "hub-spoke",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "explicit"
+    }
+  },
+  "icon_system": "diagram-core-v1",
+  "layout": "hub-spoke",
+  "preset": "hub-spoke",
+  "canvas": {
+    "width": 1600,
+    "height": 900
+  },
+  "style": "minimal-light",
+  "title": {
+    "text": "MCP Tool Orchestration Hub",
+    "subtitle": "A central agent coordinates policy, knowledge, execution, memory, and observability"
+  },
+  "motion": {
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "ease": "spring",
+    "stagger": 0.08,
+    "duration_scale": 1.0,
+    "intensity": 1.0,
+    "node": {
+      "preset": "icon-performance"
+    },
+    "edge": {
+      "preset": "packet-flow",
+      "particle": "high-contrast-dot",
+      "trail": false
+    },
+    "group": {
+      "preset": "none"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "static"
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "max_active_flow_edges": 6,
+    "max_particle_edges": 6,
+    "particle_count_per_edge": 1,
+    "flow_trail_count": 2,
+    "max_active_pulse_nodes": 7,
+    "pulse_mode": "all",
+    "max_scanning_groups": 0
+  },
+  "nodes": [
+    {
+      "id": "agent",
+      "label": "MCP Orchestrator",
+      "caption": "routes capability calls",
+      "position": [
+        675,
+        365
+      ],
+      "size": [
+        250,
+        165
+      ],
+      "role": "agent",
+      "icon": "agent",
+      "importance": "primary"
+    },
+    {
+      "id": "gateway",
+      "label": "MCP Gateway",
+      "caption": "policy and protocol",
+      "position": [
+        690,
+        145
+      ],
+      "size": [
+        220,
+        140
+      ],
+      "role": "risk",
+      "icon": "gateway",
+      "importance": "supporting"
+    },
+    {
+      "id": "search",
+      "label": "Search",
+      "caption": "discover evidence",
+      "position": [
+        210,
+        195
+      ],
+      "size": [
+        220,
+        140
+      ],
+      "role": "source",
+      "icon": "search",
+      "importance": "supporting"
+    },
+    {
+      "id": "documents",
+      "label": "Documents",
+      "caption": "read trusted files",
+      "position": [
+        1170,
+        195
+      ],
+      "size": [
+        220,
+        140
+      ],
+      "role": "source",
+      "icon": "document-store",
+      "importance": "supporting"
+    },
+    {
+      "id": "code",
+      "label": "Code Runtime",
+      "caption": "execute safely",
+      "position": [
+        170,
+        585
+      ],
+      "size": [
+        220,
+        140
+      ],
+      "role": "tool",
+      "icon": "source-code",
+      "importance": "supporting"
+    },
+    {
+      "id": "memory",
+      "label": "Agent Memory",
+      "caption": "retain context",
+      "position": [
+        690,
+        625
+      ],
+      "size": [
+        220,
+        140
+      ],
+      "role": "memory",
+      "icon": "memory",
+      "importance": "supporting"
+    },
+    {
+      "id": "monitoring",
+      "label": "Monitoring",
+      "caption": "observe every call",
+      "position": [
+        1210,
+        585
+      ],
+      "size": [
+        220,
+        140
+      ],
+      "role": "process",
+      "icon": "monitoring",
+      "importance": "supporting"
+    }
+  ],
+  "edges": [
+    {
+      "from": "agent",
+      "to": "gateway",
+      "label": "policy",
+      "role": "risk",
+      "route": "curved",
+      "animated": true,
+      "delay": 0.0,
+      "importance": "primary",
+      "flow_id": "mcp-capability",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "effect": {
+        "preset": "packet-flow",
+        "particle": "high-contrast-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "agent",
+      "to": "search",
+      "label": "query",
+      "role": "source",
+      "route": "curved",
+      "animated": true,
+      "delay": 0.08,
+      "importance": "primary",
+      "flow_id": "mcp-capability",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "effect": {
+        "preset": "comet-flow",
+        "particle": "high-contrast-dot",
+        "trail": true
+      }
+    },
+    {
+      "from": "agent",
+      "to": "documents",
+      "label": "read",
+      "role": "source",
+      "route": "curved",
+      "animated": true,
+      "delay": 0.16,
+      "importance": "primary",
+      "flow_id": "mcp-capability",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "effect": {
+        "preset": "stream-flow",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "agent",
+      "to": "code",
+      "label": "execute",
+      "role": "tool",
+      "route": "curved",
+      "animated": true,
+      "delay": 0.24,
+      "importance": "primary",
+      "flow_id": "mcp-capability",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "effect": {
+        "preset": "packet-flow",
+        "particle": "high-contrast-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "agent",
+      "to": "memory",
+      "label": "recall",
+      "role": "memory",
+      "route": "curved",
+      "animated": true,
+      "delay": 0.32,
+      "importance": "primary",
+      "flow_id": "mcp-capability",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "effect": {
+        "preset": "comet-flow",
+        "particle": "high-contrast-dot",
+        "trail": true
+      }
+    },
+    {
+      "from": "agent",
+      "to": "monitoring",
+      "label": "telemetry",
+      "role": "process",
+      "route": "curved",
+      "animated": true,
+      "delay": 0.4,
+      "importance": "primary",
+      "flow_id": "mcp-capability",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "effect": {
+        "preset": "stream-flow",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    }
+  ]
+}

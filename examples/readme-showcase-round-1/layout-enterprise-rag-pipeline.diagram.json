@@ -1,0 +1,258 @@
+{
+  "version": "0.4",
+  "composition_policy": "composition-v1",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "diagram-core-v1",
+      "source": "explicit"
+    },
+    "style": {
+      "value": "minimal-light",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "pipeline",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "explicit"
+    }
+  },
+  "icon_system": "diagram-core-v1",
+  "layout": "pipeline",
+  "preset": "pipeline",
+  "canvas": {
+    "width": 1600,
+    "height": 900
+  },
+  "style": "minimal-light",
+  "title": {
+    "text": "Enterprise RAG Ingestion Pipeline",
+    "subtitle": "A strict left-to-right topology for sequential transformation and retrieval"
+  },
+  "motion": {
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "ease": "spring",
+    "stagger": 0.08,
+    "duration_scale": 1.0,
+    "intensity": 1.0,
+    "node": {
+      "preset": "icon-performance"
+    },
+    "edge": {
+      "preset": "packet-flow",
+      "particle": "high-contrast-dot",
+      "trail": false
+    },
+    "group": {
+      "preset": "none"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "static"
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "max_active_flow_edges": 5,
+    "max_particle_edges": 5,
+    "particle_count_per_edge": 1,
+    "flow_trail_count": 2,
+    "max_active_pulse_nodes": 6,
+    "pulse_mode": "all",
+    "max_scanning_groups": 0
+  },
+  "nodes": [
+    {
+      "id": "documents",
+      "label": "Documents",
+      "caption": "approved source files",
+      "position": [
+        45,
+        355
+      ],
+      "size": [
+        215,
+        150
+      ],
+      "role": "source",
+      "icon": "document",
+      "importance": "supporting"
+    },
+    {
+      "id": "tokenizer",
+      "label": "Tokenizer",
+      "caption": "split and budget",
+      "position": [
+        305,
+        355
+      ],
+      "size": [
+        215,
+        150
+      ],
+      "role": "process",
+      "icon": "token",
+      "importance": "supporting"
+    },
+    {
+      "id": "embedding",
+      "label": "Embedding",
+      "caption": "encode semantics",
+      "position": [
+        565,
+        355
+      ],
+      "size": [
+        215,
+        150
+      ],
+      "role": "process",
+      "icon": "embedding",
+      "importance": "supporting"
+    },
+    {
+      "id": "index",
+      "label": "Vector Index",
+      "caption": "store searchable vectors",
+      "position": [
+        825,
+        355
+      ],
+      "size": [
+        215,
+        150
+      ],
+      "role": "memory",
+      "icon": "vector-database",
+      "importance": "supporting"
+    },
+    {
+      "id": "retrieval",
+      "label": "Retrieval",
+      "caption": "rank relevant context",
+      "position": [
+        1085,
+        355
+      ],
+      "size": [
+        215,
+        150
+      ],
+      "role": "agent",
+      "icon": "search",
+      "importance": "primary"
+    },
+    {
+      "id": "output",
+      "label": "Grounded Output",
+      "caption": "answer with citations",
+      "position": [
+        1345,
+        355
+      ],
+      "size": [
+        215,
+        150
+      ],
+      "role": "output",
+      "icon": "output",
+      "importance": "primary"
+    }
+  ],
+  "edges": [
+    {
+      "from": "documents",
+      "to": "tokenizer",
+      "label": "ingest",
+      "role": "process",
+      "route": "straight",
+      "animated": true,
+      "delay": 0.0,
+      "importance": "primary",
+      "flow_id": "rag-ingestion",
+      "flow_importance": "primary",
+      "flow_repeat": "loop",
+      "effect": {
+        "preset": "packet-flow",
+        "particle": "high-contrast-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "tokenizer",
+      "to": "embedding",
+      "label": "chunks",
+      "role": "process",
+      "route": "straight",
+      "animated": true,
+      "delay": 0.08,
+      "importance": "primary",
+      "flow_id": "rag-ingestion",
+      "flow_importance": "primary",
+      "flow_repeat": "loop",
+      "effect": {
+        "preset": "comet-flow",
+        "particle": "high-contrast-dot",
+        "trail": true
+      }
+    },
+    {
+      "from": "embedding",
+      "to": "index",
+      "label": "vectors",
+      "role": "process",
+      "route": "straight",
+      "animated": true,
+      "delay": 0.16,
+      "importance": "primary",
+      "flow_id": "rag-ingestion",
+      "flow_importance": "primary",
+      "flow_repeat": "loop",
+      "effect": {
+        "preset": "stream-flow",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "index",
+      "to": "retrieval",
+      "label": "top-k",
+      "role": "process",
+      "route": "straight",
+      "animated": true,
+      "delay": 0.24,
+      "importance": "primary",
+      "flow_id": "rag-ingestion",
+      "flow_importance": "primary",
+      "flow_repeat": "loop",
+      "effect": {
+        "preset": "packet-flow",
+        "particle": "high-contrast-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "retrieval",
+      "to": "output",
+      "label": "evidence",
+      "role": "process",
+      "route": "straight",
+      "animated": true,
+      "delay": 0.32,
+      "importance": "primary",
+      "flow_id": "rag-ingestion",
+      "flow_importance": "primary",
+      "flow_repeat": "loop",
+      "effect": {
+        "preset": "comet-flow",
+        "particle": "high-contrast-dot",
+        "trail": true
+      }
+    }
+  ]
+}
