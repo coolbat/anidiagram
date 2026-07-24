@@ -26,6 +26,7 @@ from anidiagram.illustrated_tokens import (
     illustrated_tokens_for_style,
 )
 from anidiagram.icon_system import resolve_icon_system
+from anidiagram.diagram_core.catalog import approved_icon_ids
 from anidiagram.motion_manifest import (
     CHARACTER_ICON_PERFORMANCES,
     CHARACTER_REST_AT,
@@ -112,10 +113,7 @@ class SvgRendererTest(unittest.TestCase):
             resolve_icon_system({"icon_system": "illustrated-character-v2"}),
         )
         self.assertEqual("illustrated", resolve_icon_system({"icon_system": "illustrated"}))
-        self.assertEqual(
-            {"agent", "operator", "tool", "output", "database", "api", "search", "memory", "file", "folder", "cloud", "shield", "user", "server", "ai-model", "message-queue", "vector-database", "knowledge-base", "gateway", "container"},
-            set(character_v2_icon_ids()),
-        )
+        self.assertEqual(set(approved_icon_ids()), set(character_v2_icon_ids()))
         for icon in character_v2_icon_ids():
             definition = character_v2_definition(icon)
             self.assertIsNotNone(definition, icon)
@@ -126,7 +124,7 @@ class SvgRendererTest(unittest.TestCase):
         style = deep_merge(load_style(), {"icon_system": "illustrated"})
         svg = render_svg(self._scene_with_icon("agent", motion={"profile": "off"}), style)
         self.assertIn('data-icon-system="illustrated"', svg)
-        self.assertIn('data-icon-system-version="2.4.0"', svg)
+        self.assertIn('data-icon-system-version="2.5.0"', svg)
         self.assertIn('semantic-icon-illustrated', svg)
         self.assertNotIn("illustrated-character-v2", svg)
         for part in character_v2_definition("agent").parts:
@@ -136,12 +134,12 @@ class SvgRendererTest(unittest.TestCase):
             render_html_runtime(self._scene_with_icon("agent"), style, runtime="gsap")
         )
         self.assertEqual("illustrated", manifest["icon_system"])
-        self.assertEqual("2.4.0", manifest["icon_system_version"])
+        self.assertEqual("2.5.0", manifest["icon_system_version"])
         self.assertEqual(1, len(manifest["icons"]))
         self.assertEqual(ILLUSTRATED_ICON_PERFORMANCES["agent"], manifest["icons"][0]["performance"])
         self.assertEqual(ILLUSTRATED_REST_AT["agent"], manifest["icons"][0]["rest_at"])
 
-    def test_illustrated_catalog_publishes_twenty_assets_and_preserves_the_2_0_snapshot(self):
+    def test_illustrated_catalog_publishes_fifty_six_assets_and_preserves_the_2_0_snapshot(self):
         catalog = json.loads((ROOT / "assets" / "illustrated" / "catalog.json").read_text(encoding="utf-8"))
         release = json.loads(
             (ROOT / "assets" / "illustrated" / "releases" / "2.0.0.json").read_text(encoding="utf-8")
@@ -152,18 +150,18 @@ class SvgRendererTest(unittest.TestCase):
                 "id": "illustrated",
                 "display_name": "Illustrated",
                 "display_name_zh": "插画",
-                "version": "2.4.0",
+                "version": "2.5.0",
                 "static_status": "approved",
                 "motion_status": "approved",
-                "motion_contract": "illustrated-performance-v5",
-                "previous_motion_contract": "illustrated-performance-v4",
-                "archived_motion_review_contract": "illustrated-performance-v5-review",
-                "previous_archived_motion_review_contract": "illustrated-performance-v4-review",
+                "motion_contract": "illustrated-performance-v6",
+                "previous_motion_contract": "illustrated-performance-v5",
+                "archived_motion_review_contract": "illustrated-performance-v7-review",
+                "previous_archived_motion_review_contract": "illustrated-performance-v6-review",
             },
             ILLUSTRATED_SYSTEM_METADATA,
         )
         self.assertEqual("illustrated", catalog["system"])
-        self.assertEqual("2.4.0", catalog["version"])
+        self.assertEqual("2.5.0", catalog["version"])
         self.assertEqual(["illustrated-character-v2"], catalog["legacy_aliases"])
         self.assertEqual(set(character_v2_icon_ids()), {icon["id"] for icon in catalog["icons"]})
         for icon in catalog["icons"]:
@@ -176,7 +174,7 @@ class SvgRendererTest(unittest.TestCase):
         self.assertEqual("frozen-static-baseline", release["status"])
         self.assertEqual("confirmed", release["human_visual_acceptance"])
         self.assertEqual("approved", catalog["motion_status"])
-        self.assertEqual("illustrated-performance-v5", catalog["motion_contract"]["id"])
+        self.assertEqual("illustrated-performance-v6", catalog["motion_contract"]["id"])
         self.assertEqual("approved", release["motion_status"])
         self.assertEqual("illustrated-performance-v1", release["motion_contract"])
         self.assertEqual(4, release["icon_count"])
@@ -195,8 +193,8 @@ class SvgRendererTest(unittest.TestCase):
         document = illustrated_token_document()
 
         self.assertEqual("illustrated", document["system"])
-        self.assertEqual("2.4.0", document["version"])
-        self.assertEqual(1, document["token_revision"])
+        self.assertEqual("2.5.0", document["version"])
+        self.assertEqual(2, document["token_revision"])
         self.assertEqual(
             {
                 "view_box": 120,
@@ -256,19 +254,19 @@ class SvgRendererTest(unittest.TestCase):
             dict(illustrated_geometry_tokens()),
         )
 
-    def test_illustrated_deep_tech_mapping_records_public_approval(self):
+    def test_illustrated_template_matrix_records_public_approval(self):
         mapping = json.loads(
             (ROOT / "assets" / "illustrated" / "template-mappings.json").read_text(encoding="utf-8")
         )
         public_style = json.loads((ROOT / "styles" / "deep-tech.json").read_text(encoding="utf-8"))
 
         self.assertEqual("illustrated", mapping["system"])
-        self.assertEqual("2.4.0", mapping["version"])
-        self.assertEqual(8, mapping["mapping_revision"])
-        self.assertEqual("illustrated-performance-v5", mapping["public_motion_contract"])
-        self.assertEqual("illustrated-performance-v5-review", mapping["archived_motion_review_contract"])
-        self.assertEqual(1, len(mapping["mappings"]))
-        approved = mapping["mappings"][0]
+        self.assertEqual("2.5.0", mapping["version"])
+        self.assertEqual(9, mapping["mapping_revision"])
+        self.assertEqual("illustrated-performance-v6", mapping["public_motion_contract"])
+        self.assertEqual("illustrated-performance-v7-review", mapping["archived_motion_review_contract"])
+        self.assertEqual(13, len(mapping["mappings"]))
+        approved = next(item for item in mapping["mappings"] if item["style"] == "deep-tech")
         self.assertEqual("deep-tech", approved["style"])
         self.assertEqual("approved", approved["status"])
         self.assertEqual("confirmed", approved["human_visual_acceptance"])
@@ -371,28 +369,30 @@ class SvgRendererTest(unittest.TestCase):
             {"delivery-tray", "delivery-lip"},
             {part for part in definition.parts if part.startswith("delivery-")},
         )
-        self.assertEqual("M15 66h27l9 11h13l9-11h27l7 35H8Z", primitives["delivery-tray"].attrs["d"])
+        self.assertEqual("M13 75h29l8 10h18l8-10h29l-6 29H19Z", primitives["delivery-tray"].attrs["d"])
         self.assertEqual("sky", primitives["delivery-tray"].attrs["fill"])
-        self.assertEqual("M79 60c11-1 19-7 23-16m-8 4 8-4 1 9", primitives["send-path"].attrs["d"])
-        self.assertEqual("M98 27l5 5 10-12", primitives["check"].attrs["d"])
+        self.assertIn("artifact-card", primitives)
+        self.assertIn("artifact-lines", primitives)
+        self.assertIn("emergence-track", primitives)
+        self.assertNotIn("send-path", primitives)
+        self.assertNotIn("check", primitives)
 
-    def test_character_v2_quality_reports_only_uncovered_icons(self):
+    def test_illustrated_quality_reports_no_fallback_for_the_full_registry(self):
         style = deep_merge(load_style(), {"icon_system": "illustrated"})
         covered = quality_report(self._scene_with_icon("agent", motion={"profile": "off"}), style)
         self.assertEqual([], [item for item in covered["issues"] if item["code"] == "character_icon_fallback"])
 
-        uncovered = quality_report(self._scene_with_icon("token", motion={"profile": "off"}), style)
-        warnings = [item for item in uncovered["issues"] if item["code"] == "character_icon_fallback"]
-        self.assertEqual(1, len(warnings))
-        self.assertIn("illustrated", warnings[0]["message"])
+        token = quality_report(self._scene_with_icon("token", motion={"profile": "off"}), style)
+        warnings = [item for item in token["issues"] if item["code"] == "character_icon_fallback"]
+        self.assertEqual([], warnings)
 
-    def test_character_v2_fallback_keeps_semantic_line_text_spacing(self):
+    def test_full_registry_icons_keep_illustrated_text_spacing(self):
         style = deep_merge(load_style(), {"icon_system": "illustrated"})
         covered_svg = render_svg(self._scene_with_icon("agent", motion={"profile": "off"}), style)
-        fallback_svg = render_svg(self._scene_with_icon("token", motion={"profile": "off"}), style)
+        token_svg = render_svg(self._scene_with_icon("token", motion={"profile": "off"}), style)
 
         self.assertIn('<text x="369.0" y="186.0"', covered_svg)
-        self.assertIn('<text x="328.0" y="186.0"', fallback_svg)
+        self.assertIn('<text x="369.0" y="186.0"', token_svg)
 
     def test_character_registry_and_manifest_cover_every_known_icon(self):
         self.assertEqual(set(character_icon_ids()), KNOWN_ICONS)

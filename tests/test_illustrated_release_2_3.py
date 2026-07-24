@@ -29,6 +29,13 @@ RUNTIME_FUNCTIONS = {
 }
 
 
+def _archived_parts(icon: str) -> set[str]:
+    catalog = json.loads(
+        (ROOT / "assets" / "illustrated" / "snapshots" / "catalog-2.3.0.json").read_text(encoding="utf-8")
+    )
+    return set(next(item for item in catalog["icons"] if item["id"] == icon)["parts"])
+
+
 def _manifest(html: str) -> dict:
     marker = '<script type="application/json" id="anidiagram-motion-manifest">'
     start = html.index(marker) + len(marker)
@@ -178,7 +185,7 @@ class IllustratedRelease23Test(unittest.TestCase):
         for item in contract["performances"]:
             self.assertEqual(historical_performances[item["icon"]], item["id"])
             self.assertEqual(ILLUSTRATED_REST_AT[item["icon"]], item["rest_at"])
-            self.assertLessEqual(set(item["primary_parts"]), set(illustrated_definition(item["icon"]).parts))
+            self.assertLessEqual(set(item["primary_parts"]), _archived_parts(item["icon"]))
 
     def test_public_showcase_spec_remains_a_sixteen_icon_v4_archive(self):
         spec = json.loads(

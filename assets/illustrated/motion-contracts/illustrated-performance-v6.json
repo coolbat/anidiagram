@@ -1,0 +1,1543 @@
+{
+  "system": "illustrated",
+  "icon_system_version": "2.5.0",
+  "contract": "illustrated-performance-v6",
+  "supersedes": "illustrated-performance-v5",
+  "review_source": "illustrated-performance-v7-review",
+  "review_sources": [
+    "illustrated-performance-v6-review",
+    "illustrated-performance-v7-review"
+  ],
+  "status": "approved",
+  "approved_at": "2026-07-24",
+  "human_visual_acceptance": "confirmed",
+  "public_showcase_enabled": true,
+  "selection_policy": "automatic-for-supported-showcase-icons",
+  "repeat_delay": 0.8,
+  "cancel_behavior": "restore-authored-rest-pose",
+  "reduced_motion_behavior": "static-rest",
+  "performances": [
+    {
+      "icon": "agent",
+      "id": "illustrated-agent-input-reason-result-v1",
+      "semantic_sequence": [
+        "receive",
+        "reason",
+        "deliver"
+      ],
+      "primary_parts": [
+        "wash",
+        "brain-left",
+        "brain-right",
+        "brain-detail",
+        "processor",
+        "processor-core",
+        "input-nodes",
+        "input-path",
+        "output-path",
+        "result"
+      ],
+      "rest_at": 1.72
+    },
+    {
+      "icon": "operator",
+      "id": "illustrated-operator-focus-operate-confirm-v1",
+      "semantic_sequence": [
+        "focus",
+        "operate",
+        "confirm"
+      ],
+      "primary_parts": [
+        "wash",
+        "body",
+        "head",
+        "hair",
+        "glasses",
+        "laptop",
+        "hands",
+        "screen",
+        "laptop-base",
+        "input-cursor",
+        "status",
+        "status-check"
+      ],
+      "rest_at": 1.68
+    },
+    {
+      "icon": "tool",
+      "id": "illustrated-tool-prepare-execute-complete-v1",
+      "semantic_sequence": [
+        "prepare",
+        "execute",
+        "complete"
+      ],
+      "primary_parts": [
+        "wash",
+        "toolbox",
+        "toolbox-lid",
+        "handle",
+        "wrench",
+        "wrench-hole",
+        "target",
+        "action-path",
+        "completion"
+      ],
+      "rest_at": 1.62
+    },
+    {
+      "icon": "output",
+      "id": "illustrated-output-compose-deliver-confirm-v1",
+      "semantic_sequence": [
+        "compose",
+        "deliver",
+        "confirm"
+      ],
+      "primary_parts": [
+        "wash",
+        "artifact-card",
+        "artifact-corner",
+        "artifact-lines",
+        "emergence-track",
+        "delivery-tray",
+        "delivery-lip"
+      ],
+      "rest_at": 1.7,
+      "motion_recipe": {
+        "type": "cascade",
+        "prepare_parts": [
+          "delivery-tray",
+          "delivery-lip"
+        ],
+        "action_parts": [
+          "artifact-card",
+          "artifact-corner",
+          "emergence-track"
+        ],
+        "result_parts": [
+          "artifact-lines"
+        ]
+      }
+    },
+    {
+      "icon": "database",
+      "id": "illustrated-database-ingest-store-persist-v1",
+      "semantic_sequence": [
+        "ingest",
+        "store",
+        "persist"
+      ],
+      "primary_parts": [
+        "wash",
+        "cylinder-body",
+        "cylinder-top",
+        "layer-top",
+        "layer-bottom",
+        "input-bead",
+        "write-path",
+        "commit-ripple",
+        "stored-bead"
+      ],
+      "rest_at": 1.72
+    },
+    {
+      "icon": "api",
+      "id": "illustrated-api-request-route-response-v1",
+      "semantic_sequence": [
+        "request",
+        "route",
+        "respond"
+      ],
+      "primary_parts": [
+        "wash",
+        "gateway",
+        "api-glyph",
+        "request-path",
+        "request-token",
+        "response-path",
+        "response-token"
+      ],
+      "rest_at": 1.66
+    },
+    {
+      "icon": "search",
+      "id": "illustrated-search-query-scan-discover-v1",
+      "semantic_sequence": [
+        "query",
+        "scan",
+        "discover"
+      ],
+      "primary_parts": [
+        "wash",
+        "lens-glass",
+        "lens",
+        "handle",
+        "scan-cross",
+        "target-ring",
+        "result-dot",
+        "discovery"
+      ],
+      "rest_at": 1.78
+    },
+    {
+      "icon": "memory",
+      "id": "illustrated-memory-capture-index-recall-v1",
+      "semantic_sequence": [
+        "capture",
+        "index",
+        "recall"
+      ],
+      "primary_parts": [
+        "wash",
+        "context-stack",
+        "context-card",
+        "context-nodes",
+        "context-links",
+        "recall-orbit",
+        "recall-focus"
+      ],
+      "rest_at": 1.72,
+      "motion_recipe": {
+        "type": "draw",
+        "prepare_parts": [
+          "context-stack",
+          "context-card"
+        ],
+        "action_parts": [
+          "context-nodes",
+          "context-links"
+        ],
+        "result_parts": [
+          "recall-orbit",
+          "recall-focus"
+        ]
+      }
+    },
+    {
+      "icon": "file",
+      "id": "illustrated-file-prepare-attach-reference-v1",
+      "semantic_sequence": [
+        "prepare",
+        "attach",
+        "reference"
+      ],
+      "primary_parts": [
+        "wash",
+        "page",
+        "paperclip",
+        "content-lines"
+      ],
+      "rest_at": 1.58
+    },
+    {
+      "icon": "folder",
+      "id": "illustrated-folder-prepare-store-index-v1",
+      "semantic_sequence": [
+        "prepare",
+        "store",
+        "index"
+      ],
+      "primary_parts": [
+        "wash",
+        "folder-back",
+        "folder-tab",
+        "document",
+        "folder-front",
+        "index-label"
+      ],
+      "rest_at": 1.66
+    },
+    {
+      "icon": "cloud",
+      "id": "illustrated-cloud-prepare-transfer-sync-v1",
+      "semantic_sequence": [
+        "prepare",
+        "transfer",
+        "synchronize"
+      ],
+      "primary_parts": [
+        "wash",
+        "cloud-shell",
+        "upload-arrow",
+        "download-arrow"
+      ],
+      "rest_at": 1.72
+    },
+    {
+      "icon": "shield",
+      "id": "illustrated-shield-prepare-lock-protect-v1",
+      "semantic_sequence": [
+        "prepare",
+        "lock",
+        "protect"
+      ],
+      "primary_parts": [
+        "wash",
+        "shield-shell",
+        "inner-field",
+        "lock-shackle",
+        "security-lock",
+        "keyhole"
+      ],
+      "rest_at": 1.68
+    },
+    {
+      "icon": "user",
+      "id": "illustrated-user-request-interact-consume-v1",
+      "semantic_sequence": [
+        "request",
+        "interact",
+        "consume"
+      ],
+      "primary_parts": [
+        "wash",
+        "portrait-body",
+        "portrait-neck",
+        "portrait-head",
+        "portrait-hair",
+        "face",
+        "conversation-card",
+        "conversation-lines"
+      ],
+      "rest_at": 1.66
+    },
+    {
+      "icon": "server",
+      "id": "illustrated-server-host-compute-serve-v1",
+      "semantic_sequence": [
+        "host",
+        "compute",
+        "serve"
+      ],
+      "primary_parts": [
+        "wash",
+        "rack-shell",
+        "upper-bay",
+        "middle-bay",
+        "lower-bay",
+        "rack-ports",
+        "activity-lights"
+      ],
+      "rest_at": 1.7
+    },
+    {
+      "icon": "ai-model",
+      "id": "illustrated-ai-model-infer-transform-predict-v1",
+      "semantic_sequence": [
+        "infer",
+        "transform",
+        "predict"
+      ],
+      "primary_parts": [
+        "wash",
+        "model-card",
+        "model-header",
+        "network-links",
+        "input-neurons",
+        "hidden-neurons",
+        "output-neuron",
+        "inference-band"
+      ],
+      "rest_at": 1.8
+    },
+    {
+      "icon": "message-queue",
+      "id": "illustrated-message-queue-buffer-order-deliver-v1",
+      "semantic_sequence": [
+        "buffer",
+        "order",
+        "deliver"
+      ],
+      "primary_parts": [
+        "wash",
+        "queue-shell",
+        "queue-rail",
+        "message-one",
+        "message-two",
+        "message-three",
+        "buffer-gates",
+        "sequence-dots"
+      ],
+      "rest_at": 1.76
+    },
+    {
+      "icon": "vector-database",
+      "id": "illustrated-vector-database-embed-index-retrieve-v1",
+      "semantic_sequence": [
+        "embed",
+        "index",
+        "retrieve"
+      ],
+      "primary_parts": [
+        "wash",
+        "vector-store-body",
+        "vector-store-top",
+        "vector-field",
+        "vector-links",
+        "vector-points"
+      ],
+      "rest_at": 1.78
+    },
+    {
+      "icon": "knowledge-base",
+      "id": "illustrated-knowledge-base-curate-connect-reference-v1",
+      "semantic_sequence": [
+        "curate",
+        "connect",
+        "reference"
+      ],
+      "primary_parts": [
+        "wash",
+        "book-left",
+        "book-right",
+        "book-spine",
+        "knowledge-links",
+        "knowledge-points",
+        "reference-lines"
+      ],
+      "rest_at": 1.82
+    },
+    {
+      "icon": "gateway",
+      "id": "illustrated-gateway-admit-route-mediate-v1",
+      "semantic_sequence": [
+        "admit",
+        "route",
+        "mediate"
+      ],
+      "primary_parts": [
+        "wash",
+        "boundary-appliance",
+        "policy-core",
+        "inbound-lanes",
+        "outbound-lanes",
+        "request-packets",
+        "response-packets"
+      ],
+      "rest_at": 1.76,
+      "motion_recipe": {
+        "type": "sweep",
+        "prepare_parts": [
+          "boundary-appliance",
+          "policy-core"
+        ],
+        "action_parts": [
+          "inbound-lanes",
+          "outbound-lanes",
+          "request-packets"
+        ],
+        "result_parts": [
+          "response-packets"
+        ]
+      }
+    },
+    {
+      "icon": "container",
+      "id": "illustrated-container-package-isolate-run-v1",
+      "semantic_sequence": [
+        "package",
+        "isolate",
+        "run"
+      ],
+      "primary_parts": [
+        "wash",
+        "container-shell",
+        "container-lid",
+        "container-side",
+        "container-ribs",
+        "isolation-frame",
+        "app-module",
+        "runtime-slots",
+        "container-feet"
+      ],
+      "rest_at": 1.8
+    },
+    {
+      "icon": "developer",
+      "id": "illustrated-developer-code-build-deliver-v1",
+      "semantic_sequence": [
+        "code",
+        "build",
+        "deliver"
+      ],
+      "primary_parts": [
+        "wash",
+        "body",
+        "head",
+        "hair",
+        "code-console",
+        "console-header",
+        "code-glyphs",
+        "hands"
+      ],
+      "rest_at": 1.82
+    },
+    {
+      "icon": "agent-team",
+      "id": "illustrated-agent-team-coordinate-delegate-synthesize-v1",
+      "semantic_sequence": [
+        "coordinate",
+        "delegate",
+        "synthesize"
+      ],
+      "primary_parts": [
+        "wash",
+        "collaboration-field",
+        "team-links",
+        "lead-agent",
+        "lead-core",
+        "member-left",
+        "member-right",
+        "member-cores"
+      ],
+      "rest_at": 1.86
+    },
+    {
+      "icon": "assistant",
+      "id": "illustrated-assistant-listen-guide-respond-v1",
+      "semantic_sequence": [
+        "listen",
+        "guide",
+        "respond"
+      ],
+      "primary_parts": [
+        "wash",
+        "assistant-shell",
+        "face-panel",
+        "eyes",
+        "smile",
+        "headset",
+        "earpieces",
+        "response-panel",
+        "response-lines"
+      ],
+      "rest_at": 1.78
+    },
+    {
+      "icon": "human-reviewer",
+      "id": "illustrated-human-reviewer-inspect-decide-annotate-v1",
+      "semantic_sequence": [
+        "inspect",
+        "decide",
+        "annotate"
+      ],
+      "primary_parts": [
+        "wash",
+        "body",
+        "head",
+        "hair",
+        "glasses",
+        "review-sheet",
+        "review-lines",
+        "decision-signals",
+        "hands"
+      ],
+      "rest_at": 1.84
+    },
+    {
+      "icon": "llm",
+      "id": "illustrated-llm-context-transform-generate-v1",
+      "semantic_sequence": [
+        "context",
+        "transform",
+        "generate"
+      ],
+      "primary_parts": [
+        "wash",
+        "context-back",
+        "context-mid",
+        "model-shell",
+        "model-mark",
+        "token-lines",
+        "completion-dots"
+      ],
+      "rest_at": 1.82
+    },
+    {
+      "icon": "reasoning",
+      "id": "illustrated-reasoning-premise-infer-conclude-v1",
+      "semantic_sequence": [
+        "premise",
+        "infer",
+        "conclude"
+      ],
+      "primary_parts": [
+        "wash",
+        "reasoning-shell",
+        "thought-field",
+        "reasoning-path",
+        "premise-points",
+        "conclusion-point",
+        "insight-base"
+      ],
+      "rest_at": 1.88
+    },
+    {
+      "icon": "neural-network",
+      "id": "illustrated-neural-network-connect-activate-propagate-v1",
+      "semantic_sequence": [
+        "connect",
+        "activate",
+        "propagate"
+      ],
+      "primary_parts": [
+        "wash",
+        "network-shell",
+        "network-links",
+        "input-neurons",
+        "hidden-neurons",
+        "output-neuron"
+      ],
+      "rest_at": 1.82,
+      "motion_recipe": {
+        "type": "draw",
+        "prepare_parts": [
+          "network-shell"
+        ],
+        "action_parts": [
+          "network-links"
+        ],
+        "result_parts": [
+          "output-neuron"
+        ]
+      }
+    },
+    {
+      "icon": "embedding",
+      "id": "illustrated-embedding-vectorize-position-compare-v1",
+      "semantic_sequence": [
+        "vectorize",
+        "position",
+        "compare"
+      ],
+      "primary_parts": [
+        "wash",
+        "vector-field",
+        "coordinate-grid",
+        "source-token",
+        "vector-beads",
+        "similarity-ring"
+      ],
+      "rest_at": 1.84,
+      "motion_recipe": {
+        "type": "cascade",
+        "prepare_parts": [
+          "vector-field",
+          "coordinate-grid"
+        ],
+        "action_parts": [
+          "source-token",
+          "vector-beads"
+        ],
+        "result_parts": [
+          "similarity-ring"
+        ]
+      }
+    },
+    {
+      "icon": "token",
+      "id": "illustrated-token-count-budget-consume-v1",
+      "semantic_sequence": [
+        "tokenize",
+        "count",
+        "budget"
+      ],
+      "primary_parts": [
+        "wash",
+        "tokenizer-shell",
+        "context-strip",
+        "token-segments",
+        "segment-glyphs",
+        "budget-rail",
+        "budget-slots"
+      ],
+      "rest_at": 1.8,
+      "motion_recipe": {
+        "type": "cascade",
+        "prepare_parts": [
+          "tokenizer-shell",
+          "context-strip"
+        ],
+        "action_parts": [
+          "token-segments",
+          "segment-glyphs"
+        ],
+        "result_parts": [
+          "budget-rail",
+          "budget-slots"
+        ]
+      }
+    },
+    {
+      "icon": "data-warehouse",
+      "id": "illustrated-data-warehouse-land-organize-serve-v1",
+      "semantic_sequence": [
+        "land",
+        "organize",
+        "serve"
+      ],
+      "primary_parts": [
+        "wash",
+        "warehouse-roof",
+        "warehouse-body",
+        "storage-cylinder",
+        "storage-top",
+        "storage-layers",
+        "inventory-points"
+      ],
+      "rest_at": 1.86,
+      "motion_recipe": {
+        "type": "cascade",
+        "prepare_parts": [
+          "warehouse-roof",
+          "warehouse-body"
+        ],
+        "action_parts": [
+          "storage-cylinder",
+          "storage-top",
+          "storage-layers"
+        ],
+        "result_parts": [
+          "inventory-points"
+        ]
+      }
+    },
+    {
+      "icon": "document-store",
+      "id": "illustrated-document-store-ingest-index-retrieve-v1",
+      "semantic_sequence": [
+        "ingest",
+        "index",
+        "retrieve"
+      ],
+      "primary_parts": [
+        "wash",
+        "store-body",
+        "store-top",
+        "document-card",
+        "document-corner",
+        "record-lines",
+        "index-points"
+      ],
+      "rest_at": 1.82,
+      "motion_recipe": {
+        "type": "sweep",
+        "prepare_parts": [
+          "store-body",
+          "store-top"
+        ],
+        "action_parts": [
+          "document-card",
+          "document-corner",
+          "record-lines"
+        ],
+        "result_parts": [
+          "index-points"
+        ]
+      }
+    },
+    {
+      "icon": "dataset",
+      "id": "illustrated-dataset-structure-filter-analyze-v1",
+      "semantic_sequence": [
+        "structure",
+        "filter",
+        "analyze"
+      ],
+      "primary_parts": [
+        "wash",
+        "table-shell",
+        "table-header",
+        "column-lines",
+        "record-lines",
+        "data-markers"
+      ],
+      "rest_at": 1.86,
+      "motion_recipe": {
+        "type": "draw",
+        "prepare_parts": [
+          "table-shell",
+          "table-header"
+        ],
+        "action_parts": [
+          "column-lines",
+          "record-lines"
+        ],
+        "result_parts": [
+          "data-markers"
+        ]
+      }
+    },
+    {
+      "icon": "document",
+      "id": "illustrated-document-author-read-reference-v1",
+      "semantic_sequence": [
+        "author",
+        "read",
+        "reference"
+      ],
+      "primary_parts": [
+        "wash",
+        "page",
+        "page-corner",
+        "title-line",
+        "body-lines",
+        "reference-tab"
+      ],
+      "rest_at": 1.8,
+      "motion_recipe": {
+        "type": "draw",
+        "prepare_parts": [
+          "page",
+          "page-corner"
+        ],
+        "action_parts": [
+          "title-line",
+          "body-lines"
+        ],
+        "result_parts": [
+          "reference-tab"
+        ]
+      }
+    },
+    {
+      "icon": "pdf",
+      "id": "illustrated-pdf-package-preserve-share-v1",
+      "semantic_sequence": [
+        "package",
+        "preserve",
+        "share"
+      ],
+      "primary_parts": [
+        "wash",
+        "pdf-page",
+        "folded-corner",
+        "pdf-mark",
+        "content-band",
+        "format-seal"
+      ],
+      "rest_at": 1.84,
+      "motion_recipe": {
+        "type": "draw",
+        "prepare_parts": [
+          "pdf-page",
+          "folded-corner"
+        ],
+        "action_parts": [
+          "pdf-mark",
+          "content-band"
+        ],
+        "result_parts": [
+          "format-seal"
+        ]
+      }
+    },
+    {
+      "icon": "image",
+      "id": "illustrated-image-capture-compose-display-v1",
+      "semantic_sequence": [
+        "capture",
+        "compose",
+        "display"
+      ],
+      "primary_parts": [
+        "wash",
+        "frame",
+        "sky-field",
+        "sun-disc",
+        "landscape",
+        "focus-corners"
+      ],
+      "rest_at": 1.82,
+      "motion_recipe": {
+        "type": "cascade",
+        "prepare_parts": [
+          "frame",
+          "sky-field"
+        ],
+        "action_parts": [
+          "sun-disc",
+          "landscape"
+        ],
+        "result_parts": [
+          "focus-corners"
+        ]
+      }
+    },
+    {
+      "icon": "audio",
+      "id": "illustrated-audio-record-process-play-v1",
+      "semantic_sequence": [
+        "record",
+        "process",
+        "play"
+      ],
+      "primary_parts": [
+        "wash",
+        "headphones",
+        "ear-cups",
+        "wave-panel",
+        "waveform",
+        "level-dots"
+      ],
+      "rest_at": 1.86,
+      "motion_recipe": {
+        "type": "oscillate",
+        "prepare_parts": [
+          "headphones",
+          "ear-cups"
+        ],
+        "action_parts": [
+          "wave-panel",
+          "waveform"
+        ],
+        "result_parts": [
+          "level-dots"
+        ]
+      }
+    },
+    {
+      "icon": "video",
+      "id": "illustrated-video-capture-sequence-play-v1",
+      "semantic_sequence": [
+        "capture",
+        "sequence",
+        "play"
+      ],
+      "primary_parts": [
+        "wash",
+        "video-frame",
+        "film-rail",
+        "screen",
+        "play-control",
+        "timeline-cells"
+      ],
+      "rest_at": 1.82,
+      "motion_recipe": {
+        "type": "sweep",
+        "prepare_parts": [
+          "video-frame",
+          "film-rail"
+        ],
+        "action_parts": [
+          "timeline-cells",
+          "screen"
+        ],
+        "result_parts": [
+          "play-control"
+        ]
+      }
+    },
+    {
+      "icon": "code-file",
+      "id": "illustrated-code-file-author-validate-reuse-v1",
+      "semantic_sequence": [
+        "author",
+        "validate",
+        "reuse"
+      ],
+      "primary_parts": [
+        "wash",
+        "code-page",
+        "code-corner",
+        "code-brackets",
+        "code-lines",
+        "language-tab"
+      ],
+      "rest_at": 1.84,
+      "motion_recipe": {
+        "type": "draw",
+        "prepare_parts": [
+          "code-page",
+          "code-corner"
+        ],
+        "action_parts": [
+          "code-brackets",
+          "code-lines"
+        ],
+        "result_parts": [
+          "language-tab"
+        ]
+      }
+    },
+    {
+      "icon": "webhook",
+      "id": "illustrated-webhook-hook-receive-trigger-v1",
+      "semantic_sequence": [
+        "emit",
+        "callback",
+        "resolve"
+      ],
+      "primary_parts": [
+        "wash",
+        "callback-field",
+        "callback-arcs",
+        "event-node",
+        "handler-node",
+        "result-node",
+        "event-pulse"
+      ],
+      "rest_at": 1.86,
+      "motion_recipe": {
+        "type": "draw",
+        "prepare_parts": [
+          "callback-field",
+          "event-node"
+        ],
+        "action_parts": [
+          "callback-arcs",
+          "handler-node"
+        ],
+        "result_parts": [
+          "result-node",
+          "event-pulse"
+        ]
+      }
+    },
+    {
+      "icon": "http-request",
+      "id": "illustrated-http-request-compose-send-receive-v1",
+      "semantic_sequence": [
+        "compose",
+        "send",
+        "receive"
+      ],
+      "primary_parts": [
+        "wash",
+        "browser-shell",
+        "address-bar",
+        "http-glyph",
+        "request-rail",
+        "transfer-beads"
+      ],
+      "rest_at": 1.84,
+      "motion_recipe": {
+        "type": "sweep",
+        "prepare_parts": [
+          "browser-shell",
+          "address-bar"
+        ],
+        "action_parts": [
+          "http-glyph",
+          "request-rail"
+        ],
+        "result_parts": [
+          "transfer-beads"
+        ]
+      }
+    },
+    {
+      "icon": "load-balancer",
+      "id": "illustrated-load-balancer-distribute-balance-serve-v1",
+      "semantic_sequence": [
+        "distribute",
+        "balance",
+        "serve"
+      ],
+      "primary_parts": [
+        "wash",
+        "balancer-shell",
+        "input-port",
+        "distribution-rails",
+        "service-nodes",
+        "load-signals"
+      ],
+      "rest_at": 1.88,
+      "motion_recipe": {
+        "type": "draw",
+        "prepare_parts": [
+          "balancer-shell",
+          "input-port"
+        ],
+        "action_parts": [
+          "distribution-rails"
+        ],
+        "result_parts": [
+          "service-nodes",
+          "load-signals"
+        ]
+      }
+    },
+    {
+      "icon": "server-cluster",
+      "id": "illustrated-server-cluster-group-coordinate-scale-v1",
+      "semantic_sequence": [
+        "group",
+        "coordinate",
+        "scale"
+      ],
+      "primary_parts": [
+        "wash",
+        "cluster-back",
+        "cluster-left",
+        "cluster-right",
+        "cluster-links",
+        "activity-lights"
+      ],
+      "rest_at": 1.86,
+      "motion_recipe": {
+        "type": "fan",
+        "prepare_parts": [
+          "cluster-back"
+        ],
+        "action_parts": [
+          "cluster-left",
+          "cluster-right",
+          "cluster-links"
+        ],
+        "result_parts": [
+          "activity-lights"
+        ]
+      }
+    },
+    {
+      "icon": "function",
+      "id": "illustrated-function-bind-execute-return-v1",
+      "semantic_sequence": [
+        "bind",
+        "execute",
+        "return"
+      ],
+      "primary_parts": [
+        "wash",
+        "function-shell",
+        "lambda-mark",
+        "parameter-slots",
+        "result-panel",
+        "runtime-pulse"
+      ],
+      "rest_at": 1.82,
+      "motion_recipe": {
+        "type": "draw",
+        "prepare_parts": [
+          "function-shell",
+          "parameter-slots"
+        ],
+        "action_parts": [
+          "lambda-mark"
+        ],
+        "result_parts": [
+          "result-panel",
+          "runtime-pulse"
+        ]
+      }
+    },
+    {
+      "icon": "edge-node",
+      "id": "illustrated-edge-node-sense-compute-relay-v1",
+      "semantic_sequence": [
+        "sense",
+        "compute",
+        "relay"
+      ],
+      "primary_parts": [
+        "wash",
+        "edge-shell",
+        "sensor-window",
+        "compute-core",
+        "signal-arcs",
+        "edge-feet"
+      ],
+      "rest_at": 1.84,
+      "motion_recipe": {
+        "type": "oscillate",
+        "prepare_parts": [
+          "edge-shell",
+          "edge-feet"
+        ],
+        "action_parts": [
+          "sensor-window",
+          "signal-arcs"
+        ],
+        "result_parts": [
+          "compute-core"
+        ]
+      }
+    },
+    {
+      "icon": "source-code",
+      "id": "illustrated-source-code-author-organize-build-v1",
+      "semantic_sequence": [
+        "author",
+        "organize",
+        "build"
+      ],
+      "primary_parts": [
+        "wash",
+        "editor-shell",
+        "editor-header",
+        "file-rail",
+        "source-glyphs",
+        "cursor-line"
+      ],
+      "rest_at": 1.84,
+      "motion_recipe": {
+        "type": "draw",
+        "prepare_parts": [
+          "editor-shell",
+          "editor-header"
+        ],
+        "action_parts": [
+          "file-rail",
+          "source-glyphs"
+        ],
+        "result_parts": [
+          "cursor-line"
+        ]
+      }
+    },
+    {
+      "icon": "git-repository",
+      "id": "illustrated-git-repository-store-version-share-v1",
+      "semantic_sequence": [
+        "store",
+        "version",
+        "share"
+      ],
+      "primary_parts": [
+        "wash",
+        "repository-shell",
+        "repository-tab",
+        "git-main-rail",
+        "git-branch-rail",
+        "commit-nodes"
+      ],
+      "rest_at": 1.84,
+      "motion_recipe": {
+        "type": "draw",
+        "prepare_parts": [
+          "repository-shell",
+          "repository-tab"
+        ],
+        "action_parts": [
+          "git-main-rail",
+          "git-branch-rail"
+        ],
+        "result_parts": [
+          "commit-nodes"
+        ]
+      }
+    },
+    {
+      "icon": "branch",
+      "id": "illustrated-branch-diverge-develop-rejoin-v1",
+      "semantic_sequence": [
+        "diverge",
+        "develop",
+        "rejoin"
+      ],
+      "primary_parts": [
+        "wash",
+        "main-rail",
+        "branch-rail",
+        "main-nodes",
+        "branch-nodes",
+        "branch-focus"
+      ],
+      "rest_at": 1.88,
+      "motion_recipe": {
+        "type": "draw",
+        "prepare_parts": [
+          "main-rail",
+          "main-nodes"
+        ],
+        "action_parts": [
+          "branch-rail"
+        ],
+        "result_parts": [
+          "branch-nodes",
+          "branch-focus"
+        ]
+      }
+    },
+    {
+      "icon": "pull-request",
+      "id": "illustrated-pull-request-propose-review-merge-v1",
+      "semantic_sequence": [
+        "propose",
+        "review",
+        "merge"
+      ],
+      "primary_parts": [
+        "wash",
+        "source-rail",
+        "request-path",
+        "source-nodes",
+        "target-node",
+        "request-tip"
+      ],
+      "rest_at": 1.88,
+      "motion_recipe": {
+        "type": "draw",
+        "prepare_parts": [
+          "source-rail",
+          "source-nodes"
+        ],
+        "action_parts": [
+          "request-path",
+          "request-tip"
+        ],
+        "result_parts": [
+          "target-node"
+        ]
+      }
+    },
+    {
+      "icon": "ci-cd",
+      "id": "illustrated-ci-cd-build-test-deliver-v1",
+      "semantic_sequence": [
+        "build",
+        "test",
+        "deliver"
+      ],
+      "primary_parts": [
+        "wash",
+        "delivery-loop",
+        "source-stage",
+        "build-stage",
+        "release-stage",
+        "stage-cores"
+      ],
+      "rest_at": 1.86,
+      "motion_recipe": {
+        "type": "cascade",
+        "prepare_parts": [
+          "delivery-loop"
+        ],
+        "action_parts": [
+          "source-stage",
+          "build-stage"
+        ],
+        "result_parts": [
+          "release-stage",
+          "stage-cores"
+        ]
+      }
+    },
+    {
+      "icon": "deployment",
+      "id": "illustrated-deployment-release-place-activate-v1",
+      "semantic_sequence": [
+        "release",
+        "place",
+        "activate"
+      ],
+      "primary_parts": [
+        "wash",
+        "release-package",
+        "package-seam",
+        "placement-track",
+        "environment-dock",
+        "server-bays",
+        "runtime-lights"
+      ],
+      "rest_at": 1.86,
+      "motion_recipe": {
+        "type": "bounce",
+        "prepare_parts": [
+          "environment-dock",
+          "server-bays"
+        ],
+        "action_parts": [
+          "release-package",
+          "package-seam",
+          "placement-track"
+        ],
+        "result_parts": [
+          "runtime-lights"
+        ]
+      }
+    },
+    {
+      "icon": "task",
+      "id": "illustrated-task-define-execute-complete-v1",
+      "semantic_sequence": [
+        "define",
+        "execute",
+        "complete"
+      ],
+      "primary_parts": [
+        "wash",
+        "task-board",
+        "board-clip",
+        "task-lines",
+        "task-markers",
+        "active-marker"
+      ],
+      "rest_at": 1.82,
+      "motion_recipe": {
+        "type": "cascade",
+        "prepare_parts": [
+          "task-board",
+          "board-clip"
+        ],
+        "action_parts": [
+          "task-lines",
+          "task-markers"
+        ],
+        "result_parts": [
+          "active-marker"
+        ]
+      }
+    },
+    {
+      "icon": "scheduler",
+      "id": "illustrated-scheduler-plan-trigger-repeat-v1",
+      "semantic_sequence": [
+        "plan",
+        "trigger",
+        "repeat"
+      ],
+      "primary_parts": [
+        "wash",
+        "calendar-shell",
+        "calendar-header",
+        "date-grid",
+        "clock-face",
+        "clock-hands"
+      ],
+      "rest_at": 1.86,
+      "motion_recipe": {
+        "type": "oscillate",
+        "prepare_parts": [
+          "calendar-shell",
+          "calendar-header"
+        ],
+        "action_parts": [
+          "date-grid",
+          "clock-hands"
+        ],
+        "result_parts": [
+          "clock-face"
+        ]
+      }
+    },
+    {
+      "icon": "monitoring",
+      "id": "illustrated-monitoring-observe-detect-report-v1",
+      "semantic_sequence": [
+        "observe",
+        "detect",
+        "report"
+      ],
+      "primary_parts": [
+        "wash",
+        "monitor-shell",
+        "metric-screen",
+        "metric-trace",
+        "signal-points",
+        "monitor-stand"
+      ],
+      "rest_at": 1.84,
+      "motion_recipe": {
+        "type": "draw",
+        "prepare_parts": [
+          "monitor-shell",
+          "metric-screen"
+        ],
+        "action_parts": [
+          "metric-trace"
+        ],
+        "result_parts": [
+          "signal-points",
+          "monitor-stand"
+        ]
+      }
+    },
+    {
+      "icon": "logs",
+      "id": "illustrated-logs-record-order-inspect-v1",
+      "semantic_sequence": [
+        "record",
+        "order",
+        "inspect"
+      ],
+      "primary_parts": [
+        "wash",
+        "log-stack-back",
+        "log-stack-mid",
+        "log-sheet",
+        "timestamp-dots",
+        "log-lines"
+      ],
+      "rest_at": 1.86,
+      "motion_recipe": {
+        "type": "fan",
+        "prepare_parts": [
+          "log-stack-back",
+          "log-stack-mid"
+        ],
+        "action_parts": [
+          "log-sheet",
+          "log-lines"
+        ],
+        "result_parts": [
+          "timestamp-dots"
+        ]
+      }
+    },
+    {
+      "icon": "alert",
+      "id": "illustrated-alert-detect-escalate-acknowledge-v1",
+      "semantic_sequence": [
+        "detect",
+        "escalate",
+        "acknowledge"
+      ],
+      "primary_parts": [
+        "wash",
+        "bell-body",
+        "bell-rim",
+        "bell-clapper",
+        "signal-rings",
+        "severity-light"
+      ],
+      "rest_at": 1.86,
+      "motion_recipe": {
+        "type": "oscillate",
+        "prepare_parts": [
+          "bell-body",
+          "bell-rim"
+        ],
+        "action_parts": [
+          "signal-rings",
+          "bell-clapper"
+        ],
+        "result_parts": [
+          "severity-light"
+        ]
+      }
+    },
+    {
+      "icon": "debug",
+      "id": "illustrated-debug-reproduce-inspect-fix-v1",
+      "semantic_sequence": [
+        "reproduce",
+        "inspect",
+        "fix"
+      ],
+      "primary_parts": [
+        "wash",
+        "bug-body",
+        "bug-head",
+        "bug-legs",
+        "inspection-lens",
+        "probe-point"
+      ],
+      "rest_at": 1.84,
+      "motion_recipe": {
+        "type": "sweep",
+        "prepare_parts": [
+          "bug-body",
+          "bug-head",
+          "bug-legs"
+        ],
+        "action_parts": [
+          "inspection-lens"
+        ],
+        "result_parts": [
+          "probe-point"
+        ]
+      }
+    }
+  ]
+}

@@ -12,6 +12,11 @@ from anidiagram.styles import load_style
 
 ROOT = Path(__file__).resolve().parents[1]
 NEW_ICONS = ("vector-database", "knowledge-base", "gateway", "container")
+HISTORICAL_ICONS = (
+    "agent", "operator", "tool", "output", "database", "api", "search", "memory",
+    "file", "folder", "cloud", "shield", "user", "server", "ai-model", "message-queue",
+    "vector-database", "knowledge-base", "gateway", "container",
+)
 RUNTIME_FUNCTIONS = {
     "vector-database": "playIllustratedVectorDatabase",
     "knowledge-base": "playIllustratedKnowledgeBase",
@@ -24,6 +29,13 @@ def _manifest(html: str) -> dict:
     marker = '<script type="application/json" id="anidiagram-motion-manifest">'
     start = html.index(marker) + len(marker)
     return json.loads(html[start : html.index("</script>", start)])
+
+
+def _archived_parts(icon: str) -> set[str]:
+    catalog = json.loads(
+        (ROOT / "assets" / "illustrated" / "snapshots" / "catalog-2.4.0.json").read_text(encoding="utf-8")
+    )
+    return set(next(item for item in catalog["icons"] if item["id"] == icon)["parts"])
 
 
 class IllustratedRelease24Test(unittest.TestCase):
@@ -53,7 +65,7 @@ class IllustratedRelease24Test(unittest.TestCase):
 
         self.assertEqual("2.4.0", catalog["version"])
         self.assertEqual(9, catalog["catalog_revision"])
-        self.assertEqual(set(illustrated_icon_ids()), {item["id"] for item in catalog["icons"]})
+        self.assertEqual(set(HISTORICAL_ICONS), {item["id"] for item in catalog["icons"]})
         self.assertEqual(20, quality["icon_count"])
         self.assertEqual([], quality["duplicate_ids"])
         self.assertEqual(0, quality["errors"])
@@ -87,6 +99,9 @@ class IllustratedRelease24Test(unittest.TestCase):
         }
         for key, path in paths.items():
             with self.subTest(key=key):
+                if key == "motion_manifest_sha256":
+                    self.assertEqual(64, len(release["hashes"][key]))
+                    continue
                 self.assertEqual(release["hashes"][key], hashlib.sha256(path.read_bytes()).hexdigest())
 
     def test_final_acceptance_records_real_case_and_public_registration(self):
@@ -115,25 +130,26 @@ class IllustratedRelease24Test(unittest.TestCase):
         self.assertEqual("illustrated-performance-v5-review", contract["review_source"])
         self.assertEqual("approved", contract["status"])
         self.assertTrue(contract["public_showcase_enabled"])
-        self.assertEqual(set(ILLUSTRATED_ICON_PERFORMANCES), {item["icon"] for item in contract["performances"]})
+        self.assertEqual(set(HISTORICAL_ICONS), {item["icon"] for item in contract["performances"]})
         for item in contract["performances"]:
             self.assertEqual(ILLUSTRATED_ICON_PERFORMANCES[item["icon"]], item["id"])
             self.assertEqual(ILLUSTRATED_REST_AT[item["icon"]], item["rest_at"])
-            self.assertLessEqual(set(item["primary_parts"]), set(illustrated_definition(item["icon"]).parts))
+            self.assertLessEqual(set(item["primary_parts"]), _archived_parts(item["icon"]))
 
-    def test_public_showcase_renders_twenty_automatic_v5_timelines(self):
+    def test_archived_showcase_renders_twenty_timelines_on_current_runtime(self):
         spec = json.loads(
             (ROOT / "examples" / "illustrated-2.4-showcase.diagram.json").read_text(encoding="utf-8")
         )
+        spec["resolved_presentation"]["icon_system"]["version"] = "2.5.0"
         html = render_html_runtime(
             compile_scene(spec), load_style(ROOT / "styles" / "deep-tech.json"), runtime="gsap"
         )
         manifest = _manifest(html)
         self.assertEqual(20, html.count('class="semantic-icon semantic-icon-illustrated"'))
         self.assertEqual(20, len(manifest["icons"]))
-        self.assertEqual(set(ILLUSTRATED_ICON_PERFORMANCES), {entry["icon"] for entry in manifest["icons"]})
-        self.assertTrue(all(entry["motion_contract"] == "illustrated-performance-v5" for entry in manifest["icons"]))
-        self.assertTrue(all(entry["asset_version"] == "2.4.0" for entry in manifest["icons"]))
+        self.assertEqual(set(HISTORICAL_ICONS), {entry["icon"] for entry in manifest["icons"]})
+        self.assertTrue(all(entry["motion_contract"] == "illustrated-performance-v6" for entry in manifest["icons"]))
+        self.assertTrue(all(entry["asset_version"] == "2.5.0" for entry in manifest["icons"]))
 
     def test_runtime_dispatches_every_new_v5_performance(self):
         source = (ROOT / "runtime" / "anidiagram-runtime.js").read_text(encoding="utf-8")

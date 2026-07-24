@@ -1,20 +1,93 @@
 {
   "name": "illustrated-semantic",
   "icon_system": "illustrated-character-v1",
-  "canvas": {"background": "#fffaf0", "text": "#283047", "muted": "#6d7182", "grid": "#eee7d9"},
-  "title": {"accent": "#8265d6", "highlight": "#eee8ff"},
-  "node": {"radius": 28, "stroke_width": 2.5, "fill_mode": "solid"},
-  "edge": {"width": 2.5, "duration": "3.6s"},
-  "effects": {"grid_opacity": 0.26, "frame_opacity": 0.22},
+  "canvas": {
+    "background": "#fffaf0",
+    "text": "#283047",
+    "muted": "#6d7182",
+    "grid": "#eee7d9"
+  },
+  "title": {
+    "accent": "#8265d6",
+    "highlight": "#eee8ff"
+  },
+  "node": {
+    "radius": 28,
+    "stroke_width": 2.5,
+    "fill_mode": "solid"
+  },
+  "edge": {
+    "width": 2.5,
+    "duration": "3.6s"
+  },
+  "effects": {
+    "grid_opacity": 0.26,
+    "frame_opacity": 0.22
+  },
   "roles": {
-    "actor": {"stroke": "#ef8267", "fill": "#fff0e7", "text": "#283047"},
-    "source": {"stroke": "#3faeb5", "fill": "#e8f9f7", "text": "#283047"},
-    "process": {"stroke": "#6978cf", "fill": "#eff0ff", "text": "#283047"},
-    "agent": {"stroke": "#8265d6", "fill": "#f2eeff", "text": "#283047"},
-    "memory": {"stroke": "#2e9b91", "fill": "#e6f7f1", "text": "#283047"},
-    "tool": {"stroke": "#df9638", "fill": "#fff3dc", "text": "#283047"},
-    "output": {"stroke": "#51a875", "fill": "#eaf8ee", "text": "#283047"},
-    "risk": {"stroke": "#df7585", "fill": "#fff0f2", "text": "#283047"},
-    "neutral": {"stroke": "#7d8494", "fill": "#fbfaf5", "text": "#283047"}
+    "actor": {
+      "stroke": "#ef8267",
+      "fill": "#fff0e7",
+      "text": "#283047"
+    },
+    "source": {
+      "stroke": "#3faeb5",
+      "fill": "#e8f9f7",
+      "text": "#283047"
+    },
+    "process": {
+      "stroke": "#6978cf",
+      "fill": "#eff0ff",
+      "text": "#283047"
+    },
+    "agent": {
+      "stroke": "#8265d6",
+      "fill": "#f2eeff",
+      "text": "#283047"
+    },
+    "memory": {
+      "stroke": "#2e9b91",
+      "fill": "#e6f7f1",
+      "text": "#283047"
+    },
+    "tool": {
+      "stroke": "#df9638",
+      "fill": "#fff3dc",
+      "text": "#283047"
+    },
+    "output": {
+      "stroke": "#51a875",
+      "fill": "#eaf8ee",
+      "text": "#283047"
+    },
+    "risk": {
+      "stroke": "#df7585",
+      "fill": "#fff0f2",
+      "text": "#283047"
+    },
+    "neutral": {
+      "stroke": "#7d8494",
+      "fill": "#fbfaf5",
+      "text": "#283047"
+    }
+  },
+  "illustrated_tokens": {
+    "ink": "#283047",
+    "paper": "#fffaf0",
+    "mint": "#51a875",
+    "lavender": "#c9bbff",
+    "lavender-dark": "#8067d8",
+    "violet": "#8265d6",
+    "peach": "#ffc39e",
+    "sky": "#6fd6eb",
+    "teal": "#43bdb7",
+    "teal-dark": "#1c8f91",
+    "coral": "#ef8267",
+    "sun": "#ffd45e",
+    "shadow": "#7d8494",
+    "lavender-wash": "#eee9ff",
+    "sky-wash": "#e8f8fb",
+    "sun-wash": "#fff3d8",
+    "mint-wash": "#e5f7ef"
   }
 }

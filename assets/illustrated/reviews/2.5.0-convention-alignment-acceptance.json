@@ -1,0 +1,27 @@
+{
+  "schema": "illustrated-convention-alignment-acceptance-v1",
+  "system": "illustrated",
+  "target_version": "2.5.0",
+  "status": "approved",
+  "approved_at": "2026-07-24",
+  "human_visual_acceptance": "confirmed",
+  "approved_icons": [
+    "token",
+    "document-store",
+    "webhook",
+    "pull-request",
+    "output",
+    "memory",
+    "gateway",
+    "data-warehouse",
+    "git-repository",
+    "branch",
+    "ci-cd",
+    "deployment"
+  ],
+  "approved_icon_count": 12,
+  "review_proof": "outputs/illustrated-convention-alignment-review/illustrated-convention-alignment-review.html",
+  "reference_coverage": 12,
+  "public_registry_changed": true,
+  "motion_synchronization_required": true
+}

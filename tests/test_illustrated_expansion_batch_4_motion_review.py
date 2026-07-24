@@ -42,7 +42,7 @@ class IllustratedExpansionBatch4MotionReviewTest(unittest.TestCase):
         self.assertEqual(16, acceptance["public_showcase"]["static_icon_count"])
         self.assertEqual(16, acceptance["public_showcase"]["automatic_motion_icon_count"])
         self.assertFalse(acceptance["public_showcase"]["public_registry_changed"])
-        self.assertEqual(20, len(illustrated_icon_ids()))
+        self.assertEqual(56, len(illustrated_icon_ids()))
         self.assertTrue(set(EXPECTED).issubset(illustrated_icon_ids()))
 
     def test_review_contract_covers_exactly_the_four_static_approved_candidates(self):

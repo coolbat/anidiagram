@@ -284,15 +284,14 @@ omits `icon_system`. It clean-room covers all 13 legacy schema icons: `agent`, `
 the original line-icon system.
 
 `illustrated` is the public id for the approved static Illustrated system. Its
-current implementation version is `2.4.0`, recorded separately in
-`resolved_presentation.icon_system.version`. It covers `agent`, `operator`,
-`tool`, `output`, `database`, `api`, `search`, `memory`, `file`, `folder`,
-`cloud`, `shield`, `user`, `server`, `ai-model`, `message-queue`,
-`vector-database`, `knowledge-base`, `gateway`, and `container` as structured
-semantic illustrations. It is not the composition-v1 default. All twenty icons
-emit approved public `illustrated-performance-v5` runtime performances under
-`showcase-v1`. `illustrated-performance-v5-review` is the immutable archived
-human-review source and is not emitted by new diagrams. The former
+current implementation version is `2.5.0`, recorded separately in
+`resolved_presentation.icon_system.version`. Its 56 structured semantic
+illustrations have exact id parity with Diagram Core v1. It is not the
+composition-v1 default. All 56 icons emit approved public
+`illustrated-performance-v6` runtime performances under `showcase-v1`. The
+v6/v7 review contracts are immutable archived human-review sources and are not
+emitted by new diagrams. The former `illustrated-performance-v5` public
+contract remains the immutable twenty-icon 2.4.0 archive. The former
 `illustrated-performance-v4` public contract and its v4-review source remain
 2.3.0 archives. The `illustrated-performance-v3` public contract and
 `illustrated-performance-v3-review` review contract remain 2.2.0 archives, and
@@ -305,15 +304,14 @@ warning. The legacy id
 example and its review style are historical design evidence, not current
 adoption guidance or a second public style.
 
-Illustrated 2.4.0 visual constants live in
-[`assets/illustrated/tokens-2.4.0.json`](../assets/illustrated/tokens-2.4.0.json). A style
+Illustrated 2.5.0 visual constants live in
+[`assets/illustrated/tokens-2.5.0.json`](../assets/illustrated/tokens-2.5.0.json). A style
 can explicitly override approved colors with an `illustrated_tokens` object,
 for example `{"ink": "#172033", "paper": "#fffaf0"}`. The renderer rejects
 unknown token names and non-hex values. Geometry, paths, part ids, and semantic
-roles are not template-owned and remain frozen within version 2.4.0.
-The public `deep-tech` style contains the first approved Illustrated token
-mapping. It preserves separate violet, cyan, teal, green, amber, and coral
-semantic accents instead of applying one monochrome tint.
+roles are not template-owned and remain frozen within version 2.5.0. All 13
+public styles contain approved Illustrated token mappings. They preserve
+semantic accent distinctions instead of applying one monochrome tint.
 
 The 13 quiet semantic performances are `brain-think-pulse-v1`,
 `operator-type-focus-v1`, `search-scout-find-v1`, `tool-kit-action-v1`,

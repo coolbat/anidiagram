@@ -1,0 +1,74 @@
+{
+  "schema": "illustrated-release-validation-v1",
+  "system": "illustrated",
+  "version": "2.5.0",
+  "status": "verified",
+  "verified_at": "2026-07-24",
+  "scope": "local-release-candidate",
+  "python_tests": {
+    "passed": 249,
+    "failed": 0
+  },
+  "diagram_core_strict": {
+    "catalog": 56,
+    "svg": 56,
+    "manifests": 56,
+    "approved": 56,
+    "planned": 0,
+    "visual_review": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "public_showcase": {
+    "icon_count": 56,
+    "rest_verified": 56,
+    "reduced_motion_verified": 56,
+    "mode_switching_verified": true,
+    "quality_errors": 0,
+    "quality_warnings": 0
+  },
+  "real_case": {
+    "node_count": 13,
+    "character_timelines": 13,
+    "animated_edges": 13,
+    "readable_edges": 2,
+    "rest_verified": 13,
+    "reduced_motion_verified": 13,
+    "mode_switching_verified": true,
+    "quality_errors": 0,
+    "quality_warnings": 0
+  },
+  "template_matrix": {
+    "styles": 13,
+    "icons": 56,
+    "instances": 728,
+    "geometry_changed": false,
+    "semantic_structure_changed": false
+  },
+  "browser_visual": {
+    "showcase": "passed",
+    "template_matrix": "passed",
+    "real_case": "passed",
+    "console_errors": 0,
+    "duplicate_svg_ids": 0,
+    "horizontal_overflow_pages": 0
+  },
+  "export_evidence": {
+    "path": "outputs/release-evidence/icon-systems/public-icon-system-export-evidence.json",
+    "bytes": 15449,
+    "sha256": "6b7f446cbb4941d7b8f1d3135285fc151871ab2c3c284178fa92fb8047b662cb",
+    "status": "verified",
+    "systems": 2,
+    "formats": 10,
+    "renderer": "browser",
+    "fps": 24,
+    "frames": 108,
+    "scale": 2.0,
+    "minimum_node_distinct_frames": 3,
+    "issues": []
+  },
+  "remote_ci": {
+    "status": "pending-source-push",
+    "claim": "not-yet-observed"
+  }
+}

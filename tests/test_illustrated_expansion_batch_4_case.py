@@ -33,7 +33,7 @@ class IllustratedExpansionBatch4CaseTest(unittest.TestCase):
         review_path = ROOT / review_record["path"]
         self.assertEqual(review_record["sha256"], hashlib.sha256(review_path.read_bytes()).hexdigest())
         self.assertFalse(acceptance["public_showcase"]["public_registry_changed"])
-        self.assertEqual(20, len(illustrated_icon_ids()))
+        self.assertEqual(56, len(illustrated_icon_ids()))
         self.assertTrue(CANDIDATE_ICONS.issubset(illustrated_icon_ids()))
 
     def test_plan_keeps_semantics_separate_from_candidate_presentation(self):

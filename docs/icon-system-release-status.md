@@ -30,39 +30,37 @@ serialized `showcase-v1` composition profile.
 | Public id | Status | Assets | Motion behavior | Default? |
 | --- | --- | ---: | --- | --- |
 | `diagram-core-v1` | approved | 56 | All eligible Diagram Core performances run under `showcase-v1` | Yes, for composition-v1 |
-| `illustrated` | approved, implementation version 2.4.0 | 20 | `illustrated-performance-v5`, automatic under public `showcase-v1` | No; select explicitly |
+| `illustrated` | approved, implementation version 2.5.0 | 56 | `illustrated-performance-v6`, automatic under public `showcase-v1` | No; select explicitly |
 | `illustrated-character-v1` | supported legacy compatibility system | 13 | Character v1 semantic loops and Motion Coordination v1.2 | Only on the legacy omission path |
 | `illustrated-v1` | explicit legacy compatibility system | legacy set | Legacy illustrated runtime mapping | No |
 | `semantic-line-v1` | explicit legacy compatibility system | legacy set | Legacy semantic-line runtime mapping | No |
 
 `illustrated-character-v2` is an accepted input alias for `illustrated`. New
 plans and resolved DiagramScript output use the stable `illustrated` id and
-record implementation version `2.4.0` separately.
+record implementation version `2.5.0` separately.
 
-## Illustrated 2.4.0
+## Illustrated 2.5.0
 
-The approved assets are:
-
-`agent`, `operator`, `tool`, `output`, `database`, `api`, `search`, `memory`,
-`file`, `folder`, `cloud`, `shield`, `user`, `server`, `ai-model`,
-`message-queue`, `vector-database`, `knowledge-base`, `gateway`, and
-`container`.
+The approved registry contains 56 icons and has exact semantic-id parity with
+Diagram Core v1. The first twenty 2.4.0 icons remain unchanged in identity;
+2.5.0 adds the remaining people, AI/data, content/media, network/compute,
+source/delivery, and runtime/operations families.
 
 Current live sources:
 
 - `assets/illustrated/catalog.json`
 - `src/anidiagram/illustrated_registry.py`
 - `assets/illustrated/template-mappings.json`
-- `assets/illustrated/tokens-2.4.0.json`
-- `assets/illustrated/motion-contracts/illustrated-performance-v5.json`
-- `assets/illustrated/releases/2.4.0.json`
-- `assets/illustrated/reviews/2.4.0-acceptance.json`
+- `assets/illustrated/tokens-2.5.0.json`
+- `assets/illustrated/motion-contracts/illustrated-performance-v6.json`
+- `assets/illustrated/releases/2.5.0.json`
+- `assets/illustrated/reviews/2.5.0-acceptance.json`
 
-The public v5 contract contains all twenty performances and supersedes v4 for
-new `illustrated` diagrams. `illustrated-performance-v5-review`, the Batch 4
-static and motion reviews, and the Cloud-Native Knowledge Retrieval real-case
-review remain immutable approval evidence and are not emitted by new diagrams.
-The 2.3.0 release and public v4 contract remain archived unchanged.
+The public v6 contract contains all 56 performances and supersedes v5 for new
+`illustrated` diagrams. The v6/v7 review contracts, batch approvals,
+convention-alignment proof, 13 x 56 template matrix, and Governed RAG real-case
+proof remain approval evidence and are not emitted as public motion contracts.
+The 2.4.0 release and public v5 contract remain archived unchanged.
 
 ## Edge Motion 1.0.0
 
@@ -86,7 +84,7 @@ The canonical sources and release evidence are:
 - `assets/edge-motion/reviews/v1.0.0-acceptance.json`
 - `assets/edge-motion/releases/v1.0.0.json`
 
-Edge Motion and Illustrated are independently versioned. Illustrated 2.4.0 was
+Edge Motion and Illustrated are independently versioned. Illustrated 2.5.0 was
 promoted only after its separate real-case and public-registration approvals.
 
 ## Immutable archive boundary
@@ -94,9 +92,10 @@ promoted only after its separate real-case and public-registration approvals.
 Do not update historical facts merely to match the current release. In
 particular, preserve:
 
-- releases 2.0.0, 2.1.0, 2.2.0, and 2.3.0;
+- releases 2.0.0, 2.1.0, 2.2.0, 2.3.0, and 2.4.0;
 - `2.2.0.static-motion-review.json` and `2.3.0.static-motion-review.json`;
-- motion contracts v1, v2, v2-review, v3, v3-review, v4, v4-review, and v5-review;
+- motion contracts v1, v2, v2-review, v3, v3-review, v4, v4-review, v5,
+  v5-review, v6-review, and v7-review;
 - `2.3.0-static-acceptance.json`;
 - versioned 2.0.0-2.3.0 snapshots and every `*.static-motion-review.*` snapshot;
 - historical material under `docs/superpowers/specs/` and
@@ -115,21 +114,22 @@ PYTHONPATH=src python3 scripts/validate_diagram_core_assets.py --strict --json
 
 Expected contract: 56 approved assets, zero errors, and zero warnings.
 
-Illustrated 2.4.0:
+Illustrated 2.5.0:
 
 ```bash
 PYTHONPATH=src python3 -m anidiagram.cli \
-  --spec examples/illustrated-2.4-showcase.diagram.json \
-  --outdir outputs/illustrated-2.4-showcase \
-  --basename illustrated-2.4-showcase \
+  --spec examples/illustrated-2.5-showcase.diagram.json \
+  --outdir outputs/illustrated-2.5-showcase \
+  --basename illustrated-2.5-showcase \
   --formats svg,html,quality
 node --check runtime/anidiagram-runtime.js
+node --check runtime/illustrated-performance-v6-runtime.js
 node scripts/verify_character_motion_rest.mjs \
-  outputs/illustrated-2.4-showcase/illustrated-2.4-showcase.html 20 illustrated
+  outputs/illustrated-2.5-showcase/illustrated-2.5-showcase.html 56 illustrated
 node scripts/verify_character_reduced_motion.mjs \
-  outputs/illustrated-2.4-showcase/illustrated-2.4-showcase.html 20 illustrated
+  outputs/illustrated-2.5-showcase/illustrated-2.5-showcase.html 56 illustrated
 node scripts/verify_stage_motion_modes.mjs \
-  outputs/illustrated-2.4-showcase/illustrated-2.4-showcase.html
+  outputs/illustrated-2.5-showcase/illustrated-2.5-showcase.html
 ```
 
 The generated quality report must contain zero errors. Contract or renderer
@@ -158,7 +158,7 @@ changes in the frame-based Lottie capture.
 of validation. The contract job runs the complete Python suite, strict 56-icon
 Diagram Core validation, JavaScript syntax checking, and a render smoke test.
 The browser job regenerates the current Illustrated showcase and a
-composition-v1 edge-flow proof, then checks all twenty Illustrated rest poses,
+composition-v1 edge-flow proof, then checks all 56 Illustrated rest poses,
 reduced motion, runtime mode switching, and nonzero edge-flow coverage in
 Chromium.
 
@@ -173,13 +173,22 @@ commit-addressed GitHub Actions artifact retained for 14 days. Sharding changes
 only CI scheduling; the formal contract remains 10 formats at 24 FPS, 108
 frames, and 2x scale.
 
-The current remote evidence is GitHub Actions run
+The latest retained remote evidence before 2.5.0 is GitHub Actions run
 [`29909815356`](https://github.com/coolbat/anidiagram/actions/runs/29909815356)
-for commit `2392226`. Its final 333,810,052-byte artifact passed both merge-time
+for the 2.4.0 commit `2392226`. Its final 333,810,052-byte artifact passed both merge-time
 and independent verification with two systems, ten formats, and zero issues,
 and is retained through 2026-08-05 10:05:44 UTC. The artifact is CI evidence,
 not a tracked source release or a replacement for the immutable approval
 records.
+
+The local 2.5.0 release evidence is
+`outputs/release-evidence/icon-systems/public-icon-system-export-evidence.json`
+(15,449 bytes, SHA-256
+`6b7f446cbb4941d7b8f1d3135285fc151871ab2c3c284178fa92fb8047b662cb`).
+It passed two systems x ten formats at browser 24 FPS, 108 frames, and 2x scale
+with 56 automatic performances per system, at least three visible states per
+icon, and zero issues. Remote retention for 2.5.0 begins after this source
+release is pushed and the manual evidence workflow is dispatched.
 
 ## Updating this page
 

@@ -35,7 +35,10 @@ jobs:
       - name: Validate all approved Diagram Core assets
         run: PYTHONPATH=src python3 scripts/validate_diagram_core_assets.py --strict --json
       - name: Check runtime JavaScript syntax
-        run: node --check runtime/anidiagram-runtime.js
+        run: |
+          node --check runtime/anidiagram-runtime.js
+          node --check runtime/illustrated-performance-v6-runtime.js
+          node --check runtime/edge-motion-v1-runtime.js
       - name: Render composition smoke test
         run: |
           PYTHONPATH=src python3 -m anidiagram.cli \
@@ -66,9 +69,16 @@ jobs:
       - name: Render current Illustrated public showcase
         run: |
           PYTHONPATH=src python3 -m anidiagram.cli \
-            --spec examples/illustrated-2.4-showcase.diagram.json \
+            --spec examples/illustrated-2.5-showcase.diagram.json \
             --outdir build/ci/illustrated \
-            --basename illustrated-2.4-showcase \
+            --basename illustrated-2.5-showcase \
+            --formats svg,html,quality
+      - name: Render Illustrated 2.5 real-case gate
+        run: |
+          PYTHONPATH=src python3 -m anidiagram.cli \
+            --spec examples/illustrated-2.5-release-case.diagram.json \
+            --outdir build/ci/illustrated-case \
+            --basename illustrated-2.5-release-case \
             --formats svg,html,quality
       - name: Render composition-v1 edge-flow proof
         run: |
@@ -81,13 +91,19 @@ jobs:
       - name: Verify Illustrated rest poses and reduced motion
         run: |
           node scripts/verify_character_motion_rest.mjs \
-            build/ci/illustrated/illustrated-2.4-showcase.html 20 illustrated
+            build/ci/illustrated/illustrated-2.5-showcase.html 56 illustrated
           node scripts/verify_character_reduced_motion.mjs \
-            build/ci/illustrated/illustrated-2.4-showcase.html 20 illustrated
+            build/ci/illustrated/illustrated-2.5-showcase.html 56 illustrated
+          node scripts/verify_character_motion_rest.mjs \
+            build/ci/illustrated-case/illustrated-2.5-release-case.html 13 illustrated
+          node scripts/verify_character_reduced_motion.mjs \
+            build/ci/illustrated-case/illustrated-2.5-release-case.html 13 illustrated
       - name: Verify runtime motion modes and edge coverage
         run: |
           node scripts/verify_stage_motion_modes.mjs \
-            build/ci/illustrated/illustrated-2.4-showcase.html
+            build/ci/illustrated/illustrated-2.5-showcase.html
+          node scripts/verify_stage_motion_modes.mjs \
+            build/ci/illustrated-case/illustrated-2.5-release-case.html 13 13 2
           node scripts/verify_stage_motion_modes.mjs \
             build/ci/composition/production-request-path.html
       - name: Upload browser diagnostics on failure

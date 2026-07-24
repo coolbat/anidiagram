@@ -62,22 +62,23 @@ PYTHONPATH=src python3 -m unittest discover -s tests
 
 For Diagram Core changes, the strict validator must report all 56 approved
 assets with zero errors and zero warnings. For Illustrated renderer, contract,
-or runtime changes, first regenerate the public 2.4.0 showcase, then run the
-twenty-item browser gates:
+or runtime changes, first regenerate the public 2.5.0 showcase, then run the
+56-item browser gates:
 
 ```bash
 PYTHONPATH=src python3 -m anidiagram.cli \
-  --spec examples/illustrated-2.4-showcase.diagram.json \
-  --outdir outputs/illustrated-2.4-showcase \
-  --basename illustrated-2.4-showcase \
+  --spec examples/illustrated-2.5-showcase.diagram.json \
+  --outdir outputs/illustrated-2.5-showcase \
+  --basename illustrated-2.5-showcase \
   --formats svg,html,quality
 node --check runtime/anidiagram-runtime.js
+node --check runtime/illustrated-performance-v6-runtime.js
 node scripts/verify_character_motion_rest.mjs \
-  outputs/illustrated-2.4-showcase/illustrated-2.4-showcase.html 20 illustrated
+  outputs/illustrated-2.5-showcase/illustrated-2.5-showcase.html 56 illustrated
 node scripts/verify_character_reduced_motion.mjs \
-  outputs/illustrated-2.4-showcase/illustrated-2.4-showcase.html 20 illustrated
+  outputs/illustrated-2.5-showcase/illustrated-2.5-showcase.html 56 illustrated
 node scripts/verify_stage_motion_modes.mjs \
-  outputs/illustrated-2.4-showcase/illustrated-2.4-showcase.html
+  outputs/illustrated-2.5-showcase/illustrated-2.5-showcase.html
 ```
 
 The regenerated quality report must contain zero errors. Do not replace an
@@ -124,19 +125,21 @@ uses timeline or sequence; hierarchy uses stack; convergence uses funnel;
 relationships use er or network; explicit memory interaction uses agent-memory.
 
 Supported icon systems include `diagram-core-v1` (the composition-v1 default),
-`illustrated-character-v1`, and `illustrated` (currently version `2.4.0`).
+`illustrated-character-v1`, and `illustrated` (currently version `2.5.0`).
 `illustrated-character-v2` remains accepted only as a legacy alias for
 `illustrated`; new plans and resolved output use the stable `illustrated` id.
 Illustrated templates may override only the approved colors through the
 `illustrated_tokens` style field. They must not alter icon geometry, SVG part
 ids, or semantic roles.
-The public `deep-tech` style includes an approved multicolor mapping for
-Illustrated 2.4.0; use that public style rather than a review-only duplicate.
-Illustrated 2.4.0 contains twenty approved static icons. The approved
-`illustrated-performance-v5` contract supplies public automatic `showcase-v1`
-performances for all twenty icons. `illustrated-performance-v5-review` is
-retained only as the archived human-review source and must not be emitted by new
-diagrams. `illustrated-performance-v4` remains the immutable sixteen-icon 2.3.0
+All 13 public styles include approved color-token mappings for Illustrated
+2.5.0; use those public styles rather than review-only duplicates. Illustrated
+2.5.0 contains 56 approved static icons. The approved
+`illustrated-performance-v6` contract supplies public automatic `showcase-v1`
+performances for all 56 icons. The v6/v7 review contracts are retained only as
+archived human-review sources and must not be emitted by new diagrams.
+`illustrated-performance-v5` remains the immutable twenty-icon 2.4.0 public
+archive, while `illustrated-performance-v5-review` remains its archived
+approval source. `illustrated-performance-v4` remains the immutable sixteen-icon 2.3.0
 public-contract archive, while `illustrated-performance-v4-review` remains its
 archived approval source. `illustrated-performance-v3` remains the immutable twelve-icon 2.2.0
 public-contract archive, while `illustrated-performance-v3-review` remains its

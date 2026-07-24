@@ -20,10 +20,15 @@ class ReleaseWorkflowContractTest(unittest.TestCase):
             "PYTHONPATH=src python3 -m unittest discover -s tests",
             "PYTHONPATH=src python3 scripts/validate_diagram_core_assets.py --strict --json",
             "node --check runtime/anidiagram-runtime.js",
-            "examples/illustrated-2.4-showcase.diagram.json",
+            "node --check runtime/illustrated-performance-v6-runtime.js",
+            "node --check runtime/edge-motion-v1-runtime.js",
+            "examples/illustrated-2.5-showcase.diagram.json",
+            "examples/illustrated-2.5-release-case.diagram.json",
             "verify_character_motion_rest.mjs",
             "verify_character_reduced_motion.mjs",
-            "20 illustrated",
+            "56 illustrated",
+            "13 illustrated",
+            "illustrated-2.5-release-case.html 13 13 2",
             "examples/contracts/production-request-path.plan.json",
             "verify_stage_motion_modes.mjs",
         ):
@@ -51,7 +56,7 @@ class ReleaseWorkflowContractTest(unittest.TestCase):
             "python3 -m pip install -e \".[raster]\"",
             "npm ci",
             "playwright install --with-deps chromium",
-            'system: ["diagram-core-v1", "illustrated-2.4"]',
+            'system: ["diagram-core-v1", "illustrated-2.5"]',
             'shard: ["visual", "motion"]',
             '--system "${{ matrix.system }}" --shard "${{ matrix.shard }}"',
             "actions/download-artifact@v4",
@@ -78,7 +83,7 @@ class ReleaseWorkflowContractTest(unittest.TestCase):
                 "schema": "public-icon-system-export-evidence-fragment-v1",
                 "capture": capture,
                 "formats": formats,
-                "system": {"id": "illustrated-2.4"},
+                "system": {"id": "illustrated-2.5"},
             },
             {
                 "schema": "public-icon-system-export-evidence-fragment-v1",
@@ -91,7 +96,7 @@ class ReleaseWorkflowContractTest(unittest.TestCase):
         merged = release_evidence._merge_fragment_documents(fragments)
 
         self.assertEqual("public-icon-system-export-evidence-v1", merged["schema"])
-        self.assertEqual(["diagram-core-v1", "illustrated-2.4"], [item["id"] for item in merged["systems"]])
+        self.assertEqual(["diagram-core-v1", "illustrated-2.5"], [item["id"] for item in merged["systems"]])
 
     def test_release_evidence_fragments_require_both_public_systems(self):
         fragment = {

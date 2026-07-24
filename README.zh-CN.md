@@ -296,8 +296,8 @@ legacy `explainer-board` 输出。当前本地 planner 和编译器见
 | 不声明 `composition_policy` 的直接 DiagramScript v0.4 | `diagram-core-v1` | 未声明 `motion` 时使用 `expressive` |
 | DiagramScript v0.1-v0.3 或未声明 `icon_system` 的旧 style | `illustrated-character-v1` | scene 未声明 motion 时使用 `expressive` |
 
-`illustrated` 是显式选择、并非默认图标系统。当前实现版本为 2.4.0，20 枚
-图标在 `showcase-v1` 下自动使用正式的 `illustrated-performance-v5` 合约。
+`illustrated` 是显式选择、并非默认图标系统。当前实现版本为 2.5.0，56 枚
+图标在 `showcase-v1` 下自动使用正式的 `illustrated-performance-v6` 合约。
 当前、默认与 legacy 边界见
 [图标系统发布状态](./docs/icon-system-release-status.md)。
 
@@ -397,7 +397,7 @@ DiagramPlan v0.2 会显式解析为 `showcase-v1`。
 | `motion.group` | `none`, `static`, `soft-reveal`, `marching-ants`, `border-scan`, `corner-pulse` |
 | `motion.title` | `none`, `fade`, `breathe`, `handwrite-reveal`, `highlight-sweep` |
 
-Edge Motion v1.0.0 已冻结并通过人工视觉审核；Illustrated 2.4 图标候选仍维持独立审核边界。
+Edge Motion v1.0.0 已冻结并通过人工视觉审核；Illustrated 2.5 与边动效继续维持独立版本边界。
 
 DiagramScript `0.3` 支持结构化 effect object：
 
@@ -535,17 +535,17 @@ AniDiagram 可以在概念层面参考已有项目和动画库，但代码、sch
 
 如果未来明确引入第三方 MIT 代码或资产，必须先补充原始版权和许可声明。
 
-## Illustrated 2.4.0
+## Illustrated 2.5.0
 
 `illustrated` 是当前插画图标系统的稳定公共 id，并非 composition-v1 默认值；
-需要插画语言时应显式选择。版本 2.4.0 包含 20 枚已批准图标：`agent`、
-`operator`、`tool`、`output`、`database`、`api`、`search`、`memory`、
-`file`、`folder`、`cloud`、`shield`、`user`、`server`、`ai-model` 和
-`message-queue`、`vector-database`、`knowledge-base`、`gateway` 和 `container`。
+需要插画语言时应显式选择。版本 2.5.0 包含 56 枚已批准图标，与 Diagram
+Core v1 的 56 个语义一一对应；13 套公共模板只覆盖颜色 token，不改变图标
+几何、部件 id 或语义角色。
 
-公共 `showcase-v1` 会自动使用完整 20 项的正式
-`illustrated-performance-v5` 合约。`illustrated-performance-v5-review` 仅是
-不可变的人审归档证据，新图不得输出它。输入 alias
+公共 `showcase-v1` 会自动使用完整 56 项的正式
+`illustrated-performance-v6` 合约。v6/v7 review 合约仅作为不可变的人审归档
+证据，新图不得输出它们；`illustrated-performance-v5` 保留为 2.4.0 的不可变
+公共归档。输入 alias
 `illustrated-character-v2` 会解析为 `illustrated`；新 plan 与 resolved output
 统一使用稳定公共 id。
 

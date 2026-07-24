@@ -1,0 +1,530 @@
+{
+  "version": "0.4",
+  "composition_policy": "composition-v1",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "explicit",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "minimal-light",
+      "source": "model"
+    },
+    "layout": {
+      "value": "layered",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "explicit"
+    }
+  },
+  "icon_system": "illustrated",
+  "preset": "illustrated-2.5-release-case",
+  "canvas": {
+    "width": 2180,
+    "height": 1040
+  },
+  "style": "minimal-light",
+  "title": {
+    "text": "Governed RAG Production Architecture",
+    "subtitle": "Continuous knowledge preparation → policy-scoped retrieval → grounded response"
+  },
+  "motion": {
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "stagger": 0.08,
+    "intensity": 1.0,
+    "node": {
+      "preset": "icon-performance"
+    },
+    "edge": {
+      "preset": "packet-flow"
+    },
+    "group": {
+      "preset": "none"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "static"
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  },
+  "nodes": [
+    {
+      "id": "application-user",
+      "label": "Application User",
+      "caption": "Submits a governed query",
+      "position": [
+        60,
+        210
+      ],
+      "size": [
+        250,
+        160
+      ],
+      "role": "actor",
+      "icon": "user"
+    },
+    {
+      "id": "policy-gateway",
+      "label": "Policy Gateway",
+      "caption": "Admits and scopes traffic",
+      "position": [
+        390,
+        210
+      ],
+      "size": [
+        250,
+        160
+      ],
+      "role": "risk",
+      "icon": "gateway"
+    },
+    {
+      "id": "query-api",
+      "label": "Query API",
+      "caption": "Normalizes the request",
+      "position": [
+        720,
+        210
+      ],
+      "size": [
+        250,
+        160
+      ],
+      "role": "process",
+      "icon": "api"
+    },
+    {
+      "id": "rag-agent",
+      "label": "RAG Agent",
+      "caption": "Plans retrieval and response",
+      "position": [
+        1050,
+        210
+      ],
+      "size": [
+        250,
+        160
+      ],
+      "role": "agent",
+      "icon": "agent"
+    },
+    {
+      "id": "language-model",
+      "label": "Language Model",
+      "caption": "Generates grounded language",
+      "position": [
+        1380,
+        210
+      ],
+      "size": [
+        250,
+        160
+      ],
+      "role": "agent",
+      "icon": "llm"
+    },
+    {
+      "id": "cited-output",
+      "label": "Cited Output",
+      "caption": "Delivers evidence-backed results",
+      "position": [
+        1710,
+        210
+      ],
+      "size": [
+        250,
+        160
+      ],
+      "role": "output",
+      "icon": "output"
+    },
+    {
+      "id": "source-documents",
+      "label": "Source Documents",
+      "caption": "Approved enterprise corpus",
+      "position": [
+        60,
+        650
+      ],
+      "size": [
+        250,
+        160
+      ],
+      "role": "source",
+      "icon": "document"
+    },
+    {
+      "id": "tokenizer",
+      "label": "Tokenizer",
+      "caption": "Segments and budgets context",
+      "position": [
+        390,
+        650
+      ],
+      "size": [
+        250,
+        160
+      ],
+      "role": "process",
+      "icon": "token"
+    },
+    {
+      "id": "embedding-service",
+      "label": "Embedding Service",
+      "caption": "Vectorizes document chunks",
+      "position": [
+        720,
+        650
+      ],
+      "size": [
+        250,
+        160
+      ],
+      "role": "process",
+      "icon": "embedding"
+    },
+    {
+      "id": "vector-index",
+      "label": "Vector Index",
+      "caption": "Indexes semantic vectors",
+      "position": [
+        1050,
+        650
+      ],
+      "size": [
+        250,
+        160
+      ],
+      "role": "memory",
+      "icon": "vector-database"
+    },
+    {
+      "id": "document-store",
+      "label": "Document Store",
+      "caption": "Resolves source passages",
+      "position": [
+        1380,
+        650
+      ],
+      "size": [
+        250,
+        160
+      ],
+      "role": "memory",
+      "icon": "document-store"
+    },
+    {
+      "id": "conversation-memory",
+      "label": "Conversation Memory",
+      "caption": "Recalls authorized context",
+      "position": [
+        1710,
+        650
+      ],
+      "size": [
+        250,
+        160
+      ],
+      "role": "memory",
+      "icon": "memory"
+    },
+    {
+      "id": "runtime-monitoring",
+      "label": "Runtime Monitoring",
+      "caption": "Observes quality and latency",
+      "position": [
+        1910,
+        430
+      ],
+      "size": [
+        210,
+        160
+      ],
+      "role": "process",
+      "icon": "monitoring"
+    }
+  ],
+  "edges": [
+    {
+      "id": "flow-1",
+      "from": "application-user",
+      "to": "policy-gateway",
+      "label": "query",
+      "kind": "transfer",
+      "importance": "primary",
+      "flow_id": "online-query",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "path": "M 310 290 C 350 290, 350 290, 390 290",
+      "label_position": [
+        350.0,
+        278.0
+      ],
+      "motion": {
+        "enabled": true,
+        "effect": "packet-flow",
+        "delay": 0.0
+      }
+    },
+    {
+      "id": "flow-2",
+      "from": "policy-gateway",
+      "to": "query-api",
+      "label": "admit",
+      "kind": "transfer",
+      "importance": "primary",
+      "flow_id": "online-query",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "path": "M 640 290 C 680 290, 680 290, 720 290",
+      "label_position": [
+        680.0,
+        278.0
+      ],
+      "motion": {
+        "enabled": true,
+        "effect": "packet-flow",
+        "delay": 0.05
+      }
+    },
+    {
+      "id": "flow-3",
+      "from": "query-api",
+      "to": "rag-agent",
+      "label": "route",
+      "kind": "transfer",
+      "importance": "primary",
+      "flow_id": "online-query",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "path": "M 970 290 C 1010 290, 1010 290, 1050 290",
+      "label_position": [
+        1010.0,
+        278.0
+      ],
+      "motion": {
+        "enabled": true,
+        "effect": "packet-flow",
+        "delay": 0.1
+      }
+    },
+    {
+      "id": "flow-4",
+      "from": "rag-agent",
+      "to": "language-model",
+      "label": "prompt",
+      "kind": "transfer",
+      "importance": "primary",
+      "flow_id": "online-query",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "path": "M 1300 290 C 1340 290, 1340 290, 1380 290",
+      "label_position": [
+        1340.0,
+        278.0
+      ],
+      "motion": {
+        "enabled": true,
+        "effect": "comet-flow",
+        "delay": 0.15
+      }
+    },
+    {
+      "id": "flow-5",
+      "from": "language-model",
+      "to": "cited-output",
+      "label": "response",
+      "kind": "transfer",
+      "importance": "primary",
+      "flow_id": "online-query",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "path": "M 1630 290 C 1670 290, 1670 290, 1710 290",
+      "label_position": [
+        1670.0,
+        278.0
+      ],
+      "motion": {
+        "enabled": true,
+        "effect": "packet-flow",
+        "delay": 0.2
+      }
+    },
+    {
+      "id": "flow-6",
+      "from": "source-documents",
+      "to": "tokenizer",
+      "label": "content",
+      "kind": "transfer",
+      "importance": "supporting",
+      "flow_id": "knowledge-preparation",
+      "flow_importance": "supporting",
+      "flow_repeat": "loop",
+      "path": "M 310 730 C 350 730, 350 730, 390 730",
+      "label_position": [
+        350.0,
+        718.0
+      ],
+      "motion": {
+        "enabled": true,
+        "effect": "stream-flow",
+        "delay": 0.25
+      }
+    },
+    {
+      "id": "flow-7",
+      "from": "tokenizer",
+      "to": "embedding-service",
+      "label": "segments",
+      "kind": "transfer",
+      "importance": "supporting",
+      "flow_id": "knowledge-preparation",
+      "flow_importance": "supporting",
+      "flow_repeat": "loop",
+      "path": "M 640 730 C 680 730, 680 730, 720 730",
+      "label_position": [
+        680.0,
+        718.0
+      ],
+      "motion": {
+        "enabled": true,
+        "effect": "stream-flow",
+        "delay": 0.3
+      }
+    },
+    {
+      "id": "flow-8",
+      "from": "embedding-service",
+      "to": "vector-index",
+      "label": "vectors",
+      "kind": "transfer",
+      "importance": "supporting",
+      "flow_id": "knowledge-preparation",
+      "flow_importance": "supporting",
+      "flow_repeat": "loop",
+      "path": "M 970 730 C 1010 730, 1010 730, 1050 730",
+      "label_position": [
+        1010.0,
+        718.0
+      ],
+      "motion": {
+        "enabled": true,
+        "effect": "stream-flow",
+        "delay": 0.35
+      }
+    },
+    {
+      "id": "flow-9",
+      "from": "vector-index",
+      "to": "document-store",
+      "label": "matches",
+      "kind": "transfer",
+      "importance": "supporting",
+      "flow_id": "knowledge-preparation",
+      "flow_importance": "supporting",
+      "flow_repeat": "event-driven",
+      "path": "M 1300 730 C 1340 730, 1340 730, 1380 730",
+      "label_position": [
+        1340.0,
+        718.0
+      ],
+      "motion": {
+        "enabled": true,
+        "effect": "packet-flow",
+        "delay": 0.4
+      }
+    },
+    {
+      "id": "flow-10",
+      "from": "document-store",
+      "to": "conversation-memory",
+      "label": "citations",
+      "kind": "transfer",
+      "importance": "supporting",
+      "flow_id": "knowledge-preparation",
+      "flow_importance": "supporting",
+      "flow_repeat": "event-driven",
+      "path": "M 1630 730 C 1670 730, 1670 730, 1710 730",
+      "label_position": [
+        1670.0,
+        718.0
+      ],
+      "motion": {
+        "enabled": true,
+        "effect": "packet-flow",
+        "delay": 0.45
+      }
+    },
+    {
+      "id": "flow-11",
+      "from": "vector-index",
+      "to": "rag-agent",
+      "label": "retrieve",
+      "kind": "transfer",
+      "importance": "supporting",
+      "flow_id": "online-query",
+      "flow_importance": "supporting",
+      "flow_repeat": "event-driven",
+      "path": "M 1300 730 C 1175 730, 1175 290, 1050 290",
+      "label_position": [
+        1175.0,
+        498.0
+      ],
+      "motion": {
+        "enabled": true,
+        "effect": "comet-flow",
+        "delay": 0.5
+      }
+    },
+    {
+      "id": "flow-12",
+      "from": "conversation-memory",
+      "to": "rag-agent",
+      "label": "recall",
+      "kind": "transfer",
+      "importance": "supporting",
+      "flow_id": "online-query",
+      "flow_importance": "supporting",
+      "flow_repeat": "event-driven",
+      "path": "M 1960 730 C 1505 730, 1505 290, 1050 290",
+      "label_position": [
+        1505.0,
+        498.0
+      ],
+      "motion": {
+        "enabled": true,
+        "effect": "packet-flow",
+        "delay": 0.55
+      }
+    },
+    {
+      "id": "flow-13",
+      "from": "rag-agent",
+      "to": "runtime-monitoring",
+      "label": "telemetry",
+      "kind": "transfer",
+      "importance": "supporting",
+      "flow_id": "knowledge-preparation",
+      "flow_importance": "supporting",
+      "flow_repeat": "loop",
+      "path": "M 1300 290 C 1605 290, 1605 510, 1910 510",
+      "label_position": [
+        1605.0,
+        388.0
+      ],
+      "motion": {
+        "enabled": true,
+        "effect": "stream-flow",
+        "delay": 0.6
+      }
+    }
+  ]
+}

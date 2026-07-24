@@ -58,18 +58,23 @@ CASES = (
         ),
     },
     {
-        "id": "illustrated-2.4",
+        "id": "illustrated-2.5",
         "icon_system": "illustrated",
-        "version": "2.4.0",
-        "icon_count": 20,
-        "motion_contract": "illustrated-performance-v5",
-        "spec": ROOT / "examples" / "illustrated-2.4-showcase.diagram.json",
+        "version": "2.5.0",
+        "icon_count": 56,
+        "motion_contract": "illustrated-performance-v6",
+        "spec": ROOT / "examples" / "illustrated-2.5-showcase.diagram.json",
         "style": ROOT / "styles" / "deep-tech.json",
         "catalog": ROOT / "assets" / "illustrated" / "catalog.json",
-        "motion_authority": ROOT / "assets" / "illustrated" / "motion-contracts" / "illustrated-performance-v5.json",
+        "motion_authority": ROOT / "assets" / "illustrated" / "motion-contracts" / "illustrated-performance-v6.json",
         "authorities": (
-            ROOT / "assets" / "illustrated" / "releases" / "2.4.0.json",
-            ROOT / "assets" / "illustrated" / "reviews" / "2.4.0-acceptance.json",
+            ROOT / "assets" / "illustrated" / "reviews" / "2.5.0-batch-5-static-acceptance.json",
+            ROOT / "assets" / "illustrated" / "reviews" / "2.5.0-batch-5-motion-acceptance.json",
+            ROOT / "assets" / "illustrated" / "reviews" / "2.5.0-batches-6-10-static-acceptance.json",
+            ROOT / "assets" / "illustrated" / "reviews" / "2.5.0-batches-6-10-motion-acceptance.json",
+            ROOT / "assets" / "illustrated" / "reviews" / "2.5.0-convention-alignment-acceptance.json",
+            ROOT / "assets" / "illustrated" / "reviews" / "2.5.0-template-acceptance.json",
+            ROOT / "assets" / "illustrated" / "reviews" / "template-matrix-2.5.0-final.json",
         ),
     },
 )
@@ -480,7 +485,7 @@ def verify_evidence(evidence_path: Path, *, require_verified_status: bool = True
         issues.append("export format matrix does not match the public contract")
     systems = document.get("systems", [])
     if [item.get("id") for item in systems] != [item["id"] for item in CASES]:
-        issues.append("expected Diagram Core v1 and Illustrated 2.4 evidence entries")
+        issues.append("expected Diagram Core v1 and Illustrated 2.5 evidence entries")
 
     capture = document.get("capture", {})
     if capture.get("renderer") != "browser":

@@ -320,8 +320,8 @@ Current defaults are scoped by input contract:
 | Legacy DiagramScript v0.1-v0.3 or a style that omits `icon_system` | `illustrated-character-v1` | `expressive` when scene motion is omitted |
 
 `illustrated` is an explicit, non-default public icon-system choice. Its current
-implementation version is 2.4.0 and its twenty icons use the approved
-`illustrated-performance-v5` contract automatically under `showcase-v1`. See
+implementation version is 2.5.0 and its 56 icons use the approved
+`illustrated-performance-v6` contract automatically under `showcase-v1`. See
 [the icon-system release status](./docs/icon-system-release-status.md) for the
 current/default/legacy matrix.
 
@@ -707,18 +707,19 @@ schema, assets, examples, and documentation are authored independently.
 If code or assets are ever copied from MIT-licensed references, this project
 must add their original license notices before release.
 
-## Illustrated 2.4.0
+## Illustrated 2.5.0
 
 `illustrated` is the stable public id for the current Illustrated icon system.
 It is not the composition-v1 default; select it explicitly when the illustration
-language is wanted. Version 2.4.0 contains twenty approved icons: `agent`,
-`operator`, `tool`, `output`, `database`, `api`, `search`, `memory`, `file`,
-`folder`, `cloud`, `shield`, `user`, `server`, `ai-model`, `message-queue`,
-`vector-database`, `knowledge-base`, `gateway`, and `container`.
+language is wanted. Version 2.5.0 contains 56 approved icons with one-to-one
+semantic coverage of Diagram Core v1. All 13 public templates adapt only the
+approved Illustrated color tokens; geometry, part ids, and semantic roles stay
+unchanged.
 
-Public `showcase-v1` diagrams automatically use the approved twenty-item
-`illustrated-performance-v5` contract. `illustrated-performance-v5-review` is
-archived human-review evidence and is never emitted by new diagrams. The input
+Public `showcase-v1` diagrams automatically use the approved 56-item
+`illustrated-performance-v6` contract. The v6/v7 review contracts are archived
+human-review evidence and are never emitted by new diagrams. The former
+`illustrated-performance-v5` contract remains the immutable 2.4.0 archive. The input
 alias `illustrated-character-v2` resolves to `illustrated`; new plans and
 resolved output use the stable public id.
 

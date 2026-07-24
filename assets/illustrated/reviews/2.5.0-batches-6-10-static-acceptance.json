@@ -1,0 +1,19 @@
+{
+  "schema": "illustrated-static-acceptance-v1",
+  "system": "illustrated",
+  "target_version": "2.5.0",
+  "batches": [6, 7, 8, 9, 10],
+  "status": "static-confirmed-motion-pending",
+  "approved_at": "2026-07-23",
+  "human_visual_acceptance": "confirmed",
+  "approved_icon_count": 30,
+  "visual_proof": "outputs/illustrated-expansion-batches-6-10/illustrated-expansion-batches-6-10.html",
+  "reviewed_themes": ["canonical-warm", "deep-tech"],
+  "reviewed_sizes": [64, 96, 120],
+  "public_registry_changed": false,
+  "motion_acceptance": {
+    "status": "pending-human-review",
+    "review_contract": "illustrated-performance-v7-review",
+    "review_proof": "outputs/illustrated-expansion-batches-6-10-motion-review/illustrated-expansion-batches-6-10-motion-review.html"
+  }
+}

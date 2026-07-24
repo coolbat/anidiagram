@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        system: ["diagram-core-v1", "illustrated-2.4"]
+        system: ["diagram-core-v1", "illustrated-2.5"]
         shard: ["visual", "motion"]
     runs-on: ubuntu-latest
     timeout-minutes: 35

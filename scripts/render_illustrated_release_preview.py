@@ -40,6 +40,11 @@ LABELS = {
 }
 
 
+def _label(icon_id: str) -> str:
+    special = {"pdf": "PDF", "http-request": "HTTP Request", "ci-cd": "CI/CD", "llm": "LLM"}
+    return LABELS.get(icon_id, special.get(icon_id, icon_id.replace("-", " ").title()))
+
+
 def render_svg() -> str:
     style = load_style(ROOT / "styles" / "illustrated-character-v2-concept.json")
     palette = illustrated_tokens_for_style(style)
@@ -54,7 +59,7 @@ def render_svg() -> str:
             f'''<g class="release-card" data-icon="{icon_id}">
   <rect x="{x}" y="{y}" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
   {artwork}
-  <text x="{x + 154}" y="{y + 204}" class="icon-title" text-anchor="middle" fill="#283047">{LABELS[icon_id]}</text>
+  <text x="{x + 154}" y="{y + 204}" class="icon-title" text-anchor="middle" fill="#283047">{_label(icon_id)}</text>
   <text x="{x + 154}" y="{y + 224}" class="role" text-anchor="middle" fill="#6d7182">{illustrated_definition(icon_id).semantic_role}</text>
 </g>'''
         )
@@ -62,7 +67,7 @@ def render_svg() -> str:
     height = 172 + rows * 274
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="{height}" viewBox="0 0 1480 {height}" role="img" aria-labelledby="title desc">
 <title id="title">Illustrated {ILLUSTRATED_ICON_SYSTEM_VERSION} release preview</title>
-<desc id="desc">Twenty approved static Illustrated icons.</desc>
+<desc id="desc">{len(illustrated_icon_ids())} approved static Illustrated icons.</desc>
 <style>
   .title {{ font: 760 40px ui-sans-serif, system-ui, sans-serif; }}
   .subtitle {{ font: 430 16px ui-sans-serif, system-ui, sans-serif; }}
@@ -71,7 +76,7 @@ def render_svg() -> str:
 </style>
 <rect width="100%" height="100%" fill="#ececf3" />
 <text x="52" y="62" class="title" fill="#172033">Illustrated · {ILLUSTRATED_ICON_SYSTEM_VERSION}</text>
-<text x="52" y="94" class="subtitle" fill="#667085">20 approved icons · 20 public automatic performances</text>
+<text x="52" y="94" class="subtitle" fill="#667085">{len(illustrated_icon_ids())} approved icons · {len(illustrated_icon_ids())} public automatic performances</text>
 {''.join(cards)}
 </svg>'''
 

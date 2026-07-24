@@ -1,0 +1,57 @@
+{
+  "system": "illustrated",
+  "icon_system_version": "2.5.0-candidate",
+  "contract": "illustrated-performance-v6-review",
+  "extends": "illustrated-performance-v5",
+  "status": "visual-review",
+  "approved_static_batch": "illustrated-expansion-batch-5",
+  "public_showcase_enabled": false,
+  "selection_policy": "explicit-review-only",
+  "repeat_delay": 0.8,
+  "cancel_behavior": "restore-authored-rest-pose",
+  "reduced_motion_behavior": "static-rest",
+  "performances": [
+    {
+      "icon": "developer",
+      "id": "illustrated-developer-code-build-deliver-v1",
+      "semantic_sequence": ["code", "build", "deliver"],
+      "primary_parts": ["body", "head", "hair", "code-console", "console-header", "code-glyphs", "hands"],
+      "rest_at": 1.82
+    },
+    {
+      "icon": "agent-team",
+      "id": "illustrated-agent-team-coordinate-delegate-synthesize-v1",
+      "semantic_sequence": ["coordinate", "delegate", "synthesize"],
+      "primary_parts": ["collaboration-field", "team-links", "lead-agent", "lead-core", "member-left", "member-right", "member-cores"],
+      "rest_at": 1.86
+    },
+    {
+      "icon": "assistant",
+      "id": "illustrated-assistant-listen-guide-respond-v1",
+      "semantic_sequence": ["listen", "guide", "respond"],
+      "primary_parts": ["assistant-shell", "face-panel", "eyes", "smile", "headset", "earpieces", "response-panel", "response-lines"],
+      "rest_at": 1.78
+    },
+    {
+      "icon": "human-reviewer",
+      "id": "illustrated-human-reviewer-inspect-decide-annotate-v1",
+      "semantic_sequence": ["inspect", "decide", "annotate"],
+      "primary_parts": ["body", "head", "hair", "glasses", "review-sheet", "review-lines", "decision-signals", "hands"],
+      "rest_at": 1.84
+    },
+    {
+      "icon": "llm",
+      "id": "illustrated-llm-context-transform-generate-v1",
+      "semantic_sequence": ["context", "transform", "generate"],
+      "primary_parts": ["context-back", "context-mid", "model-shell", "model-mark", "token-lines", "completion-dots"],
+      "rest_at": 1.82
+    },
+    {
+      "icon": "reasoning",
+      "id": "illustrated-reasoning-premise-infer-conclude-v1",
+      "semantic_sequence": ["premise", "infer", "conclude"],
+      "primary_parts": ["reasoning-shell", "thought-field", "reasoning-path", "premise-points", "conclusion-point", "insight-base"],
+      "rest_at": 1.88
+    }
+  ]
+}

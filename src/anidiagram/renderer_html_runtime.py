@@ -83,5 +83,11 @@ def render_html_runtime(scene: Scene, style: Dict[str, Any], runtime: str = "gsa
 def _runtime_source() -> str:
     root = Path(__file__).resolve().parents[2]
     legacy = (root / "runtime" / "anidiagram-runtime.js").read_text(encoding="utf-8")
+    illustrated = (root / "runtime" / "illustrated-performance-v6-runtime.js").read_text(encoding="utf-8")
     edge_motion = (root / "runtime" / "edge-motion-v1-runtime.js").read_text(encoding="utf-8")
+    marker = "\n})();"
+    if marker not in legacy:
+        raise RuntimeError("AniDiagram runtime closure marker changed")
+    prefix, suffix = legacy.rsplit(marker, 1)
+    legacy = f"{prefix}\n{illustrated}{marker}{suffix}"
     return f"{legacy}\n{edge_motion}"

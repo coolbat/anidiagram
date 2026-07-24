@@ -19,14 +19,69 @@
     "duration": "3.8s"
   },
   "roles": {
-    "actor": {"stroke": "#f59e0b", "fill": "#17120a", "text": "#e5e7eb"},
-    "source": {"stroke": "#22d3ee", "fill": "#061416", "text": "#e5e7eb"},
-    "process": {"stroke": "#22c55e", "fill": "#07130a", "text": "#e5e7eb"},
-    "agent": {"stroke": "#a78bfa", "fill": "#120f1f", "text": "#e5e7eb"},
-    "memory": {"stroke": "#14b8a6", "fill": "#061513", "text": "#e5e7eb"},
-    "tool": {"stroke": "#eab308", "fill": "#181506", "text": "#e5e7eb"},
-    "output": {"stroke": "#84cc16", "fill": "#101706", "text": "#e5e7eb"},
-    "risk": {"stroke": "#f43f5e", "fill": "#1a0710", "text": "#e5e7eb"},
-    "neutral": {"stroke": "#525252", "fill": "#0f0f0f", "text": "#e5e7eb"}
+    "actor": {
+      "stroke": "#f59e0b",
+      "fill": "#17120a",
+      "text": "#e5e7eb"
+    },
+    "source": {
+      "stroke": "#22d3ee",
+      "fill": "#061416",
+      "text": "#e5e7eb"
+    },
+    "process": {
+      "stroke": "#22c55e",
+      "fill": "#07130a",
+      "text": "#e5e7eb"
+    },
+    "agent": {
+      "stroke": "#a78bfa",
+      "fill": "#120f1f",
+      "text": "#e5e7eb"
+    },
+    "memory": {
+      "stroke": "#14b8a6",
+      "fill": "#061513",
+      "text": "#e5e7eb"
+    },
+    "tool": {
+      "stroke": "#eab308",
+      "fill": "#181506",
+      "text": "#e5e7eb"
+    },
+    "output": {
+      "stroke": "#84cc16",
+      "fill": "#101706",
+      "text": "#e5e7eb"
+    },
+    "risk": {
+      "stroke": "#f43f5e",
+      "fill": "#1a0710",
+      "text": "#e5e7eb"
+    },
+    "neutral": {
+      "stroke": "#525252",
+      "fill": "#0f0f0f",
+      "text": "#e5e7eb"
+    }
+  },
+  "illustrated_tokens": {
+    "ink": "#c7f9d4",
+    "paper": "#07130a",
+    "mint": "#22c55e",
+    "lavender": "#7158b9",
+    "lavender-dark": "#b7a0f5",
+    "violet": "#8568cf",
+    "peach": "#b86b25",
+    "sky": "#0e8fa6",
+    "teal": "#0f8c87",
+    "teal-dark": "#4ad8cf",
+    "coral": "#c93655",
+    "sun": "#b48a08",
+    "shadow": "#000000",
+    "lavender-wash": "#120f1f",
+    "sky-wash": "#061416",
+    "sun-wash": "#181506",
+    "mint-wash": "#061513"
   }
 }

@@ -1,0 +1,49 @@
+{
+  "schema": "illustrated-release-acceptance-v1",
+  "system": "illustrated",
+  "version": "2.5.0",
+  "status": "confirmed",
+  "approved_at": "2026-07-24",
+  "static_acceptance": {
+    "status": "confirmed",
+    "approved_icon_count": 56
+  },
+  "motion_acceptance": {
+    "status": "confirmed",
+    "approved_contract": "illustrated-performance-v6",
+    "review_contracts": [
+      "illustrated-performance-v6-review",
+      "illustrated-performance-v7-review"
+    ],
+    "approved_icon_count": 56
+  },
+  "template_acceptance": {
+    "status": "confirmed",
+    "style_count": 13,
+    "icon_count": 56,
+    "instance_count": 728
+  },
+  "convention_alignment": {
+    "status": "confirmed",
+    "approved_icon_count": 12,
+    "acceptance_record": "assets/illustrated/reviews/2.5.0-convention-alignment-acceptance.json"
+  },
+  "real_case_acceptance": {
+    "status": "confirmed",
+    "case": "examples/illustrated-2.5-release-case.diagram.json",
+    "edge_motion_contract": "edge-motion-v1@1.0.0",
+    "animated_edge_count": 13
+  },
+  "public_showcase": {
+    "spec": "examples/illustrated-2.5-showcase.diagram.json",
+    "automatic_motion_icon_count": 56,
+    "manifest_verified": 56,
+    "rest_verified": 56,
+    "reduced_motion_verified": 56,
+    "mode_switching_verified": true
+  },
+  "public_registration": {
+    "status": "confirmed",
+    "registered_icon_count": 56
+  }
+}

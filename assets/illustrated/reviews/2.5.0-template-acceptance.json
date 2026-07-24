@@ -1,0 +1,35 @@
+{
+  "schema": "illustrated-template-acceptance-v1",
+  "system": "illustrated",
+  "target_version": "2.5.0",
+  "status": "approved",
+  "approved_at": "2026-07-22",
+  "human_visual_acceptance": "confirmed",
+  "review_source": "assets/illustrated/reviews/template-matrix-2.5.0-candidate.json",
+  "visual_proof": "outputs/illustrated-template-matrix/illustrated-template-matrix.html",
+  "style_count": 13,
+  "reviewed_icon_count": 20,
+  "reviewed_instance_count": 260,
+  "approved_styles": [
+    "minimal-light",
+    "deep-tech",
+    "blueprint",
+    "flat-icon",
+    "dark-terminal",
+    "notion-clean",
+    "glassmorphism",
+    "claude-warm",
+    "openai-minimal",
+    "dark-luxury",
+    "aurora-orb",
+    "illustrated-semantic",
+    "sketch-board"
+  ],
+  "constraints": {
+    "geometry_overrides": false,
+    "semantic_structure_overrides": false,
+    "color_tokens_only": true
+  },
+  "public_mapping_revision": 9,
+  "final_56_icon_matrix_required": true
+}

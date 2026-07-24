@@ -22,7 +22,7 @@ class IllustratedDeepTechCaseTest(unittest.TestCase):
         report = quality_report(scene, style)
 
         self.assertEqual("illustrated", spec["icon_system"])
-        self.assertEqual("2.4.0", spec["resolved_presentation"]["icon_system"]["version"])
+        self.assertEqual("2.5.0", spec["resolved_presentation"]["icon_system"]["version"])
         self.assertEqual("deep-tech", spec["resolved_presentation"]["style"]["value"])
         self.assertEqual("showcase-v1", spec["resolved_presentation"]["motion"]["value"])
         self.assertEqual({"agent", "operator", "tool", "output"}, {node["icon"] for node in spec["nodes"]})

@@ -1,0 +1,398 @@
+{
+  "schema": "illustrated-template-matrix-v2",
+  "system": "illustrated",
+  "base_version": "2.5.0",
+  "target_version": "2.5.0",
+  "status": "approved",
+  "review_stage": "P3-template-full-adaptation",
+  "icon_count": 56,
+  "style_count": 13,
+  "visual_proof": "outputs/illustrated-template-matrix-2.5/illustrated-template-matrix.html",
+  "constraints": {
+    "geometry_overrides": false,
+    "semantic_structure_overrides": false,
+    "color_tokens_only": true
+  },
+  "mappings": [
+    {
+      "style": "minimal-light",
+      "status": "approved",
+      "human_visual_acceptance": "confirmed",
+      "target_public_source": "styles/minimal-light.json#illustrated_tokens",
+      "illustrated_tokens": {
+        "ink": "#172033",
+        "paper": "#ffffff",
+        "mint": "#34c38f",
+        "lavender": "#c4b5fd",
+        "lavender-dark": "#7c3aed",
+        "violet": "#7c3aed",
+        "peach": "#fdba9a",
+        "sky": "#60a5fa",
+        "teal": "#22b8b5",
+        "teal-dark": "#0f8f87",
+        "coral": "#f97370",
+        "sun": "#fbbf24",
+        "shadow": "#cbd5e1",
+        "lavender-wash": "#f3efff",
+        "sky-wash": "#eaf6ff",
+        "sun-wash": "#fff7dd",
+        "mint-wash": "#e8f8ef"
+      },
+      "constraints": {
+        "geometry_overrides": false,
+        "semantic_structure_overrides": false
+      }
+    },
+    {
+      "style": "deep-tech",
+      "status": "approved",
+      "human_visual_acceptance": "confirmed",
+      "target_public_source": "styles/deep-tech.json#illustrated_tokens",
+      "illustrated_tokens": {
+        "ink": "#d8cebd",
+        "paper": "#111c33",
+        "mint": "#34d399",
+        "lavender": "#8b5cf6",
+        "lavender-dark": "#c4b5fd",
+        "violet": "#a78bfa",
+        "peach": "#f7b38a",
+        "sky": "#38bdf8",
+        "teal": "#14b8a6",
+        "teal-dark": "#5eead4",
+        "coral": "#fb7185",
+        "sun": "#fbbf24",
+        "shadow": "#020617",
+        "lavender-wash": "#251f4b",
+        "sky-wash": "#0b3047",
+        "sun-wash": "#382707",
+        "mint-wash": "#0a3027"
+      },
+      "constraints": {
+        "geometry_overrides": false,
+        "semantic_structure_overrides": false
+      }
+    },
+    {
+      "style": "blueprint",
+      "status": "approved",
+      "human_visual_acceptance": "confirmed",
+      "target_public_source": "styles/blueprint.json#illustrated_tokens",
+      "illustrated_tokens": {
+        "ink": "#cfe9f5",
+        "paper": "#0b1d38",
+        "mint": "#28b980",
+        "lavender": "#5268c9",
+        "lavender-dark": "#a7b8ff",
+        "violet": "#667de0",
+        "peach": "#c58b55",
+        "sky": "#238dbb",
+        "teal": "#168f89",
+        "teal-dark": "#58d5ce",
+        "coral": "#c64f79",
+        "sun": "#b58b29",
+        "shadow": "#020b18",
+        "lavender-wash": "#101b45",
+        "sky-wash": "#0b273c",
+        "sun-wash": "#2a2512",
+        "mint-wash": "#0b2f2b"
+      },
+      "constraints": {
+        "geometry_overrides": false,
+        "semantic_structure_overrides": false
+      }
+    },
+    {
+      "style": "flat-icon",
+      "status": "approved",
+      "human_visual_acceptance": "confirmed",
+      "target_public_source": "styles/flat-icon.json#illustrated_tokens",
+      "illustrated_tokens": {
+        "ink": "#111827",
+        "paper": "#ffffff",
+        "mint": "#22c55e",
+        "lavender": "#d8b4fe",
+        "lavender-dark": "#7e22ce",
+        "violet": "#9333ea",
+        "peach": "#fdba74",
+        "sky": "#38bdf8",
+        "teal": "#06b6d4",
+        "teal-dark": "#0e7490",
+        "coral": "#ef4444",
+        "sun": "#facc15",
+        "shadow": "#cbd5e1",
+        "lavender-wash": "#f3e8ff",
+        "sky-wash": "#cffafe",
+        "sun-wash": "#fef3c7",
+        "mint-wash": "#d1fae5"
+      },
+      "constraints": {
+        "geometry_overrides": false,
+        "semantic_structure_overrides": false
+      }
+    },
+    {
+      "style": "dark-terminal",
+      "status": "approved",
+      "human_visual_acceptance": "confirmed",
+      "target_public_source": "styles/dark-terminal.json#illustrated_tokens",
+      "illustrated_tokens": {
+        "ink": "#c7f9d4",
+        "paper": "#07130a",
+        "mint": "#22c55e",
+        "lavender": "#7158b9",
+        "lavender-dark": "#b7a0f5",
+        "violet": "#8568cf",
+        "peach": "#b86b25",
+        "sky": "#0e8fa6",
+        "teal": "#0f8c87",
+        "teal-dark": "#4ad8cf",
+        "coral": "#c93655",
+        "sun": "#b48a08",
+        "shadow": "#000000",
+        "lavender-wash": "#120f1f",
+        "sky-wash": "#061416",
+        "sun-wash": "#181506",
+        "mint-wash": "#061513"
+      },
+      "constraints": {
+        "geometry_overrides": false,
+        "semantic_structure_overrides": false
+      }
+    },
+    {
+      "style": "notion-clean",
+      "status": "approved",
+      "human_visual_acceptance": "confirmed",
+      "target_public_source": "styles/notion-clean.json#illustrated_tokens",
+      "illustrated_tokens": {
+        "ink": "#1f2937",
+        "paper": "#ffffff",
+        "mint": "#22c55e",
+        "lavender": "#ddd6fe",
+        "lavender-dark": "#7c3aed",
+        "violet": "#8b5cf6",
+        "peach": "#fed7aa",
+        "sky": "#67e8f9",
+        "teal": "#14b8a6",
+        "teal-dark": "#0f766e",
+        "coral": "#ef6f6c",
+        "sun": "#fbbf24",
+        "shadow": "#d1d5db",
+        "lavender-wash": "#faf5ff",
+        "sky-wash": "#f0fdfa",
+        "sun-wash": "#fff7ed",
+        "mint-wash": "#f0fdf4"
+      },
+      "constraints": {
+        "geometry_overrides": false,
+        "semantic_structure_overrides": false
+      }
+    },
+    {
+      "style": "glassmorphism",
+      "status": "approved",
+      "human_visual_acceptance": "confirmed",
+      "target_public_source": "styles/glassmorphism.json#illustrated_tokens",
+      "illustrated_tokens": {
+        "ink": "#24324a",
+        "paper": "#ffffff",
+        "mint": "#34d399",
+        "lavender": "#c4b5fd",
+        "lavender-dark": "#7c3aed",
+        "violet": "#8b5cf6",
+        "peach": "#fdba9a",
+        "sky": "#7dd3fc",
+        "teal": "#06b6d4",
+        "teal-dark": "#0e7490",
+        "coral": "#fb7185",
+        "sun": "#fbbf24",
+        "shadow": "#c7d2fe",
+        "lavender-wash": "#fbfaff",
+        "sky-wash": "#f0fdff",
+        "sun-wash": "#fffaf0",
+        "mint-wash": "#f1fff8"
+      },
+      "constraints": {
+        "geometry_overrides": false,
+        "semantic_structure_overrides": false
+      }
+    },
+    {
+      "style": "claude-warm",
+      "status": "approved",
+      "human_visual_acceptance": "confirmed",
+      "target_public_source": "styles/claude-warm.json#illustrated_tokens",
+      "illustrated_tokens": {
+        "ink": "#3f3028",
+        "paper": "#fffaf5",
+        "mint": "#4daf78",
+        "lavender": "#d4b8f4",
+        "lavender-dark": "#7a3b9c",
+        "violet": "#9333ea",
+        "peach": "#f4b183",
+        "sky": "#64b6c7",
+        "teal": "#2b9a96",
+        "teal-dark": "#0e7490",
+        "coral": "#dc6b5f",
+        "sun": "#d9a62e",
+        "shadow": "#d6cec3",
+        "lavender-wash": "#faf5ff",
+        "sky-wash": "#ecfeff",
+        "sun-wash": "#fffbeb",
+        "mint-wash": "#f0fdf4"
+      },
+      "constraints": {
+        "geometry_overrides": false,
+        "semantic_structure_overrides": false
+      }
+    },
+    {
+      "style": "openai-minimal",
+      "status": "approved",
+      "human_visual_acceptance": "confirmed",
+      "target_public_source": "styles/openai-minimal.json#illustrated_tokens",
+      "illustrated_tokens": {
+        "ink": "#111111",
+        "paper": "#ffffff",
+        "mint": "#10a37f",
+        "lavender": "#c4b5fd",
+        "lavender-dark": "#6d4fc2",
+        "violet": "#7c3aed",
+        "peach": "#e9a677",
+        "sky": "#38bdf8",
+        "teal": "#14b8a6",
+        "teal-dark": "#087f69",
+        "coral": "#ef6666",
+        "sun": "#d5a526",
+        "shadow": "#d4d4d4",
+        "lavender-wash": "#f5f3ff",
+        "sky-wash": "#f0fdff",
+        "sun-wash": "#fffbe8",
+        "mint-wash": "#effcf8"
+      },
+      "constraints": {
+        "geometry_overrides": false,
+        "semantic_structure_overrides": false
+      }
+    },
+    {
+      "style": "dark-luxury",
+      "status": "approved",
+      "human_visual_acceptance": "confirmed",
+      "target_public_source": "styles/dark-luxury.json#illustrated_tokens",
+      "illustrated_tokens": {
+        "ink": "#d7cbb8",
+        "paper": "#151515",
+        "mint": "#34d399",
+        "lavender": "#76509a",
+        "lavender-dark": "#c084fc",
+        "violet": "#9160b7",
+        "peach": "#b6794d",
+        "sky": "#2f91bd",
+        "teal": "#178f86",
+        "teal-dark": "#5fc9bb",
+        "coral": "#c94761",
+        "sun": "#d6a84f",
+        "shadow": "#050505",
+        "lavender-wash": "#16101f",
+        "sky-wash": "#07151a",
+        "sun-wash": "#1c1710",
+        "mint-wash": "#071711"
+      },
+      "constraints": {
+        "geometry_overrides": false,
+        "semantic_structure_overrides": false
+      }
+    },
+    {
+      "style": "aurora-orb",
+      "status": "approved",
+      "human_visual_acceptance": "confirmed",
+      "target_public_source": "styles/aurora-orb.json#illustrated_tokens",
+      "illustrated_tokens": {
+        "ink": "#211729",
+        "paper": "#fffafc",
+        "mint": "#8ecf64",
+        "lavender": "#b9a8ff",
+        "lavender-dark": "#5047d9",
+        "violet": "#7b66dd",
+        "peach": "#ffc18f",
+        "sky": "#74b4ff",
+        "teal": "#38cdb4",
+        "teal-dark": "#169b58",
+        "coral": "#ff6f8f",
+        "sun": "#ffd75d",
+        "shadow": "#cfc5d4",
+        "lavender-wash": "#fff0f6",
+        "sky-wash": "#edf7ff",
+        "sun-wash": "#fff1eb",
+        "mint-wash": "#f7ffdc"
+      },
+      "constraints": {
+        "geometry_overrides": false,
+        "semantic_structure_overrides": false
+      }
+    },
+    {
+      "style": "illustrated-semantic",
+      "status": "approved",
+      "human_visual_acceptance": "confirmed",
+      "target_public_source": "styles/illustrated-semantic.json#illustrated_tokens",
+      "illustrated_tokens": {
+        "ink": "#283047",
+        "paper": "#fffaf0",
+        "mint": "#51a875",
+        "lavender": "#c9bbff",
+        "lavender-dark": "#8067d8",
+        "violet": "#8265d6",
+        "peach": "#ffc39e",
+        "sky": "#6fd6eb",
+        "teal": "#43bdb7",
+        "teal-dark": "#1c8f91",
+        "coral": "#ef8267",
+        "sun": "#ffd45e",
+        "shadow": "#7d8494",
+        "lavender-wash": "#eee9ff",
+        "sky-wash": "#e8f8fb",
+        "sun-wash": "#fff3d8",
+        "mint-wash": "#e5f7ef"
+      },
+      "constraints": {
+        "geometry_overrides": false,
+        "semantic_structure_overrides": false
+      }
+    },
+    {
+      "style": "sketch-board",
+      "status": "approved",
+      "human_visual_acceptance": "confirmed",
+      "target_public_source": "styles/sketch-board.json#illustrated_tokens",
+      "illustrated_tokens": {
+        "ink": "#111827",
+        "paper": "#fbfcfd",
+        "mint": "#38b879",
+        "lavender": "#cbb8f4",
+        "lavender-dark": "#7b3fd1",
+        "violet": "#7b3fd1",
+        "peach": "#f3b08e",
+        "sky": "#65b5dd",
+        "teal": "#2aab98",
+        "teal-dark": "#0f8f7a",
+        "coral": "#d95f5f",
+        "sun": "#e0b44f",
+        "shadow": "#cbd5e1",
+        "lavender-wash": "#f4edff",
+        "sky-wash": "#edf3ff",
+        "sun-wash": "#fff7df",
+        "mint-wash": "#e9f8ef"
+      },
+      "constraints": {
+        "geometry_overrides": false,
+        "semantic_structure_overrides": false
+      }
+    }
+  ],
+  "approved_at": "2026-07-24",
+  "human_visual_acceptance": "confirmed",
+  "instance_count": 728
+}

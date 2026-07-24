@@ -1,0 +1,844 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="4008" viewBox="0 0 1480 4008" role="img" aria-labelledby="title desc">
+<title id="title">Illustrated 2.5.0 release preview</title>
+<desc id="desc">56 approved static Illustrated icons.</desc>
+<style>
+  .title { font: 760 40px ui-sans-serif, system-ui, sans-serif; }
+  .subtitle { font: 430 16px ui-sans-serif, system-ui, sans-serif; }
+  .icon-title { font: 740 20px ui-sans-serif, system-ui, sans-serif; }
+  .role { font: 620 11px ui-monospace, SFMono-Regular, monospace; }
+</style>
+<rect width="100%" height="100%" fill="#ececf3" />
+<text x="52" y="62" class="title" fill="#172033">Illustrated · 2.5.0</text>
+<text x="52" y="94" class="subtitle" fill="#667085">56 approved icons · 56 public automatic performances</text>
+<g class="release-card" data-icon="agent">
+  <rect x="52" y="142" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-agent-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="input-reason-result" data-rest-opacity="1" transform="translate(129.0 179.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-agent-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="59" cy="61" r="49" fill="#eee9ff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-agent-brain-left" class="illustrated-part illustrated-brain-left" data-rest-opacity="1" d="M57 27C45 18 30 25 31 38c-11 4-12 19-2 25-5 12 7 23 18 18 3 8 10 9 15 3V38c-1-5-2-8-5-11Z" fill="#46caa0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-agent-brain-right" class="illustrated-part illustrated-brain-right" data-rest-opacity="1" d="M63 27c12-9 27-2 26 11 11 4 12 19 2 25 5 12-7 23-18 18-3 8-10 9-15 3V38c1-5 2-8 5-11Z" fill="#c9bbff" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-agent-brain-detail" class="illustrated-part illustrated-brain-detail" data-rest-opacity="0.68" d="M43 35c-5 4-3 9 1 11m-8 13c7-1 7 6 12 8m29-32c5 4 3 9-1 11m8 13c-7-1-7 6-12 8" opacity="0.68" fill="none" stroke="#283047" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-agent-processor" class="illustrated-part illustrated-processor" data-rest-opacity="1" x="45" y="42" width="30" height="30" rx="6" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-agent-processor-core" class="illustrated-part illustrated-processor-core" data-rest-opacity="1" d="M50 63l4.5-13L59 63m-7.3-5h5.6M62.5 50h7m-3.5 0v13m-3.5 0h7" fill="none" stroke="#8265d6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-agent-input-nodes" class="illustrated-part illustrated-input-nodes" data-rest-opacity="1" d="M8 45h12v12H8Zm0 26h12V59H8Z" fill="#ff826e" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-agent-input-path" class="illustrated-part illustrated-input-path" data-rest-opacity="1" d="M20 51h9m-9 14h7c4 0 5-3 5-7" fill="none" stroke="#8265d6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-agent-output-path" class="illustrated-part illustrated-output-path" data-rest-opacity="1" d="M90 54h10c5 0 7-3 7-7V35" fill="none" stroke="#8265d6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-agent-result" class="illustrated-part illustrated-result" data-rest-opacity="1" d="M107 16l3 8 8 3-8 3-3 8-3-8-8-3 8-3Z" fill="#ffd45e" stroke="#283047" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="206" y="346" class="icon-title" text-anchor="middle" fill="#283047">Agent</text>
+  <text x="206" y="366" class="role" text-anchor="middle" fill="#6d7182">input-reason-result</text>
+</g><g class="release-card" data-icon="operator">
+  <rect x="396" y="142" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-operator-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="person-operate-status" data-rest-opacity="1" transform="translate(473.0 179.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-operator-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="58" cy="61" r="49" fill="#e8f8fb" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-operator-body" class="illustrated-part illustrated-body" data-rest-opacity="1" d="M31 80c2-17 13-27 28-27 16 0 27 10 29 27Z" fill="#6fd6eb" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-operator-head" class="illustrated-part illustrated-head" data-rest-opacity="1" cx="59" cy="36" r="18" fill="#ffc39e" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-operator-hair" class="illustrated-part illustrated-hair" data-rest-opacity="1" d="M41 36c-3-15 8-25 21-23 12 1 19 11 16 24l-9-5-6 4-9-5-7 6Z" fill="#8265d6" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-operator-glasses" class="illustrated-part illustrated-glasses" data-rest-opacity="1" d="M43 38h13c0 6-3 9-7 9s-6-3-6-9Zm19 0h13c0 6-3 9-7 9s-6-3-6-9Zm-6 1h6" fill="#fffaf0" stroke="#283047" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-operator-laptop" class="illustrated-part illustrated-laptop" data-rest-opacity="1" d="M26 70h68l-6 31H32Z" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-operator-hands" class="illustrated-part illustrated-hands" data-rest-opacity="1" d="M34 77c0-6 4-10 9-10s9 4 9 10Zm34 0c0-6 4-10 9-10s9 4 9 10Z" fill="#ffc39e" stroke="#283047" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-operator-screen" class="illustrated-part illustrated-screen" data-rest-opacity="1" x="50" y="78" width="21" height="13" rx="3" fill="#46caa0" stroke="#283047" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-operator-laptop-base" class="illustrated-part illustrated-laptop-base" data-rest-opacity="1" d="M20 102h80l-7 7H27Z" fill="#c9bbff" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-operator-input-cursor" class="illustrated-part illustrated-input-cursor" data-rest-opacity="1" d="M18 64l13 6-6 3-3 7Z" fill="#ffd45e" stroke="#283047" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-operator-status" class="illustrated-part illustrated-status" data-rest-opacity="1" cx="98" cy="29" r="13" fill="#46caa0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-operator-status-check" class="illustrated-part illustrated-status-check" data-rest-opacity="1" d="M91 29l5 5 10-12" fill="none" stroke="#283047" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="550" y="346" class="icon-title" text-anchor="middle" fill="#283047">Operator</text>
+  <text x="550" y="366" class="role" text-anchor="middle" fill="#6d7182">person-operate-status</text>
+</g><g class="release-card" data-icon="tool">
+  <rect x="740" y="142" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-tool-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="tool-action-complete" data-rest-opacity="1" transform="translate(817.0 179.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-tool-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="59" cy="61" r="49" fill="#fff3d8" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-tool-toolbox" class="illustrated-part illustrated-toolbox" data-rest-opacity="1" d="M20 54h77l-7 46H27Z" fill="#43bdb7" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-tool-toolbox-lid" class="illustrated-part illustrated-toolbox-lid" data-rest-opacity="1" d="M18 48h81v15H18Z" fill="#c9bbff" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-tool-handle" class="illustrated-part illustrated-handle" data-rest-opacity="1" d="M38 48c0-19 40-19 40 0" fill="none" stroke="#283047" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-tool-wrench" class="illustrated-part illustrated-wrench" data-rest-opacity="1" d="M48 67l12 12 31-31c8 1 16-3 20-10l-13-6-7 7-9-9 7-7-6-13c-10 4-15 15-12 25Z" fill="#ffd45e" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-tool-wrench-hole" class="illustrated-part illustrated-wrench-hole" data-rest-opacity="1" cx="56" cy="71" r="4.5" fill="#fffaf0" stroke="#283047" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-tool-target" class="illustrated-part illustrated-target" data-rest-opacity="1" d="M11 79l5-9 10 1 5 10-6 9-10-1Z" fill="#ff826e" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-tool-action-path" class="illustrated-part illustrated-action-path" data-rest-opacity="1" d="M31 76c9-1 14-5 20-11" fill="none" stroke="#8265d6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-tool-completion" class="illustrated-part illustrated-completion" data-rest-opacity="1" d="M99 73l3 7 7 3-7 3-3 7-3-7-7-3 7-3Z" fill="#46caa0" stroke="#283047" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="894" y="346" class="icon-title" text-anchor="middle" fill="#283047">Tool</text>
+  <text x="894" y="366" class="role" text-anchor="middle" fill="#6d7182">tool-action-complete</text>
+</g><g class="release-card" data-icon="output">
+  <rect x="1084" y="142" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-output-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="artifact-deliver-confirm" data-rest-opacity="1" transform="translate(1161.0 179.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-output-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="58" cy="61" r="49" fill="#e5f7ef" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-output-artifact-card" class="illustrated-part illustrated-artifact-card" data-rest-opacity="1" d="M33 14h36l16 16v51H33Z" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-output-artifact-corner" class="illustrated-part illustrated-artifact-corner" data-rest-opacity="1" d="M69 14v17h16" fill="#c9bbff" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-output-artifact-lines" class="illustrated-part illustrated-artifact-lines" data-rest-opacity="1" d="M44 43h29M44 55h29M44 67h20" fill="none" stroke="#8265d6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-output-emergence-track" class="illustrated-part illustrated-emergence-track" data-rest-opacity="1" d="M59 79v17" fill="none" stroke="#1c8f91" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-output-delivery-tray" class="illustrated-part illustrated-delivery-tray" data-rest-opacity="1" d="M13 75h29l8 10h18l8-10h29l-6 29H19Z" fill="#6fd6eb" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-output-delivery-lip" class="illustrated-part illustrated-delivery-lip" data-rest-opacity="1" d="M19 96h80M42 75l8 10h18l8-10" fill="none" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="1238" y="346" class="icon-title" text-anchor="middle" fill="#283047">Output</text>
+  <text x="1238" y="366" class="role" text-anchor="middle" fill="#6d7182">artifact-deliver-confirm</text>
+</g><g class="release-card" data-icon="database">
+  <rect x="52" y="416" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-database-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="data-ingest-store-persist" data-rest-opacity="1" transform="translate(129.0 453.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-database-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="59" cy="61" r="49" fill="#e8f8fb" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-database-cylinder-body" class="illustrated-part illustrated-cylinder-body" data-rest-opacity="1" d="M25 37v50c0 9 16 16 35 16s35-7 35-16V37Z" fill="#6fd6eb" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <ellipse id="icon-release-database-cylinder-top" class="illustrated-part illustrated-cylinder-top" data-rest-opacity="1" cx="60" cy="37" rx="35" ry="14" fill="#c9bbff" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-database-layer-top" class="illustrated-part illustrated-layer-top" data-rest-opacity="1" d="M25 58c0 9 16 16 35 16s35-7 35-16" fill="none" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-database-layer-bottom" class="illustrated-part illustrated-layer-bottom" data-rest-opacity="1" d="M25 78c0 9 16 16 35 16s35-7 35-16" fill="none" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-database-input-bead" class="illustrated-part illustrated-input-bead" data-rest-opacity="1" cx="14" cy="23" r="6" fill="#ff826e" stroke="#283047" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-database-write-path" class="illustrated-part illustrated-write-path" data-rest-opacity="1" d="M20 25c11-4 17 0 24 8m-7-1 7 1-3-7" fill="none" stroke="#8265d6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <ellipse id="icon-release-database-commit-ripple" class="illustrated-part illustrated-commit-ripple" data-rest-opacity="1" cx="60" cy="85" rx="13" ry="5" fill="none" stroke="#43bdb7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-database-stored-bead" class="illustrated-part illustrated-stored-bead" data-rest-opacity="1" cx="60" cy="84" r="4.5" fill="#46caa0" stroke="#283047" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="206" y="620" class="icon-title" text-anchor="middle" fill="#283047">Database</text>
+  <text x="206" y="640" class="role" text-anchor="middle" fill="#6d7182">data-ingest-store-persist</text>
+</g><g class="release-card" data-icon="api">
+  <rect x="396" y="416" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-api-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="request-route-response" data-rest-opacity="1" transform="translate(473.0 453.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-api-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="59" cy="61" r="49" fill="#eee9ff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-api-gateway" class="illustrated-part illustrated-gateway" data-rest-opacity="1" x="30" y="24" width="60" height="72" rx="16" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-api-api-glyph" class="illustrated-part illustrated-api-glyph" data-rest-opacity="1" d="M51 44 42 60l9 16m18-32 9 16-9 16M63 40l-7 40" fill="none" stroke="#8265d6" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-api-request-path" class="illustrated-part illustrated-request-path" data-rest-opacity="1" d="M10 45h27m-8-7 8 7-8 7" fill="none" stroke="#43bdb7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-api-request-token" class="illustrated-part illustrated-request-token" data-rest-opacity="1" cx="12" cy="45" r="5" fill="#ff826e" stroke="#283047" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-api-response-path" class="illustrated-part illustrated-response-path" data-rest-opacity="1" d="M110 76H83m8-7-8 7 8 7" fill="none" stroke="#8067d8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-api-response-token" class="illustrated-part illustrated-response-token" data-rest-opacity="1" cx="108" cy="76" r="5" fill="#ffd45e" stroke="#283047" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="550" y="620" class="icon-title" text-anchor="middle" fill="#283047">API</text>
+  <text x="550" y="640" class="role" text-anchor="middle" fill="#6d7182">request-route-response</text>
+</g><g class="release-card" data-icon="search">
+  <rect x="740" y="416" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-search-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="query-scan-discover" data-rest-opacity="1" transform="translate(817.0 453.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-search-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="58" cy="61" r="49" fill="#e8f8fb" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-search-lens-glass" class="illustrated-part illustrated-lens-glass" data-rest-opacity="1" cx="49" cy="48" r="29" fill="#fffaf0" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-search-lens" class="illustrated-part illustrated-lens" data-rest-opacity="1" cx="49" cy="48" r="30" fill="none" stroke="#283047" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-search-handle" class="illustrated-part illustrated-handle" data-rest-opacity="1" d="M70 69l29 29" fill="none" stroke="#283047" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-search-scan-cross" class="illustrated-part illustrated-scan-cross" data-rest-opacity="1" d="M49 34v28M35 48h28" fill="none" stroke="#8265d6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-search-target-ring" class="illustrated-part illustrated-target-ring" data-rest-opacity="1" cx="93" cy="24" r="11" fill="#e5f7ef" stroke="#43bdb7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-search-result-dot" class="illustrated-part illustrated-result-dot" data-rest-opacity="1" cx="93" cy="24" r="4" fill="#46caa0" stroke="#283047" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-search-discovery" class="illustrated-part illustrated-discovery" data-rest-opacity="1" d="M20 79l3 8 8 3-8 3-3 8-3-8-8-3 8-3Z" fill="#ffd45e" stroke="#283047" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="894" y="620" class="icon-title" text-anchor="middle" fill="#283047">Search</text>
+  <text x="894" y="640" class="role" text-anchor="middle" fill="#6d7182">query-scan-discover</text>
+</g><g class="release-card" data-icon="memory">
+  <rect x="1084" y="416" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-memory-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="context-capture-index-recall" data-rest-opacity="1" transform="translate(1161.0 453.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-memory-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="59" cy="61" r="49" fill="#e5f7ef" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-memory-context-stack" class="illustrated-part illustrated-context-stack" data-rest-opacity="1" d="M19 31h66v65H19Zm7-8h66v65" fill="#c9bbff" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-memory-context-card" class="illustrated-part illustrated-context-card" data-rest-opacity="1" x="33" y="16" width="66" height="65" rx="12" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-memory-context-nodes" class="illustrated-part illustrated-context-nodes" data-rest-opacity="1" d="M49 39h0m18 12h0m17-15h0m-25 28h0" fill="none" stroke="#1c8f91" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-memory-context-links" class="illustrated-part illustrated-context-links" data-rest-opacity="1" d="M49 39 67 51m0 0 17-15M67 51l-8 13" fill="none" stroke="#8265d6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-memory-recall-orbit" class="illustrated-part illustrated-recall-orbit" data-rest-opacity="1" d="M46 91c9-10 26-11 37-2 6 5 8 11 7 18" fill="none" stroke="#ff826e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-memory-recall-focus" class="illustrated-part illustrated-recall-focus" data-rest-opacity="1" cx="47" cy="91" r="7" fill="#ffd45e" stroke="#283047" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="1238" y="620" class="icon-title" text-anchor="middle" fill="#283047">Memory</text>
+  <text x="1238" y="640" class="role" text-anchor="middle" fill="#6d7182">context-capture-index-recall</text>
+</g><g class="release-card" data-icon="file">
+  <rect x="52" y="690" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-file-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="document-content-attach-reference" data-rest-opacity="1" transform="translate(129.0 727.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-file-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#eee9ff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-file-page" class="illustrated-part illustrated-page" data-rest-opacity="1" x="29" y="17" width="62" height="86" rx="8" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-file-paperclip" class="illustrated-part illustrated-paperclip" data-rest-opacity="1" d="M45 35v38c0 13 18 13 18 0V44c0-8-11-8-11 0v27c0 5 6 5 6 0V49" fill="none" stroke="#8265d6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-file-content-lines" class="illustrated-part illustrated-content-lines" data-rest-opacity="1" d="M68 49h12M68 64h12" fill="none" stroke="#1c8f91" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="206" y="894" class="icon-title" text-anchor="middle" fill="#283047">File</text>
+  <text x="206" y="914" class="role" text-anchor="middle" fill="#6d7182">document-content-attach-reference</text>
+</g><g class="release-card" data-icon="folder">
+  <rect x="396" y="690" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-folder-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="collection-store-index-organize" data-rest-opacity="1" transform="translate(473.0 727.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-folder-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#fff3d8" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-folder-folder-back" class="illustrated-part illustrated-folder-back" data-rest-opacity="1" d="M18 43h31l9 9h44v45H18Z" fill="#c9bbff" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-folder-folder-tab" class="illustrated-part illustrated-folder-tab" data-rest-opacity="1" d="M18 43h31l9 9H18Z" fill="#ffd45e" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-folder-document" class="illustrated-part illustrated-document" data-rest-opacity="1" x="50" y="35" width="31" height="40" rx="5" fill="#fffaf0" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-folder-folder-front" class="illustrated-part illustrated-folder-front" data-rest-opacity="1" d="M18 60h86l-8 37H27Z" fill="#ffd45e" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-folder-index-label" class="illustrated-part illustrated-index-label" data-rest-opacity="1" x="44" y="70" width="34" height="15" rx="7.5" fill="#46caa0" stroke="#283047" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="550" y="894" class="icon-title" text-anchor="middle" fill="#283047">Folder</text>
+  <text x="550" y="914" class="role" text-anchor="middle" fill="#6d7182">collection-store-index-organize</text>
+</g><g class="release-card" data-icon="cloud">
+  <rect x="740" y="690" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-cloud-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="data-upload-download-sync" data-rest-opacity="1" transform="translate(817.0 727.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-cloud-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="58" cy="63" r="49" fill="#e8f8fb" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-cloud-cloud-shell" class="illustrated-part illustrated-cloud-shell" data-rest-opacity="1" d="M28 91c-16 0-21-20-7-29-1-17 18-27 32-17 9-14 31-10 34 6 17-1 23 21 7 32Z" fill="#6fd6eb" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-cloud-upload-arrow" class="illustrated-part illustrated-upload-arrow" data-rest-opacity="1" d="M44 80V49M34 59l10-10 10 10" fill="none" stroke="#8265d6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-cloud-download-arrow" class="illustrated-part illustrated-download-arrow" data-rest-opacity="1" d="M76 47v31M66 68l10 10 10-10" fill="none" stroke="#1c8f91" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="894" y="894" class="icon-title" text-anchor="middle" fill="#283047">Cloud</text>
+  <text x="894" y="914" class="role" text-anchor="middle" fill="#6d7182">data-upload-download-sync</text>
+</g><g class="release-card" data-icon="shield">
+  <rect x="1084" y="690" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-shield-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="security-lock-protect" data-rest-opacity="1" transform="translate(1161.0 727.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-shield-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="61" cy="61" r="49" fill="#eee9ff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-shield-shield-shell" class="illustrated-part illustrated-shield-shell" data-rest-opacity="1" d="M60 15l35 14v28c0 22-14 37-35 47-21-10-35-25-35-47V29Z" fill="#c9bbff" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-shield-inner-field" class="illustrated-part illustrated-inner-field" data-rest-opacity="1" d="M60 29l22 9v18c0 14-9 24-22 31-13-7-22-17-22-31V38Z" fill="#fffaf0" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-shield-lock-shackle" class="illustrated-part illustrated-lock-shackle" data-rest-opacity="1" d="M49 59v-8c0-15 22-15 22 0v8" fill="none" stroke="#1c8f91" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-shield-security-lock" class="illustrated-part illustrated-security-lock" data-rest-opacity="1" x="44" y="57" width="32" height="28" rx="7" fill="#46caa0" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-shield-keyhole" class="illustrated-part illustrated-keyhole" data-rest-opacity="1" d="M60 66a4 4 0 1 0 .1 0M60 70v7" fill="none" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="1238" y="894" class="icon-title" text-anchor="middle" fill="#283047">Shield</text>
+  <text x="1238" y="914" class="role" text-anchor="middle" fill="#6d7182">security-lock-protect</text>
+</g><g class="release-card" data-icon="user">
+  <rect x="52" y="964" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-user-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="external-person-request-interact" data-rest-opacity="1" transform="translate(129.0 1001.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-user-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="58" cy="61" r="49" fill="#e8f8fb" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-user-portrait-body" class="illustrated-part illustrated-portrait-body" data-rest-opacity="1" d="M21 101c2-23 16-36 37-36s35 13 37 36Z" fill="#6fd6eb" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-user-portrait-neck" class="illustrated-part illustrated-portrait-neck" data-rest-opacity="1" x="51" y="56" width="15" height="17" rx="6" fill="#ffc39e" stroke="#283047" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-user-portrait-head" class="illustrated-part illustrated-portrait-head" data-rest-opacity="1" cx="58" cy="42" r="22" fill="#ffc39e" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-user-portrait-hair" class="illustrated-part illustrated-portrait-hair" data-rest-opacity="1" d="M37 43c-2-20 12-31 27-27 11 3 18 13 16 27l-8-8-9 4-10-6-9 8Z" fill="#c9bbff" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-user-face" class="illustrated-part illustrated-face" data-rest-opacity="1" d="M48 47h2m15 0h2M51 56c5 4 10 4 15 0" fill="none" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-user-conversation-card" class="illustrated-part illustrated-conversation-card" data-rest-opacity="1" d="M80 20h27c5 0 8 3 8 8v21c0 5-3 8-8 8H96l-8 8v-8h-8c-5 0-8-3-8-8V28c0-5 3-8 8-8Z" fill="#fffaf0" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-user-conversation-lines" class="illustrated-part illustrated-conversation-lines" data-rest-opacity="1" d="M83 34h20M83 43h14" fill="none" stroke="#1c8f91" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="206" y="1168" class="icon-title" text-anchor="middle" fill="#283047">User</text>
+  <text x="206" y="1188" class="role" text-anchor="middle" fill="#6d7182">external-person-request-interact</text>
+</g><g class="release-card" data-icon="server">
+  <rect x="396" y="964" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-server-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="compute-host-run-service" data-rest-opacity="1" transform="translate(473.0 1001.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-server-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#e5f7ef" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-server-rack-shell" class="illustrated-part illustrated-rack-shell" data-rest-opacity="1" x="24" y="15" width="72" height="90" rx="14" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-server-upper-bay" class="illustrated-part illustrated-upper-bay" data-rest-opacity="1" x="31" y="25" width="58" height="20" rx="6" fill="#6fd6eb" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-server-middle-bay" class="illustrated-part illustrated-middle-bay" data-rest-opacity="1" x="31" y="50" width="58" height="20" rx="6" fill="#c9bbff" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-server-lower-bay" class="illustrated-part illustrated-lower-bay" data-rest-opacity="1" x="31" y="75" width="58" height="20" rx="6" fill="#ffd45e" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-server-rack-ports" class="illustrated-part illustrated-rack-ports" data-rest-opacity="1" d="M40 35h17M40 60h17M40 85h17" fill="none" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-server-activity-lights" class="illustrated-part illustrated-activity-lights" data-rest-opacity="1" d="M77 35h0M77 60h0M77 85h0" fill="none" stroke="#1c8f91" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="550" y="1168" class="icon-title" text-anchor="middle" fill="#283047">Server</text>
+  <text x="550" y="1188" class="role" text-anchor="middle" fill="#6d7182">compute-host-run-service</text>
+</g><g class="release-card" data-icon="ai-model">
+  <rect x="740" y="964" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-ai-model-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="model-inference-transform-predict" data-rest-opacity="1" transform="translate(817.0 1001.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-ai-model-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#eee9ff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-ai-model-model-card" class="illustrated-part illustrated-model-card" data-rest-opacity="1" x="18" y="18" width="84" height="84" rx="18" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-ai-model-model-header" class="illustrated-part illustrated-model-header" data-rest-opacity="1" d="M31 34h26M86 34h0" fill="none" stroke="#8265d6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-ai-model-network-links" class="illustrated-part illustrated-network-links" data-rest-opacity="0.78" d="M38 53 61 45m-23 8 23 16m-23 20 23-24m0-20 21 12M61 69l21-12M61 45l21 32M61 69l21 8" opacity="0.78" fill="none" stroke="#8067d8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-ai-model-input-neurons" class="illustrated-part illustrated-input-neurons" data-rest-opacity="1" d="M38 53h0M38 73h0" fill="none" stroke="#ff826e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-ai-model-hidden-neurons" class="illustrated-part illustrated-hidden-neurons" data-rest-opacity="1" d="M61 45h0M61 69h0" fill="none" stroke="#8265d6" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-ai-model-output-neuron" class="illustrated-part illustrated-output-neuron" data-rest-opacity="1" cx="82" cy="57" r="5" fill="#46caa0" stroke="#283047" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-ai-model-inference-band" class="illustrated-part illustrated-inference-band" data-rest-opacity="1" d="M35 88h50" fill="none" stroke="#1c8f91" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="894" y="1168" class="icon-title" text-anchor="middle" fill="#283047">AI Model</text>
+  <text x="894" y="1188" class="role" text-anchor="middle" fill="#6d7182">model-inference-transform-predict</text>
+</g><g class="release-card" data-icon="message-queue">
+  <rect x="1084" y="964" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-message-queue-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="async-buffer-order-deliver" data-rest-opacity="1" transform="translate(1161.0 1001.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-message-queue-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#fff3d8" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-message-queue-queue-shell" class="illustrated-part illustrated-queue-shell" data-rest-opacity="1" x="15" y="27" width="90" height="67" rx="18" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-message-queue-queue-rail" class="illustrated-part illustrated-queue-rail" data-rest-opacity="1" d="M26 72h68" fill="none" stroke="#283047" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-message-queue-message-one" class="illustrated-part illustrated-message-one" data-rest-opacity="1" x="27" y="43" width="18" height="22" rx="6" fill="#ff826e" stroke="#283047" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-message-queue-message-two" class="illustrated-part illustrated-message-two" data-rest-opacity="1" x="51" y="43" width="18" height="22" rx="6" fill="#c9bbff" stroke="#283047" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-message-queue-message-three" class="illustrated-part illustrated-message-three" data-rest-opacity="1" x="75" y="43" width="18" height="22" rx="6" fill="#46caa0" stroke="#283047" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-message-queue-buffer-gates" class="illustrated-part illustrated-buffer-gates" data-rest-opacity="1" d="M24 39v40M96 39v40" fill="none" stroke="#1c8f91" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-message-queue-sequence-dots" class="illustrated-part illustrated-sequence-dots" data-rest-opacity="1" d="M36 83h0M60 83h0M84 83h0" fill="none" stroke="#8265d6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="1238" y="1168" class="icon-title" text-anchor="middle" fill="#283047">Message Queue</text>
+  <text x="1238" y="1188" class="role" text-anchor="middle" fill="#6d7182">async-buffer-order-deliver</text>
+</g><g class="release-card" data-icon="vector-database">
+  <rect x="52" y="1238" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-vector-database-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="vector-embed-index-retrieve" data-rest-opacity="1" transform="translate(129.0 1275.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-vector-database-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#e8f8fb" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-vector-database-vector-store-body" class="illustrated-part illustrated-vector-store-body" data-rest-opacity="1" d="M23 37v49c0 11 17 19 37 19s37-8 37-19V37Z" fill="#6fd6eb" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <ellipse id="icon-release-vector-database-vector-store-top" class="illustrated-part illustrated-vector-store-top" data-rest-opacity="1" cx="60" cy="37" rx="37" ry="15" fill="#c9bbff" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-vector-database-vector-field" class="illustrated-part illustrated-vector-field" data-rest-opacity="1" d="M31 59c8 6 18 9 29 9s22-3 29-9v27c0 7-13 13-29 13S31 93 31 86Z" fill="#fffaf0" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-vector-database-vector-links" class="illustrated-part illustrated-vector-links" data-rest-opacity="1" d="M43 74 59 60l19 13-16 15-19-14m16-14 3 28" fill="none" stroke="#8265d6" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-vector-database-vector-points" class="illustrated-part illustrated-vector-points" data-rest-opacity="1" d="M43 74h0M59 60h0M78 73h0M62 88h0" fill="none" stroke="#1c8f91" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="206" y="1442" class="icon-title" text-anchor="middle" fill="#283047">Vector Database</text>
+  <text x="206" y="1462" class="role" text-anchor="middle" fill="#6d7182">vector-embed-index-retrieve</text>
+</g><g class="release-card" data-icon="knowledge-base">
+  <rect x="396" y="1238" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-knowledge-base-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="knowledge-curate-connect-reference" data-rest-opacity="1" transform="translate(473.0 1275.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-knowledge-base-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#fff3d8" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-knowledge-base-book-left" class="illustrated-part illustrated-book-left" data-rest-opacity="1" d="M11 31c18-6 35-4 49 8v65c-14-10-31-13-49-7Z" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-knowledge-base-book-right" class="illustrated-part illustrated-book-right" data-rest-opacity="1" d="M109 31c-18-6-35-4-49 8v65c14-10 31-13 49-7Z" fill="#c9bbff" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-knowledge-base-book-spine" class="illustrated-part illustrated-book-spine" data-rest-opacity="1" d="M60 39v65" fill="none" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-knowledge-base-knowledge-links" class="illustrated-part illustrated-knowledge-links" data-rest-opacity="1" d="M28 56 43 68 31 82m15-31-3 17m34-12-14 12 15 13m-15-13 13 0" fill="none" stroke="#8265d6" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-knowledge-base-knowledge-points" class="illustrated-part illustrated-knowledge-points" data-rest-opacity="1" d="M28 56h0M43 68h0M31 82h0M77 56h0M63 68h0M78 81h0" fill="none" stroke="#1c8f91" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-knowledge-base-reference-lines" class="illustrated-part illustrated-reference-lines" data-rest-opacity="1" d="M23 91h22M75 91h22" fill="none" stroke="#ff826e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="550" y="1442" class="icon-title" text-anchor="middle" fill="#283047">Knowledge Base</text>
+  <text x="550" y="1462" class="role" text-anchor="middle" fill="#6d7182">knowledge-curate-connect-reference</text>
+</g><g class="release-card" data-icon="gateway">
+  <rect x="740" y="1238" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-gateway-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="traffic-admit-route-mediate" data-rest-opacity="1" transform="translate(817.0 1275.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-gateway-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#eee9ff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-gateway-boundary-appliance" class="illustrated-part illustrated-boundary-appliance" data-rest-opacity="1" x="35" y="15" width="50" height="91" rx="17" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-gateway-policy-core" class="illustrated-part illustrated-policy-core" data-rest-opacity="1" d="M48 38h24v18H48Zm0 30h24v18H48Z" fill="#c9bbff" stroke="#283047" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-gateway-inbound-lanes" class="illustrated-part illustrated-inbound-lanes" data-rest-opacity="1" d="M10 47h25M10 75h25" fill="none" stroke="#1c8f91" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-gateway-outbound-lanes" class="illustrated-part illustrated-outbound-lanes" data-rest-opacity="1" d="M85 47h25M85 75h25" fill="none" stroke="#8265d6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-gateway-request-packets" class="illustrated-part illustrated-request-packets" data-rest-opacity="1" d="M18 47h0m12 28h0" fill="none" stroke="#ff826e" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-gateway-response-packets" class="illustrated-part illustrated-response-packets" data-rest-opacity="1" d="M91 47h0m12 28h0" fill="none" stroke="#46caa0" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="894" y="1442" class="icon-title" text-anchor="middle" fill="#283047">Gateway</text>
+  <text x="894" y="1462" class="role" text-anchor="middle" fill="#6d7182">traffic-admit-route-mediate</text>
+</g><g class="release-card" data-icon="container">
+  <rect x="1084" y="1238" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-container-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="workload-package-isolate-run" data-rest-opacity="1" transform="translate(1161.0 1275.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-container-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#e5f7ef" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-container-container-shell" class="illustrated-part illustrated-container-shell" data-rest-opacity="1" d="M12 36h80v61H12Z" fill="#6fd6eb" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-container-container-lid" class="illustrated-part illustrated-container-lid" data-rest-opacity="1" d="m12 36 16-15h80L92 36Z" fill="#c9bbff" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-container-container-side" class="illustrated-part illustrated-container-side" data-rest-opacity="1" d="m92 36 16-15v61L92 97Z" fill="#43bdb7" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-container-container-ribs" class="illustrated-part illustrated-container-ribs" data-rest-opacity="1" d="M24 44v45M34 44v45M80 44v45" fill="none" stroke="#1c8f91" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-container-isolation-frame" class="illustrated-part illustrated-isolation-frame" data-rest-opacity="1" x="40" y="47" width="34" height="38" rx="8" fill="#fffaf0" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-container-app-module" class="illustrated-part illustrated-app-module" data-rest-opacity="1" x="46" y="56" width="22" height="20" rx="6" fill="#46caa0" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-container-runtime-slots" class="illustrated-part illustrated-runtime-slots" data-rest-opacity="1" d="M51 66h0M57 66h0M63 66h0" fill="none" stroke="#8265d6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-container-container-feet" class="illustrated-part illustrated-container-feet" data-rest-opacity="1" d="M25 97v7m55-7v7" fill="none" stroke="#283047" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="1238" y="1442" class="icon-title" text-anchor="middle" fill="#283047">Container</text>
+  <text x="1238" y="1462" class="role" text-anchor="middle" fill="#6d7182">workload-package-isolate-run</text>
+</g><g class="release-card" data-icon="developer">
+  <rect x="52" y="1512" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-developer-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="person-code-build-deliver" data-rest-opacity="1" transform="translate(129.0 1549.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-developer-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#e8f8fb" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-developer-body" class="illustrated-part illustrated-body" data-rest-opacity="1" d="M31 75c3-17 14-26 29-26s26 9 29 26Z" fill="#6fd6eb" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-developer-head" class="illustrated-part illustrated-head" data-rest-opacity="1" cx="60" cy="36" r="17" fill="#ffc39e" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-developer-hair" class="illustrated-part illustrated-hair" data-rest-opacity="1" d="M43 37c-3-15 5-23 18-23 12 0 20 8 16 23l-8-7-8 5-10-6-5 8Z" fill="#8265d6" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-developer-code-console" class="illustrated-part illustrated-code-console" data-rest-opacity="1" x="18" y="63" width="84" height="42" rx="9" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-developer-console-header" class="illustrated-part illustrated-console-header" data-rest-opacity="1" d="M19 76h82M28 70h0m8 0h0" fill="none" stroke="#ff826e" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-developer-code-glyphs" class="illustrated-part illustrated-code-glyphs" data-rest-opacity="1" d="m38 86-7 6 7 6m20-12 7 6-7 6m-5-15-7 18M75 87h14m-14 9h10" fill="none" stroke="#8265d6" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-developer-hands" class="illustrated-part illustrated-hands" data-rest-opacity="1" d="M29 64c3-5 10-5 13 0m36 0c3-5 10-5 13 0" fill="#ffc39e" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="206" y="1716" class="icon-title" text-anchor="middle" fill="#283047">Developer</text>
+  <text x="206" y="1736" class="role" text-anchor="middle" fill="#6d7182">person-code-build-deliver</text>
+</g><g class="release-card" data-icon="agent-team">
+  <rect x="396" y="1512" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-agent-team-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="agents-coordinate-delegate-synthesize" data-rest-opacity="1" transform="translate(473.0 1549.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-agent-team-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#eee9ff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <ellipse id="icon-release-agent-team-collaboration-field" class="illustrated-part illustrated-collaboration-field" data-rest-opacity="1" cx="60" cy="63" rx="48" ry="38" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-agent-team-team-links" class="illustrated-part illustrated-team-links" data-rest-opacity="1" d="M60 54 34 77m26-23 26 23M34 77h52" fill="none" stroke="#1c8f91" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-agent-team-lead-agent" class="illustrated-part illustrated-lead-agent" data-rest-opacity="1" x="42" y="23" width="36" height="34" rx="11" fill="#8265d6" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-agent-team-lead-core" class="illustrated-part illustrated-lead-core" data-rest-opacity="1" d="M49 47l4-14 4 14m-6.5-5h5M62 33h8m-4 0v14m-4 0h8" fill="none" stroke="#fffaf0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-agent-team-member-left" class="illustrated-part illustrated-member-left" data-rest-opacity="1" x="16" y="69" width="36" height="32" rx="11" fill="#6fd6eb" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-agent-team-member-right" class="illustrated-part illustrated-member-right" data-rest-opacity="1" x="68" y="69" width="36" height="32" rx="11" fill="#46caa0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-agent-team-member-cores" class="illustrated-part illustrated-member-cores" data-rest-opacity="1" d="M26 85h0m8 0h0m8 0h0M78 85h0m8 0h0m8 0h0" fill="none" stroke="#283047" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="550" y="1716" class="icon-title" text-anchor="middle" fill="#283047">Agent Team</text>
+  <text x="550" y="1736" class="role" text-anchor="middle" fill="#6d7182">agents-coordinate-delegate-synthesize</text>
+</g><g class="release-card" data-icon="assistant">
+  <rect x="740" y="1512" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-assistant-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="assistant-listen-guide-respond" data-rest-opacity="1" transform="translate(817.0 1549.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-assistant-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#e5f7ef" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-assistant-assistant-shell" class="illustrated-part illustrated-assistant-shell" data-rest-opacity="1" x="22" y="20" width="76" height="84" rx="30" fill="#6fd6eb" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-assistant-face-panel" class="illustrated-part illustrated-face-panel" data-rest-opacity="1" x="34" y="33" width="52" height="36" rx="16" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-assistant-eyes" class="illustrated-part illustrated-eyes" data-rest-opacity="1" d="M46 49h0m28 0h0" fill="none" stroke="#1c8f91" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-assistant-smile" class="illustrated-part illustrated-smile" data-rest-opacity="1" d="M50 57c5 6 15 6 20 0" fill="none" stroke="#8265d6" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-assistant-headset" class="illustrated-part illustrated-headset" data-rest-opacity="1" d="M28 51V43c0-19 13-31 32-31s32 12 32 31v8" fill="none" stroke="#8265d6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-assistant-earpieces" class="illustrated-part illustrated-earpieces" data-rest-opacity="1" d="M22 48h12v18H22Zm64 0h12v18H86Z" fill="#c9bbff" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-assistant-response-panel" class="illustrated-part illustrated-response-panel" data-rest-opacity="1" x="37" y="77" width="46" height="17" rx="7" fill="#fffaf0" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-assistant-response-lines" class="illustrated-part illustrated-response-lines" data-rest-opacity="1" d="M46 85h12m6 0h10" fill="none" stroke="#1c8f91" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="894" y="1716" class="icon-title" text-anchor="middle" fill="#283047">Assistant</text>
+  <text x="894" y="1736" class="role" text-anchor="middle" fill="#6d7182">assistant-listen-guide-respond</text>
+</g><g class="release-card" data-icon="human-reviewer">
+  <rect x="1084" y="1512" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-human-reviewer-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="human-inspect-decide-annotate" data-rest-opacity="1" transform="translate(1161.0 1549.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-human-reviewer-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#fff3d8" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-human-reviewer-body" class="illustrated-part illustrated-body" data-rest-opacity="1" d="M23 103c2-25 17-39 37-39s35 14 37 39Z" fill="#46caa0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-human-reviewer-head" class="illustrated-part illustrated-head" data-rest-opacity="1" cx="60" cy="37" r="18" fill="#ffc39e" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-human-reviewer-hair" class="illustrated-part illustrated-hair" data-rest-opacity="1" d="M42 37c-2-15 6-23 18-23 13 0 21 8 18 23l-8-6-9 4-10-5-6 7Z" fill="#c9bbff" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-human-reviewer-glasses" class="illustrated-part illustrated-glasses" data-rest-opacity="1" d="M43 40h13m8 0h13M56 40h8" fill="none" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-human-reviewer-review-sheet" class="illustrated-part illustrated-review-sheet" data-rest-opacity="1" x="31" y="61" width="58" height="46" rx="7" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-human-reviewer-review-lines" class="illustrated-part illustrated-review-lines" data-rest-opacity="1" d="M43 73h31M43 84h25M43 95h31" fill="none" stroke="#8265d6" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-human-reviewer-decision-signals" class="illustrated-part illustrated-decision-signals" data-rest-opacity="1" d="M78 73h0M72 84h0M78 95h0" fill="none" stroke="#ff826e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-human-reviewer-hands" class="illustrated-part illustrated-hands" data-rest-opacity="1" d="M31 91c-7-1-10 5-6 10m64-10c7-1 10 5 6 10" fill="#ffc39e" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="1238" y="1716" class="icon-title" text-anchor="middle" fill="#283047">Human Reviewer</text>
+  <text x="1238" y="1736" class="role" text-anchor="middle" fill="#6d7182">human-inspect-decide-annotate</text>
+</g><g class="release-card" data-icon="llm">
+  <rect x="52" y="1786" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-llm-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="language-context-transform-generate" data-rest-opacity="1" transform="translate(129.0 1823.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-llm-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#eee9ff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-llm-context-back" class="illustrated-part illustrated-context-back" data-rest-opacity="1" x="25" y="16" width="76" height="70" rx="14" fill="#6fd6eb" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-llm-context-mid" class="illustrated-part illustrated-context-mid" data-rest-opacity="1" x="18" y="24" width="76" height="70" rx="14" fill="#c9bbff" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-llm-model-shell" class="illustrated-part illustrated-model-shell" data-rest-opacity="1" d="M12 31h76c8 0 14 6 14 14v50H67l-10 12-2-12H26c-8 0-14-6-14-14Z" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-llm-model-mark" class="illustrated-part illustrated-model-mark" data-rest-opacity="1" d="M30 45v20h11M47 45v20h11M64 65V45l8 11 8-11v20" fill="none" stroke="#8265d6" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-llm-token-lines" class="illustrated-part illustrated-token-lines" data-rest-opacity="1" d="M29 76h44M29 84h32" fill="none" stroke="#1c8f91" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-llm-completion-dots" class="illustrated-part illustrated-completion-dots" data-rest-opacity="1" d="M72 84h0m9 0h0m9 0h0" fill="none" stroke="#ff826e" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="206" y="1990" class="icon-title" text-anchor="middle" fill="#283047">LLM</text>
+  <text x="206" y="2010" class="role" text-anchor="middle" fill="#6d7182">language-context-transform-generate</text>
+</g><g class="release-card" data-icon="reasoning">
+  <rect x="396" y="1786" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-reasoning-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="premise-connect-infer-conclude" data-rest-opacity="1" transform="translate(473.0 1823.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-reasoning-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#fff3d8" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-reasoning-reasoning-shell" class="illustrated-part illustrated-reasoning-shell" data-rest-opacity="1" d="M60 13c-24 0-40 16-40 38 0 15 8 25 21 33v11h38V84c13-8 21-19 21-34 0-21-17-37-40-37Z" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-reasoning-thought-field" class="illustrated-part illustrated-thought-field" data-rest-opacity="1" cx="60" cy="51" r="29" fill="#c9bbff" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-reasoning-reasoning-path" class="illustrated-part illustrated-reasoning-path" data-rest-opacity="1" d="M40 40h16v12H45v14h15V57h18V42h-9v-8" fill="none" stroke="#fffaf0" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-reasoning-premise-points" class="illustrated-part illustrated-premise-points" data-rest-opacity="1" d="M40 40h0M45 66h0M69 34h0" fill="none" stroke="#1c8f91" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-reasoning-conclusion-point" class="illustrated-part illustrated-conclusion-point" data-rest-opacity="1" cx="78" cy="42" r="6" fill="#ffd45e" stroke="#283047" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-reasoning-insight-base" class="illustrated-part illustrated-insight-base" data-rest-opacity="1" x="39" y="93" width="42" height="12" rx="5" fill="#6fd6eb" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="550" y="1990" class="icon-title" text-anchor="middle" fill="#283047">Reasoning</text>
+  <text x="550" y="2010" class="role" text-anchor="middle" fill="#6d7182">premise-connect-infer-conclude</text>
+</g><g class="release-card" data-icon="neural-network">
+  <rect x="740" y="1786" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-neural-network-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="neurons-connect-activate-propagate" data-rest-opacity="1" transform="translate(817.0 1823.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-neural-network-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#eee9ff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-neural-network-network-shell" class="illustrated-part illustrated-network-shell" data-rest-opacity="1" x="17" y="19" width="86" height="83" rx="24" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-neural-network-network-links" class="illustrated-part illustrated-network-links" data-rest-opacity="1" d="M31 42 57 33m-26 9 26 25M31 79l26-12m0-34 29 14M57 33l29 38M57 67l29-20m-29 20 29 4" fill="none" stroke="#8265d6" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-neural-network-input-neurons" class="illustrated-part illustrated-input-neurons" data-rest-opacity="1" d="M31 42h0m0 37h0" fill="none" stroke="#6fd6eb" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-neural-network-hidden-neurons" class="illustrated-part illustrated-hidden-neurons" data-rest-opacity="1" d="M57 33h0m0 34h0" fill="none" stroke="#43bdb7" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-neural-network-output-neuron" class="illustrated-part illustrated-output-neuron" data-rest-opacity="1" d="M86 47h0m0 24h0" fill="none" stroke="#ff826e" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="894" y="1990" class="icon-title" text-anchor="middle" fill="#283047">Neural Network</text>
+  <text x="894" y="2010" class="role" text-anchor="middle" fill="#6d7182">neurons-connect-activate-propagate</text>
+</g><g class="release-card" data-icon="embedding">
+  <rect x="1084" y="1786" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-embedding-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="content-vectorize-position-compare" data-rest-opacity="1" transform="translate(1161.0 1823.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-embedding-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#e8f8fb" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-embedding-vector-field" class="illustrated-part illustrated-vector-field" data-rest-opacity="1" x="18" y="18" width="84" height="84" rx="18" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-embedding-coordinate-grid" class="illustrated-part illustrated-coordinate-grid" data-rest-opacity="0.55" d="M38 28v64M59 28v64M80 28v64M28 39h64M28 60h64M28 81h64" opacity="0.55" fill="none" stroke="#c9bbff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-embedding-source-token" class="illustrated-part illustrated-source-token" data-rest-opacity="1" x="26" y="29" width="23" height="18" rx="6" fill="#ffd45e" stroke="#283047" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-embedding-vector-beads" class="illustrated-part illustrated-vector-beads" data-rest-opacity="1" d="M47 73h0M64 54h0M79 67h0M86 39h0" fill="none" stroke="#1c8f91" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-embedding-similarity-ring" class="illustrated-part illustrated-similarity-ring" data-rest-opacity="1" cx="64" cy="54" r="17" fill="none" stroke="#ff826e" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="1238" y="1990" class="icon-title" text-anchor="middle" fill="#283047">Embedding</text>
+  <text x="1238" y="2010" class="role" text-anchor="middle" fill="#6d7182">content-vectorize-position-compare</text>
+</g><g class="release-card" data-icon="token">
+  <rect x="52" y="2060" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-token-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="tokenize-count-budget-consume" data-rest-opacity="1" transform="translate(129.0 2097.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-token-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#fff3d8" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-token-tokenizer-shell" class="illustrated-part illustrated-tokenizer-shell" data-rest-opacity="1" x="14" y="23" width="92" height="74" rx="18" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-token-context-strip" class="illustrated-part illustrated-context-strip" data-rest-opacity="1" d="M15 41h90V31c0-4-3-8-8-8H23c-5 0-8 4-8 8Z" fill="#c9bbff" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-token-token-segments" class="illustrated-part illustrated-token-segments" data-rest-opacity="1" d="M25 54h23v18H25Zm27 0h17v18H52Zm21 0h22v18H73Z" fill="#46caa0" stroke="#283047" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-token-segment-glyphs" class="illustrated-part illustrated-segment-glyphs" data-rest-opacity="1" d="M31 63h11M57 63h7M79 63h10" fill="none" stroke="#1c8f91" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-token-budget-rail" class="illustrated-part illustrated-budget-rail" data-rest-opacity="1" d="M26 84h68" fill="none" stroke="#8067d8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-token-budget-slots" class="illustrated-part illustrated-budget-slots" data-rest-opacity="1" d="M35 84h0m17 0h0m17 0h0m17 0h0" fill="none" stroke="#ff826e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="206" y="2264" class="icon-title" text-anchor="middle" fill="#283047">Token</text>
+  <text x="206" y="2284" class="role" text-anchor="middle" fill="#6d7182">tokenize-count-budget-consume</text>
+</g><g class="release-card" data-icon="data-warehouse">
+  <rect x="396" y="2060" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-data-warehouse-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="data-land-organize-serve" data-rest-opacity="1" transform="translate(473.0 2097.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-data-warehouse-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#fff3d8" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-data-warehouse-warehouse-roof" class="illustrated-part illustrated-warehouse-roof" data-rest-opacity="1" d="M12 44 60 16l48 28Z" fill="#c9bbff" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-data-warehouse-warehouse-body" class="illustrated-part illustrated-warehouse-body" data-rest-opacity="1" d="M19 44h82v62H19Z" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-data-warehouse-storage-cylinder" class="illustrated-part illustrated-storage-cylinder" data-rest-opacity="1" d="M34 62c0-6 12-11 26-11s26 5 26 11v29c0 7-12 12-26 12S34 98 34 91Z" fill="#6fd6eb" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <ellipse id="icon-release-data-warehouse-storage-top" class="illustrated-part illustrated-storage-top" data-rest-opacity="1" cx="60" cy="62" rx="26" ry="11" fill="#46caa0" stroke="#283047" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-data-warehouse-storage-layers" class="illustrated-part illustrated-storage-layers" data-rest-opacity="1" d="M34 75c0 7 12 11 26 11s26-4 26-11M34 88c0 7 12 11 26 11s26-4 26-11" fill="none" stroke="#8265d6" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-data-warehouse-inventory-points" class="illustrated-part illustrated-inventory-points" data-rest-opacity="1" d="M44 75h0m32 13h0" fill="none" stroke="#ff826e" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="550" y="2264" class="icon-title" text-anchor="middle" fill="#283047">Data Warehouse</text>
+  <text x="550" y="2284" class="role" text-anchor="middle" fill="#6d7182">data-land-organize-serve</text>
+</g><g class="release-card" data-icon="document-store">
+  <rect x="740" y="2060" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-document-store-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="documents-ingest-index-retrieve" data-rest-opacity="1" transform="translate(817.0 2097.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-document-store-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#e5f7ef" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-document-store-store-body" class="illustrated-part illustrated-store-body" data-rest-opacity="1" d="M19 39c0-10 18-18 41-18s41 8 41 18v48c0 10-18 18-41 18S19 97 19 87Z" fill="#43bdb7" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <ellipse id="icon-release-document-store-store-top" class="illustrated-part illustrated-store-top" data-rest-opacity="1" cx="60" cy="39" rx="41" ry="18" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-document-store-document-card" class="illustrated-part illustrated-document-card" data-rest-opacity="1" d="M46 45h27l13 13v36H46Z" fill="#fffaf0" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-document-store-document-corner" class="illustrated-part illustrated-document-corner" data-rest-opacity="1" d="M73 45v14h13" fill="#c9bbff" stroke="#283047" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-document-store-record-lines" class="illustrated-part illustrated-record-lines" data-rest-opacity="1" d="M55 68h21M55 78h21M55 88h14" fill="none" stroke="#8265d6" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-document-store-index-points" class="illustrated-part illustrated-index-points" data-rest-opacity="1" d="M29 65h0m0 17h0" fill="none" stroke="#ffd45e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="894" y="2264" class="icon-title" text-anchor="middle" fill="#283047">Document Store</text>
+  <text x="894" y="2284" class="role" text-anchor="middle" fill="#6d7182">documents-ingest-index-retrieve</text>
+</g><g class="release-card" data-icon="dataset">
+  <rect x="1084" y="2060" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-dataset-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="records-structure-filter-analyze" data-rest-opacity="1" transform="translate(1161.0 2097.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-dataset-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#e8f8fb" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-dataset-table-shell" class="illustrated-part illustrated-table-shell" data-rest-opacity="1" x="15" y="21" width="90" height="78" rx="12" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-dataset-table-header" class="illustrated-part illustrated-table-header" data-rest-opacity="1" d="M16 42h88V28c0-4-3-7-7-7H23c-4 0-7 3-7 7Z" fill="#c9bbff" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-dataset-column-lines" class="illustrated-part illustrated-column-lines" data-rest-opacity="1" d="M44 22v76M75 22v76" fill="none" stroke="#283047" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-dataset-record-lines" class="illustrated-part illustrated-record-lines" data-rest-opacity="1" d="M16 61h88M16 80h88" fill="none" stroke="#1c8f91" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-dataset-data-markers" class="illustrated-part illustrated-data-markers" data-rest-opacity="1" d="M30 51h0m30 19h0m30 19h0" fill="none" stroke="#ff826e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="1238" y="2264" class="icon-title" text-anchor="middle" fill="#283047">Dataset</text>
+  <text x="1238" y="2284" class="role" text-anchor="middle" fill="#6d7182">records-structure-filter-analyze</text>
+</g><g class="release-card" data-icon="document">
+  <rect x="52" y="2334" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-document-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="document-author-read-reference" data-rest-opacity="1" transform="translate(129.0 2371.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-document-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#eee9ff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-document-page" class="illustrated-part illustrated-page" data-rest-opacity="1" d="M25 13h45l24 24v70H25Z" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-document-page-corner" class="illustrated-part illustrated-page-corner" data-rest-opacity="1" d="M70 14v24h24" fill="#c9bbff" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-document-title-line" class="illustrated-part illustrated-title-line" data-rest-opacity="1" d="M38 50h40" fill="none" stroke="#8265d6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-document-body-lines" class="illustrated-part illustrated-body-lines" data-rest-opacity="1" d="M38 65h43M38 76h35M38 87h40" fill="none" stroke="#1c8f91" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-document-reference-tab" class="illustrated-part illustrated-reference-tab" data-rest-opacity="1" d="M70 87v20l8-6 8 6V87Z" fill="#ff826e" stroke="#283047" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="206" y="2538" class="icon-title" text-anchor="middle" fill="#283047">Document</text>
+  <text x="206" y="2558" class="role" text-anchor="middle" fill="#6d7182">document-author-read-reference</text>
+</g><g class="release-card" data-icon="pdf">
+  <rect x="396" y="2334" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-pdf-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="pdf-package-preserve-share" data-rest-opacity="1" transform="translate(473.0 2371.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-pdf-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#fff3d8" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-pdf-pdf-page" class="illustrated-part illustrated-pdf-page" data-rest-opacity="1" d="M22 13h51l24 24v70H22Z" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-pdf-folded-corner" class="illustrated-part illustrated-folded-corner" data-rest-opacity="1" d="M73 14v24h24" fill="#ffc39e" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-pdf-pdf-mark" class="illustrated-part illustrated-pdf-mark" data-rest-opacity="1" d="M32 51v24m0-24h10c9 0 9 12 0 12H32m23-12v24h8c14 0 14-24 0-24Zm35 0H76v24m0-12h11" fill="none" stroke="#ff826e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-pdf-content-band" class="illustrated-part illustrated-content-band" data-rest-opacity="1" d="M34 88h49" fill="none" stroke="#8265d6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-pdf-format-seal" class="illustrated-part illustrated-format-seal" data-rest-opacity="1" cx="87" cy="91" r="10" fill="#ffd45e" stroke="#283047" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="550" y="2538" class="icon-title" text-anchor="middle" fill="#283047">PDF</text>
+  <text x="550" y="2558" class="role" text-anchor="middle" fill="#6d7182">pdf-package-preserve-share</text>
+</g><g class="release-card" data-icon="image">
+  <rect x="740" y="2334" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-image-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="image-capture-compose-display" data-rest-opacity="1" transform="translate(817.0 2371.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-image-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#e5f7ef" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-image-frame" class="illustrated-part illustrated-frame" data-rest-opacity="1" x="13" y="20" width="94" height="80" rx="15" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-image-sky-field" class="illustrated-part illustrated-sky-field" data-rest-opacity="1" x="23" y="30" width="74" height="60" rx="10" fill="#6fd6eb" stroke="#283047" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-image-sun-disc" class="illustrated-part illustrated-sun-disc" data-rest-opacity="1" cx="76" cy="46" r="9" fill="#ffd45e" stroke="#283047" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-image-landscape" class="illustrated-part illustrated-landscape" data-rest-opacity="1" d="M24 78c12-18 24-22 36-7 10-13 22-10 36 8v11H24Z" fill="#46caa0" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-image-focus-corners" class="illustrated-part illustrated-focus-corners" data-rest-opacity="1" d="M29 41v-6h8m46 0h8v6M29 79v6h8m46 0h8v-6" fill="none" stroke="#8265d6" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="894" y="2538" class="icon-title" text-anchor="middle" fill="#283047">Image</text>
+  <text x="894" y="2558" class="role" text-anchor="middle" fill="#6d7182">image-capture-compose-display</text>
+</g><g class="release-card" data-icon="audio">
+  <rect x="1084" y="2334" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-audio-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="audio-record-process-play" data-rest-opacity="1" transform="translate(1161.0 2371.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-audio-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#e8f8fb" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-audio-headphones" class="illustrated-part illustrated-headphones" data-rest-opacity="1" d="M22 64V49c0-23 15-37 38-37s38 14 38 37v15" fill="none" stroke="#8265d6" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-audio-ear-cups" class="illustrated-part illustrated-ear-cups" data-rest-opacity="1" d="M17 55h17v31H17Zm69 0h17v31H86Z" fill="#c9bbff" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-audio-wave-panel" class="illustrated-part illustrated-wave-panel" data-rest-opacity="1" x="32" y="43" width="56" height="49" rx="15" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-audio-waveform" class="illustrated-part illustrated-waveform" data-rest-opacity="1" d="M41 68h7l4-15 7 30 7-23 5 15 4-7h5" fill="none" stroke="#1c8f91" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-audio-level-dots" class="illustrated-part illustrated-level-dots" data-rest-opacity="1" d="M44 45h0m32 0h0" fill="none" stroke="#ff826e" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="1238" y="2538" class="icon-title" text-anchor="middle" fill="#283047">Audio</text>
+  <text x="1238" y="2558" class="role" text-anchor="middle" fill="#6d7182">audio-record-process-play</text>
+</g><g class="release-card" data-icon="video">
+  <rect x="52" y="2608" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-video-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="video-capture-sequence-play" data-rest-opacity="1" transform="translate(129.0 2645.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-video-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#eee9ff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-video-video-frame" class="illustrated-part illustrated-video-frame" data-rest-opacity="1" x="12" y="23" width="96" height="74" rx="14" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-video-film-rail" class="illustrated-part illustrated-film-rail" data-rest-opacity="1" d="M13 39h94M13 82h94" fill="none" stroke="#8265d6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-video-screen" class="illustrated-part illustrated-screen" data-rest-opacity="1" x="25" y="45" width="70" height="31" rx="8" fill="#6fd6eb" stroke="#283047" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-video-play-control" class="illustrated-part illustrated-play-control" data-rest-opacity="1" d="M53 51 72 60.5 53 70Z" fill="#ff826e" stroke="#283047" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-video-timeline-cells" class="illustrated-part illustrated-timeline-cells" data-rest-opacity="1" d="M23 29h12v6H23Zm20 0h12v6H43Zm20 0h12v6H63Zm20 0h12v6H83ZM23 86h12v6H23Zm20 0h12v6H43Zm20 0h12v6H63Zm20 0h12v6H83Z" fill="#ffd45e" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="206" y="2812" class="icon-title" text-anchor="middle" fill="#283047">Video</text>
+  <text x="206" y="2832" class="role" text-anchor="middle" fill="#6d7182">video-capture-sequence-play</text>
+</g><g class="release-card" data-icon="code-file">
+  <rect x="396" y="2608" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-code-file-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="code-file-author-validate-reuse" data-rest-opacity="1" transform="translate(473.0 2645.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-code-file-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#e5f7ef" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-code-file-code-page" class="illustrated-part illustrated-code-page" data-rest-opacity="1" d="M22 13h52l24 24v70H22Z" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-code-file-code-corner" class="illustrated-part illustrated-code-corner" data-rest-opacity="1" d="M74 14v24h24" fill="#46caa0" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-code-file-code-brackets" class="illustrated-part illustrated-code-brackets" data-rest-opacity="1" d="m44 50-10 10 10 10m30-20 10 10-10 10m-8-26-13 34" fill="none" stroke="#8265d6" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-code-file-code-lines" class="illustrated-part illustrated-code-lines" data-rest-opacity="1" d="M37 88h43M37 97h30" fill="none" stroke="#1c8f91" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-code-file-language-tab" class="illustrated-part illustrated-language-tab" data-rest-opacity="1" x="27" y="20" width="28" height="13" rx="6" fill="#ffd45e" stroke="#283047" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="550" y="2812" class="icon-title" text-anchor="middle" fill="#283047">Code File</text>
+  <text x="550" y="2832" class="role" text-anchor="middle" fill="#6d7182">code-file-author-validate-reuse</text>
+</g><g class="release-card" data-icon="webhook">
+  <rect x="740" y="2608" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-webhook-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="event-hook-receive-trigger" data-rest-opacity="1" transform="translate(817.0 2645.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-webhook-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#e8f8fb" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-webhook-callback-field" class="illustrated-part illustrated-callback-field" data-rest-opacity="1" cx="60" cy="60" r="43" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-webhook-callback-arcs" class="illustrated-part illustrated-callback-arcs" data-rest-opacity="1" d="M37 43c9-15 33-19 47-4M88 49c8 17-1 38-18 45M58 96c-18 1-33-15-32-32" fill="none" stroke="#8265d6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-webhook-event-node" class="illustrated-part illustrated-event-node" data-rest-opacity="1" cx="34" cy="49" r="10" fill="#ff826e" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-webhook-handler-node" class="illustrated-part illustrated-handler-node" data-rest-opacity="1" cx="88" cy="43" r="10" fill="#ffd45e" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-webhook-result-node" class="illustrated-part illustrated-result-node" data-rest-opacity="1" cx="65" cy="94" r="10" fill="#46caa0" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-webhook-event-pulse" class="illustrated-part illustrated-event-pulse" data-rest-opacity="1" d="M34 44v6l5 3" fill="none" stroke="#fffaf0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="894" y="2812" class="icon-title" text-anchor="middle" fill="#283047">Webhook</text>
+  <text x="894" y="2832" class="role" text-anchor="middle" fill="#6d7182">event-hook-receive-trigger</text>
+</g><g class="release-card" data-icon="http-request">
+  <rect x="1084" y="2608" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-http-request-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="http-compose-send-receive" data-rest-opacity="1" transform="translate(1161.0 2645.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-http-request-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#eee9ff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-http-request-browser-shell" class="illustrated-part illustrated-browser-shell" data-rest-opacity="1" x="12" y="20" width="96" height="82" rx="14" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-http-request-address-bar" class="illustrated-part illustrated-address-bar" data-rest-opacity="1" d="M13 40h94M25 30h0m10 0h0m10 0h0" fill="none" stroke="#ff826e" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-http-request-http-glyph" class="illustrated-part illustrated-http-glyph" data-rest-opacity="1" d="M27 52v16m9-16v16m-9-8h9m7-8h16m-8 0v16M66 68V52h10c9 0 9 13 0 13H66M90 68V52h10c9 0 9 13 0 13H90" fill="none" stroke="#8265d6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-http-request-request-rail" class="illustrated-part illustrated-request-rail" data-rest-opacity="1" d="M28 83h64" fill="none" stroke="#1c8f91" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-http-request-transfer-beads" class="illustrated-part illustrated-transfer-beads" data-rest-opacity="1" d="M39 83h0m21 0h0m21 0h0" fill="none" stroke="#ffd45e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="1238" y="2812" class="icon-title" text-anchor="middle" fill="#283047">HTTP Request</text>
+  <text x="1238" y="2832" class="role" text-anchor="middle" fill="#6d7182">http-compose-send-receive</text>
+</g><g class="release-card" data-icon="load-balancer">
+  <rect x="52" y="2882" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-load-balancer-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="traffic-distribute-balance-serve" data-rest-opacity="1" transform="translate(129.0 2919.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-load-balancer-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#e5f7ef" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-load-balancer-balancer-shell" class="illustrated-part illustrated-balancer-shell" data-rest-opacity="1" x="37" y="16" width="46" height="34" rx="11" fill="#c9bbff" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-load-balancer-input-port" class="illustrated-part illustrated-input-port" data-rest-opacity="1" x="47" y="25" width="26" height="16" rx="6" fill="#fffaf0" stroke="#283047" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-load-balancer-distribution-rails" class="illustrated-part illustrated-distribution-rails" data-rest-opacity="1" d="M60 50v19M26 69h68M26 69v12m34-12v12m34-12v12" fill="none" stroke="#1c8f91" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-load-balancer-service-nodes" class="illustrated-part illustrated-service-nodes" data-rest-opacity="1" d="M12 81h28v23H12Zm34 0h28v23H46Zm34 0h28v23H80Z" fill="#6fd6eb" stroke="#283047" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-load-balancer-load-signals" class="illustrated-part illustrated-load-signals" data-rest-opacity="1" d="M26 92h0m34 0h0m34 0h0" fill="none" stroke="#ff826e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="206" y="3086" class="icon-title" text-anchor="middle" fill="#283047">Load Balancer</text>
+  <text x="206" y="3106" class="role" text-anchor="middle" fill="#6d7182">traffic-distribute-balance-serve</text>
+</g><g class="release-card" data-icon="server-cluster">
+  <rect x="396" y="2882" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-server-cluster-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="servers-group-coordinate-scale" data-rest-opacity="1" transform="translate(473.0 2919.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-server-cluster-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#e8f8fb" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-server-cluster-cluster-back" class="illustrated-part illustrated-cluster-back" data-rest-opacity="1" x="38" y="12" width="44" height="64" rx="10" fill="#c9bbff" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-server-cluster-cluster-left" class="illustrated-part illustrated-cluster-left" data-rest-opacity="1" x="12" y="42" width="44" height="66" rx="10" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-server-cluster-cluster-right" class="illustrated-part illustrated-cluster-right" data-rest-opacity="1" x="64" y="42" width="44" height="66" rx="10" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-server-cluster-cluster-links" class="illustrated-part illustrated-cluster-links" data-rest-opacity="1" d="M60 76v12M34 88h52" fill="none" stroke="#1c8f91" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-server-cluster-activity-lights" class="illustrated-part illustrated-activity-lights" data-rest-opacity="1" d="M46 29h0m0 15h0m-23 16h0m0 17h0m52-17h0m0 17h0" fill="none" stroke="#46caa0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="550" y="3086" class="icon-title" text-anchor="middle" fill="#283047">Server Cluster</text>
+  <text x="550" y="3106" class="role" text-anchor="middle" fill="#6d7182">servers-group-coordinate-scale</text>
+</g><g class="release-card" data-icon="function">
+  <rect x="740" y="2882" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-function-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="function-bind-execute-return" data-rest-opacity="1" transform="translate(817.0 2919.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-function-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#eee9ff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-function-function-shell" class="illustrated-part illustrated-function-shell" data-rest-opacity="1" x="18" y="17" width="84" height="86" rx="22" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-function-lambda-mark" class="illustrated-part illustrated-lambda-mark" data-rest-opacity="1" d="M39 34h12l23 49M50 44 33 83m31 0h18" fill="none" stroke="#8265d6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-function-parameter-slots" class="illustrated-part illustrated-parameter-slots" data-rest-opacity="1" d="M78 34h0m10 0h0" fill="none" stroke="#1c8f91" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-function-result-panel" class="illustrated-part illustrated-result-panel" data-rest-opacity="1" x="65" y="70" width="26" height="20" rx="7" fill="#46caa0" stroke="#283047" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-function-runtime-pulse" class="illustrated-part illustrated-runtime-pulse" data-rest-opacity="1" cx="31" cy="31" r="7" fill="#ffd45e" stroke="#283047" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="894" y="3086" class="icon-title" text-anchor="middle" fill="#283047">Function</text>
+  <text x="894" y="3106" class="role" text-anchor="middle" fill="#6d7182">function-bind-execute-return</text>
+</g><g class="release-card" data-icon="edge-node">
+  <rect x="1084" y="2882" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-edge-node-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="edge-sense-compute-relay" data-rest-opacity="1" transform="translate(1161.0 2919.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-edge-node-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#fff3d8" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-edge-node-edge-shell" class="illustrated-part illustrated-edge-shell" data-rest-opacity="1" d="M24 31 60 13l36 18v60L60 108 24 91Z" fill="#6fd6eb" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-edge-node-sensor-window" class="illustrated-part illustrated-sensor-window" data-rest-opacity="1" x="36" y="35" width="48" height="25" rx="9" fill="#fffaf0" stroke="#283047" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-edge-node-compute-core" class="illustrated-part illustrated-compute-core" data-rest-opacity="1" x="42" y="68" width="36" height="25" rx="8" fill="#46caa0" stroke="#283047" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-edge-node-signal-arcs" class="illustrated-part illustrated-signal-arcs" data-rest-opacity="1" d="M47 48c7-7 19-7 26 0m-20 0c4-3 10-3 14 0" fill="none" stroke="#8265d6" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-edge-node-edge-feet" class="illustrated-part illustrated-edge-feet" data-rest-opacity="1" d="M38 98v9m44-9v9" fill="none" stroke="#283047" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="1238" y="3086" class="icon-title" text-anchor="middle" fill="#283047">Edge Node</text>
+  <text x="1238" y="3106" class="role" text-anchor="middle" fill="#6d7182">edge-sense-compute-relay</text>
+</g><g class="release-card" data-icon="source-code">
+  <rect x="52" y="3156" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-source-code-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="source-author-organize-build" data-rest-opacity="1" transform="translate(129.0 3193.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-source-code-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#e5f7ef" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-source-code-editor-shell" class="illustrated-part illustrated-editor-shell" data-rest-opacity="1" x="12" y="18" width="96" height="84" rx="13" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-source-code-editor-header" class="illustrated-part illustrated-editor-header" data-rest-opacity="1" d="M13 38h94M25 28h0m10 0h0m10 0h0" fill="none" stroke="#ff826e" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-source-code-file-rail" class="illustrated-part illustrated-file-rail" data-rest-opacity="1" d="M36 39v62M22 51h8m-8 12h8m-8 12h8" fill="none" stroke="#c9bbff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-source-code-source-glyphs" class="illustrated-part illustrated-source-glyphs" data-rest-opacity="1" d="m54 53-9 9 9 9m31-18 9 9-9 9m-9-23-13 31" fill="none" stroke="#8265d6" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-source-code-cursor-line" class="illustrated-part illustrated-cursor-line" data-rest-opacity="1" d="M48 86h38" fill="none" stroke="#1c8f91" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="206" y="3360" class="icon-title" text-anchor="middle" fill="#283047">Source Code</text>
+  <text x="206" y="3380" class="role" text-anchor="middle" fill="#6d7182">source-author-organize-build</text>
+</g><g class="release-card" data-icon="git-repository">
+  <rect x="396" y="3156" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-git-repository-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="repository-store-version-share" data-rest-opacity="1" transform="translate(473.0 3193.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-git-repository-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#eee9ff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-git-repository-repository-shell" class="illustrated-part illustrated-repository-shell" data-rest-opacity="1" d="M13 35h35l9 10h50v61H13Z" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-git-repository-repository-tab" class="illustrated-part illustrated-repository-tab" data-rest-opacity="1" d="M14 35h33l9 10H14Z" fill="#c9bbff" stroke="#283047" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-git-repository-git-main-rail" class="illustrated-part illustrated-git-main-rail" data-rest-opacity="1" d="M42 58v34" fill="none" stroke="#1c8f91" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-git-repository-git-branch-rail" class="illustrated-part illustrated-git-branch-rail" data-rest-opacity="1" d="M42 70c23 0 34 5 34 20V58" fill="none" stroke="#8265d6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-git-repository-commit-nodes" class="illustrated-part illustrated-commit-nodes" data-rest-opacity="1" d="M42 58h0m0 34h0M76 58h0m0 34h0" fill="none" stroke="#ff826e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="550" y="3360" class="icon-title" text-anchor="middle" fill="#283047">Git Repository</text>
+  <text x="550" y="3380" class="role" text-anchor="middle" fill="#6d7182">repository-store-version-share</text>
+</g><g class="release-card" data-icon="branch">
+  <rect x="740" y="3156" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-branch-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="branch-diverge-develop-rejoin" data-rest-opacity="1" transform="translate(817.0 3193.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-branch-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#e8f8fb" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-branch-main-rail" class="illustrated-part illustrated-main-rail" data-rest-opacity="1" d="M39 20v80" fill="none" stroke="#1c8f91" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-branch-branch-rail" class="illustrated-part illustrated-branch-rail" data-rest-opacity="1" d="M39 45c28 0 42 10 42 31v24" fill="none" stroke="#8265d6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-branch-main-nodes" class="illustrated-part illustrated-main-nodes" data-rest-opacity="1" d="M39 20h0m0 25h0m0 55h0" fill="none" stroke="#46caa0" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-branch-branch-nodes" class="illustrated-part illustrated-branch-nodes" data-rest-opacity="1" d="M81 76h0m0 24h0" fill="none" stroke="#ff826e" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-branch-branch-focus" class="illustrated-part illustrated-branch-focus" data-rest-opacity="1" cx="39" cy="45" r="11" fill="#ffd45e" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="894" y="3360" class="icon-title" text-anchor="middle" fill="#283047">Branch</text>
+  <text x="894" y="3380" class="role" text-anchor="middle" fill="#6d7182">branch-diverge-develop-rejoin</text>
+</g><g class="release-card" data-icon="pull-request">
+  <rect x="1084" y="3156" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-pull-request-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="changes-propose-review-merge" data-rest-opacity="1" transform="translate(1161.0 3193.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-pull-request-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#fff3d8" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-pull-request-source-rail" class="illustrated-part illustrated-source-rail" data-rest-opacity="1" d="M34 28v64" fill="none" stroke="#1c8f91" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-pull-request-request-path" class="illustrated-part illustrated-request-path" data-rest-opacity="1" d="M61 32h7c10 0 18 8 18 18v42" fill="none" stroke="#8265d6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-pull-request-source-nodes" class="illustrated-part illustrated-source-nodes" data-rest-opacity="1" d="M34 28h0m0 64h0" fill="none" stroke="#46caa0" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-pull-request-target-node" class="illustrated-part illustrated-target-node" data-rest-opacity="1" cx="86" cy="92" r="6.5" fill="#ffd45e" stroke="#283047" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-pull-request-request-tip" class="illustrated-part illustrated-request-tip" data-rest-opacity="1" d="m52 23 9 9-9 9" fill="none" stroke="#ff826e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="1238" y="3360" class="icon-title" text-anchor="middle" fill="#283047">Pull Request</text>
+  <text x="1238" y="3380" class="role" text-anchor="middle" fill="#6d7182">changes-propose-review-merge</text>
+</g><g class="release-card" data-icon="ci-cd">
+  <rect x="52" y="3430" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-ci-cd-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="change-build-test-deliver" data-rest-opacity="1" transform="translate(129.0 3467.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-ci-cd-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#e5f7ef" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-ci-cd-delivery-loop" class="illustrated-part illustrated-delivery-loop" data-rest-opacity="1" d="M18 61c0-19 22-31 38-15l8 8 8-8c16-16 38-4 38 15s-22 31-38 15l-8-8-8 8C40 92 18 80 18 61Z" fill="none" stroke="#8265d6" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-ci-cd-source-stage" class="illustrated-part illustrated-source-stage" data-rest-opacity="1" cx="27" cy="61" r="10" fill="#c9bbff" stroke="#283047" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-ci-cd-build-stage" class="illustrated-part illustrated-build-stage" data-rest-opacity="1" cx="64" cy="61" r="10" fill="#ffd45e" stroke="#283047" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-ci-cd-release-stage" class="illustrated-part illustrated-release-stage" data-rest-opacity="1" cx="101" cy="61" r="10" fill="#46caa0" stroke="#283047" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-ci-cd-stage-cores" class="illustrated-part illustrated-stage-cores" data-rest-opacity="1" d="M27 61h0m37 0h0m37 0h0" fill="none" stroke="#ff826e" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="206" y="3634" class="icon-title" text-anchor="middle" fill="#283047">CI/CD</text>
+  <text x="206" y="3654" class="role" text-anchor="middle" fill="#6d7182">change-build-test-deliver</text>
+</g><g class="release-card" data-icon="deployment">
+  <rect x="396" y="3430" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-deployment-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="artifact-release-place-activate" data-rest-opacity="1" transform="translate(473.0 3467.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-deployment-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#e8f8fb" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-deployment-release-package" class="illustrated-part illustrated-release-package" data-rest-opacity="1" d="M38 16h44v35H38Zm0 0 22 12 22-12M60 28v23" fill="#c9bbff" stroke="#283047" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-deployment-package-seam" class="illustrated-part illustrated-package-seam" data-rest-opacity="1" d="M47 36h26" fill="none" stroke="#8265d6" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-deployment-placement-track" class="illustrated-part illustrated-placement-track" data-rest-opacity="1" d="M60 51v17" fill="none" stroke="#1c8f91" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-deployment-environment-dock" class="illustrated-part illustrated-environment-dock" data-rest-opacity="1" x="18" y="67" width="84" height="39" rx="12" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-deployment-server-bays" class="illustrated-part illustrated-server-bays" data-rest-opacity="1" d="M29 78h26v17H29Zm36 0h26v17H65Z" fill="#6fd6eb" stroke="#283047" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-deployment-runtime-lights" class="illustrated-part illustrated-runtime-lights" data-rest-opacity="1" d="M37 86h0m11 0h0m25 0h0m11 0h0" fill="none" stroke="#ff826e" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="550" y="3634" class="icon-title" text-anchor="middle" fill="#283047">Deployment</text>
+  <text x="550" y="3654" class="role" text-anchor="middle" fill="#6d7182">artifact-release-place-activate</text>
+</g><g class="release-card" data-icon="task">
+  <rect x="740" y="3430" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-task-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="task-define-execute-complete" data-rest-opacity="1" transform="translate(817.0 3467.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-task-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#fff3d8" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-task-task-board" class="illustrated-part illustrated-task-board" data-rest-opacity="1" x="22" y="20" width="76" height="87" rx="13" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-task-board-clip" class="illustrated-part illustrated-board-clip" data-rest-opacity="1" x="42" y="12" width="36" height="18" rx="8" fill="#c9bbff" stroke="#283047" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-task-task-lines" class="illustrated-part illustrated-task-lines" data-rest-opacity="1" d="M44 48h39M44 67h31M44 86h39" fill="none" stroke="#8265d6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-task-task-markers" class="illustrated-part illustrated-task-markers" data-rest-opacity="1" d="M34 48h0M34 67h0M34 86h0" fill="none" stroke="#1c8f91" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-task-active-marker" class="illustrated-part illustrated-active-marker" data-rest-opacity="1" cx="83" cy="67" r="7" fill="#ff826e" stroke="#283047" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="894" y="3634" class="icon-title" text-anchor="middle" fill="#283047">Task</text>
+  <text x="894" y="3654" class="role" text-anchor="middle" fill="#6d7182">task-define-execute-complete</text>
+</g><g class="release-card" data-icon="scheduler">
+  <rect x="1084" y="3430" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-scheduler-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="schedule-plan-trigger-repeat" data-rest-opacity="1" transform="translate(1161.0 3467.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-scheduler-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#eee9ff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-scheduler-calendar-shell" class="illustrated-part illustrated-calendar-shell" data-rest-opacity="1" x="13" y="21" width="78" height="78" rx="14" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-scheduler-calendar-header" class="illustrated-part illustrated-calendar-header" data-rest-opacity="1" d="M14 43h76M31 14v17m42-17v17" fill="none" stroke="#8265d6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-scheduler-date-grid" class="illustrated-part illustrated-date-grid" data-rest-opacity="1" d="M29 56h10m11 0h10m11 0h10M29 70h10m11 0h10m11 0h10M29 84h10m11 0h10" fill="none" stroke="#1c8f91" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-scheduler-clock-face" class="illustrated-part illustrated-clock-face" data-rest-opacity="1" cx="87" cy="83" r="24" fill="#6fd6eb" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-scheduler-clock-hands" class="illustrated-part illustrated-clock-hands" data-rest-opacity="1" d="M87 69v15l10 7" fill="none" stroke="#ff826e" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="1238" y="3634" class="icon-title" text-anchor="middle" fill="#283047">Scheduler</text>
+  <text x="1238" y="3654" class="role" text-anchor="middle" fill="#6d7182">schedule-plan-trigger-repeat</text>
+</g><g class="release-card" data-icon="monitoring">
+  <rect x="52" y="3704" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-monitoring-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="metrics-observe-detect-report" data-rest-opacity="1" transform="translate(129.0 3741.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-monitoring-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#e5f7ef" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-monitoring-monitor-shell" class="illustrated-part illustrated-monitor-shell" data-rest-opacity="1" x="10" y="18" width="100" height="70" rx="14" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-monitoring-metric-screen" class="illustrated-part illustrated-metric-screen" data-rest-opacity="1" x="20" y="29" width="80" height="48" rx="8" fill="#6fd6eb" stroke="#283047" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-monitoring-metric-trace" class="illustrated-part illustrated-metric-trace" data-rest-opacity="1" d="M28 61h13l8-17 11 25 10-15 9 7h13" fill="none" stroke="#8265d6" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-monitoring-signal-points" class="illustrated-part illustrated-signal-points" data-rest-opacity="1" d="M49 44h0m11 25h0m10-15h0" fill="none" stroke="#ff826e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-monitoring-monitor-stand" class="illustrated-part illustrated-monitor-stand" data-rest-opacity="1" d="M60 88v12M39 101h42" fill="none" stroke="#283047" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="206" y="3908" class="icon-title" text-anchor="middle" fill="#283047">Monitoring</text>
+  <text x="206" y="3928" class="role" text-anchor="middle" fill="#6d7182">metrics-observe-detect-report</text>
+</g><g class="release-card" data-icon="logs">
+  <rect x="396" y="3704" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-logs-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="events-record-order-inspect" data-rest-opacity="1" transform="translate(473.0 3741.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-logs-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#e8f8fb" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-logs-log-stack-back" class="illustrated-part illustrated-log-stack-back" data-rest-opacity="1" x="31" y="13" width="70" height="77" rx="11" fill="#6fd6eb" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-logs-log-stack-mid" class="illustrated-part illustrated-log-stack-mid" data-rest-opacity="1" x="23" y="21" width="70" height="77" rx="11" fill="#c9bbff" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-release-logs-log-sheet" class="illustrated-part illustrated-log-sheet" data-rest-opacity="1" x="15" y="29" width="70" height="77" rx="11" fill="#fffaf0" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-logs-timestamp-dots" class="illustrated-part illustrated-timestamp-dots" data-rest-opacity="1" d="M29 47h0m0 17h0m0 17h0m0 17h0" fill="none" stroke="#ff826e" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-logs-log-lines" class="illustrated-part illustrated-log-lines" data-rest-opacity="1" d="M42 47h30M42 64h23M42 81h32M42 98h20" fill="none" stroke="#1c8f91" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="550" y="3908" class="icon-title" text-anchor="middle" fill="#283047">Logs</text>
+  <text x="550" y="3928" class="role" text-anchor="middle" fill="#6d7182">events-record-order-inspect</text>
+</g><g class="release-card" data-icon="alert">
+  <rect x="740" y="3704" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-alert-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="signal-detect-escalate-acknowledge" data-rest-opacity="1" transform="translate(817.0 3741.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-alert-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#fff3d8" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-alert-bell-body" class="illustrated-part illustrated-bell-body" data-rest-opacity="1" d="M29 76c8-9 10-18 10-31 0-14 8-24 21-24s21 10 21 24c0 13 2 22 10 31Z" fill="#ffd45e" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-alert-bell-rim" class="illustrated-part illustrated-bell-rim" data-rest-opacity="1" d="M24 76h72c0 10-8 14-18 14H42c-10 0-18-4-18-14Z" fill="#ff826e" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-alert-bell-clapper" class="illustrated-part illustrated-bell-clapper" data-rest-opacity="1" cx="60" cy="96" r="9" fill="#c9bbff" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-alert-signal-rings" class="illustrated-part illustrated-signal-rings" data-rest-opacity="1" d="M27 30c-8 9-8 23-2 33m68-33c8 9 8 23 2 33" fill="none" stroke="#8265d6" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-alert-severity-light" class="illustrated-part illustrated-severity-light" data-rest-opacity="1" cx="60" cy="14" r="7" fill="#ff826e" stroke="#283047" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="894" y="3908" class="icon-title" text-anchor="middle" fill="#283047">Alert</text>
+  <text x="894" y="3928" class="role" text-anchor="middle" fill="#6d7182">signal-detect-escalate-acknowledge</text>
+</g><g class="release-card" data-icon="debug">
+  <rect x="1084" y="3704" width="308" height="238" rx="26" fill="#fffaf0" stroke="#d8d1c3" stroke-width="1.8" />
+  <g id="icon-release-debug-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="bug-reproduce-inspect-fix" data-rest-opacity="1" transform="translate(1161.0 3741.0) scale(1.2833)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-release-debug-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#eee9ff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <ellipse id="icon-release-debug-bug-body" class="illustrated-part illustrated-bug-body" data-rest-opacity="1" cx="50" cy="65" rx="24" ry="30" fill="#c9bbff" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-debug-bug-head" class="illustrated-part illustrated-bug-head" data-rest-opacity="1" cx="50" cy="34" r="15" fill="#ff826e" stroke="#283047" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-release-debug-bug-legs" class="illustrated-part illustrated-bug-legs" data-rest-opacity="1" d="M28 52 16 44m12 21H13m15 13-12 9m56-35 10-8M72 65h13M72 78l10 9M42 21l-7-10m23 10 7-10" fill="none" stroke="#283047" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-debug-inspection-lens" class="illustrated-part illustrated-inspection-lens" data-rest-opacity="1" cx="83" cy="79" r="20" fill="#fffaf0" stroke="#1c8f91" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-release-debug-probe-point" class="illustrated-part illustrated-probe-point" data-rest-opacity="1" cx="83" cy="79" r="7" fill="#ffd45e" stroke="#283047" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+  <text x="1238" y="3908" class="icon-title" text-anchor="middle" fill="#283047">Debug</text>
+  <text x="1238" y="3928" class="role" text-anchor="middle" fill="#6d7182">bug-reproduce-inspect-fix</text>
+</g>
+</svg>

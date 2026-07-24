@@ -88,6 +88,36 @@ This record closes the current composition-v1 and public icon-system stage. It
 records the exact uncommitted worktree that was independently verified; it does
 not claim that the changes have already been committed or published.
 
+### Evidence E-ILL-2.5-01 — passed locally
+
+- Milestone: Illustrated 2.5.0 56-icon, 13-template, public-motion, real-case,
+  and export closeout.
+- Recorded at: 2026-07-24 CST.
+- Scope: promote batches 5-10, align convention-sensitive icons, adapt all 13
+  public templates, freeze `illustrated-performance-v6`, and verify the
+  Governed RAG production case.
+- Browser gates: showcase rest and reduced motion passed 56/56; mode switching
+  passed `Expressive -> Readable -> Off -> Expressive`. The real case passed
+  13/13 character timelines, 13 animated edges, and 2 Readable edges.
+- Browser visual proof: the 56-icon showcase, 13 x 56 template matrix, and
+  13-node real case loaded over HTTP with no console errors, duplicate SVG ids,
+  horizontal overflow, or missing accessible icon labels.
+- Export evidence: Diagram Core v1 and Illustrated 2.5 each passed SVG, HTML,
+  PNG, WebP, GIF, APNG, MP4, PDF, Lottie, and quality at browser 24 FPS, 108
+  frames, and 2x scale. Every animated format contained 108 distinct frames;
+  every one of the 56 automatic performances per system had at least three
+  visible states; issues were empty.
+- Artifact:
+  `outputs/release-evidence/icon-systems/public-icon-system-export-evidence.json`
+  (15,449 bytes, SHA-256
+  `6b7f446cbb4941d7b8f1d3135285fc151871ab2c3c284178fa92fb8047b662cb`).
+- Public authority: `assets/illustrated/releases/2.5.0.json`,
+  `assets/illustrated/reviews/2.5.0-acceptance.json`, and
+  `assets/illustrated/motion-contracts/illustrated-performance-v6.json`.
+- Blocker class: none locally. Remote CI and evidence retention begin after the
+  source commit is pushed; no remote pass is claimed by this local record.
+- Verdict: passed locally; ready for source commit and push.
+
 ### Evidence E-COMP-01 — passed
 
 - Milestone: composition-v1 defaults and Illustrated 2.3.0 public v4 closeout.

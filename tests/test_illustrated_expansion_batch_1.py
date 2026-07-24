@@ -3,6 +3,7 @@ import unittest
 from pathlib import Path
 
 from anidiagram.illustrated_registry import illustrated_definition, illustrated_icon_ids
+from anidiagram.illustrated_convention_alignment_review import convention_alignment_definition
 from anidiagram.illustrated_expansion_batch_1 import (
     ILLUSTRATED_EXPANSION_BATCH_1_METADATA,
     expansion_batch_1_definition,
@@ -58,7 +59,8 @@ class IllustratedExpansionBatch1Test(unittest.TestCase):
             illustrated_icon_ids()[:8],
         )
         for icon_id in EXPECTED:
-            self.assertIs(expansion_batch_1_definition(icon_id), illustrated_definition(icon_id))
+            expected = convention_alignment_definition(icon_id) or expansion_batch_1_definition(icon_id)
+            self.assertIs(expected, illustrated_definition(icon_id))
 
     def test_candidates_have_one_semantic_role_and_unique_stable_parts(self):
         expected_roles = {

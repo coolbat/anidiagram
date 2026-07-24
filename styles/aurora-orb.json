@@ -36,7 +36,11 @@
       "glow": "#ffd0a8",
       "band": "#ff4f73",
       "shadow": "#56308f",
-      "gradient": ["#ffc18f", "#ff6f66", "#6b45a2"]
+      "gradient": [
+        "#ffc18f",
+        "#ff6f66",
+        "#6b45a2"
+      ]
     },
     "source": {
       "stroke": "#2468ff",
@@ -45,7 +49,11 @@
       "glow": "#b9f3e9",
       "band": "#7b86ff",
       "shadow": "#172068",
-      "gradient": ["#b7fff0", "#3e8dff", "#20207a"]
+      "gradient": [
+        "#b7fff0",
+        "#3e8dff",
+        "#20207a"
+      ]
     },
     "process": {
       "stroke": "#2f8cff",
@@ -54,7 +62,11 @@
       "glow": "#eaffc5",
       "band": "#bdf0d6",
       "shadow": "#2575dc",
-      "gradient": ["#fffed2", "#b8f7d5", "#2d83e6"]
+      "gradient": [
+        "#fffed2",
+        "#b8f7d5",
+        "#2d83e6"
+      ]
     },
     "agent": {
       "stroke": "#ee5a90",
@@ -63,7 +75,11 @@
       "glow": "#ffe8ce",
       "band": "#ff7fa7",
       "shadow": "#151947",
-      "gradient": ["#151947", "#ff79a8", "#ffe8ce"]
+      "gradient": [
+        "#151947",
+        "#ff79a8",
+        "#ffe8ce"
+      ]
     },
     "memory": {
       "stroke": "#169b58",
@@ -72,7 +88,11 @@
       "glow": "#ffe571",
       "band": "#8ecf64",
       "shadow": "#0a6a37",
-      "gradient": ["#ffd75d", "#a8cf55", "#086b3a"]
+      "gradient": [
+        "#ffd75d",
+        "#a8cf55",
+        "#086b3a"
+      ]
     },
     "tool": {
       "stroke": "#5870ff",
@@ -81,7 +101,11 @@
       "glow": "#d3fff0",
       "band": "#b9a8ff",
       "shadow": "#2844d9",
-      "gradient": ["#dfffee", "#8fc3ff", "#5047d9"]
+      "gradient": [
+        "#dfffee",
+        "#8fc3ff",
+        "#5047d9"
+      ]
     },
     "output": {
       "stroke": "#18a95e",
@@ -90,7 +114,11 @@
       "glow": "#fff2a4",
       "band": "#9edc6c",
       "shadow": "#0a7a40",
-      "gradient": ["#fff19a", "#b9e06b", "#087a41"]
+      "gradient": [
+        "#fff19a",
+        "#b9e06b",
+        "#087a41"
+      ]
     },
     "risk": {
       "stroke": "#ff4d7f",
@@ -99,7 +127,11 @@
       "glow": "#ffe3c4",
       "band": "#ff74a4",
       "shadow": "#22194d",
-      "gradient": ["#24194f", "#ff6d9a", "#ffe1bd"]
+      "gradient": [
+        "#24194f",
+        "#ff6d9a",
+        "#ffe1bd"
+      ]
     },
     "neutral": {
       "stroke": "#ddd4df",
@@ -108,7 +140,30 @@
       "glow": "#ffffff",
       "band": "#e7d9ef",
       "shadow": "#cfc5d4",
-      "gradient": ["#ffffff", "#f4edf8", "#ded6e6"]
+      "gradient": [
+        "#ffffff",
+        "#f4edf8",
+        "#ded6e6"
+      ]
     }
+  },
+  "illustrated_tokens": {
+    "ink": "#211729",
+    "paper": "#fffafc",
+    "mint": "#8ecf64",
+    "lavender": "#b9a8ff",
+    "lavender-dark": "#5047d9",
+    "violet": "#7b66dd",
+    "peach": "#ffc18f",
+    "sky": "#74b4ff",
+    "teal": "#38cdb4",
+    "teal-dark": "#169b58",
+    "coral": "#ff6f8f",
+    "sun": "#ffd75d",
+    "shadow": "#cfc5d4",
+    "lavender-wash": "#fff0f6",
+    "sky-wash": "#edf7ff",
+    "sun-wash": "#fff1eb",
+    "mint-wash": "#f7ffdc"
   }
 }

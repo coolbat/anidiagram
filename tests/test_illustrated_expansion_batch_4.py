@@ -8,6 +8,7 @@ from anidiagram.illustrated_expansion_batch_4 import (
     expansion_batch_4_icon_ids,
 )
 from anidiagram.illustrated_registry import illustrated_definition, illustrated_icon_ids
+from anidiagram.illustrated_convention_alignment_review import convention_alignment_definition
 from anidiagram.illustrated_tokens import illustrated_geometry_tokens, illustrated_tokens_for_style
 from anidiagram.renderer_illustrated_character_v2 import render_character_v2_icon
 from anidiagram.styles import load_style
@@ -53,10 +54,11 @@ class IllustratedExpansionBatch4Test(unittest.TestCase):
         )
 
     def test_public_24_registry_contains_the_four_approved_icons(self):
-        self.assertEqual(20, len(illustrated_icon_ids()))
+        self.assertEqual(56, len(illustrated_icon_ids()))
         for icon_id in EXPECTED:
             with self.subTest(icon_id=icon_id):
-                self.assertIs(expansion_batch_4_definition(icon_id), illustrated_definition(icon_id))
+                expected = convention_alignment_definition(icon_id) or expansion_batch_4_definition(icon_id)
+                self.assertIs(expected, illustrated_definition(icon_id))
 
     def test_candidates_have_distinct_semantics_and_unique_stable_parts(self):
         expected_roles = {

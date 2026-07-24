@@ -1,0 +1,902 @@
+{
+  "version": "0.4",
+  "composition_policy": "composition-v1",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "explicit",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "deep-tech",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "matrix",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "preset": "illustrated-2.5-showcase",
+  "icon_system": "illustrated",
+  "canvas": {
+    "width": 1480,
+    "height": 4530
+  },
+  "style": "deep-tech",
+  "title": {
+    "text": "Illustrated 2.5 · Public Showcase",
+    "subtitle": "56 approved icons · automatic showcase-v1 performances"
+  },
+  "motion": {
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "stagger": 0.08,
+    "node": {
+      "preset": "icon-performance"
+    },
+    "edge": {
+      "preset": "none"
+    },
+    "group": {
+      "preset": "none"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "static"
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "max_active_flow_edges": 0,
+    "max_particle_edges": 0,
+    "max_active_pulse_nodes": 56,
+    "max_scanning_groups": 0
+  },
+  "nodes": [
+    {
+      "id": "agent",
+      "label": "Agent",
+      "caption": "receive • reason • deliver",
+      "position": [
+        50,
+        160
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "agent",
+      "icon": "agent"
+    },
+    {
+      "id": "operator",
+      "label": "Operator",
+      "caption": "focus • operate • confirm",
+      "position": [
+        407,
+        160
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "actor",
+      "icon": "operator"
+    },
+    {
+      "id": "tool",
+      "label": "Tool",
+      "caption": "prepare • execute • complete",
+      "position": [
+        764,
+        160
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "tool",
+      "icon": "tool"
+    },
+    {
+      "id": "output",
+      "label": "Output",
+      "caption": "compose • deliver • confirm",
+      "position": [
+        1121,
+        160
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "output",
+      "icon": "output"
+    },
+    {
+      "id": "database",
+      "label": "Database",
+      "caption": "ingest • store • persist",
+      "position": [
+        50,
+        470
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "memory",
+      "icon": "database"
+    },
+    {
+      "id": "api",
+      "label": "Api",
+      "caption": "request • route • respond",
+      "position": [
+        407,
+        470
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "process",
+      "icon": "api"
+    },
+    {
+      "id": "search",
+      "label": "Search",
+      "caption": "query • scan • discover",
+      "position": [
+        764,
+        470
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "tool",
+      "icon": "search"
+    },
+    {
+      "id": "memory",
+      "label": "Memory",
+      "caption": "capture • index • recall",
+      "position": [
+        1121,
+        470
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "memory",
+      "icon": "memory"
+    },
+    {
+      "id": "file",
+      "label": "File",
+      "caption": "prepare • attach • reference",
+      "position": [
+        50,
+        780
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "source",
+      "icon": "file"
+    },
+    {
+      "id": "folder",
+      "label": "Folder",
+      "caption": "prepare • store • index",
+      "position": [
+        407,
+        780
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "source",
+      "icon": "folder"
+    },
+    {
+      "id": "cloud",
+      "label": "Cloud",
+      "caption": "prepare • transfer • synchronize",
+      "position": [
+        764,
+        780
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "source",
+      "icon": "cloud"
+    },
+    {
+      "id": "shield",
+      "label": "Shield",
+      "caption": "prepare • lock • protect",
+      "position": [
+        1121,
+        780
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "risk",
+      "icon": "shield"
+    },
+    {
+      "id": "user",
+      "label": "User",
+      "caption": "request • interact • consume",
+      "position": [
+        50,
+        1090
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "actor",
+      "icon": "user"
+    },
+    {
+      "id": "server",
+      "label": "Server",
+      "caption": "host • compute • serve",
+      "position": [
+        407,
+        1090
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "process",
+      "icon": "server"
+    },
+    {
+      "id": "ai-model",
+      "label": "Ai Model",
+      "caption": "infer • transform • predict",
+      "position": [
+        764,
+        1090
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "agent",
+      "icon": "ai-model"
+    },
+    {
+      "id": "message-queue",
+      "label": "Message Queue",
+      "caption": "buffer • order • deliver",
+      "position": [
+        1121,
+        1090
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "process",
+      "icon": "message-queue"
+    },
+    {
+      "id": "vector-database",
+      "label": "Vector Database",
+      "caption": "embed • index • retrieve",
+      "position": [
+        50,
+        1400
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "memory",
+      "icon": "vector-database"
+    },
+    {
+      "id": "knowledge-base",
+      "label": "Knowledge Base",
+      "caption": "curate • connect • reference",
+      "position": [
+        407,
+        1400
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "memory",
+      "icon": "knowledge-base"
+    },
+    {
+      "id": "gateway",
+      "label": "Gateway",
+      "caption": "admit • route • mediate",
+      "position": [
+        764,
+        1400
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "process",
+      "icon": "gateway"
+    },
+    {
+      "id": "container",
+      "label": "Container",
+      "caption": "package • isolate • run",
+      "position": [
+        1121,
+        1400
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "process",
+      "icon": "container"
+    },
+    {
+      "id": "developer",
+      "label": "Developer",
+      "caption": "code • build • deliver",
+      "position": [
+        50,
+        1710
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "actor",
+      "icon": "developer"
+    },
+    {
+      "id": "agent-team",
+      "label": "Agent Team",
+      "caption": "coordinate • delegate • synthesize",
+      "position": [
+        407,
+        1710
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "agent",
+      "icon": "agent-team"
+    },
+    {
+      "id": "assistant",
+      "label": "Assistant",
+      "caption": "listen • guide • respond",
+      "position": [
+        764,
+        1710
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "agent",
+      "icon": "assistant"
+    },
+    {
+      "id": "human-reviewer",
+      "label": "Human Reviewer",
+      "caption": "inspect • decide • annotate",
+      "position": [
+        1121,
+        1710
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "actor",
+      "icon": "human-reviewer"
+    },
+    {
+      "id": "llm",
+      "label": "LLM",
+      "caption": "context • transform • generate",
+      "position": [
+        50,
+        2020
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "agent",
+      "icon": "llm"
+    },
+    {
+      "id": "reasoning",
+      "label": "Reasoning",
+      "caption": "premise • infer • conclude",
+      "position": [
+        407,
+        2020
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "agent",
+      "icon": "reasoning"
+    },
+    {
+      "id": "neural-network",
+      "label": "Neural Network",
+      "caption": "connect • activate • propagate",
+      "position": [
+        764,
+        2020
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "agent",
+      "icon": "neural-network"
+    },
+    {
+      "id": "embedding",
+      "label": "Embedding",
+      "caption": "vectorize • position • compare",
+      "position": [
+        1121,
+        2020
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "process",
+      "icon": "embedding"
+    },
+    {
+      "id": "token",
+      "label": "Token",
+      "caption": "tokenize • count • budget",
+      "position": [
+        50,
+        2330
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "neutral",
+      "icon": "token"
+    },
+    {
+      "id": "data-warehouse",
+      "label": "Data Warehouse",
+      "caption": "land • organize • serve",
+      "position": [
+        407,
+        2330
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "memory",
+      "icon": "data-warehouse"
+    },
+    {
+      "id": "document-store",
+      "label": "Document Store",
+      "caption": "ingest • index • retrieve",
+      "position": [
+        764,
+        2330
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "memory",
+      "icon": "document-store"
+    },
+    {
+      "id": "dataset",
+      "label": "Dataset",
+      "caption": "structure • filter • analyze",
+      "position": [
+        1121,
+        2330
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "memory",
+      "icon": "dataset"
+    },
+    {
+      "id": "document",
+      "label": "Document",
+      "caption": "author • read • reference",
+      "position": [
+        50,
+        2640
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "source",
+      "icon": "document"
+    },
+    {
+      "id": "pdf",
+      "label": "PDF",
+      "caption": "package • preserve • share",
+      "position": [
+        407,
+        2640
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "source",
+      "icon": "pdf"
+    },
+    {
+      "id": "image",
+      "label": "Image",
+      "caption": "capture • compose • display",
+      "position": [
+        764,
+        2640
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "source",
+      "icon": "image"
+    },
+    {
+      "id": "audio",
+      "label": "Audio",
+      "caption": "record • process • play",
+      "position": [
+        1121,
+        2640
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "source",
+      "icon": "audio"
+    },
+    {
+      "id": "video",
+      "label": "Video",
+      "caption": "capture • sequence • play",
+      "position": [
+        50,
+        2950
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "source",
+      "icon": "video"
+    },
+    {
+      "id": "code-file",
+      "label": "Code File",
+      "caption": "author • validate • reuse",
+      "position": [
+        407,
+        2950
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "source",
+      "icon": "code-file"
+    },
+    {
+      "id": "webhook",
+      "label": "Webhook",
+      "caption": "emit • callback • resolve",
+      "position": [
+        764,
+        2950
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "process",
+      "icon": "webhook"
+    },
+    {
+      "id": "http-request",
+      "label": "HTTP Request",
+      "caption": "compose • send • receive",
+      "position": [
+        1121,
+        2950
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "process",
+      "icon": "http-request"
+    },
+    {
+      "id": "load-balancer",
+      "label": "Load Balancer",
+      "caption": "distribute • balance • serve",
+      "position": [
+        50,
+        3260
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "process",
+      "icon": "load-balancer"
+    },
+    {
+      "id": "server-cluster",
+      "label": "Server Cluster",
+      "caption": "group • coordinate • scale",
+      "position": [
+        407,
+        3260
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "process",
+      "icon": "server-cluster"
+    },
+    {
+      "id": "function",
+      "label": "Function",
+      "caption": "bind • execute • return",
+      "position": [
+        764,
+        3260
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "process",
+      "icon": "function"
+    },
+    {
+      "id": "edge-node",
+      "label": "Edge Node",
+      "caption": "sense • compute • relay",
+      "position": [
+        1121,
+        3260
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "process",
+      "icon": "edge-node"
+    },
+    {
+      "id": "source-code",
+      "label": "Source Code",
+      "caption": "author • organize • build",
+      "position": [
+        50,
+        3570
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "source",
+      "icon": "source-code"
+    },
+    {
+      "id": "git-repository",
+      "label": "Git Repository",
+      "caption": "store • version • share",
+      "position": [
+        407,
+        3570
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "source",
+      "icon": "git-repository"
+    },
+    {
+      "id": "branch",
+      "label": "Branch",
+      "caption": "diverge • develop • rejoin",
+      "position": [
+        764,
+        3570
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "source",
+      "icon": "branch"
+    },
+    {
+      "id": "pull-request",
+      "label": "Pull Request",
+      "caption": "propose • review • merge",
+      "position": [
+        1121,
+        3570
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "process",
+      "icon": "pull-request"
+    },
+    {
+      "id": "ci-cd",
+      "label": "CI/CD",
+      "caption": "build • test • deliver",
+      "position": [
+        50,
+        3880
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "process",
+      "icon": "ci-cd"
+    },
+    {
+      "id": "deployment",
+      "label": "Deployment",
+      "caption": "release • place • activate",
+      "position": [
+        407,
+        3880
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "output",
+      "icon": "deployment"
+    },
+    {
+      "id": "task",
+      "label": "Task",
+      "caption": "define • execute • complete",
+      "position": [
+        764,
+        3880
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "process",
+      "icon": "task"
+    },
+    {
+      "id": "scheduler",
+      "label": "Scheduler",
+      "caption": "plan • trigger • repeat",
+      "position": [
+        1121,
+        3880
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "process",
+      "icon": "scheduler"
+    },
+    {
+      "id": "monitoring",
+      "label": "Monitoring",
+      "caption": "observe • detect • report",
+      "position": [
+        50,
+        4190
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "process",
+      "icon": "monitoring"
+    },
+    {
+      "id": "logs",
+      "label": "Logs",
+      "caption": "record • order • inspect",
+      "position": [
+        407,
+        4190
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "source",
+      "icon": "logs"
+    },
+    {
+      "id": "alert",
+      "label": "Alert",
+      "caption": "detect • escalate • acknowledge",
+      "position": [
+        764,
+        4190
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "risk",
+      "icon": "alert"
+    },
+    {
+      "id": "debug",
+      "label": "Debug",
+      "caption": "reproduce • inspect • fix",
+      "position": [
+        1121,
+        4190
+      ],
+      "size": [
+        310,
+        230
+      ],
+      "role": "tool",
+      "icon": "debug"
+    }
+  ]
+}

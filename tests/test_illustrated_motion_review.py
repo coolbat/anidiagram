@@ -4,6 +4,7 @@ from pathlib import Path
 
 from anidiagram.illustrated_character_v2_icons import character_v2_definition
 from anidiagram.illustrated_registry import illustrated_definition, illustrated_icon_ids
+from anidiagram.illustrated_public_motion import ILLUSTRATED_PUBLIC_MOTION_SPECS
 from anidiagram.motion_manifest import (
     ILLUSTRATED_ICON_PERFORMANCES,
     ILLUSTRATED_REST_AT,
@@ -14,7 +15,7 @@ from anidiagram.motion_manifest import (
     ILLUSTRATED_V3_ICON_PERFORMANCES,
     ILLUSTRATED_V3_REST_AT,
 )
-from anidiagram.renderer_html_runtime import render_html_runtime
+from anidiagram.renderer_html_runtime import _runtime_source, render_html_runtime
 from anidiagram.schema import compile_scene
 from anidiagram.styles import load_style
 
@@ -44,6 +45,22 @@ FUNCTIONS.update({
     "gateway": "playIllustratedGateway",
     "container": "playIllustratedContainer",
 })
+FUNCTIONS.update({
+    "developer": "playIllustratedDeveloper",
+    "agent-team": "playIllustratedAgentTeam",
+    "assistant": "playIllustratedAssistant",
+    "human-reviewer": "playIllustratedHumanReviewer",
+    "llm": "playIllustratedLlm",
+    "reasoning": "playIllustratedReasoning",
+})
+FUNCTIONS.update({icon: "playIllustratedPublicConfigured" for icon in ILLUSTRATED_PUBLIC_MOTION_SPECS})
+
+
+def _archived_parts(version: str, icon: str) -> set[str]:
+    catalog = json.loads(
+        (ROOT / "assets" / "illustrated" / "snapshots" / f"catalog-{version}.json").read_text(encoding="utf-8")
+    )
+    return set(next(item for item in catalog["icons"] if item["id"] == icon)["parts"])
 
 
 def _manifest(html: str) -> dict:
@@ -78,10 +95,9 @@ class IllustratedMotionReviewTest(unittest.TestCase):
         self.assertEqual("automatic-for-supported-showcase-icons", contract["selection_policy"])
         self.assertEqual(set(ILLUSTRATED_V2_ICON_PERFORMANCES), {item["icon"] for item in contract["performances"]})
         for item in contract["performances"]:
-            definition = illustrated_definition(item["icon"])
             self.assertEqual(ILLUSTRATED_V2_ICON_PERFORMANCES[item["icon"]], item["id"])
             self.assertEqual(ILLUSTRATED_V2_REST_AT[item["icon"]], item["rest_at"])
-            self.assertLessEqual(set(item["primary_parts"]), set(definition.parts))
+            self.assertLessEqual(set(item["primary_parts"]), _archived_parts("2.1.0", item["icon"]))
 
     def test_v3_contract_approves_all_twelve_public_icons(self):
         contract = json.loads(
@@ -101,32 +117,33 @@ class IllustratedMotionReviewTest(unittest.TestCase):
         for item in contract["performances"]:
             self.assertEqual(ILLUSTRATED_V3_ICON_PERFORMANCES[item["icon"]], item["id"])
             self.assertEqual(ILLUSTRATED_V3_REST_AT[item["icon"]], item["rest_at"])
-            self.assertLessEqual(set(item["primary_parts"]), set(illustrated_definition(item["icon"]).parts))
+            self.assertLessEqual(set(item["primary_parts"]), _archived_parts("2.2.0", item["icon"]))
 
-    def test_public_showcase_page_automatically_emits_twenty_v5_entries(self):
+    def test_archived_twenty_icon_showcase_runs_on_the_current_v6_runtime(self):
         spec = json.loads(
             (ROOT / "examples" / "illustrated-2.4-showcase.diagram.json").read_text(encoding="utf-8")
         )
         self.assertTrue(all("effect" not in node for node in spec["nodes"]))
+        spec["resolved_presentation"]["icon_system"]["version"] = "2.5.0"
         html = render_html_runtime(
             compile_scene(spec), load_style(ROOT / "styles" / "deep-tech.json"), runtime="gsap"
         )
         manifest = _manifest(html)
 
         self.assertEqual("illustrated", manifest["icon_system"])
-        self.assertEqual("2.4.0", manifest["icon_system_version"])
+        self.assertEqual("2.5.0", manifest["icon_system_version"])
         self.assertEqual(20, len(manifest["icons"]))
-        self.assertEqual(set(ILLUSTRATED_ICON_PERFORMANCES), {entry["icon"] for entry in manifest["icons"]})
+        self.assertEqual({node["icon"] for node in spec["nodes"]}, {entry["icon"] for entry in manifest["icons"]})
         for entry in manifest["icons"]:
             definition = illustrated_definition(entry["icon"])
             self.assertEqual(ILLUSTRATED_ICON_PERFORMANCES[entry["icon"]], entry["performance"])
             self.assertEqual(ILLUSTRATED_REST_AT[entry["icon"]], entry["rest_at"])
-            self.assertEqual("illustrated-performance-v5", entry["motion_contract"])
+            self.assertEqual("illustrated-performance-v6", entry["motion_contract"])
             self.assertEqual("approved", entry["motion_status"])
             self.assertEqual("automatic-for-supported-showcase-icons", entry["selection_policy"])
             self.assertEqual("restore-authored-rest-pose", entry["cancel_behavior"])
             self.assertEqual("static-rest", entry["reduced_motion_behavior"])
-            self.assertEqual("2.4.0", entry["asset_version"])
+            self.assertEqual("2.5.0", entry["asset_version"])
             self.assertEqual(set(definition.parts), set(entry["parts"]))
             for selector in entry["parts"].values():
                 self.assertEqual(1, html.count(f'id="{selector[1:]}"'), selector)
@@ -138,7 +155,7 @@ class IllustratedMotionReviewTest(unittest.TestCase):
         ):
             with self.subTest(filename=filename):
                 spec = json.loads((ROOT / "examples" / filename).read_text(encoding="utf-8"))
-                spec["resolved_presentation"]["icon_system"]["version"] = "2.4.0"
+                spec["resolved_presentation"]["icon_system"]["version"] = "2.5.0"
                 manifest = _manifest(
                     render_html_runtime(
                         compile_scene(spec), load_style(ROOT / "styles" / "deep-tech.json"), runtime="gsap"
@@ -146,14 +163,14 @@ class IllustratedMotionReviewTest(unittest.TestCase):
                 )
                 self.assertEqual(expected_count, len(manifest["icons"]))
                 for entry in manifest["icons"]:
-                    self.assertEqual("illustrated-performance-v5", entry["motion_contract"])
+                    self.assertEqual("illustrated-performance-v6", entry["motion_contract"])
                     self.assertEqual("approved", entry["motion_status"])
 
     def test_existing_deep_tech_case_uses_v2_for_every_supported_instance(self):
         spec = json.loads(
             (ROOT / "examples" / "illustrated-deep-tech-software-delivery.diagram.json").read_text(encoding="utf-8")
         )
-        spec["resolved_presentation"]["icon_system"]["version"] = "2.4.0"
+        spec["resolved_presentation"]["icon_system"]["version"] = "2.5.0"
         manifest = _manifest(
             render_html_runtime(
                 compile_scene(spec), load_style(ROOT / "styles" / "deep-tech.json"), runtime="gsap"
@@ -167,7 +184,7 @@ class IllustratedMotionReviewTest(unittest.TestCase):
                 for icon in ("agent", "operator", "tool", "output")
             },
         )
-        self.assertTrue(all(entry["motion_contract"] == "illustrated-performance-v5" for entry in manifest["icons"]))
+        self.assertTrue(all(entry["motion_contract"] == "illustrated-performance-v6" for entry in manifest["icons"]))
 
     def test_archived_expansion_review_contract_preserves_the_approval_evidence(self):
         contract = json.loads(
@@ -201,14 +218,14 @@ class IllustratedMotionReviewTest(unittest.TestCase):
                 encoding="utf-8"
             )
         )
-        spec["resolved_presentation"]["icon_system"]["version"] = "2.4.0"
+        spec["resolved_presentation"]["icon_system"]["version"] = "2.5.0"
         explicit_html = render_html_runtime(
             compile_scene(spec), load_style(ROOT / "styles" / "deep-tech.json"), runtime="gsap"
         )
         explicit_manifest = _manifest(explicit_html)
         self.assertEqual(4, len(explicit_manifest["icons"]))
         for entry in explicit_manifest["icons"]:
-            self.assertEqual("illustrated-performance-v5", entry["motion_contract"])
+            self.assertEqual("illustrated-performance-v6", entry["motion_contract"])
             self.assertEqual("approved", entry["motion_status"])
             self.assertEqual("automatic-for-supported-showcase-icons", entry["selection_policy"])
             self.assertEqual(ILLUSTRATED_V3_ADDITIONAL_ICON_PERFORMANCES[entry["icon"]], entry["performance"])
@@ -227,12 +244,18 @@ class IllustratedMotionReviewTest(unittest.TestCase):
         )
 
     def test_runtime_dispatches_every_public_v2_performance(self):
-        source = (ROOT / "runtime" / "anidiagram-runtime.js").read_text(encoding="utf-8")
+        source = _runtime_source()
         for icon, performance in ILLUSTRATED_ICON_PERFORMANCES.items():
             function_name = FUNCTIONS[icon]
             self.assertIn(f"function {function_name}", source)
-            self.assertIn(f'"{performance}": {function_name}', source)
-            self.assertIn(f'"{performance}",', source)
+            self.assertTrue(
+                f'"{performance}": {function_name}' in source
+                or f'performances["{performance}"] = {function_name}' in source
+            )
+            self.assertTrue(
+                f'"{performance}",' in source
+                or f'characterPerformanceIds.add("{performance}")' in source
+            )
 
     def test_cloud_arrows_reveal_in_their_semantic_directions(self):
         contract = json.loads(

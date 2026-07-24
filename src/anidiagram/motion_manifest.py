@@ -13,6 +13,11 @@ from .effects import channel_effect
 from .icon_system import icon_system_version, resolve_icon_system
 from .illustrated_character_icons import character_definition
 from .illustrated_registry import illustrated_definition
+from .illustrated_public_motion import (
+    ILLUSTRATED_PUBLIC_ICON_PERFORMANCES,
+    ILLUSTRATED_PUBLIC_MOTION_SPECS,
+    ILLUSTRATED_PUBLIC_REST_AT,
+)
 from .illustrated_expansion_batch_4_motion import (
     ILLUSTRATED_V5_REVIEW_ICON_PERFORMANCES,
     ILLUSTRATED_V5_REVIEW_REST_AT,
@@ -125,16 +130,8 @@ ILLUSTRATED_V4_REVIEW_REST_AT = {
     "ai-model": 1.80,
     "message-queue": 1.76,
 }
-ILLUSTRATED_ICON_PERFORMANCES = {
-    **ILLUSTRATED_V3_ICON_PERFORMANCES,
-    **ILLUSTRATED_V4_REVIEW_ICON_PERFORMANCES,
-    **ILLUSTRATED_V5_REVIEW_ICON_PERFORMANCES,
-}
-ILLUSTRATED_REST_AT = {
-    **ILLUSTRATED_V3_REST_AT,
-    **ILLUSTRATED_V4_REVIEW_REST_AT,
-    **ILLUSTRATED_V5_REVIEW_REST_AT,
-}
+ILLUSTRATED_ICON_PERFORMANCES = dict(ILLUSTRATED_PUBLIC_ICON_PERFORMANCES)
+ILLUSTRATED_REST_AT = dict(ILLUSTRATED_PUBLIC_REST_AT)
 STRONG_CHARACTER_INTENSITY = 1.5
 STRONG_CHARACTER_REST_AT = 1.2
 SUPPORTED_ICON_PERFORMANCES.update(CHARACTER_ICON_PERFORMANCES.values())
@@ -312,10 +309,18 @@ def build_motion_manifest(
             icon_entry["cancel_behavior"] = "restore-authored-rest-pose"
             icon_entry["reduced_motion_behavior"] = "static-rest"
             icon_entry["repeat_delay"] = 0.8
-            icon_entry["motion_contract"] = "illustrated-performance-v5"
+            icon_entry["motion_contract"] = "illustrated-performance-v6"
             icon_entry["motion_status"] = "approved"
             icon_entry["selection_policy"] = "automatic-for-supported-showcase-icons"
             icon_entry["rest_at"] = ILLUSTRATED_REST_AT[node.icon]
+            motion_spec = ILLUSTRATED_PUBLIC_MOTION_SPECS.get(node.icon)
+            if motion_spec is not None:
+                icon_entry["motion_recipe"] = {
+                    "type": motion_spec["recipe"],
+                    "prepare_parts": list(motion_spec["prepare_parts"]),
+                    "action_parts": list(motion_spec["action_parts"]),
+                    "result_parts": list(motion_spec["result_parts"]),
+                }
         if definition is not None:
             if hasattr(definition, "colors"):
                 icon_entry["colors"] = definition.colors

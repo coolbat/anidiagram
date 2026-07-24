@@ -7,7 +7,7 @@ from typing import Any, Dict, Tuple
 
 DEFAULT_ICON_SYSTEM = "illustrated-character-v1"
 ILLUSTRATED_ICON_SYSTEM = "illustrated"
-ILLUSTRATED_ICON_SYSTEM_VERSION = "2.4.0"
+ILLUSTRATED_ICON_SYSTEM_VERSION = "2.5.0"
 ICON_SYSTEM_ALIASES = {
     "illustrated-character-v2": ILLUSTRATED_ICON_SYSTEM,
 }

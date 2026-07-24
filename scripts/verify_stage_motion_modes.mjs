@@ -65,7 +65,15 @@ function assert(condition, message) {
 async function main() {
   const htmlPath = process.argv[2];
   if (!htmlPath || !fs.existsSync(htmlPath)) {
-    throw new Error("usage: verify_stage_motion_modes.mjs <runtime.html>");
+    throw new Error("usage: verify_stage_motion_modes.mjs <runtime.html> [expected-characters] [expected-edges] [expected-readable-edges]");
+  }
+  const expectedCharacterArg = process.argv[3] === undefined ? null : Number(process.argv[3]);
+  const expectedEdgeArg = process.argv[4] === undefined ? null : Number(process.argv[4]);
+  const expectedReadableArg = process.argv[5] === undefined ? null : Number(process.argv[5]);
+  for (const [label, value] of [["characters", expectedCharacterArg], ["edges", expectedEdgeArg], ["readable edges", expectedReadableArg]]) {
+    if (value !== null && (!Number.isInteger(value) || value < 0)) {
+      throw new Error(`expected ${label} must be a non-negative integer`);
+    }
   }
   const { chromium } = loadPlaywright();
   const browser = await chromium.launch({ headless: true });
@@ -77,6 +85,12 @@ async function main() {
     const manifest = await page.evaluate(() => JSON.parse(document.getElementById("anidiagram-motion-manifest").textContent));
     const expectedCharacters = manifest.icons.length;
     const totalEdges = await page.locator("g.edge").count();
+    if (expectedCharacterArg !== null) {
+      assert(expectedCharacters === expectedCharacterArg, `manifest characters: ${expectedCharacters}/${expectedCharacterArg}`);
+    }
+    if (expectedEdgeArg !== null) {
+      assert(totalEdges === expectedEdgeArg, `rendered edges: ${totalEdges}/${expectedEdgeArg}`);
+    }
     const fallbackExpressive = Array.from({ length: Number.isInteger(manifest.stage.edge_limit) ? Math.min(totalEdges, manifest.stage.edge_limit) : totalEdges }, (_, index) => index);
     const fallbackReadable = Array.from({ length: Number.isInteger(manifest.stage.readable_edge_limit) ? Math.min(totalEdges, manifest.stage.readable_edge_limit) : Math.min(2, totalEdges) }, (_, index) => index);
     const expectedExpressiveIndices = manifest.stage.edge_flow
@@ -87,6 +101,9 @@ async function main() {
       : [];
     const expectedExpressivePackets = expectedExpressiveIndices.length;
     const expectedReadablePackets = expectedReadableIndices.length;
+    if (expectedReadableArg !== null) {
+      assert(expectedReadablePackets === expectedReadableArg, `readable edges: ${expectedReadablePackets}/${expectedReadableArg}`);
+    }
     const edgeEntries = Array.isArray(manifest.edges) ? manifest.edges : [];
     const packetCount = (indices) => indices.filter((index) => edgeEntries[index]?.motion_kind === "packet").length;
     const cometCount = (indices) => indices.filter((index) => edgeEntries[index]?.motion_kind === "comet").length;
