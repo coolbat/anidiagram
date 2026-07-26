@@ -22,7 +22,7 @@ style, layout, and motion system.
    - Choose one concrete public style from the catalog when the user did not
      choose. Record `presentation_sources.style: model`. Use `minimal-light`
      only as the deterministic fallback.
-   - Choose one concrete layout from the 14-layout catalog when the user did
+   - Choose one concrete layout from the 15-layout catalog when the user did
      not choose. Record `presentation_sources.layout: model`. Use `layered`
      only as the deterministic fallback.
    - Use `motion: showcase-v1` unless the user explicitly requests another
@@ -116,13 +116,20 @@ presentation-led work.
 Layouts:
 
 `pipeline`, `loop`, `hub-spoke`, `layered`, `swimlane`, `compare`, `matrix`,
-`timeline`, `stack`, `funnel`, `sequence`, `er`, `network`, `agent-memory`.
+`timeline`, `stack`, `funnel`, `sequence`, `er`, `network`, `agent-memory`,
+`agent-loop`.
 
 Choose from semantic topology: ordered transformations use pipeline; feedback
 uses loop; central orchestration uses hub-spoke; tiers use layered; ownership
 uses swimlane; alternatives use compare; two dimensions use matrix; chronology
 uses timeline or sequence; hierarchy uses stack; convergence uses funnel;
-relationships use er or network; explicit memory interaction uses agent-memory.
+relationships use er or network; explicit memory interaction uses agent-memory;
+agent internals with trigger, cognitive loop, memory, safety, and tool domains
+use agent-loop.
+
+In `agent-loop`, conditional branching may infer a decision shape only inside
+the cognitive-core or safety zones. Trigger, memory, and tool entities remain
+component cards even when they fan out.
 
 Supported icon systems include `diagram-core-v1`, `illustrated-character-v1`,
 and `illustrated` (the composition-v1 default, currently version `2.5.0`).
@@ -151,7 +158,7 @@ Never let a style file override an explicit DiagramScript v0.4 icon system.
 ## Legacy compatibility
 
 Use `--spec` for existing DiagramScript v0.1-v0.3 files and `--preset` for the
-14 built-in clean-room preset compilers. Their legacy Illustrated Character v1
+15 built-in clean-room preset compilers. Their legacy Illustrated Character v1
 resolution remains unchanged. Do not silently migrate pixel-stable legacy
 diagrams; create a separate v0.4 version unless the user asks to replace it.
 Direct manually authored DiagramScript v0.4 files without

@@ -206,12 +206,14 @@ class ShowcaseGalleryTest(unittest.TestCase):
 
         self.assertEqual("Agent Runtime Flow", manifest["hero"]["title"])
         self.assertEqual(13, len(manifest["styles"]))
-        self.assertEqual(14, len(manifest["layouts"]))
+        self.assertEqual(15, len(manifest["layouts"]))
         self.assertEqual("runtime/motion-catalog.json", manifest["runtime_motion_catalog"])
         self.assertEqual("gallery/runtime-motion.html", manifest["runtime_motion_page"])
         self.assertEqual("illustrated-character-v1", manifest["hero"]["icon_system"])
         self.assertTrue(all(entry["icon_system"] == "illustrated-character-v1" for entry in manifest["styles"]))
-        self.assertTrue(all(entry["icon_system"] == "illustrated-character-v1" for entry in manifest["layouts"]))
+        layout_icon_systems = {entry["preset"]: entry["icon_system"] for entry in manifest["layouts"]}
+        self.assertEqual("illustrated", layout_icon_systems.pop("agent-loop"))
+        self.assertTrue(all(value == "illustrated-character-v1" for value in layout_icon_systems.values()))
         self.assertEqual("semantic-line-v1", manifest["runtime_motion_overview"]["icon_system"])
         self.assertTrue((ROOT / manifest["runtime_motion_page"]).is_file())
         self.assertTrue((ROOT / manifest["runtime_motion_overview"]["html"]).is_file())
@@ -252,6 +254,7 @@ class ShowcaseGalleryTest(unittest.TestCase):
         self.assertIn("AI Growth Funnel", [entry["title"] for entry in manifest["styles"]])
         self.assertIn("RAG Ingestion Pipeline", [entry["title"] for entry in manifest["layouts"]])
         self.assertIn("Personalized Agent Memory Flow", [entry["title"] for entry in manifest["layouts"]])
+        self.assertIn("Agent Loop Runtime Architecture", [entry["title"] for entry in manifest["layouts"]])
 
         entries = [manifest["hero"], *manifest["styles"], *manifest["layouts"]]
         for entry in entries:
@@ -260,8 +263,13 @@ class ShowcaseGalleryTest(unittest.TestCase):
                     self.assertTrue((ROOT / entry[key]).is_file(), entry[key])
                 for key in ("svg", "html"):
                     rendered = (ROOT / entry[key]).read_text(encoding="utf-8")
-                    self.assertIn('data-icon-system="illustrated-character-v1"', rendered, entry[key])
-                    self.assertIn("semantic-icon-illustrated-character-v1", rendered, entry[key])
+                    self.assertIn(f'data-icon-system="{entry["icon_system"]}"', rendered, entry[key])
+                    icon_class = (
+                        "semantic-icon-illustrated"
+                        if entry["icon_system"] == "illustrated"
+                        else "semantic-icon-illustrated-character-v1"
+                    )
+                    self.assertIn(icon_class, rendered, entry[key])
                 summary = json.loads((ROOT / entry["quality"]).read_text(encoding="utf-8"))["summary"]
                 self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, summary)
 

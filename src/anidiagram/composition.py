@@ -55,6 +55,7 @@ LAYOUTS = {
     "er",
     "network",
     "agent-memory",
+    "agent-loop",
 }
 MOTIONS = {"off", "subtle", "normal", "expressive", "teaching", "runtime-loop", "showcase-v1"}
 
@@ -163,6 +164,18 @@ def compile_plan_v02(plan: Mapping[str, Any]) -> Dict[str, Any]:
         _compile_relation(relation, index + 1, flow_context.get(str(relation["id"])))
         for index, relation in enumerate(relations)
     ]
+    if resolved["layout"]["value"] == "agent-loop":
+        agent_loop_zones = _agent_loop_zones(
+            entity_order,
+            {str(entity["id"]): entity for entity in entities},
+            groups_semantic,
+        )
+        zone_by_entity = {
+            item_id: zone
+            for zone, item_ids in agent_loop_zones.items()
+            for item_id in item_ids
+        }
+        _apply_agent_loop_presentation(edges, nodes, zone_by_entity)
     groups = _compile_semantic_groups(groups_semantic, nodes)
 
     return {
@@ -497,6 +510,7 @@ def _layout_entities(
         "funnel": lambda: _funnel_layout(ordered),
         "er": lambda: _er_layout(ordered, relations),
         "agent-memory": lambda: _agent_memory_layout(ordered, entity_by_id),
+        "agent-loop": lambda: _agent_loop_layout(ordered, entity_by_id, groups, relations),
     }
     return dispatchers[layout]()
 
@@ -729,6 +743,220 @@ def _agent_memory_layout(
     return positions, {"width": 1080, "height": max(720, 305 + max((len(items) for items in columns.values()), default=1) * 175)}
 
 
+def _agent_loop_layout(
+    ordered: Sequence[str],
+    entity_by_id: Mapping[str, Mapping[str, Any]],
+    groups: Sequence[Mapping[str, Any]],
+    relations: Sequence[Mapping[str, Any]],
+) -> Tuple[Dict[str, Tuple[int, int]], Dict[str, int]]:
+    """Place a trigger, cognitive loop, and three supporting agent domains."""
+
+    zones = _agent_loop_zones(ordered, entity_by_id, groups)
+    decision_capable = set(zones["core"]) | set(zones["safety"])
+    decision_ids = _agent_loop_decision_ids(relations) & decision_capable
+
+    positions: Dict[str, Tuple[int, int]] = {}
+    _place_horizontal(positions, zones["trigger"], 210, 1210, 175)
+
+    core_head = zones["core"][:3]
+    core_tail = zones["core"][3:]
+    _place_horizontal(positions, core_head, 90, 810, 365)
+    core_tail_rows = _pack_agent_loop_rows(
+        core_tail,
+        lambda item_id: 320 if item_id in decision_ids else 220,
+        max_items=3,
+        available_width=920,
+    )
+    for row, row_items in enumerate(core_tail_rows):
+        left, right_edge = (560, 1480) if len(row_items) == 3 else (790, 1400)
+        widths = [320 if item_id in decision_ids else 220 for item_id in row_items]
+        if sum(widths) + max(0, len(widths) - 1) * 24 > right_edge - left:
+            left, right_edge = 560, 1480
+        _place_horizontal_sized(positions, row_items, widths, left, right_edge, 535 + row * 150)
+
+    core_row_count = len(core_tail_rows)
+    core_bottom = 481 if not core_tail_rows else 535 + (core_row_count - 1) * 150 + 116
+    corridor_bottom = _agent_loop_corridor_bottom(zones, relations, core_bottom)
+    support_y = max(
+        790 + max(0, core_row_count - 1) * 150,
+        corridor_bottom + 48,
+    )
+    for index, item_id in enumerate(zones["memory"]):
+        positions[item_id] = (55, support_y + index * 150)
+    safety_rows = _pack_agent_loop_rows(
+        zones["safety"],
+        lambda item_id: 320 if item_id in decision_ids else 210,
+        max_items=4,
+        available_width=960,
+    )
+    for row, row_items in enumerate(safety_rows):
+        _place_horizontal_sized(
+            positions,
+            row_items,
+            [320 if item_id in decision_ids else 210 for item_id in row_items],
+            330,
+            1290,
+            support_y + row * 150,
+        )
+    for index, item_id in enumerate(zones["tools"]):
+        positions[item_id] = (1360, support_y - 30 + index * 150)
+
+    content_bottom = max((y + 116 for _, y in positions.values()), default=116)
+    return positions, {"width": 1640, "height": max(1240, content_bottom + 42)}
+
+
+def _agent_loop_decision_ids(relations: Sequence[Mapping[str, Any]]) -> set[str]:
+    conditional_outgoing: Dict[str, int] = defaultdict(int)
+    for relation in relations:
+        if relation.get("condition"):
+            conditional_outgoing[str(relation["from"])] += 1
+    return {item_id for item_id, count in conditional_outgoing.items() if count >= 2}
+
+
+def _pack_agent_loop_rows(
+    items: Sequence[str],
+    width_for: Any,
+    *,
+    max_items: int,
+    available_width: int,
+    min_gap: int = 24,
+) -> List[List[str]]:
+    rows: List[List[str]] = []
+    current: List[str] = []
+    current_width = 0
+    for item_id in items:
+        item_width = int(width_for(item_id))
+        candidate_width = current_width + item_width + (min_gap if current else 0)
+        if current and (len(current) >= max_items or candidate_width > available_width):
+            rows.append(current)
+            current = []
+            current_width = 0
+            candidate_width = item_width
+        current.append(item_id)
+        current_width = candidate_width
+    if current:
+        rows.append(current)
+    return rows
+
+
+def _agent_loop_corridor_bottom(
+    zones: Mapping[str, Sequence[str]],
+    relations: Sequence[Mapping[str, Any]],
+    core_bottom: int,
+) -> int:
+    zone_by_entity = {
+        item_id: zone
+        for zone, item_ids in zones.items()
+        for item_id in item_ids
+    }
+    lane_counts: Dict[Tuple[str, str], int] = defaultdict(int)
+    for relation in relations:
+        source_zone = zone_by_entity[str(relation["from"])]
+        target_zone = zone_by_entity[str(relation["to"])]
+        if source_zone == "core" and target_zone == "core" and relation.get("kind") == "feedback":
+            lane_counts[("core", "feedback")] += 1
+        elif source_zone == "core" and target_zone in {"memory", "safety", "tools"}:
+            lane_counts[(source_zone, target_zone)] += 1
+        elif source_zone == "tools" and target_zone == "core":
+            lane_counts[(source_zone, target_zone)] += 1
+        elif source_zone in {"memory", "safety"} and target_zone == "core":
+            lane_counts[(source_zone, target_zone)] += 1
+
+    corridor_bottom = core_bottom
+    for key, count in lane_counts.items():
+        if not count:
+            continue
+        base = 38 if key == ("core", "feedback") else (20 if key == ("tools", "core") else 30)
+        corridor_bottom = max(corridor_bottom, core_bottom + base + (count - 1) * 12)
+    return corridor_bottom
+
+
+def _agent_loop_zones(
+    ordered: Sequence[str],
+    entity_by_id: Mapping[str, Mapping[str, Any]],
+    groups: Sequence[Mapping[str, Any]],
+) -> Dict[str, List[str]]:
+    group_zones = {
+        "trigger": "trigger",
+        "input": "trigger",
+        "source": "trigger",
+        "agent-loop": "core",
+        "cognitive-core": "core",
+        "reasoning-loop": "core",
+        "runtime": "core",
+        "memory": "memory",
+        "safety": "safety",
+        "guardrail": "safety",
+        "policy": "safety",
+        "tool-execution": "tools",
+        "tooling": "tools",
+        "tools": "tools",
+    }
+    zone_by_entity: Dict[str, str] = {}
+    for group in groups:
+        zone = group_zones.get(str(group.get("kind") or ""))
+        if zone is None:
+            continue
+        for member in group.get("members", []):
+            zone_by_entity.setdefault(str(member), zone)
+
+    zones: Dict[str, List[str]] = {
+        "trigger": [],
+        "core": [],
+        "memory": [],
+        "safety": [],
+        "tools": [],
+    }
+    role_zones = {
+        "actor": "trigger",
+        "source": "trigger",
+        "memory": "memory",
+        "risk": "safety",
+        "tool": "tools",
+    }
+    for item_id in ordered:
+        role = str(entity_by_id[item_id].get("role") or "neutral")
+        zones[zone_by_entity.get(item_id, role_zones.get(role, "core"))].append(item_id)
+    return zones
+
+
+def _place_horizontal(
+    positions: Dict[str, Tuple[int, int]],
+    items: Sequence[str],
+    left: int,
+    right: int,
+    y: int,
+) -> None:
+    if not items:
+        return
+    if len(items) == 1:
+        positions[items[0]] = ((left + right) // 2, y)
+        return
+    for index, item_id in enumerate(items):
+        x = round(left + (right - left) * index / (len(items) - 1))
+        positions[item_id] = (x, y)
+
+
+def _place_horizontal_sized(
+    positions: Dict[str, Tuple[int, int]],
+    items: Sequence[str],
+    widths: Sequence[int],
+    left: int,
+    right_edge: int,
+    y: int,
+) -> None:
+    if not items:
+        return
+    if len(items) == 1:
+        positions[items[0]] = (left + (right_edge - left - int(widths[0])) // 2, y)
+        return
+    gap = (right_edge - left - sum(int(width) for width in widths)) / (len(items) - 1)
+    x = float(left)
+    for item_id, width in zip(items, widths):
+        positions[item_id] = (round(x), y)
+        x += int(width) + gap
+
+
 def _compile_entity(entity: Mapping[str, Any], position: Tuple[int, int], icon_system: str, step: int) -> Dict[str, Any]:
     role = str(entity.get("role") or "neutral")
     icon, resolution = _resolve_icon_for_entity(entity, icon_system)
@@ -791,7 +1019,11 @@ def _flow_relation_context(flows: Sequence[Mapping[str, Any]]) -> Dict[str, Dict
             ) < (
                 importance_order[existing["importance"]], existing["flow_index"]
             ):
+                if existing is not None and existing["repeat"] == "loop":
+                    item["repeat"] = "loop"
                 context[relation_key] = item
+            elif item["repeat"] == "loop":
+                existing["repeat"] = "loop"
     return context
 
 
@@ -826,6 +1058,103 @@ def _compile_relation(
         compiled["flow_importance"] = flow_importance
         compiled["flow_repeat"] = repeat
     return compiled
+
+
+def _apply_agent_loop_presentation(
+    edges: Sequence[Dict[str, Any]],
+    nodes: Sequence[Mapping[str, Any]],
+    zone_by_entity: Mapping[str, str],
+) -> None:
+    node_by_id = {str(node["id"]): node for node in nodes}
+    conditional_outgoing: Dict[str, int] = defaultdict(int)
+    for edge in edges:
+        if edge.get("condition"):
+            conditional_outgoing[str(edge["from"])] += 1
+    for node in nodes:
+        node.pop("step", None)
+        zone = zone_by_entity[str(node["id"])]
+        node["size"] = [210, 116] if zone == "safety" else [220, 116]
+        if zone in {"core", "safety"} and conditional_outgoing[str(node["id"])] >= 2:
+            node["shape"] = "decision"
+            node["size"] = [320, 116]
+
+    core_bottom = max(
+        (
+            int(node["position"][1]) + int(node["size"][1])
+            for node in nodes
+            if zone_by_entity[str(node["id"])] == "core"
+        ),
+        default=660,
+    )
+
+    lane_counts: Dict[Tuple[str, str], int] = defaultdict(int)
+    for edge in edges:
+        edge.pop("step", None)
+        source = node_by_id[str(edge["from"])]
+        target = node_by_id[str(edge["to"])]
+        source_zone = zone_by_entity[str(edge["from"])]
+        target_zone = zone_by_entity[str(edge["to"])]
+        sx, sy = _node_anchor(source, "bottom")
+        tx, ty = _node_anchor(target, "top")
+        if source["position"][1] == target["position"][1] or source["position"][0] == target["position"][0]:
+            edge["route"] = "straight"
+            continue
+        if source_zone == "trigger" and target_zone == "core":
+            edge["route"] = "points"
+            edge["points"] = [[sx, sy], [sx, 315], [tx, 315], [tx, ty]]
+            continue
+        if (
+            source_zone == "core"
+            and target_zone == "core"
+            and target["position"][0] < source["position"][0]
+            and edge.get("semantic_kind") == "feedback"
+        ):
+            lane = lane_counts[("core", "feedback")]
+            lane_counts[("core", "feedback")] += 1
+            corridor = core_bottom + 38 + lane * 12
+            edge["route"] = "points"
+            edge["points"] = [[sx, sy], [sx, corridor], [tx, corridor], [tx, ty + int(target["size"][1])]]
+            continue
+        if source_zone == "core" and target_zone in {"memory", "safety", "tools"}:
+            lane = lane_counts[(source_zone, target_zone)]
+            lane_counts[(source_zone, target_zone)] += 1
+            corridor = core_bottom + 30 + lane * 12
+            edge["route"] = "points"
+            edge["points"] = [[sx, sy], [sx, corridor], [tx, corridor], [tx, ty]]
+            continue
+        if source_zone == "tools" and target_zone == "core":
+            lane = lane_counts[(source_zone, target_zone)]
+            lane_counts[(source_zone, target_zone)] += 1
+            source_top = _node_anchor(source, "top")
+            target_right = (
+                int(target["position"][0]) + int(target["size"][0]),
+                int(target["position"][1]) + int(target["size"][1]) // 2,
+            )
+            corridor_y = core_bottom + 20 + lane * 12
+            corridor_x = 1600 - lane * 14
+            edge["route"] = "points"
+            edge["points"] = [
+                [source_top[0], source_top[1]],
+                [source_top[0], corridor_y],
+                [corridor_x, corridor_y],
+                [corridor_x, target_right[1]],
+                [target_right[0], target_right[1]],
+            ]
+            continue
+        if source_zone in {"memory", "safety"} and target_zone == "core":
+            lane = lane_counts[(source_zone, target_zone)]
+            lane_counts[(source_zone, target_zone)] += 1
+            corridor = core_bottom + 30 + lane * 12
+            edge["route"] = "points"
+            edge["points"] = [[sx, source["position"][1]], [sx, corridor], [tx, corridor], [tx, ty + int(target["size"][1])]]
+            continue
+        edge["route"] = "orthogonal"
+
+
+def _node_anchor(node: Mapping[str, Any], side: str) -> Tuple[int, int]:
+    x, y = int(node["position"][0]), int(node["position"][1])
+    width, height = int(node["size"][0]), int(node["size"][1])
+    return (x + width // 2, y + height) if side == "bottom" else (x + width // 2, y)
 
 
 def _relation_role(kind: str, importance: str) -> str:

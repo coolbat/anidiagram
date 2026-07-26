@@ -226,7 +226,7 @@
         "layout": {
           "enum": [
             "auto", "pipeline", "loop", "hub-spoke", "layered", "swimlane", "compare",
-            "matrix", "timeline", "stack", "funnel", "sequence", "er", "network", "agent-memory"
+            "matrix", "timeline", "stack", "funnel", "sequence", "er", "network", "agent-memory", "agent-loop"
           ],
           "default": "auto"
         },

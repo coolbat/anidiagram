@@ -1,0 +1,1021 @@
+{
+  "version": "0.4",
+  "composition_policy": "composition-v1",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "sketch-board",
+      "source": "model"
+    },
+    "layout": {
+      "value": "agent-loop",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "icon_system": "illustrated",
+  "layout": "agent-loop",
+  "preset": "agent-loop",
+  "canvas": {
+    "width": 1640,
+    "height": 1240
+  },
+  "style": "sketch-board",
+  "title": {
+    "text": "Agent Loop Runtime Architecture",
+    "subtitle": "Trigger → think → guarded tool execution → observe → decide"
+  },
+  "motion": {
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "ease": "spring",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 1.0,
+    "edge": {
+      "preset": "packet-flow"
+    },
+    "node": {
+      "preset": "icon-performance"
+    },
+    "group": {
+      "preset": "border-scan"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "subtle"
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  },
+  "groups": [
+    {
+      "id": "trigger-input",
+      "label": "Trigger / Input",
+      "bounds": [
+        684,
+        133,
+        272,
+        184
+      ],
+      "role": "neutral",
+      "semantic_kind": "trigger",
+      "importance": "primary",
+      "effect": {
+        "preset": "border-scan"
+      }
+    },
+    {
+      "id": "cognitive-core",
+      "label": "Cognitive Core · the agent loop",
+      "bounds": [
+        64,
+        323,
+        1362,
+        354
+      ],
+      "role": "neutral",
+      "semantic_kind": "agent-loop",
+      "importance": "primary",
+      "effect": {
+        "preset": "border-scan"
+      }
+    },
+    {
+      "id": "memory-layer",
+      "label": "Memory",
+      "bounds": [
+        29,
+        748,
+        272,
+        334
+      ],
+      "role": "neutral",
+      "semantic_kind": "memory",
+      "importance": "supporting",
+      "effect": {
+        "preset": "border-scan"
+      }
+    },
+    {
+      "id": "safety-layers",
+      "label": "Safety Layers",
+      "bounds": [
+        304,
+        748,
+        1012,
+        334
+      ],
+      "role": "neutral",
+      "semantic_kind": "safety",
+      "importance": "primary",
+      "effect": {
+        "preset": "border-scan"
+      }
+    },
+    {
+      "id": "tool-execution",
+      "label": "Tool Execution",
+      "bounds": [
+        1334,
+        718,
+        272,
+        484
+      ],
+      "role": "neutral",
+      "semantic_kind": "tool-execution",
+      "importance": "primary",
+      "effect": {
+        "preset": "border-scan"
+      }
+    }
+  ],
+  "nodes": [
+    {
+      "id": "trigger",
+      "label": "Trigger / Input",
+      "caption": "Message · event · API · schedule",
+      "position": [
+        710,
+        175
+      ],
+      "size": [
+        220,
+        116
+      ],
+      "role": "source",
+      "icon": "scheduler",
+      "semantic_kind": "scheduler",
+      "icon_resolution": "exact",
+      "importance": "primary",
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "think",
+      "label": "Think",
+      "caption": "Reason, plan, and reflect",
+      "position": [
+        90,
+        365
+      ],
+      "size": [
+        220,
+        116
+      ],
+      "role": "agent",
+      "icon": "reasoning",
+      "semantic_kind": "reasoning",
+      "icon_resolution": "exact",
+      "importance": "primary",
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "act",
+      "label": "Act",
+      "caption": "Select and call a tool",
+      "position": [
+        450,
+        365
+      ],
+      "size": [
+        220,
+        116
+      ],
+      "role": "agent",
+      "icon": "agent",
+      "semantic_kind": "agent",
+      "icon_resolution": "exact",
+      "importance": "primary",
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "observe",
+      "label": "Observe",
+      "caption": "Parse result and update state",
+      "position": [
+        810,
+        365
+      ],
+      "size": [
+        220,
+        116
+      ],
+      "role": "output",
+      "icon": "monitoring",
+      "semantic_kind": "monitoring",
+      "icon_resolution": "exact",
+      "importance": "primary",
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "done",
+      "label": "Done?",
+      "caption": "Is the final answer ready?",
+      "position": [
+        790,
+        535
+      ],
+      "size": [
+        320,
+        116
+      ],
+      "role": "risk",
+      "icon": "task",
+      "semantic_kind": "task",
+      "icon_resolution": "exact",
+      "importance": "primary",
+      "effect": {
+        "preset": "icon-performance"
+      },
+      "shape": "decision"
+    },
+    {
+      "id": "output",
+      "label": "Output",
+      "caption": "Deliver the final answer",
+      "position": [
+        1180,
+        535
+      ],
+      "size": [
+        220,
+        116
+      ],
+      "role": "output",
+      "icon": "output",
+      "semantic_kind": "output",
+      "icon_resolution": "exact",
+      "importance": "primary",
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "working-memory",
+      "label": "Working Memory",
+      "caption": "Active turn context",
+      "position": [
+        55,
+        790
+      ],
+      "size": [
+        220,
+        116
+      ],
+      "role": "memory",
+      "icon": "memory",
+      "semantic_kind": "memory",
+      "icon_resolution": "exact",
+      "importance": "supporting",
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "long-term-memory",
+      "label": "Long-Term Memory",
+      "caption": "Retrieved knowledge",
+      "position": [
+        55,
+        940
+      ],
+      "size": [
+        220,
+        116
+      ],
+      "role": "memory",
+      "icon": "vector-database",
+      "semantic_kind": "vector-database",
+      "icon_resolution": "exact",
+      "importance": "supporting",
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "validate",
+      "label": "Validate",
+      "caption": "Schema and intent",
+      "position": [
+        330,
+        790
+      ],
+      "size": [
+        210,
+        116
+      ],
+      "role": "risk",
+      "icon": "shield",
+      "semantic_kind": "shield",
+      "icon_resolution": "exact",
+      "importance": "primary",
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "scope",
+      "label": "Scope",
+      "caption": "Permission boundary",
+      "position": [
+        580,
+        790
+      ],
+      "size": [
+        210,
+        116
+      ],
+      "role": "risk",
+      "icon": "token",
+      "semantic_kind": "token",
+      "icon_resolution": "exact",
+      "importance": "primary",
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "budget",
+      "label": "Budget",
+      "caption": "Cost · steps · rate limits",
+      "position": [
+        830,
+        790
+      ],
+      "size": [
+        210,
+        116
+      ],
+      "role": "risk",
+      "icon": "scheduler",
+      "semantic_kind": "scheduler",
+      "icon_resolution": "exact",
+      "importance": "primary",
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "allow",
+      "label": "Allow",
+      "caption": "Authorize execution",
+      "position": [
+        1080,
+        790
+      ],
+      "size": [
+        210,
+        116
+      ],
+      "role": "risk",
+      "icon": "shield",
+      "semantic_kind": "shield",
+      "icon_resolution": "exact",
+      "importance": "primary",
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "reject-replan",
+      "label": "Reject + Replan",
+      "caption": "Revise the action",
+      "position": [
+        705,
+        940
+      ],
+      "size": [
+        210,
+        116
+      ],
+      "role": "risk",
+      "icon": "reasoning",
+      "semantic_kind": "reasoning",
+      "icon_resolution": "exact",
+      "importance": "supporting",
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "tool-types",
+      "label": "Tool Types",
+      "caption": "Search · code · APIs",
+      "position": [
+        1360,
+        760
+      ],
+      "size": [
+        220,
+        116
+      ],
+      "role": "tool",
+      "icon": "tool",
+      "semantic_kind": "tool",
+      "icon_resolution": "exact",
+      "importance": "primary",
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "dispatch",
+      "label": "Dispatch",
+      "caption": "Route to an executor",
+      "position": [
+        1360,
+        910
+      ],
+      "size": [
+        220,
+        116
+      ],
+      "role": "tool",
+      "icon": "gateway",
+      "semantic_kind": "gateway",
+      "icon_resolution": "exact",
+      "importance": "primary",
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "return-result",
+      "label": "Return Result",
+      "caption": "Back to Observe",
+      "position": [
+        1360,
+        1060
+      ],
+      "size": [
+        220,
+        116
+      ],
+      "role": "tool",
+      "icon": "output",
+      "semantic_kind": "output",
+      "icon_resolution": "exact",
+      "importance": "primary",
+      "effect": {
+        "preset": "icon-performance"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "trigger",
+      "to": "think",
+      "label": "start",
+      "role": "process",
+      "direction": "forward",
+      "route": "points",
+      "semantic_relation_id": "trigger-think",
+      "semantic_kind": "trigger",
+      "importance": "primary",
+      "effect": {
+        "preset": "packet-flow",
+        "particle_count": 1
+      },
+      "flow_id": "main-path",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "points": [
+        [
+          820,
+          291
+        ],
+        [
+          820,
+          315
+        ],
+        [
+          200,
+          315
+        ],
+        [
+          200,
+          365
+        ]
+      ]
+    },
+    {
+      "from": "think",
+      "to": "act",
+      "label": "plan",
+      "role": "process",
+      "direction": "forward",
+      "route": "straight",
+      "semantic_relation_id": "think-act",
+      "semantic_kind": "instruction",
+      "importance": "primary",
+      "effect": {
+        "preset": "stream-flow",
+        "particle_count": 1
+      },
+      "flow_id": "main-path",
+      "flow_importance": "primary",
+      "flow_repeat": "loop"
+    },
+    {
+      "from": "act",
+      "to": "observe",
+      "label": "response",
+      "role": "process",
+      "direction": "forward",
+      "route": "straight",
+      "semantic_relation_id": "act-observe",
+      "semantic_kind": "data-flow",
+      "importance": "primary",
+      "effect": {
+        "preset": "stream-flow",
+        "particle_count": 1
+      },
+      "flow_id": "main-path",
+      "flow_importance": "primary",
+      "flow_repeat": "loop"
+    },
+    {
+      "from": "observe",
+      "to": "done",
+      "label": "",
+      "role": "process",
+      "direction": "forward",
+      "route": "orthogonal",
+      "semantic_relation_id": "observe-done",
+      "semantic_kind": "verification",
+      "importance": "primary",
+      "effect": {
+        "preset": "stream-flow",
+        "particle_count": 1
+      },
+      "flow_id": "main-path",
+      "flow_importance": "primary",
+      "flow_repeat": "loop"
+    },
+    {
+      "from": "done",
+      "to": "output",
+      "label": "yes",
+      "role": "process",
+      "direction": "forward",
+      "route": "straight",
+      "semantic_relation_id": "done-output",
+      "semantic_kind": "delivery",
+      "importance": "primary",
+      "effect": {
+        "preset": "packet-flow",
+        "particle_count": 1
+      },
+      "condition": "Final answer is ready",
+      "flow_id": "main-path",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven"
+    },
+    {
+      "from": "done",
+      "to": "think",
+      "label": "not yet",
+      "role": "output",
+      "direction": "forward",
+      "route": "points",
+      "semantic_relation_id": "done-think",
+      "semantic_kind": "feedback",
+      "importance": "primary",
+      "effect": {
+        "preset": "stream-flow",
+        "particle_count": 1
+      },
+      "condition": "Another tool call or reasoning step is needed",
+      "flow_id": "retry-loop",
+      "flow_importance": "primary",
+      "flow_repeat": "loop",
+      "points": [
+        [
+          950,
+          651
+        ],
+        [
+          950,
+          689
+        ],
+        [
+          200,
+          689
+        ],
+        [
+          200,
+          481
+        ]
+      ]
+    },
+    {
+      "from": "think",
+      "to": "working-memory",
+      "label": "store",
+      "role": "neutral",
+      "direction": "forward",
+      "route": "points",
+      "semantic_relation_id": "think-working",
+      "semantic_kind": "context-loading",
+      "importance": "supporting",
+      "effect": {
+        "preset": "packet-flow",
+        "particle_count": 1
+      },
+      "points": [
+        [
+          200,
+          481
+        ],
+        [
+          200,
+          681
+        ],
+        [
+          165,
+          681
+        ],
+        [
+          165,
+          790
+        ]
+      ]
+    },
+    {
+      "from": "working-memory",
+      "to": "long-term-memory",
+      "label": "",
+      "role": "neutral",
+      "direction": "forward",
+      "route": "straight",
+      "semantic_relation_id": "working-long",
+      "semantic_kind": "memory-write",
+      "importance": "supporting",
+      "effect": {
+        "preset": "stream-flow",
+        "particle_count": 1
+      },
+      "flow_id": "memory-loop",
+      "flow_importance": "supporting",
+      "flow_repeat": "loop"
+    },
+    {
+      "from": "long-term-memory",
+      "to": "think",
+      "label": "context",
+      "role": "neutral",
+      "direction": "forward",
+      "route": "points",
+      "semantic_relation_id": "long-think",
+      "semantic_kind": "context-loading",
+      "importance": "supporting",
+      "effect": {
+        "preset": "stream-flow",
+        "particle_count": 1
+      },
+      "flow_id": "memory-loop",
+      "flow_importance": "supporting",
+      "flow_repeat": "loop",
+      "points": [
+        [
+          165,
+          940
+        ],
+        [
+          165,
+          681
+        ],
+        [
+          200,
+          681
+        ],
+        [
+          200,
+          481
+        ]
+      ]
+    },
+    {
+      "from": "observe",
+      "to": "working-memory",
+      "label": "",
+      "role": "neutral",
+      "direction": "forward",
+      "route": "points",
+      "semantic_relation_id": "observe-working",
+      "semantic_kind": "memory-write",
+      "importance": "supporting",
+      "effect": {
+        "preset": "stream-flow",
+        "particle_count": 1
+      },
+      "flow_id": "memory-loop",
+      "flow_importance": "supporting",
+      "flow_repeat": "loop",
+      "points": [
+        [
+          920,
+          481
+        ],
+        [
+          920,
+          693
+        ],
+        [
+          165,
+          693
+        ],
+        [
+          165,
+          790
+        ]
+      ]
+    },
+    {
+      "from": "act",
+      "to": "validate",
+      "label": "",
+      "role": "risk",
+      "direction": "forward",
+      "route": "points",
+      "semantic_relation_id": "act-validate",
+      "semantic_kind": "security",
+      "importance": "primary",
+      "effect": {
+        "preset": "packet-flow",
+        "particle_count": 1
+      },
+      "flow_id": "guarded-tool-loop",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "points": [
+        [
+          560,
+          481
+        ],
+        [
+          560,
+          681
+        ],
+        [
+          435,
+          681
+        ],
+        [
+          435,
+          790
+        ]
+      ]
+    },
+    {
+      "from": "validate",
+      "to": "scope",
+      "label": "",
+      "role": "risk",
+      "direction": "forward",
+      "route": "straight",
+      "semantic_relation_id": "validate-scope",
+      "semantic_kind": "security",
+      "importance": "primary",
+      "effect": {
+        "preset": "packet-flow",
+        "particle_count": 1
+      },
+      "flow_id": "guarded-tool-loop",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven"
+    },
+    {
+      "from": "scope",
+      "to": "budget",
+      "label": "",
+      "role": "risk",
+      "direction": "forward",
+      "route": "straight",
+      "semantic_relation_id": "scope-budget",
+      "semantic_kind": "security",
+      "importance": "primary",
+      "effect": {
+        "preset": "packet-flow",
+        "particle_count": 1
+      },
+      "flow_id": "guarded-tool-loop",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven"
+    },
+    {
+      "from": "budget",
+      "to": "allow",
+      "label": "",
+      "role": "risk",
+      "direction": "forward",
+      "route": "straight",
+      "semantic_relation_id": "budget-allow",
+      "semantic_kind": "security",
+      "importance": "primary",
+      "effect": {
+        "preset": "packet-flow",
+        "particle_count": 1
+      },
+      "flow_id": "guarded-tool-loop",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven"
+    },
+    {
+      "from": "allow",
+      "to": "tool-types",
+      "label": "",
+      "role": "process",
+      "direction": "forward",
+      "route": "orthogonal",
+      "semantic_relation_id": "allow-tool",
+      "semantic_kind": "approval",
+      "importance": "primary",
+      "effect": {
+        "preset": "packet-flow",
+        "particle_count": 1
+      },
+      "flow_id": "guarded-tool-loop",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven"
+    },
+    {
+      "from": "tool-types",
+      "to": "dispatch",
+      "label": "",
+      "role": "process",
+      "direction": "forward",
+      "route": "straight",
+      "semantic_relation_id": "tool-dispatch",
+      "semantic_kind": "orchestration",
+      "importance": "primary",
+      "effect": {
+        "preset": "packet-flow",
+        "particle_count": 1
+      },
+      "flow_id": "guarded-tool-loop",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven"
+    },
+    {
+      "from": "dispatch",
+      "to": "return-result",
+      "label": "",
+      "role": "process",
+      "direction": "forward",
+      "route": "straight",
+      "semantic_relation_id": "dispatch-return",
+      "semantic_kind": "data-flow",
+      "importance": "primary",
+      "effect": {
+        "preset": "packet-flow",
+        "particle_count": 1
+      },
+      "flow_id": "guarded-tool-loop",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven"
+    },
+    {
+      "from": "return-result",
+      "to": "observe",
+      "label": "observe",
+      "role": "output",
+      "direction": "forward",
+      "route": "points",
+      "semantic_relation_id": "return-observe",
+      "semantic_kind": "observability",
+      "importance": "primary",
+      "effect": {
+        "preset": "packet-flow",
+        "particle_count": 1
+      },
+      "flow_id": "guarded-tool-loop",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "points": [
+        [
+          1470,
+          1060
+        ],
+        [
+          1470,
+          671
+        ],
+        [
+          1600,
+          671
+        ],
+        [
+          1600,
+          423
+        ],
+        [
+          1030,
+          423
+        ]
+      ]
+    },
+    {
+      "from": "validate",
+      "to": "reject-replan",
+      "label": "",
+      "role": "risk",
+      "direction": "forward",
+      "route": "orthogonal",
+      "semantic_relation_id": "validate-reject",
+      "semantic_kind": "failure",
+      "importance": "context",
+      "effect": {
+        "preset": "stream-flow",
+        "particle_count": 1
+      },
+      "flow_id": "replan-loop",
+      "flow_importance": "supporting",
+      "flow_repeat": "loop"
+    },
+    {
+      "from": "scope",
+      "to": "reject-replan",
+      "label": "",
+      "role": "risk",
+      "direction": "forward",
+      "route": "orthogonal",
+      "semantic_relation_id": "scope-reject",
+      "semantic_kind": "failure",
+      "importance": "context",
+      "effect": {
+        "preset": "draw",
+        "particle_count": 1
+      }
+    },
+    {
+      "from": "budget",
+      "to": "reject-replan",
+      "label": "",
+      "role": "risk",
+      "direction": "forward",
+      "route": "orthogonal",
+      "semantic_relation_id": "budget-reject",
+      "semantic_kind": "failure",
+      "importance": "context",
+      "effect": {
+        "preset": "draw",
+        "particle_count": 1
+      }
+    },
+    {
+      "from": "reject-replan",
+      "to": "think",
+      "label": "replan",
+      "role": "output",
+      "direction": "forward",
+      "route": "points",
+      "semantic_relation_id": "reject-think",
+      "semantic_kind": "feedback",
+      "importance": "supporting",
+      "effect": {
+        "preset": "stream-flow",
+        "particle_count": 1
+      },
+      "flow_id": "replan-loop",
+      "flow_importance": "supporting",
+      "flow_repeat": "loop",
+      "points": [
+        [
+          810,
+          940
+        ],
+        [
+          810,
+          681
+        ],
+        [
+          200,
+          681
+        ],
+        [
+          200,
+          481
+        ]
+      ]
+    }
+  ]
+}

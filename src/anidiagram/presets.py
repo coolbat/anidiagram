@@ -20,6 +20,7 @@ PRESET_NAMES = (
     "er",
     "network",
     "agent-memory",
+    "agent-loop",
 )
 
 
@@ -308,5 +309,60 @@ def _build_agent_memory() -> Dict[str, Any]:
         _edge("tools", "store", "retrieve", "source", "straight", 4),
         _edge("memory", "answer", "context", "memory", "straight", 5),
         _edge("store", "answer", "evidence", "source", "straight", 6),
+    ]
+    return spec
+
+
+def _build_agent_loop() -> Dict[str, Any]:
+    spec = _base(
+        "Agent Loop",
+        "trigger, cognition, memory, safety, and tool execution",
+        "sketch-board",
+    )
+    spec["canvas"] = {"width": 1640, "height": 1180}
+    spec["groups"] = [
+        {"id": "trigger", "label": "Trigger / Input", "bounds": [680, 130, 280, 150], "role": "source"},
+        {"id": "core", "label": "Cognitive Core", "bounds": [55, 320, 1375, 350], "role": "agent"},
+        {"id": "memory", "label": "Memory", "bounds": [25, 745, 250, 300], "role": "memory"},
+        {"id": "safety", "label": "Safety Layers", "bounds": [300, 745, 900, 300], "role": "risk"},
+        {"id": "tools", "label": "Tool Execution", "bounds": [1325, 715, 265, 410], "role": "tool"},
+    ]
+    spec["nodes"] = [
+        _node("trigger", "Trigger", 740, 175, "source", 1, "message · event · API · schedule"),
+        _node("think", "Think", 110, 375, "agent", 2, "reason and plan"),
+        _node("act", "Act", 410, 375, "agent", 3, "select a tool"),
+        _node("observe", "Observe", 710, 375, "output", 4, "parse result"),
+        _node("done", "Done?", 800, 535, "risk", 5, "final answer ready"),
+        _node("output", "Output", 1180, 535, "output", 6, "deliver"),
+        _node("working-memory", "Working Memory", 55, 790, "memory", 7, "active context"),
+        _node("long-memory", "Long-Term Memory", 55, 920, "memory", 8, "retrieved knowledge"),
+        _node("validate", "Validate", 330, 790, "risk", 9, "schema + intent"),
+        _node("scope", "Scope", 535, 790, "risk", 10, "permissions"),
+        _node("budget", "Budget", 740, 790, "risk", 11, "cost + steps"),
+        _node("allow", "Allow", 945, 790, "output", 12, "execute"),
+        _node("reject", "Reject + Replan", 640, 920, "risk", 13, "revise"),
+        _node("tool-types", "Tool Types", 1360, 760, "tool", 14, "search · code · APIs"),
+        _node("dispatch", "Dispatch", 1360, 890, "tool", 15, "route executor"),
+        _node("return", "Return Result", 1360, 1020, "output", 16, "back to observe"),
+    ]
+    spec["nodes"][4]["shape"] = "decision"
+    spec["edges"] = [
+        _edge("trigger", "think", "start", "source", "orthogonal", 1),
+        _edge("think", "act", "plan", "agent", "straight", 2),
+        _edge("act", "observe", "run", "agent", "straight", 3),
+        _edge("observe", "done", "evaluate", "output", "orthogonal", 4),
+        _edge("done", "output", "yes", "output", "straight", 5),
+        _edge("done", "think", "not yet", "risk", "orthogonal", 6),
+        _edge("think", "working-memory", "store", "memory", "orthogonal"),
+        _edge("long-memory", "think", "context", "memory", "orthogonal"),
+        _edge("act", "validate", "policy", "risk", "orthogonal"),
+        _edge("validate", "scope", "pass", "risk", "straight"),
+        _edge("scope", "budget", "pass", "risk", "straight"),
+        _edge("budget", "allow", "pass", "risk", "straight"),
+        _edge("allow", "tool-types", "invoke", "tool", "orthogonal"),
+        _edge("tool-types", "dispatch", "select", "tool", "vh"),
+        _edge("dispatch", "return", "result", "output", "vh"),
+        _edge("return", "observe", "observe", "output", "orthogonal"),
+        _edge("reject", "think", "replan", "risk", "orthogonal"),
     ]
     return spec

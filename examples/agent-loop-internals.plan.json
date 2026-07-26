@@ -1,0 +1,224 @@
+{
+  "version": "0.2",
+  "semantic": {
+    "title": "Agent Loop Runtime Architecture",
+    "subtitle": "Trigger → think → guarded tool execution → observe → decide",
+    "summary": "A governed agent loop connects triggers, cognition, memory, safety gates, tool execution, and a final output decision.",
+    "intent": {
+      "diagram_kind": "architecture",
+      "primary_question": "How does a production agent loop move from an external trigger to a governed final answer?",
+      "audience": [
+        "software engineers",
+        "agent workflow designers"
+      ],
+      "scope": "Trigger inputs, cognitive loop, memory, safety gates, tool dispatch, observation, retries, and output",
+      "exclusions": [
+        "Vendor-specific APIs",
+        "Model implementation details",
+        "Infrastructure deployment topology"
+      ]
+    },
+    "entities": [
+      {
+        "id": "trigger",
+        "label": "Trigger / Input",
+        "description": "Message · event · API · schedule",
+        "kind": "scheduler",
+        "role": "source",
+        "importance": "primary",
+        "source_refs": ["reference-image"]
+      },
+      {
+        "id": "think",
+        "label": "Think",
+        "description": "Reason, plan, and reflect",
+        "kind": "reasoning",
+        "role": "agent",
+        "importance": "primary",
+        "source_refs": ["reference-image"]
+      },
+      {
+        "id": "act",
+        "label": "Act",
+        "description": "Select and call a tool",
+        "kind": "agent",
+        "role": "agent",
+        "importance": "primary",
+        "source_refs": ["reference-image"]
+      },
+      {
+        "id": "observe",
+        "label": "Observe",
+        "description": "Parse result and update state",
+        "kind": "monitoring",
+        "role": "output",
+        "importance": "primary",
+        "source_refs": ["reference-image"]
+      },
+      {
+        "id": "done",
+        "label": "Done?",
+        "description": "Is the final answer ready?",
+        "kind": "task",
+        "role": "risk",
+        "importance": "primary",
+        "source_refs": ["reference-image"]
+      },
+      {
+        "id": "output",
+        "label": "Output",
+        "description": "Deliver the final answer",
+        "kind": "output",
+        "role": "output",
+        "importance": "primary",
+        "source_refs": ["reference-image"]
+      },
+      {
+        "id": "working-memory",
+        "label": "Working Memory",
+        "description": "Active turn context",
+        "kind": "memory",
+        "role": "memory",
+        "importance": "supporting",
+        "source_refs": ["reference-image"]
+      },
+      {
+        "id": "long-term-memory",
+        "label": "Long-Term Memory",
+        "description": "Retrieved knowledge",
+        "kind": "vector-database",
+        "role": "memory",
+        "importance": "supporting",
+        "source_refs": ["reference-image"]
+      },
+      {
+        "id": "validate",
+        "label": "Validate",
+        "description": "Schema and intent",
+        "kind": "shield",
+        "role": "risk",
+        "importance": "primary",
+        "source_refs": ["reference-image"]
+      },
+      {
+        "id": "scope",
+        "label": "Scope",
+        "description": "Permission boundary",
+        "kind": "token",
+        "role": "risk",
+        "importance": "primary",
+        "source_refs": ["reference-image"]
+      },
+      {
+        "id": "budget",
+        "label": "Budget",
+        "description": "Cost · steps · rate limits",
+        "kind": "scheduler",
+        "role": "risk",
+        "importance": "primary",
+        "source_refs": ["reference-image"]
+      },
+      {
+        "id": "allow",
+        "label": "Allow",
+        "description": "Authorize execution",
+        "kind": "shield",
+        "role": "risk",
+        "importance": "primary",
+        "source_refs": ["reference-image"]
+      },
+      {
+        "id": "reject-replan",
+        "label": "Reject + Replan",
+        "description": "Revise the action",
+        "kind": "reasoning",
+        "role": "risk",
+        "importance": "supporting",
+        "source_refs": ["reference-image"]
+      },
+      {
+        "id": "tool-types",
+        "label": "Tool Types",
+        "description": "Search · code · APIs",
+        "kind": "tool",
+        "role": "tool",
+        "importance": "primary",
+        "source_refs": ["reference-image"]
+      },
+      {
+        "id": "dispatch",
+        "label": "Dispatch",
+        "description": "Route to an executor",
+        "kind": "gateway",
+        "role": "tool",
+        "importance": "primary",
+        "source_refs": ["reference-image"]
+      },
+      {
+        "id": "return-result",
+        "label": "Return Result",
+        "description": "Back to Observe",
+        "kind": "output",
+        "role": "tool",
+        "importance": "primary",
+        "source_refs": ["reference-image"]
+      }
+    ],
+    "relations": [
+      {"id": "trigger-think", "from": "trigger", "to": "think", "kind": "trigger", "label": "start", "direction": "forward", "importance": "primary", "source_refs": ["reference-image"]},
+      {"id": "think-act", "from": "think", "to": "act", "kind": "instruction", "label": "plan", "direction": "forward", "importance": "primary", "source_refs": ["reference-image"]},
+      {"id": "act-observe", "from": "act", "to": "observe", "kind": "data-flow", "label": "response", "direction": "forward", "importance": "primary", "source_refs": ["reference-image"]},
+      {"id": "observe-done", "from": "observe", "to": "done", "kind": "verification", "label": "", "direction": "forward", "importance": "primary", "source_refs": ["reference-image"]},
+      {"id": "done-output", "from": "done", "to": "output", "kind": "delivery", "label": "yes", "direction": "forward", "importance": "primary", "condition": "Final answer is ready", "source_refs": ["reference-image"]},
+      {"id": "done-think", "from": "done", "to": "think", "kind": "feedback", "label": "not yet", "direction": "forward", "importance": "primary", "condition": "Another tool call or reasoning step is needed", "source_refs": ["reference-image"]},
+      {"id": "think-working", "from": "think", "to": "working-memory", "kind": "context-loading", "label": "store", "direction": "forward", "importance": "supporting", "source_refs": ["reference-image"]},
+      {"id": "working-long", "from": "working-memory", "to": "long-term-memory", "kind": "memory-write", "label": "", "direction": "forward", "importance": "supporting", "source_refs": ["reference-image"]},
+      {"id": "long-think", "from": "long-term-memory", "to": "think", "kind": "context-loading", "label": "context", "direction": "forward", "importance": "supporting", "source_refs": ["reference-image"]},
+      {"id": "observe-working", "from": "observe", "to": "working-memory", "kind": "memory-write", "label": "", "direction": "forward", "importance": "supporting", "source_refs": ["reference-image"]},
+      {"id": "act-validate", "from": "act", "to": "validate", "kind": "security", "label": "", "direction": "forward", "importance": "primary", "source_refs": ["reference-image"]},
+      {"id": "validate-scope", "from": "validate", "to": "scope", "kind": "security", "label": "", "direction": "forward", "importance": "primary", "source_refs": ["reference-image"]},
+      {"id": "scope-budget", "from": "scope", "to": "budget", "kind": "security", "label": "", "direction": "forward", "importance": "primary", "source_refs": ["reference-image"]},
+      {"id": "budget-allow", "from": "budget", "to": "allow", "kind": "security", "label": "", "direction": "forward", "importance": "primary", "source_refs": ["reference-image"]},
+      {"id": "allow-tool", "from": "allow", "to": "tool-types", "kind": "approval", "label": "", "direction": "forward", "importance": "primary", "source_refs": ["reference-image"]},
+      {"id": "tool-dispatch", "from": "tool-types", "to": "dispatch", "kind": "orchestration", "label": "", "direction": "forward", "importance": "primary", "source_refs": ["reference-image"]},
+      {"id": "dispatch-return", "from": "dispatch", "to": "return-result", "kind": "data-flow", "label": "", "direction": "forward", "importance": "primary", "source_refs": ["reference-image"]},
+      {"id": "return-observe", "from": "return-result", "to": "observe", "kind": "observability", "label": "observe", "direction": "forward", "importance": "primary", "source_refs": ["reference-image"]},
+      {"id": "validate-reject", "from": "validate", "to": "reject-replan", "kind": "failure", "label": "", "direction": "forward", "importance": "context", "source_refs": ["reference-image"]},
+      {"id": "scope-reject", "from": "scope", "to": "reject-replan", "kind": "failure", "label": "", "direction": "forward", "importance": "context", "source_refs": ["reference-image"]},
+      {"id": "budget-reject", "from": "budget", "to": "reject-replan", "kind": "failure", "label": "", "direction": "forward", "importance": "context", "source_refs": ["reference-image"]},
+      {"id": "reject-think", "from": "reject-replan", "to": "think", "kind": "feedback", "label": "replan", "direction": "forward", "importance": "supporting", "source_refs": ["reference-image"]}
+    ],
+    "groups": [
+      {"id": "trigger-input", "label": "Trigger / Input", "kind": "trigger", "members": ["trigger"], "importance": "primary", "source_refs": ["reference-image"]},
+      {"id": "cognitive-core", "label": "Cognitive Core · the agent loop", "kind": "agent-loop", "members": ["think", "act", "observe", "done", "output"], "importance": "primary", "source_refs": ["reference-image"]},
+      {"id": "memory-layer", "label": "Memory", "kind": "memory", "members": ["working-memory", "long-term-memory"], "importance": "supporting", "source_refs": ["reference-image"]},
+      {"id": "safety-layers", "label": "Safety Layers", "kind": "safety", "members": ["validate", "scope", "budget", "allow", "reject-replan"], "importance": "primary", "source_refs": ["reference-image"]},
+      {"id": "tool-execution", "label": "Tool Execution", "kind": "tool-execution", "members": ["tool-types", "dispatch", "return-result"], "importance": "primary", "source_refs": ["reference-image"]}
+    ],
+    "flows": [
+      {"id": "main-path", "label": "Main answer path", "description": "A trigger enters the cognitive loop and exits only when the answer is ready.", "relation_ids": ["trigger-think", "think-act", "act-observe", "observe-done", "done-output"], "importance": "primary", "repeat": "event-driven", "source_refs": ["reference-image"]},
+      {"id": "retry-loop", "label": "Cognitive retry loop", "description": "An incomplete result returns to thinking for another iteration.", "relation_ids": ["done-think", "think-act", "act-observe", "observe-done"], "importance": "primary", "repeat": "loop", "source_refs": ["reference-image"]},
+      {"id": "guarded-tool-loop", "label": "Governed tool execution", "description": "Every tool action passes validation, scope, and budget gates before dispatch.", "relation_ids": ["act-validate", "validate-scope", "scope-budget", "budget-allow", "allow-tool", "tool-dispatch", "dispatch-return", "return-observe"], "importance": "primary", "repeat": "event-driven", "source_refs": ["reference-image"]},
+      {"id": "memory-loop", "label": "Memory feedback", "description": "Observed state is stored, consolidated, and recalled into reasoning.", "relation_ids": ["observe-working", "working-long", "long-think"], "importance": "supporting", "repeat": "loop", "source_refs": ["reference-image"]},
+      {"id": "replan-loop", "label": "Reject and replan", "description": "A rejected action returns to the thinking stage.", "relation_ids": ["validate-reject", "reject-think"], "importance": "supporting", "repeat": "loop", "source_refs": ["reference-image"]}
+    ],
+    "sources": [
+      {
+        "id": "reference-image",
+        "type": "image",
+        "title": "User-provided loop engineering internals reference",
+        "note": "The topology is clean-room re-expressed as an AniDiagram semantic architecture and reusable agent-loop layout."
+      }
+    ]
+  },
+  "presentation": {
+    "icon_system": "auto",
+    "style": "sketch-board",
+    "layout": "agent-loop",
+    "motion": "auto"
+  },
+  "presentation_sources": {
+    "style": "model",
+    "layout": "explicit"
+  }
+}

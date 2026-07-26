@@ -20,6 +20,7 @@ for path in (SRC, SCRIPTS):
 
 from anidiagram.exporters import write_html, write_quality, write_svg
 from anidiagram.icon_system import resolve_icon_system
+from anidiagram.planner import compile_plan
 from anidiagram.quality import quality_report
 from anidiagram.schema import compile_scene
 from anidiagram.styles import deep_merge, load_style
@@ -59,6 +60,7 @@ LAYOUT_CASES = (
     ("er", "Agent Memory Data Model", "openai-minimal", ["Data models", "Relationships", "Memory schemas"]),
     ("network", "Distributed Agent Runtime Mesh", "dark-luxury", ["Distributed systems", "Runtime meshes", "Routing"]),
     ("agent-memory", "Personalized Agent Memory Flow", "deep-tech", ["Agent memory", "Retrieval", "Grounded output"]),
+    ("agent-loop", "Agent Loop Runtime Architecture", "sketch-board", ["Agent internals", "Governed tool loops", "Memory and safety"]),
 )
 
 MOTION_CATALOG_PATH = ROOT / "runtime" / "motion-catalog.json"
@@ -593,6 +595,9 @@ def layout_showcase_specs() -> Dict[str, Spec]:
             ],
             _motion("teaching", "signal-arrow", "icon-performance", "soft-reveal", "highlight-sweep", intensity=1.1),
         ),
+        "agent-loop": compile_plan(
+            json.loads((ROOT / "examples" / "agent-loop-internals.plan.json").read_text(encoding="utf-8"))
+        ),
     }
     focused_policy = {
         "profile": "focused",
@@ -734,7 +739,7 @@ def _build_layouts(spec_dir: Path, outdir: Path, quality: bool) -> List[Dict[str
             "preset": preset,
             "title": title,
             "style": style_name,
-            "icon_system": resolve_icon_system(style),
+            "icon_system": scene.icon_system or resolve_icon_system(style),
             "basename": preset,
             "spec": _rel(spec_path),
             "svg": _rel(svg_path),

@@ -580,6 +580,27 @@
         "warnings": 0,
         "issues": 0
       }
+    },
+    {
+      "preset": "agent-loop",
+      "title": "Agent Loop Runtime Architecture",
+      "style": "sketch-board",
+      "icon_system": "illustrated",
+      "basename": "agent-loop",
+      "spec": "examples/showcase/layouts/agent-loop-agent-loop-runtime-architecture.diagram.json",
+      "svg": "gallery/layouts/agent-loop.svg",
+      "html": "gallery/layouts/agent-loop.html",
+      "quality": "gallery/layouts/agent-loop.quality.json",
+      "best_for": [
+        "Agent internals",
+        "Governed tool loops",
+        "Memory and safety"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
     }
   ],
   "runtime_motion_page": "gallery/runtime-motion.html",

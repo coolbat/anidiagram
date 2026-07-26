@@ -10,6 +10,7 @@ from anidiagram.composition import DEFAULT_ICON_SYSTEM, DIAGRAM_CORE_ICONS
 from anidiagram.diagram_core.catalog import approved_icon_ids
 from anidiagram.motion_manifest import build_motion_manifest
 from anidiagram.planner import compile_plan
+from anidiagram.quality import quality_report
 from anidiagram.renderer_svg import render_svg
 from anidiagram.schema import DiagramScriptValidationError, compile_scene
 from anidiagram.styles import load_style
@@ -253,6 +254,31 @@ class CompositionContractTest(unittest.TestCase):
             self.assertEqual("illustrated", result["icon_system"])
             self.assertEqual("0.4", spec["version"])
             self.assertEqual(0, result["outputs"]["quality"]["summary"]["errors"])
+
+    def test_agent_loop_reference_case_uses_the_new_layout_and_illustrated_default(self):
+        plan = json.loads((ROOT / "examples" / "agent-loop-internals.plan.json").read_text(encoding="utf-8"))
+        spec = compile_plan(plan)
+        scene = compile_scene(spec)
+        style = load_style(ROOT / "styles" / "sketch-board.json")
+        manifest = build_motion_manifest(scene, style)
+
+        self.assertEqual("agent-loop", spec["layout"])
+        self.assertEqual("illustrated", spec["icon_system"])
+        self.assertEqual(
+            {"value": "illustrated", "version": "2.5.0", "source": "default"},
+            spec["resolved_presentation"]["icon_system"],
+        )
+        self.assertEqual({"nodes": 16, "edges": 22, "groups": 5}, scene.stats())
+        self.assertEqual(16, len(manifest["icons"]))
+        self.assertEqual(list(range(22)), manifest["stage"]["active_edge_indices"])
+        edges = {edge["semantic_relation_id"]: edge for edge in spec["edges"]}
+        for relation_id in ("think-act", "act-observe", "observe-done", "done-think"):
+            self.assertEqual("loop", edges[relation_id]["flow_repeat"])
+            self.assertEqual("stream-flow", edges[relation_id]["effect"]["preset"])
+        self.assertEqual(
+            {"errors": 0, "warnings": 0, "issues": 0},
+            quality_report(scene, style)["summary"],
+        )
 
     def test_all_56_approved_core_icons_render_and_receive_showcase_motion(self):
         icon_ids = sorted(DIAGRAM_CORE_ICONS)
