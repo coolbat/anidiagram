@@ -6,7 +6,7 @@ from contextlib import redirect_stdout
 from pathlib import Path
 
 from anidiagram.cli import main
-from anidiagram.composition import DIAGRAM_CORE_ICONS
+from anidiagram.composition import DEFAULT_ICON_SYSTEM, DIAGRAM_CORE_ICONS
 from anidiagram.diagram_core.catalog import approved_icon_ids
 from anidiagram.motion_manifest import build_motion_manifest
 from anidiagram.planner import compile_plan
@@ -28,7 +28,8 @@ class CompositionContractTest(unittest.TestCase):
         spec = compile_plan(self._plan())
 
         self.assertEqual("0.4", spec["version"])
-        self.assertEqual("diagram-core-v1", spec["icon_system"])
+        self.assertEqual("illustrated", DEFAULT_ICON_SYSTEM)
+        self.assertEqual("illustrated", spec["icon_system"])
         self.assertEqual("minimal-light", spec["style"])
         self.assertEqual("layered", spec["preset"])
         self.assertEqual("showcase-v1", spec["motion"]["profile"])
@@ -42,7 +43,7 @@ class CompositionContractTest(unittest.TestCase):
         )
         self.assertEqual(
             {
-                "icon_system": {"value": "diagram-core-v1", "source": "default"},
+                "icon_system": {"value": "illustrated", "version": "2.5.0", "source": "default"},
                 "style": {"value": "minimal-light", "source": "fallback"},
                 "layout": {"value": "layered", "source": "fallback"},
                 "motion": {"value": "showcase-v1", "source": "explicit"},
@@ -55,7 +56,7 @@ class CompositionContractTest(unittest.TestCase):
         self.assertEqual("gateway", next(node for node in spec["nodes"] if node["id"] == "ingress")["icon"])
 
         scene = compile_scene(spec)
-        self.assertEqual("diagram-core-v1", scene.icon_system)
+        self.assertEqual("illustrated", scene.icon_system)
         self.assertEqual("showcase-v1", scene.motion.profile)
         self.assertEqual("layered", scene.preset)
         self.assertEqual("unrestricted", scene.motion_policy.profile)
@@ -63,20 +64,22 @@ class CompositionContractTest(unittest.TestCase):
         self.assertEqual("all", scene.motion_policy.pulse_mode)
 
         svg = render_svg(scene, load_style())
-        self.assertIn('data-icon-system="diagram-core-v1"', svg)
-        self.assertIn('data-icon-source="diagram-core-v1"', svg)
-        self.assertIn('id="node_u2x2eingress__gateway__root"', svg)
-        self.assertNotIn("semantic-icon-character-wrap", svg)
+        self.assertIn('data-icon-system="illustrated"', svg)
+        self.assertIn('data-icon-system-version="2.5.0"', svg)
+        self.assertIn("semantic-icon-illustrated", svg)
+        self.assertIn('id="icon-ingress-root"', svg)
 
         manifest = build_motion_manifest(scene, load_style())
         self.assertEqual(4, len(manifest["icons"]))
         self.assertEqual([0, 1, 2], manifest["stage"]["active_edge_indices"])
         gateway = next(item for item in manifest["icons"] if item["icon"] == "gateway")
-        self.assertEqual("gateway-showcase-loop-v1", gateway["performance"])
-        self.assertIn("recipe", gateway)
+        self.assertEqual("illustrated-gateway-admit-route-mediate-v1", gateway["performance"])
+        self.assertEqual("illustrated-performance-v6", gateway["motion_contract"])
+        self.assertEqual("2.5.0", gateway["asset_version"])
+        self.assertIn("motion_recipe", gateway)
         self.assertEqual(
-            "#node_u2x2eingress__gateway__gate",
-            gateway["parts"]["gate"],
+            "#icon-ingress-policy-core",
+            gateway["parts"]["policy-core"],
         )
 
     def test_v02_explicit_presentation_is_preserved(self):
@@ -98,6 +101,22 @@ class CompositionContractTest(unittest.TestCase):
             {"value": "illustrated", "version": "2.5.0", "source": "explicit"},
             spec["resolved_presentation"]["icon_system"],
         )
+
+    def test_v02_explicit_diagram_core_selection_remains_available(self):
+        plan = self._plan()
+        plan["presentation"]["icon_system"] = "diagram-core-v1"
+
+        spec = compile_plan(plan)
+        scene = compile_scene(spec)
+        svg = render_svg(scene, load_style())
+
+        self.assertEqual("diagram-core-v1", spec["icon_system"])
+        self.assertEqual(
+            {"value": "diagram-core-v1", "source": "explicit"},
+            spec["resolved_presentation"]["icon_system"],
+        )
+        self.assertIn('data-icon-system="diagram-core-v1"', svg)
+        self.assertIn('data-icon-source="diagram-core-v1"', svg)
 
     def test_v02_legacy_illustrated_v2_id_resolves_to_versioned_illustrated_identity(self):
         plan = self._plan()
@@ -153,7 +172,7 @@ class CompositionContractTest(unittest.TestCase):
 
         self.assertEqual(
             {
-                "icon_system": {"value": "diagram-core-v1", "source": "default"},
+                "icon_system": {"value": "illustrated", "version": "2.5.0", "source": "default"},
                 "style": {"value": "minimal-light", "source": "fallback"},
                 "layout": {"value": "layered", "source": "fallback"},
                 "motion": {"value": "showcase-v1", "source": "default"},
@@ -231,7 +250,7 @@ class CompositionContractTest(unittest.TestCase):
             self.assertTrue(result["ok"])
             self.assertEqual("plan", result["source"])
             self.assertEqual({"name": "DiagramPlan", "version": "0.2"}, result["plan"]["schema"])
-            self.assertEqual("diagram-core-v1", result["icon_system"])
+            self.assertEqual("illustrated", result["icon_system"])
             self.assertEqual("0.4", spec["version"])
             self.assertEqual(0, result["outputs"]["quality"]["summary"]["errors"])
 

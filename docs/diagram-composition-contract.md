@@ -200,13 +200,14 @@ structure without embedding citations into visible labels.
 Target input field:
 
 ```json
-"icon_system": "diagram-core-v1"
+"icon_system": "illustrated"
 ```
 
 Resolution policy:
 
 1. Explicit user selection.
-2. `diagram-core-v1` default under composition policy v1.
+2. `illustrated` default under composition policy v1, currently implementation
+   version `2.5.0`.
 
 `auto` means use the versioned default; it does not ask a model to choose.
 
@@ -216,25 +217,23 @@ produce a declared fallback or a quality issue; it MUST NOT silently substitute
 a semantically different icon.
 
 The public illustrated system id is `illustrated`; its current implementation
-version is recorded separately as `2.4.0` in the resolved icon-system axis.
+version is recorded separately as `2.5.0` in the resolved icon-system axis.
 `illustrated-character-v2` is a legacy input alias and MUST resolve to
-`illustrated`. Twenty static assets are approved: `agent`, `operator`, `tool`,
-`output`, `database`, `api`, `search`, `memory`, `file`, `folder`, `cloud`, and
-`shield`, plus `user`, `server`, `ai-model`, `message-queue`, `vector-database`,
-`knowledge-base`, `gateway`, and `container`. The separately versioned
-`illustrated-performance-v5` motion contract is approved and maps all twenty
-icons automatically under public `showcase-v1`.
-`illustrated-performance-v5-review` remains immutable archived human-review
-evidence and is not emitted by new diagrams. `illustrated-performance-v4`
-and its v4-review source remain immutable 2.3.0 archives.
+`illustrated`. Fifty-six static assets are approved with exact semantic-id
+parity with Diagram Core v1. The separately versioned
+`illustrated-performance-v6` motion contract maps all 56 icons automatically
+under public `showcase-v1`. The v6/v7 review contracts remain immutable archived
+human-review evidence and are not emitted by new diagrams. The former public
+v5 contract remains the immutable twenty-icon 2.4.0 archive;
+`illustrated-performance-v4` and its v4-review source remain immutable 2.3.0 archives.
 `illustrated-performance-v3`
 remains the immutable twelve-icon 2.2.0 public-contract archive,
 `illustrated-performance-v2` remains the immutable eight-icon 2.1.0 archive,
 and `illustrated-performance-v3-review` remains archived approval evidence. The four-icon
 `illustrated-performance-v1` contract remains the immutable 2.0.0 archive.
 
-Illustrated 2.4.0 reads its canonical color and geometry values from
-`assets/illustrated/tokens-2.4.0.json`. A style MAY override the declared color
+Illustrated 2.5.0 reads its canonical color and geometry values from
+`assets/illustrated/tokens-2.5.0.json`. A style MAY override the declared color
 tokens through an `illustrated_tokens` object. Unknown tokens and non-hex color
 values are validation errors. View box, stroke width, line caps, line joins,
 icon paths, semantic roles, and SVG part ids are version-locked and MUST NOT be
@@ -260,8 +259,7 @@ call a model. Styles own canvas, typography-like spacing, node surfaces, edge
 colors, and semantic role colors. They do not own the icon-system selection.
 For the Illustrated system, styles may additionally map the approved visual
 color tokens, but cannot change icon geometry or semantic structure.
-`deep-tech` is the first approved public mapping for Illustrated 2.4.0. Its
-dark multicolor palette is stored directly in `styles/deep-tech.json`; review
+All 13 public styles contain approved Illustrated 2.5.0 token mappings. Review
 files must not become a second source of truth.
 
 When a Skill or another model-facing planner resolves an `auto` style or layout
@@ -323,7 +321,7 @@ and why they were selected. Recommended metadata:
 {
   "composition_policy": "composition-v1",
   "resolved_presentation": {
-    "icon_system": {"value": "diagram-core-v1", "source": "default"},
+    "icon_system": {"value": "illustrated", "version": "2.5.0", "source": "default"},
     "style": {"value": "deep-tech", "source": "model"},
     "layout": {"value": "layered", "source": "model"},
     "motion": {"value": "showcase-v1", "source": "default"}
@@ -339,7 +337,7 @@ Systems whose identity no longer embeds a release number record it separately.
 For example, an explicit Illustrated selection resolves as:
 
 ```json
-"icon_system": {"value": "illustrated", "version": "2.4.0", "source": "explicit"}
+"icon_system": {"value": "illustrated", "version": "2.5.0", "source": "explicit"}
 ```
 
 ## Compatibility and migration
@@ -347,7 +345,7 @@ For example, an explicit Illustrated selection resolves as:
 - Current DiagramScript v0.3 behavior does not change under this contract.
 - DiagramScript v0.3 omission continues to resolve through the current
   Illustrated Character v1 compatibility path.
-- The independent top-level `icon_system`, Diagram Core default, resolved
+- The independent top-level `icon_system`, Illustrated 2.5.0 default, resolved
   presentation record, and `showcase-v1` profile belong to DiagramScript v0.4
   or later.
 - Existing diagrams that require pixel-stable reproduction SHOULD be pinned to

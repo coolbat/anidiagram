@@ -21,7 +21,7 @@ and [the v0.2 schema](../schemas/diagram-plan-v0.2.schema.json).
 2. Build DiagramPlan v0.2 `semantic`: intent, entities, relations, groups,
    flows, importance, state, and source provenance.
 3. Resolve the four presentation requests. User choices win; otherwise the
-   model may choose style and layout, the icon default is `diagram-core-v1`,
+   model may choose style and layout, the icon default is `illustrated` 2.5.0,
    and the motion default is `showcase-v1`.
 4. Record model-selected concrete values in `presentation_sources`; unresolved
    `auto` values receive deterministic compiler defaults.

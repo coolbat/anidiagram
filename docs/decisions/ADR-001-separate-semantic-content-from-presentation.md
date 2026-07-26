@@ -8,6 +8,8 @@ Accepted and implemented
 
 2026-07-19
 
+Amended 2026-07-26 to promote Illustrated 2.5 as the composition-v1 default.
+
 ## Context
 
 AniDiagram needs a stable contract that can survive independent changes to icon
@@ -65,7 +67,8 @@ with a machine-readable planning schema in
 
 ### Resolution policy v1
 
-- `icon_system`: explicit user value, otherwise `diagram-core-v1`.
+- `icon_system`: explicit user value, otherwise `illustrated` (implementation
+  version 2.5.0).
 - `style`: explicit user value, otherwise model selection from the 13 public
   catalog styles, otherwise `minimal-light`.
 - `layout`: explicit coordinates, otherwise explicit layout, otherwise model
@@ -81,8 +84,11 @@ selection.
 - DiagramPlan v0.1 and DiagramScript v0.1-v0.3 remain valid.
 - DiagramScript v0.3 keeps its current icon-system resolution behavior,
   including legacy style-bound icon-system settings.
-- The new top-level independent `icon_system` field and Diagram Core default
-  belong to DiagramScript v0.4 or a later explicit schema version.
+- The new top-level independent `icon_system` field belongs to DiagramScript
+  v0.4 or a later explicit schema version. DiagramPlan v0.2 compiled through
+  `composition-v1` defaults to Illustrated 2.5. Direct manually authored
+  DiagramScript v0.4 documents without `composition_policy` retain the
+  `diagram-core-v1` omission default for compatibility.
 - For the v0.4 resolution path, a scene-level explicit icon system wins.
   Style-level icon-system settings are compatibility metadata only and cannot
   override an explicit scene selection.
@@ -132,6 +138,7 @@ and restart must settle on the authored static rest pose.
   putting part ids into content documents.
 - Model-selected style and layout choices become reproducible because their
   resolved ids are recorded.
-- DiagramScript v0.4, the 56-icon Diagram Core promotion, `showcase-v1`, and
-  DiagramPlan v0.2 CLI compilation are implemented. Further work can optimize
-  each system behind these stable boundaries.
+- DiagramScript v0.4, both 56-icon public systems, the Illustrated 2.5
+  composition-v1 default, `showcase-v1`, and DiagramPlan v0.2 CLI compilation
+  are implemented. Further work can optimize each system behind these stable
+  boundaries.

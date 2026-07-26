@@ -300,7 +300,8 @@ Schema files:
 v0.2 adds route types, step badges, preset metadata, and stricter role
 validation. v0.3 adds structured effect objects, semantic icons, and node
 shapes. v0.4 adds an independent top-level icon system, resolved presentation
-provenance, the Diagram Core default, and `showcase-v1`. See
+provenance, and `showcase-v1`; composition-v1 output defaults to versioned
+Illustrated. See
 [docs/diagram-script.md](./docs/diagram-script.md).
 
 DiagramPlan v0.2 is the default higher-level brief/LLM contract; v0.1 remains
@@ -315,15 +316,16 @@ Current defaults are scoped by input contract:
 
 | Input path | Default icon system | Default motion |
 | --- | --- | --- |
-| DiagramPlan v0.2 compiled through `composition-v1` to DiagramScript v0.4 | `diagram-core-v1` | `showcase-v1` |
+| DiagramPlan v0.2 compiled through `composition-v1` to DiagramScript v0.4 | `illustrated` (2.5.0) | `showcase-v1` |
 | Direct DiagramScript v0.4 without `composition_policy` | `diagram-core-v1` | `expressive` when `motion` is omitted |
 | Legacy DiagramScript v0.1-v0.3 or a style that omits `icon_system` | `illustrated-character-v1` | `expressive` when scene motion is omitted |
 
-`illustrated` is an explicit, non-default public icon-system choice. Its current
+`illustrated` is the composition-v1 default public icon-system choice. Its current
 implementation version is 2.5.0 and its 56 icons use the approved
 `illustrated-performance-v6` contract automatically under `showcase-v1`. See
 [the icon-system release status](./docs/icon-system-release-status.md) for the
-current/default/legacy matrix.
+current/default/legacy matrix. Select `diagram-core-v1` explicitly when the
+technical line-icon language is preferred.
 
 ## Layout Presets
 
@@ -710,8 +712,8 @@ must add their original license notices before release.
 ## Illustrated 2.5.0
 
 `illustrated` is the stable public id for the current Illustrated icon system.
-It is not the composition-v1 default; select it explicitly when the illustration
-language is wanted. Version 2.5.0 contains 56 approved icons with one-to-one
+It is the composition-v1 default when a DiagramPlan uses `icon_system: auto` or
+omits the presentation axis. Version 2.5.0 contains 56 approved icons with one-to-one
 semantic coverage of Diagram Core v1. All 13 public templates adapt only the
 approved Illustrated color tokens; geometry, part ids, and semantic roles stay
 unchanged.

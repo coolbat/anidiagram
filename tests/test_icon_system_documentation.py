@@ -24,10 +24,16 @@ class IconSystemDocumentationTest(unittest.TestCase):
                 self.assertIn("illustrated-character-v1", source)
                 self.assertIn("expressive", source.lower())
 
-        self.assertNotIn("The default semantic icon system is", self._read("README.md"))
-        self.assertNotIn("未显式指定图标系统时，默认使用", self._read("README.zh-CN.md"))
+        self.assertIn("composition-v1 default", self._read("README.md"))
+        self.assertIn("composition-v1 默认", self._read("README.zh-CN.md"))
+        self.assertNotIn("Diagram Core 默认值", self._read("README.zh-CN.md"))
+        self.assertIn("Direct manually authored DiagramScript v0.4", self._read("SKILL.md"))
 
-    def test_illustrated_25_public_contract_is_current_and_non_default(self):
+        adr = self._read("docs/decisions/ADR-001-separate-semantic-content-from-presentation.md")
+        self.assertIn("illustrated` (implementation", adr)
+        self.assertIn("retain the\n  `diagram-core-v1` omission default", adr)
+
+    def test_illustrated_25_public_contract_is_current_and_composition_default(self):
         for relative in (
             "README.md",
             "README.zh-CN.md",
@@ -42,6 +48,7 @@ class IconSystemDocumentationTest(unittest.TestCase):
                 self.assertIn("illustrated-performance-v6", source)
 
         status = self._read("docs/icon-system-release-status.md")
+        self.assertIn("Yes, for composition-v1", status)
         self.assertIn("No; select explicitly", status)
         self.assertIn("56 performances", status)
         self.assertIn("v6/v7 review contracts", status)

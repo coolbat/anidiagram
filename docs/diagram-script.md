@@ -79,7 +79,7 @@ Schema: `schemas/diagram-script-v0.3.schema.json`.
 - `showcase-v1`, which enables every eligible performance from the resolved icon
   system, data-flow edge, group treatment, and title entry while preserving
   rest poses and reduced-motion behavior;
-- the approved 56-icon `diagram-core-v1` catalog as the v0.4 default.
+- the approved 56-icon `illustrated` 2.5.0 catalog as the composition-v1 default.
 
 Schema: `schemas/diagram-script-v0.4.schema.json`.
 
@@ -286,8 +286,8 @@ the original line-icon system.
 `illustrated` is the public id for the approved static Illustrated system. Its
 current implementation version is `2.5.0`, recorded separately in
 `resolved_presentation.icon_system.version`. Its 56 structured semantic
-illustrations have exact id parity with Diagram Core v1. It is not the
-composition-v1 default. All 56 icons emit approved public
+illustrations have exact id parity with Diagram Core v1. It is the
+composition-v1 default; `diagram-core-v1` remains an explicit option. All 56 icons emit approved public
 `illustrated-performance-v6` runtime performances under `showcase-v1`. The
 v6/v7 review contracts are immutable archived human-review sources and are not
 emitted by new diagrams. The former `illustrated-performance-v5` public

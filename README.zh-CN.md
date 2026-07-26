@@ -281,7 +281,7 @@ Schema 文件：
 - [schemas/diagram-plan-v0.2.schema.json](./schemas/diagram-plan-v0.2.schema.json) — 语义优先的当前合约
 - [schemas/style-profile-v0.1.schema.json](./schemas/style-profile-v0.1.schema.json)
 
-`0.2` 增加 route、step badge、preset metadata 和更严格的 role 校验。`0.3` 增加结构化 effect object、语义 icon 和节点形状。`0.4` 增加独立图标系统、解析来源记录、Diagram Core 默认值与 `showcase-v1`。更完整的字段说明见 [docs/diagram-script.md](./docs/diagram-script.md)。
+`0.2` 增加 route、step badge、preset metadata 和更严格的 role 校验。`0.3` 增加结构化 effect object、语义 icon 和节点形状。`0.4` 增加独立图标系统、解析来源记录与 `showcase-v1`；composition-v1 输出默认使用带版本记录的 Illustrated。更完整的字段说明见 [docs/diagram-script.md](./docs/diagram-script.md)。
 
 DiagramPlan v0.2 是当前默认的上层 brief/LLM 合约，并通过
 `composition-v1` 编译到 DiagramScript v0.4。DiagramPlan v0.1 仅保留给显式
@@ -292,14 +292,15 @@ legacy `explainer-board` 输出。当前本地 planner 和编译器见
 
 | 输入路径 | 默认图标系统 | 默认动效 |
 | --- | --- | --- |
-| DiagramPlan v0.2 经 `composition-v1` 编译到 DiagramScript v0.4 | `diagram-core-v1` | `showcase-v1` |
+| DiagramPlan v0.2 经 `composition-v1` 编译到 DiagramScript v0.4 | `illustrated`（2.5.0） | `showcase-v1` |
 | 不声明 `composition_policy` 的直接 DiagramScript v0.4 | `diagram-core-v1` | 未声明 `motion` 时使用 `expressive` |
 | DiagramScript v0.1-v0.3 或未声明 `icon_system` 的旧 style | `illustrated-character-v1` | scene 未声明 motion 时使用 `expressive` |
 
-`illustrated` 是显式选择、并非默认图标系统。当前实现版本为 2.5.0，56 枚
+`illustrated` 是 composition-v1 默认图标系统。当前实现版本为 2.5.0，56 枚
 图标在 `showcase-v1` 下自动使用正式的 `illustrated-performance-v6` 合约。
 当前、默认与 legacy 边界见
-[图标系统发布状态](./docs/icon-system-release-status.md)。
+[图标系统发布状态](./docs/icon-system-release-status.md)。需要技术线框语言时，
+应显式指定 `diagram-core-v1`。
 
 ## 布局 Preset
 
@@ -537,8 +538,9 @@ AniDiagram 可以在概念层面参考已有项目和动画库，但代码、sch
 
 ## Illustrated 2.5.0
 
-`illustrated` 是当前插画图标系统的稳定公共 id，并非 composition-v1 默认值；
-需要插画语言时应显式选择。版本 2.5.0 包含 56 枚已批准图标，与 Diagram
+`illustrated` 是当前插画图标系统的稳定公共 id；当 DiagramPlan 使用
+`icon_system: auto` 或省略该 presentation 轴时，它就是 composition-v1 默认值。
+版本 2.5.0 包含 56 枚已批准图标，与 Diagram
 Core v1 的 56 个语义一一对应；13 套公共模板只覆盖颜色 token，不改变图标
 几何、部件 id 或语义角色。
 

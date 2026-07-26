@@ -12,7 +12,7 @@ from .icon_system import canonical_icon_system_id, icon_system_version
 from .illustrated_registry import illustrated_icon_ids
 
 
-DEFAULT_ICON_SYSTEM = "diagram-core-v1"
+DEFAULT_ICON_SYSTEM = "illustrated"
 DEFAULT_STYLE = "minimal-light"
 DEFAULT_LAYOUT = "layered"
 DEFAULT_MOTION = "showcase-v1"

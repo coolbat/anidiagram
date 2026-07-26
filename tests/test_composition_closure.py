@@ -92,7 +92,7 @@ class CompositionClosureTest(unittest.TestCase):
     def test_composition_v1_rejects_any_stale_resolved_axis(self):
         spec = compile_plan(self._plan())
         mutations = {
-            "icon_system": "illustrated",
+            "icon_system": "diagram-core-v1",
             "style": "deep-tech",
             "layout": "pipeline",
             "motion": "teaching",

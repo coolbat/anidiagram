@@ -18,7 +18,7 @@ style, layout, and motion system.
 2. Resolve the four presentation axes before rendering:
    - Honor every explicit user choice.
    - Use `icon_system: auto` when none was requested; it resolves to the
-     versioned default `diagram-core-v1`.
+     versioned default `illustrated` (currently Illustrated 2.5.0).
    - Choose one concrete public style from the catalog when the user did not
      choose. Record `presentation_sources.style: model`. Use `minimal-light`
      only as the deterministic fallback.
@@ -124,8 +124,8 @@ uses swimlane; alternatives use compare; two dimensions use matrix; chronology
 uses timeline or sequence; hierarchy uses stack; convergence uses funnel;
 relationships use er or network; explicit memory interaction uses agent-memory.
 
-Supported icon systems include `diagram-core-v1` (the composition-v1 default),
-`illustrated-character-v1`, and `illustrated` (currently version `2.5.0`).
+Supported icon systems include `diagram-core-v1`, `illustrated-character-v1`,
+and `illustrated` (the composition-v1 default, currently version `2.5.0`).
 `illustrated-character-v2` remains accepted only as a legacy alias for
 `illustrated`; new plans and resolved output use the stable `illustrated` id.
 Illustrated templates may override only the approved colors through the
@@ -154,6 +154,9 @@ Use `--spec` for existing DiagramScript v0.1-v0.3 files and `--preset` for the
 14 built-in clean-room preset compilers. Their legacy Illustrated Character v1
 resolution remains unchanged. Do not silently migrate pixel-stable legacy
 diagrams; create a separate v0.4 version unless the user asks to replace it.
+Direct manually authored DiagramScript v0.4 files without
+`composition_policy` also retain their `diagram-core-v1` omission default;
+Illustrated 2.5 is the default specifically for composition-v1 planning output.
 
 ## Gallery
 

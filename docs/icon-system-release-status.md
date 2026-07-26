@@ -13,7 +13,7 @@ AniDiagram has three intentionally different omission behaviors:
 
 | Input path | Default icon system | Default motion | Why |
 | --- | --- | --- | --- |
-| DiagramPlan v0.2 compiled through `composition-v1` to DiagramScript v0.4 | `diagram-core-v1` | `showcase-v1` | Current semantic-first product path |
+| DiagramPlan v0.2 compiled through `composition-v1` to DiagramScript v0.4 | `illustrated` (2.5.0) | `showcase-v1` | Current semantic-first product path |
 | Direct DiagramScript v0.4 without `composition_policy` | `diagram-core-v1` | `expressive` when motion is omitted | Manually authored v0.4 compatibility path |
 | DiagramScript v0.1-v0.3 or a legacy style that omits `icon_system` | `illustrated-character-v1` | `expressive` when scene motion is omitted | Pixel-stable compatibility path |
 
@@ -29,8 +29,8 @@ serialized `showcase-v1` composition profile.
 
 | Public id | Status | Assets | Motion behavior | Default? |
 | --- | --- | ---: | --- | --- |
-| `diagram-core-v1` | approved | 56 | All eligible Diagram Core performances run under `showcase-v1` | Yes, for composition-v1 |
-| `illustrated` | approved, implementation version 2.5.0 | 56 | `illustrated-performance-v6`, automatic under public `showcase-v1` | No; select explicitly |
+| `diagram-core-v1` | approved | 56 | All eligible Diagram Core performances run under `showcase-v1` | No; select explicitly |
+| `illustrated` | approved, implementation version 2.5.0 | 56 | `illustrated-performance-v6`, automatic under public `showcase-v1` | Yes, for composition-v1 |
 | `illustrated-character-v1` | supported legacy compatibility system | 13 | Character v1 semantic loops and Motion Coordination v1.2 | Only on the legacy omission path |
 | `illustrated-v1` | explicit legacy compatibility system | legacy set | Legacy illustrated runtime mapping | No |
 | `semantic-line-v1` | explicit legacy compatibility system | legacy set | Legacy semantic-line runtime mapping | No |
