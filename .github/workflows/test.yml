@@ -30,6 +30,7 @@ jobs:
         run: |
           python3 -m pip install -e ".[raster]"
           npm ci
+          npx playwright install --with-deps chromium
       - name: Run unit and contract tests
         run: PYTHONPATH=src python3 -m unittest discover -s tests
       - name: Validate all approved Diagram Core assets
