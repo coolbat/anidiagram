@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import base64
+import hashlib
+import inspect
 import json
 import math
 import os
@@ -24,6 +26,12 @@ PointList = List[Point]
 BROWSER_CAPTURE_FORMATS = {"png", "gif", "pdf", "webp", "mp4", "apng", "lottie"}
 DEFAULT_BROWSER_CAPTURE_FPS = 24
 DEFAULT_BROWSER_CAPTURE_FRAMES = 48
+GSAP_BROWSER_CAPTURE_VERSION = "3.15.0"
+BROWSER_CAPTURE_CONTRACT_VERSION = "browser-capture-v1"
+_GSAP_FLOATING_CDN_URL = "https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"
+_GSAP_CAPTURE_CDN_URL = (
+    f"https://cdn.jsdelivr.net/npm/gsap@{GSAP_BROWSER_CAPTURE_VERSION}/dist/gsap.min.js"
+)
 
 
 def write_svg(scene: Scene, style: Dict[str, Any], path: Path) -> Dict[str, str]:
@@ -97,7 +105,8 @@ def write_browser_capture(
         html_path = tmp_path / "runtime.html"
         frames_dir = tmp_path / "frames"
         frames_dir.mkdir()
-        html_path.write_text(render_html_runtime(scene, style, runtime=runtime), encoding="utf-8")
+        html_source = browser_capture_html(scene, style, runtime)
+        html_path.write_text(html_source, encoding="utf-8")
 
         capture = _capture_browser_runtime(
             scene=scene,
@@ -139,7 +148,65 @@ def write_browser_capture(
     result["frames"] = frame_count
     result["scale"] = scale
     result["loop_blend_frames"] = applied_loop_blend
+    if runtime == "gsap":
+        result["runtime_dependency"] = f"gsap@{GSAP_BROWSER_CAPTURE_VERSION}"
+    if format_name == "webp":
+        result["capture_contract"] = BROWSER_CAPTURE_CONTRACT_VERSION
+        result["input_sha256"] = webp_browser_capture_input_sha256(
+            scene,
+            style,
+            runtime=runtime,
+            frames=frame_count,
+            fps=fps,
+            scale=scale,
+            loop_blend_frames=loop_blend_frames,
+        )
     return result
+
+
+def browser_capture_html(scene: Scene, style: Dict[str, Any], runtime: str = "gsap") -> str:
+    return _pin_browser_capture_dependencies(
+        render_html_runtime(scene, style, runtime=runtime),
+        runtime,
+    )
+
+
+def webp_browser_capture_input_sha256(
+    scene: Scene,
+    style: Dict[str, Any],
+    runtime: str = "gsap",
+    frames: int = DEFAULT_BROWSER_CAPTURE_FRAMES,
+    fps: int = DEFAULT_BROWSER_CAPTURE_FPS,
+    scale: float = 2.0,
+    loop_blend_frames: int = 0,
+) -> str:
+    try:
+        from PIL import __version__ as pillow_version
+    except ImportError:
+        pillow_version = "unavailable"
+    payload = {
+        "contract": BROWSER_CAPTURE_CONTRACT_VERSION,
+        "html": browser_capture_html(scene, style, runtime),
+        "format": "webp",
+        "frames": int(frames),
+        "fps": int(fps),
+        "scale": float(scale),
+        "loop_blend_frames": int(loop_blend_frames),
+        "capture_script": _browser_capture_script(),
+        "blend_implementation": inspect.getsource(_blend_loop_seam),
+        "packaging_implementation": inspect.getsource(_write_browser_image_sequence),
+        "pillow_version": pillow_version,
+    }
+    encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
+
+
+def _pin_browser_capture_dependencies(html_source: str, runtime: str) -> str:
+    if runtime != "gsap":
+        return html_source
+    if _GSAP_FLOATING_CDN_URL not in html_source:
+        raise RuntimeError("GSAP browser capture dependency marker changed")
+    return html_source.replace(_GSAP_FLOATING_CDN_URL, _GSAP_CAPTURE_CDN_URL, 1)
 
 
 def write_png(scene: Scene, style: Dict[str, Any], path: Path) -> Dict[str, str]:

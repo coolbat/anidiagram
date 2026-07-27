@@ -86,8 +86,11 @@ implemented and should not change the default `html` behavior. See
 Gallery cards can use SVG fallback previews, but a README hero should use
 browser-captured runtime media. GitHub repository file views show `.html` files
 as source code; they do not execute the GSAP runtime. For GitHub README
-presentation, use an animated WebP or GIF captured from `diagram.html`, and link
-the preview to an MP4 or to a hosted runtime page.
+presentation, use an animated WebP or GIF captured from `diagram.html`. Link
+the preview to an MP4 or hosted runtime page when one is published. If neither
+exists yet, leave the inline animation unlinked and provide explicit local
+runtime instructions; do not link it to a repository `.html` source view or a
+static SVG that implies an interactive destination.
 
 For interactive HTML links, serve the generated gallery through a static host
 such as GitHub Pages. A repository link like

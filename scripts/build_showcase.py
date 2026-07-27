@@ -112,6 +112,8 @@ def build_showcase(spec_root: Path, outdir: Path, quality: bool = True) -> Dict[
     readme_showcase_result = render_readme_showcase_round(
         spec_root.parent / "readme-showcase-round-1",
         outdir / "readme-showcase",
+        reuse_webp=True,
+        webp_source_dir=ROOT / "gallery" / "readme-showcase",
     )
     readme_showcase = {
         "status": "approved",

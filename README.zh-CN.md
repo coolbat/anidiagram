@@ -22,11 +22,11 @@ README 现在使用 Round 1 已审核通过的 8 个精选案例。完整的 13 
 
 | Loop Engineering Operating Architecture |
 | --- |
-| [![Loop Engineering Operating Architecture](./gallery/readme-showcase/hero-loop-engineering.preview.svg)](./gallery/readme-showcase/hero-loop-engineering.svg)<br>`illustrated` 2.5 · `minimal-light` · `layered-loop`<br>把治理、隔离执行、验证交付和外部状态组织成三层工程循环。 |
+| ![Loop Engineering Operating Architecture](./gallery/readme-showcase/hero-loop-engineering.webp)<br>`illustrated` 2.5 · `minimal-light` · `layered-loop`<br>把治理、隔离执行、验证交付和外部状态组织成三层工程循环。 |
 
 | Governed RAG Production Architecture | Kubernetes Production Architecture |
 | --- | --- |
-| [![Governed RAG Production Architecture](./gallery/readme-showcase/hero-governed-rag.preview.svg)](./gallery/readme-showcase/hero-governed-rag.svg)<br>`illustrated` 2.5 · `minimal-light` · `layered` | [![Kubernetes Production Architecture](./gallery/readme-showcase/hero-kubernetes-three-layer.preview.svg)](./gallery/readme-showcase/hero-kubernetes-three-layer.svg)<br>`diagram-core-v1` · `deep-tech` · 三层结构 |
+| ![Governed RAG Production Architecture](./gallery/readme-showcase/hero-governed-rag.webp)<br>`illustrated` 2.5 · `minimal-light` · `layered` | ![Kubernetes Production Architecture](./gallery/readme-showcase/hero-kubernetes-three-layer.webp)<br>`diagram-core-v1` · `deep-tech` · 三层结构 |
 
 本地打开可交互 runtime：
 
@@ -44,13 +44,13 @@ GitHub Pages 发布，README 按钮应链接到 Pages URL，而不是 GitHub 的
 
 | Minimal Light | Deep Tech | Claude Warm |
 | --- | --- | --- |
-| [![Minimal Light 下的 Production AI Agent Request Lifecycle](./gallery/readme-showcase/template-agent-lifecycle-minimal-light.preview.svg)](./gallery/readme-showcase/template-agent-lifecycle-minimal-light.svg)<br>安静、偏文档表达 | [![Deep Tech 下的 Production AI Agent Request Lifecycle](./gallery/readme-showcase/template-agent-lifecycle-deep-tech.preview.svg)](./gallery/readme-showcase/template-agent-lifecycle-deep-tech.svg)<br>高对比技术展示 | [![Claude Warm 下的 Production AI Agent Request Lifecycle](./gallery/readme-showcase/template-agent-lifecycle-claude-warm.preview.svg)](./gallery/readme-showcase/template-agent-lifecycle-claude-warm.svg)<br>温暖的推理和教学表达 |
+| ![Minimal Light 下的 Production AI Agent Request Lifecycle](./gallery/readme-showcase/template-agent-lifecycle-minimal-light.webp)<br>安静、偏文档表达 | ![Deep Tech 下的 Production AI Agent Request Lifecycle](./gallery/readme-showcase/template-agent-lifecycle-deep-tech.webp)<br>高对比技术展示 | ![Claude Warm 下的 Production AI Agent Request Lifecycle](./gallery/readme-showcase/template-agent-lifecycle-claude-warm.webp)<br>温暖的推理和教学表达 |
 
 ### Layout Showcase
 
 | Enterprise RAG Ingestion Pipeline | MCP Tool Orchestration Hub |
 | --- | --- |
-| [![Enterprise RAG Ingestion Pipeline](./gallery/readme-showcase/layout-enterprise-rag-pipeline.preview.svg)](./gallery/readme-showcase/layout-enterprise-rag-pipeline.svg)<br>`pipeline` · 顺序转换与检索 | [![MCP Tool Orchestration Hub](./gallery/readme-showcase/layout-mcp-tool-hub.preview.svg)](./gallery/readme-showcase/layout-mcp-tool-hub.svg)<br>`hub-spoke` · 一个编排器协调多种能力 |
+| ![Enterprise RAG Ingestion Pipeline](./gallery/readme-showcase/layout-enterprise-rag-pipeline.webp)<br>`pipeline` · 顺序转换与检索 | ![MCP Tool Orchestration Hub](./gallery/readme-showcase/layout-mcp-tool-hub.webp)<br>`hub-spoke` · 一个编排器协调多种能力 |
 
 ### Runtime Motion Showcase
 
@@ -470,8 +470,21 @@ interactive、hybrid 都是后续路线图，不是默认行为。更多 runtime
 ## 重新生成 Gallery
 
 ```bash
+python3 -m pip install -e ".[raster]"
 PYTHONPATH=src python3 scripts/build_showcase.py --quality
 ```
+
+该命令复用已经提交的 8 个 README animated WebP 预览。如果需要使用固定的
+`gsap@3.15.0` 捕获 runtime 明确重新录制，执行：
+
+```bash
+PYTHONPATH=src python3 scripts/render_readme_showcase_round_1.py \
+  --spec-root examples/readme-showcase-round-1 \
+  --outdir gallery/readme-showcase
+```
+
+重新录制需要项目内的 Playwright/Chromium 浏览器运行环境，并能访问固定的
+GSAP 依赖。
 
 ## 测试
 

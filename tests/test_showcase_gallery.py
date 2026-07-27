@@ -5,6 +5,11 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit
 
+try:
+    from PIL import Image
+except ImportError:  # pragma: no cover - exercised by the base install contract
+    Image = None
+
 from anidiagram.quality import quality_report
 from anidiagram.schema import compile_scene
 from anidiagram.motion_manifest import CHARACTER_ICON_PERFORMANCES, CHARACTER_REST_AT, build_motion_manifest
@@ -347,27 +352,52 @@ class ShowcaseGalleryTest(unittest.TestCase):
                 "layout-enterprise-rag-pipeline",
                 "layout-mcp-tool-hub",
             ]
-            positions = [source.index(f"gallery/readme-showcase/{case_id}.preview.svg") for case_id in expected]
+            positions = [source.index(f"gallery/readme-showcase/{case_id}.webp") for case_id in expected]
             self.assertEqual(sorted(positions), positions, relative)
             self.assertNotIn("gallery/previews/agent-runtime-flow.webp", source)
             self.assertNotIn("gallery/styles/minimal-light.svg", source)
             self.assertNotIn("gallery/layouts/pipeline.svg", source)
+            self.assertIn("scripts/render_readme_showcase_round_1.py", source)
             for case_id in expected:
+                self.assertNotIn(f"gallery/readme-showcase/{case_id}.preview.svg", source)
                 self.assertIn(
-                    f"](./gallery/readme-showcase/{case_id}.svg)",
+                    f"](./gallery/readme-showcase/{case_id}.webp)",
                     source,
-                    f"{relative}: {case_id} GitHub preview link",
+                    f"{relative}: {case_id} animated WebP image",
                 )
                 self.assertNotIn(
-                    f"](./gallery/readme-showcase/{case_id}.html)",
+                    f"](./gallery/readme-showcase/{case_id}.svg)",
                     source,
-                    f"{relative}: {case_id} source-page link",
+                    f"{relative}: {case_id} static click target",
                 )
                 for suffix in ("preview.svg", "html", "quality.json"):
                     self.assertTrue(
                         (ROOT / "gallery" / "readme-showcase" / f"{case_id}.{suffix}").is_file(),
                         f"{relative}: {case_id}.{suffix}",
                     )
+
+    @unittest.skipIf(Image is None, "Pillow is required to inspect animated WebP frames")
+    def test_curated_showcase_uses_animated_webp_previews(self):
+        manifest = json.loads((ROOT / "gallery" / "readme-showcase" / "manifest.json").read_text(encoding="utf-8"))
+        review = (ROOT / "gallery" / "readme-showcase" / "readme-showcase-round-1.html").read_text(encoding="utf-8")
+        self.assertEqual(8, len(manifest["cases"]))
+        total_bytes = 0
+        for case in manifest["cases"]:
+            path = ROOT / case["webp"]
+            self.assertTrue(path.is_file(), case["webp"])
+            total_bytes += path.stat().st_size
+            self.assertLess(path.stat().st_size, 6_000_000, case["webp"])
+            self.assertIn(f'src="{path.name}"', review)
+            self.assertNotIn(f'src="{case["id"]}.preview.svg"', review)
+            self.assertEqual("browser", case["webp_capture"]["renderer"])
+            self.assertEqual(72, case["webp_capture"]["frames"])
+            self.assertEqual("gsap@3.15.0", case["webp_capture"]["runtime_dependency"])
+            self.assertEqual("browser-capture-v1", case["webp_capture"]["capture_contract"])
+            self.assertEqual(64, len(case["webp_capture"]["input_sha256"]))
+            with Image.open(path) as image:
+                self.assertTrue(getattr(image, "is_animated", False), case["webp"])
+                self.assertEqual(72, image.n_frames, case["webp"])
+        self.assertLess(total_bytes, 30_000_000)
 
     def test_full_gallery_builders_keep_two_column_style_grids(self):
 

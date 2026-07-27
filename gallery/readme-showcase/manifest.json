@@ -32,6 +32,17 @@
       "canvas": {
         "width": 1280,
         "height": 920
+      },
+      "webp": "gallery/readme-showcase/hero-loop-engineering.webp",
+      "webp_capture": {
+        "renderer": "browser",
+        "fps": 24,
+        "frames": 72,
+        "scale": 1.0,
+        "loop_blend_frames": 8,
+        "runtime_dependency": "gsap@3.15.0",
+        "capture_contract": "browser-capture-v1",
+        "input_sha256": "db9302ca72d559e998ff67bbde52c024d8f51c5d380cc9ca218c31a36c37db39"
       }
     },
     {
@@ -55,6 +66,17 @@
       "canvas": {
         "width": 1600,
         "height": 900
+      },
+      "webp": "gallery/readme-showcase/hero-governed-rag.webp",
+      "webp_capture": {
+        "renderer": "browser",
+        "fps": 24,
+        "frames": 72,
+        "scale": 1.0,
+        "loop_blend_frames": 8,
+        "runtime_dependency": "gsap@3.15.0",
+        "capture_contract": "browser-capture-v1",
+        "input_sha256": "d955bc55aca640a401df26e0230370df29ea7ea2aa484f1629d3787b52374ace"
       }
     },
     {
@@ -78,6 +100,17 @@
       "canvas": {
         "width": 1600,
         "height": 900
+      },
+      "webp": "gallery/readme-showcase/hero-kubernetes-three-layer.webp",
+      "webp_capture": {
+        "renderer": "browser",
+        "fps": 24,
+        "frames": 72,
+        "scale": 1.0,
+        "loop_blend_frames": 8,
+        "runtime_dependency": "gsap@3.15.0",
+        "capture_contract": "browser-capture-v1",
+        "input_sha256": "cec5763a1a5fa80fe467bfa25d35bc651875c791806bb396af20364841a8ef24"
       }
     },
     {
@@ -101,6 +134,17 @@
       "canvas": {
         "width": 1600,
         "height": 900
+      },
+      "webp": "gallery/readme-showcase/template-agent-lifecycle-minimal-light.webp",
+      "webp_capture": {
+        "renderer": "browser",
+        "fps": 24,
+        "frames": 72,
+        "scale": 1.0,
+        "loop_blend_frames": 8,
+        "runtime_dependency": "gsap@3.15.0",
+        "capture_contract": "browser-capture-v1",
+        "input_sha256": "cdc347a0899b45688db8dd2cbcfdd392c6cd0be96705512016b8d6d7a488b678"
       }
     },
     {
@@ -124,6 +168,17 @@
       "canvas": {
         "width": 1600,
         "height": 900
+      },
+      "webp": "gallery/readme-showcase/template-agent-lifecycle-deep-tech.webp",
+      "webp_capture": {
+        "renderer": "browser",
+        "fps": 24,
+        "frames": 72,
+        "scale": 1.0,
+        "loop_blend_frames": 8,
+        "runtime_dependency": "gsap@3.15.0",
+        "capture_contract": "browser-capture-v1",
+        "input_sha256": "b354b57f54ae144229cac93e2be3d07f96843aade8262a27e64df9d216c79cdd"
       }
     },
     {
@@ -147,6 +202,17 @@
       "canvas": {
         "width": 1600,
         "height": 900
+      },
+      "webp": "gallery/readme-showcase/template-agent-lifecycle-claude-warm.webp",
+      "webp_capture": {
+        "renderer": "browser",
+        "fps": 24,
+        "frames": 72,
+        "scale": 1.0,
+        "loop_blend_frames": 8,
+        "runtime_dependency": "gsap@3.15.0",
+        "capture_contract": "browser-capture-v1",
+        "input_sha256": "c0b383c83acae6d20aed9f6e31b107adbee4ea26f58fe89ff6f4b9b733607a0b"
       }
     },
     {
@@ -170,6 +236,17 @@
       "canvas": {
         "width": 1600,
         "height": 900
+      },
+      "webp": "gallery/readme-showcase/layout-enterprise-rag-pipeline.webp",
+      "webp_capture": {
+        "renderer": "browser",
+        "fps": 24,
+        "frames": 72,
+        "scale": 1.0,
+        "loop_blend_frames": 8,
+        "runtime_dependency": "gsap@3.15.0",
+        "capture_contract": "browser-capture-v1",
+        "input_sha256": "9a45d6bd207bf3b6c848cfd98c7afe014392beb660e490b84fc577fda238d677"
       }
     },
     {
@@ -193,6 +270,17 @@
       "canvas": {
         "width": 1600,
         "height": 900
+      },
+      "webp": "gallery/readme-showcase/layout-mcp-tool-hub.webp",
+      "webp_capture": {
+        "renderer": "browser",
+        "fps": 24,
+        "frames": 72,
+        "scale": 1.0,
+        "loop_blend_frames": 8,
+        "runtime_dependency": "gsap@3.15.0",
+        "capture_contract": "browser-capture-v1",
+        "input_sha256": "f6f6666498a69ad237107244e732339a879a581fad91f4d9ea7ff95a06103c5b"
       }
     }
   ]

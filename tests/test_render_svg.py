@@ -11,6 +11,8 @@ from anidiagram.cli import main
 from anidiagram.exporters import _render_frames
 from anidiagram.exporters import _blend_loop_seam
 from anidiagram.exporters import _browser_capture_script
+from anidiagram.exporters import _pin_browser_capture_dependencies
+from anidiagram.exporters import webp_browser_capture_input_sha256
 from anidiagram.exporters import write_browser_capture
 from anidiagram.exporters import write_gif
 from anidiagram.illustrated_character_icons import character_definition, character_icon_ids
@@ -1227,6 +1229,24 @@ class SvgRendererTest(unittest.TestCase):
         self.assertIn("svgElement.setCurrentTime(seconds)", script)
         self.assertIn("window.__ANIDIAGRAM_TIMELINES__", script)
         self.assertIn("tl.totalTime(localSeconds % cycleSeconds, false)", script)
+
+    def test_browser_capture_pins_the_gsap_dependency(self):
+        source = '<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>'
+        pinned = _pin_browser_capture_dependencies(source, "gsap")
+
+        self.assertIn("gsap@3.15.0/dist/gsap.min.js", pinned)
+        self.assertNotIn("gsap@3/dist/gsap.min.js", pinned)
+        self.assertEqual(source, _pin_browser_capture_dependencies(source, "none"))
+
+    def test_browser_capture_fingerprint_covers_timing_contract(self):
+        scene = compile_scene(json.loads((ROOT / "tests" / "fixtures" / "minimal.diagram.json").read_text(encoding="utf-8")))
+        style = load_style(ROOT / "styles" / "minimal-light.json")
+        common = {"runtime": "gsap", "frames": 72, "scale": 1.0, "loop_blend_frames": 8}
+
+        at_24_fps = webp_browser_capture_input_sha256(scene, style, fps=24, **common)
+        at_30_fps = webp_browser_capture_input_sha256(scene, style, fps=30, **common)
+
+        self.assertNotEqual(at_24_fps, at_30_fps)
 
     def test_browser_capture_timeout_scales_for_formal_ci_exports(self):
         from anidiagram import exporters

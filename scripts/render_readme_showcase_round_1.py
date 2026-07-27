@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import sys
 from functools import partial
 from html import escape
@@ -28,7 +29,14 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from anidiagram.exporters import write_html, write_quality, write_svg
+from anidiagram.exporters import (
+    GSAP_BROWSER_CAPTURE_VERSION,
+    webp_browser_capture_input_sha256,
+    write_browser_capture,
+    write_html,
+    write_quality,
+    write_svg,
+)
 from anidiagram.planner import compile_plan
 from anidiagram.quality import quality_report
 from anidiagram.renderer_svg import render_svg
@@ -38,6 +46,13 @@ from anidiagram.styles import load_style
 
 Spec = dict[str, Any]
 CANVAS = {"width": 1600, "height": 900}
+README_WEBP_CAPTURE = {
+    "runtime": "gsap",
+    "frames": 72,
+    "fps": 24,
+    "scale": 1.0,
+    "loop_blend_frames": 8,
+}
 
 CASES = (
     {
@@ -459,12 +474,18 @@ def _review_page(entries: list[Spec]) -> str:
     for heading, kind, description in groups:
         cards = []
         for entry in (item for item in entries if item["kind"] == kind):
+            preview_name = entry.get("webp_name", entry["preview_name"])
+            preview_alt = (
+                f'Animated WebP preview of {entry["title"]}'
+                if entry.get("webp_name")
+                else f'Static preview of {entry["title"]}'
+            )
             cards.append(
                 f'''<article data-kind="{escape(kind)}" data-case="{escape(entry["id"])}">
   <div class="card-head"><div><span>{escape(entry["label"])}</span><h3>{escape(entry["title"])}</h3></div>
   <code>{escape(entry["icon_system"])} · {escape(entry["style"])} · {escape(entry["layout"])}</code></div>
   <a class="preview" href="{escape(entry["html_name"])}" aria-label="Open animated {escape(entry["title"])}">
-    <img src="{escape(entry["preview_name"])}" alt="Static preview of {escape(entry["title"])}" width="{entry["canvas"]["width"]}" height="{entry["canvas"]["height"]}">
+    <img src="{escape(preview_name)}" alt="{escape(preview_alt)}" width="{entry["canvas"]["width"]}" height="{entry["canvas"]["height"]}">
   </a>
   <p class="links"><a href="{escape(entry["html_name"])}">Animated HTML</a><a href="{escape(entry["svg_name"])}">SVG</a><a href="{escape(entry["quality_name"])}">Quality</a><a href="{escape(entry["spec_relative"])}">DiagramScript</a></p>
 </article>'''
@@ -508,7 +529,16 @@ def _review_page(entries: list[Spec]) -> str:
 '''
 
 
-def render_round(spec_root: Path, outdir: Path) -> Spec:
+def render_round(
+    spec_root: Path,
+    outdir: Path,
+    *,
+    export_webp: bool = False,
+    reuse_webp: bool = False,
+    webp_source_dir: Path | None = None,
+) -> Spec:
+    if export_webp and reuse_webp:
+        raise ValueError("export_webp and reuse_webp are mutually exclusive")
     spec_root = spec_root.resolve()
     outdir = outdir.resolve()
     spec_root.mkdir(parents=True, exist_ok=True)
@@ -517,12 +547,20 @@ def render_round(spec_root: Path, outdir: Path) -> Spec:
     entries: list[Spec] = []
     combined = {"errors": 0, "warnings": 0, "issues": 0}
     specs = build_specs()
+    reused_cases: dict[str, Spec] = {}
+    if reuse_webp:
+        source_manifest_path = (webp_source_dir or outdir).resolve() / "manifest.json"
+        if not source_manifest_path.is_file():
+            raise RuntimeError(f"Committed WebP manifest is missing: {source_manifest_path}")
+        source_manifest = json.loads(source_manifest_path.read_text(encoding="utf-8"))
+        reused_cases = {item["id"]: item for item in source_manifest.get("cases", [])}
 
     for case in CASES:
         case_id = case["id"]
         spec = specs[case_id]
         spec_path = spec_root / f"{case_id}.diagram.json"
         preview_path = outdir / f"{case_id}.preview.svg"
+        webp_path = outdir / f"{case_id}.webp"
         svg_path = outdir / f"{case_id}.svg"
         html_path = outdir / f"{case_id}.html"
         quality_path = outdir / f"{case_id}.quality.json"
@@ -538,27 +576,88 @@ def render_round(spec_root: Path, outdir: Path) -> Spec:
             encoding="utf-8",
         )
         write_quality(scene, style, quality_path)
+        webp_result = None
+        if export_webp:
+            webp_result = write_browser_capture(
+                scene,
+                style,
+                webp_path,
+                "webp",
+                **README_WEBP_CAPTURE,
+            )
+            if webp_result.get("status") != "written":
+                raise RuntimeError(
+                    f'Animated WebP export failed for {case_id}: '
+                    f'{webp_result.get("reason", webp_result.get("status", "unknown error"))}'
+                )
+        elif reuse_webp:
+            source_path = (webp_source_dir or outdir).resolve() / webp_path.name
+            if not source_path.is_file():
+                raise RuntimeError(
+                    f"Committed animated WebP is missing for {case_id}; "
+                    "run scripts/render_readme_showcase_round_1.py with the tracked gallery outdir"
+                )
+            if source_path != webp_path:
+                shutil.copyfile(source_path, webp_path)
+            _validate_reused_webp(webp_path, spec["canvas"])
+            source_case = reused_cases.get(case_id)
+            if not source_case or "webp_capture" not in source_case:
+                raise RuntimeError(f"Committed WebP provenance is missing for {case_id}")
+            expected_hash = webp_browser_capture_input_sha256(
+                scene,
+                style,
+                runtime=README_WEBP_CAPTURE["runtime"],
+                frames=README_WEBP_CAPTURE["frames"],
+                fps=README_WEBP_CAPTURE["fps"],
+                scale=README_WEBP_CAPTURE["scale"],
+                loop_blend_frames=README_WEBP_CAPTURE["loop_blend_frames"],
+            )
+            if source_case["webp_capture"].get("input_sha256") != expected_hash:
+                raise RuntimeError(f"Committed WebP capture input changed for {case_id}; explicitly re-record it")
+            webp_result = {
+                "status": "written",
+                **source_case["webp_capture"],
+            }
         summary = quality_report(scene, style)["summary"]
         for key in combined:
             combined[key] += int(summary[key])
-        entries.append(
-            {
-                **case,
-                "title": spec["title"]["text"],
-                "spec": _relative(spec_path, base),
-                "preview": _relative(preview_path, base),
-                "svg": _relative(svg_path, base),
-                "html": _relative(html_path, base),
-                "quality": _relative(quality_path, base),
-                "spec_relative": os.path.relpath(spec_path, outdir),
-                "preview_name": preview_path.name,
-                "svg_name": svg_path.name,
-                "html_name": html_path.name,
-                "quality_name": quality_path.name,
-                "quality_summary": summary,
-                "canvas": dict(spec["canvas"]),
-            }
-        )
+        entry = {
+            **case,
+            "title": spec["title"]["text"],
+            "spec": _relative(spec_path, base),
+            "preview": _relative(preview_path, base),
+            "svg": _relative(svg_path, base),
+            "html": _relative(html_path, base),
+            "quality": _relative(quality_path, base),
+            "spec_relative": os.path.relpath(spec_path, outdir),
+            "preview_name": preview_path.name,
+            "svg_name": svg_path.name,
+            "html_name": html_path.name,
+            "quality_name": quality_path.name,
+            "quality_summary": summary,
+            "canvas": dict(spec["canvas"]),
+        }
+        if webp_result is not None:
+            entry.update(
+                {
+                    "webp": _relative(webp_path, base),
+                    "webp_name": webp_path.name,
+                    "webp_capture": {
+                        key: webp_result[key]
+                        for key in (
+                            "renderer",
+                            "fps",
+                            "frames",
+                            "scale",
+                            "loop_blend_frames",
+                            "runtime_dependency",
+                            "capture_contract",
+                            "input_sha256",
+                        )
+                    },
+                }
+            )
+        entries.append(entry)
 
     review_path = outdir / "readme-showcase-round-1.html"
     review_path.write_text(_review_page(entries), encoding="utf-8")
@@ -571,7 +670,7 @@ def render_round(spec_root: Path, outdir: Path) -> Spec:
         "quality_summary": combined,
         "review_page": _relative(review_path, base),
         "cases": [
-            {key: value for key, value in entry.items() if key not in {"spec_relative", "preview_name", "svg_name", "html_name", "quality_name"}}
+            {key: value for key, value in entry.items() if key not in {"spec_relative", "preview_name", "webp_name", "svg_name", "html_name", "quality_name"}}
             for entry in entries
         ],
     }
@@ -585,12 +684,32 @@ def render_round(spec_root: Path, outdir: Path) -> Spec:
     }
 
 
+def _validate_reused_webp(path: Path, canvas: Spec) -> None:
+    try:
+        from PIL import Image
+    except ImportError as exc:
+        raise RuntimeError("Pillow raster support is required to validate committed WebP previews") from exc
+    try:
+        with Image.open(path) as image:
+            valid = (
+                image.format == "WEBP"
+                and bool(getattr(image, "is_animated", False))
+                and image.n_frames == README_WEBP_CAPTURE["frames"]
+                and image.size == (canvas["width"], canvas["height"])
+            )
+    except Exception as exc:
+        raise RuntimeError(f"Committed animated WebP is invalid: {path}") from exc
+    if not valid:
+        raise RuntimeError(f"Committed animated WebP contract mismatch: {path}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--spec-root", type=Path, default=ROOT / "examples" / "readme-showcase-round-1")
     parser.add_argument("--outdir", type=Path, default=ROOT / "outputs" / "readme-showcase-round-1")
+    parser.add_argument("--skip-webp", action="store_true", help="Skip the browser-captured animated README previews.")
     args = parser.parse_args()
-    print(json.dumps(render_round(args.spec_root, args.outdir), ensure_ascii=False, indent=2))
+    print(json.dumps(render_round(args.spec_root, args.outdir, export_webp=not args.skip_webp), ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":

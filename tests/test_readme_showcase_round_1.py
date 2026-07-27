@@ -5,6 +5,7 @@ import tempfile
 import unittest
 from copy import deepcopy
 from pathlib import Path
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,7 +16,7 @@ if str(SCRIPTS) not in sys.path:
 from anidiagram.quality import quality_report
 from anidiagram.schema import compile_scene
 from anidiagram.styles import load_style
-from render_readme_showcase_round_1 import CASES, build_specs, render_round
+from render_readme_showcase_round_1 import CASES, _validate_reused_webp, build_specs, render_round
 
 
 class ReadmeShowcaseRound1Test(unittest.TestCase):
@@ -139,6 +140,116 @@ class ReadmeShowcaseRound1Test(unittest.TestCase):
             self.assertIn("README Showcase · Round 1", review)
             self.assertIn("Eight approved showcase cases", review)
 
+    def test_renderer_exports_readme_webp_with_the_browser_capture_contract(self):
+        captures = []
+
+        def fake_capture(scene, style, path, format_name, **options):
+            path.write_bytes(b"RIFF-test-WEBP")
+            captures.append((scene.title.text, format_name, options))
+            return {
+                "status": "written",
+                "path": str(path),
+                "renderer": "browser",
+                "fps": options["fps"],
+                "frames": options["frames"],
+                "scale": options["scale"],
+                "loop_blend_frames": options["loop_blend_frames"],
+                "runtime_dependency": "gsap@3.15.0",
+                "capture_contract": "browser-capture-v1",
+                "input_sha256": "fake-input-hash",
+            }
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with patch("render_readme_showcase_round_1.write_browser_capture", side_effect=fake_capture):
+                render_round(root / "specs", root / "outputs", export_webp=True)
+
+            self.assertEqual(8, len(captures))
+            for _title, format_name, options in captures:
+                self.assertEqual("webp", format_name)
+                self.assertEqual("gsap", options["runtime"])
+                self.assertEqual(24, options["fps"])
+                self.assertEqual(72, options["frames"])
+                self.assertEqual(1.0, options["scale"])
+                self.assertEqual(8, options["loop_blend_frames"])
+
+            manifest = json.loads((root / "outputs" / "manifest.json").read_text(encoding="utf-8"))
+            for case in manifest["cases"]:
+                self.assertTrue((root / case["webp"]).is_file(), case["webp"])
+                self.assertEqual(
+                    {
+                        "renderer": "browser",
+                        "fps": 24,
+                        "frames": 72,
+                        "scale": 1.0,
+                        "loop_blend_frames": 8,
+                        "runtime_dependency": "gsap@3.15.0",
+                        "capture_contract": "browser-capture-v1",
+                        "input_sha256": "fake-input-hash",
+                    },
+                    case["webp_capture"],
+                )
+            review = (root / "outputs" / "readme-showcase-round-1.html").read_text(encoding="utf-8")
+            self.assertEqual(8, review.count("Animated WebP preview of"))
+            self.assertEqual(8, review.count('.webp"'))
+            self.assertNotIn('.preview.svg" alt="Static preview', review)
+
+    def test_renderer_reuses_committed_webp_without_recapturing(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source_dir = root / "canonical"
+            outdir = root / "outputs"
+            source_dir.mkdir()
+            outdir.mkdir()
+            for case in CASES:
+                (source_dir / f'{case["id"]}.webp').write_bytes(
+                    f'RIFF-{case["id"]}-WEBP'.encode()
+                )
+            (source_dir / "manifest.json").write_text(
+                json.dumps({"cases": [
+                    {
+                        "id": case["id"],
+                        "webp_capture": {
+                            "renderer": "browser", "fps": 24, "frames": 72, "scale": 1.0,
+                            "loop_blend_frames": 8, "runtime_dependency": "gsap@3.15.0",
+                            "capture_contract": "browser-capture-v1",
+                            "input_sha256": "fake-input-hash",
+                        },
+                    }
+                    for case in CASES
+                ]}),
+                encoding="utf-8",
+            )
+
+            with patch("render_readme_showcase_round_1.write_browser_capture") as capture, \
+                 patch("render_readme_showcase_round_1._validate_reused_webp"), \
+                 patch("render_readme_showcase_round_1.webp_browser_capture_input_sha256", return_value="fake-input-hash"):
+                render_round(
+                    root / "specs",
+                    outdir,
+                    reuse_webp=True,
+                    webp_source_dir=source_dir,
+                )
+
+            capture.assert_not_called()
+            for case in CASES:
+                self.assertEqual(
+                    (source_dir / f'{case["id"]}.webp').read_bytes(),
+                    (outdir / f'{case["id"]}.webp').read_bytes(),
+                )
+            manifest = json.loads((outdir / "manifest.json").read_text(encoding="utf-8"))
+            self.assertEqual(8, len(manifest["cases"]))
+            self.assertTrue(all(case["webp_capture"]["runtime_dependency"] == "gsap@3.15.0" for case in manifest["cases"]))
+            review = (outdir / "readme-showcase-round-1.html").read_text(encoding="utf-8")
+            self.assertEqual(8, review.count("Animated WebP preview of"))
+
+    def test_reused_webp_validation_rejects_invalid_media(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "invalid.webp"
+            path.write_bytes(b"not-a-webp")
+            with self.assertRaisesRegex(RuntimeError, "invalid"):
+                _validate_reused_webp(path, {"width": 1600, "height": 900})
+
     def test_browser_runtime_has_no_overflow_or_inactive_edges(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -160,6 +271,7 @@ class ReadmeShowcaseRound1Test(unittest.TestCase):
             self.assertEqual(70, report["nodes"])
             self.assertEqual(66, report["edges"])
             self.assertEqual(66, report["active_runtime_edges"])
+            self.assertEqual(0, report["animated_webp_previews"])
             self.assertEqual([], report["console_errors"])
             self.assertEqual([], report["overflow"])
 

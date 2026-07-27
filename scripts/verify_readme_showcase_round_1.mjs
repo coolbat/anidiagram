@@ -23,6 +23,7 @@ async function main() {
     nodes: 0,
     edges: 0,
     active_runtime_edges: 0,
+    animated_webp_previews: 0,
     console_errors: [],
     overflow: [],
   };
@@ -41,7 +42,10 @@ async function main() {
     await page.waitForFunction(() => Array.from(document.images).every((image) => image.complete));
     const review = await page.evaluate(() => ({
       articles: document.querySelectorAll("article").length,
-      images: Array.from(document.images).map((image) => [image.naturalWidth, image.naturalHeight]),
+      images: Array.from(document.images).map((image) => ({
+        dimensions: [image.naturalWidth, image.naturalHeight],
+        source: new URL(image.currentSrc || image.src).pathname,
+      })),
       pageOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
       cardOverflow: Array.from(document.querySelectorAll("article"))
         .filter((article) => article.scrollWidth > article.clientWidth)
@@ -49,14 +53,26 @@ async function main() {
     }));
     assert(review.articles === manifest.cases.length, `review articles: ${review.articles}/${manifest.cases.length}`);
     assert(review.images.length === manifest.cases.length, `review images: ${review.images.length}/${manifest.cases.length}`);
-    review.images.forEach(([width, height], index) => {
+    review.images.forEach(({ dimensions: [width, height], source }, index) => {
       const expected = manifest.cases[index].canvas;
       if (width !== expected.width || height !== expected.height) {
         report.overflow.push(
           `review image ${index + 1}: ${width}x${height}, expected ${expected.width}x${expected.height}`
         );
       }
+      if (manifest.cases[index].webp) {
+        assert(source.endsWith(".webp"), `${manifest.cases[index].id}: review preview is not WebP`);
+      }
     });
+    for (let index = 0; index < manifest.cases.length; index += 1) {
+      if (!manifest.cases[index].webp) continue;
+      const image = page.locator("article img").nth(index);
+      const first = await image.screenshot({ animations: "allow" });
+      await page.waitForTimeout(180);
+      const second = await image.screenshot({ animations: "allow" });
+      assert(!first.equals(second), `${manifest.cases[index].id}: WebP preview did not advance`);
+      report.animated_webp_previews += 1;
+    }
     if (review.pageOverflow) report.overflow.push("review page: horizontal overflow");
     review.cardOverflow.forEach((caseId) => report.overflow.push(`${caseId}: card overflow`));
 

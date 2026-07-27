@@ -26,11 +26,11 @@ Full gallery: [gallery/index.html](./gallery/index.html) ·
 
 | Loop Engineering Operating Architecture |
 | --- |
-| [![Loop Engineering Operating Architecture](./gallery/readme-showcase/hero-loop-engineering.preview.svg)](./gallery/readme-showcase/hero-loop-engineering.svg)<br>`illustrated` 2.5 · `minimal-light` · `layered-loop`<br>A governed engineering loop arranged as three operating layers with external state feeding the next cycle. |
+| ![Loop Engineering Operating Architecture](./gallery/readme-showcase/hero-loop-engineering.webp)<br>`illustrated` 2.5 · `minimal-light` · `layered-loop`<br>A governed engineering loop arranged as three operating layers with external state feeding the next cycle. |
 
 | Governed RAG Production Architecture | Kubernetes Production Architecture |
 | --- | --- |
-| [![Governed RAG Production Architecture](./gallery/readme-showcase/hero-governed-rag.preview.svg)](./gallery/readme-showcase/hero-governed-rag.svg)<br>`illustrated` 2.5 · `minimal-light` · `layered` | [![Kubernetes Production Architecture](./gallery/readme-showcase/hero-kubernetes-three-layer.preview.svg)](./gallery/readme-showcase/hero-kubernetes-three-layer.svg)<br>`diagram-core-v1` · `deep-tech` · three explicit layers |
+| ![Governed RAG Production Architecture](./gallery/readme-showcase/hero-governed-rag.webp)<br>`illustrated` 2.5 · `minimal-light` · `layered` | ![Kubernetes Production Architecture](./gallery/readme-showcase/hero-kubernetes-three-layer.webp)<br>`diagram-core-v1` · `deep-tech` · three explicit layers |
 
 To open the interactive runtime locally:
 
@@ -49,13 +49,13 @@ changes, making the visual-system differences directly comparable.
 
 | Minimal Light | Deep Tech | Claude Warm |
 | --- | --- | --- |
-| [![Production AI Agent Request Lifecycle in Minimal Light](./gallery/readme-showcase/template-agent-lifecycle-minimal-light.preview.svg)](./gallery/readme-showcase/template-agent-lifecycle-minimal-light.svg)<br>Quiet, documentation-first clarity | [![Production AI Agent Request Lifecycle in Deep Tech](./gallery/readme-showcase/template-agent-lifecycle-deep-tech.preview.svg)](./gallery/readme-showcase/template-agent-lifecycle-deep-tech.svg)<br>High-contrast technical presentation | [![Production AI Agent Request Lifecycle in Claude Warm](./gallery/readme-showcase/template-agent-lifecycle-claude-warm.preview.svg)](./gallery/readme-showcase/template-agent-lifecycle-claude-warm.svg)<br>Warm reasoning and teaching tone |
+| ![Production AI Agent Request Lifecycle in Minimal Light](./gallery/readme-showcase/template-agent-lifecycle-minimal-light.webp)<br>Quiet, documentation-first clarity | ![Production AI Agent Request Lifecycle in Deep Tech](./gallery/readme-showcase/template-agent-lifecycle-deep-tech.webp)<br>High-contrast technical presentation | ![Production AI Agent Request Lifecycle in Claude Warm](./gallery/readme-showcase/template-agent-lifecycle-claude-warm.webp)<br>Warm reasoning and teaching tone |
 
 ### Layout Showcase
 
 | Enterprise RAG Ingestion Pipeline | MCP Tool Orchestration Hub |
 | --- | --- |
-| [![Enterprise RAG Ingestion Pipeline](./gallery/readme-showcase/layout-enterprise-rag-pipeline.preview.svg)](./gallery/readme-showcase/layout-enterprise-rag-pipeline.svg)<br>`pipeline` · sequential transformation and retrieval | [![MCP Tool Orchestration Hub](./gallery/readme-showcase/layout-mcp-tool-hub.preview.svg)](./gallery/readme-showcase/layout-mcp-tool-hub.svg)<br>`hub-spoke` · one orchestrator coordinating multiple capabilities |
+| ![Enterprise RAG Ingestion Pipeline](./gallery/readme-showcase/layout-enterprise-rag-pipeline.webp)<br>`pipeline` · sequential transformation and retrieval | ![MCP Tool Orchestration Hub](./gallery/readme-showcase/layout-mcp-tool-hub.webp)<br>`hub-spoke` · one orchestrator coordinating multiple capabilities |
 
 ### Runtime Motion Showcase
 
@@ -346,8 +346,21 @@ style provides a compatible default.
 Regenerate the committed gallery assets:
 
 ```bash
+python3 -m pip install -e ".[raster]"
 PYTHONPATH=src python3 scripts/build_showcase.py --quality
 ```
+
+This reuses the eight committed animated README WebP previews. To deliberately
+record them again with the pinned `gsap@3.15.0` capture runtime, run:
+
+```bash
+PYTHONPATH=src python3 scripts/render_readme_showcase_round_1.py \
+  --spec-root examples/readme-showcase-round-1 \
+  --outdir gallery/readme-showcase
+```
+
+Re-recording requires the bundled Playwright/Chromium browser runtime and
+network access to the pinned GSAP dependency.
 
 ## Motion Design
 
