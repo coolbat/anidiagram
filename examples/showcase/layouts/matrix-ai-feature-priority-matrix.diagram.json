@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "flat-icon",
@@ -10,26 +10,23 @@
     "subtitle": "impact and effort separate quick wins from big bets"
   },
   "motion": {
-    "profile": "normal",
-    "sequence": "step-stagger",
-    "ease": "calm",
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
-    "intensity": 0.85,
+    "intensity": 1.0,
     "edge": {
-      "preset": "flow-dot",
-      "particle": "soft-dot",
-      "trail": false
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "icon-pulse",
-      "accent": "ripple"
+      "preset": "icon-performance"
     },
     "group": {
-      "preset": "soft-reveal"
+      "preset": "border-scan"
     },
     "title": {
-      "preset": "fade"
+      "preset": "highlight-sweep"
     },
     "reduced_motion": "subtle"
   },
@@ -38,9 +35,9 @@
       "id": "matrix",
       "label": "Impact x Effort",
       "bounds": [
-        280,
+        350,
         155,
-        620,
+        775,
         405
       ],
       "role": "neutral"
@@ -52,11 +49,11 @@
       "label": "Quick Wins",
       "caption": "high impact",
       "position": [
-        330,
+        412,
         205
       ],
       "size": [
-        190,
+        240,
         86
       ],
       "role": "output",
@@ -67,11 +64,11 @@
       "label": "Big Bets",
       "caption": "strategic",
       "position": [
-        690,
+        862,
         205
       ],
       "size": [
-        190,
+        240,
         86
       ],
       "role": "agent",
@@ -82,11 +79,11 @@
       "label": "Fill-ins",
       "caption": "small wins",
       "position": [
-        330,
+        412,
         435
       ],
       "size": [
-        190,
+        240,
         86
       ],
       "role": "tool",
@@ -97,11 +94,11 @@
       "label": "Avoid",
       "caption": "low return",
       "position": [
-        690,
+        862,
         435
       ],
       "size": [
-        190,
+        240,
         86
       ],
       "role": "risk",
@@ -112,11 +109,11 @@
       "label": "Signals",
       "caption": "demand",
       "position": [
-        90,
+        112,
         320
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "source",
@@ -127,11 +124,11 @@
       "label": "Roadmap",
       "caption": "commit",
       "position": [
-        1010,
+        1262,
         320
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "memory",
@@ -144,14 +141,22 @@
       "to": "quick",
       "label": "score",
       "role": "source",
-      "route": "orthogonal"
+      "route": "orthogonal",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "signals",
       "to": "fill",
       "label": "score",
       "role": "source",
-      "route": "orthogonal"
+      "route": "orthogonal",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "quick",
@@ -160,18 +165,48 @@
       "role": "output",
       "route": "orthogonal",
       "effect": {
-        "preset": "flow-dot",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "big",
       "to": "roadmap",
       "label": "plan",
       "role": "agent",
-      "route": "orthogonal"
+      "route": "orthogonal",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     }
   ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "matrix",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "flat-icon",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "matrix",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  },
   "preset": "matrix"
 }

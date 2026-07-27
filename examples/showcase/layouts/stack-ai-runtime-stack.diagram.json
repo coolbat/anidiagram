@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "dark-terminal",
@@ -10,23 +10,20 @@
     "subtitle": "ui, orchestration, model, tools, memory, and infrastructure layers"
   },
   "motion": {
-    "profile": "normal",
-    "sequence": "step-stagger",
-    "ease": "calm",
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
     "intensity": 1.0,
     "edge": {
-      "preset": "dynamic-dash",
-      "particle": "soft-dot",
-      "trail": false
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "status-blink",
-      "accent": "glow"
+      "preset": "icon-performance"
     },
     "group": {
-      "preset": "corner-pulse"
+      "preset": "border-scan"
     },
     "title": {
       "preset": "highlight-sweep"
@@ -38,9 +35,9 @@
       "id": "stack",
       "label": "Runtime Stack",
       "bounds": [
-        455,
+        569,
         80,
-        350,
+        438,
         610
       ],
       "role": "neutral"
@@ -52,11 +49,11 @@
       "label": "UI",
       "caption": "surface",
       "position": [
-        520,
+        650,
         105
       ],
       "size": [
-        220,
+        240,
         72
       ],
       "role": "actor",
@@ -67,11 +64,11 @@
       "label": "Orchestration",
       "caption": "router",
       "position": [
-        520,
+        650,
         205
       ],
       "size": [
-        220,
+        240,
         72
       ],
       "role": "agent",
@@ -82,11 +79,11 @@
       "label": "Model",
       "caption": "inference",
       "position": [
-        520,
+        650,
         305
       ],
       "size": [
-        220,
+        240,
         72
       ],
       "role": "tool",
@@ -97,11 +94,11 @@
       "label": "Tools",
       "caption": "actions",
       "position": [
-        520,
+        650,
         405
       ],
       "size": [
-        220,
+        240,
         72
       ],
       "role": "process",
@@ -112,11 +109,11 @@
       "label": "Memory",
       "caption": "state",
       "position": [
-        520,
+        650,
         505
       ],
       "size": [
-        220,
+        240,
         72
       ],
       "role": "memory",
@@ -127,11 +124,11 @@
       "label": "Infra",
       "caption": "queue + cache",
       "position": [
-        520,
+        650,
         605
       ],
       "size": [
-        220,
+        240,
         72
       ],
       "role": "source",
@@ -144,36 +141,83 @@
       "to": "orch",
       "label": "depends",
       "role": "process",
-      "route": "vh"
+      "route": "vh",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "orch",
       "to": "model",
       "label": "depends",
       "role": "process",
-      "route": "vh"
+      "route": "vh",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "model",
       "to": "tools",
       "label": "depends",
       "role": "process",
-      "route": "vh"
+      "route": "vh",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "tools",
       "to": "memory",
       "label": "depends",
       "role": "process",
-      "route": "vh"
+      "route": "vh",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "memory",
       "to": "infra",
       "label": "depends",
       "role": "process",
-      "route": "vh"
+      "route": "vh",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     }
   ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "stack",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "dark-terminal",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "stack",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  },
   "preset": "stack"
 }

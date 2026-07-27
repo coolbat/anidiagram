@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "aurora-orb",
@@ -10,20 +10,17 @@
     "subtitle": "briefs become variants, reviews, and publishable assets"
   },
   "motion": {
-    "profile": "expressive",
-    "sequence": "step-stagger",
+    "profile": "showcase-v1",
+    "sequence": "staged",
     "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
-    "intensity": 1.2,
+    "intensity": 1.0,
     "edge": {
-      "preset": "ghost-flow",
-      "particle": "soft-dot",
-      "trail": true
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "icon-pulse",
-      "accent": "ripple"
+      "preset": "icon-performance"
     },
     "group": {
       "preset": "border-scan"
@@ -38,9 +35,9 @@
       "id": "studio",
       "label": "Studio Canvas",
       "bounds": [
-        55,
+        69,
         145,
-        1090,
+        1362,
         420
       ],
       "role": "agent"
@@ -52,11 +49,11 @@
       "label": "Brief",
       "caption": "intent",
       "position": [
-        90,
+        112,
         315
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "actor",
@@ -67,11 +64,11 @@
       "label": "Mood",
       "caption": "palette",
       "position": [
-        305,
+        381,
         210
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "source",
@@ -82,11 +79,11 @@
       "label": "Studio Agent",
       "caption": "compose",
       "position": [
-        520,
+        650,
         315
       ],
       "size": [
-        205,
+        240,
         92
       ],
       "role": "agent",
@@ -97,11 +94,11 @@
       "label": "Variants",
       "caption": "options",
       "position": [
-        765,
+        956,
         210
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "tool",
@@ -112,11 +109,11 @@
       "label": "Review",
       "caption": "select",
       "position": [
-        765,
+        956,
         420
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "risk",
@@ -127,11 +124,11 @@
       "label": "Publish",
       "caption": "export",
       "position": [
-        1000,
+        1250,
         315
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "output",
@@ -144,7 +141,11 @@
       "to": "agent",
       "label": "intent",
       "role": "actor",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "mood",
@@ -153,10 +154,9 @@
       "role": "source",
       "route": "orthogonal",
       "effect": {
-        "preset": "ghost-flow",
-        "particle": "soft-dot",
-        "trail": true
-      }
+        "preset": "comet-flow"
+      },
+      "animated": true
     },
     {
       "from": "agent",
@@ -165,17 +165,20 @@
       "role": "agent",
       "route": "orthogonal",
       "effect": {
-        "preset": "flow-arrow",
-        "particle": "soft-arrow",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "variants",
       "to": "review",
       "label": "choose",
       "role": "tool",
-      "route": "vh"
+      "route": "vh",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "review",
@@ -184,10 +187,36 @@
       "role": "output",
       "route": "orthogonal",
       "effect": {
-        "preset": "flow-dot",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     }
-  ]
+  ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "hub-spoke",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "aurora-orb",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "hub-spoke",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  }
 }

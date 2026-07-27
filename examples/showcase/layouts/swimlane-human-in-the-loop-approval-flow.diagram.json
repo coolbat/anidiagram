@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "minimal-light",
@@ -10,26 +10,23 @@
     "subtitle": "user, agent, reviewer, and system each own a clear lane"
   },
   "motion": {
-    "profile": "subtle",
-    "sequence": "step-stagger",
-    "ease": "calm",
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
-    "intensity": 0.55,
+    "intensity": 1.0,
     "edge": {
-      "preset": "draw",
-      "particle": "soft-dot",
-      "trail": false
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "fade",
-      "accent": "glow"
+      "preset": "icon-performance"
     },
     "group": {
-      "preset": "soft-reveal"
+      "preset": "border-scan"
     },
     "title": {
-      "preset": "fade"
+      "preset": "highlight-sweep"
     },
     "reduced_motion": "subtle"
   },
@@ -38,9 +35,9 @@
       "id": "user",
       "label": "User",
       "bounds": [
-        60,
+        75,
         145,
-        1100,
+        1375,
         100
       ],
       "role": "actor"
@@ -49,9 +46,9 @@
       "id": "agent",
       "label": "Agent",
       "bounds": [
-        60,
+        75,
         285,
-        1100,
+        1375,
         100
       ],
       "role": "agent"
@@ -60,9 +57,9 @@
       "id": "reviewer",
       "label": "Reviewer",
       "bounds": [
-        60,
+        75,
         425,
-        1100,
+        1375,
         100
       ],
       "role": "risk"
@@ -74,11 +71,11 @@
       "label": "Request",
       "caption": "submit",
       "position": [
-        110,
+        138,
         175
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "actor",
@@ -89,11 +86,11 @@
       "label": "Draft",
       "caption": "agent proposal",
       "position": [
-        350,
+        438,
         315
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "agent",
@@ -104,11 +101,11 @@
       "label": "Review",
       "caption": "human check",
       "position": [
-        590,
+        738,
         455
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "risk",
@@ -119,11 +116,11 @@
       "label": "Approve",
       "caption": "decision",
       "position": [
-        830,
+        1038,
         455
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "output",
@@ -134,11 +131,11 @@
       "label": "Execute",
       "caption": "system action",
       "position": [
-        830,
+        1038,
         315
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "tool",
@@ -149,11 +146,11 @@
       "label": "Notify",
       "caption": "result",
       "position": [
-        1030,
+        1288,
         175
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "output",
@@ -166,36 +163,83 @@
       "to": "draft",
       "label": "handoff",
       "role": "process",
-      "route": "orthogonal"
+      "route": "orthogonal",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "draft",
       "to": "review",
       "label": "handoff",
       "role": "process",
-      "route": "orthogonal"
+      "route": "orthogonal",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "review",
       "to": "approve",
       "label": "handoff",
       "role": "process",
-      "route": "orthogonal"
+      "route": "orthogonal",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "approve",
       "to": "execute",
       "label": "handoff",
       "role": "process",
-      "route": "orthogonal"
+      "route": "orthogonal",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "execute",
       "to": "notify",
       "label": "handoff",
       "role": "process",
-      "route": "orthogonal"
+      "route": "orthogonal",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     }
   ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "swimlane",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "minimal-light",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "swimlane",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  },
   "preset": "swimlane"
 }

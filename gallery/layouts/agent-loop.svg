@@ -240,7 +240,7 @@
   </circle>
 
   <text x="1145.0" y="579.0" class="edge-label" fill="#4b5563" opacity="1">
-    yes
+
   </text>
 </g>
 
@@ -539,7 +539,6 @@
 
 
   <text x="747.5" y="909.0" class="edge-label" fill="#4b5563" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="2.89s" fill="freeze" />
 
   </text>
 </g>
@@ -559,7 +558,6 @@
 
 
   <text x="872.5" y="909.0" class="edge-label" fill="#4b5563" opacity="0">
-    <animate attributeName="opacity" values="0;1" dur="0.45s" begin="3.01s" fill="freeze" />
 
   </text>
 </g>

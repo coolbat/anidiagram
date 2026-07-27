@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "openai-minimal",
@@ -10,26 +10,23 @@
     "subtitle": "users, sessions, messages, memories, tool calls, and artifacts"
   },
   "motion": {
-    "profile": "subtle",
-    "sequence": "step-stagger",
-    "ease": "calm",
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
-    "intensity": 0.45,
+    "intensity": 1.0,
     "edge": {
-      "preset": "draw",
-      "particle": "soft-dot",
-      "trail": false
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "fade",
-      "accent": "glow"
+      "preset": "icon-performance"
     },
     "group": {
-      "preset": "soft-reveal"
+      "preset": "border-scan"
     },
     "title": {
-      "preset": "fade"
+      "preset": "highlight-sweep"
     },
     "reduced_motion": "subtle"
   },
@@ -38,9 +35,9 @@
       "id": "model",
       "label": "Memory Schema",
       "bounds": [
-        70,
+        88,
         165,
-        1080,
+        1350,
         410
       ],
       "role": "neutral"
@@ -52,11 +49,11 @@
       "label": "User",
       "caption": "id, plan",
       "position": [
-        105,
+        131,
         225
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "actor",
@@ -67,11 +64,11 @@
       "label": "Session",
       "caption": "started_at",
       "position": [
-        350,
+        438,
         225
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "process",
@@ -82,11 +79,11 @@
       "label": "Message",
       "caption": "role, text",
       "position": [
-        595,
+        744,
         225
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "source",
@@ -97,11 +94,11 @@
       "label": "Memory",
       "caption": "scope, value",
       "position": [
-        840,
+        1050,
         225
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "memory",
@@ -112,11 +109,11 @@
       "label": "ToolCall",
       "caption": "name, status",
       "position": [
-        470,
+        588,
         455
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "tool",
@@ -127,11 +124,11 @@
       "label": "Artifact",
       "caption": "uri, type",
       "position": [
-        715,
+        894,
         455
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "output",
@@ -144,36 +141,83 @@
       "to": "session",
       "label": "has",
       "role": "actor",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "session",
       "to": "message",
       "label": "contains",
       "role": "process",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "message",
       "to": "memory",
       "label": "summarizes",
       "role": "memory",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "message",
       "to": "toolcall",
       "label": "invokes",
       "role": "tool",
-      "route": "vh"
+      "route": "vh",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "toolcall",
       "to": "artifact",
       "label": "creates",
       "role": "output",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     }
   ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "er",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "openai-minimal",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "er",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  },
   "preset": "er"
 }

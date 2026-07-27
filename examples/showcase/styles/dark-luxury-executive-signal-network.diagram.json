@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "dark-luxury",
@@ -10,20 +10,17 @@
     "subtitle": "market, finance, and product signals converge"
   },
   "motion": {
-    "profile": "expressive",
-    "sequence": "step-stagger",
+    "profile": "showcase-v1",
+    "sequence": "staged",
     "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
-    "intensity": 1.05,
+    "intensity": 1.0,
     "edge": {
-      "preset": "glow-line",
-      "particle": "soft-dot",
-      "trail": false
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "pulse",
-      "accent": "ripple"
+      "preset": "icon-performance"
     },
     "group": {
       "preset": "border-scan"
@@ -38,9 +35,9 @@
       "id": "signals",
       "label": "Signal Room",
       "bounds": [
-        130,
+        162,
         110,
-        920,
+        1150,
         530
       ],
       "role": "neutral"
@@ -52,11 +49,11 @@
       "label": "Market",
       "caption": "signals",
       "position": [
-        185,
+        231,
         165
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "source",
@@ -67,11 +64,11 @@
       "label": "Finance",
       "caption": "metrics",
       "position": [
-        185,
+        231,
         465
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "memory",
@@ -82,11 +79,11 @@
       "label": "Product",
       "caption": "usage",
       "position": [
-        825,
+        1031,
         165
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "tool",
@@ -97,11 +94,11 @@
       "label": "Board",
       "caption": "decision",
       "position": [
-        505,
+        631,
         315
       ],
       "size": [
-        205,
+        240,
         92
       ],
       "role": "agent",
@@ -112,11 +109,11 @@
       "label": "Action",
       "caption": "portfolio",
       "position": [
-        825,
+        1031,
         465
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "output",
@@ -127,11 +124,11 @@
       "label": "Risk",
       "caption": "guardrail",
       "position": [
-        505,
+        631,
         535
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "risk",
@@ -144,21 +141,33 @@
       "to": "board",
       "label": "trend",
       "role": "source",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "finance",
       "to": "board",
       "label": "margin",
       "role": "memory",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "product",
       "to": "board",
       "label": "usage",
       "role": "tool",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "board",
@@ -167,10 +176,9 @@
       "role": "output",
       "route": "straight",
       "effect": {
-        "preset": "flow-arrow",
-        "particle": "soft-arrow",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "risk",
@@ -179,10 +187,36 @@
       "role": "risk",
       "route": "vh",
       "effect": {
-        "preset": "glow-line",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "stream-flow"
+      },
+      "animated": true
     }
-  ]
+  ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "network",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "dark-luxury",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "network",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  }
 }

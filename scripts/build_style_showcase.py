@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Tuple
 
@@ -16,6 +17,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from anidiagram.exporters import write_html, write_quality, write_svg
+from anidiagram.edge_motion import canonical_edge_motion
 from anidiagram.quality import quality_report
 from anidiagram.schema import compile_scene
 from anidiagram.styles import load_style
@@ -42,9 +44,122 @@ STYLE_ORDER = (
     "sketch-board",
 )
 
+STYLE_SHOWCASE_LAYOUTS = {
+    "minimal-light": "pipeline",
+    "deep-tech": "network",
+    "blueprint": "layered",
+    "flat-icon": "matrix",
+    "dark-terminal": "pipeline",
+    "notion-clean": "pipeline",
+    "glassmorphism": "funnel",
+    "claude-warm": "loop",
+    "openai-minimal": "pipeline",
+    "dark-luxury": "network",
+    "aurora-orb": "hub-spoke",
+    "illustrated-semantic": "pipeline",
+    "sketch-board": "loop",
+}
+
+PUBLIC_SHOWCASE_ICON_SYSTEM = "illustrated"
+PUBLIC_SHOWCASE_ICON_VERSION = "2.5.0"
+PUBLIC_SHOWCASE_MOTION = "showcase-v1"
+PUBLIC_SHOWCASE_HORIZONTAL_SCALE = 1.25
+PUBLIC_SHOWCASE_RIGHT_MARGIN = 32
+PUBLIC_SHOWCASE_MIN_NODE_WIDTH = 240
+_DYNAMIC_EDGE_EFFECTS = {"packet-flow", "comet-flow", "stream-flow"}
+
+
+def adapt_public_showcase_geometry(spec: Spec) -> None:
+    """Expand legacy Character v1 geometry for Illustrated 2.5 cards."""
+
+    scale = PUBLIC_SHOWCASE_HORIZONTAL_SCALE
+    canvas = spec.get("canvas")
+    if isinstance(canvas, dict) and isinstance(canvas.get("width"), (int, float)):
+        canvas["width"] = round(canvas["width"] * scale) + PUBLIC_SHOWCASE_RIGHT_MARGIN
+    for node in spec.get("nodes", []):
+        position = node.get("position")
+        size = node.get("size")
+        if isinstance(position, list) and len(position) == 2:
+            position[0] = round(position[0] * scale)
+        if isinstance(size, list) and len(size) == 2:
+            size[0] = max(PUBLIC_SHOWCASE_MIN_NODE_WIDTH, size[0])
+    for group in spec.get("groups", []):
+        bounds = group.get("bounds")
+        if isinstance(bounds, list) and len(bounds) == 4:
+            bounds[0] = round(bounds[0] * scale)
+            bounds[2] = round(bounds[2] * scale)
+    for edge in spec.get("edges", []):
+        points = edge.get("points")
+        if isinstance(points, list):
+            for point in points:
+                if isinstance(point, list) and len(point) == 2:
+                    point[0] = round(point[0] * scale)
+
+
+def apply_public_showcase_contract(
+    source: Spec,
+    *,
+    layout: str,
+    style_source: str = "explicit",
+    layout_source: str = "explicit",
+) -> Spec:
+    """Return a composition-v1 public Showcase spec without changing geometry.
+
+    The helper is intentionally shared by the standalone style builder and the
+    combined gallery builder so either entry point resolves the same four
+    presentation axes. Existing dynamic edge recipes are canonicalized through
+    Edge Motion v1; static, draw-only, or omitted recipes become packet flow so
+    every Showcase data-flow edge remains visibly active.
+    """
+
+    spec = deepcopy(source)
+    adapt_public_showcase_geometry(spec)
+    style = str(spec["style"])
+    spec["version"] = "0.4"
+    spec["composition_policy"] = "composition-v1"
+    spec["icon_system"] = PUBLIC_SHOWCASE_ICON_SYSTEM
+    spec["layout"] = layout
+    spec["resolved_presentation"] = {
+        "icon_system": {
+            "value": PUBLIC_SHOWCASE_ICON_SYSTEM,
+            "source": "default",
+            "version": PUBLIC_SHOWCASE_ICON_VERSION,
+        },
+        "style": {"value": style, "source": style_source},
+        "layout": {"value": layout, "source": layout_source},
+        "motion": {"value": PUBLIC_SHOWCASE_MOTION, "source": "default"},
+    }
+    spec["motion"] = {
+        "profile": PUBLIC_SHOWCASE_MOTION,
+        "sequence": "staged",
+        "ease": "spring",
+        "stagger": 0.12,
+        "duration_scale": 1.0,
+        "intensity": 1.0,
+        "edge": {"preset": "packet-flow"},
+        "node": {"preset": "icon-performance"},
+        "group": {"preset": "border-scan"},
+        "title": {"preset": "highlight-sweep"},
+        "reduced_motion": "subtle",
+    }
+    spec["motion_policy"] = {
+        "profile": "unrestricted",
+        "motion_area": "unrestricted",
+        "pulse_mode": "all",
+    }
+    for edge in spec.get("edges", []):
+        effect = edge.get("effect")
+        preset = effect.get("preset") if isinstance(effect, dict) else effect
+        canonical = canonical_edge_motion(str(preset or "packet-flow"))
+        if canonical not in _DYNAMIC_EDGE_EFFECTS:
+            canonical = "packet-flow"
+        edge["animated"] = True
+        edge["effect"] = {"preset": canonical}
+    return spec
+
 
 def style_showcase_specs() -> Dict[str, Spec]:
-    return {
+    specs = {
         "minimal-light": _flow_case(
             "minimal-light",
             "Customer Support Triage",
@@ -317,6 +432,13 @@ def style_showcase_specs() -> Dict[str, Spec]:
             ],
             _motion("teaching", "ghost-flow", "icon-pulse", "border-scan", "handwrite-reveal", sequence="staged", intensity=1.15),
         ),
+    }
+    return {
+        style_name: apply_public_showcase_contract(
+            spec,
+            layout=STYLE_SHOWCASE_LAYOUTS[style_name],
+        )
+        for style_name, spec in specs.items()
     }
 
 

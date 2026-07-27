@@ -3,7 +3,7 @@
 
 The proof deliberately isolates the three presentation questions:
 
-* one README hero candidate;
+* two README hero candidates;
 * one fixed semantic diagram rendered through three templates;
 * two topology-specific examples using one icon system and one template.
 
@@ -46,6 +46,14 @@ CASES = (
         "style": "minimal-light",
         "layout": "layered",
         "icon_system": "illustrated",
+    },
+    {
+        "id": "hero-kubernetes-three-layer",
+        "kind": "hero",
+        "label": "Hero candidate · Three layers",
+        "style": "deep-tech",
+        "layout": "layered",
+        "icon_system": "diagram-core-v1",
     },
     {
         "id": "template-agent-lifecycle-minimal-light",
@@ -243,6 +251,64 @@ def _hero_spec() -> Spec:
     )
 
 
+def _kubernetes_three_layer_spec() -> Spec:
+    nodes = [
+        _node("external-users", "External Users", "production application traffic", "user", "actor", 85, 185, 250, 120),
+        _node("automation-clients", "Automation Clients", "CI/CD and platform APIs", "api", "source", 450, 185, 250, 120),
+        _node("platform-operators", "Platform Operators", "operate and troubleshoot", "operator", "actor", 815, 185, 250, 120),
+        _node("security-policy", "Security Policy", "identity and admission rules", "shield", "risk", 1180, 185, 250, 120),
+        _node("ingress", "Ingress Gateway", "routes trusted traffic", "gateway", "risk", 85, 390, 250, 125),
+        _node("api-server", "Kubernetes API", "declares desired state", "api", "process", 450, 390, 250, 125),
+        _node("scheduler", "Scheduler", "places workloads", "scheduler", "process", 815, 390, 250, 125),
+        _node("controller", "Control Plane", "reconciles cluster state", "server-cluster", "agent", 1180, 390, 250, 125),
+        _node("deployments", "Deployments", "versioned application releases", "deployment", "process", 85, 620, 250, 140),
+        _node("containers", "Container Workloads", "replicated services", "container", "process", 450, 620, 250, 140),
+        _node("stateful-data", "Stateful Data", "persistent production data", "database", "memory", 815, 620, 250, 140),
+        _node("observability", "Observability", "metrics, logs, and alerts", "monitoring", "output", 1180, 620, 250, 140),
+    ]
+    links = [
+        ("external-users", "ingress", "request", "actor", "traffic"),
+        ("automation-clients", "api-server", "automate", "source", "operations"),
+        ("platform-operators", "scheduler", "operate", "actor", "operations"),
+        ("security-policy", "controller", "enforce", "risk", "governance"),
+        ("ingress", "api-server", "admit", "risk", "control-plane"),
+        ("api-server", "scheduler", "schedule", "process", "control-plane"),
+        ("scheduler", "controller", "reconcile", "agent", "control-plane"),
+        ("ingress", "deployments", "route", "process", "runtime"),
+        ("api-server", "containers", "deploy", "process", "runtime"),
+        ("scheduler", "stateful-data", "place", "memory", "runtime"),
+        ("controller", "observability", "telemetry", "output", "reliability"),
+    ]
+    edges = [
+        _edge(
+            source,
+            target,
+            label,
+            index,
+            role=role,
+            route="straight" if index in {0, 1, 2, 3, 7, 8, 9, 10} else "curved",
+            flow_id=flow_id,
+            flow_repeat="loop" if flow_id in {"traffic", "runtime", "reliability"} else "event-driven",
+        )
+        for index, (source, target, label, role, flow_id) in enumerate(links)
+    ]
+    spec = _base_spec(
+        title="Kubernetes Production Architecture",
+        subtitle="Traffic & operations → Kubernetes control plane → runtime & reliability",
+        style="deep-tech",
+        icon_system="diagram-core-v1",
+        layout="layered",
+        nodes=nodes,
+        edges=edges,
+    )
+    spec["groups"] = [
+        {"id": "traffic-operations", "label": "Traffic & Operations", "bounds": [40, 145, 1520, 180], "role": "actor", "importance": "primary"},
+        {"id": "control-plane", "label": "Kubernetes Control Plane", "bounds": [40, 350, 1520, 190], "role": "agent", "importance": "primary"},
+        {"id": "runtime-reliability", "label": "Runtime & Reliability", "bounds": [40, 570, 1520, 245], "role": "process", "importance": "primary"},
+    ]
+    return spec
+
+
 def _template_spec(style: str) -> Spec:
     nodes = [
         _node("user", "User Request", "goal and context", "user", "actor", 40, 215),
@@ -351,6 +417,7 @@ def _hub_spec() -> Spec:
 def build_specs() -> dict[str, Spec]:
     builders = {
         "hero-governed-rag": _hero_spec,
+        "hero-kubernetes-three-layer": _kubernetes_three_layer_spec,
         "template-agent-lifecycle-minimal-light": partial(_template_spec, "minimal-light"),
         "template-agent-lifecycle-deep-tech": partial(_template_spec, "deep-tech"),
         "template-agent-lifecycle-claude-warm": partial(_template_spec, "claude-warm"),
@@ -369,7 +436,7 @@ def _relative(path: Path, base: Path) -> str:
 
 def _review_page(entries: list[Spec]) -> str:
     groups = (
-        ("Hero candidate", "hero", "A README-first composition at the final 16:9 display ratio."),
+        ("Hero candidates", "hero", "Compare a content-first RAG hero with a three-layer infrastructure hero."),
         ("Template comparison", "template", "Identical semantics and geometry; only the template changes."),
         ("Layout comparison", "layout", "One icon system and one template; the topology matches the content."),
     )
@@ -420,7 +487,7 @@ def _review_page(entries: list[Spec]) -> str:
   </style>
 </head>
 <body><main>
-  <div class="intro"><div><p class="eyebrow">ANIDIAGRAM · NARROW VISUAL PROOF</p><h1>README Showcase · Round 1</h1></div><p>Six approval candidates. The README remains untouched until this surface passes visual review.</p></div>
+  <div class="intro"><div><p class="eyebrow">ANIDIAGRAM · NARROW VISUAL PROOF</p><h1>README Showcase · Round 1</h1></div><p>Seven approval candidates. The README remains untouched until this surface passes visual review.</p></div>
   {''.join(sections)}
 </main></body></html>
 '''

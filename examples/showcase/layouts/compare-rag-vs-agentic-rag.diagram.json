@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "openai-minimal",
@@ -10,26 +10,23 @@
     "subtitle": "compare retrieval-only flow with planning, tools, memory, and evaluation"
   },
   "motion": {
-    "profile": "subtle",
-    "sequence": "step-stagger",
-    "ease": "calm",
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
-    "intensity": 0.45,
+    "intensity": 1.0,
     "edge": {
-      "preset": "draw",
-      "particle": "soft-dot",
-      "trail": false
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "fade",
-      "accent": "glow"
+      "preset": "icon-performance"
     },
     "group": {
-      "preset": "soft-reveal"
+      "preset": "border-scan"
     },
     "title": {
-      "preset": "fade"
+      "preset": "highlight-sweep"
     },
     "reduced_motion": "subtle"
   },
@@ -38,9 +35,9 @@
       "id": "rag",
       "label": "RAG",
       "bounds": [
-        110,
+        138,
         170,
-        380,
+        475,
         430
       ],
       "role": "process"
@@ -49,9 +46,9 @@
       "id": "agentic",
       "label": "Agentic RAG",
       "bounds": [
-        690,
+        862,
         170,
-        380,
+        475,
         430
       ],
       "role": "agent"
@@ -63,11 +60,11 @@
       "label": "Query",
       "caption": "ask",
       "position": [
-        190,
+        238,
         245
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "actor",
@@ -78,11 +75,11 @@
       "label": "Retrieve",
       "caption": "top-k",
       "position": [
-        190,
+        238,
         390
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "memory",
@@ -93,11 +90,11 @@
       "label": "Answer",
       "caption": "compose",
       "position": [
-        190,
+        238,
         535
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "output",
@@ -108,11 +105,11 @@
       "label": "Plan",
       "caption": "decompose",
       "position": [
-        760,
+        950,
         215
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "agent",
@@ -123,11 +120,11 @@
       "label": "Tools",
       "caption": "act",
       "position": [
-        760,
+        950,
         360
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "tool",
@@ -138,11 +135,11 @@
       "label": "Memory",
       "caption": "learn",
       "position": [
-        760,
+        950,
         505
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "memory",
@@ -153,11 +150,11 @@
       "label": "Choose",
       "caption": "fit by task",
       "position": [
-        500,
+        625,
         610
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "output",
@@ -170,43 +167,94 @@
       "to": "rag-retrieve",
       "label": "search",
       "role": "memory",
-      "route": "vh"
+      "route": "vh",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "rag-retrieve",
       "to": "rag-answer",
       "label": "context",
       "role": "output",
-      "route": "vh"
+      "route": "vh",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "agent-plan",
       "to": "agent-tools",
       "label": "invoke",
       "role": "tool",
-      "route": "vh"
+      "route": "vh",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "agent-tools",
       "to": "agent-memory",
       "label": "state",
       "role": "memory",
-      "route": "vh"
+      "route": "vh",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "rag-answer",
       "to": "decision",
       "label": "simple",
       "role": "output",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "agent-memory",
       "to": "decision",
       "label": "complex",
       "role": "agent",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     }
   ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "compare",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "openai-minimal",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "compare",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  },
   "preset": "compare"
 }

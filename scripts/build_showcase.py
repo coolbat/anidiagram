@@ -24,7 +24,17 @@ from anidiagram.planner import compile_plan
 from anidiagram.quality import quality_report
 from anidiagram.schema import compile_scene
 from anidiagram.styles import deep_merge, load_style
-from build_style_showcase import _catalog_styles, _chain, _edge, _flow_case, _group, _motion, _node, style_showcase_specs
+from build_style_showcase import (
+    _catalog_styles,
+    _chain,
+    _edge,
+    _flow_case,
+    _group,
+    _motion,
+    _node,
+    apply_public_showcase_contract,
+    style_showcase_specs,
+)
 
 
 Spec = Dict[str, Any]
@@ -599,35 +609,19 @@ def layout_showcase_specs() -> Dict[str, Spec]:
             json.loads((ROOT / "examples" / "agent-loop-internals.plan.json").read_text(encoding="utf-8"))
         ),
     }
-    focused_policy = {
-        "profile": "focused",
-        "motion_area": "small",
-        "max_active_flow_edges": 4,
-        "max_particle_edges": 4,
-        "particle_count_per_edge": 1,
-        "flow_trail_count": 0,
-        "max_active_pulse_nodes": 3,
-        "pulse_mode": "rotate",
-        "max_scanning_groups": 0,
+    return {
+        preset: spec
+        if preset == "agent-loop"
+        else apply_public_showcase_contract(spec, layout=preset)
+        for preset, spec in specs.items()
     }
-    for preset in ("pipeline", "sequence", "agent-memory"):
-        specs[preset]["motion_policy"] = dict(focused_policy)
-    intentionally_static_edges = {
-        "pipeline": {("retrieve", "answer")},
-        "sequence": {("memory", "output")},
-        "agent-memory": {("agent", "tool"), ("tool", "memory")},
-    }
-    for preset, edge_pairs in intentionally_static_edges.items():
-        for edge in specs[preset]["edges"]:
-            if (edge["from"], edge["to"]) in edge_pairs:
-                edge["animated"] = False
-    return specs
 
 
 def _build_hero(spec_dir: Path, outdir: Path, quality: bool) -> Dict[str, Any]:
     spec_dir.mkdir(parents=True, exist_ok=True)
     outdir.mkdir(parents=True, exist_ok=True)
     spec = json.loads((ROOT / "examples" / "high-fidelity-runtime.diagram.json").read_text(encoding="utf-8"))
+    spec = apply_public_showcase_contract(spec, layout="layered")
     spec_path = spec_dir / "agent-runtime-flow.diagram.json"
     spec_path.write_text(json.dumps(spec, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     scene = compile_scene(spec)
@@ -654,7 +648,7 @@ def _build_hero(spec_dir: Path, outdir: Path, quality: bool) -> Dict[str, Any]:
         "basename": "agent-runtime-flow",
         "spec": _rel(spec_path),
         "style": "deep-tech",
-        "icon_system": resolve_icon_system(style),
+        "icon_system": scene.icon_system,
         "svg": _rel(svg_path),
         "html": _rel(html_path),
         "quality": _rel(quality_path),
@@ -692,7 +686,7 @@ def _build_styles(spec_dir: Path, outdir: Path, quality: bool) -> List[Dict[str,
             write_quality(scene, style, quality_path)
         entry = {
             "style": style_name,
-            "icon_system": resolve_icon_system(style),
+            "icon_system": scene.icon_system,
             "title": spec["title"]["text"],
             "basename": style_name,
             "spec": _rel(spec_path),
@@ -1292,7 +1286,7 @@ def _write_gallery_index(
     <p>Style Showcase makes diagrams look right. Layout Showcase makes diagram purpose obvious. The hero preview is browser-captured runtime media when available; card images stay lightweight SVG previews.</p>
     <section>
       <h2>Public Icon Systems</h2>
-      <p>The current frozen Diagram Core v1 and Illustrated 2.3 public releases, each with complete static and automatic-motion coverage.</p>
+      <p>The current frozen Diagram Core v1 and Illustrated 2.5 public releases, each with complete static and automatic-motion coverage.</p>
       <p class="links"><a href="icon-systems/index.html">Open public icon systems</a></p>
       <div class="grid">
 {icon_system_cards}

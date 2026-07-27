@@ -1,8 +1,8 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "preset": "high-fidelity-runtime",
   "canvas": {
-    "width": 1120,
+    "width": 1432,
     "height": 640
   },
   "style": "deep-tech",
@@ -11,22 +11,20 @@
     "subtitle": "One agent retrieves, acts, verifies, remembers, and delivers"
   },
   "motion": {
-    "profile": "expressive",
+    "profile": "showcase-v1",
     "sequence": "staged",
     "ease": "spring",
-    "stagger": 0.1,
+    "stagger": 0.12,
     "duration_scale": 1.0,
-    "intensity": 1.05,
+    "intensity": 1.0,
     "edge": {
-      "preset": "signal-arrow",
-      "particle_count": 1,
-      "trail_count": 0
+      "preset": "packet-flow"
     },
     "node": {
       "preset": "icon-performance"
     },
     "group": {
-      "preset": "static"
+      "preset": "border-scan"
     },
     "title": {
       "preset": "highlight-sweep"
@@ -34,23 +32,18 @@
     "reduced_motion": "subtle"
   },
   "motion_policy": {
-    "profile": "focused",
-    "motion_area": "small",
-    "max_active_flow_edges": 4,
-    "max_particle_edges": 4,
-    "particle_count_per_edge": 1,
-    "flow_trail_count": 0,
-    "max_active_pulse_nodes": 3,
-    "max_scanning_groups": 0
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
   },
   "groups": [
     {
       "id": "input",
       "label": "Input",
       "bounds": [
-        40,
+        50,
         220,
-        220,
+        275,
         240
       ],
       "role": "source",
@@ -62,9 +55,9 @@
       "id": "orchestration",
       "label": "Orchestration",
       "bounds": [
-        300,
+        375,
         190,
-        320,
+        400,
         310
       ],
       "role": "agent",
@@ -76,9 +69,9 @@
       "id": "capabilities",
       "label": "Capability Paths",
       "bounds": [
-        650,
+        812,
         140,
-        430,
+        538,
         420
       ],
       "role": "process",
@@ -93,11 +86,11 @@
       "label": "Request",
       "caption": "user intent",
       "position": [
-        70,
+        88,
         295
       ],
       "size": [
-        160,
+        240,
         88
       ],
       "role": "source",
@@ -111,7 +104,7 @@
       "label": "Agent",
       "caption": "plan · route · decide",
       "position": [
-        350,
+        438,
         260
       ],
       "size": [
@@ -129,11 +122,11 @@
       "label": "Retrieve",
       "caption": "discover context",
       "position": [
-        690,
+        862,
         190
       ],
       "size": [
-        155,
+        240,
         82
       ],
       "role": "source",
@@ -147,11 +140,11 @@
       "label": "Memory",
       "caption": "ground response",
       "position": [
-        890,
+        1112,
         190
       ],
       "size": [
-        155,
+        240,
         82
       ],
       "role": "memory",
@@ -165,11 +158,11 @@
       "label": "Policy",
       "caption": "verify safety",
       "position": [
-        690,
+        862,
         310
       ],
       "size": [
-        155,
+        240,
         82
       ],
       "role": "risk",
@@ -183,11 +176,11 @@
       "label": "Output",
       "caption": "compose answer",
       "position": [
-        890,
+        1112,
         305
       ],
       "size": [
-        165,
+        240,
         92
       ],
       "role": "output",
@@ -201,11 +194,11 @@
       "label": "Tool",
       "caption": "execute action",
       "position": [
-        690,
+        862,
         440
       ],
       "size": [
-        155,
+        240,
         82
       ],
       "role": "tool",
@@ -219,11 +212,11 @@
       "label": "API",
       "caption": "external result",
       "position": [
-        890,
+        1112,
         440
       ],
       "size": [
-        155,
+        240,
         82
       ],
       "role": "tool",
@@ -240,8 +233,9 @@
       "label": "intent",
       "role": "source",
       "effect": {
-        "preset": "signal-dot"
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "agent",
@@ -249,8 +243,9 @@
       "label": "retrieve",
       "role": "source",
       "effect": {
-        "preset": "signal-arrow"
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "search",
@@ -258,9 +253,9 @@
       "label": "context",
       "role": "memory",
       "effect": {
-        "preset": "signal-dot"
+        "preset": "packet-flow"
       },
-      "animated": false
+      "animated": true
     },
     {
       "from": "memory",
@@ -270,18 +265,18 @@
       "route": "points",
       "points": [
         [
-          968,
+          1210,
           272
         ],
         [
-          968,
+          1210,
           305
         ]
       ],
       "effect": {
-        "preset": "signal-dot"
+        "preset": "packet-flow"
       },
-      "animated": false
+      "animated": true
     },
     {
       "from": "agent",
@@ -289,9 +284,9 @@
       "label": "verify",
       "role": "risk",
       "effect": {
-        "preset": "dynamic-dash"
+        "preset": "stream-flow"
       },
-      "animated": false
+      "animated": true
     },
     {
       "from": "shield",
@@ -299,8 +294,9 @@
       "label": "approve",
       "role": "output",
       "effect": {
-        "preset": "signal-arrow"
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "agent",
@@ -308,8 +304,9 @@
       "label": "act",
       "role": "tool",
       "effect": {
-        "preset": "signal-arrow"
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "tool",
@@ -317,9 +314,9 @@
       "label": "call",
       "role": "tool",
       "effect": {
-        "preset": "signal-arrow"
+        "preset": "packet-flow"
       },
-      "animated": false
+      "animated": true
     },
     {
       "from": "api",
@@ -329,18 +326,40 @@
       "route": "points",
       "points": [
         [
-          968,
+          1210,
           440
         ],
         [
-          968,
+          1210,
           397
         ]
       ],
       "effect": {
-        "preset": "signal-arrow"
+        "preset": "packet-flow"
       },
-      "animated": false
+      "animated": true
     }
-  ]
+  ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "layered",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "deep-tech",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "layered",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  }
 }

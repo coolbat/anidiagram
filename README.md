@@ -32,7 +32,7 @@ host such as GitHub Pages, or opened through a local static server.
 
 | Agent Runtime Flow |
 | --- |
-| [![Agent Runtime Flow](./gallery/previews/agent-runtime-flow.webp)](./gallery/previews/agent-runtime-flow.mp4)<br>Browser-captured `illustrated-character-v1` runtime preview: a focal agent branches into retrieval/memory, policy verification, and tool/API paths before converging on the output.<br>[GIF](./gallery/previews/agent-runtime-flow.gif) · [APNG](./gallery/previews/agent-runtime-flow.apng) · Runtime HTML: `gallery/hero/agent-runtime-flow.html` |
+| [![Agent Runtime Flow](./gallery/previews/agent-runtime-flow.webp)](./gallery/previews/agent-runtime-flow.mp4)<br>Browser-captured `illustrated` 2.5 runtime preview using the composition-v1 default: a focal agent branches into retrieval/memory, policy verification, and tool/API paths before converging on the output.<br>[GIF](./gallery/previews/agent-runtime-flow.gif) · [APNG](./gallery/previews/agent-runtime-flow.apng) · Runtime HTML: `gallery/hero/agent-runtime-flow.html` |
 
 To open the interactive runtime locally:
 

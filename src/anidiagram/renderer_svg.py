@@ -1471,6 +1471,18 @@ def edge_path(edge: Edge, nodes: Dict[str, NodeBox]) -> str:
     return curve_path(start, end)
 
 
+def edge_label_has_clearance(edge: Edge, start: Point, end: Point) -> bool:
+    """Keep short horizontal connectors readable by omitting cramped labels."""
+
+    if not edge.label:
+        return False
+    if edge.route != "straight" or abs(start[1] - end[1]) > 1:
+        return True
+    available = abs(end[0] - start[0])
+    estimated_text_width = len(edge.label) * 7 + 18
+    return available >= max(48, estimated_text_width)
+
+
 def render_edge(
     edge: Edge,
     nodes: Dict[str, NodeBox],
@@ -1494,7 +1506,7 @@ def render_edge(
         duration_value = 4.2
     mid_x = (start[0] + end[0]) / 2
     mid_y = (start[1] + end[1]) / 2 - 14
-    label = edge.label
+    label = edge.label if edge_label_has_clearance(edge, start, end) else ""
     marker_id = f"arrow-{index}"
     marker_orient = "auto-start-reverse" if edge.direction == "bidirectional" else "auto"
     marker_attributes = (
@@ -1566,9 +1578,10 @@ def render_edge(
     label_static = not edge_is_active or edge_mode in CONTINUOUS_EDGE_MOTION or runtime_loop_active(motion)
     label_opacity = "1" if label_static else "0"
     label_motion = ""
-    if not label_static:
+    if not label_static and label:
         label_motion = f'<animate attributeName="opacity" values="0;1" dur="{seconds(scaled_duration(0.45, motion))}" begin="{seconds(motion_delay(index, motion, "label") + edge.motion.delay)}" fill="freeze" />'
     label_motion_line = f"    {label_motion}\n" if label_motion else ""
+    label_text = f"    {esc(label)}" if label else ""
     return f"""
 <defs>
   <marker id="{marker_id}" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="{marker_orient}" markerUnits="userSpaceOnUse">
@@ -1582,7 +1595,7 @@ def render_edge(
 {motion_markup}
 {badge}
   <text x="{mid_x:.1f}" y="{mid_y:.1f}" class="edge-label" fill="{esc(style.get("canvas", {}).get("muted", "#5b6778"))}" opacity="{label_opacity}">
-{label_motion_line}    {esc(label)}
+{label_motion_line}{label_text}
   </text>
 </g>"""
 

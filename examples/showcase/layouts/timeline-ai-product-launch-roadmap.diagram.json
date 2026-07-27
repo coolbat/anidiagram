@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "blueprint",
@@ -10,23 +10,20 @@
     "subtitle": "alpha, beta, public launch, scale, and learning milestones"
   },
   "motion": {
-    "profile": "teaching",
-    "sequence": "step-stagger",
+    "profile": "showcase-v1",
+    "sequence": "staged",
     "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
-    "intensity": 0.9,
+    "intensity": 1.0,
     "edge": {
-      "preset": "signal-arrow",
-      "particle": "soft-dot",
-      "trail": false
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "pop",
-      "accent": "glow"
+      "preset": "icon-performance"
     },
     "group": {
-      "preset": "soft-reveal"
+      "preset": "border-scan"
     },
     "title": {
       "preset": "highlight-sweep"
@@ -38,9 +35,9 @@
       "id": "roadmap",
       "label": "Launch Window",
       "bounds": [
-        55,
+        69,
         260,
-        1120,
+        1400,
         190
       ],
       "role": "process"
@@ -52,11 +49,11 @@
       "label": "Alpha",
       "caption": "internal",
       "position": [
-        90,
+        112,
         325
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "source",
@@ -67,11 +64,11 @@
       "label": "Beta",
       "caption": "trusted users",
       "position": [
-        305,
+        381,
         325
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "process",
@@ -82,11 +79,11 @@
       "label": "Public",
       "caption": "launch",
       "position": [
-        520,
+        650,
         325
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "output",
@@ -97,11 +94,11 @@
       "label": "Scale",
       "caption": "automate",
       "position": [
-        735,
+        919,
         325
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "tool",
@@ -112,11 +109,11 @@
       "label": "Learn",
       "caption": "feedback",
       "position": [
-        950,
+        1188,
         325
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "memory",
@@ -129,29 +126,72 @@
       "to": "beta",
       "label": "milestone",
       "role": "process",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "beta",
       "to": "public",
       "label": "milestone",
       "role": "process",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "public",
       "to": "scale",
       "label": "milestone",
       "role": "process",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "scale",
       "to": "learn",
       "label": "milestone",
       "role": "process",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     }
   ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "timeline",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "blueprint",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "timeline",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  },
   "preset": "timeline"
 }

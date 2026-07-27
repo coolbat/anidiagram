@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "deep-tech",
@@ -10,23 +10,20 @@
     "subtitle": "signals move through policy, model, and action loops"
   },
   "motion": {
-    "profile": "expressive",
-    "sequence": "step-stagger",
+    "profile": "showcase-v1",
+    "sequence": "staged",
     "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
-    "intensity": 1.35,
+    "intensity": 1.0,
     "edge": {
-      "preset": "flow-arrow",
-      "particle": "soft-arrow",
-      "trail": false
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "glow-breathe",
-      "accent": "glow"
+      "preset": "icon-performance"
     },
     "group": {
-      "preset": "marching-ants"
+      "preset": "border-scan"
     },
     "title": {
       "preset": "highlight-sweep"
@@ -38,9 +35,9 @@
       "id": "telemetry",
       "label": "Telemetry",
       "bounds": [
-        60,
+        75,
         150,
-        475,
+        594,
         165
       ],
       "role": "source"
@@ -49,9 +46,9 @@
       "id": "runtime",
       "label": "Runtime",
       "bounds": [
-        500,
+        625,
         145,
-        640,
+        800,
         420
       ],
       "role": "agent"
@@ -63,11 +60,11 @@
       "label": "Signals",
       "caption": "events",
       "position": [
-        90,
+        112,
         195
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "source",
@@ -78,11 +75,11 @@
       "label": "Stream",
       "caption": "normalize",
       "position": [
-        315,
+        394,
         195
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "process",
@@ -93,11 +90,11 @@
       "label": "Agent",
       "caption": "coordinate",
       "position": [
-        540,
+        675,
         315
       ],
       "size": [
-        190,
+        240,
         92
       ],
       "role": "agent",
@@ -108,11 +105,11 @@
       "label": "Model",
       "caption": "score",
       "position": [
-        790,
+        988,
         195
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "tool",
@@ -123,11 +120,11 @@
       "label": "Policy",
       "caption": "guard",
       "position": [
-        790,
+        988,
         445
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "risk",
@@ -138,11 +135,11 @@
       "label": "Action",
       "caption": "dispatch",
       "position": [
-        1015,
+        1269,
         315
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "output",
@@ -155,14 +152,22 @@
       "to": "stream",
       "label": "ingest",
       "role": "source",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "stream",
       "to": "agent",
       "label": "context",
       "role": "process",
-      "route": "orthogonal"
+      "route": "orthogonal",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "agent",
@@ -171,10 +176,9 @@
       "role": "tool",
       "route": "orthogonal",
       "effect": {
-        "preset": "flow-arrow",
-        "particle": "soft-arrow",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "agent",
@@ -183,24 +187,58 @@
       "role": "risk",
       "route": "orthogonal",
       "effect": {
-        "preset": "dynamic-dash",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "stream-flow"
+      },
+      "animated": true
     },
     {
       "from": "model",
       "to": "action",
       "label": "pass",
       "role": "output",
-      "route": "orthogonal"
+      "route": "orthogonal",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "policy",
       "to": "action",
       "label": "approve",
       "role": "output",
-      "route": "orthogonal"
+      "route": "orthogonal",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     }
-  ]
+  ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "network",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "deep-tech",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "network",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  }
 }

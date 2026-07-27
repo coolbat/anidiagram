@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "sketch-board",
@@ -10,26 +10,23 @@
     "subtitle": "tokens, attention, alignment, and output as a staged lesson"
   },
   "motion": {
-    "profile": "teaching",
+    "profile": "showcase-v1",
     "sequence": "staged",
     "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
-    "intensity": 1.15,
+    "intensity": 1.0,
     "edge": {
-      "preset": "ghost-flow",
-      "particle": "soft-dot",
-      "trail": true
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "icon-pulse",
-      "accent": "ripple"
+      "preset": "icon-performance"
     },
     "group": {
       "preset": "border-scan"
     },
     "title": {
-      "preset": "handwrite-reveal"
+      "preset": "highlight-sweep"
     },
     "reduced_motion": "subtle"
   },
@@ -38,9 +35,9 @@
       "id": "input",
       "label": "Source Tokens",
       "bounds": [
-        65,
+        81,
         155,
-        455,
+        569,
         175
       ],
       "role": "source"
@@ -49,9 +46,9 @@
       "id": "core",
       "label": "Transformer Core",
       "bounds": [
-        515,
+        644,
         155,
-        670,
+        838,
         410
       ],
       "role": "agent"
@@ -63,11 +60,11 @@
       "label": "Tokens",
       "caption": "input words",
       "position": [
-        105,
+        131,
         210
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "source",
@@ -78,11 +75,11 @@
       "label": "Embed",
       "caption": "meaning",
       "position": [
-        325,
+        406,
         210
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "memory",
@@ -93,11 +90,11 @@
       "label": "Attend",
       "caption": "mix signals",
       "position": [
-        545,
+        681,
         315
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "agent",
@@ -108,11 +105,11 @@
       "label": "Aligned?",
       "caption": "mask + context",
       "position": [
-        765,
+        956,
         315
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "risk",
@@ -123,11 +120,11 @@
       "label": "Softmax",
       "caption": "scores",
       "position": [
-        985,
+        1231,
         210
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "tool",
@@ -138,11 +135,11 @@
       "label": "Output",
       "caption": "next token",
       "position": [
-        985,
+        1231,
         430
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "output",
@@ -157,10 +154,9 @@
       "role": "source",
       "route": "straight",
       "effect": {
-        "preset": "flow-dot",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "embed",
@@ -169,10 +165,9 @@
       "role": "memory",
       "route": "orthogonal",
       "effect": {
-        "preset": "ghost-flow",
-        "particle": "soft-dot",
-        "trail": true
-      }
+        "preset": "comet-flow"
+      },
+      "animated": true
     },
     {
       "from": "attend",
@@ -181,17 +176,20 @@
       "role": "agent",
       "route": "straight",
       "effect": {
-        "preset": "flow-arrow",
-        "particle": "soft-arrow",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "align",
       "to": "softmax",
       "label": "yes",
       "role": "output",
-      "route": "orthogonal"
+      "route": "orthogonal",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "align",
@@ -200,10 +198,9 @@
       "role": "output",
       "route": "orthogonal",
       "effect": {
-        "preset": "glow-line",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "stream-flow"
+      },
+      "animated": true
     },
     {
       "from": "output",
@@ -212,10 +209,36 @@
       "role": "memory",
       "route": "orthogonal",
       "effect": {
-        "preset": "dynamic-dash",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "stream-flow"
+      },
+      "animated": true
     }
-  ]
+  ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "loop",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "sketch-board",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "loop",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  }
 }

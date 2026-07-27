@@ -27,7 +27,7 @@ GitHub README 里也能直接看到高保真动效。Style / Layout 的大量卡
 
 | Agent Runtime Flow |
 | --- |
-| [![Agent Runtime Flow](./gallery/previews/agent-runtime-flow.webp)](./gallery/previews/agent-runtime-flow.mp4)<br>从浏览器 runtime 录制的 `illustrated-character-v1` 高保真预览：以 Agent 为视觉中心，分出检索/记忆、策略校验和工具/API 三条路径，最后汇聚到输出。<br>[GIF](./gallery/previews/agent-runtime-flow.gif) · [APNG](./gallery/previews/agent-runtime-flow.apng) · Runtime HTML：`gallery/hero/agent-runtime-flow.html` |
+| [![Agent Runtime Flow](./gallery/previews/agent-runtime-flow.webp)](./gallery/previews/agent-runtime-flow.mp4)<br>从浏览器 runtime 录制的 composition-v1 默认 `illustrated` 2.5 高保真预览：以 Agent 为视觉中心，分出检索/记忆、策略校验和工具/API 三条路径，最后汇聚到输出。<br>[GIF](./gallery/previews/agent-runtime-flow.gif) · [APNG](./gallery/previews/agent-runtime-flow.apng) · Runtime HTML：`gallery/hero/agent-runtime-flow.html` |
 
 本地打开可交互 runtime：
 

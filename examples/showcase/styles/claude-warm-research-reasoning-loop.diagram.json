@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "claude-warm",
@@ -10,26 +10,23 @@
     "subtitle": "questions cycle through evidence and critique"
   },
   "motion": {
-    "profile": "expressive",
-    "sequence": "step-stagger",
+    "profile": "showcase-v1",
+    "sequence": "staged",
     "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
-    "intensity": 0.9,
+    "intensity": 1.0,
     "edge": {
-      "preset": "comet-flow",
-      "particle": "soft-dot",
-      "trail": true
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "pop",
-      "accent": "glow"
+      "preset": "icon-performance"
     },
     "group": {
-      "preset": "marching-ants"
+      "preset": "border-scan"
     },
     "title": {
-      "preset": "fade"
+      "preset": "highlight-sweep"
     },
     "reduced_motion": "subtle"
   },
@@ -38,9 +35,9 @@
       "id": "loop",
       "label": "Reasoning Loop",
       "bounds": [
-        210,
+        262,
         90,
-        790,
+        988,
         500
       ],
       "role": "neutral"
@@ -52,11 +49,11 @@
       "label": "Question",
       "caption": "frame",
       "position": [
-        515,
+        644,
         130
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "actor",
@@ -67,11 +64,11 @@
       "label": "Collect",
       "caption": "sources",
       "position": [
-        780,
+        975,
         285
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "source",
@@ -82,11 +79,11 @@
       "label": "Synthesis",
       "caption": "draft",
       "position": [
-        515,
+        644,
         445
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "process",
@@ -97,11 +94,11 @@
       "label": "Critique",
       "caption": "check",
       "position": [
-        250,
+        312,
         285
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "risk",
@@ -112,11 +109,11 @@
       "label": "Memory",
       "caption": "reuse",
       "position": [
-        515,
+        644,
         285
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "memory",
@@ -129,14 +126,22 @@
       "to": "collect",
       "label": "look up",
       "role": "source",
-      "route": "curved"
+      "route": "curved",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "collect",
       "to": "synth",
       "label": "evidence",
       "role": "source",
-      "route": "curved"
+      "route": "curved",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "synth",
@@ -145,17 +150,20 @@
       "role": "risk",
       "route": "curved",
       "effect": {
-        "preset": "dynamic-dash",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "stream-flow"
+      },
+      "animated": true
     },
     {
       "from": "critique",
       "to": "question",
       "label": "revise",
       "role": "actor",
-      "route": "curved"
+      "route": "curved",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "memory",
@@ -164,10 +172,36 @@
       "role": "memory",
       "route": "vh",
       "effect": {
-        "preset": "flow-dot",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     }
-  ]
+  ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "loop",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "claude-warm",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "loop",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  }
 }

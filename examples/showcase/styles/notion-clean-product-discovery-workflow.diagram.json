@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "notion-clean",
@@ -10,26 +10,23 @@
     "subtitle": "research notes become a tested product decision"
   },
   "motion": {
-    "profile": "subtle",
-    "sequence": "step-stagger",
-    "ease": "calm",
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
-    "intensity": 0.5,
+    "intensity": 1.0,
     "edge": {
-      "preset": "draw",
-      "particle": "soft-dot",
-      "trail": false
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "fade",
-      "accent": "glow"
+      "preset": "icon-performance"
     },
     "group": {
-      "preset": "soft-reveal"
+      "preset": "border-scan"
     },
     "title": {
-      "preset": "fade"
+      "preset": "highlight-sweep"
     },
     "reduced_motion": "subtle"
   },
@@ -38,9 +35,9 @@
       "id": "research",
       "label": "Research",
       "bounds": [
-        70,
+        88,
         215,
-        450,
+        562,
         180
       ],
       "role": "source"
@@ -49,9 +46,9 @@
       "id": "decision",
       "label": "Decision",
       "bounds": [
-        520,
+        650,
         215,
-        635,
+        794,
         180
       ],
       "role": "process"
@@ -63,11 +60,11 @@
       "label": "Notes",
       "caption": "interviews",
       "position": [
-        105,
+        131,
         285
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "source",
@@ -78,11 +75,11 @@
       "label": "Patterns",
       "caption": "cluster",
       "position": [
-        325,
+        406,
         285
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "memory",
@@ -93,11 +90,11 @@
       "label": "Prototype",
       "caption": "try",
       "position": [
-        545,
+        681,
         285
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "tool",
@@ -108,11 +105,11 @@
       "label": "Test",
       "caption": "measure",
       "position": [
-        765,
+        956,
         285
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "agent",
@@ -123,11 +120,11 @@
       "label": "Decision",
       "caption": "ship or stop",
       "position": [
-        985,
+        1231,
         285
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "output",
@@ -140,28 +137,71 @@
       "to": "patterns",
       "label": "next",
       "role": "process",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "patterns",
       "to": "prototype",
       "label": "next",
       "role": "process",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "prototype",
       "to": "test",
       "label": "next",
       "role": "process",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "test",
       "to": "decision",
       "label": "next",
       "role": "process",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     }
-  ]
+  ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "pipeline",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "notion-clean",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "pipeline",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  }
 }

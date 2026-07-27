@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "deep-tech",
@@ -10,23 +10,20 @@
     "subtitle": "the agent retrieves context, commits memory, and produces a grounded answer"
   },
   "motion": {
-    "profile": "teaching",
-    "sequence": "step-stagger",
+    "profile": "showcase-v1",
+    "sequence": "staged",
     "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
-    "intensity": 1.1,
+    "intensity": 1.0,
     "edge": {
-      "preset": "signal-arrow",
-      "particle": "soft-dot",
-      "trail": false
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "icon-performance",
-      "accent": "glow"
+      "preset": "icon-performance"
     },
     "group": {
-      "preset": "soft-reveal"
+      "preset": "border-scan"
     },
     "title": {
       "preset": "highlight-sweep"
@@ -38,9 +35,9 @@
       "id": "runtime",
       "label": "Agent Runtime",
       "bounds": [
-        55,
+        69,
         155,
-        630,
+        788,
         410
       ],
       "role": "agent"
@@ -49,9 +46,9 @@
       "id": "state",
       "label": "Memory + Output",
       "bounds": [
-        710,
+        888,
         205,
-        430,
+        538,
         215
       ],
       "role": "memory"
@@ -63,11 +60,11 @@
       "label": "User",
       "caption": "preference",
       "position": [
-        80,
+        100,
         315
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "actor",
@@ -78,11 +75,11 @@
       "label": "Agent",
       "caption": "think + act",
       "position": [
-        295,
+        369,
         315
       ],
       "size": [
-        190,
+        240,
         92
       ],
       "role": "agent",
@@ -93,11 +90,11 @@
       "label": "Search",
       "caption": "retrieve",
       "position": [
-        525,
+        656,
         205
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "source",
@@ -108,11 +105,11 @@
       "label": "Memory",
       "caption": "commit",
       "position": [
-        760,
+        950,
         315
       ],
       "size": [
-        190,
+        240,
         92
       ],
       "role": "memory",
@@ -123,11 +120,11 @@
       "label": "Tool",
       "caption": "do work",
       "position": [
-        525,
+        656,
         425
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "tool",
@@ -138,11 +135,11 @@
       "label": "Output",
       "caption": "answer",
       "position": [
-        1005,
+        1256,
         315
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "output",
@@ -155,7 +152,11 @@
       "to": "agent",
       "label": "intent",
       "role": "actor",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "agent",
@@ -164,10 +165,9 @@
       "role": "source",
       "route": "orthogonal",
       "effect": {
-        "preset": "signal-arrow",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "agent",
@@ -176,11 +176,9 @@
       "role": "tool",
       "route": "orthogonal",
       "effect": {
-        "preset": "signal-arrow",
-        "particle": "soft-dot",
-        "trail": false
+        "preset": "packet-flow"
       },
-      "animated": false
+      "animated": true
     },
     {
       "from": "search",
@@ -189,10 +187,9 @@
       "role": "memory",
       "route": "orthogonal",
       "effect": {
-        "preset": "signal-dot",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "tool",
@@ -201,30 +198,48 @@
       "role": "memory",
       "route": "orthogonal",
       "effect": {
-        "preset": "signal-dot",
-        "particle": "soft-dot",
-        "trail": false
+        "preset": "packet-flow"
       },
-      "animated": false
+      "animated": true
     },
     {
       "from": "memory",
       "to": "output",
       "label": "ground",
       "role": "output",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     }
   ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "agent-memory",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "deep-tech",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "agent-memory",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
   "motion_policy": {
-    "profile": "focused",
-    "motion_area": "small",
-    "max_active_flow_edges": 4,
-    "max_particle_edges": 4,
-    "particle_count_per_edge": 1,
-    "flow_trail_count": 0,
-    "max_active_pulse_nodes": 3,
-    "pulse_mode": "rotate",
-    "max_scanning_groups": 0
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
   },
   "preset": "agent-memory"
 }

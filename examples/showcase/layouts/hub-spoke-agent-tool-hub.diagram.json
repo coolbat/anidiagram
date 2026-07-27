@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "deep-tech",
@@ -10,20 +10,17 @@
     "subtitle": "one agent coordinates search, browser, api, memory, and code tools"
   },
   "motion": {
-    "profile": "teaching",
-    "sequence": "step-stagger",
+    "profile": "showcase-v1",
+    "sequence": "staged",
     "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
-    "intensity": 1.1,
+    "intensity": 1.0,
     "edge": {
-      "preset": "signal-arrow",
-      "particle": "soft-dot",
-      "trail": false
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "icon-performance",
-      "accent": "glow"
+      "preset": "icon-performance"
     },
     "group": {
       "preset": "border-scan"
@@ -38,9 +35,9 @@
       "id": "hub",
       "label": "Tool Hub",
       "bounds": [
-        90,
+        112,
         95,
-        1050,
+        1312,
         560
       ],
       "role": "agent"
@@ -52,11 +49,11 @@
       "label": "Agent",
       "caption": "route tasks",
       "position": [
-        535,
+        669,
         315
       ],
       "size": [
-        200,
+        240,
         92
       ],
       "role": "agent",
@@ -67,11 +64,11 @@
       "label": "Search",
       "caption": "discover",
       "position": [
-        215,
+        269,
         145
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "source",
@@ -82,11 +79,11 @@
       "label": "Browser",
       "caption": "inspect",
       "position": [
-        855,
+        1069,
         145
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "tool",
@@ -97,11 +94,11 @@
       "label": "API",
       "caption": "call",
       "position": [
-        930,
+        1162,
         455
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "tool",
@@ -112,11 +109,11 @@
       "label": "Memory",
       "caption": "recall",
       "position": [
-        515,
+        644,
         520
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "memory",
@@ -127,11 +124,11 @@
       "label": "Code Tool",
       "caption": "execute",
       "position": [
-        140,
+        175,
         455
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "process",
@@ -146,10 +143,9 @@
       "role": "source",
       "route": "straight",
       "effect": {
-        "preset": "signal-arrow",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "agent",
@@ -158,10 +154,9 @@
       "role": "tool",
       "route": "straight",
       "effect": {
-        "preset": "signal-arrow",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "agent",
@@ -170,10 +165,9 @@
       "role": "tool",
       "route": "straight",
       "effect": {
-        "preset": "signal-arrow",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "agent",
@@ -182,10 +176,9 @@
       "role": "memory",
       "route": "straight",
       "effect": {
-        "preset": "signal-dot",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "agent",
@@ -194,11 +187,37 @@
       "role": "process",
       "route": "straight",
       "effect": {
-        "preset": "signal-arrow",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     }
   ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "hub-spoke",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "deep-tech",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "hub-spoke",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  },
   "preset": "hub-spoke"
 }

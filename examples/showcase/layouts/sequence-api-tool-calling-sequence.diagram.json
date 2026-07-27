@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "notion-clean",
@@ -10,23 +10,20 @@
     "subtitle": "user, agent, tool, api, memory, and output exchange ordered messages"
   },
   "motion": {
-    "profile": "teaching",
-    "sequence": "step-stagger",
+    "profile": "showcase-v1",
+    "sequence": "staged",
     "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
     "intensity": 1.0,
     "edge": {
-      "preset": "signal-arrow",
-      "particle": "soft-dot",
-      "trail": false
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "icon-performance",
-      "accent": "glow"
+      "preset": "icon-performance"
     },
     "group": {
-      "preset": "soft-reveal"
+      "preset": "border-scan"
     },
     "title": {
       "preset": "highlight-sweep"
@@ -38,9 +35,9 @@
       "id": "sequence",
       "label": "Call Sequence",
       "bounds": [
-        45,
+        56,
         180,
-        1185,
+        1481,
         190
       ],
       "role": "neutral"
@@ -52,11 +49,11 @@
       "label": "User",
       "caption": "asks",
       "position": [
-        70,
+        88,
         245
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "actor",
@@ -67,11 +64,11 @@
       "label": "Agent",
       "caption": "plans",
       "position": [
-        265,
+        331,
         245
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "agent",
@@ -82,11 +79,11 @@
       "label": "Tool",
       "caption": "runs",
       "position": [
-        460,
+        575,
         245
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "tool",
@@ -97,11 +94,11 @@
       "label": "API",
       "caption": "responds",
       "position": [
-        655,
+        819,
         245
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "process",
@@ -112,11 +109,11 @@
       "label": "Memory",
       "caption": "commit",
       "position": [
-        850,
+        1062,
         245
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "memory",
@@ -127,11 +124,11 @@
       "label": "Output",
       "caption": "answer",
       "position": [
-        1045,
+        1306,
         245
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "output",
@@ -144,7 +141,11 @@
       "to": "agent",
       "label": "prompt",
       "role": "actor",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "agent",
@@ -153,10 +154,9 @@
       "role": "tool",
       "route": "straight",
       "effect": {
-        "preset": "signal-arrow",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "tool",
@@ -165,10 +165,9 @@
       "role": "process",
       "route": "straight",
       "effect": {
-        "preset": "signal-arrow",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "api",
@@ -177,10 +176,9 @@
       "role": "memory",
       "route": "straight",
       "effect": {
-        "preset": "signal-dot",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "memory",
@@ -188,19 +186,38 @@
       "label": "ground",
       "role": "output",
       "route": "straight",
-      "animated": false
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     }
   ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "sequence",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "notion-clean",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "sequence",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
   "motion_policy": {
-    "profile": "focused",
-    "motion_area": "small",
-    "max_active_flow_edges": 4,
-    "max_particle_edges": 4,
-    "particle_count_per_edge": 1,
-    "flow_trail_count": 0,
-    "max_active_pulse_nodes": 3,
-    "pulse_mode": "rotate",
-    "max_scanning_groups": 0
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
   },
   "preset": "sequence"
 }

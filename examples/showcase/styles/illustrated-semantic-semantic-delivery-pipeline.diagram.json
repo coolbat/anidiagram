@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "illustrated-semantic",
@@ -10,26 +10,23 @@
     "subtitle": "clear illustrated roles on a warm, low-noise canvas"
   },
   "motion": {
-    "profile": "subtle",
-    "sequence": "step-stagger",
-    "ease": "calm",
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
-    "intensity": 0.65,
+    "intensity": 1.0,
     "edge": {
-      "preset": "draw",
-      "particle": "soft-dot",
-      "trail": false
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "fade",
-      "accent": "glow"
+      "preset": "icon-performance"
     },
     "group": {
-      "preset": "soft-reveal"
+      "preset": "border-scan"
     },
     "title": {
-      "preset": "fade"
+      "preset": "highlight-sweep"
     },
     "reduced_motion": "subtle"
   },
@@ -38,9 +35,9 @@
       "id": "semantic-flow",
       "label": "Structured Semantic Flow",
       "bounds": [
-        55,
+        69,
         245,
-        1095,
+        1369,
         210
       ],
       "role": "neutral"
@@ -52,11 +49,11 @@
       "label": "Brief",
       "caption": "input",
       "position": [
-        90,
+        112,
         315
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "actor",
@@ -67,11 +64,11 @@
       "label": "Think",
       "caption": "reason",
       "position": [
-        300,
+        375,
         315
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "agent",
@@ -82,11 +79,11 @@
       "label": "Operate",
       "caption": "review",
       "position": [
-        510,
+        638,
         315
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "source",
@@ -97,11 +94,11 @@
       "label": "Execute",
       "caption": "run",
       "position": [
-        720,
+        900,
         315
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "tool",
@@ -112,11 +109,11 @@
       "label": "Deliver",
       "caption": "confirm",
       "position": [
-        930,
+        1162,
         315
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "output",
@@ -129,28 +126,71 @@
       "to": "think",
       "label": "handoff",
       "role": "process",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "think",
       "to": "operate",
       "label": "handoff",
       "role": "process",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "operate",
       "to": "execute",
       "label": "handoff",
       "role": "process",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "execute",
       "to": "deliver",
       "label": "handoff",
       "role": "process",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     }
-  ]
+  ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "pipeline",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "illustrated-semantic",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "pipeline",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  }
 }

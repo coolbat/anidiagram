@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "glassmorphism",
@@ -10,20 +10,17 @@
     "subtitle": "signals become qualified users, activation, and expansion loops"
   },
   "motion": {
-    "profile": "expressive",
-    "sequence": "step-stagger",
+    "profile": "showcase-v1",
+    "sequence": "staged",
     "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
     "intensity": 1.0,
     "edge": {
-      "preset": "ghost-flow",
-      "particle": "soft-dot",
-      "trail": true
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "pulse",
-      "accent": "ripple"
+      "preset": "icon-performance"
     },
     "group": {
       "preset": "border-scan"
@@ -38,9 +35,9 @@
       "id": "funnel",
       "label": "Funnel",
       "bounds": [
-        450,
+        562,
         80,
-        345,
+        431,
         600
       ],
       "role": "process"
@@ -52,11 +49,11 @@
       "label": "Traffic",
       "caption": "visits",
       "position": [
-        505,
+        631,
         130
       ],
       "size": [
-        230,
+        240,
         78
       ],
       "role": "source",
@@ -67,11 +64,11 @@
       "label": "Qualify",
       "caption": "fit + intent",
       "position": [
-        525,
+        656,
         245
       ],
       "size": [
-        190,
+        240,
         78
       ],
       "role": "process",
@@ -82,11 +79,11 @@
       "label": "Activate",
       "caption": "first value",
       "position": [
-        545,
+        681,
         360
       ],
       "size": [
-        150,
+        240,
         78
       ],
       "role": "agent",
@@ -97,11 +94,11 @@
       "label": "Expand",
       "caption": "next best action",
       "position": [
-        565,
+        706,
         475
       ],
       "size": [
-        145,
+        240,
         78
       ],
       "role": "tool",
@@ -112,11 +109,11 @@
       "label": "Retain",
       "caption": "loop",
       "position": [
-        575,
+        719,
         590
       ],
       "size": [
-        120,
+        240,
         70
       ],
       "role": "output",
@@ -127,11 +124,11 @@
       "label": "Growth DB",
       "caption": "history",
       "position": [
-        870,
+        1088,
         360
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "memory",
@@ -144,14 +141,22 @@
       "to": "qualify",
       "label": "filter",
       "role": "source",
-      "route": "vh"
+      "route": "vh",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "qualify",
       "to": "activate",
       "label": "rank",
       "role": "process",
-      "route": "vh"
+      "route": "vh",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "activate",
@@ -160,10 +165,9 @@
       "role": "agent",
       "route": "vh",
       "effect": {
-        "preset": "ghost-flow",
-        "particle": "soft-dot",
-        "trail": true
-      }
+        "preset": "comet-flow"
+      },
+      "animated": true
     },
     {
       "from": "expand",
@@ -172,17 +176,47 @@
       "role": "output",
       "route": "vh",
       "effect": {
-        "preset": "flow-dot",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "crm",
       "to": "activate",
       "label": "context",
       "role": "memory",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     }
-  ]
+  ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "funnel",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "glassmorphism",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "funnel",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  }
 }

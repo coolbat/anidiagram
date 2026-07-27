@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "flat-icon",
@@ -10,26 +10,23 @@
     "subtitle": "demand signals become a focused roadmap"
   },
   "motion": {
-    "profile": "normal",
-    "sequence": "step-stagger",
-    "ease": "calm",
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
-    "intensity": 0.95,
+    "intensity": 1.0,
     "edge": {
-      "preset": "flow-dot",
-      "particle": "soft-dot",
-      "trail": false
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "icon-pulse",
-      "accent": "ripple"
+      "preset": "icon-performance"
     },
     "group": {
-      "preset": "soft-reveal"
+      "preset": "border-scan"
     },
     "title": {
-      "preset": "fade"
+      "preset": "highlight-sweep"
     },
     "reduced_motion": "subtle"
   },
@@ -38,9 +35,9 @@
       "id": "matrix",
       "label": "Impact x Effort",
       "bounds": [
-        310,
+        388,
         150,
-        570,
+        712,
         380
       ],
       "role": "neutral"
@@ -52,11 +49,11 @@
       "label": "Demand",
       "caption": "requests",
       "position": [
-        95,
+        119,
         320
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "source",
@@ -67,11 +64,11 @@
       "label": "Quick Win",
       "caption": "high value",
       "position": [
-        345,
+        431,
         205
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "output",
@@ -82,11 +79,11 @@
       "label": "Big Bet",
       "caption": "strategic",
       "position": [
-        655,
+        819,
         205
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "agent",
@@ -97,11 +94,11 @@
       "label": "Fill In",
       "caption": "low effort",
       "position": [
-        345,
+        431,
         425
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "tool",
@@ -112,11 +109,11 @@
       "label": "Avoid",
       "caption": "too risky",
       "position": [
-        655,
+        819,
         425
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "risk",
@@ -127,11 +124,11 @@
       "label": "Roadmap",
       "caption": "commit",
       "position": [
-        985,
+        1231,
         320
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "memory",
@@ -144,14 +141,22 @@
       "to": "quick",
       "label": "score",
       "role": "source",
-      "route": "orthogonal"
+      "route": "orthogonal",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "demand",
       "to": "fill",
       "label": "score",
       "role": "source",
-      "route": "orthogonal"
+      "route": "orthogonal",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "quick",
@@ -160,17 +165,20 @@
       "role": "output",
       "route": "orthogonal",
       "effect": {
-        "preset": "flow-dot",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "bet",
       "to": "roadmap",
       "label": "sequence",
       "role": "agent",
-      "route": "orthogonal"
+      "route": "orthogonal",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "avoid",
@@ -179,10 +187,36 @@
       "role": "risk",
       "route": "orthogonal",
       "effect": {
-        "preset": "static",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     }
-  ]
+  ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "matrix",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "flat-icon",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "matrix",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  }
 }

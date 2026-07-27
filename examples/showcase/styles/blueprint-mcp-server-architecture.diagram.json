@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "blueprint",
@@ -10,20 +10,17 @@
     "subtitle": "client requests route through tools, resources, auth, and transport"
   },
   "motion": {
-    "profile": "expressive",
-    "sequence": "step-stagger",
+    "profile": "showcase-v1",
+    "sequence": "staged",
     "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
-    "intensity": 1.1,
+    "intensity": 1.0,
     "edge": {
-      "preset": "dynamic-dash",
-      "particle": "soft-dot",
-      "trail": false
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "pop",
-      "accent": "glow"
+      "preset": "icon-performance"
     },
     "group": {
       "preset": "border-scan"
@@ -38,9 +35,9 @@
       "id": "client-plane",
       "label": "Client Plane",
       "bounds": [
-        60,
+        75,
         225,
-        450,
+        562,
         195
       ],
       "role": "source"
@@ -49,9 +46,9 @@
       "id": "server-plane",
       "label": "Server Plane",
       "bounds": [
-        490,
+        612,
         140,
-        655,
+        819,
         365
       ],
       "role": "agent"
@@ -63,11 +60,11 @@
       "label": "Client",
       "caption": "LLM host",
       "position": [
-        90,
+        112,
         300
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "actor",
@@ -78,11 +75,11 @@
       "label": "Transport",
       "caption": "stdio / http",
       "position": [
-        300,
+        375,
         300
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "tool",
@@ -93,11 +90,11 @@
       "label": "MCP Server",
       "caption": "capability router",
       "position": [
-        520,
+        650,
         300
       ],
       "size": [
-        190,
+        240,
         88
       ],
       "role": "agent",
@@ -108,11 +105,11 @@
       "label": "Tools",
       "caption": "actions",
       "position": [
-        775,
+        969,
         205
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "process",
@@ -123,11 +120,11 @@
       "label": "Resources",
       "caption": "read context",
       "position": [
-        775,
+        969,
         395
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "memory",
@@ -138,11 +135,11 @@
       "label": "Policy",
       "caption": "auth + limits",
       "position": [
-        1000,
+        1250,
         300
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "risk",
@@ -155,14 +152,22 @@
       "to": "transport",
       "label": "request",
       "role": "actor",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "transport",
       "to": "server",
       "label": "message",
       "role": "tool",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "server",
@@ -171,10 +176,9 @@
       "role": "process",
       "route": "orthogonal",
       "effect": {
-        "preset": "flow-arrow",
-        "particle": "soft-arrow",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "server",
@@ -183,24 +187,58 @@
       "role": "memory",
       "route": "orthogonal",
       "effect": {
-        "preset": "dynamic-dash",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "stream-flow"
+      },
+      "animated": true
     },
     {
       "from": "tools",
       "to": "policy",
       "label": "guard",
       "role": "risk",
-      "route": "orthogonal"
+      "route": "orthogonal",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "resources",
       "to": "policy",
       "label": "scope",
       "role": "risk",
-      "route": "orthogonal"
+      "route": "orthogonal",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     }
-  ]
+  ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "layered",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "blueprint",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "layered",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  }
 }

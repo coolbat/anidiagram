@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "claude-warm",
@@ -10,20 +10,17 @@
     "subtitle": "observe, plan, act, evaluate, and learn with a quiet feedback rhythm"
   },
   "motion": {
-    "profile": "teaching",
-    "sequence": "step-stagger",
+    "profile": "showcase-v1",
+    "sequence": "staged",
     "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
     "intensity": 1.0,
     "edge": {
-      "preset": "ghost-flow",
-      "particle": "soft-dot",
-      "trail": true
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "icon-performance",
-      "accent": "glow"
+      "preset": "icon-performance"
     },
     "group": {
       "preset": "border-scan"
@@ -38,9 +35,9 @@
       "id": "loop",
       "label": "Reflection Loop",
       "bounds": [
-        190,
+        238,
         85,
-        820,
+        1025,
         535
       ],
       "role": "neutral"
@@ -52,11 +49,11 @@
       "label": "Observe",
       "caption": "state",
       "position": [
-        515,
+        644,
         130
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "source",
@@ -67,11 +64,11 @@
       "label": "Plan",
       "caption": "next step",
       "position": [
-        800,
+        1000,
         305
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "agent",
@@ -82,11 +79,11 @@
       "label": "Act",
       "caption": "tool use",
       "position": [
-        515,
+        644,
         480
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "tool",
@@ -97,11 +94,11 @@
       "label": "Evaluate",
       "caption": "quality",
       "position": [
-        230,
+        288,
         305
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "risk",
@@ -112,11 +109,11 @@
       "label": "Learn",
       "caption": "memory",
       "position": [
-        515,
+        644,
         305
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "memory",
@@ -129,7 +126,11 @@
       "to": "plan",
       "label": "signal",
       "role": "source",
-      "route": "curved"
+      "route": "curved",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "plan",
@@ -138,17 +139,20 @@
       "role": "agent",
       "route": "curved",
       "effect": {
-        "preset": "flow-arrow",
-        "particle": "soft-arrow",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "act",
       "to": "evaluate",
       "label": "result",
       "role": "tool",
-      "route": "curved"
+      "route": "curved",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "evaluate",
@@ -157,10 +161,9 @@
       "role": "risk",
       "route": "curved",
       "effect": {
-        "preset": "dynamic-dash",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "stream-flow"
+      },
+      "animated": true
     },
     {
       "from": "learn",
@@ -169,11 +172,37 @@
       "role": "memory",
       "route": "straight",
       "effect": {
-        "preset": "flow-dot",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     }
   ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "loop",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "claude-warm",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "loop",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  },
   "preset": "loop"
 }

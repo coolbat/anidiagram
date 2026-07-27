@@ -8,6 +8,7 @@ from urllib.parse import urlsplit
 from anidiagram.quality import quality_report
 from anidiagram.schema import compile_scene
 from anidiagram.motion_manifest import CHARACTER_ICON_PERFORMANCES, CHARACTER_REST_AT, build_motion_manifest
+from anidiagram.edge_motion import canonical_edge_motion
 from anidiagram.illustrated_character_icons import character_definition
 from anidiagram.renderer_svg import node_box, render_svg, route_points
 from anidiagram.styles import load_style
@@ -19,6 +20,7 @@ if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
 from build_showcase import LAYOUT_CASES, layout_showcase_specs, load_runtime_motion_catalog
+from build_style_showcase import apply_public_showcase_contract, style_showcase_specs
 
 
 class _LocalAssetParser(HTMLParser):
@@ -119,9 +121,6 @@ class ShowcaseGalleryTest(unittest.TestCase):
             ROOT / "examples" / "agent-memory.diagram.json",
             ROOT / "examples" / "high-fidelity-runtime.diagram.json",
             ROOT / "examples" / "illustrated-character-strong-loop-cases.diagram.json",
-            ROOT / "examples" / "showcase" / "layouts" / "pipeline-rag-ingestion-pipeline.diagram.json",
-            ROOT / "examples" / "showcase" / "layouts" / "layered-llm-app-architecture-layers.diagram.json",
-            ROOT / "examples" / "showcase" / "layouts" / "sequence-api-tool-calling-sequence.diagram.json",
         )
         for path in targets:
             with self.subTest(path=path.name):
@@ -199,6 +198,54 @@ class ShowcaseGalleryTest(unittest.TestCase):
                 scene = compile_scene(spec)
                 self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, quality_report(scene)["summary"])
 
+    def test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion(self):
+        hero_source = json.loads((ROOT / "examples" / "high-fidelity-runtime.diagram.json").read_text(encoding="utf-8"))
+        collections = {
+            "hero": {"agent-runtime-flow": apply_public_showcase_contract(hero_source, layout="layered")},
+            "styles": style_showcase_specs(),
+            "layouts": {
+                preset: spec
+                for preset, spec in layout_showcase_specs().items()
+                if preset != "agent-loop"
+            },
+        }
+
+        for collection, specs in collections.items():
+            expected_count = {"hero": 1, "styles": 13, "layouts": 14}[collection]
+            self.assertEqual(expected_count, len(specs), collection)
+            for name, spec in specs.items():
+                with self.subTest(collection=collection, name=name):
+                    self.assertEqual("0.4", spec["version"])
+                    self.assertEqual("composition-v1", spec["composition_policy"])
+                    self.assertEqual("illustrated", spec["icon_system"])
+                    self.assertEqual("2.5.0", spec["resolved_presentation"]["icon_system"]["version"])
+                    self.assertEqual("illustrated", spec["resolved_presentation"]["icon_system"]["value"])
+                    self.assertEqual("showcase-v1", spec["resolved_presentation"]["motion"]["value"])
+                    self.assertEqual("showcase-v1", spec["motion"]["profile"])
+                    self.assertEqual("unrestricted", spec["motion_policy"]["profile"])
+                    self.assertGreaterEqual(spec["canvas"]["width"], 1400)
+                    self.assertTrue(all(node["size"][0] >= 240 for node in spec["nodes"]))
+                    self.assertTrue(all(edge.get("animated") is True for edge in spec["edges"]))
+                    self.assertTrue(
+                        all(
+                            canonical_edge_motion(edge["effect"]["preset"])
+                            in {"packet-flow", "comet-flow", "stream-flow"}
+                            for edge in spec["edges"]
+                        )
+                    )
+
+                    scene = compile_scene(spec)
+                    style = load_style(ROOT / "styles" / f'{spec["style"]}.json')
+                    manifest = build_motion_manifest(scene, style)
+                    self.assertEqual(list(range(len(scene.edges))), manifest["stage"]["active_edge_indices"])
+                    self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, quality_report(scene, style)["summary"])
+
+        agent_loop = layout_showcase_specs()["agent-loop"]
+        self.assertEqual("composition-v1", agent_loop["composition_policy"])
+        self.assertEqual("illustrated", agent_loop["icon_system"])
+        self.assertEqual("2.5.0", agent_loop["resolved_presentation"]["icon_system"]["version"])
+        self.assertEqual("showcase-v1", agent_loop["motion"]["profile"])
+
     def test_showcase_manifest_points_to_generated_assets(self):
         manifest_path = ROOT / "gallery" / "showcase_manifest.json"
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -209,11 +256,9 @@ class ShowcaseGalleryTest(unittest.TestCase):
         self.assertEqual(15, len(manifest["layouts"]))
         self.assertEqual("runtime/motion-catalog.json", manifest["runtime_motion_catalog"])
         self.assertEqual("gallery/runtime-motion.html", manifest["runtime_motion_page"])
-        self.assertEqual("illustrated-character-v1", manifest["hero"]["icon_system"])
-        self.assertTrue(all(entry["icon_system"] == "illustrated-character-v1" for entry in manifest["styles"]))
-        layout_icon_systems = {entry["preset"]: entry["icon_system"] for entry in manifest["layouts"]}
-        self.assertEqual("illustrated", layout_icon_systems.pop("agent-loop"))
-        self.assertTrue(all(value == "illustrated-character-v1" for value in layout_icon_systems.values()))
+        self.assertEqual("illustrated", manifest["hero"]["icon_system"])
+        self.assertTrue(all(entry["icon_system"] == "illustrated" for entry in manifest["styles"]))
+        self.assertTrue(all(entry["icon_system"] == "illustrated" for entry in manifest["layouts"]))
         self.assertEqual("semantic-line-v1", manifest["runtime_motion_overview"]["icon_system"])
         self.assertTrue((ROOT / manifest["runtime_motion_page"]).is_file())
         self.assertTrue((ROOT / manifest["runtime_motion_overview"]["html"]).is_file())
@@ -261,15 +306,16 @@ class ShowcaseGalleryTest(unittest.TestCase):
             with self.subTest(entry=entry["title"]):
                 for key in ("spec", "svg", "html", "quality"):
                     self.assertTrue((ROOT / entry[key]).is_file(), entry[key])
+                spec = json.loads((ROOT / entry["spec"]).read_text(encoding="utf-8"))
+                self.assertEqual("0.4", spec["version"])
+                self.assertEqual("composition-v1", spec["composition_policy"])
+                self.assertEqual("illustrated", spec["icon_system"])
+                self.assertEqual("2.5.0", spec["resolved_presentation"]["icon_system"]["version"])
+                self.assertEqual("showcase-v1", spec["motion"]["profile"])
                 for key in ("svg", "html"):
                     rendered = (ROOT / entry[key]).read_text(encoding="utf-8")
                     self.assertIn(f'data-icon-system="{entry["icon_system"]}"', rendered, entry[key])
-                    icon_class = (
-                        "semantic-icon-illustrated"
-                        if entry["icon_system"] == "illustrated"
-                        else "semantic-icon-illustrated-character-v1"
-                    )
-                    self.assertIn(icon_class, rendered, entry[key])
+                    self.assertIn("semantic-icon-illustrated", rendered, entry[key])
                 summary = json.loads((ROOT / entry["quality"]).read_text(encoding="utf-8"))["summary"]
                 self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, summary)
 

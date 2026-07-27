@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "openai-minimal",
@@ -10,26 +10,23 @@
     "subtitle": "prompts, candidates, judges, and release reports"
   },
   "motion": {
-    "profile": "subtle",
-    "sequence": "step-stagger",
-    "ease": "calm",
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
-    "intensity": 0.45,
+    "intensity": 1.0,
     "edge": {
-      "preset": "draw",
-      "particle": "soft-dot",
-      "trail": false
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "fade",
-      "accent": "glow"
+      "preset": "icon-performance"
     },
     "group": {
-      "preset": "soft-reveal"
+      "preset": "border-scan"
     },
     "title": {
-      "preset": "fade"
+      "preset": "highlight-sweep"
     },
     "reduced_motion": "subtle"
   },
@@ -38,9 +35,9 @@
       "id": "eval",
       "label": "Eval Harness",
       "bounds": [
-        75,
+        94,
         250,
-        1090,
+        1362,
         185
       ],
       "role": "neutral"
@@ -52,11 +49,11 @@
       "label": "Prompt",
       "caption": "task",
       "position": [
-        110,
+        138,
         315
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "source",
@@ -67,11 +64,11 @@
       "label": "Candidates",
       "caption": "outputs",
       "position": [
-        330,
+        412,
         315
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "agent",
@@ -82,11 +79,11 @@
       "label": "Judge",
       "caption": "rubric",
       "position": [
-        550,
+        688,
         315
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "tool",
@@ -97,11 +94,11 @@
       "label": "Report",
       "caption": "scores",
       "position": [
-        770,
+        962,
         315
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "memory",
@@ -112,11 +109,11 @@
       "label": "Release",
       "caption": "decision",
       "position": [
-        990,
+        1238,
         315
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "output",
@@ -129,28 +126,71 @@
       "to": "candidates",
       "label": "eval",
       "role": "process",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "candidates",
       "to": "judge",
       "label": "eval",
       "role": "process",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "judge",
       "to": "report",
       "label": "eval",
       "role": "process",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "report",
       "to": "release",
       "label": "eval",
       "role": "process",
-      "route": "straight"
+      "route": "straight",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     }
-  ]
+  ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "pipeline",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "openai-minimal",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "pipeline",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  }
 }

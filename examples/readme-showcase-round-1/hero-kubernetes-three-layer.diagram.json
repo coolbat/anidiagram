@@ -1,0 +1,500 @@
+{
+  "version": "0.4",
+  "composition_policy": "composition-v1",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "diagram-core-v1",
+      "source": "explicit"
+    },
+    "style": {
+      "value": "deep-tech",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "layered",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "explicit"
+    }
+  },
+  "icon_system": "diagram-core-v1",
+  "layout": "layered",
+  "preset": "layered",
+  "canvas": {
+    "width": 1600,
+    "height": 900
+  },
+  "style": "deep-tech",
+  "title": {
+    "text": "Kubernetes Production Architecture",
+    "subtitle": "Traffic & operations → Kubernetes control plane → runtime & reliability"
+  },
+  "motion": {
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "ease": "spring",
+    "stagger": 0.08,
+    "duration_scale": 1.0,
+    "intensity": 1.0,
+    "node": {
+      "preset": "icon-performance"
+    },
+    "edge": {
+      "preset": "packet-flow",
+      "particle": "high-contrast-dot",
+      "trail": false
+    },
+    "group": {
+      "preset": "none"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "static"
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "max_active_flow_edges": 11,
+    "max_particle_edges": 11,
+    "particle_count_per_edge": 1,
+    "flow_trail_count": 2,
+    "max_active_pulse_nodes": 12,
+    "pulse_mode": "all",
+    "max_scanning_groups": 0
+  },
+  "nodes": [
+    {
+      "id": "external-users",
+      "label": "External Users",
+      "caption": "production application traffic",
+      "position": [
+        85,
+        185
+      ],
+      "size": [
+        250,
+        120
+      ],
+      "role": "actor",
+      "icon": "user",
+      "importance": "primary"
+    },
+    {
+      "id": "automation-clients",
+      "label": "Automation Clients",
+      "caption": "CI/CD and platform APIs",
+      "position": [
+        450,
+        185
+      ],
+      "size": [
+        250,
+        120
+      ],
+      "role": "source",
+      "icon": "api",
+      "importance": "supporting"
+    },
+    {
+      "id": "platform-operators",
+      "label": "Platform Operators",
+      "caption": "operate and troubleshoot",
+      "position": [
+        815,
+        185
+      ],
+      "size": [
+        250,
+        120
+      ],
+      "role": "actor",
+      "icon": "operator",
+      "importance": "primary"
+    },
+    {
+      "id": "security-policy",
+      "label": "Security Policy",
+      "caption": "identity and admission rules",
+      "position": [
+        1180,
+        185
+      ],
+      "size": [
+        250,
+        120
+      ],
+      "role": "risk",
+      "icon": "shield",
+      "importance": "supporting"
+    },
+    {
+      "id": "ingress",
+      "label": "Ingress Gateway",
+      "caption": "routes trusted traffic",
+      "position": [
+        85,
+        390
+      ],
+      "size": [
+        250,
+        125
+      ],
+      "role": "risk",
+      "icon": "gateway",
+      "importance": "supporting"
+    },
+    {
+      "id": "api-server",
+      "label": "Kubernetes API",
+      "caption": "declares desired state",
+      "position": [
+        450,
+        390
+      ],
+      "size": [
+        250,
+        125
+      ],
+      "role": "process",
+      "icon": "api",
+      "importance": "supporting"
+    },
+    {
+      "id": "scheduler",
+      "label": "Scheduler",
+      "caption": "places workloads",
+      "position": [
+        815,
+        390
+      ],
+      "size": [
+        250,
+        125
+      ],
+      "role": "process",
+      "icon": "scheduler",
+      "importance": "supporting"
+    },
+    {
+      "id": "controller",
+      "label": "Control Plane",
+      "caption": "reconciles cluster state",
+      "position": [
+        1180,
+        390
+      ],
+      "size": [
+        250,
+        125
+      ],
+      "role": "agent",
+      "icon": "server-cluster",
+      "importance": "primary"
+    },
+    {
+      "id": "deployments",
+      "label": "Deployments",
+      "caption": "versioned application releases",
+      "position": [
+        85,
+        620
+      ],
+      "size": [
+        250,
+        140
+      ],
+      "role": "process",
+      "icon": "deployment",
+      "importance": "supporting"
+    },
+    {
+      "id": "containers",
+      "label": "Container Workloads",
+      "caption": "replicated services",
+      "position": [
+        450,
+        620
+      ],
+      "size": [
+        250,
+        140
+      ],
+      "role": "process",
+      "icon": "container",
+      "importance": "supporting"
+    },
+    {
+      "id": "stateful-data",
+      "label": "Stateful Data",
+      "caption": "persistent production data",
+      "position": [
+        815,
+        620
+      ],
+      "size": [
+        250,
+        140
+      ],
+      "role": "memory",
+      "icon": "database",
+      "importance": "supporting"
+    },
+    {
+      "id": "observability",
+      "label": "Observability",
+      "caption": "metrics, logs, and alerts",
+      "position": [
+        1180,
+        620
+      ],
+      "size": [
+        250,
+        140
+      ],
+      "role": "output",
+      "icon": "monitoring",
+      "importance": "primary"
+    }
+  ],
+  "edges": [
+    {
+      "from": "external-users",
+      "to": "ingress",
+      "label": "request",
+      "role": "actor",
+      "route": "straight",
+      "animated": true,
+      "delay": 0.0,
+      "importance": "primary",
+      "flow_id": "traffic",
+      "flow_importance": "primary",
+      "flow_repeat": "loop",
+      "effect": {
+        "preset": "packet-flow",
+        "particle": "high-contrast-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "automation-clients",
+      "to": "api-server",
+      "label": "automate",
+      "role": "source",
+      "route": "straight",
+      "animated": true,
+      "delay": 0.08,
+      "importance": "primary",
+      "flow_id": "operations",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "effect": {
+        "preset": "comet-flow",
+        "particle": "high-contrast-dot",
+        "trail": true
+      }
+    },
+    {
+      "from": "platform-operators",
+      "to": "scheduler",
+      "label": "operate",
+      "role": "actor",
+      "route": "straight",
+      "animated": true,
+      "delay": 0.16,
+      "importance": "primary",
+      "flow_id": "operations",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "effect": {
+        "preset": "stream-flow",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "security-policy",
+      "to": "controller",
+      "label": "enforce",
+      "role": "risk",
+      "route": "straight",
+      "animated": true,
+      "delay": 0.24,
+      "importance": "primary",
+      "flow_id": "governance",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "effect": {
+        "preset": "packet-flow",
+        "particle": "high-contrast-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "ingress",
+      "to": "api-server",
+      "label": "admit",
+      "role": "risk",
+      "route": "curved",
+      "animated": true,
+      "delay": 0.32,
+      "importance": "primary",
+      "flow_id": "control-plane",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "effect": {
+        "preset": "comet-flow",
+        "particle": "high-contrast-dot",
+        "trail": true
+      }
+    },
+    {
+      "from": "api-server",
+      "to": "scheduler",
+      "label": "schedule",
+      "role": "process",
+      "route": "curved",
+      "animated": true,
+      "delay": 0.4,
+      "importance": "primary",
+      "flow_id": "control-plane",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "effect": {
+        "preset": "stream-flow",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "scheduler",
+      "to": "controller",
+      "label": "reconcile",
+      "role": "agent",
+      "route": "curved",
+      "animated": true,
+      "delay": 0.48,
+      "importance": "primary",
+      "flow_id": "control-plane",
+      "flow_importance": "primary",
+      "flow_repeat": "event-driven",
+      "effect": {
+        "preset": "packet-flow",
+        "particle": "high-contrast-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "ingress",
+      "to": "deployments",
+      "label": "route",
+      "role": "process",
+      "route": "straight",
+      "animated": true,
+      "delay": 0.56,
+      "importance": "primary",
+      "flow_id": "runtime",
+      "flow_importance": "primary",
+      "flow_repeat": "loop",
+      "effect": {
+        "preset": "comet-flow",
+        "particle": "high-contrast-dot",
+        "trail": true
+      }
+    },
+    {
+      "from": "api-server",
+      "to": "containers",
+      "label": "deploy",
+      "role": "process",
+      "route": "straight",
+      "animated": true,
+      "delay": 0.64,
+      "importance": "primary",
+      "flow_id": "runtime",
+      "flow_importance": "primary",
+      "flow_repeat": "loop",
+      "effect": {
+        "preset": "stream-flow",
+        "particle": "soft-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "scheduler",
+      "to": "stateful-data",
+      "label": "place",
+      "role": "memory",
+      "route": "straight",
+      "animated": true,
+      "delay": 0.72,
+      "importance": "primary",
+      "flow_id": "runtime",
+      "flow_importance": "primary",
+      "flow_repeat": "loop",
+      "effect": {
+        "preset": "packet-flow",
+        "particle": "high-contrast-dot",
+        "trail": false
+      }
+    },
+    {
+      "from": "controller",
+      "to": "observability",
+      "label": "telemetry",
+      "role": "output",
+      "route": "straight",
+      "animated": true,
+      "delay": 0.8,
+      "importance": "primary",
+      "flow_id": "reliability",
+      "flow_importance": "primary",
+      "flow_repeat": "loop",
+      "effect": {
+        "preset": "comet-flow",
+        "particle": "high-contrast-dot",
+        "trail": true
+      }
+    }
+  ],
+  "groups": [
+    {
+      "id": "traffic-operations",
+      "label": "Traffic & Operations",
+      "bounds": [
+        40,
+        145,
+        1520,
+        180
+      ],
+      "role": "actor",
+      "importance": "primary"
+    },
+    {
+      "id": "control-plane",
+      "label": "Kubernetes Control Plane",
+      "bounds": [
+        40,
+        350,
+        1520,
+        190
+      ],
+      "role": "agent",
+      "importance": "primary"
+    },
+    {
+      "id": "runtime-reliability",
+      "label": "Runtime & Reliability",
+      "bounds": [
+        40,
+        570,
+        1520,
+        245
+      ],
+      "role": "process",
+      "importance": "primary"
+    }
+  ]
+}

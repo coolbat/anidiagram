@@ -750,6 +750,61 @@ class SvgRendererTest(unittest.TestCase):
         self.assertIn('class="node-title">Agent</tspan>', svg)
         self.assertIn("marker-end", svg)
 
+    def test_unlabeled_draw_edge_does_not_emit_invisible_label_animation(self):
+        scene = compile_scene(
+            {
+                "version": "0.3",
+                "canvas": {"width": 640, "height": 360},
+                "motion": {"profile": "normal", "edge": {"preset": "draw"}},
+                "nodes": [
+                    {"id": "source", "label": "Source", "position": [80, 160], "size": [160, 84]},
+                    {"id": "target", "label": "Target", "position": [380, 160], "size": [160, 84]},
+                ],
+                "edges": [
+                    {
+                        "from": "source",
+                        "to": "target",
+                        "label": "",
+                        "effect": {"preset": "draw"},
+                    }
+                ],
+            }
+        )
+
+        svg = render_svg(scene, load_style())
+        label_markup = svg.split('class="edge-label"', 1)[1].split("</text>", 1)[0]
+
+        self.assertNotIn("<animate", label_markup)
+        self.assertNotIn("\n    \n", label_markup)
+
+    def test_cramped_horizontal_edge_omits_overlapping_visual_label(self):
+        scene = compile_scene(
+            {
+                "version": "0.3",
+                "canvas": {"width": 520, "height": 320},
+                "motion": {"profile": "normal", "edge": {"preset": "packet-flow"}},
+                "nodes": [
+                    {"id": "source", "label": "Source", "position": [40, 140], "size": [180, 84]},
+                    {"id": "target", "label": "Target", "position": [250, 140], "size": [180, 84]},
+                ],
+                "edges": [
+                    {
+                        "from": "source",
+                        "to": "target",
+                        "label": "handoff",
+                        "route": "straight",
+                        "effect": {"preset": "packet-flow"},
+                    }
+                ],
+            }
+        )
+
+        svg = render_svg(scene, load_style())
+        label_markup = svg.split('class="edge-label"', 1)[1].split("</text>", 1)[0]
+
+        self.assertNotIn("handoff", label_markup)
+        self.assertIn("edge-packet", svg)
+
     def test_edge_markers_use_single_fixed_arrowhead_with_butt_line_caps(self):
         spec = json.loads((ROOT / "examples" / "agent-memory.diagram.json").read_text(encoding="utf-8"))
         scene = compile_scene(spec)

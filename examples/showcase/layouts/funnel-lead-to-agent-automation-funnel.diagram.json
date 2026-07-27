@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "glassmorphism",
@@ -10,20 +10,17 @@
     "subtitle": "capture, qualify, enrich, score, and hand off the right lead"
   },
   "motion": {
-    "profile": "expressive",
-    "sequence": "step-stagger",
+    "profile": "showcase-v1",
+    "sequence": "staged",
     "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
-    "intensity": 0.95,
+    "intensity": 1.0,
     "edge": {
-      "preset": "ghost-flow",
-      "particle": "soft-dot",
-      "trail": true
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "pulse",
-      "accent": "ripple"
+      "preset": "icon-performance"
     },
     "group": {
       "preset": "border-scan"
@@ -38,9 +35,9 @@
       "id": "funnel",
       "label": "Automation Funnel",
       "bounds": [
-        445,
+        556,
         80,
-        365,
+        456,
         555
       ],
       "role": "process"
@@ -52,7 +49,7 @@
       "label": "Capture",
       "caption": "forms + chat",
       "position": [
-        500,
+        625,
         115
       ],
       "size": [
@@ -67,11 +64,11 @@
       "label": "Qualify",
       "caption": "rules",
       "position": [
-        520,
+        650,
         220
       ],
       "size": [
-        220,
+        240,
         76
       ],
       "role": "process",
@@ -82,11 +79,11 @@
       "label": "Enrich",
       "caption": "context",
       "position": [
-        540,
+        675,
         325
       ],
       "size": [
-        180,
+        240,
         76
       ],
       "role": "memory",
@@ -97,11 +94,11 @@
       "label": "Score",
       "caption": "agent fit",
       "position": [
-        560,
+        700,
         430
       ],
       "size": [
-        145,
+        240,
         76
       ],
       "role": "agent",
@@ -112,11 +109,11 @@
       "label": "Handoff",
       "caption": "sales task",
       "position": [
-        570,
+        712,
         535
       ],
       "size": [
-        125,
+        240,
         72
       ],
       "role": "output",
@@ -129,29 +126,72 @@
       "to": "qualify",
       "label": "filter",
       "role": "process",
-      "route": "vh"
+      "route": "vh",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "qualify",
       "to": "enrich",
       "label": "filter",
       "role": "process",
-      "route": "vh"
+      "route": "vh",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "enrich",
       "to": "score",
       "label": "filter",
       "role": "process",
-      "route": "vh"
+      "route": "vh",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "score",
       "to": "handoff",
       "label": "filter",
       "role": "process",
-      "route": "vh"
+      "route": "vh",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     }
   ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "funnel",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "glassmorphism",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "funnel",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  },
   "preset": "funnel"
 }

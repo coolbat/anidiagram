@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4",
   "canvas": {
-    "width": 1280,
+    "width": 1632,
     "height": 720
   },
   "style": "dark-terminal",
@@ -10,23 +10,20 @@
     "subtitle": "operators isolate, patch, and verify production"
   },
   "motion": {
-    "profile": "expressive",
-    "sequence": "step-stagger",
+    "profile": "showcase-v1",
+    "sequence": "staged",
     "ease": "spring",
     "stagger": 0.12,
     "duration_scale": 1.0,
-    "intensity": 1.2,
+    "intensity": 1.0,
     "edge": {
-      "preset": "dynamic-dash",
-      "particle": "soft-dot",
-      "trail": false
+      "preset": "packet-flow"
     },
     "node": {
-      "preset": "status-blink",
-      "accent": "glow"
+      "preset": "icon-performance"
     },
     "group": {
-      "preset": "corner-pulse"
+      "preset": "border-scan"
     },
     "title": {
       "preset": "highlight-sweep"
@@ -38,9 +35,9 @@
       "id": "terminal",
       "label": "War Room",
       "bounds": [
-        70,
+        88,
         95,
-        1110,
+        1388,
         460
       ],
       "role": "neutral"
@@ -52,11 +49,11 @@
       "label": "Alert",
       "caption": "page on-call",
       "position": [
-        110,
+        138,
         145
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "risk",
@@ -67,11 +64,11 @@
       "label": "Shell",
       "caption": "inspect",
       "position": [
-        110,
+        138,
         275
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "tool",
@@ -82,11 +79,11 @@
       "label": "Isolate",
       "caption": "contain",
       "position": [
-        110,
+        138,
         405
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "process",
@@ -97,11 +94,11 @@
       "label": "Patch",
       "caption": "fix",
       "position": [
-        510,
+        638,
         275
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "agent",
@@ -112,11 +109,11 @@
       "label": "Verify",
       "caption": "checks",
       "position": [
-        810,
+        1012,
         275
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "source",
@@ -127,11 +124,11 @@
       "label": "Notes",
       "caption": "postmortem",
       "position": [
-        1010,
+        1262,
         405
       ],
       "size": [
-        180,
+        240,
         84
       ],
       "role": "memory",
@@ -146,24 +143,31 @@
       "role": "risk",
       "route": "vh",
       "effect": {
-        "preset": "dynamic-dash",
-        "particle": "soft-dot",
-        "trail": false
-      }
+        "preset": "stream-flow"
+      },
+      "animated": true
     },
     {
       "from": "shell",
       "to": "isolate",
       "label": "lock",
       "role": "tool",
-      "route": "vh"
+      "route": "vh",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "isolate",
       "to": "patch",
       "label": "handoff",
       "role": "process",
-      "route": "orthogonal"
+      "route": "orthogonal",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     },
     {
       "from": "patch",
@@ -172,17 +176,47 @@
       "role": "agent",
       "route": "straight",
       "effect": {
-        "preset": "flow-arrow",
-        "particle": "soft-arrow",
-        "trail": false
-      }
+        "preset": "packet-flow"
+      },
+      "animated": true
     },
     {
       "from": "verify",
       "to": "notes",
       "label": "record",
       "role": "memory",
-      "route": "vh"
+      "route": "vh",
+      "animated": true,
+      "effect": {
+        "preset": "packet-flow"
+      }
     }
-  ]
+  ],
+  "composition_policy": "composition-v1",
+  "icon_system": "illustrated",
+  "layout": "pipeline",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "dark-terminal",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "pipeline",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  }
 }
