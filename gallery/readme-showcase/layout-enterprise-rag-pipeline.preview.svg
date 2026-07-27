@@ -1,0 +1,380 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="showcase-v1" data-motion-sequence="staged" data-motion-edge="packet-flow" data-motion-node="icon-performance" data-motion-group="none" data-motion-title="highlight-sweep" data-motion-reduced="static" data-icon-system="diagram-core-v1">
+<title id="diagram-title">Enterprise RAG Ingestion Pipeline</title>
+<desc id="diagram-desc">A strict left-to-right topology for sequential transformation and retrieval</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .edge-flow { stroke-linecap: round; }
+  .edge-draw, .edge-base { stroke-linecap: butt; stroke-linejoin: round; }
+  .edge-particle { filter: url(#particle-glow); }
+  .edge-arrow-particle { filter: url(#particle-glow); }
+  .semantic-icon { vector-effect: non-scaling-stroke; }
+  .semantic-icon-breathe { transform-box: fill-box; transform-origin: center; animation: semanticIconBreathe 2.8s ease-in-out infinite; }
+  .icon-breathe-halo { pointer-events: none; filter: url(#particle-glow); }
+  .node-glow, .node-burst { pointer-events: none; }
+  #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
+  #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
+  @keyframes titlePulse { 0%, 100% { opacity: 0.76; } 50% { opacity: 1; } }
+  @keyframes titleSlide { 0%, 100% { transform: translateX(0); opacity: 0.9; } 50% { transform: translateX(8px); opacity: 1; } }
+  @keyframes semanticIconBreathe { 0%, 100% { transform: scale(0.96); opacity: 0.72; } 50% { transform: scale(1.08); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    #title-accent, #title-highlight, .semantic-icon-breathe { animation: none; }
+  }
+</style>
+<rect width="100%" height="100%" fill="#ffffff" />
+<defs>
+  <filter id="soft-glow" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="5" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <filter id="particle-glow" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="2.6" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#edf2f7" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="1544" height="848" rx="26" fill="none" stroke="#94a3b8" stroke-width="1.4" opacity="1.00" />
+<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#2563eb" style="animation:none" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#e8f1ff" style="animation:none" />
+
+<text id="main-title" x="90" y="84" class="title" fill="#172033" opacity="1">
+  Enterprise RAG Ingestion Pipeline
+</text>
+<text x="74" y="126" class="subtitle" fill="#5b6778" opacity="1">
+  A strict left-to-right topology for sequential transformation and retrieval
+</text>
+
+
+<defs>
+  <marker id="arrow-1" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 272.0 430.0 L 293.0 430.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 272.0 430.0 L 293.0 430.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-1)" />
+
+
+
+  <text x="282.5" y="416.0" class="edge-label" fill="#5b6778" opacity="1">
+
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-2" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 532.0 430.0 L 553.0 430.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 532.0 430.0 L 553.0 430.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-2)" />
+
+
+
+  <text x="542.5" y="416.0" class="edge-label" fill="#5b6778" opacity="1">
+
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-3" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 792.0 430.0 L 813.0 430.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 792.0 430.0 L 813.0 430.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-3)" />
+
+
+
+  <text x="802.5" y="416.0" class="edge-label" fill="#5b6778" opacity="1">
+
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-4" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 1052.0 430.0 L 1073.0 430.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 1052.0 430.0 L 1073.0 430.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-4)" />
+
+
+
+  <text x="1062.5" y="416.0" class="edge-label" fill="#5b6778" opacity="1">
+
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-5" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 1312.0 430.0 L 1333.0 430.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 1312.0 430.0 L 1333.0 430.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-5)" />
+
+
+
+  <text x="1322.5" y="416.0" class="edge-label" fill="#5b6778" opacity="1">
+
+  </text>
+</g>
+
+<g id="node-documents" class="node motion-node" data-role="source" opacity="1">
+
+
+
+
+  <rect x="45.0" y="355.0" width="215.0" height="150.0" rx="14.0"
+        fill="#ecfeff" stroke="#0891b2" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="document" data-node-id="documents" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(55 384) scale(0.958333333333333)" data-icon="document" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#94a3b8;--icon-accent-secondary:#2563eb;--icon-detail:#5b6778;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#172033;--icon-surface-main:#f8fafc;--icon-surface-recessed:#edf2f7;--icon-surface-secondary:#ffffff" id="node_u2x2edocuments__document__root"><g data-part="body" id="node_u2x2edocuments__document__body">
+    <g data-part="page" id="node_u2x2edocuments__document__page">
+      <path d="M 23 13 H 59 L 75 29 V 83 H 23 Z" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer" />
+    </g>
+    <g data-part="fold" id="node_u2x2edocuments__document__fold">
+      <polygon points="59,13 59,29 75,29" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer" />
+    </g>
+    <g data-part="line-top" id="node_u2x2edocuments__document__line-top">
+      <rect x="31" y="37" width="34" height="8" rx="4" fill="var(--icon-accent-secondary, #45c5bd)" />
+      <line x1="36" y1="41" x2="58" y2="41" stroke="var(--icon-surface-contrast, #14213d)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="inner" />
+    </g>
+    <g data-part="line-middle" id="node_u2x2edocuments__document__line-middle">
+      <line x1="32" y1="53" x2="64" y2="53" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="inner" />
+    </g>
+    <g data-part="line-bottom" id="node_u2x2edocuments__document__line-bottom">
+      <line x1="32" y1="62" x2="54" y2="62" stroke="var(--icon-detail, #64748b)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="inner" />
+    </g>
+    <g data-part="indicator" id="node_u2x2edocuments__document__indicator">
+      <circle cx="66" cy="72" r="6" fill="var(--icon-surface-contrast, #14213d)" />
+      <circle cx="66" cy="72" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+    </g>
+  </g>
+</g></g>
+
+  <text x="195.5" y="416.0" text-anchor="middle" fill="#172033">
+<tspan x="195.5" dy="18" class="node-title">Documents</tspan>
+<tspan x="195.5" dy="17" class="node-caption">approved</tspan>
+<tspan x="195.5" dy="17" class="node-caption">source</tspan>
+</text>
+</g>
+
+<g id="node-tokenizer" class="node motion-node" data-role="process" opacity="1">
+
+
+
+
+  <rect x="305.0" y="355.0" width="215.0" height="150.0" rx="14.0"
+        fill="#eff6ff" stroke="#2563eb" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="token" data-node-id="tokenizer" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(315 384) scale(0.958333333333333)" data-icon="token" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#94a3b8;--icon-accent-secondary:#2563eb;--icon-detail:#5b6778;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#172033;--icon-surface-main:#f8fafc;--icon-surface-recessed:#edf2f7;--icon-surface-secondary:#ffffff" id="node_u2x2etokenizer__token__root"><g data-part="body" id="node_u2x2etokenizer__token__body">
+  <g data-part="shell" id="node_u2x2etokenizer__token__shell">
+    <circle cx="48" cy="48" r="31" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="tick-group" id="node_u2x2etokenizer__token__tick-group">
+    <line x1="48" y1="21" x2="48" y2="27" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="67" y1="29" x2="63" y2="33" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="75" y1="48" x2="69" y2="48" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="67" y1="67" x2="63" y2="63" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="48" y1="75" x2="48" y2="69" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="29" y1="67" x2="33" y2="63" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="21" y1="48" x2="27" y2="48" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="29" y1="29" x2="33" y2="33" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="core" id="node_u2x2etokenizer__token__core">
+    <circle cx="48" cy="48" r="17" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="48" r="9" fill="var(--icon-surface-contrast, #14213d)" />
+  </g>
+  <g data-part="indicator" id="node_u2x2etokenizer__token__indicator">
+    <circle cx="48" cy="48" r="4" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g></g>
+
+  <text x="455.5" y="416.0" text-anchor="middle" fill="#172033">
+<tspan x="455.5" dy="18" class="node-title">Tokenizer</tspan>
+<tspan x="455.5" dy="17" class="node-caption">split and</tspan>
+<tspan x="455.5" dy="17" class="node-caption">budget</tspan>
+</text>
+</g>
+
+<g id="node-embedding" class="node motion-node" data-role="process" opacity="1">
+
+
+
+
+  <rect x="565.0" y="355.0" width="215.0" height="150.0" rx="14.0"
+        fill="#eff6ff" stroke="#2563eb" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="embedding" data-node-id="embedding" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(575 384) scale(0.958333333333333)" data-icon="embedding" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#94a3b8;--icon-accent-secondary:#2563eb;--icon-detail:#5b6778;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#172033;--icon-surface-main:#f8fafc;--icon-surface-recessed:#edf2f7;--icon-surface-secondary:#ffffff" id="node_u2x2eembedding__embedding__root"><g data-part="body" id="node_u2x2eembedding__embedding__body">
+    <rect x="11" y="16" width="74" height="64" rx="18" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="input-card" id="node_u2x2eembedding__embedding__input-card">
+    <rect x="18" y="29" width="23" height="34" rx="7" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <line x1="24" y1="40" x2="35" y2="40" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="24" y1="47" x2="32" y2="47" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="coordinate-space" id="node_u2x2eembedding__embedding__coordinate-space">
+    <rect x="51" y="24" width="27" height="43" rx="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <line x1="57" y1="58" x2="73" y2="58" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="57" y1="58" x2="57" y2="32" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="points" id="node_u2x2eembedding__embedding__points">
+    <circle cx="61" cy="51" r="2.6" fill="var(--icon-accent-secondary, #45c5bd)" />
+    <circle cx="68" cy="43" r="2.6" fill="var(--icon-accent, #7c5ce7)" />
+    <circle cx="72" cy="33" r="2.6" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="vector" id="node_u2x2eembedding__embedding__vector">
+    <path d="M 58 56 L 70 36" fill="none" stroke="var(--icon-accent, #7c5ce7)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="outer" />
+    <polyline points="65,38 71,35 71,42" fill="none" stroke="var(--icon-accent, #7c5ce7)" stroke-width="2.125" stroke-linecap="round" stroke-linejoin="round" data-stroke-role="outer" />
+  </g>
+  <g data-part="projection" id="node_u2x2eembedding__embedding__projection">
+    <path d="M 40 39 Q 47 39 52 34" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" stroke-dasharray="2.5 3" data-stroke-role="inner" />
+    <path d="M 40 53 Q 47 53 52 58" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" stroke-dasharray="2.5 3" data-stroke-role="inner" />
+  </g>
+  <g data-part="indicator" id="node_u2x2eembedding__embedding__indicator">
+    <circle cx="30" cy="70" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+</g></g>
+
+  <text x="715.5" y="416.0" text-anchor="middle" fill="#172033">
+<tspan x="715.5" dy="18" class="node-title">Embedding</tspan>
+<tspan x="715.5" dy="17" class="node-caption">encode</tspan>
+<tspan x="715.5" dy="17" class="node-caption">semantics</tspan>
+</text>
+</g>
+
+<g id="node-index" class="node motion-node" data-role="memory" opacity="1">
+
+
+
+
+  <rect x="825.0" y="355.0" width="215.0" height="150.0" rx="14.0"
+        fill="#ecfdf5" stroke="#059669" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="vector-database" data-node-id="index" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(835 384) scale(0.958333333333333)" data-icon="vector-database" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#94a3b8;--icon-accent-secondary:#2563eb;--icon-detail:#5b6778;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#172033;--icon-surface-main:#f8fafc;--icon-surface-recessed:#edf2f7;--icon-surface-secondary:#ffffff" id="node_u2x2eindex__vector-database__root"><g data-part="body" id="node_u2x2eindex__vector-database__body">
+  <g data-part="shell" id="node_u2x2eindex__vector-database__shell">
+    <rect x="17" y="14" width="62" height="68" rx="16" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="layers" id="node_u2x2eindex__vector-database__layers">
+    <rect x="25" y="24" width="46" height="13" rx="5" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="25" y="42" width="46" height="13" rx="5" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <rect x="25" y="60" width="46" height="13" rx="5" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="points" id="node_u2x2eindex__vector-database__points">
+    <circle cx="34" cy="30.5" r="2.3" fill="var(--icon-accent-secondary, #45c5bd)" />
+    <circle cx="43" cy="30.5" r="2.3" fill="var(--icon-accent-secondary, #45c5bd)" />
+    <circle cx="52" cy="48.5" r="2.3" fill="var(--icon-accent-secondary, #45c5bd)" />
+    <circle cx="61" cy="48.5" r="2.3" fill="var(--icon-accent-secondary, #45c5bd)" />
+    <circle cx="39" cy="66.5" r="2.3" fill="var(--icon-surface-main, #fffaf2)" />
+  </g>
+  <g data-part="scanner" id="node_u2x2eindex__vector-database__scanner">
+    <rect x="58" y="21" width="7" height="55" rx="3.5" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" data-stroke-role="inner" />
+    <line x1="61.5" y1="27" x2="61.5" y2="68" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator" id="node_u2x2eindex__vector-database__indicator">
+    <circle cx="74" cy="75" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g></g>
+
+  <text x="975.5" y="416.0" text-anchor="middle" fill="#172033">
+<tspan x="975.5" dy="18" class="node-title">Vector</tspan>
+<tspan x="975.5" dy="18" class="node-title">Index</tspan>
+<tspan x="975.5" dy="17" class="node-caption">store</tspan>
+<tspan x="975.5" dy="17" class="node-caption">searchable</tspan>
+</text>
+</g>
+
+<g id="node-retrieval" class="node motion-node" data-role="agent" opacity="1">
+
+
+
+
+  <rect x="1085.0" y="355.0" width="215.0" height="150.0" rx="14.0"
+        fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="search" data-node-id="retrieval" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(1095 384) scale(0.958333333333333)" data-icon="search" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#94a3b8;--icon-accent-secondary:#2563eb;--icon-detail:#5b6778;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#172033;--icon-surface-main:#f8fafc;--icon-surface-recessed:#edf2f7;--icon-surface-secondary:#ffffff" id="node_u2x2eretrieval__search__root"><g data-part="body" id="node_u2x2eretrieval__search__body">
+  <g data-part="lens" id="node_u2x2eretrieval__search__lens">
+    <circle cx="42" cy="41" r="24" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="42" cy="41" r="17" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="handle" id="node_u2x2eretrieval__search__handle">
+    <path d="M 57 58 L 63 52 L 82 71 Q 84 73 82 76 L 80 78 Q 77 80 75 77 Z" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer" />
+  </g>
+  <g data-part="scan" id="node_u2x2eretrieval__search__scan">
+    <line x1="26" y1="41" x2="58" y2="41" stroke="var(--icon-accent, #7c5ce7)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <line x1="42" y1="25" x2="42" y2="57" stroke="var(--icon-accent, #7c5ce7)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="target" id="node_u2x2eretrieval__search__target">
+    <circle cx="50" cy="34" r="7" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="indicator" id="node_u2x2eretrieval__search__indicator">
+    <circle cx="50" cy="34" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g></g>
+
+  <text x="1235.5" y="416.0" text-anchor="middle" fill="#172033">
+<tspan x="1235.5" dy="18" class="node-title">Retrieval</tspan>
+<tspan x="1235.5" dy="17" class="node-caption">rank</tspan>
+<tspan x="1235.5" dy="17" class="node-caption">relevant</tspan>
+</text>
+</g>
+
+<g id="node-output" class="node motion-node" data-role="output" opacity="1">
+
+
+
+
+  <rect x="1345.0" y="355.0" width="215.0" height="150.0" rx="14.0"
+        fill="#f0fdf4" stroke="#16a34a" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="output" data-node-id="output" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(1355 384) scale(0.958333333333333)" data-icon="output" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#94a3b8;--icon-accent-secondary:#2563eb;--icon-detail:#5b6778;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#172033;--icon-surface-main:#f8fafc;--icon-surface-recessed:#edf2f7;--icon-surface-secondary:#ffffff" id="node_u2x2eoutput__output__root"><g data-part="body" id="node_u2x2eoutput__output__body">
+  <g data-part="shell" id="node_u2x2eoutput__output__shell">
+    <rect x="15" y="17" width="66" height="64" rx="17" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="card" id="node_u2x2eoutput__output__card">
+    <rect x="24" y="27" width="48" height="42" rx="10" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <line x1="32" y1="36" x2="56" y2="36" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="send-path" id="node_u2x2eoutput__output__send-path">
+    <line x1="31" y1="55" x2="56" y2="55" stroke="var(--icon-accent, #7c5ce7)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="outer" />
+    <polyline points="51,49 58,55 51,61" fill="none" stroke="var(--icon-accent, #7c5ce7)" stroke-width="2.125" stroke-linecap="round" stroke-linejoin="round" data-stroke-role="outer" />
+  </g>
+  <g data-part="check" id="node_u2x2eoutput__output__check">
+    <path d="M 58 42 L 62 46 L 69 38" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="2.125" stroke-linecap="round" stroke-linejoin="round" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator" id="node_u2x2eoutput__output__indicator">
+    <circle cx="69" cy="67" r="6" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="69" cy="67" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g></g>
+
+  <text x="1495.5" y="416.0" text-anchor="middle" fill="#172033">
+<tspan x="1495.5" dy="18" class="node-title">Grounded</tspan>
+<tspan x="1495.5" dy="18" class="node-title">Output</tspan>
+<tspan x="1495.5" dy="17" class="node-caption">answer with</tspan>
+<tspan x="1495.5" dy="17" class="node-caption">citations</tspan>
+</text>
+</g>
+</svg>

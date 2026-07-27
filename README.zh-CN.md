@@ -8,26 +8,25 @@ AniDiagram 是一个 clean-room 的 DiagramScript 渲染器，用来生成可动
 
 ## Showcase
 
-AniDiagram 的 README 展示分成两套画廊：
+README 现在使用 Round 1 已审核通过的 8 个精选案例。完整的 13 种风格和
+16 种布局仍保留在 Gallery 中，不再把全部案例堆进 README。
 
-- **Style Showcase**：13 个签名案例，每个公共视觉风格一个，用来回答“它能长成什么气质？”
-- **Layout Showcase**：16 个教学案例，每个布局 preset 一个，用来回答“这个布局适合什么场景？”
+- **Hero Showcase**：3 个架构叙事案例，以 Loop Engineering 为首。
+- **Template Showcase**：相同语义内容使用 3 种模板直接对照。
+- **Layout Showcase**：2 个针对不同拓扑的布局案例。
 
-画廊源文件：`gallery/index.html`
-机器可读 manifest：[gallery/showcase_manifest.json](./gallery/showcase_manifest.json)
-Runtime 动效管理页：[gallery/runtime-motion.html](./gallery/runtime-motion.html)
-动效 catalog 源文件：[runtime/motion-catalog.json](./runtime/motion-catalog.json)
+完整入口：[Gallery](./gallery/index.html) · [全部风格](./gallery/styles/index.html) ·
+[全部布局](./gallery/layouts/index.html) · [Runtime 动效](./gallery/runtime-motion.html)
 
-README 首屏使用从 GSAP runtime 真实录制出来的 animated preview，所以在
-GitHub README 里也能直接看到高保真动效。Style / Layout 的大量卡片继续用
-轻量 SVG 预览，保证页面足够轻、足够好扫。可交互的 `.html` runtime 页面
-需要通过 GitHub Pages 这类静态站点承载，或者用本地静态服务器打开。
+### Hero Showcase
 
-### Hero Demo
-
-| Agent Runtime Flow |
+| Loop Engineering Operating Architecture |
 | --- |
-| [![Agent Runtime Flow](./gallery/previews/agent-runtime-flow.webp)](./gallery/previews/agent-runtime-flow.mp4)<br>从浏览器 runtime 录制的 composition-v1 默认 `illustrated` 2.5 高保真预览：以 Agent 为视觉中心，分出检索/记忆、策略校验和工具/API 三条路径，最后汇聚到输出。<br>[GIF](./gallery/previews/agent-runtime-flow.gif) · [APNG](./gallery/previews/agent-runtime-flow.apng) · Runtime HTML：`gallery/hero/agent-runtime-flow.html` |
+| [![Loop Engineering Operating Architecture](./gallery/readme-showcase/hero-loop-engineering.preview.svg)](./gallery/readme-showcase/hero-loop-engineering.svg)<br>`illustrated` 2.5 · `minimal-light` · `layered-loop`<br>把治理、隔离执行、验证交付和外部状态组织成三层工程循环。 |
+
+| Governed RAG Production Architecture | Kubernetes Production Architecture |
+| --- | --- |
+| [![Governed RAG Production Architecture](./gallery/readme-showcase/hero-governed-rag.preview.svg)](./gallery/readme-showcase/hero-governed-rag.svg)<br>`illustrated` 2.5 · `minimal-light` · `layered` | [![Kubernetes Production Architecture](./gallery/readme-showcase/hero-kubernetes-three-layer.preview.svg)](./gallery/readme-showcase/hero-kubernetes-three-layer.svg)<br>`diagram-core-v1` · `deep-tech` · 三层结构 |
 
 本地打开可交互 runtime：
 
@@ -35,79 +34,23 @@ GitHub README 里也能直接看到高保真动效。Style / Layout 的大量卡
 python3 -m http.server 8765
 ```
 
-然后访问 `http://127.0.0.1:8765/gallery/hero/agent-runtime-flow.html`。如果用
+然后访问 `http://127.0.0.1:8765/gallery/readme-showcase/readme-showcase-round-1.html`。如果用
 GitHub Pages 发布，README 按钮应链接到 Pages URL，而不是 GitHub 的 `blob`
 源码页。
 
-### Style Showcase
+### Template Showcase
 
-每个内置风格都有一份签名 DiagramScript 案例、SVG 预览、HTML runtime 和 quality report。README 卡片链接到便携 SVG 预览；如果要打开高保真 HTML runtime，需要本地 serve `gallery/`，或启用 GitHub Pages。
+语义内容与几何位置保持不变，只切换公共模板，直接比较视觉系统差异。
 
-| `minimal-light` | `deep-tech` |
-| --- | --- |
-| [![minimal-light style showcase](./gallery/styles/minimal-light.svg)](./gallery/styles/minimal-light.svg)<br>Customer Support Triage | [![deep-tech style showcase](./gallery/styles/deep-tech.svg)](./gallery/styles/deep-tech.svg)<br>Realtime AI Ops Mesh |
-
-| `blueprint` | `flat-icon` |
-| --- | --- |
-| [![blueprint style showcase](./gallery/styles/blueprint.svg)](./gallery/styles/blueprint.svg)<br>MCP Server Architecture | [![flat-icon style showcase](./gallery/styles/flat-icon.svg)](./gallery/styles/flat-icon.svg)<br>Feature Priority Board |
-
-| `dark-terminal` | `notion-clean` |
-| --- | --- |
-| [![dark-terminal style showcase](./gallery/styles/dark-terminal.svg)](./gallery/styles/dark-terminal.svg)<br>Incident Response Runbook | [![notion-clean style showcase](./gallery/styles/notion-clean.svg)](./gallery/styles/notion-clean.svg)<br>Product Discovery Workflow |
-
-| `glassmorphism` | `claude-warm` |
-| --- | --- |
-| [![glassmorphism style showcase](./gallery/styles/glassmorphism.svg)](./gallery/styles/glassmorphism.svg)<br>AI Growth Funnel | [![claude-warm style showcase](./gallery/styles/claude-warm.svg)](./gallery/styles/claude-warm.svg)<br>Research Reasoning Loop |
-
-| `openai-minimal` | `dark-luxury` |
-| --- | --- |
-| [![openai-minimal style showcase](./gallery/styles/openai-minimal.svg)](./gallery/styles/openai-minimal.svg)<br>Evaluation Pipeline | [![dark-luxury style showcase](./gallery/styles/dark-luxury.svg)](./gallery/styles/dark-luxury.svg)<br>Executive Signal Network |
-
-| `aurora-orb` | `sketch-board` |
-| --- | --- |
-| [![aurora-orb style showcase](./gallery/styles/aurora-orb.svg)](./gallery/styles/aurora-orb.svg)<br>Creative Agent Studio | [![sketch-board style showcase](./gallery/styles/sketch-board.svg)](./gallery/styles/sketch-board.svg)<br>Attention Teaching Flow |
-
-补充公共风格：[`illustrated-semantic` — Semantic Delivery Pipeline](./gallery/styles/illustrated-semantic.svg)。
-
-完整风格画廊源文件：`gallery/styles/index.html`
+| Minimal Light | Deep Tech | Claude Warm |
+| --- | --- | --- |
+| [![Minimal Light 下的 Production AI Agent Request Lifecycle](./gallery/readme-showcase/template-agent-lifecycle-minimal-light.preview.svg)](./gallery/readme-showcase/template-agent-lifecycle-minimal-light.svg)<br>安静、偏文档表达 | [![Deep Tech 下的 Production AI Agent Request Lifecycle](./gallery/readme-showcase/template-agent-lifecycle-deep-tech.preview.svg)](./gallery/readme-showcase/template-agent-lifecycle-deep-tech.svg)<br>高对比技术展示 | [![Claude Warm 下的 Production AI Agent Request Lifecycle](./gallery/readme-showcase/template-agent-lifecycle-claude-warm.preview.svg)](./gallery/readme-showcase/template-agent-lifecycle-claude-warm.svg)<br>温暖的推理和教学表达 |
 
 ### Layout Showcase
 
-每个布局 preset 都有一个具体 AI / 产品案例，用来说明什么时候该用这个布局。
-
-| `pipeline` | `loop` |
+| Enterprise RAG Ingestion Pipeline | MCP Tool Orchestration Hub |
 | --- | --- |
-| [![pipeline layout showcase](./gallery/layouts/pipeline.svg)](./gallery/layouts/pipeline.svg)<br>RAG Ingestion Pipeline | [![loop layout showcase](./gallery/layouts/loop.svg)](./gallery/layouts/loop.svg)<br>Agent Reflection Loop |
-
-| `hub-spoke` | `layered` |
-| --- | --- |
-| [![hub-spoke layout showcase](./gallery/layouts/hub-spoke.svg)](./gallery/layouts/hub-spoke.svg)<br>Agent Tool Hub | [![layered layout showcase](./gallery/layouts/layered.svg)](./gallery/layouts/layered.svg)<br>LLM App Architecture Layers |
-
-| `swimlane` | `compare` |
-| --- | --- |
-| [![swimlane layout showcase](./gallery/layouts/swimlane.svg)](./gallery/layouts/swimlane.svg)<br>Human-in-the-loop Approval Flow | [![compare layout showcase](./gallery/layouts/compare.svg)](./gallery/layouts/compare.svg)<br>RAG vs Agentic RAG |
-
-| `matrix` | `timeline` |
-| --- | --- |
-| [![matrix layout showcase](./gallery/layouts/matrix.svg)](./gallery/layouts/matrix.svg)<br>AI Feature Priority Matrix | [![timeline layout showcase](./gallery/layouts/timeline.svg)](./gallery/layouts/timeline.svg)<br>AI Product Launch Roadmap |
-
-| `stack` | `funnel` |
-| --- | --- |
-| [![stack layout showcase](./gallery/layouts/stack.svg)](./gallery/layouts/stack.svg)<br>AI Runtime Stack | [![funnel layout showcase](./gallery/layouts/funnel.svg)](./gallery/layouts/funnel.svg)<br>Lead-to-Agent Automation Funnel |
-
-| `sequence` | `er` |
-| --- | --- |
-| [![sequence layout showcase](./gallery/layouts/sequence.svg)](./gallery/layouts/sequence.svg)<br>API Tool Calling Sequence | [![er layout showcase](./gallery/layouts/er.svg)](./gallery/layouts/er.svg)<br>Agent Memory Data Model |
-
-| `network` | `agent-memory` |
-| --- | --- |
-| [![network layout showcase](./gallery/layouts/network.svg)](./gallery/layouts/network.svg)<br>Distributed Agent Runtime Mesh | [![agent-memory layout showcase](./gallery/layouts/agent-memory.svg)](./gallery/layouts/agent-memory.svg)<br>Personalized Agent Memory Flow |
-
-| `agent-loop` | `layered-loop` |
-| --- | --- |
-| [![agent-loop layout showcase](./gallery/layouts/agent-loop.svg)](./gallery/layouts/agent-loop.svg)<br>Agent Loop Runtime Architecture | [![layered-loop layout showcase](./gallery/layouts/layered-loop.svg)](./gallery/layouts/layered-loop.svg)<br>Loop Engineering Operating Architecture |
-
-完整布局画廊源文件：`gallery/layouts/index.html`
+| [![Enterprise RAG Ingestion Pipeline](./gallery/readme-showcase/layout-enterprise-rag-pipeline.preview.svg)](./gallery/readme-showcase/layout-enterprise-rag-pipeline.svg)<br>`pipeline` · 顺序转换与检索 | [![MCP Tool Orchestration Hub](./gallery/readme-showcase/layout-mcp-tool-hub.preview.svg)](./gallery/readme-showcase/layout-mcp-tool-hub.svg)<br>`hub-spoke` · 一个编排器协调多种能力 |
 
 ### Runtime Motion Showcase
 

@@ -35,6 +35,7 @@ from build_style_showcase import (
     apply_public_showcase_contract,
     style_showcase_specs,
 )
+from render_readme_showcase_round_1 import render_round as render_readme_showcase_round
 
 
 Spec = Dict[str, Any]
@@ -108,6 +109,16 @@ def build_showcase(spec_root: Path, outdir: Path, quality: bool = True) -> Dict[
     runtime_demos = runtime_bundle["demos"]
     character_theme_comparison = _build_character_theme_comparison(outdir, quality)
     icon_system_releases = _build_icon_system_releases(outdir / "icon-systems", quality)
+    readme_showcase_result = render_readme_showcase_round(
+        spec_root.parent / "readme-showcase-round-1",
+        outdir / "readme-showcase",
+    )
+    readme_showcase = {
+        "status": "approved",
+        "case_count": readme_showcase_result["case_count"],
+        "review_page": _rel(outdir / "readme-showcase" / "readme-showcase-round-1.html"),
+        "manifest": _rel(outdir / "readme-showcase" / "manifest.json"),
+    }
     manifest = {
         "hero": hero_entry,
         "styles": style_entries,
@@ -119,6 +130,7 @@ def build_showcase(spec_root: Path, outdir: Path, quality: bool = True) -> Dict[
         "runtime_motion": runtime_entries,
         "character_theme_comparison": character_theme_comparison,
         "icon_system_releases": icon_system_releases,
+        "readme_showcase": readme_showcase,
     }
     (outdir / "showcase_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     _write_runtime_motion_index(outdir, runtime_catalog, runtime_entries, runtime_overview, runtime_demos)
@@ -139,6 +151,7 @@ def build_showcase(spec_root: Path, outdir: Path, quality: bool = True) -> Dict[
         "runtime_motion": len(runtime_entries),
         "character_themes": len(character_theme_comparison["themes"]),
         "icon_system_releases": len(icon_system_releases),
+        "readme_showcase": readme_showcase,
         "runtime_motion_page": str((outdir / "runtime-motion.html").resolve()),
         "manifest": str((outdir / "showcase_manifest.json").resolve()),
     }

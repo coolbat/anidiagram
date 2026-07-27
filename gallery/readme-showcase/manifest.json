@@ -1,0 +1,199 @@
+{
+  "schema": "readme-showcase-v1",
+  "round": 1,
+  "status": "approved",
+  "readme_mutated": true,
+  "canvas_policy": "per-case",
+  "quality_summary": {
+    "errors": 0,
+    "warnings": 0,
+    "issues": 0
+  },
+  "review_page": "gallery/readme-showcase/readme-showcase-round-1.html",
+  "cases": [
+    {
+      "id": "hero-loop-engineering",
+      "kind": "hero",
+      "label": "Hero · Layered Loop",
+      "style": "minimal-light",
+      "layout": "layered-loop",
+      "icon_system": "illustrated",
+      "title": "Loop Engineering Operating Architecture",
+      "spec": "examples/readme-showcase-round-1/hero-loop-engineering.diagram.json",
+      "preview": "gallery/readme-showcase/hero-loop-engineering.preview.svg",
+      "svg": "gallery/readme-showcase/hero-loop-engineering.svg",
+      "html": "gallery/readme-showcase/hero-loop-engineering.html",
+      "quality": "gallery/readme-showcase/hero-loop-engineering.quality.json",
+      "quality_summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      },
+      "canvas": {
+        "width": 1280,
+        "height": 920
+      }
+    },
+    {
+      "id": "hero-governed-rag",
+      "kind": "hero",
+      "label": "Hero candidate",
+      "style": "minimal-light",
+      "layout": "layered",
+      "icon_system": "illustrated",
+      "title": "Governed RAG Production Architecture",
+      "spec": "examples/readme-showcase-round-1/hero-governed-rag.diagram.json",
+      "preview": "gallery/readme-showcase/hero-governed-rag.preview.svg",
+      "svg": "gallery/readme-showcase/hero-governed-rag.svg",
+      "html": "gallery/readme-showcase/hero-governed-rag.html",
+      "quality": "gallery/readme-showcase/hero-governed-rag.quality.json",
+      "quality_summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      },
+      "canvas": {
+        "width": 1600,
+        "height": 900
+      }
+    },
+    {
+      "id": "hero-kubernetes-three-layer",
+      "kind": "hero",
+      "label": "Hero candidate · Three layers",
+      "style": "deep-tech",
+      "layout": "layered",
+      "icon_system": "diagram-core-v1",
+      "title": "Kubernetes Production Architecture",
+      "spec": "examples/readme-showcase-round-1/hero-kubernetes-three-layer.diagram.json",
+      "preview": "gallery/readme-showcase/hero-kubernetes-three-layer.preview.svg",
+      "svg": "gallery/readme-showcase/hero-kubernetes-three-layer.svg",
+      "html": "gallery/readme-showcase/hero-kubernetes-three-layer.html",
+      "quality": "gallery/readme-showcase/hero-kubernetes-three-layer.quality.json",
+      "quality_summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      },
+      "canvas": {
+        "width": 1600,
+        "height": 900
+      }
+    },
+    {
+      "id": "template-agent-lifecycle-minimal-light",
+      "kind": "template",
+      "label": "Template · Minimal Light",
+      "style": "minimal-light",
+      "layout": "layered",
+      "icon_system": "illustrated",
+      "title": "Production AI Agent Request Lifecycle",
+      "spec": "examples/readme-showcase-round-1/template-agent-lifecycle-minimal-light.diagram.json",
+      "preview": "gallery/readme-showcase/template-agent-lifecycle-minimal-light.preview.svg",
+      "svg": "gallery/readme-showcase/template-agent-lifecycle-minimal-light.svg",
+      "html": "gallery/readme-showcase/template-agent-lifecycle-minimal-light.html",
+      "quality": "gallery/readme-showcase/template-agent-lifecycle-minimal-light.quality.json",
+      "quality_summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      },
+      "canvas": {
+        "width": 1600,
+        "height": 900
+      }
+    },
+    {
+      "id": "template-agent-lifecycle-deep-tech",
+      "kind": "template",
+      "label": "Template · Deep Tech",
+      "style": "deep-tech",
+      "layout": "layered",
+      "icon_system": "illustrated",
+      "title": "Production AI Agent Request Lifecycle",
+      "spec": "examples/readme-showcase-round-1/template-agent-lifecycle-deep-tech.diagram.json",
+      "preview": "gallery/readme-showcase/template-agent-lifecycle-deep-tech.preview.svg",
+      "svg": "gallery/readme-showcase/template-agent-lifecycle-deep-tech.svg",
+      "html": "gallery/readme-showcase/template-agent-lifecycle-deep-tech.html",
+      "quality": "gallery/readme-showcase/template-agent-lifecycle-deep-tech.quality.json",
+      "quality_summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      },
+      "canvas": {
+        "width": 1600,
+        "height": 900
+      }
+    },
+    {
+      "id": "template-agent-lifecycle-claude-warm",
+      "kind": "template",
+      "label": "Template · Claude Warm",
+      "style": "claude-warm",
+      "layout": "layered",
+      "icon_system": "illustrated",
+      "title": "Production AI Agent Request Lifecycle",
+      "spec": "examples/readme-showcase-round-1/template-agent-lifecycle-claude-warm.diagram.json",
+      "preview": "gallery/readme-showcase/template-agent-lifecycle-claude-warm.preview.svg",
+      "svg": "gallery/readme-showcase/template-agent-lifecycle-claude-warm.svg",
+      "html": "gallery/readme-showcase/template-agent-lifecycle-claude-warm.html",
+      "quality": "gallery/readme-showcase/template-agent-lifecycle-claude-warm.quality.json",
+      "quality_summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      },
+      "canvas": {
+        "width": 1600,
+        "height": 900
+      }
+    },
+    {
+      "id": "layout-enterprise-rag-pipeline",
+      "kind": "layout",
+      "label": "Layout · Pipeline",
+      "style": "minimal-light",
+      "layout": "pipeline",
+      "icon_system": "diagram-core-v1",
+      "title": "Enterprise RAG Ingestion Pipeline",
+      "spec": "examples/readme-showcase-round-1/layout-enterprise-rag-pipeline.diagram.json",
+      "preview": "gallery/readme-showcase/layout-enterprise-rag-pipeline.preview.svg",
+      "svg": "gallery/readme-showcase/layout-enterprise-rag-pipeline.svg",
+      "html": "gallery/readme-showcase/layout-enterprise-rag-pipeline.html",
+      "quality": "gallery/readme-showcase/layout-enterprise-rag-pipeline.quality.json",
+      "quality_summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      },
+      "canvas": {
+        "width": 1600,
+        "height": 900
+      }
+    },
+    {
+      "id": "layout-mcp-tool-hub",
+      "kind": "layout",
+      "label": "Layout · Hub & Spoke",
+      "style": "minimal-light",
+      "layout": "hub-spoke",
+      "icon_system": "diagram-core-v1",
+      "title": "MCP Tool Orchestration Hub",
+      "spec": "examples/readme-showcase-round-1/layout-mcp-tool-hub.diagram.json",
+      "preview": "gallery/readme-showcase/layout-mcp-tool-hub.preview.svg",
+      "svg": "gallery/readme-showcase/layout-mcp-tool-hub.svg",
+      "html": "gallery/readme-showcase/layout-mcp-tool-hub.html",
+      "quality": "gallery/readme-showcase/layout-mcp-tool-hub.quality.json",
+      "quality_summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      },
+      "canvas": {
+        "width": 1600,
+        "height": 900
+      }
+    }
+  ]
+}

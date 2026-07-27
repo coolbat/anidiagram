@@ -22,9 +22,10 @@ class ReadmeShowcaseRound1Test(unittest.TestCase):
     def setUp(self):
         self.specs = build_specs()
 
-    def test_round_has_two_heroes_three_template_proofs_and_two_layout_proofs(self):
+    def test_round_has_three_heroes_three_template_proofs_and_two_layout_proofs(self):
         self.assertEqual(
             [
+                "hero-loop-engineering",
                 "hero-governed-rag",
                 "hero-kubernetes-three-layer",
                 "template-agent-lifecycle-minimal-light",
@@ -36,7 +37,7 @@ class ReadmeShowcaseRound1Test(unittest.TestCase):
             [case["id"] for case in CASES],
         )
         self.assertEqual({case["id"] for case in CASES}, set(self.specs))
-        self.assertEqual(2, sum(case["kind"] == "hero" for case in CASES))
+        self.assertEqual(3, sum(case["kind"] == "hero" for case in CASES))
         self.assertEqual(3, sum(case["kind"] == "template" for case in CASES))
         self.assertEqual(2, sum(case["kind"] == "layout" for case in CASES))
 
@@ -44,7 +45,12 @@ class ReadmeShowcaseRound1Test(unittest.TestCase):
         for case in CASES:
             with self.subTest(case=case["id"]):
                 spec = self.specs[case["id"]]
-                self.assertEqual({"width": 1600, "height": 900}, spec["canvas"])
+                expected_canvas = (
+                    {"width": 1280, "height": 920}
+                    if case["id"] == "hero-loop-engineering"
+                    else {"width": 1600, "height": 900}
+                )
+                self.assertEqual(expected_canvas, spec["canvas"])
                 self.assertEqual("composition-v1", spec["composition_policy"])
                 self.assertEqual("showcase-v1", spec["motion"]["profile"])
                 self.assertEqual("showcase-v1", spec["resolved_presentation"]["motion"]["value"])
@@ -103,22 +109,35 @@ class ReadmeShowcaseRound1Test(unittest.TestCase):
                 node["id"],
             )
 
-    def test_renderer_writes_seven_complete_review_bundles(self):
+    def test_loop_engineering_is_the_first_layered_loop_hero(self):
+        spec = self.specs["hero-loop-engineering"]
+        self.assertEqual("hero-loop-engineering", CASES[0]["id"])
+        self.assertEqual("Loop Engineering Operating Architecture", spec["title"]["text"])
+        self.assertEqual("layered-loop", spec["layout"])
+        self.assertEqual("minimal-light", spec["style"])
+        self.assertEqual("illustrated", spec["icon_system"])
+        self.assertEqual({"nodes": 8, "edges": 8, "groups": 3}, compile_scene(spec).stats())
+
+    def test_renderer_writes_eight_complete_readme_bundles(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             result = render_round(root / "specs", root / "outputs")
-            self.assertEqual(7, result["case_count"])
+            self.assertEqual(8, result["case_count"])
             self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, result["quality_summary"])
             manifest = json.loads((root / "outputs" / "manifest.json").read_text(encoding="utf-8"))
-            self.assertEqual(7, len(manifest["cases"]))
+            self.assertEqual("approved", manifest["status"])
+            self.assertTrue(manifest["readme_mutated"])
+            self.assertEqual("per-case", manifest["canvas_policy"])
+            self.assertNotIn("canvas", manifest)
+            self.assertEqual(8, len(manifest["cases"]))
             for case in manifest["cases"]:
                 for key in ("spec", "preview", "svg", "html", "quality"):
                     self.assertTrue((root / case[key]).is_file(), case[key])
             review = (root / "outputs" / "readme-showcase-round-1.html").read_text(encoding="utf-8")
-            self.assertEqual(7, review.count("<article"))
-            self.assertEqual(7, review.count("<img "))
+            self.assertEqual(8, review.count("<article"))
+            self.assertEqual(8, review.count("<img "))
             self.assertIn("README Showcase · Round 1", review)
-            self.assertIn("Seven approval candidates", review)
+            self.assertIn("Eight approved showcase cases", review)
 
     def test_browser_runtime_has_no_overflow_or_inactive_edges(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -137,10 +156,10 @@ class ReadmeShowcaseRound1Test(unittest.TestCase):
             )
             self.assertEqual(0, result.returncode, result.stderr or result.stdout)
             report = json.loads(result.stdout)
-            self.assertEqual(7, report["cases"])
-            self.assertEqual(62, report["nodes"])
-            self.assertEqual(58, report["edges"])
-            self.assertEqual(58, report["active_runtime_edges"])
+            self.assertEqual(8, report["cases"])
+            self.assertEqual(70, report["nodes"])
+            self.assertEqual(66, report["edges"])
+            self.assertEqual(66, report["active_runtime_edges"])
             self.assertEqual([], report["console_errors"])
             self.assertEqual([], report["overflow"])
 

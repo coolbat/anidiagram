@@ -1,0 +1,739 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="showcase-v1" data-motion-sequence="staged" data-motion-edge="packet-flow" data-motion-node="icon-performance" data-motion-group="none" data-motion-title="highlight-sweep" data-motion-reduced="static" data-icon-system="diagram-core-v1">
+<title id="diagram-title">Kubernetes Production Architecture</title>
+<desc id="diagram-desc">Traffic &amp; operations → Kubernetes control plane → runtime &amp; reliability</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .edge-flow { stroke-linecap: round; }
+  .edge-draw, .edge-base { stroke-linecap: butt; stroke-linejoin: round; }
+  .edge-particle { filter: url(#particle-glow); }
+  .edge-arrow-particle { filter: url(#particle-glow); }
+  .semantic-icon { vector-effect: non-scaling-stroke; }
+  .semantic-icon-breathe { transform-box: fill-box; transform-origin: center; animation: semanticIconBreathe 2.8s ease-in-out infinite; }
+  .icon-breathe-halo { pointer-events: none; filter: url(#particle-glow); }
+  .node-glow, .node-burst { pointer-events: none; }
+  #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
+  #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
+  @keyframes titlePulse { 0%, 100% { opacity: 0.76; } 50% { opacity: 1; } }
+  @keyframes titleSlide { 0%, 100% { transform: translateX(0); opacity: 0.9; } 50% { transform: translateX(8px); opacity: 1; } }
+  @keyframes semanticIconBreathe { 0%, 100% { transform: scale(0.96); opacity: 0.72; } 50% { transform: scale(1.08); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    #title-accent, #title-highlight, .semantic-icon-breathe { animation: none; }
+  }
+</style>
+<rect width="100%" height="100%" fill="#050816" />
+<defs>
+  <filter id="soft-glow" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="5" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <filter id="particle-glow" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="2.6" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#111c36" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="1544" height="848" rx="26" fill="none" stroke="#64748b" stroke-width="1.4" opacity="1.00" />
+<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#22d3ee" style="animation:none" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#0f2742" style="animation:none" />
+
+<text id="main-title" x="90" y="84" class="title" fill="#f8fafc" opacity="1">
+  Kubernetes Production Architecture
+</text>
+<text x="74" y="126" class="subtitle" fill="#cbd5e1" opacity="1">
+  Traffic &amp; operations → Kubernetes control plane → runtime &amp; reliability
+</text>
+
+<g id="group-traffic-operations" class="group" opacity="1">
+  <rect x="40.0" y="145.0" width="1520.0" height="180.0" rx="22"
+        fill="#1f1a0d" fill-opacity="0.34" stroke="#fbbf24" stroke-width="1.6" stroke-dasharray="9 8">
+  </rect>
+
+
+  <text x="58.0" y="175.0" class="group-label" fill="#cbd5e1">Traffic &amp; Operations</text>
+</g>
+
+<g id="group-control-plane" class="group" opacity="1">
+  <rect x="40.0" y="350.0" width="1520.0" height="190.0" rx="22"
+        fill="#1e1b4b" fill-opacity="0.34" stroke="#a78bfa" stroke-width="1.6" stroke-dasharray="9 8">
+  </rect>
+
+
+  <text x="58.0" y="380.0" class="group-label" fill="#cbd5e1">Kubernetes Control Plane</text>
+</g>
+
+<g id="group-runtime-reliability" class="group" opacity="1">
+  <rect x="40.0" y="570.0" width="1520.0" height="245.0" rx="22"
+        fill="#0f172a" fill-opacity="0.34" stroke="#38bdf8" stroke-width="1.6" stroke-dasharray="9 8">
+  </rect>
+
+
+  <text x="58.0" y="600.0" class="group-label" fill="#cbd5e1">Runtime &amp; Reliability</text>
+</g>
+
+<defs>
+  <marker id="arrow-1" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#fbbf24" />
+  </marker>
+</defs>
+<g class="edge" data-role="actor">
+  <path class="edge-base" d="M 210.0 317.0 L 210.0 378.0" fill="none" stroke="#fbbf24" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 210.0 317.0 L 210.0 378.0" fill="none" stroke="#fbbf24" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-1)" />
+
+
+
+  <text x="210.0" y="333.5" class="edge-label" fill="#cbd5e1" opacity="1">
+    request
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-2" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#22d3ee" />
+  </marker>
+</defs>
+<g class="edge" data-role="source">
+  <path class="edge-base" d="M 575.0 317.0 L 575.0 378.0" fill="none" stroke="#22d3ee" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 575.0 317.0 L 575.0 378.0" fill="none" stroke="#22d3ee" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-2)" />
+
+
+
+  <text x="575.0" y="333.5" class="edge-label" fill="#cbd5e1" opacity="1">
+    automate
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-3" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#fbbf24" />
+  </marker>
+</defs>
+<g class="edge" data-role="actor">
+  <path class="edge-base" d="M 940.0 317.0 L 940.0 378.0" fill="none" stroke="#fbbf24" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 940.0 317.0 L 940.0 378.0" fill="none" stroke="#fbbf24" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-3)" />
+
+
+
+  <text x="940.0" y="333.5" class="edge-label" fill="#cbd5e1" opacity="1">
+    operate
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-4" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#fb7185" />
+  </marker>
+</defs>
+<g class="edge" data-role="risk">
+  <path class="edge-base" d="M 1305.0 317.0 L 1305.0 378.0" fill="none" stroke="#fb7185" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 1305.0 317.0 L 1305.0 378.0" fill="none" stroke="#fb7185" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-4)" />
+
+
+
+  <text x="1305.0" y="333.5" class="edge-label" fill="#cbd5e1" opacity="1">
+    enforce
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-5" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#fb7185" />
+  </marker>
+</defs>
+<g class="edge" data-role="risk">
+  <path class="edge-base" d="M 347.0 452.5 C 387.0 452.5, 398.0 452.5, 438.0 452.5" fill="none" stroke="#fb7185" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 347.0 452.5 C 387.0 452.5, 398.0 452.5, 438.0 452.5" fill="none" stroke="#fb7185" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-5)" />
+
+
+
+  <text x="392.5" y="438.5" class="edge-label" fill="#cbd5e1" opacity="1">
+    admit
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-6" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#38bdf8" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 712.0 452.5 C 752.0 452.5, 763.0 452.5, 803.0 452.5" fill="none" stroke="#38bdf8" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 712.0 452.5 C 752.0 452.5, 763.0 452.5, 803.0 452.5" fill="none" stroke="#38bdf8" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-6)" />
+
+
+
+  <text x="757.5" y="438.5" class="edge-label" fill="#cbd5e1" opacity="1">
+    schedule
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-7" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#a78bfa" />
+  </marker>
+</defs>
+<g class="edge" data-role="agent">
+  <path class="edge-base" d="M 1077.0 452.5 C 1117.0 452.5, 1128.0 452.5, 1168.0 452.5" fill="none" stroke="#a78bfa" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 1077.0 452.5 C 1117.0 452.5, 1128.0 452.5, 1168.0 452.5" fill="none" stroke="#a78bfa" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-7)" />
+
+
+
+  <text x="1122.5" y="438.5" class="edge-label" fill="#cbd5e1" opacity="1">
+    reconcile
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-8" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#38bdf8" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 210.0 527.0 L 210.0 608.0" fill="none" stroke="#38bdf8" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 210.0 527.0 L 210.0 608.0" fill="none" stroke="#38bdf8" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-8)" />
+
+
+
+  <text x="210.0" y="553.5" class="edge-label" fill="#cbd5e1" opacity="1">
+    route
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-9" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#38bdf8" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 575.0 527.0 L 575.0 608.0" fill="none" stroke="#38bdf8" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 575.0 527.0 L 575.0 608.0" fill="none" stroke="#38bdf8" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-9)" />
+
+
+
+  <text x="575.0" y="553.5" class="edge-label" fill="#cbd5e1" opacity="1">
+    deploy
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-10" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#34d399" />
+  </marker>
+</defs>
+<g class="edge" data-role="memory">
+  <path class="edge-base" d="M 940.0 527.0 L 940.0 608.0" fill="none" stroke="#34d399" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 940.0 527.0 L 940.0 608.0" fill="none" stroke="#34d399" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-10)" />
+
+
+
+  <text x="940.0" y="553.5" class="edge-label" fill="#cbd5e1" opacity="1">
+    place
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-11" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#4ade80" />
+  </marker>
+</defs>
+<g class="edge" data-role="output">
+  <path class="edge-base" d="M 1305.0 527.0 L 1305.0 608.0" fill="none" stroke="#4ade80" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 1305.0 527.0 L 1305.0 608.0" fill="none" stroke="#4ade80" stroke-width="2.4" pathLength="1"
+        stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-11)" />
+
+
+
+  <text x="1305.0" y="553.5" class="edge-label" fill="#cbd5e1" opacity="1">
+    telemetry
+  </text>
+</g>
+
+<g id="node-external-users" class="node motion-node" data-role="actor" opacity="1">
+
+
+
+
+  <rect x="85.0" y="185.0" width="250.0" height="120.0" rx="14.0"
+        fill="#1f1a0d" stroke="#fbbf24" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="user" data-node-id="external-users" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(95 199) scale(0.958333333333333)" data-icon="user" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2eexternal_u2x2dusers__user__root"><g data-part="body" id="node_u2x2eexternal_u2x2dusers__user__body">
+  <g data-part="profile" id="node_u2x2eexternal_u2x2dusers__user__profile">
+    <circle cx="48" cy="48" r="34" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="head" id="node_u2x2eexternal_u2x2dusers__user__head">
+    <circle cx="48" cy="36" r="11" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="shoulders" id="node_u2x2eexternal_u2x2dusers__user__shoulders">
+    <path d="M 27 70 C 29 55 36 49 48 49 C 60 49 67 55 69 70 Z" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer" />
+  </g>
+  <g data-part="request-bubble" id="node_u2x2eexternal_u2x2dusers__user__request-bubble">
+    <path d="M 58 14 H 76 Q 83 14 83 21 V 31 Q 83 38 76 38 H 68 L 61 44 L 63 38 H 58 Q 52 38 52 31 V 21 Q 52 14 58 14 Z" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer" />
+    <circle cx="61" cy="26" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+    <circle cx="68" cy="26" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+    <circle cx="75" cy="26" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator" id="node_u2x2eexternal_u2x2dusers__user__indicator">
+    <circle cx="73" cy="66" r="6" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="73" cy="66" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g></g>
+
+  <text x="257.8" y="231.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="257.8" dy="18" class="node-title">External</tspan>
+<tspan x="257.8" dy="18" class="node-title">Users</tspan>
+<tspan x="257.8" dy="17" class="node-caption">production</tspan>
+<tspan x="257.8" dy="17" class="node-caption">application</tspan>
+</text>
+</g>
+
+<g id="node-automation-clients" class="node motion-node" data-role="source" opacity="1">
+
+
+
+
+  <rect x="450.0" y="185.0" width="250.0" height="120.0" rx="14.0"
+        fill="#071f2f" stroke="#22d3ee" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="api" data-node-id="automation-clients" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(460 199) scale(0.958333333333333)" data-icon="api" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2eautomation_u2x2dclients__api__root"><g data-part="body" id="node_u2x2eautomation_u2x2dclients__api__body">
+  <g data-part="shell" id="node_u2x2eautomation_u2x2dclients__api__shell">
+    <rect x="19" y="18" width="58" height="62" rx="12" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="header" id="node_u2x2eautomation_u2x2dclients__api__header">
+    <line x1="20.5" y1="36" x2="75.5" y2="36" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="input-interface" id="node_u2x2eautomation_u2x2dclients__api__input-interface">
+    <rect x="9.0625" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="output-interface" id="node_u2x2eautomation_u2x2dclients__api__output-interface">
+    <rect x="72.9375" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="processor" id="node_u2x2eautomation_u2x2dclients__api__processor">
+    <rect x="34" y="43" width="28" height="27" rx="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="56.5" r="6" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="48" cy="56.5" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-group" id="node_u2x2eautomation_u2x2dclients__api__indicator-group">
+    <rect x="37" y="20.5" width="22" height="14" rx="7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="27.5" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g></g>
+
+  <text x="622.8" y="231.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="622.8" dy="18" class="node-title">Automation</tspan>
+<tspan x="622.8" dy="18" class="node-title">Clients</tspan>
+<tspan x="622.8" dy="17" class="node-caption">CI/CD and</tspan>
+<tspan x="622.8" dy="17" class="node-caption">platform APIs</tspan>
+</text>
+</g>
+
+<g id="node-platform-operators" class="node motion-node" data-role="actor" opacity="1">
+
+
+
+
+  <rect x="815.0" y="185.0" width="250.0" height="120.0" rx="14.0"
+        fill="#1f1a0d" stroke="#fbbf24" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="operator" data-node-id="platform-operators" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(825 199) scale(0.958333333333333)" data-icon="operator" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2eplatform_u2x2doperators__operator__root"><g data-part="body" id="node_u2x2eplatform_u2x2doperators__operator__body">
+  <g data-part="shell" id="node_u2x2eplatform_u2x2doperators__operator__shell">
+    <path d="M 24 66 C 25 49 34 41 48 41 C 62 41 71 49 72 66 Z" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer" />
+  </g>
+  <g data-part="head" id="node_u2x2eplatform_u2x2doperators__operator__head">
+    <circle cx="48" cy="28" r="11.5" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="panel" id="node_u2x2eplatform_u2x2doperators__operator__panel">
+    <rect x="18" y="51" width="60" height="27" rx="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <line x1="25" y1="59" x2="38" y2="59" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    <rect x="14" y="75" width="68" height="7" rx="3.5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="cursor" id="node_u2x2eplatform_u2x2doperators__operator__cursor">
+    <polygon points="43,57 43,71 47.5,66.5 51,72 55,69.5 51.5,64 58,64" fill="var(--icon-accent-secondary, #45c5bd)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linejoin="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="indicator" id="node_u2x2eplatform_u2x2doperators__operator__indicator">
+    <circle cx="68" cy="68" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g></g>
+
+  <text x="987.8" y="231.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="987.8" dy="18" class="node-title">Platform</tspan>
+<tspan x="987.8" dy="18" class="node-title">Operators</tspan>
+<tspan x="987.8" dy="17" class="node-caption">operate and</tspan>
+<tspan x="987.8" dy="17" class="node-caption">troubleshoot</tspan>
+</text>
+</g>
+
+<g id="node-security-policy" class="node motion-node" data-role="risk" opacity="1">
+
+
+
+
+  <rect x="1180.0" y="185.0" width="250.0" height="120.0" rx="14.0"
+        fill="#2a0f16" stroke="#fb7185" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="shield" data-node-id="security-policy" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(1190 199) scale(0.958333333333333)" data-icon="shield" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2esecurity_u2x2dpolicy__shield__root"><g data-part="body" id="node_u2x2esecurity_u2x2dpolicy__shield__body">
+  <g data-part="shell" id="node_u2x2esecurity_u2x2dpolicy__shield__shell">
+    <path d="M 48 12 L 76 23 V 45 Q 76 69 48 84 Q 20 69 20 45 V 23 Z" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer" />
+    <path d="M 48 21 L 67 29 V 45 Q 67 61 48 73 Q 29 61 29 45 V 29 Z" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linejoin="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="scan" id="node_u2x2esecurity_u2x2dpolicy__shield__scan">
+    <line x1="31" y1="36" x2="65" y2="36" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="outer" />
+    <line x1="34" y1="41" x2="62" y2="41" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="core" id="node_u2x2esecurity_u2x2dpolicy__shield__core">
+    <circle cx="48" cy="52" r="12" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="52" r="6" fill="var(--icon-accent, #7c5ce7)" />
+  </g>
+  <g data-part="check" id="node_u2x2esecurity_u2x2dpolicy__shield__check">
+    <path d="M 55 62 L 58 65 L 64 58" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" stroke-linejoin="round" data-stroke-role="inner" />
+  </g>
+  </g>
+</g></g>
+
+  <text x="1352.8" y="231.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="1352.8" dy="18" class="node-title">Security</tspan>
+<tspan x="1352.8" dy="18" class="node-title">Policy</tspan>
+<tspan x="1352.8" dy="17" class="node-caption">identity and</tspan>
+<tspan x="1352.8" dy="17" class="node-caption">admission</tspan>
+</text>
+</g>
+
+<g id="node-ingress" class="node motion-node" data-role="risk" opacity="1">
+
+
+
+
+  <rect x="85.0" y="390.0" width="250.0" height="125.0" rx="14.0"
+        fill="#2a0f16" stroke="#fb7185" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="gateway" data-node-id="ingress" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(95 406.5) scale(0.958333333333333)" data-icon="gateway" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2eingress__gateway__root"><g data-part="body" id="node_u2x2eingress__gateway__body">
+    <g data-part="gate" id="node_u2x2eingress__gateway__gate">
+      <path d="M 20 79 V 44 C 20 25 31 15 48 15 C 65 15 76 25 76 44 V 79 H 62 V 44 C 62 34 57 29 48 29 C 39 29 34 34 34 44 V 79 Z" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer" />
+    </g>
+    <g data-part="scanner" id="node_u2x2eingress__gateway__scanner">
+      <rect x="38" y="38" width="20" height="28" rx="10" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+      <line x1="41" y1="49" x2="55" y2="49" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="inner" />
+    </g>
+    <g data-part="core" id="node_u2x2eingress__gateway__core">
+      <circle cx="48" cy="57" r="5" fill="var(--icon-surface-contrast, #14213d)" />
+      <circle cx="48" cy="57" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" />
+    </g>
+    <g data-part="input" id="node_u2x2eingress__gateway__input">
+      <path d="M 37 69 H 43 L 47 73 L 43 77 H 37" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" stroke-linejoin="round" data-stroke-role="inner" />
+    </g>
+    <g data-part="output" id="node_u2x2eingress__gateway__output">
+      <path d="M 49 69 H 55 L 59 73 L 55 77 H 49" fill="var(--icon-accent-secondary, #45c5bd)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" stroke-linejoin="round" data-stroke-role="inner" />
+    </g>
+    <g data-part="indicator" id="node_u2x2eingress__gateway__indicator">
+      <circle cx="69" cy="29" r="4.5" fill="var(--icon-surface-contrast, #14213d)" />
+      <circle cx="69" cy="29" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+    </g>
+  </g>
+</g></g>
+
+  <text x="257.8" y="438.5" text-anchor="middle" fill="#f8fafc">
+<tspan x="257.8" dy="18" class="node-title">Ingress</tspan>
+<tspan x="257.8" dy="18" class="node-title">Gateway</tspan>
+<tspan x="257.8" dy="17" class="node-caption">routes trusted</tspan>
+<tspan x="257.8" dy="17" class="node-caption">traffic</tspan>
+</text>
+</g>
+
+<g id="node-api-server" class="node motion-node" data-role="process" opacity="1">
+
+
+
+
+  <rect x="450.0" y="390.0" width="250.0" height="125.0" rx="14.0"
+        fill="#0f172a" stroke="#38bdf8" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="api" data-node-id="api-server" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(460 406.5) scale(0.958333333333333)" data-icon="api" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2eapi_u2x2dserver__api__root"><g data-part="body" id="node_u2x2eapi_u2x2dserver__api__body">
+  <g data-part="shell" id="node_u2x2eapi_u2x2dserver__api__shell">
+    <rect x="19" y="18" width="58" height="62" rx="12" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="header" id="node_u2x2eapi_u2x2dserver__api__header">
+    <line x1="20.5" y1="36" x2="75.5" y2="36" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="input-interface" id="node_u2x2eapi_u2x2dserver__api__input-interface">
+    <rect x="9.0625" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="output-interface" id="node_u2x2eapi_u2x2dserver__api__output-interface">
+    <rect x="72.9375" y="43" width="14" height="10" rx="3" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="processor" id="node_u2x2eapi_u2x2dserver__api__processor">
+    <rect x="34" y="43" width="28" height="27" rx="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <circle cx="48" cy="56.5" r="6" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    <circle cx="48" cy="56.5" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  <g data-part="indicator-group" id="node_u2x2eapi_u2x2dserver__api__indicator-group">
+    <rect x="37" y="20.5" width="22" height="14" rx="7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="27.5" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g></g>
+
+  <text x="622.8" y="438.5" text-anchor="middle" fill="#f8fafc">
+<tspan x="622.8" dy="18" class="node-title">Kubernetes</tspan>
+<tspan x="622.8" dy="18" class="node-title">API</tspan>
+<tspan x="622.8" dy="17" class="node-caption">declares</tspan>
+<tspan x="622.8" dy="17" class="node-caption">desired state</tspan>
+</text>
+</g>
+
+<g id="node-scheduler" class="node motion-node" data-role="process" opacity="1">
+
+
+
+
+  <rect x="815.0" y="390.0" width="250.0" height="125.0" rx="14.0"
+        fill="#0f172a" stroke="#38bdf8" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="scheduler" data-node-id="scheduler" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(825 406.5) scale(0.958333333333333)" data-icon="scheduler" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2escheduler__scheduler__root"><g data-part="body" id="node_u2x2escheduler__scheduler__body">
+    <rect x="11" y="20" width="74" height="57" rx="18" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <g data-part="clock" id="node_u2x2escheduler__scheduler__clock">
+      <circle cx="34" cy="48" r="17" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+      <circle cx="34" cy="48" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+    </g>
+    <g data-part="hand" id="node_u2x2escheduler__scheduler__hand">
+      <path d="M 34 48 V 38 M 34 48 L 42 53" fill="none" stroke="var(--icon-accent, #7c5ce7)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="outer" />
+    </g>
+    <g data-part="task-card" id="node_u2x2escheduler__scheduler__task-card">
+      <rect x="56" y="34" width="22" height="27" rx="7" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+      <path d="M 61 44 H 72 M 61 51 H 69" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    </g>
+    <g data-part="trigger" id="node_u2x2escheduler__scheduler__trigger">
+      <circle cx="67" cy="29" r="5" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" data-stroke-role="inner" />
+      <path d="M 67 24 V 20" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    </g>
+    <g data-part="indicator" id="node_u2x2escheduler__scheduler__indicator">
+      <circle cx="72" cy="70" r="5" fill="var(--icon-surface-contrast, #14213d)" />
+      <circle cx="72" cy="70" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" />
+    </g>
+  </g>
+</g></g>
+
+  <text x="987.8" y="438.5" text-anchor="middle" fill="#f8fafc">
+<tspan x="987.8" dy="18" class="node-title">Scheduler</tspan>
+<tspan x="987.8" dy="17" class="node-caption">places</tspan>
+<tspan x="987.8" dy="17" class="node-caption">workloads</tspan>
+</text>
+</g>
+
+<g id="node-controller" class="node motion-node" data-role="agent" opacity="1">
+
+
+
+
+  <rect x="1180.0" y="390.0" width="250.0" height="125.0" rx="14.0"
+        fill="#1e1b4b" stroke="#a78bfa" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="server-cluster" data-node-id="controller" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(1190 406.5) scale(0.958333333333333)" data-icon="server-cluster" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2econtroller__server-cluster__root"><g data-part="body" id="node_u2x2econtroller__server-cluster__body">
+    <g data-part="node-a" id="node_u2x2econtroller__server-cluster__node-a">
+      <rect x="14" y="31" width="34" height="22" rx="6" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+      <circle cx="22" cy="42" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+      <line x1="30" y1="42" x2="41" y2="42" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    </g>
+    <g data-part="node-b" id="node_u2x2econtroller__server-cluster__node-b">
+      <rect x="32" y="16" width="38" height="24" rx="6" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+      <circle cx="41" cy="28" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+      <line x1="49" y1="28" x2="62" y2="28" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    </g>
+    <g data-part="node-c" id="node_u2x2econtroller__server-cluster__node-c">
+      <rect x="42" y="52" width="40" height="26" rx="7" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+      <circle cx="52" cy="65" r="3.2" fill="var(--icon-accent, #7c5ce7)" />
+      <line x1="60" y1="65" x2="74" y2="65" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    </g>
+    <g data-part="sync" id="node_u2x2econtroller__server-cluster__sync">
+      <path d="M 54 43 Q 67 42 71 49 L 68 48 M 71 49 L 70 45" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" stroke-linejoin="round" data-stroke-role="inner" />
+      <path d="M 38 57 Q 25 60 23 53 L 26 54 M 23 53 L 24 57" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" stroke-linejoin="round" data-stroke-role="inner" />
+    </g>
+    <g data-part="indicator" id="node_u2x2econtroller__server-cluster__indicator">
+      <circle cx="77" cy="22" r="4.5" fill="var(--icon-surface-contrast, #14213d)" />
+      <circle cx="77" cy="22" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+    </g>
+  </g>
+</g></g>
+
+  <text x="1352.8" y="438.5" text-anchor="middle" fill="#f8fafc">
+<tspan x="1352.8" dy="18" class="node-title">Control</tspan>
+<tspan x="1352.8" dy="18" class="node-title">Plane</tspan>
+<tspan x="1352.8" dy="17" class="node-caption">reconciles</tspan>
+<tspan x="1352.8" dy="17" class="node-caption">cluster state</tspan>
+</text>
+</g>
+
+<g id="node-deployments" class="node motion-node" data-role="process" opacity="1">
+
+
+
+
+  <rect x="85.0" y="620.0" width="250.0" height="140.0" rx="14.0"
+        fill="#0f172a" stroke="#38bdf8" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="deployment" data-node-id="deployments" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(95 644) scale(0.958333333333333)" data-icon="deployment" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2edeployments__deployment__root"><g data-part="body" id="node_u2x2edeployments__deployment__body">
+    <rect x="11" y="21" width="74" height="56" rx="19" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <g data-part="package" id="node_u2x2edeployments__deployment__package">
+      <path d="M 20 39 L 33 32 L 46 39 L 33 46 Z" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer" />
+      <path d="M 20 39 V 55 L 33 63 V 46 Z M 46 39 V 55 L 33 63 V 46 Z" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" stroke-linejoin="round" data-stroke-role="inner" />
+    </g>
+    <g data-part="path" id="node_u2x2edeployments__deployment__path">
+      <path d="M 47 48 H 59" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="2.125" stroke-linecap="round" stroke-dasharray="3 4" data-stroke-role="outer" />
+      <circle cx="53" cy="48" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" />
+    </g>
+    <g data-part="target" id="node_u2x2edeployments__deployment__target">
+      <rect x="59" y="32" width="20" height="32" rx="9" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+      <path d="M 63 58 H 75" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    </g>
+    <g data-part="release-core" id="node_u2x2edeployments__deployment__release-core">
+      <circle cx="69" cy="46" r="7" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" data-stroke-role="inner" />
+      <circle cx="69" cy="46" r="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+    </g>
+    <g data-part="indicator" id="node_u2x2edeployments__deployment__indicator">
+      <circle cx="72" cy="70" r="5" fill="var(--icon-surface-contrast, #14213d)" />
+      <circle cx="72" cy="70" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" />
+    </g>
+  </g>
+</g></g>
+
+  <text x="257.8" y="676.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="257.8" dy="18" class="node-title">Deployments</tspan>
+<tspan x="257.8" dy="17" class="node-caption">versioned</tspan>
+<tspan x="257.8" dy="17" class="node-caption">application</tspan>
+</text>
+</g>
+
+<g id="node-containers" class="node motion-node" data-role="process" opacity="1">
+
+
+
+
+  <rect x="450.0" y="620.0" width="250.0" height="140.0" rx="14.0"
+        fill="#0f172a" stroke="#38bdf8" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="container" data-node-id="containers" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(460 644) scale(0.958333333333333)" data-icon="container" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2econtainers__container__root"><g data-part="body" id="node_u2x2econtainers__container__body">
+    <g data-part="shell" id="node_u2x2econtainers__container__shell">
+      <path d="M 26 17 H 70 Q 78 17 78 25 V 71 Q 78 79 70 79 H 26 Q 18 79 18 71 V 25 Q 18 17 26 17 Z" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer" />
+      <rect x="26" y="25" width="44" height="46" rx="10" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner" />
+    </g>
+    <g data-part="door" id="node_u2x2econtainers__container__door">
+      <path d="M 26 25 H 38 V 71 H 26 Z" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer" />
+      <circle cx="33" cy="48" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" />
+    </g>
+    <g data-part="app-core" id="node_u2x2econtainers__container__app-core">
+      <rect x="44" y="36" width="20" height="25" rx="7" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+      <rect x="49" y="42" width="10" height="8" rx="3" fill="var(--icon-accent-secondary, #45c5bd)" />
+      <line x1="49" y1="55" x2="59" y2="55" stroke="var(--icon-surface-main, #fffaf2)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    </g>
+    <g data-part="boundary" id="node_u2x2econtainers__container__boundary">
+      <rect x="13" y="12" width="70" height="72" rx="17" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" stroke-dasharray="4 5" data-stroke-role="inner" />
+    </g>
+    <g data-part="indicator" id="node_u2x2econtainers__container__indicator">
+      <circle cx="70" cy="69" r="5" fill="var(--icon-surface-contrast, #14213d)" />
+      <circle cx="70" cy="69" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" />
+    </g>
+  </g>
+</g></g>
+
+  <text x="622.8" y="676.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="622.8" dy="18" class="node-title">Container</tspan>
+<tspan x="622.8" dy="18" class="node-title">Workloads</tspan>
+<tspan x="622.8" dy="17" class="node-caption">replicated</tspan>
+<tspan x="622.8" dy="17" class="node-caption">services</tspan>
+</text>
+</g>
+
+<g id="node-stateful-data" class="node motion-node" data-role="memory" opacity="1">
+
+
+
+
+  <rect x="815.0" y="620.0" width="250.0" height="140.0" rx="14.0"
+        fill="#052e24" stroke="#34d399" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="database" data-node-id="stateful-data" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(825 644) scale(0.958333333333333)" data-icon="database" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2estateful_u2x2ddata__database__root"><g data-part="body" id="node_u2x2estateful_u2x2ddata__database__body">
+  <g data-part="shell" id="node_u2x2estateful_u2x2ddata__database__shell">
+    <rect x="20" y="18" width="56" height="66" rx="14" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="top-ring" id="node_u2x2estateful_u2x2ddata__database__top-ring">
+    <ellipse cx="48" cy="24" rx="28" ry="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+    <ellipse cx="48" cy="24" rx="18" ry="4.5" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-top" id="node_u2x2estateful_u2x2ddata__database__layer-top">
+    <path d="M 20.5 39 C 31 45 65 45 75.5 39" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-middle" id="node_u2x2estateful_u2x2ddata__database__layer-middle">
+    <path d="M 20.5 51 C 31 57 65 57 75.5 51" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="layer-bottom" id="node_u2x2estateful_u2x2ddata__database__layer-bottom">
+    <path d="M 24 78 C 34 81 62 81 72 78" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+  </g>
+  <g data-part="core" id="node_u2x2estateful_u2x2ddata__database__core">
+    <circle cx="48" cy="65" r="9.6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+  </g>
+  <g data-part="indicator" id="node_u2x2estateful_u2x2ddata__database__indicator">
+    <circle cx="48" cy="65" r="6.7" fill="var(--icon-surface-contrast, #14213d)" />
+    <circle cx="48" cy="65" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)" />
+  </g>
+  </g>
+</g></g>
+
+  <text x="987.8" y="676.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="987.8" dy="18" class="node-title">Stateful</tspan>
+<tspan x="987.8" dy="18" class="node-title">Data</tspan>
+<tspan x="987.8" dy="17" class="node-caption">persistent</tspan>
+<tspan x="987.8" dy="17" class="node-caption">production</tspan>
+</text>
+</g>
+
+<g id="node-observability" class="node motion-node" data-role="output" opacity="1">
+
+
+
+
+  <rect x="1180.0" y="620.0" width="250.0" height="140.0" rx="14.0"
+        fill="#052e16" stroke="#4ade80" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="monitoring" data-node-id="observability" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(1190 644) scale(0.958333333333333)" data-icon="monitoring" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2eobservability__monitoring__root"><g data-part="body" id="node_u2x2eobservability__monitoring__body">
+    <g data-part="shell" id="node_u2x2eobservability__monitoring__shell">
+      <rect x="12" y="19" width="72" height="58" rx="16" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
+      <path d="M 38 78 H 58" fill="none" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="outer" />
+    </g>
+    <g data-part="screen" id="node_u2x2eobservability__monitoring__screen">
+      <rect x="20" y="28" width="56" height="37" rx="10" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" data-stroke-role="inner" />
+    </g>
+    <g data-part="scanner" id="node_u2x2eobservability__monitoring__scanner">
+      <rect x="26" y="33" width="5" height="27" rx="2.5" fill="var(--icon-accent, #7c5ce7)" />
+      <path d="M 25 40 H 32" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner" />
+    </g>
+    <g data-part="metric-line" id="node_u2x2eobservability__monitoring__metric-line">
+      <path d="M 35 55 L 44 47 L 51 51 L 61 39 L 70 44" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="2.125" stroke-linecap="round" stroke-linejoin="round" data-stroke-role="outer" />
+      <circle cx="61" cy="39" r="3.5" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" data-stroke-role="inner" />
+    </g>
+    <g data-part="indicator" id="node_u2x2eobservability__monitoring__indicator">
+      <circle cx="72" cy="70" r="5" fill="var(--icon-surface-contrast, #14213d)" />
+      <circle cx="72" cy="70" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)" />
+    </g>
+  </g>
+</g></g>
+
+  <text x="1352.8" y="676.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="1352.8" dy="18" class="node-title">Observability</tspan>
+<tspan x="1352.8" dy="17" class="node-caption">metrics, logs,</tspan>
+<tspan x="1352.8" dy="17" class="node-caption">and alerts</tspan>
+</text>
+</g>
+</svg>

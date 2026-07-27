@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""Render the first narrow proof for the README showcase redesign.
+"""Render the approved curated showcase used by the GitHub README.
 
 The proof deliberately isolates the three presentation questions:
 
-* two README hero candidates;
+* three README hero cases;
 * one fixed semantic diagram rendered through three templates;
 * two topology-specific examples using one icon system and one template.
 
-It does not mutate either README.  The generated review page is the approval
-surface for deciding whether the wider README/gallery rebuild should proceed.
+The generated page remains a convenient visual QA surface for the tracked
+README assets.
 """
 
 from __future__ import annotations
@@ -29,6 +29,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from anidiagram.exporters import write_html, write_quality, write_svg
+from anidiagram.planner import compile_plan
 from anidiagram.quality import quality_report
 from anidiagram.renderer_svg import render_svg
 from anidiagram.schema import compile_scene
@@ -39,6 +40,14 @@ Spec = dict[str, Any]
 CANVAS = {"width": 1600, "height": 900}
 
 CASES = (
+    {
+        "id": "hero-loop-engineering",
+        "kind": "hero",
+        "label": "Hero · Layered Loop",
+        "style": "minimal-light",
+        "layout": "layered-loop",
+        "icon_system": "illustrated",
+    },
     {
         "id": "hero-governed-rag",
         "kind": "hero",
@@ -210,6 +219,11 @@ def _base_spec(
         "nodes": nodes,
         "edges": edges,
     }
+
+
+def _loop_engineering_spec() -> Spec:
+    plan = json.loads((ROOT / "examples" / "loop-engineering-minimal-light.plan.json").read_text(encoding="utf-8"))
+    return compile_plan(plan)
 
 
 def _hero_spec() -> Spec:
@@ -416,6 +430,7 @@ def _hub_spec() -> Spec:
 
 def build_specs() -> dict[str, Spec]:
     builders = {
+        "hero-loop-engineering": _loop_engineering_spec,
         "hero-governed-rag": _hero_spec,
         "hero-kubernetes-three-layer": _kubernetes_three_layer_spec,
         "template-agent-lifecycle-minimal-light": partial(_template_spec, "minimal-light"),
@@ -436,7 +451,7 @@ def _relative(path: Path, base: Path) -> str:
 
 def _review_page(entries: list[Spec]) -> str:
     groups = (
-        ("Hero candidates", "hero", "Compare a content-first RAG hero with a three-layer infrastructure hero."),
+        ("Hero showcase", "hero", "Lead with Loop Engineering, followed by governed RAG and three-layer infrastructure."),
         ("Template comparison", "template", "Identical semantics and geometry; only the template changes."),
         ("Layout comparison", "layout", "One icon system and one template; the topology matches the content."),
     )
@@ -449,7 +464,7 @@ def _review_page(entries: list[Spec]) -> str:
   <div class="card-head"><div><span>{escape(entry["label"])}</span><h3>{escape(entry["title"])}</h3></div>
   <code>{escape(entry["icon_system"])} · {escape(entry["style"])} · {escape(entry["layout"])}</code></div>
   <a class="preview" href="{escape(entry["html_name"])}" aria-label="Open animated {escape(entry["title"])}">
-    <img src="{escape(entry["preview_name"])}" alt="Static preview of {escape(entry["title"])}" width="1600" height="900">
+    <img src="{escape(entry["preview_name"])}" alt="Static preview of {escape(entry["title"])}" width="{entry["canvas"]["width"]}" height="{entry["canvas"]["height"]}">
   </a>
   <p class="links"><a href="{escape(entry["html_name"])}">Animated HTML</a><a href="{escape(entry["svg_name"])}">SVG</a><a href="{escape(entry["quality_name"])}">Quality</a><a href="{escape(entry["spec_relative"])}">DiagramScript</a></p>
 </article>'''
@@ -480,14 +495,14 @@ def _review_page(entries: list[Spec]) -> str:
     .card-head {{ display:flex; justify-content:space-between; gap:18px; align-items:flex-start; padding:20px 22px 16px; }} .card-head span {{ color:var(--accent); font-weight:750; font-size:13px; }}
     h3 {{ margin:5px 0 0; font-size:20px; letter-spacing:-.02em; }} code {{ color:#475467; font-size:12px; white-space:nowrap; }}
     .grid.template .card-head {{ display:block; }} .grid.template .card-head code {{ display:block; margin-top:10px; white-space:normal; }} .grid.template h3 {{ font-size:18px; }}
-    .preview {{ display:block; aspect-ratio:16/9; overflow:hidden; background:#e8edf5; border-block:1px solid var(--line); }} .preview img {{ display:block; width:100%; height:100%; object-fit:cover; }}
+    .preview {{ display:block; aspect-ratio:16/9; overflow:hidden; background:#e8edf5; border-block:1px solid var(--line); }} .preview img {{ display:block; width:100%; height:100%; object-fit:contain; }}
     .links {{ display:flex; gap:18px; flex-wrap:wrap; margin:0; padding:15px 22px 18px; }} .links a {{ color:#475467; font-size:13px; font-weight:700; text-decoration:none; }} .links a:hover {{ color:var(--accent); }}
     @media (max-width:1180px) {{ .grid.template {{ grid-template-columns:1fr; }} }}
     @media (max-width:900px) {{ .intro,section>header,.grid {{ grid-template-columns:1fr; }} section>header>span {{ margin-top:4px; }} .card-head {{ display:block; }} code {{ display:block; margin-top:10px; white-space:normal; }} }}
   </style>
 </head>
 <body><main>
-  <div class="intro"><div><p class="eyebrow">ANIDIAGRAM · NARROW VISUAL PROOF</p><h1>README Showcase · Round 1</h1></div><p>Seven approval candidates. The README remains untouched until this surface passes visual review.</p></div>
+  <div class="intro"><div><p class="eyebrow">ANIDIAGRAM · APPROVED CURATED SHOWCASE</p><h1>README Showcase · Round 1</h1></div><p>Eight approved showcase cases. This surface mirrors the GitHub README selection and order.</p></div>
   {''.join(sections)}
 </main></body></html>
 '''
@@ -541,17 +556,18 @@ def render_round(spec_root: Path, outdir: Path) -> Spec:
                 "html_name": html_path.name,
                 "quality_name": quality_path.name,
                 "quality_summary": summary,
+                "canvas": dict(spec["canvas"]),
             }
         )
 
     review_path = outdir / "readme-showcase-round-1.html"
     review_path.write_text(_review_page(entries), encoding="utf-8")
     manifest = {
-        "schema": "readme-showcase-proof-v1",
+        "schema": "readme-showcase-v1",
         "round": 1,
-        "status": "visual-review",
-        "readme_mutated": False,
-        "canvas": dict(CANVAS),
+        "status": "approved",
+        "readme_mutated": True,
+        "canvas_policy": "per-case",
         "quality_summary": combined,
         "review_page": _relative(review_path, base),
         "cases": [

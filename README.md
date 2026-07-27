@@ -10,29 +10,27 @@ images, generated assets, or repository history from the projects listed in
 
 ## Showcase
 
-AniDiagram uses two complementary galleries:
+The README uses eight approved cases from the Round 1 review surface. The full
+13-style and 16-layout catalogs remain available in the gallery without making
+the README itself exhaustive.
 
-- **Style Showcase**: 13 signature cases, one for every public visual style. This
-  answers "how can it look?"
-- **Layout Showcase**: 16 teaching cases, one for every clean-room layout
-  preset. This answers "when should I use this layout?"
+- **Hero Showcase**: three architecture stories, led by Loop Engineering.
+- **Template Showcase**: one semantic diagram rendered through three styles.
+- **Layout Showcase**: two topology-specific examples.
 
-Gallery source: `gallery/index.html`
-Machine-readable manifest: [gallery/showcase_manifest.json](./gallery/showcase_manifest.json)
-Runtime motion management: [gallery/runtime-motion.html](./gallery/runtime-motion.html)
-Catalog source of truth: [runtime/motion-catalog.json](./runtime/motion-catalog.json)
+Full gallery: [gallery/index.html](./gallery/index.html) ·
+[all styles](./gallery/styles/index.html) · [all layouts](./gallery/layouts/index.html) ·
+[runtime motion](./gallery/runtime-motion.html)
 
-The README hero uses a browser-captured animated preview from the GSAP runtime,
-so the first viewport can show the high-fidelity motion directly on GitHub.
-The style and layout grids keep lightweight SVG previews for readability and
-page weight. Interactive `.html` runtime pages need to be served by a static
-host such as GitHub Pages, or opened through a local static server.
+### Hero Showcase
 
-### Hero Demo
-
-| Agent Runtime Flow |
+| Loop Engineering Operating Architecture |
 | --- |
-| [![Agent Runtime Flow](./gallery/previews/agent-runtime-flow.webp)](./gallery/previews/agent-runtime-flow.mp4)<br>Browser-captured `illustrated` 2.5 runtime preview using the composition-v1 default: a focal agent branches into retrieval/memory, policy verification, and tool/API paths before converging on the output.<br>[GIF](./gallery/previews/agent-runtime-flow.gif) · [APNG](./gallery/previews/agent-runtime-flow.apng) · Runtime HTML: `gallery/hero/agent-runtime-flow.html` |
+| [![Loop Engineering Operating Architecture](./gallery/readme-showcase/hero-loop-engineering.preview.svg)](./gallery/readme-showcase/hero-loop-engineering.svg)<br>`illustrated` 2.5 · `minimal-light` · `layered-loop`<br>A governed engineering loop arranged as three operating layers with external state feeding the next cycle. |
+
+| Governed RAG Production Architecture | Kubernetes Production Architecture |
+| --- | --- |
+| [![Governed RAG Production Architecture](./gallery/readme-showcase/hero-governed-rag.preview.svg)](./gallery/readme-showcase/hero-governed-rag.svg)<br>`illustrated` 2.5 · `minimal-light` · `layered` | [![Kubernetes Production Architecture](./gallery/readme-showcase/hero-kubernetes-three-layer.preview.svg)](./gallery/readme-showcase/hero-kubernetes-three-layer.svg)<br>`diagram-core-v1` · `deep-tech` · three explicit layers |
 
 To open the interactive runtime locally:
 
@@ -40,82 +38,24 @@ To open the interactive runtime locally:
 python3 -m http.server 8765
 ```
 
-Then visit `http://127.0.0.1:8765/gallery/hero/agent-runtime-flow.html`.
+Then visit `http://127.0.0.1:8765/gallery/readme-showcase/readme-showcase-round-1.html`.
 When publishing with GitHub Pages, link README buttons to the Pages URL instead
 of GitHub's `blob` file view.
 
-### Style Showcase
+### Template Showcase
 
-Each bundled style has a clean-room signature case plus rendered SVG/HTML
-assets. README cards link to portable SVG previews; serve `gallery/` locally or
-through GitHub Pages to open the high-fidelity HTML runtime.
+The semantic content and geometry stay fixed while only the public style
+changes, making the visual-system differences directly comparable.
 
-| `minimal-light` | `deep-tech` |
-| --- | --- |
-| [![minimal-light style showcase](./gallery/styles/minimal-light.svg)](./gallery/styles/minimal-light.svg)<br>Customer Support Triage | [![deep-tech style showcase](./gallery/styles/deep-tech.svg)](./gallery/styles/deep-tech.svg)<br>Realtime AI Ops Mesh |
-
-| `blueprint` | `flat-icon` |
-| --- | --- |
-| [![blueprint style showcase](./gallery/styles/blueprint.svg)](./gallery/styles/blueprint.svg)<br>MCP Server Architecture | [![flat-icon style showcase](./gallery/styles/flat-icon.svg)](./gallery/styles/flat-icon.svg)<br>Feature Priority Board |
-
-| `dark-terminal` | `notion-clean` |
-| --- | --- |
-| [![dark-terminal style showcase](./gallery/styles/dark-terminal.svg)](./gallery/styles/dark-terminal.svg)<br>Incident Response Runbook | [![notion-clean style showcase](./gallery/styles/notion-clean.svg)](./gallery/styles/notion-clean.svg)<br>Product Discovery Workflow |
-
-| `glassmorphism` | `claude-warm` |
-| --- | --- |
-| [![glassmorphism style showcase](./gallery/styles/glassmorphism.svg)](./gallery/styles/glassmorphism.svg)<br>AI Growth Funnel | [![claude-warm style showcase](./gallery/styles/claude-warm.svg)](./gallery/styles/claude-warm.svg)<br>Research Reasoning Loop |
-
-| `openai-minimal` | `dark-luxury` |
-| --- | --- |
-| [![openai-minimal style showcase](./gallery/styles/openai-minimal.svg)](./gallery/styles/openai-minimal.svg)<br>Evaluation Pipeline | [![dark-luxury style showcase](./gallery/styles/dark-luxury.svg)](./gallery/styles/dark-luxury.svg)<br>Executive Signal Network |
-
-| `aurora-orb` | `sketch-board` |
-| --- | --- |
-| [![aurora-orb style showcase](./gallery/styles/aurora-orb.svg)](./gallery/styles/aurora-orb.svg)<br>Creative Agent Studio | [![sketch-board style showcase](./gallery/styles/sketch-board.svg)](./gallery/styles/sketch-board.svg)<br>Attention Teaching Flow |
-
-Additional public style: [`illustrated-semantic` — Semantic Delivery Pipeline](./gallery/styles/illustrated-semantic.svg).
-
-Full style showcase source: `gallery/styles/index.html`
+| Minimal Light | Deep Tech | Claude Warm |
+| --- | --- | --- |
+| [![Production AI Agent Request Lifecycle in Minimal Light](./gallery/readme-showcase/template-agent-lifecycle-minimal-light.preview.svg)](./gallery/readme-showcase/template-agent-lifecycle-minimal-light.svg)<br>Quiet, documentation-first clarity | [![Production AI Agent Request Lifecycle in Deep Tech](./gallery/readme-showcase/template-agent-lifecycle-deep-tech.preview.svg)](./gallery/readme-showcase/template-agent-lifecycle-deep-tech.svg)<br>High-contrast technical presentation | [![Production AI Agent Request Lifecycle in Claude Warm](./gallery/readme-showcase/template-agent-lifecycle-claude-warm.preview.svg)](./gallery/readme-showcase/template-agent-lifecycle-claude-warm.svg)<br>Warm reasoning and teaching tone |
 
 ### Layout Showcase
 
-Each layout preset has a concrete AI/product case that demonstrates when the
-layout is useful.
-
-| `pipeline` | `loop` |
+| Enterprise RAG Ingestion Pipeline | MCP Tool Orchestration Hub |
 | --- | --- |
-| [![pipeline layout showcase](./gallery/layouts/pipeline.svg)](./gallery/layouts/pipeline.svg)<br>RAG Ingestion Pipeline | [![loop layout showcase](./gallery/layouts/loop.svg)](./gallery/layouts/loop.svg)<br>Agent Reflection Loop |
-
-| `hub-spoke` | `layered` |
-| --- | --- |
-| [![hub-spoke layout showcase](./gallery/layouts/hub-spoke.svg)](./gallery/layouts/hub-spoke.svg)<br>Agent Tool Hub | [![layered layout showcase](./gallery/layouts/layered.svg)](./gallery/layouts/layered.svg)<br>LLM App Architecture Layers |
-
-| `swimlane` | `compare` |
-| --- | --- |
-| [![swimlane layout showcase](./gallery/layouts/swimlane.svg)](./gallery/layouts/swimlane.svg)<br>Human-in-the-loop Approval Flow | [![compare layout showcase](./gallery/layouts/compare.svg)](./gallery/layouts/compare.svg)<br>RAG vs Agentic RAG |
-
-| `matrix` | `timeline` |
-| --- | --- |
-| [![matrix layout showcase](./gallery/layouts/matrix.svg)](./gallery/layouts/matrix.svg)<br>AI Feature Priority Matrix | [![timeline layout showcase](./gallery/layouts/timeline.svg)](./gallery/layouts/timeline.svg)<br>AI Product Launch Roadmap |
-
-| `stack` | `funnel` |
-| --- | --- |
-| [![stack layout showcase](./gallery/layouts/stack.svg)](./gallery/layouts/stack.svg)<br>AI Runtime Stack | [![funnel layout showcase](./gallery/layouts/funnel.svg)](./gallery/layouts/funnel.svg)<br>Lead-to-Agent Automation Funnel |
-
-| `sequence` | `er` |
-| --- | --- |
-| [![sequence layout showcase](./gallery/layouts/sequence.svg)](./gallery/layouts/sequence.svg)<br>API Tool Calling Sequence | [![er layout showcase](./gallery/layouts/er.svg)](./gallery/layouts/er.svg)<br>Agent Memory Data Model |
-
-| `network` | `agent-memory` |
-| --- | --- |
-| [![network layout showcase](./gallery/layouts/network.svg)](./gallery/layouts/network.svg)<br>Distributed Agent Runtime Mesh | [![agent-memory layout showcase](./gallery/layouts/agent-memory.svg)](./gallery/layouts/agent-memory.svg)<br>Personalized Agent Memory Flow |
-
-| `agent-loop` | `layered-loop` |
-| --- | --- |
-| [![agent-loop layout showcase](./gallery/layouts/agent-loop.svg)](./gallery/layouts/agent-loop.svg)<br>Agent Loop Runtime Architecture | [![layered-loop layout showcase](./gallery/layouts/layered-loop.svg)](./gallery/layouts/layered-loop.svg)<br>Loop Engineering Operating Architecture |
-
-Full layout showcase source: `gallery/layouts/index.html`
+| [![Enterprise RAG Ingestion Pipeline](./gallery/readme-showcase/layout-enterprise-rag-pipeline.preview.svg)](./gallery/readme-showcase/layout-enterprise-rag-pipeline.svg)<br>`pipeline` · sequential transformation and retrieval | [![MCP Tool Orchestration Hub](./gallery/readme-showcase/layout-mcp-tool-hub.preview.svg)](./gallery/readme-showcase/layout-mcp-tool-hub.svg)<br>`hub-spoke` · one orchestrator coordinating multiple capabilities |
 
 ### Runtime Motion Showcase
 

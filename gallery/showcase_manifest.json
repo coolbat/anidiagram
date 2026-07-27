@@ -2410,5 +2410,11 @@
         "issues": 0
       }
     }
-  ]
+  ],
+  "readme_showcase": {
+    "status": "approved",
+    "case_count": 8,
+    "review_page": "gallery/readme-showcase/readme-showcase-round-1.html",
+    "manifest": "gallery/readme-showcase/manifest.json"
+  }
 }

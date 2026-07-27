@@ -261,6 +261,15 @@ class ShowcaseGalleryTest(unittest.TestCase):
         self.assertEqual(16, len(manifest["layouts"]))
         self.assertEqual("runtime/motion-catalog.json", manifest["runtime_motion_catalog"])
         self.assertEqual("gallery/runtime-motion.html", manifest["runtime_motion_page"])
+        self.assertEqual(
+            {
+                "status": "approved",
+                "case_count": 8,
+                "review_page": "gallery/readme-showcase/readme-showcase-round-1.html",
+                "manifest": "gallery/readme-showcase/manifest.json",
+            },
+            manifest["readme_showcase"],
+        )
         self.assertEqual("illustrated", manifest["hero"]["icon_system"])
         self.assertTrue(all(entry["icon_system"] == "illustrated" for entry in manifest["styles"]))
         self.assertTrue(all(entry["icon_system"] == "illustrated" for entry in manifest["layouts"]))
@@ -325,17 +334,42 @@ class ShowcaseGalleryTest(unittest.TestCase):
                 summary = json.loads((ROOT / entry["quality"]).read_text(encoding="utf-8"))["summary"]
                 self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, summary)
 
-    def test_style_showcases_use_two_column_readme_and_gallery_grids(self):
+    def test_readmes_use_the_approved_curated_showcase_in_order(self):
         for relative in ("README.md", "README.zh-CN.md"):
             source = (ROOT / relative).read_text(encoding="utf-8")
-            style_section = source.split("### Style Showcase", 1)[1].split("### Layout Showcase", 1)[0]
-            header_rows = [
-                line
-                for line in style_section.splitlines()
-                if line.startswith("| `") and line.endswith(" |")
+            expected = [
+                "hero-loop-engineering",
+                "hero-governed-rag",
+                "hero-kubernetes-three-layer",
+                "template-agent-lifecycle-minimal-light",
+                "template-agent-lifecycle-deep-tech",
+                "template-agent-lifecycle-claude-warm",
+                "layout-enterprise-rag-pipeline",
+                "layout-mcp-tool-hub",
             ]
-            self.assertEqual(6, len(header_rows), relative)
-            self.assertTrue(all(row.count("|") == 3 for row in header_rows), relative)
+            positions = [source.index(f"gallery/readme-showcase/{case_id}.preview.svg") for case_id in expected]
+            self.assertEqual(sorted(positions), positions, relative)
+            self.assertNotIn("gallery/previews/agent-runtime-flow.webp", source)
+            self.assertNotIn("gallery/styles/minimal-light.svg", source)
+            self.assertNotIn("gallery/layouts/pipeline.svg", source)
+            for case_id in expected:
+                self.assertIn(
+                    f"](./gallery/readme-showcase/{case_id}.svg)",
+                    source,
+                    f"{relative}: {case_id} GitHub preview link",
+                )
+                self.assertNotIn(
+                    f"](./gallery/readme-showcase/{case_id}.html)",
+                    source,
+                    f"{relative}: {case_id} source-page link",
+                )
+                for suffix in ("preview.svg", "html", "quality.json"):
+                    self.assertTrue(
+                        (ROOT / "gallery" / "readme-showcase" / f"{case_id}.{suffix}").is_file(),
+                        f"{relative}: {case_id}.{suffix}",
+                    )
+
+    def test_full_gallery_builders_keep_two_column_style_grids(self):
 
         build_showcase = (ROOT / "scripts" / "build_showcase.py").read_text(encoding="utf-8")
         style_builder = (ROOT / "scripts" / "build_style_showcase.py").read_text(encoding="utf-8")

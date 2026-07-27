@@ -50,7 +50,12 @@ async function main() {
     assert(review.articles === manifest.cases.length, `review articles: ${review.articles}/${manifest.cases.length}`);
     assert(review.images.length === manifest.cases.length, `review images: ${review.images.length}/${manifest.cases.length}`);
     review.images.forEach(([width, height], index) => {
-      if (width !== 1600 || height !== 900) report.overflow.push(`review image ${index + 1}: ${width}x${height}`);
+      const expected = manifest.cases[index].canvas;
+      if (width !== expected.width || height !== expected.height) {
+        report.overflow.push(
+          `review image ${index + 1}: ${width}x${height}, expected ${expected.width}x${expected.height}`
+        );
+      }
     });
     if (review.pageOverflow) report.overflow.push("review page: horizontal overflow");
     review.cardOverflow.forEach((caseId) => report.overflow.push(`${caseId}: card overflow`));
@@ -93,7 +98,10 @@ async function main() {
           pageOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
         };
       });
-      assert(state.width === 1600 && state.height === 900, `${entry.id}: SVG is ${state.width}x${state.height}`);
+      assert(
+        state.width === entry.canvas.width && state.height === entry.canvas.height,
+        `${entry.id}: SVG is ${state.width}x${state.height}, expected ${entry.canvas.width}x${entry.canvas.height}`
+      );
       assert(state.motionProfile === "showcase-v1", `${entry.id}: motion profile is ${state.motionProfile}`);
       assert(state.nodes === state.icons, `${entry.id}: nodes/icons ${state.nodes}/${state.icons}`);
       assert(state.edges === state.motionEdges, `${entry.id}: edges/manifest ${state.edges}/${state.motionEdges}`);
