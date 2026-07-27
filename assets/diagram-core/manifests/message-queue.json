@@ -1,0 +1,18 @@
+{
+  "id": "message-queue",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "network-interfaces",
+  "semantic_kind": "message-queue",
+  "structural_prototype": "conveyor-message-queue",
+  "parts": ["body", "shell", "message-a", "message-b", "message-c", "consumer", "indicator"],
+  "attachments": {
+    "receive": {"x": 9, "y": 48},
+    "send": {"x": 88, "y": 48},
+    "status": {"x": 24, "y": 67}
+  },
+  "states": [],
+  "actions": ["receive", "queue", "consume", "send"],
+  "status": "visual-review"
+}

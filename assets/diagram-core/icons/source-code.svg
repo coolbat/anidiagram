@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Source editor panel icon" data-icon="source-code">
+  <g data-part="body">
+    <g data-part="shell">
+      <rect x="13" y="18" width="70" height="60" rx="12" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+      <path d="M 14 32 H 82" fill="none" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="outer"/>
+      <circle cx="23" cy="25" r="2.5" fill="var(--icon-accent, #7c5ce7)"/>
+      <circle cx="31" cy="25" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+    <g data-part="cursor">
+      <rect x="67" y="57" width="3" height="12" rx="1.5" fill="var(--icon-accent, #7c5ce7)"/>
+    </g>
+    <g data-part="code-lines">
+      <path d="M 35 42 H 58" fill="none" stroke="var(--icon-accent, #7c5ce7)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="outer"/>
+      <path d="M 40 50 H 69" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="outer"/>
+      <path d="M 35 59 H 57" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+      <path d="M 40 67 H 60" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="gutter">
+      <path d="M 29 34 V 72" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+      <circle cx="23" cy="42" r="2.5" fill="var(--icon-surface-recessed, #dfe5ec)"/>
+      <circle cx="23" cy="54" r="2.5" fill="var(--icon-surface-recessed, #dfe5ec)"/>
+      <circle cx="23" cy="66" r="2.5" fill="var(--icon-surface-recessed, #dfe5ec)"/>
+    </g>
+    <g data-part="indicator">
+      <circle cx="72" cy="72" r="5" fill="var(--icon-surface-contrast, #14213d)"/>
+      <circle cx="72" cy="72" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+  </g>
+</svg>

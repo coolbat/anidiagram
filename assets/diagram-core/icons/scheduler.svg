@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Timed task scheduler icon" data-icon="scheduler">
+  <g data-part="body">
+    <rect x="11" y="20" width="74" height="57" rx="18" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <g data-part="clock">
+      <circle cx="34" cy="48" r="17" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+      <circle cx="34" cy="48" r="3" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+    <g data-part="hand">
+      <path d="M 34 48 V 38 M 34 48 L 42 53" fill="none" stroke="var(--icon-accent, #7c5ce7)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="outer"/>
+    </g>
+    <g data-part="task-card">
+      <rect x="56" y="34" width="22" height="27" rx="7" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+      <path d="M 61 44 H 72 M 61 51 H 69" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="trigger">
+      <circle cx="67" cy="29" r="5" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" data-stroke-role="inner"/>
+      <path d="M 67 24 V 20" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="indicator">
+      <circle cx="72" cy="70" r="5" fill="var(--icon-surface-contrast, #14213d)"/>
+      <circle cx="72" cy="70" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+  </g>
+</svg>

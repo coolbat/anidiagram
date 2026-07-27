@@ -37,6 +37,10 @@ from anidiagram.styles import load_style
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSET_VALIDATOR = ROOT / "scripts" / "validate_diagram_core_assets.py"
+IMPLEMENTED_ICON_IDS = frozenset(
+    path.stem
+    for path in (ROOT / "assets" / "diagram-core" / "manifests").glob("*.json")
+)
 
 
 def run_asset_validator(*arguments):
@@ -72,15 +76,18 @@ def replace_file_text(path, old, new):
 
 
 def promote_benchmark_assets(asset_root):
-    benchmark_ids = {"agent", "database", "api", "server"}
+    catalog = json.loads((asset_root / "catalog.json").read_text(encoding="utf-8"))
+    implemented_ids = {
+        entry["id"] for entry in catalog["icons"] if entry["status"] != "planned"
+    }
 
     def promote_catalog(catalog):
         for entry in catalog["icons"]:
-            if entry["id"] in benchmark_ids:
+            if entry["id"] in implemented_ids:
                 entry["status"] = "approved"
 
     mutate_json_file(asset_root / "catalog.json", promote_catalog)
-    for icon_id in sorted(benchmark_ids):
+    for icon_id in sorted(implemented_ids):
         mutate_json_file(
             asset_root / "manifests" / (icon_id + ".json"),
             lambda manifest: manifest.__setitem__("status", "approved"),
@@ -2573,16 +2580,16 @@ class DiagramCoreTokenTest(unittest.TestCase):
 
 
 class DiagramCoreAssetValidatorCLITest(unittest.TestCase):
-    def test_review_mode_reports_clean_four_icon_set(self):
+    def test_review_mode_reports_clean_implemented_icon_set(self):
         result = run_asset_validator("--review", "--json")
 
         self.assertEqual(0, result.returncode, result.stderr)
         report = json.loads(result.stdout)
         self.assertEqual(56, report["catalog"])
         self.assertEqual(13, report["legacy_valid"])
-        self.assertEqual(4, report["visual_review"])
-        self.assertEqual(4, report["svg"])
-        self.assertEqual(4, report["manifests"])
+        self.assertEqual(len(IMPLEMENTED_ICON_IDS), report["visual_review"])
+        self.assertEqual(len(IMPLEMENTED_ICON_IDS), report["svg"])
+        self.assertEqual(len(IMPLEMENTED_ICON_IDS), report["manifests"])
         self.assertEqual(0, report["errors"])
 
     def test_review_report_includes_real_metrics_and_contrast_checks(self):
@@ -2592,19 +2599,14 @@ class DiagramCoreAssetValidatorCLITest(unittest.TestCase):
         self.assertEqual("", result.stderr)
         report = json.loads(result.stdout)
         self.assertEqual(0, report["approved"])
-        self.assertEqual(52, report["planned"])
-        self.assertEqual(
-            {"agent": 12, "api": 9, "database": 9, "server": 12},
-            report["paintable_elements_by_icon"],
-        )
-        self.assertEqual(
-            {"agent": 2171, "api": 1742, "database": 1768, "server": 2219},
-            report["raw_bytes_by_icon"],
-        )
-        self.assertEqual(
-            {"agent": 596, "api": 536, "database": 528, "server": 550},
-            report["gzip_bytes_by_icon"],
-        )
+        self.assertEqual(56 - len(IMPLEMENTED_ICON_IDS), report["planned"])
+        self.assertEqual(IMPLEMENTED_ICON_IDS, set(report["paintable_elements_by_icon"]))
+        for icon_id, expected in {"agent": 12, "api": 9, "database": 9, "server": 12}.items():
+            self.assertEqual(expected, report["paintable_elements_by_icon"][icon_id])
+        for icon_id, expected in {"agent": 2171, "api": 1742, "database": 1768, "server": 2219}.items():
+            self.assertEqual(expected, report["raw_bytes_by_icon"][icon_id])
+        for icon_id, expected in {"agent": 596, "api": 536, "database": 528, "server": 550}.items():
+            self.assertEqual(expected, report["gzip_bytes_by_icon"][icon_id])
         self.assertEqual(4, report["contrast_checks"])
         self.assertEqual(0, report["warnings"])
 
@@ -2720,14 +2722,14 @@ class DiagramCoreAssetValidatorCLITest(unittest.TestCase):
             "\n".join(report["error_details"]),
         )
 
-    def test_strict_mode_fails_cleanly_until_all_benchmarks_are_approved(self):
+    def test_strict_mode_fails_cleanly_until_all_implemented_assets_are_approved(self):
         result = run_asset_validator("--strict", "--json")
 
         self.assertEqual(1, result.returncode)
         self.assertEqual("", result.stderr)
         report = json.loads(result.stdout)
         self.assertEqual(0, report["approved"])
-        self.assertEqual(4, report["visual_review"])
+        self.assertEqual(len(IMPLEMENTED_ICON_IDS), report["visual_review"])
         self.assertGreater(report["errors"], 0)
         self.assertIn("approved", "\n".join(report["error_details"]))
 
@@ -2738,15 +2740,8 @@ class DiagramCoreAssetValidatorCLITest(unittest.TestCase):
         self.assertEqual(0, json_result.returncode, json_result.stderr)
         self.assertEqual(0, human_result.returncode, human_result.stderr)
         self.assertEqual("", human_result.stderr)
-        self.assertEqual(
-            "catalog=56 legacy_valid=13 approved=0 visual_review=4 "
-            "planned=52 svg=4 manifests=4 "
-            'paintable_elements_by_icon={"agent":12,"api":9,"database":9,"server":12} '
-            'raw_bytes_by_icon={"agent":2171,"api":1742,"database":1768,"server":2219} '
-            'gzip_bytes_by_icon={"agent":596,"api":536,"database":528,"server":550} '
-            "contrast_checks=4 errors=0 warnings=0\n",
-            human_result.stdout,
-        )
+        self.assertEqual(1, human_result.stdout.count("\n"))
+        self.assertTrue(human_result.stdout.startswith("catalog=56 legacy_valid=13 "))
         json_report = json.loads(json_result.stdout)
         human_report = {}
         for field in human_result.stdout.split():
@@ -2771,7 +2766,7 @@ class DiagramCoreAssetValidatorCLITest(unittest.TestCase):
         self.assertEqual(1, result.returncode)
         self.assertEqual("", result.stderr)
         report = json.loads(result.stdout)
-        self.assertEqual(5, report["svg"])
+        self.assertEqual(len(IMPLEMENTED_ICON_IDS) + 1, report["svg"])
         self.assertGreater(report["errors"], 0)
         self.assertIn("extra.svg", "\n".join(report["error_details"]))
 
@@ -2787,7 +2782,7 @@ class DiagramCoreAssetValidatorCLITest(unittest.TestCase):
         self.assertEqual(1, result.returncode)
         self.assertEqual("", result.stderr)
         report = json.loads(result.stdout)
-        self.assertEqual(3, report["manifests"])
+        self.assertEqual(len(IMPLEMENTED_ICON_IDS) - 1, report["manifests"])
         self.assertIn("server.json", "\n".join(report["error_details"]))
 
     def test_review_rejects_asset_file_symlinks(self):
@@ -2882,7 +2877,8 @@ class DiagramCoreAssetValidatorCLITest(unittest.TestCase):
         self.assertEqual(1, human_result.returncode)
         self.assertEqual(
             "catalog=0 legacy_valid=0 approved=0 visual_review=0 "
-            "planned=0 svg=4 manifests=4 paintable_elements_by_icon={} "
+            f"planned=0 svg={len(IMPLEMENTED_ICON_IDS)} "
+            f"manifests={len(IMPLEMENTED_ICON_IDS)} paintable_elements_by_icon={{}} "
             "raw_bytes_by_icon={} gzip_bytes_by_icon={} contrast_checks=0 "
             "errors=1 warnings=0\n",
             human_result.stdout,
@@ -2996,7 +2992,7 @@ class DiagramCoreAssetValidatorCLITest(unittest.TestCase):
         self.assertEqual(1, report["approved"])
         self.assertIn("user", "\n".join(report["error_details"]))
 
-    def test_strict_mode_passes_after_all_four_benchmarks_are_promoted(self):
+    def test_strict_mode_passes_after_all_implemented_assets_are_promoted(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             asset_root = copy_canonical_asset_root(temp_dir)
             promote_benchmark_assets(asset_root)
@@ -3008,7 +3004,7 @@ class DiagramCoreAssetValidatorCLITest(unittest.TestCase):
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertEqual("", result.stderr)
         report = json.loads(result.stdout)
-        self.assertEqual(4, report["approved"])
+        self.assertEqual(len(IMPLEMENTED_ICON_IDS), report["approved"])
         self.assertEqual(0, report["visual_review"])
         self.assertEqual(0, report["errors"])
 

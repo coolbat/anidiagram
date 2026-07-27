@@ -11,11 +11,69 @@
   }
 
   function resolveParts(parts) {
-    const resolved = {};
-    Object.entries(parts || {}).forEach(([key, selector]) => {
-      resolved[key] = document.querySelector(selector);
-    });
+    const resolved = Object.create(null);
+    if (!isPlainObject(parts)) return null;
+    let entries;
+    try {
+      entries = Object.entries(parts);
+    } catch (error) {
+      return null;
+    }
+    for (const [key, selector] of entries) {
+      if (!isSafePartName(key) || typeof selector !== "string" || !selector) return null;
+      let part;
+      try {
+        part = document.querySelector(selector);
+      } catch (error) {
+        return null;
+      }
+      if (!(part instanceof Element)) return null;
+      resolved[key] = part;
+    }
     return resolved;
+  }
+
+  function isSafePartName(name) {
+    return typeof name === "string"
+      && /^[a-z][A-Za-z0-9]*(?:-[a-z0-9]+)*$/.test(name)
+      && !["constructor", "prototype", "__proto__"].includes(name);
+  }
+
+  function resolveIconInstanceRoot(iconConfig, parts) {
+    if (!isPlainObject(iconConfig) || !parts) return null;
+    const partElements = Object.values(parts);
+    if (!partElements.length || partElements.some((part) => !(part instanceof Element))) return null;
+
+    let explicitRoot = Object.prototype.hasOwnProperty.call(parts, "root") ? parts.root : null;
+    if (Object.prototype.hasOwnProperty.call(iconConfig, "root")) {
+      if (typeof iconConfig.root !== "string" || !iconConfig.root) return null;
+      try {
+        explicitRoot = document.querySelector(iconConfig.root);
+      } catch (error) {
+        return null;
+      }
+      if (!(explicitRoot instanceof Element)) return null;
+    }
+
+    const strictPresentation = iconConfig.presentation_profile === "showcase";
+    if (strictPresentation) {
+      const roots = partElements.map((part) => part.closest("[data-icon][data-icon-presentation]"));
+      if (roots.some((root) => !(root instanceof Element))) return null;
+      const uniqueRoots = new Set(roots);
+      if (explicitRoot) uniqueRoots.add(explicitRoot);
+      if (uniqueRoots.size !== 1) return null;
+      const root = roots[0];
+      if (root.getAttribute("data-icon") !== iconConfig.icon) return null;
+      if (root.getAttribute("data-icon-presentation") !== iconConfig.presentation_profile) return null;
+      if (partElements.some((part) => !root.contains(part))) return null;
+      return root;
+    }
+
+    const root = explicitRoot || partElements[0].closest("[data-icon]");
+    if (!(root instanceof Element)) return null;
+    if (partElements.some((part) => !root.contains(part))) return null;
+    if (root.hasAttribute("data-icon") && root.getAttribute("data-icon") !== iconConfig.icon) return null;
+    return root;
   }
 
   function hasParts(parts, required) {
@@ -987,6 +1045,138 @@
     return timeline;
   }
 
+  const SHOWCASE_RECIPE_PROPERTIES = new Set(["x", "y", "rotate", "scale", "scaleX", "scaleY", "opacity"]);
+  const SHOWCASE_RECIPE_EASES = new Set([
+    "none",
+    "sine.in",
+    "sine.out",
+    "sine.inOut",
+    "power1.in",
+    "power1.out",
+    "power1.inOut",
+    "power2.in",
+    "power2.out",
+    "power2.inOut",
+    "power3.in",
+    "power3.out",
+    "power3.inOut",
+    "back.out(2.4)",
+    "back.out(2.8)",
+    "back.out(3)",
+    "back.out(3.5)",
+    "bounce.out",
+    "elastic.out(1, 0.35)",
+    "elastic.out(1, 0.4)",
+  ]);
+
+  function isPlainObject(value) {
+    return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+  }
+
+  function hasOnlyKeys(value, required, optional = []) {
+    if (!isPlainObject(value)) return false;
+    const allowed = new Set([...required, ...optional]);
+    const keys = Object.keys(value);
+    return required.every((key) => Object.prototype.hasOwnProperty.call(value, key))
+      && keys.every((key) => allowed.has(key));
+  }
+
+  function resolvedRecipePart(parts, name) {
+    if (!isSafePartName(name)) return null;
+    if (Object.prototype.hasOwnProperty.call(parts, name)) return parts[name];
+    const runtimeName = name.replace(/-([a-z0-9])/g, (_, character) => character.toUpperCase());
+    return Object.prototype.hasOwnProperty.call(parts, runtimeName)
+      ? parts[runtimeName]
+      : null;
+  }
+
+  function validRecipeProperty(name, value, rotationLimit) {
+    if (!SHOWCASE_RECIPE_PROPERTIES.has(name) || !Number.isFinite(value)) return false;
+    if ((name === "x" || name === "y") && Math.abs(value) > 10) return false;
+    if (name === "rotate" && Math.abs(value) > rotationLimit) return false;
+    if (["scale", "scaleX", "scaleY"].includes(name) && (value < 0.12 || value > 1.45)) return false;
+    if (name === "opacity" && (value < 0 || value > 1)) return false;
+    return true;
+  }
+
+  function validateShowcaseRecipe(config, parts) {
+    if (config.presentation_profile !== "showcase" || config.icon_system !== "diagram-core-v1") return null;
+    if (!hasOnlyKeys(config.recipe, ["tracks"])) return null;
+    if (!Number.isFinite(config.rest_at) || config.rest_at <= 0) return null;
+    const tracks = config.recipe.tracks;
+    if (!Array.isArray(tracks) || !tracks.length || tracks.length > 12) return null;
+    const compiled = [];
+    const seenTargets = new Set();
+    for (const track of tracks) {
+      if (!hasOnlyKeys(track, ["parts", "steps"])) return null;
+      if (!Array.isArray(track.parts) || !track.parts.length || track.parts.length > 4) return null;
+      if (track.parts.some((name) => typeof name !== "string") || new Set(track.parts).size !== track.parts.length) return null;
+      const targets = track.parts.map((name) => resolvedRecipePart(parts, name));
+      if (targets.some((target) => !target)) return null;
+      if (targets.some((target) => seenTargets.has(target))) return null;
+      targets.forEach((target) => seenTargets.add(target));
+      if (!Array.isArray(track.steps) || !track.steps.length || track.steps.length > 12) return null;
+      const rotationLimit = config.icon === "search"
+        && track.parts.length === 1
+        && track.parts[0] === "scan"
+        ? 360
+        : 14;
+      const steps = [];
+      for (const step of track.steps) {
+        if (!hasOnlyKeys(step, ["to", "duration", "ease", "at"], ["stagger"])) return null;
+        if (!isPlainObject(step.to) || !Object.keys(step.to).length) return null;
+        if (Object.entries(step.to).some(([name, value]) => !validRecipeProperty(name, value, rotationLimit))) return null;
+        if (!Number.isFinite(step.duration) || step.duration < 0.04 || step.duration > 0.8) return null;
+        if (!Number.isFinite(step.at) || step.at < 0) return null;
+        const stagger = step.stagger === undefined ? 0 : step.stagger;
+        if (!Number.isFinite(stagger) || stagger < 0 || stagger > 0.12) return null;
+        if (!SHOWCASE_RECIPE_EASES.has(step.ease)) return null;
+        if (step.at + step.duration + stagger * (targets.length - 1) > config.rest_at + 1e-9) return null;
+        steps.push(step);
+      }
+      compiled.push({ targets, steps });
+    }
+    return compiled;
+  }
+
+  function authoredRest(gsap, target) {
+    const number = (name, fallback) => {
+      const value = Number(gsap.getProperty(target, name));
+      return Number.isFinite(value) ? value : fallback;
+    };
+    return {
+      x: number("x", 0),
+      y: number("y", 0),
+      rotation: number("rotation", 0),
+      scaleX: number("scaleX", 1),
+      scaleY: number("scaleY", 1),
+      opacity: number("opacity", 1),
+    };
+  }
+
+  function playDeclarativeShowcase({ config, parts, gsap }) {
+    const compiled = validateShowcaseRecipe(config, parts);
+    if (!compiled) return null;
+    const targets = [...new Set(compiled.flatMap((track) => track.targets))];
+    const rest = new Map(targets.map((target) => [target, authoredRest(gsap, target)]));
+    setInitial(parts, gsap);
+    const tl = showcaseTimeline(gsap, config);
+    if (!tl) return null;
+    compiled.forEach((track) => {
+      track.steps.forEach((step) => {
+        const variables = {
+          ...step.to,
+          duration: step.duration,
+          ease: step.ease,
+        };
+        if (step.stagger !== undefined) variables.stagger = step.stagger;
+        tl.to(track.targets, variables, step.at);
+      });
+    });
+    targets.forEach((target) => tl.set(target, rest.get(target), config.rest_at));
+    return markShowcaseRest(tl, config);
+  }
+
   function playAgentShowcase({ config, parts, gsap }) {
     const required = ["body", "antenna", "eyeLeft", "eyeRight", "core"];
     if (!hasParts(parts, required)) return null;
@@ -1018,8 +1208,9 @@
     if (!tl) return null;
     tl.to(parts.topRing, { y: -8, scaleX: 1.13, scaleY: 0.88, duration: 0.26, ease: "power2.out" }, 0)
       .to(parts.topRing, { y: 0, scaleX: 1, scaleY: 1, duration: 0.34, ease: "bounce.out" }, 0.26)
-      .to(layers, { x: (index) => (index % 2 === 0 ? 6 : -6), scaleX: 1.08, duration: 0.18, stagger: 0.06, ease: "power2.out" }, 0.28)
-      .to(layers, { x: 0, scaleX: 1, duration: 0.3, stagger: 0.05, ease: "elastic.out(1, 0.4)" }, 0.58)
+      .to(layers, { y: -2, scaleX: 0.94, duration: 0.14, stagger: 0.07, ease: "power2.out" }, 0.28)
+      .to(layers, { y: 0, scaleX: 1.04, duration: 0.16, stagger: 0.07, ease: "power2.inOut" }, 0.48)
+      .to(layers, { scaleX: 1, duration: 0.18, stagger: 0.05, ease: "elastic.out(1, 0.4)" }, 0.68)
       .to(parts.core, { scale: 1.4, duration: 0.2, ease: "power2.out" }, 0.62)
       .to(parts.core, { scale: 1, duration: 0.3, ease: "elastic.out(1, 0.35)" }, 0.82);
     return markShowcaseRest(tl, config);
@@ -1115,9 +1306,10 @@
   ]);
 
   function playIcon(iconConfig) {
-    if (!window.gsap) return null;
+    if (!window.gsap || !isPlainObject(iconConfig)) return null;
     const fn = performances[iconConfig.performance];
     const parts = resolveParts(iconConfig.parts);
+    if (!parts || !resolveIconInstanceRoot(iconConfig, parts)) return null;
     const timelines = [];
     const illustrated = playIllustratedCommon(iconConfig, parts, window.gsap);
     if (illustrated) timelines.push(illustrated);
@@ -1133,6 +1325,9 @@
         }
         timelines.push(tl);
       }
+    } else if (iconConfig.recipe) {
+      const tl = playDeclarativeShowcase({ config: iconConfig, parts, gsap: window.gsap });
+      if (tl) timelines.push(tl);
     }
     timelines.forEach((tl) => {
       if (iconConfig.delay) tl.delay(iconConfig.delay);

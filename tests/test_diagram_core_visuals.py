@@ -48,6 +48,21 @@ FORBIDDEN_SVG_TAGS = {
 }
 
 
+def catalog_reviewable_icons():
+    catalog = json.loads(
+        (ROOT / "assets" / "diagram-core" / "catalog.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    return tuple(
+        entry["id"]
+        for entry in catalog["icons"]
+        if entry["status"] in {"visual-review", "approved"}
+        and (ROOT / "assets" / "diagram-core" / "icons" / (entry["id"] + ".svg")).is_file()
+        and (ROOT / "assets" / "diagram-core" / "manifests" / (entry["id"] + ".json")).is_file()
+    )
+
+
 def local_name(name):
     return name.rsplit("}", 1)[-1]
 
@@ -369,6 +384,67 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                 source[source.index('id="diagram-core-regression-grid"') :],
                 r"<text\b",
             )
+
+    def test_review_batch_layout_scales_to_five_and_seven_unique_icons(self):
+        token_source = contact_sheet_generator.token_css()
+        _, contexts = contact_sheet_generator._context_tokens(token_source)
+        reviewable = catalog_reviewable_icons()
+        self.assertGreaterEqual(len(reviewable), 7)
+        for icon_count in (5, 7):
+            icons = reviewable[:icon_count]
+            with self.subTest(icon_count=icon_count):
+                cells = contact_sheet_generator.build_contact_sheet_cells(icons)
+                self.assertEqual(icon_count * len(SIZES) * len(CONTEXTS), len(cells))
+                sheet = contact_sheet_generator.render_benchmark_contact_sheet(cells)
+                root = ElementTree.fromstring(sheet)
+                self.assertEqual(str(icon_count * len(SIZES)), root.attrib["data-grid-columns"])
+                self.assertEqual(str(len(CONTEXTS)), root.attrib["data-grid-rows"])
+                self.assertEqual(str(icon_count * 312), root.attrib["width"])
+                self.assertEqual("416", root.attrib["height"])
+                index = json.loads(contact_sheet_generator.render_cell_index(cells))
+                self.assertEqual(
+                    {
+                        "columns": icon_count * len(SIZES),
+                        "rows": len(CONTEXTS),
+                        "cells": icon_count * len(SIZES) * len(CONTEXTS),
+                    },
+                    index["grid"],
+                )
+                recognition = contact_sheet_generator.render_recognition_html(
+                    token_source,
+                    contexts,
+                    icons=icons,
+                )
+                audit = StaticGridHTMLAudit()
+                audit.feed(recognition)
+                self.assertEqual(icon_count * 4, len(audit.recognition_cells))
+                self.assertEqual(set(icons), {
+                    cell["data-icon-id"] for cell in audit.recognition_cells
+                })
+
+    def test_review_batch_icon_selection_is_catalog_driven_and_fail_closed(self):
+        reviewable = catalog_reviewable_icons()
+        self.assertEqual(
+            reviewable,
+            contact_sheet_generator.validated_review_icons(
+                ",".join(reviewable)
+            ),
+        )
+        with self.assertRaisesRegex(ValueError, "unique"):
+            contact_sheet_generator.validated_review_icons(
+                "{0},{0}".format(reviewable[0])
+            )
+        planned = "planned-review-probe"
+        synthetic_catalog = mock.Mock(
+            entries=(mock.Mock(icon_id=planned, status="planned"),)
+        )
+        with mock.patch.object(
+            contact_sheet_generator,
+            "load_catalog",
+            return_value=synthetic_catalog,
+        ):
+            with self.assertRaisesRegex(ValueError, "visual-review or approved"):
+                contact_sheet_generator.validated_review_icons(planned)
 
     def test_benchmark_and_static_pages_are_local_deterministic_and_noninteractive(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -885,6 +961,7 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
         relative_paths = (
             "package-lock.json",
             visual_comparator.INDEX_RELATIVE_PATH,
+            visual_comparator.CELL_INDEX_RELATIVE_PATH,
             *visual_comparator.SOURCE_ASSET_PATHS,
         )
         if include_script:
@@ -970,6 +1047,11 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
         image_size=CAPTURE_SIZE,
         repo_root=ROOT,
     ):
+        cell_index_path = repo_root / visual_comparator.CELL_INDEX_RELATIVE_PATH
+        cell_index_payload = json.loads(cell_index_path.read_text(encoding="utf-8"))
+        contact_sheet = visual_comparator.contact_sheet_specification(
+            cell_index_payload
+        )
         image_path = root / (stem + ".png")
         metadata_path = root / (stem + ".json")
         self.solid_image(image_size, color).save(image_path)
@@ -993,6 +1075,19 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
                     "height": image_size[1],
                 },
                 "cells": 48,
+            },
+            "contact_sheet": {
+                "cell_index": {
+                    "path": visual_comparator.CELL_INDEX_RELATIVE_PATH,
+                    "sha256": self.sha256(cell_index_path),
+                },
+                "grid": {
+                    key: contact_sheet[key]
+                    for key in ("columns", "rows", "cells")
+                },
+                "icons": list(contact_sheet["icons"]),
+                "sizes": list(contact_sheet["sizes"]),
+                "contexts": list(contact_sheet["contexts"]),
             },
             "capture": {
                 "timestamp_utc": "2026-07-16T00:00:00.000Z",
@@ -1180,8 +1275,8 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
             "top: 0 !important",
             "left: 0 !important",
             "data-cell-kind=\"regression\"",
-            "1248",
-            "416",
+            "contactSheetSpecification",
+            "cell_index",
             "source_assets",
             "joint_sha256",
             "catalog.json",
@@ -1201,6 +1296,71 @@ class DiagramCoreVisualReviewTest(unittest.TestCase):
         self.assertIn("javaScriptEnabled: false", source)
         self.assertIn("route.fulfill", source)
         self.assertIn("locator.screenshot", source)
+
+    def test_capture_specification_is_derived_from_generated_cell_index(self):
+        module_url = self.CAPTURE_SCRIPT.as_uri()
+        fixtures = []
+        reviewable = catalog_reviewable_icons()
+        self.assertGreaterEqual(len(reviewable), 7)
+        for icon_count in (5, 7):
+            cells = contact_sheet_generator.build_contact_sheet_cells(
+                reviewable[:icon_count]
+            )
+            fixtures.append(json.loads(contact_sheet_generator.render_cell_index(cells)))
+        program = """
+const { contactSheetSpecification } = await import(%s);
+if (typeof contactSheetSpecification !== "function") {
+  throw new Error("contact sheet specification export missing");
+}
+const fixtures = %s;
+for (const [index, fixture] of fixtures.entries()) {
+  const spec = contactSheetSpecification(fixture);
+  const iconCount = index === 0 ? 5 : 7;
+  if (spec.cells !== iconCount * 12) throw new Error(`wrong cells: ${spec.cells}`);
+  if (spec.columns !== iconCount * 3 || spec.rows !== 4) {
+    throw new Error(`wrong grid: ${JSON.stringify(spec)}`);
+  }
+  if (spec.icons.length !== iconCount) throw new Error(`wrong icons: ${spec.icons}`);
+}
+const duplicate = structuredClone(fixtures[0]);
+duplicate.cells[1].cell_id = duplicate.cells[0].cell_id;
+let failure;
+try {
+  contactSheetSpecification(duplicate);
+} catch (error) {
+  failure = error;
+}
+if (!failure || !failure.message.includes("unique")) {
+  throw new Error(`duplicate cell index was accepted: ${failure && failure.message}`);
+}
+""" % (json.dumps(module_url), json.dumps(fixtures))
+        result = subprocess.run(
+            ["node", "--input-type=module", "--eval", program],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=5,
+        )
+        self.assertEqual(0, result.returncode, result.stderr)
+
+    def test_comparator_specification_is_derived_from_generated_cell_index(self):
+        reviewable = catalog_reviewable_icons()
+        self.assertGreaterEqual(len(reviewable), 7)
+        for icon_count in (5, 7):
+            icons = reviewable[:icon_count]
+            cells = contact_sheet_generator.build_contact_sheet_cells(icons)
+            payload = json.loads(contact_sheet_generator.render_cell_index(cells))
+            specification = visual_comparator.contact_sheet_specification(payload)
+            self.assertEqual(icon_count * 12, specification["cells"])
+            self.assertEqual(icon_count * 3, specification["columns"])
+            self.assertEqual(4, specification["rows"])
+            self.assertEqual(icons, specification["icons"])
+
+        malformed = copy.deepcopy(payload)
+        malformed["cells"][1]["ordinal"] = 99
+        with self.assertRaisesRegex(VisualComparisonError, "ordinal"):
+            visual_comparator.contact_sheet_specification(malformed)
 
     def test_capture_stabilization_uses_two_bounded_compositor_frame_captures(self):
         module_url = self.CAPTURE_SCRIPT.as_uri()

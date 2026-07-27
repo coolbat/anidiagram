@@ -25,9 +25,6 @@ import { chromium } from "playwright";
 
 
 const LOCATOR = "#diagram-core-regression-grid";
-const EXPECTED_CELLS = 48;
-const EXPECTED_WIDTH = 1248;
-const EXPECTED_HEIGHT = 416;
 const VIEWPORT = Object.freeze({ width: 1280, height: 900 });
 const DEVICE_SCALE_FACTOR = 1;
 const PLAYWRIGHT_OPERATION_TIMEOUT_MS = 10_000;
@@ -35,18 +32,9 @@ const CAPTURE_SESSION_TIMEOUT_MS = 12_000;
 const CAPTURE_CLEANUP_TIMEOUT_MS = 5_000;
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const INDEX_RELATIVE_PATH = "gallery/diagram-core/index.html";
+const CELL_INDEX_RELATIVE_PATH = "gallery/diagram-core/cell-index.json";
 const require = createRequire(import.meta.url);
 const PLAYWRIGHT_VERSION = require("playwright/package.json").version;
-const SOURCE_ASSET_PATHS = Object.freeze(
-  [
-    "assets/diagram-core/catalog.json",
-    "assets/diagram-core/tokens.css",
-    ...["agent", "api", "database", "server"].flatMap((iconId) => [
-      `assets/diagram-core/icons/${iconId}.svg`,
-      `assets/diagram-core/manifests/${iconId}.json`,
-    ]),
-  ].sort(),
-);
 const CAPTURE_CONTENT_SECURITY_POLICY = [
   "default-src 'none'",
   "style-src 'unsafe-inline'",
@@ -86,6 +74,7 @@ function usage() {
   return [
     "Usage: node scripts/capture_diagram_core_contact_sheet.mjs \\",
     "  --input gallery/diagram-core/index.html \\",
+    "  --cell-index gallery/diagram-core/cell-index.json \\",
     "  --output build/diagram-core/benchmark.local.png \\",
     "  --metadata build/diagram-core/benchmark.local.capture.json",
   ].join("\n");
@@ -94,7 +83,8 @@ function usage() {
 
 function parseArguments(argumentsList) {
   const values = new Map();
-  const allowed = new Set(["--input", "--output", "--metadata"]);
+  const allowed = new Set(["--input", "--cell-index", "--output", "--metadata"]);
+  const required = new Set(["--input", "--output", "--metadata"]);
   for (let index = 0; index < argumentsList.length; index += 2) {
     const option = argumentsList[index];
     const value = argumentsList[index + 1];
@@ -106,16 +96,118 @@ function parseArguments(argumentsList) {
     }
     values.set(option, value);
   }
-  for (const option of allowed) {
+  for (const option of required) {
     if (!values.has(option)) {
       throw new UsageError(`missing required option: ${option}\n${usage()}`);
     }
   }
   return {
     input: path.resolve(REPO_ROOT, values.get("--input")),
+    cellIndex: path.resolve(
+      REPO_ROOT,
+      values.get("--cell-index") || CELL_INDEX_RELATIVE_PATH,
+    ),
     output: path.resolve(REPO_ROOT, values.get("--output")),
     metadata: path.resolve(REPO_ROOT, values.get("--metadata")),
   };
+}
+
+
+function exactObjectKeys(value, keys, label) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new Error(`${label} must be an object`);
+  }
+  const actual = Object.keys(value).sort();
+  const expected = [...keys].sort();
+  if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+    throw new Error(`${label} must contain exactly ${expected.join(",")}`);
+  }
+}
+
+
+function positiveInteger(value, label) {
+  if (!Number.isInteger(value) || value <= 0) {
+    throw new Error(`${label} must be a positive integer`);
+  }
+  return value;
+}
+
+
+export function contactSheetSpecification(payload) {
+  exactObjectKeys(payload, ["version", "grid", "cells"], "cell index");
+  if (payload.version !== 1) throw new Error("cell index version must be 1");
+  exactObjectKeys(payload.grid, ["columns", "rows", "cells"], "cell index grid");
+  const columns = positiveInteger(payload.grid.columns, "cell index grid.columns");
+  const rows = positiveInteger(payload.grid.rows, "cell index grid.rows");
+  const cells = positiveInteger(payload.grid.cells, "cell index grid.cells");
+  if (!Array.isArray(payload.cells) || payload.cells.length !== cells) {
+    throw new Error("cell index cells must match grid.cells");
+  }
+  const cellIds = new Set();
+  const icons = [];
+  const sizes = [];
+  const contexts = [];
+  for (const [ordinal, cell] of payload.cells.entries()) {
+    exactObjectKeys(
+      cell,
+      ["ordinal", "cell_id", "icon_id", "size", "context", "pose"],
+      `cell index cells[${ordinal}]`,
+    );
+    if (cell.ordinal !== ordinal) throw new Error("cell index ordinal sequence is invalid");
+    for (const key of ["cell_id", "icon_id", "context", "pose"]) {
+      if (typeof cell[key] !== "string" || cell[key].length === 0) {
+        throw new Error(`cell index ${key} must be a nonempty string`);
+      }
+    }
+    if (!Number.isInteger(cell.size) || cell.size <= 0) {
+      throw new Error("cell index size must be a positive integer");
+    }
+    if (cellIds.has(cell.cell_id)) throw new Error("cell index cell_id values must be unique");
+    cellIds.add(cell.cell_id);
+    if (!icons.includes(cell.icon_id)) icons.push(cell.icon_id);
+    if (!sizes.includes(cell.size)) sizes.push(cell.size);
+    if (!contexts.includes(cell.context)) contexts.push(cell.context);
+    if (cell.pose !== "authored-rest") throw new Error("cell index pose must be authored-rest");
+  }
+  if (icons.length === 0 || new Set(icons).size !== icons.length) {
+    throw new Error("cell index icons must be unique");
+  }
+  if (sizes.length !== 3 || contexts.length !== 4) {
+    throw new Error("cell index must contain three sizes and four contexts");
+  }
+  if (columns !== icons.length * sizes.length || rows !== contexts.length) {
+    throw new Error("cell index grid does not match its icon, size, and context axes");
+  }
+  const expected = [];
+  for (const context of contexts) {
+    for (const iconId of icons) {
+      for (const size of sizes) expected.push([iconId, size, context]);
+    }
+  }
+  const actual = payload.cells.map((cell) => [cell.icon_id, cell.size, cell.context]);
+  if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+    throw new Error("cell index cells are not the canonical row-major product");
+  }
+  return Object.freeze({
+    columns,
+    rows,
+    cells,
+    icons: Object.freeze(icons),
+    sizes: Object.freeze(sizes),
+    contexts: Object.freeze(contexts),
+  });
+}
+
+
+function sourceAssetPaths(icons) {
+  return [
+    "assets/diagram-core/catalog.json",
+    "assets/diagram-core/tokens.css",
+    ...icons.flatMap((iconId) => [
+      `assets/diagram-core/icons/${iconId}.svg`,
+      `assets/diagram-core/manifests/${iconId}.json`,
+    ]),
+  ].sort();
 }
 
 
@@ -826,10 +918,10 @@ function relativeRepoPath(target) {
 }
 
 
-async function canonicalSourceAssets() {
+async function canonicalSourceAssets(icons) {
   const files = [];
   const snapshots = [];
-  for (const relativePath of SOURCE_ASSET_PATHS) {
+  for (const relativePath of sourceAssetPaths(icons)) {
     const absolutePath = path.join(REPO_ROOT, relativePath);
     const snapshot = await readFileSnapshot(
       absolutePath,
@@ -1187,9 +1279,12 @@ async function inspectStaticSurface(page, frozenSource) {
 
 export async function capture(paths, publicationOperations) {
   const operationDeadline = createOperationDeadline();
+  const cellIndexPath = paths.cellIndex || path.join(REPO_ROOT, CELL_INDEX_RELATIVE_PATH);
   await requireRegularFile(paths.input, "input HTML");
+  await requireRegularFile(cellIndexPath, "cell index");
   await rejectAliases([
     ["input", paths.input],
+    ["cell index", cellIndexPath],
     ["output", paths.output],
     ["metadata", paths.metadata],
   ]);
@@ -1198,14 +1293,25 @@ export async function capture(paths, publicationOperations) {
   relativeRepoPath(canonicalInput);
   const inputSnapshot = await readFileSnapshot(canonicalInput, "input HTML");
   const inputPayload = inputSnapshot.payload;
+  const canonicalCellIndex = await realpath(cellIndexPath);
+  relativeRepoPath(canonicalCellIndex);
+  const cellIndexSnapshot = await readFileSnapshot(canonicalCellIndex, "cell index");
+  let cellIndexPayload;
+  try {
+    cellIndexPayload = JSON.parse(cellIndexSnapshot.payload.toString("utf8"));
+  } catch (error) {
+    throw new Error("cell index must be valid UTF-8 JSON", { cause: error });
+  }
+  const contactSheet = contactSheetSpecification(cellIndexPayload);
   const lockedPlaywright = await lockedPlaywrightProvenance();
   const canonicalIndexSnapshot = await readFileSnapshot(
     path.join(REPO_ROOT, INDEX_RELATIVE_PATH),
     "canonical Diagram Core index",
   );
-  const sourceAssets = await canonicalSourceAssets();
+  const sourceAssets = await canonicalSourceAssets(contactSheet.icons);
   const provenanceSnapshots = [
     { snapshot: inputSnapshot, label: "input HTML" },
+    { snapshot: cellIndexSnapshot, label: "cell index" },
     { snapshot: lockedPlaywright.snapshot, label: "package lock" },
     { snapshot: canonicalIndexSnapshot, label: "canonical Diagram Core index" },
     ...sourceAssets.snapshots,
@@ -1223,6 +1329,7 @@ export async function capture(paths, publicationOperations) {
   let motion;
   let chromiumVersion;
   let dimensions;
+  let gridMetadata;
   let allowedMainNavigations = 0;
   const runBrowserCapture = async () => {
     browser = await chromium.connect(browserServer.wsEndpoint(), {
@@ -1308,16 +1415,34 @@ export async function capture(paths, publicationOperations) {
       throw new Error(`${LOCATOR} must match exactly once; found ${locatorCount}`);
     }
     cells = await locator.locator('[data-cell-kind="regression"]').count();
-    if (cells !== EXPECTED_CELLS) {
-      throw new Error(`regression grid must contain ${EXPECTED_CELLS} cells; found ${cells}`);
+    if (cells !== contactSheet.cells) {
+      throw new Error(`regression grid must contain ${contactSheet.cells} cells; found ${cells}`);
+    }
+    gridMetadata = await locator.evaluate((root) => ({
+      columns: Number(root.dataset.gridColumns),
+      rows: Number(root.dataset.gridRows),
+      cells: Number(root.dataset.cellCount),
+    }));
+    if (
+      gridMetadata.columns !== contactSheet.columns
+      || gridMetadata.rows !== contactSheet.rows
+      || gridMetadata.cells !== contactSheet.cells
+    ) {
+      throw new Error(
+        `regression grid metadata does not match cell index: ${JSON.stringify(gridMetadata)}`,
+      );
     }
     boundingBox = await locator.boundingBox();
     if (!boundingBox) throw new Error(`${LOCATOR} has no visible bounding box`);
-    if (boundingBox.width !== EXPECTED_WIDTH || boundingBox.height !== EXPECTED_HEIGHT) {
-      throw new Error(
-        `regression grid dimensions must be ${EXPECTED_WIDTH}x${EXPECTED_HEIGHT}; `
-        + `found ${boundingBox.width}x${boundingBox.height}`,
-      );
+    if (
+      boundingBox.x !== 0
+      || boundingBox.y !== 0
+      || !Number.isInteger(boundingBox.width)
+      || !Number.isInteger(boundingBox.height)
+      || boundingBox.width <= 0
+      || boundingBox.height <= 0
+    ) {
+      throw new Error(`regression grid has invalid capture bounds: ${JSON.stringify(boundingBox)}`);
     }
     motion = await computedMotionCounts(locator);
     if (motion.animationCount !== 0 || motion.transitionCount !== 0) {
@@ -1339,9 +1464,9 @@ export async function capture(paths, publicationOperations) {
       throw new Error(`external requests are forbidden: ${[...externalRequests].join(", ")}`);
     }
     dimensions = pngDimensions(screenshot);
-    if (dimensions.width !== EXPECTED_WIDTH || dimensions.height !== EXPECTED_HEIGHT) {
+    if (dimensions.width !== boundingBox.width || dimensions.height !== boundingBox.height) {
       throw new Error(
-        `screenshot dimensions must be ${EXPECTED_WIDTH}x${EXPECTED_HEIGHT}; `
+        `screenshot dimensions must match the regression grid bounds; `
         + `found ${dimensions.width}x${dimensions.height}`,
       );
     }
@@ -1388,6 +1513,20 @@ export async function capture(paths, publicationOperations) {
           height: boundingBox.height,
         },
         cells,
+      },
+      contact_sheet: {
+        cell_index: {
+          path: relativeRepoPath(canonicalCellIndex),
+          sha256: sha256(cellIndexSnapshot.payload),
+        },
+        grid: {
+          columns: contactSheet.columns,
+          rows: contactSheet.rows,
+          cells: contactSheet.cells,
+        },
+        icons: [...contactSheet.icons],
+        sizes: [...contactSheet.sizes],
+        contexts: [...contactSheet.contexts],
       },
       capture: {
         timestamp_utc: captureTimestamp,

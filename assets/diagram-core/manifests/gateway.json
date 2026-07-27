@@ -1,0 +1,18 @@
+{
+  "id": "gateway",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "network-interfaces",
+  "semantic_kind": "gateway",
+  "structural_prototype": "scanning-entry-gateway",
+  "parts": ["body", "gate", "scanner", "core", "input", "output", "indicator"],
+  "attachments": {
+    "receive": {"x": 12, "y": 73},
+    "send": {"x": 84, "y": 73},
+    "status": {"x": 69, "y": 29}
+  },
+  "states": [],
+  "actions": ["receive", "inspect", "route", "send"],
+  "status": "visual-review"
+}

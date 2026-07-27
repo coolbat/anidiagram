@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Personal user profile icon" data-icon="user">
+  <g data-part="body">
+  <g data-part="profile">
+    <circle cx="48" cy="48" r="34" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="head">
+    <circle cx="48" cy="36" r="11" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="shoulders">
+    <path d="M 27 70 C 29 55 36 49 48 49 C 60 49 67 55 69 70 Z" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+  </g>
+  <g data-part="request-bubble">
+    <path d="M 58 14 H 76 Q 83 14 83 21 V 31 Q 83 38 76 38 H 68 L 61 44 L 63 38 H 58 Q 52 38 52 31 V 21 Q 52 14 58 14 Z" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+    <circle cx="61" cy="26" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    <circle cx="68" cy="26" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    <circle cx="75" cy="26" r="2.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+  </g>
+  <g data-part="indicator">
+    <circle cx="73" cy="66" r="6" fill="var(--icon-surface-contrast, #14213d)"/>
+    <circle cx="73" cy="66" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+  </g>
+  </g>
+</svg>

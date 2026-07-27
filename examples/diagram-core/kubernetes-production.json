@@ -1,0 +1,75 @@
+{
+  "version": "1.0",
+  "preset": "diagram-core-kubernetes-production",
+  "style": "diagram-core-light",
+  "icon_system": "diagram-core-v1",
+  "diagram_core_release": "1.0.0",
+  "canvas": {"width": 1600, "height": 900},
+  "title": {
+    "text": "Kubernetes Production Architecture",
+    "subtitle": "Build, reconcile, serve, and observe with the frozen Diagram Core v1 icon system"
+  },
+  "motion": {
+    "profile": "full-showcase",
+    "animated_nodes": ["developer", "repository", "pipeline", "registry", "external-user", "api-server", "scheduler", "controllers", "etcd", "ingress", "service", "deployment", "queue", "pod-a", "pod-b", "data-store", "metrics", "logs", "alerts"],
+    "active_edge_indices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+    "labeled_edge_indices": [3, 18],
+    "readable_edge_indices": [3, 12],
+    "reduced_motion": "static-rest"
+  },
+  "groups": [
+    {"id": "delivery", "label": "01  DELIVERY & ACTORS", "bounds": [30, 135, 270, 730], "tone": "violet"},
+    {"id": "cluster", "label": "02  KUBERNETES CLUSTER", "bounds": [320, 135, 930, 730], "tone": "blue"},
+    {"id": "control-plane", "label": "CONTROL PLANE", "bounds": [345, 165, 880, 215], "tone": "blue"},
+    {"id": "workload-plane", "label": "WORKLOAD PLANE", "bounds": [345, 415, 880, 425], "tone": "mint"},
+    {"id": "observability", "label": "03  OBSERVABILITY", "bounds": [1270, 135, 300, 730], "tone": "coral"}
+  ],
+  "nodes": [
+    {"id": "developer", "label": "Developer", "caption": "commit", "icon": "developer", "group": "delivery", "position": [55, 185], "size": [210, 112]},
+    {"id": "repository", "label": "Git Repository", "caption": "source", "icon": "git-repository", "group": "delivery", "position": [55, 320], "size": [210, 112]},
+    {"id": "pipeline", "label": "CI / CD", "caption": "build + test", "icon": "ci-cd", "group": "delivery", "position": [55, 455], "size": [210, 112]},
+    {"id": "registry", "label": "Image Registry", "caption": "versioned image", "icon": "container", "group": "delivery", "position": [55, 590], "size": [210, 112]},
+    {"id": "external-user", "label": "External User", "caption": "HTTPS request", "icon": "user", "group": "delivery", "position": [55, 725], "size": [210, 112]},
+
+    {"id": "api-server", "label": "API Server", "caption": "cluster gateway", "icon": "api", "group": "control-plane", "position": [360, 195], "size": [190, 154]},
+    {"id": "scheduler", "label": "Scheduler", "caption": "place workloads", "icon": "scheduler", "group": "control-plane", "position": [570, 195], "size": [190, 154]},
+    {"id": "controllers", "label": "Controllers", "caption": "reconcile state", "icon": "agent-team", "group": "control-plane", "position": [780, 195], "size": [190, 154]},
+    {"id": "etcd", "label": "etcd", "caption": "desired state", "icon": "database", "group": "control-plane", "position": [990, 195], "size": [190, 154]},
+
+    {"id": "ingress", "label": "Ingress", "caption": "route traffic", "icon": "gateway", "group": "workload-plane", "position": [360, 480], "size": [190, 154]},
+    {"id": "service", "label": "Service", "caption": "balance replicas", "icon": "load-balancer", "group": "workload-plane", "position": [570, 480], "size": [190, 154]},
+    {"id": "deployment", "label": "Deployment", "caption": "desired replicas", "icon": "deployment", "group": "workload-plane", "position": [780, 480], "size": [190, 154]},
+    {"id": "queue", "label": "Message Queue", "caption": "buffer work", "icon": "message-queue", "group": "workload-plane", "position": [990, 480], "size": [190, 154]},
+    {"id": "pod-a", "label": "Pod A", "caption": "application", "icon": "container", "group": "workload-plane", "position": [465, 670], "size": [190, 154]},
+    {"id": "pod-b", "label": "Pod B", "caption": "application", "icon": "container", "group": "workload-plane", "position": [675, 670], "size": [190, 154]},
+    {"id": "data-store", "label": "Data Store", "caption": "persistent data", "icon": "database", "group": "workload-plane", "position": [885, 670], "size": [190, 154]},
+
+    {"id": "metrics", "label": "Metrics", "caption": "health + latency", "icon": "monitoring", "group": "observability", "position": [1290, 200], "size": [260, 160]},
+    {"id": "logs", "label": "Logs", "caption": "events + traces", "icon": "logs", "group": "observability", "position": [1290, 410], "size": [260, 160]},
+    {"id": "alerts", "label": "Alerts", "caption": "notify operators", "icon": "alert", "group": "observability", "position": [1290, 620], "size": [260, 160]}
+  ],
+  "edges": [
+    {"from": "developer", "to": "repository", "label": "push", "effect": "signal-dot", "points": [[160, 297], [160, 320]]},
+    {"from": "repository", "to": "pipeline", "label": "trigger", "effect": "signal-dot", "points": [[160, 432], [160, 455]]},
+    {"from": "pipeline", "to": "registry", "label": "publish", "effect": "signal-arrow", "points": [[160, 567], [160, 590]]},
+    {"from": "registry", "to": "api-server", "label": "rollout", "effect": "signal-arrow", "points": [[265, 646], [305, 646], [305, 272], [360, 272]]},
+    {"from": "api-server", "to": "scheduler", "label": "pending pod", "effect": "signal-dot", "points": [[550, 272], [570, 272]]},
+    {"from": "api-server", "to": "controllers", "label": "watch", "effect": "signal-dot", "points": [[455, 349], [455, 392], [875, 392], [875, 349]]},
+    {"from": "api-server", "to": "etcd", "label": "state", "effect": "signal-dot", "points": [[455, 195], [455, 154], [1085, 154], [1085, 195]]},
+    {"from": "scheduler", "to": "deployment", "label": "bind", "effect": "signal-dot", "points": [[665, 349], [665, 430], [875, 430], [875, 480]]},
+    {"from": "controllers", "to": "deployment", "label": "reconcile", "effect": "signal-dot", "points": [[875, 349], [875, 480]]},
+    {"from": "deployment", "to": "pod-a", "label": "replica", "effect": "signal-dot", "points": [[875, 634], [875, 654], [560, 654], [560, 670]]},
+    {"from": "deployment", "to": "pod-b", "label": "replica", "effect": "signal-dot", "points": [[875, 634], [875, 654], [770, 654], [770, 670]]},
+    {"from": "external-user", "to": "ingress", "label": "HTTPS", "effect": "signal-dot", "points": [[265, 781], [315, 781], [315, 557], [360, 557]]},
+    {"from": "ingress", "to": "service", "label": "route", "effect": "signal-arrow", "points": [[550, 557], [570, 557]]},
+    {"from": "service", "to": "pod-a", "label": "request", "effect": "signal-dot", "points": [[665, 634], [665, 646], [560, 646], [560, 670]]},
+    {"from": "service", "to": "pod-b", "label": "request", "effect": "signal-dot", "points": [[665, 634], [665, 646], [770, 646], [770, 670]]},
+    {"from": "pod-a", "to": "queue", "label": "job", "effect": "signal-dot", "points": [[655, 747], [955, 747], [955, 634], [990, 634]]},
+    {"from": "queue", "to": "data-store", "label": "write", "effect": "signal-dot", "points": [[1085, 634], [1085, 650], [980, 650], [980, 670]]},
+    {"from": "pod-b", "to": "data-store", "label": "query", "effect": "signal-dot", "points": [[865, 747], [885, 747]]},
+    {"from": "pod-a", "to": "metrics", "label": "telemetry", "effect": "signal-arrow", "points": [[655, 747], [1238, 747], [1238, 280], [1290, 280]]},
+    {"from": "pod-b", "to": "metrics", "label": "telemetry", "effect": "signal-dot", "points": [[865, 747], [1252, 747], [1252, 280], [1290, 280]]},
+    {"from": "metrics", "to": "logs", "label": "correlate", "effect": "signal-dot", "points": [[1420, 360], [1420, 410]]},
+    {"from": "metrics", "to": "alerts", "label": "threshold", "effect": "signal-dot", "points": [[1290, 280], [1260, 280], [1260, 700], [1290, 700]]}
+  ]
+}

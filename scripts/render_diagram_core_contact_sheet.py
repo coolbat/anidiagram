@@ -17,6 +17,7 @@ from typing import Dict, Mapping, Optional, Sequence, Tuple
 from xml.etree import ElementTree
 
 from anidiagram.diagram_core.adapter import render_preview_icon
+from anidiagram.diagram_core.catalog import load_catalog
 from anidiagram.diagram_core.tokens import token_css
 
 
@@ -35,11 +36,7 @@ CELL_WIDTH = 158
 CELL_HEIGHT = 146
 MAIN_Y = 128
 ROW_STEP_Y = 160
-BENCHMARK_COLUMNS = len(BENCHMARK_ICONS) * len(SIZES)
-BENCHMARK_ROWS = len(CONTEXTS)
 BENCHMARK_CELL_SIZE = 104
-BENCHMARK_WIDTH = BENCHMARK_COLUMNS * BENCHMARK_CELL_SIZE
-BENCHMARK_HEIGHT = BENCHMARK_ROWS * BENCHMARK_CELL_SIZE
 _HEX_COLOR = re.compile(r"^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$")
 _RGB_COLOR = re.compile(
     r"^rgb\(\s*(\d{1,3})(?:\s*,\s*|\s+)(\d{1,3})"
@@ -47,6 +44,31 @@ _RGB_COLOR = re.compile(
     re.IGNORECASE,
 )
 _SIMPLE_VAR = re.compile(r"^var\(\s*(--[a-z0-9-]+)\s*\)$")
+
+
+def validated_review_icons(source: str) -> Tuple[str, ...]:
+    """Return a unique, ordered subset backed by reviewable canonical assets."""
+
+    icons = tuple(value.strip() for value in source.split(","))
+    if not icons or any(not value for value in icons):
+        raise ValueError("--icons must contain at least one icon id")
+    if len(icons) != len(set(icons)):
+        raise ValueError("--icons values must be unique")
+    statuses = {
+        entry.icon_id: entry.status
+        for entry in load_catalog(ASSET_ROOT).entries
+    }
+    for icon_id in icons:
+        if statuses.get(icon_id) not in {"visual-review", "approved"}:
+            raise ValueError(
+                "--icons entries must be implemented visual-review or approved icons: "
+                + icon_id
+            )
+        for directory, suffix in (("icons", ".svg"), ("manifests", ".json")):
+            path = ASSET_ROOT / directory / (icon_id + suffix)
+            if not path.is_file() or path.is_symlink():
+                raise ValueError("--icons entry is missing a canonical asset: " + icon_id)
+    return icons
 
 
 @dataclass(frozen=True)
@@ -399,13 +421,13 @@ def render_review_html(
 def build_contact_sheet_cells(
     icons: Sequence[str] = BENCHMARK_ICONS,
 ) -> Tuple[ContactSheetCell, ...]:
-    """Return the locked row-major 12-column by 4-row authored-rest matrix."""
+    """Return a row-major three-size by four-context authored-rest matrix."""
 
     normalized_icons = tuple(icons)
-    if normalized_icons != BENCHMARK_ICONS:
-        raise ValueError(
-            "benchmark icons must be agent,database,api,server in canonical order"
-        )
+    if not normalized_icons:
+        raise ValueError("contact sheet requires at least one icon")
+    if len(normalized_icons) != len(set(normalized_icons)):
+        raise ValueError("contact sheet icons must be unique")
     cells = []
     ordinal = 0
     for context_index, context in enumerate(CONTEXTS):
@@ -432,6 +454,17 @@ def build_contact_sheet_cells(
                 )
                 ordinal += 1
     return tuple(cells)
+
+
+def _cell_grid(cells: Sequence[ContactSheetCell]) -> Tuple[int, int, Tuple[str, ...]]:
+    ordered_cells = tuple(cells)
+    if not ordered_cells:
+        raise ValueError("contact sheet requires at least one cell")
+    icons = tuple(dict.fromkeys(cell.icon_id for cell in ordered_cells))
+    expected = build_contact_sheet_cells(icons)
+    if ordered_cells != expected:
+        raise ValueError("contact sheet cells must be the complete canonical product")
+    return len(icons) * len(SIZES), len(CONTEXTS), icons
 
 
 def _static_preview(
@@ -515,8 +548,9 @@ def render_benchmark_contact_sheet(
     ordered_cells = (
         build_contact_sheet_cells() if cells is None else tuple(cells)
     )
-    if len(ordered_cells) != BENCHMARK_COLUMNS * BENCHMARK_ROWS:
-        raise ValueError("benchmark contact sheet requires exactly 48 cells")
+    columns, rows, icons = _cell_grid(ordered_cells)
+    width = columns * BENCHMARK_CELL_SIZE
+    height = rows * BENCHMARK_CELL_SIZE
     source = token_css()
     _, contexts = _context_tokens(source)
     rendered_cells = [
@@ -527,15 +561,23 @@ def render_benchmark_contact_sheet(
         if aria_labelledby
         else ""
     )
-    return """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" width="{width}" height="{height}" id="diagram-core-regression-grid" role="img" aria-label="Diagram Core authored-rest benchmark: four icons, three sizes, and four contexts"{labelledby} data-icon-review-region="true" data-grid-columns="{columns}" data-grid-rows="{rows}" data-cell-count="{count}">
+    aria_label = (
+        "Diagram Core authored-rest benchmark: four icons, three sizes, and four contexts"
+        if icons == BENCHMARK_ICONS
+        else "Diagram Core authored-rest review batch: {0} icons, three sizes, and four contexts".format(
+            len(icons)
+        )
+    )
+    return """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" width="{width}" height="{height}" id="diagram-core-regression-grid" role="img" aria-label="{aria_label}"{labelledby} data-icon-review-region="true" data-grid-columns="{columns}" data-grid-rows="{rows}" data-cell-count="{count}">
 {cells}
 </svg>
 """.format(
-        width=BENCHMARK_WIDTH,
-        height=BENCHMARK_HEIGHT,
+        width=width,
+        height=height,
+        aria_label=_escaped(aria_label),
         labelledby=labelledby,
-        columns=BENCHMARK_COLUMNS,
-        rows=BENCHMARK_ROWS,
+        columns=columns,
+        rows=rows,
         count=len(ordered_cells),
         cells="\n".join(rendered_cells),
     )
@@ -547,11 +589,12 @@ def render_cell_index(
     ordered_cells = (
         build_contact_sheet_cells() if cells is None else tuple(cells)
     )
+    columns, rows, _ = _cell_grid(ordered_cells)
     payload = {
         "version": 1,
         "grid": {
-            "columns": BENCHMARK_COLUMNS,
-            "rows": BENCHMARK_ROWS,
+            "columns": columns,
+            "rows": rows,
             "cells": len(ordered_cells),
         },
         "cells": [
@@ -581,16 +624,28 @@ def render_benchmark_review_html(
     ordered_cells = (
         build_contact_sheet_cells() if cells is None else tuple(cells)
     )
+    columns, rows, icons = _cell_grid(ordered_cells)
+    width = columns * BENCHMARK_CELL_SIZE
+    height = rows * BENCHMARK_CELL_SIZE
     embedded_grid = render_benchmark_contact_sheet(
         ordered_cells,
         aria_labelledby="diagram-core-grid-title diagram-core-grid-description",
     ).rstrip()
     column_labels = [
         "{0} · {1} px".format(icon_id, size)
-        for icon_id in BENCHMARK_ICONS
+        for icon_id in icons
         for size in SIZES
     ]
     row_labels = ["{0} · authored rest".format(context) for context in CONTEXTS]
+    description = (
+        "A fixed 12-column by 4-row, 48-cell authored-rest visual review surface. The screenshot locator contains icon geometry only; all labels and legends remain outside it."
+        if icons == BENCHMARK_ICONS
+        else "A fixed {0}-column by {1}-row, {2}-cell authored-rest visual review surface. The screenshot locator contains icon geometry only; all labels and legends remain outside it.".format(
+            columns,
+            rows,
+            len(ordered_cells),
+        )
+    )
     return """<!doctype html>
 <html lang="en">
 <head>
@@ -615,7 +670,7 @@ def render_benchmark_review_html(
 <body>
   <header>
     <h1 id="diagram-core-grid-title">Diagram Core static regression matrix</h1>
-    <p id="diagram-core-grid-description">A fixed 12-column by 4-row, 48-cell authored-rest visual review surface. The screenshot locator contains icon geometry only; all labels and legends remain outside it.</p>
+    <p id="diagram-core-grid-description">{description}</p>
     <p>Contact sheet SHA-256: <code>{digest}</code>.</p>
     <p>Separate motion review: <code>gallery/diagram-core/showcase.html</code>.</p>
   </header>
@@ -645,8 +700,9 @@ def render_benchmark_review_html(
         card=_escaped(tokens["--icon-surface-main"]),
         text=_escaped(tokens["--icon-stroke"]),
         border=_escaped(tokens["--icon-surface-recessed"]),
-        width=BENCHMARK_WIDTH,
-        height=BENCHMARK_HEIGHT,
+        width=width,
+        height=height,
+        description=_escaped(description),
         digest=_escaped(contact_digest),
         column_items=_legend_items(column_labels),
         row_items=_legend_items(row_labels),
@@ -694,7 +750,11 @@ def _recognition_cell(
 def render_recognition_html(
     token_source: str,
     contexts: Mapping[str, Mapping[str, str]],
+    icons: Sequence[str] = BENCHMARK_ICONS,
 ) -> str:
+    normalized_icons = tuple(icons)
+    if not normalized_icons or len(normalized_icons) != len(set(normalized_icons)):
+        raise ValueError("recognition icons must be a nonempty unique sequence")
     blue = contexts["blue"]
     modes = (
         ("label-hidden", blue),
@@ -706,7 +766,7 @@ def render_recognition_html(
     for mode, tokens in modes:
         cells = [
             _recognition_cell(mode, icon_id, tokens)
-            for icon_id in BENCHMARK_ICONS
+            for icon_id in normalized_icons
         ]
         mode_groups.append(
             """      <div class="recognition-mode" role="group" aria-label="{label}" data-recognition-group="{mode}">
@@ -717,15 +777,24 @@ def render_recognition_html(
                 cells="\n".join(cells),
             )
         )
+    node_context_legend = (
+        "node-context · four icons in one fixed blue node context for visual-weight comparison"
+        if normalized_icons == BENCHMARK_ICONS
+        else "node-context · {0} icons in one fixed blue node context for visual-weight comparison".format(
+            len(normalized_icons)
+        )
+    )
     legend = _legend_items(
         (
             "label-hidden · normal blue-context silhouettes at 48 px",
             "accent-off · accent tokens collapsed to neutral roles",
             "grayscale · luminance-only recognition",
-            "node-context · four icons in one fixed blue node context for visual-weight comparison",
+            node_context_legend,
         )
     )
     defaults, _ = _context_tokens(token_source)
+    group_width = len(normalized_icons) * BENCHMARK_CELL_SIZE
+    review_width = group_width * 2 + 32
     return """<!doctype html>
 <html lang="en">
 <head>
@@ -735,13 +804,13 @@ def render_recognition_html(
   <style>
     * {{ box-sizing: border-box; }}
     body {{ margin: 0; background: {page}; color: {text}; font-family: ui-sans-serif, system-ui, sans-serif; line-height: 1.5; }}
-    header, main {{ width: 864px; margin-inline: auto; }}
+    header, main {{ width: {review_width}px; margin-inline: auto; }}
     header {{ padding: 40px 0 20px; }}
     h1, h2, p {{ margin-top: 0; }}
     h1 {{ margin-bottom: 8px; font-size: 36px; }}
     .mode-legend {{ margin: 0 0 24px; padding: 20px 20px 20px 44px; border: 1px solid {border}; background: {card}; }}
-    .review-grid {{ width: 864px; display: grid; grid-template-columns: repeat(2, 416px); gap: 32px; padding-bottom: 64px; }}
-    .recognition-mode {{ display: grid; grid-template-columns: repeat(4, {cell_size}px); width: 416px; }}
+    .review-grid {{ width: {review_width}px; display: grid; grid-template-columns: repeat(2, {group_width}px); gap: 32px; padding-bottom: 64px; }}
+    .recognition-mode {{ display: grid; grid-template-columns: repeat({icon_count}, {cell_size}px); width: {group_width}px; }}
     .recognition-mode svg {{ display: block; width: {cell_size}px; height: {cell_size}px; }}
   </style>
 </head>
@@ -766,6 +835,9 @@ def render_recognition_html(
         card=_escaped(defaults["--icon-surface-main"]),
         text=_escaped(defaults["--icon-stroke"]),
         border=_escaped(defaults["--icon-surface-recessed"]),
+        review_width=review_width,
+        group_width=group_width,
+        icon_count=len(normalized_icons),
         cell_size=BENCHMARK_CELL_SIZE,
         legend=legend,
         groups="\n".join(mode_groups),
@@ -1159,7 +1231,7 @@ def main() -> int:
     if output.absolute() == html_output.absolute():
         parser.error("SVG and HTML outputs must be different files")
 
-    if arguments.icons == ICON_ID:
+    if arguments.icons == ICON_ID and arguments.recognition:
         if not arguments.recognition:
             parser.error("Agent checkpoint generation requires --recognition")
         if arguments.recognition_output is not None or arguments.cell_index is not None:
@@ -1194,17 +1266,17 @@ def main() -> int:
         print("OK")
         return 0
 
-    canonical_icons = ",".join(BENCHMARK_ICONS)
-    if arguments.icons != canonical_icons:
-        parser.error(
-            "--icons must be either agent or " + canonical_icons
-        )
     if arguments.recognition:
         parser.error("benchmark generation uses --recognition-output")
     if arguments.recognition_output is None:
         parser.error("benchmark generation requires --recognition-output")
     if arguments.cell_index is None:
         parser.error("benchmark generation requires --cell-index")
+
+    try:
+        review_icons = validated_review_icons(arguments.icons)
+    except ValueError as error:
+        parser.error(str(error))
 
     recognition_output = Path(arguments.recognition_output)
     cell_index = Path(arguments.cell_index)
@@ -1218,14 +1290,14 @@ def main() -> int:
     except ValueError as error:
         parser.error(str(error))
 
-    cells = build_contact_sheet_cells()
+    cells = build_contact_sheet_cells(review_icons)
     contact_sheet = render_benchmark_contact_sheet(cells)
     contact_bytes = contact_sheet.encode("utf-8")
     digest = hashlib.sha256(contact_bytes).hexdigest()
     token_source = token_css()
     defaults, contexts = _context_tokens(token_source)
     review_page = render_benchmark_review_html(digest, defaults, cells)
-    recognition_page = render_recognition_html(token_source, contexts)
+    recognition_page = render_recognition_html(token_source, contexts, review_icons)
     index_source = render_cell_index(cells)
 
     _publish_outputs(
@@ -1237,8 +1309,11 @@ def main() -> int:
         )
     )
     print(
-        "icons=4 cells=48 unique=48 sizes=48,64,96 "
-        "contexts=blue,dark,warm,green pose=authored-rest"
+        "icons={0} cells={1} unique={1} sizes=48,64,96 "
+        "contexts=blue,dark,warm,green pose=authored-rest".format(
+            len(review_icons),
+            len(cells),
+        )
     )
     print("OK")
     return 0

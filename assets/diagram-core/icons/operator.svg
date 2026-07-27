@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Human operator at control panel icon" data-icon="operator">
+  <g data-part="body">
+  <g data-part="shell">
+    <path d="M 24 66 C 25 49 34 41 48 41 C 62 41 71 49 72 66 Z" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+  </g>
+  <g data-part="head">
+    <circle cx="48" cy="28" r="11.5" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="panel">
+    <rect x="18" y="51" width="60" height="27" rx="8" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <line x1="25" y1="59" x2="38" y2="59" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    <rect x="14" y="75" width="68" height="7" rx="3.5" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="cursor">
+    <polygon points="43,57 43,71 47.5,66.5 51,72 55,69.5 51.5,64 58,64" fill="var(--icon-accent-secondary, #45c5bd)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linejoin="round" data-stroke-role="inner"/>
+  </g>
+  <g data-part="indicator">
+    <circle cx="68" cy="68" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+  </g>
+  </g>
+</svg>

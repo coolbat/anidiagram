@@ -1,0 +1,18 @@
+{
+  "id": "image",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "files-content",
+  "semantic_kind": "image",
+  "structural_prototype": "image-preview-file",
+  "parts": ["body", "page", "fold", "preview", "scan-line", "badge", "indicator"],
+  "attachments": {
+    "receive": {"x": 12, "y": 48},
+    "send": {"x": 84, "y": 48},
+    "status": {"x": 66, "y": 70}
+  },
+  "states": [],
+  "actions": ["receive", "open", "scan", "send"],
+  "status": "visual-review"
+}

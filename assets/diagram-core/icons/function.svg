@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Triggered function capsule icon" data-icon="function">
+  <g data-part="body">
+    <g data-part="shell">
+      <rect x="14" y="27" width="68" height="42" rx="21" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+      <path d="M 29 29 V 67" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="trigger">
+      <path d="M 24 35 L 18 47 H 24 L 20 60 L 31 44 H 25 L 29 35 Z" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" stroke-linejoin="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="function-core">
+      <circle cx="47" cy="48" r="12" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+      <path d="M 40 43 H 43 Q 47 43 48 48 M 40 53 H 43 Q 47 53 48 48 H 54" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+      <circle cx="40" cy="43" r="2" fill="var(--icon-accent, #7c5ce7)"/>
+      <circle cx="40" cy="53" r="2" fill="var(--icon-accent, #7c5ce7)"/>
+      <circle cx="54" cy="48" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+    <g data-part="result">
+      <rect x="63" y="39" width="12" height="18" rx="5" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+      <circle cx="69" cy="48" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+    <g data-part="indicator">
+      <circle cx="72" cy="69" r="5" fill="var(--icon-surface-contrast, #14213d)"/>
+      <circle cx="72" cy="69" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+  </g>
+</svg>

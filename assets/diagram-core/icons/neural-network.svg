@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Layered neural network icon" data-icon="neural-network">
+  <g data-part="body">
+  <g data-part="shell">
+    <rect x="13" y="15" width="70" height="66" rx="18" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="layer-a">
+    <circle cx="27" cy="35" r="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <circle cx="27" cy="61" r="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="layer-b">
+    <circle cx="48" cy="28" r="5.5" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <circle cx="48" cy="48" r="6.5" fill="var(--icon-accent-secondary, #45c5bd)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <circle cx="48" cy="68" r="5.5" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="layer-c">
+    <circle cx="69" cy="35" r="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <circle cx="69" cy="61" r="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="signal">
+    <path d="M 33 35 L 42.5 29 M 33 36 L 42 46 M 33 59 L 42 50 M 33 61 L 42.5 67" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    <path d="M 54 29 L 63 35 M 54.5 46 L 63 36 M 54.5 50 L 63 59 M 54 67 L 63 61" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    <path d="M 44 48 H 52" fill="none" stroke="var(--icon-surface-main, #fffaf2)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="outer"/>
+  </g>
+  <g data-part="indicator">
+    <circle cx="76" cy="73" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+  </g>
+  </g>
+</svg>

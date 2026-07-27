@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Versioned repository box icon" data-icon="git-repository">
+  <g data-part="body">
+    <g data-part="box">
+      <path d="M 19 20 H 77 Q 82 20 82 25 V 70 Q 82 77 75 77 H 21 Q 14 77 14 70 V 27 Q 14 20 19 20 Z" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+      <path d="M 15 33 H 81" fill="none" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="outer"/>
+      <rect x="20" y="25" width="21" height="4" rx="2" fill="var(--icon-accent, #7c5ce7)"/>
+    </g>
+    <g data-part="branch-tree">
+      <path d="M 30 43 V 65 M 30 50 Q 43 50 43 42 M 30 58 Q 43 58 43 66" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="outer"/>
+      <circle cx="30" cy="43" r="3" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" data-stroke-role="inner"/>
+      <circle cx="43" cy="42" r="3" fill="var(--icon-accent, #7c5ce7)"/>
+    </g>
+    <g data-part="commit">
+      <circle cx="30" cy="65" r="4" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" data-stroke-role="inner"/>
+      <circle cx="43" cy="66" r="3" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+    <g data-part="history">
+      <path d="M 54 43 H 71" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+      <path d="M 54 53 H 67" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+      <path d="M 54 63 H 70" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="indicator">
+      <circle cx="71" cy="70" r="5" fill="var(--icon-surface-contrast, #14213d)"/>
+      <circle cx="71" cy="70" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Audio waveform file icon" data-icon="audio">
+  <g data-part="body">
+    <g data-part="page">
+      <path d="M 23 13 H 59 L 75 29 V 83 H 23 Z" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+    </g>
+    <g data-part="fold">
+      <polygon points="59,13 59,29 75,29" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+    </g>
+    <g data-part="waveform">
+      <line x1="32" y1="48" x2="32" y2="54" stroke="var(--icon-detail, #64748b)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="inner"/>
+      <line x1="37" y1="42" x2="37" y2="60" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="inner"/>
+      <line x1="42" y1="36" x2="42" y2="66" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="inner"/>
+      <line x1="47" y1="44" x2="47" y2="58" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="inner"/>
+      <line x1="52" y1="39" x2="52" y2="63" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="inner"/>
+      <line x1="57" y1="45" x2="57" y2="57" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="inner"/>
+      <line x1="62" y1="48" x2="62" y2="54" stroke="var(--icon-detail, #64748b)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="playhead">
+      <line x1="48" y1="34" x2="48" y2="68" stroke="var(--icon-accent, #7c5ce7)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+      <circle cx="48" cy="34" r="3" fill="var(--icon-accent, #7c5ce7)"/>
+    </g>
+    <g data-part="badge">
+      <polygon points="33,68 33,76 40,72" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" stroke-linejoin="round" data-stroke-role="inner"/>
+      <path d="M 42 69 Q 46 72 42 75" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="indicator">
+      <circle cx="66" cy="72" r="6" fill="var(--icon-surface-contrast, #14213d)"/>
+      <circle cx="66" cy="72" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+  </g>
+</svg>

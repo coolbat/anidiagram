@@ -1,0 +1,18 @@
+{
+  "id": "neural-network",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "ai-models",
+  "semantic_kind": "neural-network",
+  "structural_prototype": "layered-neural-network",
+  "parts": ["body", "shell", "layer-a", "layer-b", "layer-c", "signal", "indicator"],
+  "attachments": {
+    "receive": {"x": 8, "y": 48},
+    "send": {"x": 88, "y": 48},
+    "status": {"x": 76, "y": 73}
+  },
+  "states": [],
+  "actions": ["receive", "propagate", "activate", "send"],
+  "status": "visual-review"
+}

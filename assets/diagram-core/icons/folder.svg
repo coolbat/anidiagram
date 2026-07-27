@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Tabbed folder with file card icon" data-icon="folder">
+  <g data-part="body">
+  <g data-part="shell">
+    <path d="M 15 33 Q 15 27 22 27 H 41 L 48 35 H 74 Q 81 35 81 42 V 78 Q 81 82 77 82 H 19 Q 15 82 15 78 Z" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+  </g>
+  <g data-part="tab">
+    <path d="M 20 33 V 23 Q 20 19 25 19 H 42 L 51 33 Z" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+  </g>
+  <g data-part="file-card">
+    <rect x="29" y="34" width="38" height="34" rx="7" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="file-line">
+    <line x1="37" y1="44" x2="59" y2="44" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    <line x1="37" y1="51" x2="54" y2="51" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+  </g>
+  <g data-part="indicator">
+    <circle cx="67" cy="69" r="6" fill="var(--icon-surface-contrast, #14213d)"/>
+    <circle cx="67" cy="69" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+  </g>
+  </g>
+</svg>

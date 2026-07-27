@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Diagnostic debug lens icon" data-icon="debug">
+  <g data-part="body">
+    <rect x="11" y="20" width="74" height="57" rx="18" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <g data-part="scanner">
+      <circle cx="34" cy="45" r="14" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+      <path d="M 44 55 L 53 64" fill="none" stroke="var(--icon-accent, #7c5ce7)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="outer"/>
+      <path d="M 25 45 H 43" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="code-card">
+      <rect x="51" y="31" width="27" height="30" rx="8" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+      <path d="M 57 41 H 70 M 57 48 H 67 M 57 55 H 72" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="bug-dot">
+      <circle cx="34" cy="45" r="5" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" data-stroke-role="inner"/>
+      <path d="M 28 39 L 25 36 M 40 39 L 43 36 M 27 45 H 23 M 41 45 H 45" fill="none" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="fix-check">
+      <circle cx="59" cy="66" r="7" fill="var(--icon-accent-secondary, #45c5bd)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" data-stroke-role="inner"/>
+      <path d="M 55 66 L 58 69 L 63 63" fill="none" stroke="var(--icon-surface-main, #fffaf2)" stroke-width="1.375" stroke-linecap="round" stroke-linejoin="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="indicator">
+      <circle cx="72" cy="70" r="5" fill="var(--icon-surface-contrast, #14213d)"/>
+      <circle cx="72" cy="70" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+  </g>
+</svg>

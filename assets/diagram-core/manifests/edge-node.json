@@ -1,0 +1,18 @@
+{
+  "id": "edge-node",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "compute-runtime",
+  "semantic_kind": "edge-node",
+  "structural_prototype": "signal-edge-node",
+  "parts": ["body", "shell", "signal", "core", "sync", "latency-ring", "indicator"],
+  "attachments": {
+    "receive": {"x": 9, "y": 48},
+    "send": {"x": 87, "y": 48},
+    "status": {"x": 69, "y": 70}
+  },
+  "states": [],
+  "actions": ["receive", "sync", "process", "send"],
+  "status": "visual-review"
+}

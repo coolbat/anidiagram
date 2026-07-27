@@ -1,78 +1,87 @@
-# Frozen Goal Contract
+# Diagram Core v1 Full Catalog Goal Contract
 
 ## Background
 
-AniDiagram already contains an uncommitted `illustrated-character-v1` baseline
-on branch `codex/illustrated-character-v1`: 13 clean-room semantic icons,
-character-local GSAP performances, two theme trials, examples, and browser
-verifiers. The approved follow-on roadmap is
-`docs/superpowers/plans/2026-07-11-illustrated-character-motion-rollout-roadmap.md`.
+The 56-id `diagram-core-v1` catalog, asset/manifest contracts, four benchmark
+SVGs, and one expressive `showcase` Presentation Profile already exist on the
+isolated `codex/diagram-core-v1-phase-0-1` worktree. Coolbat approved the visual
+and motion direction for Agent, Database, API, and Server on 2026-07-17 and
+requested that all remaining icons be implemented in batches, internally tested
+and accepted, then presented once for final human visual acceptance.
 
 ## Goal
 
-Complete all fifteen tasks in the approved roadmap and demonstrate, with fresh
-automated and browser evidence, that motion coordination, mode behavior, theme
-rollout, representative examples, the gallery, and the supported export matrix
-meet the roadmap acceptance criteria.
+Implement the remaining 52 Diagram Core icons as canonical, theme-aware,
+accessible SVG assets with matching Icon Asset Manifests and differentiated
+showcase performances. Execute the approved compatibility batch first, then six
+seven-icon expansion batches. Produce deterministic static and live review
+surfaces, pass every batch gate and the final full regression gate, complete an
+independent review, and only then request coolbat's final visual acceptance.
 
 ## Non-goals
 
-- Do not add timeline, choreographer, event-driven, state-machine, interactive,
-  or hybrid runtime scheduling.
-- Do not redesign the approved 13 character drawings or their semantic actions.
-- Do not import third-party icon code, runtime packages, or visual assets.
-- Do not deploy, publish, merge, push, or open a pull request.
+- Do not implement `idle / active / processing / success / warning / error`.
+- Do not model `showcase` as a State or Domain Action.
+- Do not switch `DEFAULT_ICON_SYSTEM` from `illustrated-character-v1`.
+- Do not promote any new asset from `visual-review` to `approved` before the
+  user's final visual acceptance.
+- Do not add React/SDK components, third-party icon geometry, a second runtime,
+  or a second hand-maintained geometry source.
+- Do not deploy, push, merge, open a pull request, or publish.
 
 ## Deliverables
 
-- Motion Coordination v1.1 implementation and browser verification.
-- Character v1 motion catalog and three-theme comparison surface.
-- Representative example migration and deterministic gallery rebuild.
-- Supported export-matrix evidence and synchronized English/Chinese docs.
-- Updated roadmap, execution state, and release evidence.
+- Exactly 56 canonical SVGs and 56 matching manifests under
+  `assets/diagram-core/`.
+- Catalog entries with implemented prototypes, parts, actions, revisions, and
+  `visual-review` status while semantic states remain empty.
+- One maintainable data-driven showcase contract for new icons while preserving
+  the four approved benchmark performances unchanged.
+- Batch contact sheets and a final categorized 56-icon live showcase.
+- Static safety, manifest parity, part identity, repeated-instance, recognition,
+  motion amplitude, reset, reduced-motion, no-GSAP, clipping, and performance
+  evidence.
+- Synchronized plan, documentation, loop state, and release evidence.
 
 ## Constraints
 
-- Preserve existing unrelated dirty-worktree changes.
-- Use the current `codex/illustrated-character-v1` branch as the only write
-  surface because the approved baseline is uncommitted and cannot be reproduced
-  safely in a clean worktree.
-- Use test-driven development for behavior changes.
-- Preserve explicit legacy `illustrated-v1` and `semantic-line-v1` behavior.
-- Keep HTML runtime ownership GSAP-only and standalone SVG fallback ownership
-  SMIL/static-only; do not mix them on the same runtime stage.
+- Canonical SVG plus Icon Asset Manifest remain the asset source of truth.
+- Every SVG uses `viewBox="0 0 96 96"`, semantic `data-part` groups, repository
+  tokens with fallbacks, no scripts/animation/raster/external resources, and no
+  connection anchors.
+- Preserve the approved family language: dark rounded outline, warm surface,
+  purple primary accent, teal secondary accent, clear silhouette, restrained
+  internal detail, and meaningful 48 px recognition.
+- Use the shared `file-shell` skeleton for the file/content family without
+  making the exported SVGs dependent on another asset.
+- Each showcase performance moves only meaningful public Parts, returns to the
+  authored rest pose, remains unclipped, and has a scene-controlled quiet gap.
+- Use test-driven development for behavior changes and verify each batch before
+  selecting the next.
+- Preserve all unrelated user changes and the current four-file showcase diff.
 
 ## Done Conditions
 
-- All roadmap Tasks 1-15 and Checkpoints A-D are checked with fresh evidence.
-- Full unit tests, runtime syntax checks, character and stage browser verifiers,
-  gallery generation/tests, export checks, quality reports, and `git diff
-  --check` pass from the final source state.
-- Expressive, Readable, Off, and operating-system reduced-motion behavior are
-  observably distinct and conform to the approved contract.
-- No unrelated worktree changes are reverted or staged.
+- Catalog/manifests/assets report 56/56 implemented visual-review icons and zero
+  semantic states.
+- Compatibility batch and all six expansion batches have fresh passing S0/S1
+  evidence and independent review findings are closed.
+- The final 56-icon gallery is deterministic, recognizable in static contexts,
+  network-free, and functional with Showcase/Pause/Replay/Off controls.
+- Full unittest, asset validator, JavaScript syntax, browser motion, fallback,
+  repeated-instance, performance, generated-artifact, and `git diff --check`
+  gates pass from the final source state.
+- No default-system switch, approval promotion, delivery, or cleanup occurs.
 
 ## Human-owned Decisions
 
-- Deployment, publishing, pushing, merging, public release, and pull requests.
-- Any product decision that changes the approved character visuals or runtime
-  scheduling model.
-- Approval of any theme beyond the three specified comparison themes.
+- Final visual acceptance of the 52 new icons and their showcase performances.
+- Promotion from `visual-review` to `approved` and any default-system switch.
+- Phase 2 lifecycle/state semantics and all external delivery actions.
 
 ## Forbidden Actions
 
-- Do not deploy, publish, merge, send external messages, alter secrets, or make
-  billing, auth, permission, legal, or destructive data changes without explicit
-  approval.
-- Do not expand scope, replace a missing decision, or invent work to consume
-  time.
-- Do not reset, clean, discard, or broadly stage the current dirty worktree.
-
-## Approved Assumptions
-
-- The request to complete every roadmap task authorizes implementation through
-  its four checkpoints using automated and local browser evidence.
-- Existing user-visible character timing (`0.8 s` repeat gap, `0.44 s` breath,
-  `1.012` scale) is frozen.
-- Optional export tools may report an explicit skipped state when genuinely
-  unavailable; mandatory source, HTML, SVG, browser, and quality gates may not.
+- Do not copy third-party icon assets or geometry.
+- Do not infer approval from automated tests.
+- Do not weaken validators, lower quality thresholds, or hide failed batches.
+- Do not reset, clean, discard, broadly stage, or delete the isolated worktree.

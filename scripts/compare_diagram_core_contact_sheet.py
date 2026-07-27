@@ -14,6 +14,7 @@ import sys
 import tempfile
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from html.parser import HTMLParser
 from pathlib import Path
 
 from PIL import Image
@@ -23,6 +24,7 @@ CAPTURE_SCHEMA = "anidiagram.diagram-core.capture"
 CAPTURE_VERSION = 1
 REPO_ROOT = Path(__file__).resolve().parent.parent
 INDEX_RELATIVE_PATH = "gallery/diagram-core/index.html"
+CELL_INDEX_RELATIVE_PATH = "gallery/diagram-core/cell-index.json"
 SOURCE_ASSET_PATHS = tuple(
     sorted(
         [
@@ -38,9 +40,6 @@ SOURCE_ASSET_PATHS = tuple(
 )
 VIEWPORT = {"width": 1280, "height": 900, "device_scale_factor": 1}
 LOCATOR_SELECTOR = "#diagram-core-regression-grid"
-EXPECTED_CELLS = 48
-EXPECTED_WIDTH = 1248
-EXPECTED_HEIGHT = 416
 
 
 class VisualComparisonError(ValueError):
@@ -84,6 +83,10 @@ class ProvenanceFile:
 class RepositoryProvenance:
     package_lock_snapshot: FileSnapshot
     index_snapshot: FileSnapshot
+    cell_index_snapshot: FileSnapshot
+    cell_index_relative_path: str
+    contact_sheet: dict
+    input_grid: dict
     playwright_version: str
     source_assets: tuple
     source_assets_joint_sha256: str
@@ -95,6 +98,17 @@ class ValidatedCapture:
     digest: str
     image: Image.Image
     repository_provenance: RepositoryProvenance
+
+
+class _ReviewGridParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.matches = []
+
+    def handle_starttag(self, tag, attrs):
+        attributes = dict(attrs)
+        if attributes.get("id") == "diagram-core-regression-grid":
+            self.matches.append((tag, attributes))
 
 
 def _validate_thresholds(channel_tolerance, max_diff_ratio):
@@ -395,6 +409,116 @@ def _require_sha256(value, label):
     return value
 
 
+def _positive_integer(value, label):
+    if type(value) is not int or value <= 0:
+        raise VisualComparisonError("{0} must be a positive integer".format(label))
+    return value
+
+
+def contact_sheet_specification(payload):
+    """Validate a generated cell index and return its derived review axes."""
+
+    _require_exact_keys(payload, {"version", "grid", "cells"}, "cell index")
+    _require_exact_integer(payload["version"], 1, "cell index version")
+    grid = payload["grid"]
+    _require_exact_keys(grid, {"columns", "rows", "cells"}, "cell index grid")
+    columns = _positive_integer(grid["columns"], "cell index grid.columns")
+    rows = _positive_integer(grid["rows"], "cell index grid.rows")
+    cell_count = _positive_integer(grid["cells"], "cell index grid.cells")
+    cells = payload["cells"]
+    if not isinstance(cells, list) or len(cells) != cell_count:
+        raise VisualComparisonError("cell index cells must match grid.cells")
+    icons = []
+    sizes = []
+    contexts = []
+    cell_ids = set()
+    for ordinal, cell in enumerate(cells):
+        _require_exact_keys(
+            cell,
+            {"ordinal", "cell_id", "icon_id", "size", "context", "pose"},
+            "cell index cells[{0}]".format(ordinal),
+        )
+        _require_exact_integer(cell["ordinal"], ordinal, "cell index ordinal")
+        for key in ("cell_id", "icon_id", "context", "pose"):
+            _require_nonempty_string(cell[key], "cell index {0}".format(key))
+        _positive_integer(cell["size"], "cell index size")
+        if cell["cell_id"] in cell_ids:
+            raise VisualComparisonError("cell index cell_id values must be unique")
+        cell_ids.add(cell["cell_id"])
+        if cell["icon_id"] not in icons:
+            icons.append(cell["icon_id"])
+        if cell["size"] not in sizes:
+            sizes.append(cell["size"])
+        if cell["context"] not in contexts:
+            contexts.append(cell["context"])
+        if cell["pose"] != "authored-rest":
+            raise VisualComparisonError("cell index pose must be authored-rest")
+    if len(sizes) != 3 or len(contexts) != 4:
+        raise VisualComparisonError(
+            "cell index must contain three sizes and four contexts"
+        )
+    if columns != len(icons) * len(sizes) or rows != len(contexts):
+        raise VisualComparisonError("cell index grid does not match its axes")
+    expected = [
+        (icon_id, size, context)
+        for context in contexts
+        for icon_id in icons
+        for size in sizes
+    ]
+    actual = [
+        (cell["icon_id"], cell["size"], cell["context"])
+        for cell in cells
+    ]
+    if actual != expected:
+        raise VisualComparisonError(
+            "cell index cells are not the canonical row-major product"
+        )
+    return {
+        "columns": columns,
+        "rows": rows,
+        "cells": cell_count,
+        "icons": tuple(icons),
+        "sizes": tuple(sizes),
+        "contexts": tuple(contexts),
+    }
+
+
+def _input_grid_specification(snapshot, contact_sheet):
+    try:
+        source = snapshot.payload.decode("utf-8")
+    except UnicodeError as error:
+        raise VisualComparisonError("review input must be valid UTF-8 HTML") from error
+    parser = _ReviewGridParser()
+    parser.feed(source)
+    if len(parser.matches) != 1 or parser.matches[0][0] != "svg":
+        raise VisualComparisonError(
+            "review input must contain exactly one SVG regression grid"
+        )
+    attributes = parser.matches[0][1]
+
+    def integer_attribute(name):
+        value = attributes.get(name, "")
+        if not value.isdecimal():
+            raise VisualComparisonError(
+                "review input grid {0} must be an integer".format(name)
+            )
+        return _positive_integer(int(value), "review input grid {0}".format(name))
+
+    grid = {
+        "columns": integer_attribute("data-grid-columns"),
+        "rows": integer_attribute("data-grid-rows"),
+        "cells": integer_attribute("data-cell-count"),
+        "width": integer_attribute("width"),
+        "height": integer_attribute("height"),
+    }
+    for key in ("columns", "rows", "cells"):
+        if grid[key] != contact_sheet[key]:
+            raise VisualComparisonError(
+                "review input grid does not match the generated cell index"
+            )
+    return grid
+
+
 def _capture_metadata_digest(metadata):
     capture = copy.deepcopy(metadata)
     capture.pop("approval", None)
@@ -415,10 +539,42 @@ def _metadata_image_path(path):
         return str(target)
 
 
+def _repository_file(relative_path, label):
+    value = _require_nonempty_string(relative_path, label)
+    if "\\" in value or Path(value).is_absolute():
+        raise VisualComparisonError("{0} must be a repository-relative path".format(label))
+    root = REPO_ROOT.resolve()
+    target = (root / value).resolve(strict=False)
+    try:
+        target.relative_to(root)
+    except ValueError as error:
+        raise VisualComparisonError(
+            "{0} must remain inside the repository".format(label)
+        ) from error
+    return target
+
+
+def _source_asset_paths(icons):
+    return tuple(
+        sorted(
+            [
+                "assets/diagram-core/catalog.json",
+                "assets/diagram-core/tokens.css",
+            ]
+            + [
+                "assets/diagram-core/{0}/{1}.{2}".format(directory, icon, suffix)
+                for icon in icons
+                for directory, suffix in (("icons", "svg"), ("manifests", "json"))
+            ]
+        )
+    )
+
+
 def _ensure_repository_provenance_current(provenance):
     snapshots = (
         (provenance.package_lock_snapshot, "package lock"),
-        (provenance.index_snapshot, "canonical Diagram Core index"),
+        (provenance.index_snapshot, "Diagram Core review input"),
+        (provenance.cell_index_snapshot, "Diagram Core cell index"),
     ) + tuple(
         (
             entry.snapshot,
@@ -430,7 +586,7 @@ def _ensure_repository_provenance_current(provenance):
         _ensure_snapshot_current(snapshot, label)
 
 
-def _read_repository_provenance():
+def _read_repository_provenance(metadata=None):
     package_lock_snapshot = _read_file_snapshot(
         REPO_ROOT / "package-lock.json",
         "package lock",
@@ -444,12 +600,32 @@ def _read_repository_provenance():
         version,
         "locked Playwright version",
     )
+    if metadata is None:
+        input_relative_path = INDEX_RELATIVE_PATH
+        cell_index_relative_path = CELL_INDEX_RELATIVE_PATH
+    else:
+        input_relative_path = _nested(metadata, ("input", "path"), "capture metadata")
+        cell_index_relative_path = _nested(
+            metadata,
+            ("contact_sheet", "cell_index", "path"),
+            "capture metadata",
+        )
     index_snapshot = _read_file_snapshot(
-        REPO_ROOT / INDEX_RELATIVE_PATH,
-        "canonical Diagram Core index",
+        _repository_file(input_relative_path, "input path"),
+        "Diagram Core review input",
     )
+    cell_index_snapshot = _read_file_snapshot(
+        _repository_file(cell_index_relative_path, "cell index path"),
+        "Diagram Core cell index",
+    )
+    try:
+        cell_index_payload = json.loads(cell_index_snapshot.payload.decode("utf-8"))
+    except (UnicodeError, json.JSONDecodeError) as error:
+        raise VisualComparisonError("cell index is not valid UTF-8 JSON") from error
+    contact_sheet = contact_sheet_specification(cell_index_payload)
+    input_grid = _input_grid_specification(index_snapshot, contact_sheet)
     source_assets = []
-    for relative_path in SOURCE_ASSET_PATHS:
+    for relative_path in _source_asset_paths(contact_sheet["icons"]):
         snapshot = _read_file_snapshot(
             REPO_ROOT / relative_path,
             "canonical source asset {0}".format(relative_path),
@@ -468,6 +644,10 @@ def _read_repository_provenance():
     provenance = RepositoryProvenance(
         package_lock_snapshot=package_lock_snapshot,
         index_snapshot=index_snapshot,
+        cell_index_snapshot=cell_index_snapshot,
+        cell_index_relative_path=cell_index_relative_path,
+        contact_sheet=contact_sheet,
+        input_grid=input_grid,
         playwright_version=playwright_version,
         source_assets=tuple(source_assets),
         source_assets_joint_sha256=_sha256_bytes(joint_payload),
@@ -509,6 +689,7 @@ def _validate_capture_metadata(
         "platform",
         "viewport",
         "locator",
+        "contact_sheet",
         "capture",
         "input",
         "image",
@@ -525,7 +706,40 @@ def _validate_capture_metadata(
         "{0} capture version".format(label),
     )
     if repository_provenance is None:
-        repository_provenance = _read_repository_provenance()
+        repository_provenance = _read_repository_provenance(metadata)
+
+    contact_sheet = _nested(metadata, ("contact_sheet",), label)
+    _require_exact_keys(
+        contact_sheet,
+        {"cell_index", "grid", "icons", "sizes", "contexts"},
+        "{0} contact sheet".format(label),
+    )
+    cell_index = contact_sheet["cell_index"]
+    _require_exact_keys(
+        cell_index,
+        {"path", "sha256"},
+        "{0} cell index".format(label),
+    )
+    if cell_index["path"] != repository_provenance.cell_index_relative_path:
+        raise VisualComparisonError("{0} cell index path is not current".format(label))
+    if _require_sha256(
+        cell_index["sha256"], "{0} cell index SHA-256".format(label)
+    ) != _sha256_bytes(repository_provenance.cell_index_snapshot.payload):
+        raise VisualComparisonError("{0} cell index SHA-256 is not current".format(label))
+    derived_sheet = repository_provenance.contact_sheet
+    expected_contact_sheet = {
+        "cell_index": cell_index,
+        "grid": {
+            key: derived_sheet[key] for key in ("columns", "rows", "cells")
+        },
+        "icons": list(derived_sheet["icons"]),
+        "sizes": list(derived_sheet["sizes"]),
+        "contexts": list(derived_sheet["contexts"]),
+    }
+    if contact_sheet != expected_contact_sheet:
+        raise VisualComparisonError(
+            "{0} contact sheet does not match its generated cell index".format(label)
+        )
 
     browser = _nested(metadata, ("browser",), label)
     _require_exact_keys(
@@ -572,20 +786,21 @@ def _validate_capture_metadata(
         raise VisualComparisonError("{0} locator is not the locked capture locator".format(label))
     _require_exact_integer(
         locator["cells"],
-        EXPECTED_CELLS,
+        derived_sheet["cells"],
         "{0} locator.cells".format(label),
     )
     bounds = locator["bounding_box"]
     _require_exact_keys(bounds, {"x", "y", "width", "height"}, "{0} bounding box".format(label))
-    for key, expected in (
-        ("x", 0),
-        ("y", 0),
-        ("width", EXPECTED_WIDTH),
-        ("height", EXPECTED_HEIGHT),
-    ):
+    for key, expected in (("x", 0), ("y", 0)):
         _require_exact_integer(
             bounds[key],
             expected,
+            "{0} bounding_box.{1}".format(label, key),
+        )
+    for key in ("width", "height"):
+        _require_exact_integer(
+            bounds[key],
+            repository_provenance.input_grid[key],
             "{0} bounding_box.{1}".format(label, key),
         )
 
@@ -617,8 +832,11 @@ def _validate_capture_metadata(
 
     input_metadata = _nested(metadata, ("input",), label)
     _require_exact_keys(input_metadata, {"path", "sha256"}, "{0} input".format(label))
-    if input_metadata["path"] != INDEX_RELATIVE_PATH:
-        raise VisualComparisonError("{0} input path is not the canonical index".format(label))
+    expected_input_path = repository_provenance.index_snapshot.path.relative_to(
+        REPO_ROOT.resolve()
+    ).as_posix()
+    if input_metadata["path"] != expected_input_path:
+        raise VisualComparisonError("{0} input path is not current".format(label))
     if input_metadata["sha256"] != _sha256_bytes(
         repository_provenance.index_snapshot.payload
     ):
@@ -632,12 +850,12 @@ def _validate_capture_metadata(
     )
     _require_exact_integer(
         image_metadata["width"],
-        EXPECTED_WIDTH,
+        bounds["width"],
         "{0} image.width".format(label),
     )
     _require_exact_integer(
         image_metadata["height"],
-        EXPECTED_HEIGHT,
+        bounds["height"],
         "{0} image.height".format(label),
     )
     image_snapshot = _read_file_snapshot(image_path, "{0} image".format(label))
@@ -653,13 +871,9 @@ def _validate_capture_metadata(
         )
     capture_image = _decode_capture_image(image_snapshot, "{0} image".format(label))
     actual_dimensions = (capture_image.width, capture_image.height)
-    if actual_dimensions != (EXPECTED_WIDTH, EXPECTED_HEIGHT):
+    if actual_dimensions != (bounds["width"], bounds["height"]):
         raise VisualComparisonError(
-            "{0} image dimensions must be {1}x{2}".format(
-                label,
-                EXPECTED_WIDTH,
-                EXPECTED_HEIGHT,
-            )
+            "{0} image dimensions must match its captured bounds".format(label)
         )
     if bounds["width"] != capture_image.width or bounds["height"] != capture_image.height:
         raise VisualComparisonError("{0} bounding box does not match image dimensions".format(label))
@@ -671,9 +885,14 @@ def _validate_capture_metadata(
         "{0} source assets".format(label),
     )
     files = source_assets["files"]
-    if not isinstance(files, list) or len(files) != len(SOURCE_ASSET_PATHS):
-        raise VisualComparisonError("{0} must list exactly 10 source asset files".format(label))
-    expected_paths = list(SOURCE_ASSET_PATHS)
+    expected_paths = list(_source_asset_paths(derived_sheet["icons"]))
+    if not isinstance(files, list) or len(files) != len(expected_paths):
+        raise VisualComparisonError(
+            "{0} must list exactly {1} source asset files".format(
+                label,
+                len(expected_paths),
+            )
+        )
     actual_paths = []
     for index, entry in enumerate(files):
         _require_exact_keys(
@@ -745,6 +964,8 @@ def _validate_capture_metadata(
 def _ensure_capture_compatibility(baseline_metadata, candidate_metadata):
     fields = (
         (("platform",), "platform"),
+        (("contact_sheet",), "contact sheet specification"),
+        (("input",), "review input"),
         (("source_assets", "joint_sha256"), "source asset digest"),
         (("browser", "playwright_version"), "Playwright version"),
         (("browser", "chromium_version"), "Chromium version"),
@@ -1205,11 +1426,11 @@ def accept_candidate(
     candidate_metadata_path = _absolute(candidate_metadata)
     _prepare_output_path(baseline)
     _prepare_output_path(baseline_metadata)
-    repository_provenance = _read_repository_provenance()
     metadata, metadata_snapshot = _read_metadata_snapshot(
         candidate_metadata_path,
         "candidate metadata",
     )
+    repository_provenance = _read_repository_provenance(metadata)
     validated = _validate_capture_metadata(
         metadata,
         candidate_path,
@@ -1289,7 +1510,6 @@ def compare_capture_files(
     try:
         baseline_path = _absolute(baseline)
         candidate_path = _absolute(candidate)
-        repository_provenance = _read_repository_provenance()
         baseline_payload, baseline_metadata_snapshot = _read_metadata_snapshot(
             baseline_metadata,
             "baseline metadata",
@@ -1298,6 +1518,7 @@ def compare_capture_files(
             candidate_metadata,
             "candidate metadata",
         )
+        repository_provenance = _read_repository_provenance(candidate_payload)
         baseline_validated = _validate_capture_metadata(
             baseline_payload,
             baseline_path,

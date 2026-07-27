@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Linked knowledge cards icon" data-icon="knowledge-base">
+  <g data-part="body">
+    <rect x="11" y="14" width="74" height="68" rx="18" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+  </g>
+  <g data-part="card-left">
+    <rect x="18" y="23" width="23" height="27" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <line x1="24" y1="32" x2="35" y2="32" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+  </g>
+  <g data-part="card-center">
+    <rect x="36.5" y="53" width="23" height="24" rx="6" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <line x1="42.5" y1="62" x2="53.5" y2="62" stroke="var(--icon-surface-main, #fffaf2)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+  </g>
+  <g data-part="card-right">
+    <rect x="55" y="23" width="23" height="27" rx="6" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <line x1="61" y1="32" x2="72" y2="32" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+  </g>
+  <g data-part="links">
+    <line x1="36" y1="43" x2="43" y2="53" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    <line x1="60" y1="43" x2="53" y2="53" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    <line x1="41" y1="40" x2="55" y2="40" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+  </g>
+  <g data-part="core">
+    <circle cx="48" cy="43" r="7" fill="var(--icon-surface-contrast, #14213d)"/>
+    <circle cx="48" cy="43" r="3.3" fill="var(--icon-accent-secondary, #45c5bd)"/>
+  </g>
+  <g data-part="indicator">
+    <circle cx="76" cy="70" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+  </g>
+</svg>

@@ -1,0 +1,18 @@
+{
+  "id": "file",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "files-content",
+  "semantic_kind": "file",
+  "structural_prototype": "folded-file-card",
+  "parts": ["body", "sheet", "fold", "content-line-top", "content-line-bottom", "indicator"],
+  "attachments": {
+    "receive": {"x": 12, "y": 48},
+    "send": {"x": 84, "y": 48},
+    "status": {"x": 68, "y": 70}
+  },
+  "states": [],
+  "actions": ["receive", "open", "read", "send"],
+  "status": "visual-review"
+}

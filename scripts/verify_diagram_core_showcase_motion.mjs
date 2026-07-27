@@ -9,13 +9,23 @@ import { chromium } from "playwright";
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SHOWCASE_PATH = path.join(REPO_ROOT, "gallery", "diagram-core", "showcase.html");
+const CATALOG_PATH = path.join(REPO_ROOT, "assets", "diagram-core", "catalog.json");
 const MOTION_CATALOG_PATH = path.join(REPO_ROOT, "runtime", "motion-catalog.json");
-const ICONS = Object.freeze(["agent", "database", "api", "server"]);
-const OPERATION_TIMEOUT_MS = 10_000;
-const AMPLITUDE = Object.freeze({ translation: 4, rotation: 4, scale: 0.08 });
+const CATALOG_VISUAL_REVIEW_ICONS = Object.freeze(
+  JSON.parse(readFileSync(CATALOG_PATH, "utf8")).icons
+    .filter((entry) => entry.status === "visual-review")
+    .map((entry) => entry.id)
+);
 const SHOWCASE_DEFINITIONS = Object.freeze(
   JSON.parse(readFileSync(MOTION_CATALOG_PATH, "utf8")).diagram_core_presentations
 );
+const ICONS = Object.freeze(
+  SHOWCASE_DEFINITIONS.map((entry) => entry.icon)
+);
+const ICON_COUNT = ICONS.length;
+const PERFORMANCE_ICON_COUNT = 20;
+const OPERATION_TIMEOUT_MS = 10_000;
+const AMPLITUDE = Object.freeze({ translation: 4, rotation: 4, scale: 0.08 });
 
 
 function fail(message) {
@@ -45,18 +55,23 @@ async function verifySemanticBoundary(page) {
     cards: document.querySelectorAll("[data-showcase-card]").length,
     manifest: JSON.parse(document.getElementById("anidiagram-motion-manifest").textContent),
   }));
-  if (boundary.presentations !== 4 || boundary.cards !== 4) {
-    fail(`expected four showcase icons, got presentations=${boundary.presentations} cards=${boundary.cards}`);
+  if (boundary.presentations !== ICON_COUNT || boundary.cards !== ICON_COUNT) {
+    fail(`expected ${ICON_COUNT} showcase icons, got presentations=${boundary.presentations} cards=${boundary.cards}`);
   }
   if (boundary.states !== 0 || boundary.stateMarks !== 0) {
     fail(`semantic state leaked into v1 review: states=${boundary.states} marks=${boundary.stateMarks}`);
   }
-  if (boundary.manifest.profile !== "showcase" || boundary.manifest.icons.length !== 4) {
-    fail("motion manifest does not declare one four-icon showcase profile");
+  if (boundary.manifest.profile !== "showcase" || boundary.manifest.icons.length !== ICON_COUNT) {
+    fail(`motion manifest does not declare one ${ICON_COUNT}-icon showcase profile`);
   }
   const manifestIcons = boundary.manifest.icons.map((entry) => entry.icon);
   if (JSON.stringify(manifestIcons) !== JSON.stringify(ICONS)) {
     fail(`unexpected manifest icon order: ${manifestIcons.join(",")}`);
+  }
+  const catalogIcons = [...CATALOG_VISUAL_REVIEW_ICONS].sort();
+  const definitionIcons = [...new Set(SHOWCASE_DEFINITIONS.map((entry) => entry.icon))].sort();
+  if (JSON.stringify(definitionIcons) !== JSON.stringify(catalogIcons)) {
+    fail(`motion catalog visual-review set does not match catalog: ${definitionIcons.join(",")}`);
   }
   for (const [index, definition] of SHOWCASE_DEFINITIONS.entries()) {
     const entry = boundary.manifest.icons[index];
@@ -82,7 +97,7 @@ async function verifySemanticBoundary(page) {
 
 
 async function verifyExpressiveMotion(page) {
-  await page.waitForFunction(() => (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length === 4);
+  await page.waitForFunction((count) => (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length === count, ICON_COUNT);
   const report = await page.evaluate(({ amplitude }) => {
     const manifest = JSON.parse(document.getElementById("anidiagram-motion-manifest").textContent);
     const timelines = window.__ANIDIAGRAM_ICON_TIMELINES__;
@@ -180,8 +195,9 @@ async function verifyExpressiveMotion(page) {
     if (entry.peaks.translation > 10 + 0.01) {
       fail(`${entry.icon} translation peak ${entry.peaks.translation.toFixed(3)} exceeds 10 units`);
     }
-    if (entry.peaks.rotation > 14 + 0.01) {
-      fail(`${entry.icon} rotation peak ${entry.peaks.rotation.toFixed(3)} exceeds 14 degrees`);
+    const rotationLimit = entry.icon === "search" ? 360 : 14;
+    if (entry.peaks.rotation > rotationLimit + 0.01) {
+      fail(`${entry.icon} rotation peak ${entry.peaks.rotation.toFixed(3)} exceeds ${rotationLimit} degrees`);
     }
     if (entry.minBodyScale < 0.88 - 0.001 || entry.maxBodyScale > 1.16 + 0.001) {
       fail(`${entry.icon} body scale range ${entry.minBodyScale}-${entry.maxBodyScale} is out of bounds`);
@@ -191,6 +207,334 @@ async function verifyExpressiveMotion(page) {
     }
   }
   return report;
+}
+
+
+async function verifySearchCircularWobble(page) {
+  const report = await page.evaluate(() => {
+    const manifest = JSON.parse(document.getElementById("anidiagram-motion-manifest").textContent);
+    const searchIndex = manifest.icons.findIndex((entry) => entry.icon === "search");
+    const search = manifest.icons[searchIndex];
+    const timeline = window.__ANIDIAGRAM_ICON_TIMELINES__[searchIndex];
+    const body = document.querySelector(search.parts.body);
+    const lens = document.querySelector(search.parts.lens);
+    const handle = document.querySelector(search.parts.handle);
+    const expected = [
+      [0.06, 0, -4],
+      [0.115, 3, -3],
+      [0.17, 4, 0],
+      [0.225, 3, 3],
+      [0.28, 0, 4],
+      [0.335, -3, 3],
+      [0.39, -4, 0],
+      [0.445, -3, -3],
+      [0.5, 0, -4],
+      [0.58, 0, 0],
+    ];
+    timeline.pause();
+    const samples = expected.map(([time, expectedX, expectedY]) => {
+      timeline.seek(time, false);
+      const number = (target, property) => Number(window.gsap.getProperty(target, property)) || 0;
+      return {
+        time,
+        expectedX,
+        expectedY,
+        x: number(body, "x"),
+        y: number(body, "y"),
+        rotation: number(body, "rotation"),
+        lensOwnMotion: Math.max(
+          Math.abs(number(lens, "x")),
+          Math.abs(number(lens, "y")),
+          Math.abs(number(lens, "rotation")),
+        ),
+        handleOwnMotion: Math.max(
+          Math.abs(number(handle, "x")),
+          Math.abs(number(handle, "y")),
+          Math.abs(number(handle, "rotation")),
+        ),
+      };
+    });
+    timeline.seek(timeline.__anidiagramRestAt, false);
+    return samples;
+  });
+
+  for (const sample of report) {
+    if (Math.abs(sample.x - sample.expectedX) > 0.06 || Math.abs(sample.y - sample.expectedY) > 0.06) {
+      fail(`search circular wobble deviates at ${sample.time}s: got ${sample.x.toFixed(3)},${sample.y.toFixed(3)}`);
+    }
+    if (Math.abs(sample.rotation) > 0.01) {
+      fail(`search whole body rotates instead of retaining orientation at ${sample.time}s`);
+    }
+    if (sample.lensOwnMotion > 0.01 || sample.handleOwnMotion > 0.01) {
+      fail(`search lens or handle owns separate motion at ${sample.time}s`);
+    }
+  }
+  return report;
+}
+
+
+async function verifyDatabaseLayerWave(page) {
+  const report = await page.evaluate(() => {
+    const manifest = JSON.parse(document.getElementById("anidiagram-motion-manifest").textContent);
+    const databaseIndex = manifest.icons.findIndex((entry) => entry.icon === "database");
+    const database = manifest.icons[databaseIndex];
+    const timeline = window.__ANIDIAGRAM_ICON_TIMELINES__[databaseIndex];
+    const layerNames = ["layerTop", "layerMiddle", "layerBottom"];
+    const layers = layerNames.map((name) => document.querySelector(database.parts[name]));
+    const samples = Array.from(
+      { length: 401 },
+      (_, sampleIndex) => timeline.duration() * sampleIndex / 400
+    );
+    const maxHorizontalShift = [0, 0, 0];
+    const verticalPeak = [0, 0, 0];
+    const maxVerticalShift = [0, 0, 0];
+    const verticalPeakAt = [0, 0, 0];
+    const minScaleX = [1, 1, 1];
+    const maxScaleX = [1, 1, 1];
+    timeline.pause();
+    for (const time of samples) {
+      timeline.seek(Math.min(time, timeline.duration()), false);
+      layers.forEach((layer, index) => {
+        const x = Math.abs(Number(window.gsap.getProperty(layer, "x")) || 0);
+        const y = Number(window.gsap.getProperty(layer, "y")) || 0;
+        const scaleX = Number(window.gsap.getProperty(layer, "scaleX")) || 1;
+        maxHorizontalShift[index] = Math.max(maxHorizontalShift[index], x);
+        maxVerticalShift[index] = Math.max(maxVerticalShift[index], y);
+        minScaleX[index] = Math.min(minScaleX[index], scaleX);
+        maxScaleX[index] = Math.max(maxScaleX[index], scaleX);
+        if (y < verticalPeak[index]) {
+          verticalPeak[index] = y;
+          verticalPeakAt[index] = time;
+        }
+      });
+    }
+    timeline.seek(timeline.duration(), false);
+    const finalPose = layers.map((layer) => ({
+      x: Number(window.gsap.getProperty(layer, "x")) || 0,
+      y: Number(window.gsap.getProperty(layer, "y")) || 0,
+      scaleX: Number(window.gsap.getProperty(layer, "scaleX")) || 1,
+    }));
+    return {
+      layerNames,
+      maxHorizontalShift,
+      verticalPeak,
+      maxVerticalShift,
+      verticalPeakAt,
+      minScaleX,
+      maxScaleX,
+      finalPose,
+    };
+  });
+  if (report.maxHorizontalShift.some((value) => value > 0.001)) {
+    fail(`database separator layers drift horizontally: ${report.maxHorizontalShift.join(",")}`);
+  }
+  if (report.verticalPeak.some((value) => value < -2.1 || value > -1.5)
+      || report.maxVerticalShift.some((value) => value > 0.001)) {
+    fail(`database separator layer wave amplitude is out of bounds: ${report.verticalPeak.join(",")}`);
+  }
+  if (report.minScaleX.some((value) => value < 0.93 || value > 0.95)
+      || report.maxScaleX.some((value) => value < 1.03 || value > 1.05)) {
+    fail(`database separator layer scale wave is out of bounds: min=${report.minScaleX.join(",")} max=${report.maxScaleX.join(",")}`);
+  }
+  if (!(report.verticalPeakAt[0] < report.verticalPeakAt[1]
+      && report.verticalPeakAt[1] < report.verticalPeakAt[2])) {
+    fail(`database separator layer wave is not top-to-bottom: ${report.verticalPeakAt.join(",")}`);
+  }
+  if (report.finalPose.some(({ x, y, scaleX }) => (
+    Math.abs(x) > 0.001 || Math.abs(y) > 0.001 || Math.abs(scaleX - 1) > 0.001
+  ))) {
+    fail(`database separator layers do not restore authored rest: ${JSON.stringify(report.finalPose)}`);
+  }
+  return report;
+}
+
+
+async function verifyDeclarativeRecipePolicy(browser) {
+  const { context, page } = await openPage(browser);
+  try {
+    await page.waitForFunction((count) => (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length === count, ICON_COUNT);
+    const report = await page.evaluate(() => {
+      window.AniDiagramRuntime.stop();
+      const manifestElement = document.getElementById("anidiagram-motion-manifest");
+      const sourceManifest = JSON.parse(manifestElement.textContent);
+      const original = sourceManifest.icons[0];
+      const secondIcon = sourceManifest.icons[1];
+      const bodyName = Object.prototype.hasOwnProperty.call(original.parts, "body")
+        ? "body"
+        : Object.keys(original.parts)[0];
+      const body = document.querySelector(original.parts[bodyName]);
+      const initialOpacity = Number(window.gsap.getProperty(body, "opacity"));
+      const base = {
+        ...original,
+        performance: "__declarative-recipe-policy-test__",
+        rest_at: 0.4,
+        repeat_delay: 1,
+        duration_ms: 667,
+        recipe: {
+          tracks: [{
+            parts: [bodyName],
+            steps: [{
+              to: { y: -5, opacity: 0.45 },
+              duration: 0.18,
+              ease: "power2.out",
+              at: 0,
+            }],
+          }],
+        },
+      };
+      const run = (entry) => {
+        window.AniDiagramRuntime.stop();
+        manifestElement.textContent = JSON.stringify({
+          version: "recipe-policy-test",
+          mode: "ambient",
+          profile: "showcase",
+          icon_system: "diagram-core-v1",
+          icons: [entry],
+          edges: [],
+          groups: [],
+        });
+        window.AniDiagramRuntime.play();
+        return (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length;
+      };
+      const runBoundaryAttack = (entry) => {
+        window.AniDiagramRuntime.stop();
+        const bodyStyle = document.body.getAttribute("style");
+        const bodyTransform = document.body.getAttribute("transform");
+        const bodyComputedTransform = getComputedStyle(document.body).transform;
+        manifestElement.textContent = JSON.stringify({
+          version: "recipe-boundary-policy-test",
+          mode: "ambient",
+          profile: "showcase",
+          icon_system: "diagram-core-v1",
+          icons: [entry],
+          edges: [],
+          groups: [],
+        });
+        let error = null;
+        try {
+          window.AniDiagramRuntime.play();
+          const timeline = (window.__ANIDIAGRAM_ICON_TIMELINES__ || [])[0];
+          if (timeline) {
+            timeline.pause();
+            timeline.seek(Math.min(0.18, timeline.duration()), false);
+          }
+        } catch (caught) {
+          error = `${caught.name}: ${caught.message}`;
+        }
+        const result = {
+          timelines: (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length,
+          error,
+          bodyStyleChanged: document.body.getAttribute("style") !== bodyStyle,
+          bodyTransformChanged: document.body.getAttribute("transform") !== bodyTransform,
+          bodyComputedTransformChanged: getComputedStyle(document.body).transform !== bodyComputedTransform,
+        };
+        try {
+          window.AniDiagramRuntime.stop();
+        } catch (caught) {
+          result.error = result.error || `${caught.name}: ${caught.message}`;
+        }
+        window.gsap.set(document.body, { clearProps: "all" });
+        if (bodyStyle === null) document.body.removeAttribute("style");
+        else document.body.setAttribute("style", bodyStyle);
+        if (bodyTransform === null) document.body.removeAttribute("transform");
+        else document.body.setAttribute("transform", bodyTransform);
+        return result;
+      };
+      const validCount = run(base);
+      const timeline = window.__ANIDIAGRAM_ICON_TIMELINES__[0];
+      timeline.pause();
+      timeline.seek(0.18, false);
+      const activeY = Number(window.gsap.getProperty(body, "y"));
+      const activeOpacity = Number(window.gsap.getProperty(body, "opacity"));
+      timeline.seek(timeline.duration(), false);
+      const restY = Number(window.gsap.getProperty(body, "y"));
+      const restOpacity = Number(window.gsap.getProperty(body, "opacity"));
+
+      const missingRecipe = { ...base };
+      delete missingRecipe.recipe;
+      const illegalProperty = JSON.parse(JSON.stringify(base));
+      illegalProperty.recipe.tracks[0].steps[0].to.filter = 3;
+      const illegalEase = JSON.parse(JSON.stringify(base));
+      illegalEase.recipe.tracks[0].steps[0].ease = "steps(1)";
+      const missingPart = JSON.parse(JSON.stringify(base));
+      missingPart.recipe.tracks[0].parts = ["not-declared"];
+      const beyondRest = JSON.parse(JSON.stringify(base));
+      beyondRest.recipe.tracks[0].steps[0].at = 0.3;
+      beyondRest.recipe.tracks[0].steps[0].duration = 0.2;
+      const extraField = JSON.parse(JSON.stringify(base));
+      extraField.recipe.tracks[0].steps[0].onComplete = "unsafe";
+      const duplicateTrackTarget = JSON.parse(JSON.stringify(base));
+      duplicateTrackTarget.parts.bodyAlias = duplicateTrackTarget.parts[bodyName];
+      const duplicateTargetTrack = JSON.parse(
+        JSON.stringify(duplicateTrackTarget.recipe.tracks[0])
+      );
+      duplicateTargetTrack.parts = ["bodyAlias"];
+      duplicateTrackTarget.recipe.tracks.push(duplicateTargetTrack);
+      const foreignSelector = JSON.parse(JSON.stringify(base));
+      foreignSelector.parts = { evil: "body" };
+      foreignSelector.recipe.tracks[0].parts = ["evil"];
+      const prototypePart = JSON.parse(JSON.stringify(base));
+      prototypePart.parts = JSON.parse(`{"__proto__":${JSON.stringify(original.parts[bodyName])}}`);
+      prototypePart.recipe.tracks[0].parts = ["__proto__"];
+      const malformedSelector = JSON.parse(JSON.stringify(base));
+      malformedSelector.parts = { evil: "[" };
+      malformedSelector.recipe.tracks[0].parts = ["evil"];
+      const malformedRootSelector = JSON.parse(JSON.stringify(base));
+      malformedRootSelector.root = "[";
+      const crossInstance = JSON.parse(JSON.stringify(base));
+      crossInstance.parts = {
+        anchor: original.parts[bodyName],
+        evil: secondIcon.parts.body,
+      };
+      crossInstance.recipe.tracks[0].parts = ["evil"];
+      return {
+        validCount,
+        activeY,
+        activeOpacity,
+        initialOpacity,
+        restY,
+        restOpacity,
+        invalidCounts: [
+          run(missingRecipe),
+          run(illegalProperty),
+          run(illegalEase),
+          run(missingPart),
+          run(beyondRest),
+          run(extraField),
+          run(duplicateTrackTarget),
+        ],
+        boundaryAttacks: {
+          foreignSelector: runBoundaryAttack(foreignSelector),
+          prototypePart: runBoundaryAttack(prototypePart),
+          malformedSelector: runBoundaryAttack(malformedSelector),
+          malformedRootSelector: runBoundaryAttack(malformedRootSelector),
+          crossInstance: runBoundaryAttack(crossInstance),
+        },
+      };
+    });
+    if (report.validCount !== 1 || report.activeY > -4.5 || report.activeOpacity > 0.5) {
+      fail(`valid declarative recipe did not animate once: ${JSON.stringify(report)}`);
+    }
+    if (Math.abs(report.restY) > 0.001 || Math.abs(report.restOpacity - report.initialOpacity) > 0.001) {
+      fail(`declarative recipe did not restore authored rest: ${JSON.stringify(report)}`);
+    }
+    const boundaryFailures = Object.entries(report.boundaryAttacks).filter(([, entry]) => (
+      entry.timelines !== 0
+      || entry.error !== null
+      || entry.bodyStyleChanged
+      || entry.bodyTransformChanged
+      || entry.bodyComputedTransformChanged
+    ));
+    if (boundaryFailures.length) {
+      fail(`declarative recipe selector boundary did not fail closed: ${JSON.stringify(boundaryFailures)}`);
+    }
+    if (report.invalidCounts.some((count) => count !== 0)) {
+      fail(`missing or illegal declarative recipe did not fail closed: ${report.invalidCounts.join(",")}`);
+    }
+    return report;
+  } finally {
+    await context.close();
+  }
 }
 
 
@@ -229,14 +573,14 @@ async function verifyRestAndControls(page) {
   if (stopped !== 0) fail(`stop left ${stopped} icon timelines`);
 
   await page.getByRole("button", { name: "Showcase" }).click();
-  await page.waitForFunction(() => (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length === 4);
+  await page.waitForFunction((count) => (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length === count, ICON_COUNT);
   await page.getByRole("button", { name: "Off" }).click();
   await assertRest("Off");
   const off = await page.evaluate(() => (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length);
   if (off !== 0) fail(`Off left ${off} icon timelines`);
 
   await page.getByRole("button", { name: "Showcase" }).click();
-  await page.waitForFunction(() => (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length === 4);
+  await page.waitForFunction((count) => (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length === count, ICON_COUNT);
   await page.evaluate(() => {
     document.getElementById("restart").click();
     window.AniDiagramRuntime.pause();
@@ -252,43 +596,47 @@ async function verifyRestAndControls(page) {
 async function verifyRepeatedInstanceIsolation(browser) {
   const { context, page } = await openPage(browser);
   try {
-    await page.waitForFunction(() => (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length === 4);
+    await page.waitForFunction((count) => (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length === count, ICON_COUNT);
     await page.evaluate(() => window.AniDiagramRuntime.stop());
     const setup = await page.evaluate(() => {
       const manifestElement = document.getElementById("anidiagram-motion-manifest");
       const manifest = JSON.parse(manifestElement.textContent);
-      const original = manifest.icons[0];
-      const originalRoot = document.querySelector(`[data-icon="${original.icon}"][data-icon-presentation="showcase"]`);
-      const clone = originalRoot.cloneNode(true);
-      const idMap = new Map();
-      for (const element of [clone, ...clone.querySelectorAll("[id]")]) {
-        if (!element.id) continue;
-        const previous = element.id;
-        const next = `${previous}__repeat`;
-        idMap.set(previous, next);
-        element.id = next;
-      }
-      clone.setAttribute("data-repeat-fixture", "agent");
-      originalRoot.parentNode.appendChild(clone);
-      const duplicate = JSON.parse(JSON.stringify(original));
-      duplicate.node_id = `${original.node_id}-repeat`;
-      duplicate.delay = 0;
-      duplicate.parts = Object.fromEntries(
-        Object.entries(original.parts).map(([name, selector]) => [
-          name,
-          `#${idMap.get(selector.slice(1))}`,
-        ])
-      );
-      manifest.icons = [original, duplicate];
+      manifest.icons = manifest.icons.flatMap((original) => {
+        const originalRoot = document.querySelector(`[data-icon="${original.icon}"][data-icon-presentation="showcase"]`);
+        const clone = originalRoot.cloneNode(true);
+        const idMap = new Map();
+        for (const element of [clone, ...clone.querySelectorAll("[id]")]) {
+          if (!element.id) continue;
+          const previous = element.id;
+          const next = `${previous}__repeat`;
+          idMap.set(previous, next);
+          element.id = next;
+        }
+        clone.setAttribute("data-repeat-fixture", original.icon);
+        originalRoot.parentNode.appendChild(clone);
+        const duplicate = JSON.parse(JSON.stringify(original));
+        duplicate.node_id = `${original.node_id}-repeat`;
+        duplicate.delay = 0;
+        duplicate.parts = Object.fromEntries(
+          Object.entries(original.parts).map(([name, selector]) => [
+            name,
+            `#${idMap.get(selector.slice(1))}`,
+          ])
+        );
+        return [original, duplicate];
+      });
       manifestElement.textContent = JSON.stringify(manifest);
       const ids = [...document.querySelectorAll("[id]")].map((element) => element.id);
-      return { duplicateIds: ids.length - new Set(ids).size };
+      return { duplicateIds: ids.length - new Set(ids).size, entries: manifest.icons.length };
     });
     if (setup.duplicateIds !== 0) fail(`repeat fixture created ${setup.duplicateIds} duplicate DOM ids`);
+    if (setup.entries !== ICON_COUNT * 2) fail(`repeat fixture expected ${ICON_COUNT * 2} entries, got ${setup.entries}`);
 
-    await page.evaluate(() => window.AniDiagramRuntime.play());
-    await page.waitForFunction(() => (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length === 2);
-    const isolation = await page.evaluate(() => {
+    await page.evaluate(() => {
+      window.AniDiagramRuntime.play();
+    });
+    await page.waitForFunction((count) => (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length === count, ICON_COUNT * 2);
+    const isolationJson = await page.evaluate(() => {
       const entries = JSON.parse(document.getElementById("anidiagram-motion-manifest").textContent).icons;
       const timelines = window.__ANIDIAGRAM_ICON_TIMELINES__;
       const moving = (entry) => Object.values(entry.parts).some((selector) => {
@@ -303,16 +651,35 @@ async function verifyRepeatedInstanceIsolation(browser) {
         return values.some((value) => Math.abs(value) > 0.001);
       });
       timelines.forEach((timeline) => timeline.pause());
-      timelines[0].seek(0, false);
-      timelines[1].seek(0.4, false);
-      const secondOnly = !moving(entries[0]) && moving(entries[1]);
-      timelines[0].seek(0.4, false);
-      timelines[1].seek(0, false);
-      const firstOnly = moving(entries[0]) && !moving(entries[1]);
-      return { firstOnly, secondOnly };
+      const movingTime = (timeline, entry) => {
+        for (let sample = 1; sample <= 100; sample += 1) {
+          const time = timeline.duration() * sample / 100;
+          timeline.seek(time, false);
+          if (moving(entry)) return time;
+        }
+        return null;
+      };
+      const results = [];
+      for (let pairIndex = 0; pairIndex < entries.length; pairIndex += 2) {
+        const firstTime = movingTime(timelines[pairIndex], entries[pairIndex]);
+        const secondTime = movingTime(timelines[pairIndex + 1], entries[pairIndex + 1]);
+        timelines.forEach((timeline) => timeline.seek(0, false));
+        if (secondTime !== null) timelines[pairIndex + 1].seek(secondTime, false);
+        const secondOnly = !moving(entries[pairIndex]) && moving(entries[pairIndex + 1]);
+        timelines.forEach((timeline) => timeline.seek(0, false));
+        if (firstTime !== null) timelines[pairIndex].seek(firstTime, false);
+        const firstOnly = moving(entries[pairIndex]) && !moving(entries[pairIndex + 1]);
+        results.push({ icon: entries[pairIndex].icon, firstOnly, secondOnly, firstTime, secondTime });
+      }
+      return JSON.stringify(results);
     });
-    if (!isolation.firstOnly || !isolation.secondOnly) {
-      fail(`repeated Agent instances are not isolated: ${JSON.stringify(isolation)}`);
+    const isolation = JSON.parse(isolationJson);
+    if (isolation.length !== ICON_COUNT) {
+      fail(`repeat isolation expected ${ICON_COUNT} per-icon results, got ${isolation.length}`);
+    }
+    const failures = isolation.filter((entry) => !entry.firstOnly || !entry.secondOnly);
+    if (failures.length) {
+      fail(`repeated icon instances are not isolated: ${JSON.stringify(failures)}`);
     }
     await page.evaluate(() => window.AniDiagramRuntime.stop());
   } finally {
@@ -324,40 +691,42 @@ async function verifyRepeatedInstanceIsolation(browser) {
 async function verifyTwentyIconPerformance(browser) {
   const { context, page } = await openPage(browser);
   try {
-    await page.waitForFunction(() => (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length === 4);
+    await page.waitForFunction((count) => (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length === count, ICON_COUNT);
     await page.evaluate(() => window.AniDiagramRuntime.stop());
-    const setup = await page.evaluate(() => {
+    const setup = await page.evaluate((fixtureCount) => {
       const manifestElement = document.getElementById("anidiagram-motion-manifest");
       const manifest = JSON.parse(manifestElement.textContent);
       const originals = manifest.icons;
       const entries = [];
-      for (const original of originals) {
-        const originalRoot = document.querySelector(`[data-icon="${original.icon}"][data-icon-presentation="showcase"]`);
-        entries.push(original);
-        for (let copyIndex = 1; copyIndex < 5; copyIndex += 1) {
-          const clone = originalRoot.cloneNode(true);
-          const suffix = `__perf${copyIndex}`;
-          const idMap = new Map();
-          for (const element of [clone, ...clone.querySelectorAll("[id]")]) {
-            if (!element.id) continue;
-            const previous = element.id;
-            const next = `${previous}${suffix}`;
-            idMap.set(previous, next);
-            element.id = next;
-          }
-          clone.setAttribute("data-performance-fixture", String(copyIndex));
-          originalRoot.parentNode.appendChild(clone);
-          const duplicate = JSON.parse(JSON.stringify(original));
-          duplicate.node_id = `${original.node_id}-perf-${copyIndex}`;
-          duplicate.delay = (copyIndex % 4) * 0.08;
-          duplicate.parts = Object.fromEntries(
-            Object.entries(original.parts).map(([name, selector]) => [
-              name,
-              `#${idMap.get(selector.slice(1))}`,
-            ])
-          );
-          entries.push(duplicate);
+      for (let fixtureIndex = 0; fixtureIndex < fixtureCount; fixtureIndex += 1) {
+        const original = originals[fixtureIndex % originals.length];
+        if (fixtureIndex < originals.length) {
+          entries.push(original);
+          continue;
         }
+        const originalRoot = document.querySelector(`[data-icon="${original.icon}"][data-icon-presentation="showcase"]`);
+        const clone = originalRoot.cloneNode(true);
+        const suffix = `__perf${fixtureIndex}`;
+        const idMap = new Map();
+        for (const element of [clone, ...clone.querySelectorAll("[id]")]) {
+          if (!element.id) continue;
+          const previous = element.id;
+          const next = `${previous}${suffix}`;
+          idMap.set(previous, next);
+          element.id = next;
+        }
+        clone.setAttribute("data-performance-fixture", String(fixtureIndex));
+        originalRoot.parentNode.appendChild(clone);
+        const duplicate = JSON.parse(JSON.stringify(original));
+        duplicate.node_id = `${original.node_id}-perf-${fixtureIndex}`;
+        duplicate.delay = (fixtureIndex % 4) * 0.08;
+        duplicate.parts = Object.fromEntries(
+          Object.entries(original.parts).map(([name, selector]) => [
+            name,
+            `#${idMap.get(selector.slice(1))}`,
+          ])
+        );
+        entries.push(duplicate);
       }
       manifest.icons = entries;
       manifestElement.textContent = JSON.stringify(manifest);
@@ -371,12 +740,12 @@ async function verifyTwentyIconPerformance(browser) {
         window.__DIAGRAM_CORE_PERF_OBSERVER__ = observer;
       }
       return { entries: entries.length, duplicateIds: ids.length - new Set(ids).size };
-    });
-    if (setup.entries !== 20 || setup.duplicateIds !== 0) {
+    }, PERFORMANCE_ICON_COUNT);
+    if (setup.entries !== PERFORMANCE_ICON_COUNT || setup.duplicateIds !== 0) {
       fail(`20-icon fixture setup failed: ${JSON.stringify(setup)}`);
     }
     await page.evaluate(() => window.AniDiagramRuntime.play());
-    await page.waitForFunction(() => (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length === 20);
+    await page.waitForFunction((count) => (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length === count, PERFORMANCE_ICON_COUNT);
     const measurement = await page.evaluate(() => new Promise((resolve) => {
       const intervals = [];
       const started = performance.now();
@@ -424,7 +793,7 @@ async function verifyFallback(browser, reducedMotion, suffix, label) {
       timelines: (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length,
       icons: document.querySelectorAll('[data-icon-presentation="showcase"]').length,
     }));
-    if (result.timelines !== 0 || result.icons !== 4) {
+    if (result.timelines !== 0 || result.icons !== ICON_COUNT) {
       fail(`${label} fallback returned timelines=${result.timelines} icons=${result.icons}`);
     }
     if (suffix && result.gsap) fail("no-GSAP fallback unexpectedly loaded GSAP");
@@ -439,19 +808,25 @@ async function main() {
   try {
     const { context, page } = await openPage(browser);
     let report;
+    let databaseLayerWave;
+    let searchCircularWobble;
     try {
       await verifySemanticBoundary(page);
       report = await verifyExpressiveMotion(page);
+      searchCircularWobble = await verifySearchCircularWobble(page);
+      databaseLayerWave = await verifyDatabaseLayerWave(page);
       await verifyRestAndControls(page);
     } finally {
       await context.close();
     }
     await verifyFallback(browser, "reduce", "", "reduced-motion");
     await verifyFallback(browser, "no-preference", "?no-gsap=1", "no-GSAP");
+    await verifyDeclarativeRecipePolicy(browser);
     await verifyRepeatedInstanceIsolation(browser);
     const performance = await verifyTwentyIconPerformance(browser);
     const peaks = report.map((entry) => entry.icon).join(",");
-    process.stdout.write(`icons=4 timelines=4 expressive=${peaks} rest=clean reduced=0 no_gsap=0 repeat=isolated perf20_p95=${performance.p95.toFixed(2)}ms frames=${performance.frames}\nOK\n`);
+    const databaseLayerOrder = databaseLayerWave.layerNames.join(">");
+    process.stdout.write(`icons=${ICON_COUNT} timelines=${ICON_COUNT} expressive=${peaks} recipe=allowlisted-fail-closed recipe_targets=unique selectors=instance-scoped search_path=clockwise-circle search_samples=${searchCircularWobble.length} database_layers=${databaseLayerOrder} database_layer_x=0 rest=clean reduced=0 no_gsap=0 repeat=isolated-all perf20_p95=${performance.p95.toFixed(2)}ms frames=${performance.frames}\nOK\n`);
   } finally {
     await browser.close();
   }

@@ -1,0 +1,17 @@
+{
+  "system": "diagram-core-v1",
+  "version": "1.0.0",
+  "status": "frozen",
+  "scope": "immutable-visual-and-motion-snapshot",
+  "catalog_lifecycle_status": "visual-review",
+  "human_visual_acceptance": "confirmed",
+  "icon_count": 56,
+  "default_icon_system_changed": false,
+  "frozen_at": "2026-07-18",
+  "hashes": {
+    "catalog_sha256": "2d13b54a0a3f64ed3bbc735e089b19e86001972b71296ebc8f88b971342fe713",
+    "tokens_sha256": "8fe39a1f8bcf128fcfa80de55e0a161f6cc77501e594a0132ed1350023fa702d",
+    "motion_catalog_sha256": "edcb6c7b78697d0c0b95219a2c560c474edad241fd1bdad8950edb797180a6ef",
+    "asset_tree_sha256": "3ef5ade2ff37639cea6af0351faa9674da7785c53cd989e7887f8d37a06ebb1b"
+  }
+}

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Image preview file icon" data-icon="image">
+  <g data-part="body">
+    <g data-part="page">
+      <path d="M 23 13 H 59 L 75 29 V 83 H 23 Z" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+    </g>
+    <g data-part="fold">
+      <polygon points="59,13 59,29 75,29" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+    </g>
+    <g data-part="preview">
+      <rect x="30" y="35" width="37" height="29" rx="5" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+      <circle cx="57" cy="43" r="4" fill="var(--icon-accent-secondary, #45c5bd)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" data-stroke-role="inner"/>
+      <polyline points="34,59 43,49 49,55 54,50 63,59" fill="none" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linecap="round" stroke-linejoin="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="scan-line">
+      <line x1="32" y1="52" x2="65" y2="52" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="badge">
+      <rect x="32" y="67" width="15" height="7" rx="2" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner"/>
+      <polyline points="35,72 38,69 41,72 44,69" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" stroke-linejoin="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="indicator">
+      <circle cx="66" cy="72" r="6" fill="var(--icon-surface-contrast, #14213d)"/>
+      <circle cx="66" cy="72" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+  </g>
+</svg>

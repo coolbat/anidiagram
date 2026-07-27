@@ -1,0 +1,18 @@
+{
+  "id": "operator",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "actors",
+  "semantic_kind": "operator",
+  "structural_prototype": "operator-console",
+  "parts": ["body", "shell", "head", "panel", "cursor", "indicator"],
+  "attachments": {
+    "receive": {"x": 8, "y": 60},
+    "send": {"x": 88, "y": 60},
+    "status": {"x": 68, "y": 68}
+  },
+  "states": [],
+  "actions": ["receive", "operate", "confirm", "send"],
+  "status": "visual-review"
+}

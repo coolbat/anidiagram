@@ -12,7 +12,6 @@ from anidiagram.diagram_core.catalog import legacy_valid_icon_ids, load_catalog
 from anidiagram.diagram_core.tokens import contrast_ratio, token_contexts, token_css
 
 
-_BENCHMARK_IDS = ("agent", "database", "api", "server")
 _DEFAULT_ASSET_ROOT = Path(__file__).resolve().parents[1] / "assets" / "diagram-core"
 
 
@@ -41,8 +40,12 @@ def _filesystem_preflight(root):
     return details
 
 
-def _inventory(root, directory, suffix):
-    expected = frozenset(icon_id + suffix for icon_id in _BENCHMARK_IDS)
+def _inventory(root, directory, suffix, expected_icon_ids=None):
+    expected = (
+        None
+        if expected_icon_ids is None
+        else frozenset(icon_id + suffix for icon_id in expected_icon_ids)
+    )
     path = root / directory
     try:
         entries = tuple(path.iterdir())
@@ -50,16 +53,17 @@ def _inventory(root, directory, suffix):
         return 0, ["{0}: cannot inspect asset directory: {1}".format(path, error)]
     names = frozenset(entry.name for entry in entries)
     details = []
-    missing = sorted(expected - names)
-    extra = sorted(names - expected)
-    if missing:
-        details.append(
-            "{0}: missing files: {1}".format(path, ", ".join(missing))
-        )
-    if extra:
-        details.append(
-            "{0}: unexpected files: {1}".format(path, ", ".join(extra))
-        )
+    if expected is not None:
+        missing = sorted(expected - names)
+        extra = sorted(names - expected)
+        if missing:
+            details.append(
+                "{0}: missing files: {1}".format(path, ", ".join(missing))
+            )
+        if extra:
+            details.append(
+                "{0}: unexpected files: {1}".format(path, ", ".join(extra))
+            )
     for entry in sorted(entries, key=lambda candidate: candidate.name):
         if entry.is_symlink():
             details.append("{0}: symbolic link is forbidden".format(entry))
@@ -125,19 +129,39 @@ def _build_report(arguments):
         report["errors"] = len(preflight_errors)
         report["error_details"] = preflight_errors
         return report
-    svg_count, svg_errors = _inventory(asset_root, "icons", ".svg")
-    manifest_count, manifest_errors = _inventory(
-        asset_root, "manifests", ".json"
-    )
-    error_details = svg_errors + manifest_errors
-    report = _empty_report(svg_count, manifest_count)
     try:
         catalog = load_catalog(asset_root)
     except (OSError, UnicodeError, ValueError) as error:
+        svg_count, svg_errors = _inventory(
+            asset_root, "icons", ".svg", expected_icon_ids=None
+        )
+        manifest_count, manifest_errors = _inventory(
+            asset_root, "manifests", ".json", expected_icon_ids=None
+        )
+        error_details = svg_errors + manifest_errors
+        report = _empty_report(svg_count, manifest_count)
         error_details.append(str(error))
         report["errors"] = len(error_details)
         report["error_details"] = error_details
         return report
+
+    implemented_ids = tuple(
+        entry.icon_id for entry in catalog.entries if entry.status != "planned"
+    )
+    svg_count, svg_errors = _inventory(
+        asset_root,
+        "icons",
+        ".svg",
+        expected_icon_ids=implemented_ids,
+    )
+    manifest_count, manifest_errors = _inventory(
+        asset_root,
+        "manifests",
+        ".json",
+        expected_icon_ids=implemented_ids,
+    )
+    error_details = svg_errors + manifest_errors
+    report = _empty_report(svg_count, manifest_count)
 
     report.update(
         {
@@ -156,30 +180,20 @@ def _build_report(arguments):
     statuses = {entry.icon_id: entry.status for entry in catalog.entries}
     lifecycle_drift = tuple(
         icon_id
-        for icon_id in _BENCHMARK_IDS
+        for icon_id in implemented_ids
         if statuses.get(icon_id) != allowed_status
     )
     if lifecycle_drift:
         error_details.append(
-            "{0} mode requires all benchmark assets to use status {1}; "
+            "{0} mode requires all implemented assets to use status {1}; "
             "mismatched: {2}".format(
                 "strict" if arguments.strict else "review",
                 allowed_status,
                 ", ".join(lifecycle_drift),
             )
         )
-    unexpected_implemented = tuple(
-        entry.icon_id
-        for entry in catalog.entries
-        if entry.icon_id not in _BENCHMARK_IDS and entry.status != "planned"
-    )
-    if unexpected_implemented:
-        error_details.append(
-            "unexpected implemented catalog entries: "
-            + ", ".join(unexpected_implemented)
-        )
     assets = {}
-    for icon_id in _BENCHMARK_IDS:
+    for icon_id in implemented_ids:
         try:
             assets[icon_id] = load_asset(
                 icon_id,

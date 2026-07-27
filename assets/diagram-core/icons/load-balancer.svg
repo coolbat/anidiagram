@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Three way load distributor icon" data-icon="load-balancer">
+  <g data-part="body">
+    <g data-part="distributor">
+      <circle cx="43" cy="48" r="18" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+      <path d="M 36 48 L 43 41 L 50 48 L 43 55 Z" fill="var(--icon-accent, #7c5ce7)" stroke="var(--icon-stroke, #14213d)" stroke-width="1.375" stroke-linejoin="round" data-stroke-role="inner"/>
+    </g>
+    <g data-part="input">
+      <path d="M 16 43 H 29 L 34 48 L 29 53 H 16 Z" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+    </g>
+    <g data-part="outlet-top">
+      <path d="M 58 41 L 67 29" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+      <rect x="65" y="20" width="16" height="13" rx="4" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    </g>
+    <g data-part="outlet-middle">
+      <path d="M 61 48 H 68" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+      <rect x="67" y="41.5" width="16" height="13" rx="4" fill="var(--icon-accent-secondary, #45c5bd)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    </g>
+    <g data-part="outlet-bottom">
+      <path d="M 58 55 L 67 67" fill="none" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+      <rect x="65" y="63" width="16" height="13" rx="4" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    </g>
+    <g data-part="indicator">
+      <circle cx="43" cy="48" r="3" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+  </g>
+</svg>

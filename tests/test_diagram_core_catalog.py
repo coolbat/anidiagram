@@ -213,15 +213,19 @@ class DiagramCoreCatalogTest(unittest.TestCase):
         self.assertFalse(schema["additionalProperties"])
         self.assertFalse(schema["$defs"]["icon"]["additionalProperties"])
 
-    def test_catalog_starts_only_benchmarks_in_visual_review(self):
+    def test_catalog_visual_review_set_matches_the_canonical_manifest_inventory(self):
         catalog = load_catalog()
         status = {entry.icon_id: entry.status for entry in catalog.entries}
+        implemented = {
+            path.stem
+            for path in (ROOT / "assets" / "diagram-core" / "manifests").glob("*.json")
+        }
 
         self.assertEqual(
-            {"agent", "database", "api", "server"},
+            implemented,
             {icon_id for icon_id, value in status.items() if value == "visual-review"},
         )
-        self.assertEqual(52, sum(value == "planned" for value in status.values()))
+        self.assertEqual(56 - len(implemented), sum(value == "planned" for value in status.values()))
         self.assertTrue(set(status.values()).issubset(CATALOG_STATUSES))
 
     def test_semantics_aliases_and_planned_capabilities_are_not_inferred(self):
@@ -233,7 +237,11 @@ class DiagramCoreCatalogTest(unittest.TestCase):
         self.assertEqual([], aliases)
         self.assertEqual(len(aliases), len(set(aliases)))
         self.assertFalse(set(aliases) & CATALOG_IDS)
-        self.assertEqual(52, len(planned))
+        implemented = {
+            path.stem
+            for path in (ROOT / "assets" / "diagram-core" / "manifests").glob("*.json")
+        }
+        self.assertEqual(56 - len(implemented), len(planned))
         self.assertTrue(all(entry.structural_prototype == "unassigned" for entry in planned))
         self.assertTrue(all(entry.parts == () for entry in planned))
         self.assertTrue(all(entry.supported_states == () for entry in planned))
@@ -273,7 +281,10 @@ class DiagramCoreCatalogTest(unittest.TestCase):
         self.assertNotIn("server", KNOWN_ICONS)
 
     def test_planned_catalog_icons_are_not_implemented(self):
-        for icon_id in ("user", "llm", "pdf", "scheduler"):
+        planned_ids = tuple(
+            entry.icon_id for entry in load_catalog().entries if entry.status == "planned"
+        )
+        for icon_id in planned_ids:
             with self.subTest(icon_id=icon_id):
                 self.assertEqual("planned", catalog_entry(icon_id).status)
                 result = validate_scene(scene_spec_with_icon(icon_id))

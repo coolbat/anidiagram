@@ -1,0 +1,18 @@
+{
+  "id": "human-reviewer",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "actors",
+  "semantic_kind": "human-reviewer",
+  "structural_prototype": "reviewer-card-inspection",
+  "parts": ["body", "person", "head", "review-card", "lens", "indicator"],
+  "attachments": {
+    "receive": {"x": 7, "y": 57},
+    "send": {"x": 89, "y": 57},
+    "status": {"x": 78, "y": 23}
+  },
+  "states": [],
+  "actions": ["receive", "inspect", "decide", "send"],
+  "status": "visual-review"
+}

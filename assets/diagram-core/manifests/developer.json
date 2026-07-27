@@ -1,0 +1,18 @@
+{
+  "id": "developer",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "actors",
+  "semantic_kind": "developer",
+  "structural_prototype": "code-builder-console",
+  "parts": ["body", "person", "head", "code-panel", "code-mark", "indicator"],
+  "attachments": {
+    "receive": {"x": 8, "y": 56},
+    "send": {"x": 88, "y": 56},
+    "status": {"x": 76, "y": 70}
+  },
+  "states": [],
+  "actions": ["receive", "build", "debug", "send"],
+  "status": "visual-review"
+}

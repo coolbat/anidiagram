@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Search instrument icon" data-icon="search">
+  <g data-part="body">
+  <g data-part="lens">
+    <circle cx="42" cy="41" r="24" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <circle cx="42" cy="41" r="17" fill="var(--icon-surface-secondary, #eef1f5)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner"/>
+  </g>
+  <g data-part="handle">
+    <path d="M 57 58 L 63 52 L 82 71 Q 84 73 82 76 L 80 78 Q 77 80 75 77 Z" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linejoin="round" data-stroke-role="outer"/>
+  </g>
+  <g data-part="scan">
+    <line x1="26" y1="41" x2="58" y2="41" stroke="var(--icon-accent, #7c5ce7)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+    <line x1="42" y1="25" x2="42" y2="57" stroke="var(--icon-accent, #7c5ce7)" stroke-width="1.375" stroke-linecap="round" data-stroke-role="inner"/>
+  </g>
+  <g data-part="target">
+    <circle cx="50" cy="34" r="7" fill="var(--icon-surface-recessed, #dfe5ec)" stroke="var(--icon-detail, #64748b)" stroke-width="1.375" data-stroke-role="inner"/>
+  </g>
+  <g data-part="indicator">
+    <circle cx="50" cy="34" r="3.2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+  </g>
+  </g>
+</svg>

@@ -1,0 +1,18 @@
+{
+  "id": "scheduler",
+  "system": "diagram-core-v1",
+  "asset_revision": 1,
+  "viewBox": "0 0 96 96",
+  "category": "operations-observability",
+  "semantic_kind": "scheduler",
+  "structural_prototype": "timed-task-scheduler",
+  "parts": ["body", "clock", "hand", "task-card", "trigger", "indicator"],
+  "attachments": {
+    "receive": {"x": 9, "y": 48},
+    "send": {"x": 87, "y": 48},
+    "status": {"x": 72, "y": 70}
+  },
+  "states": [],
+  "actions": ["receive", "schedule", "trigger", "send"],
+  "status": "visual-review"
+}

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" focusable="false" aria-label="Forked commit line icon" data-icon="branch">
+  <g data-part="body">
+    <rect x="13" y="22" width="70" height="53" rx="18" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+    <g data-part="main-line">
+      <path d="M 23 59 H 73" fill="none" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="outer"/>
+    </g>
+    <g data-part="branch-line">
+      <path d="M 37 59 C 43 59 42 38 55 35" fill="none" stroke="var(--icon-accent-secondary, #45c5bd)" stroke-width="2.125" stroke-linecap="round" data-stroke-role="outer"/>
+    </g>
+    <g data-part="commit-a">
+      <circle cx="27" cy="59" r="6" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+      <circle cx="27" cy="59" r="2.5" fill="var(--icon-accent, #7c5ce7)"/>
+    </g>
+    <g data-part="commit-b">
+      <circle cx="55" cy="35" r="6" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+      <circle cx="55" cy="35" r="2.5" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+    <g data-part="commit-c">
+      <circle cx="69" cy="59" r="6" fill="var(--icon-surface-secondary, #eee9ff)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer"/>
+      <circle cx="69" cy="59" r="2.5" fill="var(--icon-accent, #7c5ce7)"/>
+    </g>
+    <g data-part="indicator">
+      <circle cx="77" cy="69" r="4" fill="var(--icon-surface-contrast, #14213d)"/>
+      <circle cx="77" cy="69" r="2" fill="var(--icon-accent-secondary, #45c5bd)"/>
+    </g>
+  </g>
+</svg>
