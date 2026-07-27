@@ -56,6 +56,7 @@ LAYOUTS = {
     "network",
     "agent-memory",
     "agent-loop",
+    "layered-loop",
 }
 MOTIONS = {"off", "subtle", "normal", "expressive", "teaching", "runtime-loop", "showcase-v1"}
 
@@ -176,6 +177,13 @@ def compile_plan_v02(plan: Mapping[str, Any]) -> Dict[str, Any]:
             for item_id in item_ids
         }
         _apply_agent_loop_presentation(edges, nodes, zone_by_entity)
+    elif resolved["layout"]["value"] == "layered-loop":
+        lane_by_entity, lanes = _semantic_lanes(
+            entity_order,
+            {str(entity["id"]): entity for entity in entities},
+            groups_semantic,
+        )
+        _apply_layered_loop_presentation(edges, nodes, lane_by_entity, lanes, canvas)
     groups = _compile_semantic_groups(groups_semantic, nodes)
 
     return {
@@ -511,6 +519,7 @@ def _layout_entities(
         "er": lambda: _er_layout(ordered, relations),
         "agent-memory": lambda: _agent_memory_layout(ordered, entity_by_id),
         "agent-loop": lambda: _agent_loop_layout(ordered, entity_by_id, groups, relations),
+        "layered-loop": lambda: _layered_loop_layout(ordered, entity_by_id, groups),
     }
     return dispatchers[layout]()
 
@@ -622,17 +631,7 @@ def _layered_layout(
 def _swimlane_layout(
     ordered: Sequence[str], entity_by_id: Mapping[str, Mapping[str, Any]], groups: Sequence[Mapping[str, Any]]
 ) -> Tuple[Dict[str, Tuple[int, int]], Dict[str, int]]:
-    lane_by_entity: Dict[str, str] = {}
-    for group in groups:
-        for member in group.get("members", []):
-            lane_by_entity.setdefault(str(member), str(group["id"]))
-    for item_id in ordered:
-        lane_by_entity.setdefault(item_id, str(entity_by_id[item_id].get("role") or "neutral"))
-    lanes: List[str] = []
-    for item_id in ordered:
-        lane = lane_by_entity[item_id]
-        if lane not in lanes:
-            lanes.append(lane)
+    lane_by_entity, lanes = _semantic_lanes(ordered, entity_by_id, groups)
     counts: Dict[str, int] = defaultdict(int)
     positions = {}
     for item_id in ordered:
@@ -644,6 +643,54 @@ def _swimlane_layout(
         "width": max(1020, 380 + max(counts.values(), default=1) * 300),
         "height": max(720, 270 + max(0, len(lanes) - 1) * 185),
     }
+
+
+def _layered_loop_layout(
+    ordered: Sequence[str],
+    entity_by_id: Mapping[str, Mapping[str, Any]],
+    groups: Sequence[Mapping[str, Any]],
+) -> Tuple[Dict[str, Tuple[int, int]], Dict[str, int]]:
+    lane_by_entity, lanes = _semantic_lanes(ordered, entity_by_id, groups)
+    items_by_lane = {
+        lane: [item_id for item_id in ordered if lane_by_entity[item_id] == lane]
+        for lane in lanes
+    }
+    max_count = max((len(items) for items in items_by_lane.values()), default=1)
+    right = 80 + max(0, max_count - 1) * 300
+    width = max(1020, right + 600)
+    positions: Dict[str, Tuple[int, int]] = {}
+    for lane_index, lane in enumerate(lanes):
+        items = items_by_lane[lane]
+        if len(items) == 1:
+            positions[items[0]] = ((width - 220) // 2, 235 + lane_index * 220)
+            continue
+        for index, item_id in enumerate(items):
+            slot = index if lane_index % 2 == 0 else len(items) - 1 - index
+            x = round(80 + (right - 80) * slot / (len(items) - 1))
+            positions[item_id] = (x, 235 + lane_index * 220)
+    return positions, {
+        "width": width,
+        "height": max(920, 430 + max(0, len(lanes) - 1) * 220),
+    }
+
+
+def _semantic_lanes(
+    ordered: Sequence[str],
+    entity_by_id: Mapping[str, Mapping[str, Any]],
+    groups: Sequence[Mapping[str, Any]],
+) -> Tuple[Dict[str, str], List[str]]:
+    lane_by_entity: Dict[str, str] = {}
+    for group in groups:
+        for member in group.get("members", []):
+            lane_by_entity.setdefault(str(member), str(group["id"]))
+    for item_id in ordered:
+        lane_by_entity.setdefault(item_id, str(entity_by_id[item_id].get("role") or "neutral"))
+    lanes: List[str] = []
+    for item_id in ordered:
+        lane = lane_by_entity[item_id]
+        if lane not in lanes:
+            lanes.append(lane)
+    return lane_by_entity, lanes
 
 
 def _compare_layout(ordered: Sequence[str]) -> Tuple[Dict[str, Tuple[int, int]], Dict[str, int]]:
@@ -1058,6 +1105,84 @@ def _compile_relation(
         compiled["flow_importance"] = flow_importance
         compiled["flow_repeat"] = repeat
     return compiled
+
+
+def _apply_layered_loop_presentation(
+    edges: Sequence[Dict[str, Any]],
+    nodes: Sequence[Mapping[str, Any]],
+    lane_by_entity: Mapping[str, str],
+    lanes: Sequence[str],
+    canvas: Dict[str, int],
+) -> None:
+    """Keep layered-loop transfers in gutters and feedback outside the layers."""
+
+    node_by_id = {str(node["id"]): node for node in nodes}
+    lane_index = {lane: index for index, lane in enumerate(lanes)}
+    lane_spacing = 12
+    outer_margin = 36
+    bottom_margin = 30
+    upward_count = sum(
+        1
+        for edge in edges
+        if lane_index[lane_by_entity[str(edge["from"])]]
+        > lane_index[lane_by_entity[str(edge["to"])]]
+    )
+    canvas["height"] += max(0, upward_count - 1) * lane_spacing
+    upward_lane = 0
+    for edge in edges:
+        source_id = str(edge["from"])
+        target_id = str(edge["to"])
+        source_lane = lane_index[lane_by_entity[source_id]]
+        target_lane = lane_index[lane_by_entity[target_id]]
+        if source_lane == target_lane:
+            edge["route"] = "straight"
+            continue
+
+        source = node_by_id[source_id]
+        target = node_by_id[target_id]
+        sx, sy = _node_anchor(source, "bottom")
+        tx, ty = _node_anchor(target, "top")
+        if source_lane < target_lane and target_lane - source_lane == 1 and sx == tx:
+            edge["route"] = "straight"
+            continue
+        edge["route"] = "points"
+        if source_lane < target_lane:
+            if target_lane - source_lane > 1:
+                first_gutter = (
+                    sy
+                    + min(
+                        int(node["position"][1])
+                        for node in nodes
+                        if lane_index[lane_by_entity[str(node["id"])]] == source_lane + 1
+                    )
+                ) // 2
+                right_corridor = int(canvas["width"]) - outer_margin
+                edge["points"] = [
+                    [sx, sy],
+                    [sx, first_gutter],
+                    [right_corridor, first_gutter],
+                    [right_corridor, ty],
+                    [tx, ty],
+                ]
+                continue
+            corridor_y = (sy + ty) // 2
+            edge["points"] = [[sx, sy], [sx, corridor_y], [tx, corridor_y], [tx, ty]]
+            continue
+
+        bottom_corridor = int(canvas["height"]) - bottom_margin - upward_lane * lane_spacing
+        left_corridor = outer_margin
+        upward_lane += 1
+        target_left = [
+            int(target["position"][0]),
+            int(target["position"][1]) + int(target["size"][1]) // 2,
+        ]
+        edge["points"] = [
+            [sx, sy],
+            [sx, bottom_corridor],
+            [left_corridor, bottom_corridor],
+            [left_corridor, target_left[1]],
+            target_left,
+        ]
 
 
 def _apply_agent_loop_presentation(

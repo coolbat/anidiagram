@@ -133,8 +133,9 @@ and restart must settle on the authored static rest pose.
 
 - Icon systems can expand without changing the semantic graph schema.
 - The 13 public visual styles remain an independent catalog.
-- The 15 layout presets, including the specialized `agent-loop` five-zone
-  architecture, remain usable while layout strategies evolve.
+- The 16 layout presets, including the specialized `agent-loop` five-zone and
+  `layered-loop` stacked-loop architectures, remain usable while layout
+  strategies evolve.
 - Motion systems can map semantic intent onto system-specific SVG parts without
   putting part ids into content documents.
 - Model-selected style and layout choices become reproducible because their

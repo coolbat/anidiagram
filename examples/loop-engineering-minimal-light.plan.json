@@ -1,0 +1,285 @@
+{
+  "version": "0.2",
+  "semantic": {
+    "title": "Loop Engineering Operating Architecture",
+    "summary": "Show how automation, worktrees, skills, sub-agents, connectors, external state, and human judgement form a repeatable coding-agent loop.",
+    "intent": {
+      "diagram_kind": "architecture",
+      "primary_question": "How does Loop Engineering replace repeated prompting with a governed, self-resuming agent workflow?",
+      "audience": [
+        "software engineers",
+        "agent workflow designers"
+      ],
+      "scope": "The five loop primitives, external memory, maker-checker separation, delivery, and human guardrails",
+      "exclusions": [
+        "Vendor-specific command syntax",
+        "Detailed CI implementation",
+        "Fully autonomous high-risk changes"
+      ]
+    },
+    "entities": [
+      {
+        "id": "automation-heartbeat",
+        "label": "Automation Heartbeat",
+        "description": "Scheduled triage",
+        "kind": "scheduler",
+        "role": "process",
+        "importance": "primary",
+        "source_refs": [
+          "loop-engineering-article"
+        ]
+      },
+      {
+        "id": "isolated-worktree",
+        "label": "Isolated Worktree",
+        "description": "Collision-free parallel work",
+        "kind": "branch",
+        "role": "process",
+        "importance": "primary",
+        "source_refs": [
+          "loop-engineering-article"
+        ]
+      },
+      {
+        "id": "project-skills",
+        "label": "Project Skills",
+        "description": "Rules + context",
+        "kind": "knowledge-base",
+        "role": "memory",
+        "importance": "primary",
+        "source_refs": [
+          "loop-engineering-article"
+        ]
+      },
+      {
+        "id": "maker-agent",
+        "label": "Maker Sub-agent",
+        "description": "Drafts implementation",
+        "kind": "agent",
+        "role": "agent",
+        "importance": "primary",
+        "source_refs": [
+          "loop-engineering-article"
+        ]
+      },
+      {
+        "id": "verifier-agent",
+        "label": "Verifier Sub-agent",
+        "description": "Tests + evidence",
+        "kind": "reasoning",
+        "role": "risk",
+        "importance": "primary",
+        "source_refs": [
+          "loop-engineering-article"
+        ]
+      },
+      {
+        "id": "tool-connectors",
+        "label": "Connectors & Delivery",
+        "description": "Publish verified PRs",
+        "kind": "gateway",
+        "role": "tool",
+        "importance": "primary",
+        "source_refs": [
+          "loop-engineering-article"
+        ]
+      },
+      {
+        "id": "external-state",
+        "label": "External State",
+        "description": "Records done and next",
+        "kind": "memory",
+        "role": "memory",
+        "importance": "primary",
+        "source_refs": [
+          "loop-engineering-article"
+        ]
+      },
+      {
+        "id": "human-engineer",
+        "label": "Human Governance",
+        "description": "Goals + stop gates",
+        "kind": "developer",
+        "role": "actor",
+        "importance": "primary",
+        "source_refs": [
+          "loop-engineering-article"
+        ]
+      }
+    ],
+    "relations": [
+      {
+        "id": "automation-opens-worktree",
+        "from": "automation-heartbeat",
+        "to": "isolated-worktree",
+        "kind": "orchestration",
+        "label": "discover + isolate",
+        "direction": "forward",
+        "importance": "primary",
+        "source_refs": [
+          "loop-engineering-article"
+        ]
+      },
+      {
+        "id": "worktree-loads-skills",
+        "from": "isolated-worktree",
+        "to": "project-skills",
+        "kind": "context-loading",
+        "label": "load context",
+        "direction": "forward",
+        "importance": "primary",
+        "source_refs": [
+          "loop-engineering-article"
+        ]
+      },
+      {
+        "id": "skills-guide-maker",
+        "from": "project-skills",
+        "to": "maker-agent",
+        "kind": "instruction",
+        "label": "use",
+        "direction": "forward",
+        "importance": "primary",
+        "source_refs": [
+          "loop-engineering-article"
+        ]
+      },
+      {
+        "id": "maker-submits-draft",
+        "from": "maker-agent",
+        "to": "verifier-agent",
+        "kind": "verification",
+        "label": "review",
+        "direction": "bidirectional",
+        "importance": "primary",
+        "source_refs": [
+          "loop-engineering-article"
+        ]
+      },
+      {
+        "id": "verifier-authorizes-connectors",
+        "from": "verifier-agent",
+        "to": "tool-connectors",
+        "kind": "approval",
+        "label": "OK",
+        "direction": "forward",
+        "importance": "primary",
+        "condition": "Tests and acceptance evidence pass",
+        "source_refs": [
+          "loop-engineering-article"
+        ]
+      },
+      {
+        "id": "connectors-update-state",
+        "from": "tool-connectors",
+        "to": "external-state",
+        "kind": "delivery",
+        "label": "publish + record",
+        "direction": "forward",
+        "importance": "primary",
+        "source_refs": [
+          "loop-engineering-article"
+        ]
+      },
+      {
+        "id": "state-informs-human",
+        "from": "external-state",
+        "to": "human-engineer",
+        "kind": "observability",
+        "label": "review",
+        "direction": "forward",
+        "importance": "primary",
+        "source_refs": [
+          "loop-engineering-article"
+        ]
+      },
+      {
+        "id": "human-governs-automation",
+        "from": "human-engineer",
+        "to": "automation-heartbeat",
+        "kind": "governance",
+        "label": "goals + stops",
+        "direction": "forward",
+        "importance": "primary",
+        "source_refs": [
+          "loop-engineering-article"
+        ]
+      }
+    ],
+    "flows": [
+      {
+        "id": "outer-loop",
+        "label": "Governed autonomous outer loop",
+        "description": "The system discovers, isolates, implements, verifies, delivers, remembers, and resumes under human-defined limits.",
+                "relation_ids": [
+                    "human-governs-automation",
+                    "automation-opens-worktree",
+                    "worktree-loads-skills",
+                    "skills-guide-maker",
+                    "maker-submits-draft",
+                    "verifier-authorizes-connectors",
+                    "connectors-update-state",
+                    "state-informs-human"
+                ],
+        "importance": "primary",
+        "repeat": "loop",
+        "source_refs": [
+          "loop-engineering-article"
+        ]
+            }
+        ],
+        "groups": [
+            {
+                "id": "governance-trigger",
+                "label": "Governance & Trigger",
+                "kind": "governance",
+                "members": [
+                    "human-engineer",
+                    "automation-heartbeat"
+                ],
+                "importance": "primary"
+            },
+            {
+                "id": "isolated-execution",
+                "label": "Isolated Execution",
+                "kind": "execution",
+                "members": [
+                    "isolated-worktree",
+                    "project-skills",
+                    "maker-agent"
+                ],
+                "importance": "primary"
+            },
+            {
+                "id": "verification-delivery",
+                "label": "Verification, Delivery & State",
+                "kind": "delivery",
+                "members": [
+                    "verifier-agent",
+                    "tool-connectors",
+                    "external-state"
+                ],
+                "importance": "primary"
+            }
+        ],
+        "sources": [
+      {
+        "id": "loop-engineering-article",
+        "type": "article",
+        "title": "Loop Engineering",
+        "uri": "/Users/coolbat/Cbrain/raw/Loop Engineering.md",
+        "note": "Addy Osmani article, published 2026-06-07; bilingual clipping used as the sole semantic source."
+      }
+    ]
+  },
+  "presentation": {
+    "icon_system": "auto",
+    "style": "minimal-light",
+    "layout": "layered-loop",
+    "motion": "auto"
+  },
+  "presentation_sources": {
+    "style": "explicit",
+    "layout": "explicit"
+  }
+}

@@ -71,6 +71,7 @@ LAYOUT_CASES = (
     ("network", "Distributed Agent Runtime Mesh", "dark-luxury", ["Distributed systems", "Runtime meshes", "Routing"]),
     ("agent-memory", "Personalized Agent Memory Flow", "deep-tech", ["Agent memory", "Retrieval", "Grounded output"]),
     ("agent-loop", "Agent Loop Runtime Architecture", "sketch-board", ["Agent internals", "Governed tool loops", "Memory and safety"]),
+    ("layered-loop", "Loop Engineering Operating Architecture", "minimal-light", ["Governed loops", "Layered execution", "External state"]),
 )
 
 MOTION_CATALOG_PATH = ROOT / "runtime" / "motion-catalog.json"
@@ -608,10 +609,13 @@ def layout_showcase_specs() -> Dict[str, Spec]:
         "agent-loop": compile_plan(
             json.loads((ROOT / "examples" / "agent-loop-internals.plan.json").read_text(encoding="utf-8"))
         ),
+        "layered-loop": compile_plan(
+            json.loads((ROOT / "examples" / "loop-engineering-minimal-light.plan.json").read_text(encoding="utf-8"))
+        ),
     }
     return {
         preset: spec
-        if preset == "agent-loop"
+        if preset in {"agent-loop", "layered-loop"}
         else apply_public_showcase_contract(spec, layout=preset)
         for preset, spec in specs.items()
     }

@@ -41,7 +41,8 @@
         "er",
         "network",
         "agent-memory",
-        "agent-loop"
+        "agent-loop",
+        "layered-loop"
       ]
     },
     "motion": {
@@ -703,7 +704,7 @@
                 "value": {
                   "enum": [
                     "pipeline", "loop", "hub-spoke", "layered", "swimlane", "compare", "matrix",
-                    "timeline", "stack", "funnel", "sequence", "er", "network", "agent-memory", "agent-loop"
+                    "timeline", "stack", "funnel", "sequence", "er", "network", "agent-memory", "agent-loop", "layered-loop"
                   ]
                 }
               }

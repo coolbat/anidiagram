@@ -283,7 +283,7 @@ Resolution policy:
 3. Model selection from the supported layout catalog.
 4. `layered` deterministic fallback.
 
-The current 15 layout presets form the catalog. `agent-loop` is the specialized
+The current 16 layout presets form the catalog. `agent-loop` is the specialized
 five-zone layout for trigger/input, cognitive-loop, memory, safety, and tool
 execution architectures. Layout consumes entities, relations, groups, flows,
 importance, and intent. For `agent-loop`, semantic groups define zone ownership;
@@ -291,6 +291,11 @@ inferred decision diamonds are limited to the cognitive-loop and safety zones,
 while trigger, memory, and tool entities remain component cards. It emits canvas
 bounds, node positions and sizes, group bounds, and edge routes. It MUST NOT
 change ids, labels, semantic kinds, roles, or relation direction.
+
+`layered-loop` is the specialized stacked-loop layout. It consumes semantic
+groups as ordered operating layers, alternates the flow direction by layer,
+keeps adjacent transfers in the inter-layer gutters, and sends upward feedback
+through an outer corridor.
 
 ## Layer 4: motion
 

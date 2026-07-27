@@ -21,6 +21,7 @@ PRESET_NAMES = (
     "network",
     "agent-memory",
     "agent-loop",
+    "layered-loop",
 )
 
 
@@ -364,5 +365,40 @@ def _build_agent_loop() -> Dict[str, Any]:
         _edge("dispatch", "return", "result", "output", "vh"),
         _edge("return", "observe", "observe", "output", "orthogonal"),
         _edge("reject", "think", "replan", "risk", "orthogonal"),
+    ]
+    return spec
+
+
+def _build_layered_loop() -> Dict[str, Any]:
+    spec = _base(
+        "Layered Loop",
+        "governance, execution, verification, delivery, and feedback",
+        "minimal-light",
+    )
+    spec["canvas"] = {"width": 1280, "height": 920}
+    spec["groups"] = [
+        {"id": "governance", "label": "Governance & Trigger", "bounds": [55, 190, 880, 180], "role": "actor"},
+        {"id": "execution", "label": "Isolated Execution", "bounds": [55, 410, 880, 180], "role": "agent"},
+        {"id": "delivery", "label": "Verification, Delivery & State", "bounds": [55, 630, 880, 180], "role": "output"},
+    ]
+    spec["nodes"] = [
+        _node("human", "Human Governance", 80, 235, "actor", 1, "goals + stop gates"),
+        _node("automation", "Automation", 680, 235, "process", 2, "scheduled triage"),
+        _node("worktree", "Worktree", 680, 455, "process", 3, "isolated work"),
+        _node("skills", "Skills", 380, 455, "memory", 4, "rules + context"),
+        _node("maker", "Maker", 80, 455, "agent", 5, "implementation"),
+        _node("verifier", "Verifier", 80, 675, "risk", 6, "tests + evidence"),
+        _node("delivery", "Delivery", 380, 675, "tool", 7, "publish"),
+        _node("state", "External State", 680, 675, "memory", 8, "record next"),
+    ]
+    spec["edges"] = [
+        _edge("human", "automation", "govern", "actor", "straight", 1),
+        _edge("automation", "worktree", "isolate", "process", "straight", 2),
+        _edge("worktree", "skills", "load", "memory", "straight", 3),
+        _edge("skills", "maker", "guide", "agent", "straight", 4),
+        _edge("maker", "verifier", "review", "risk", "straight", 5),
+        _edge("verifier", "delivery", "approve", "output", "straight", 6),
+        _edge("delivery", "state", "record", "memory", "straight", 7),
+        _edge("state", "human", "feedback", "output", "orthogonal", 8),
     ]
     return spec

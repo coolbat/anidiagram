@@ -82,7 +82,7 @@ They are not silently migrated to Diagram Core.
 
 ## Next optimization slices
 
-- Improve the 15 individual layout engines while preserving the same semantic
+- Improve the 16 individual layout engines while preserving the same semantic
   contract.
 - Expand semantic state and result mappings when process-stage diagrams are
   implemented.

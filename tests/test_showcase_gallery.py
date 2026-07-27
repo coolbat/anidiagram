@@ -206,7 +206,7 @@ class ShowcaseGalleryTest(unittest.TestCase):
             "layouts": {
                 preset: spec
                 for preset, spec in layout_showcase_specs().items()
-                if preset != "agent-loop"
+                if preset not in {"agent-loop", "layered-loop"}
             },
         }
 
@@ -245,6 +245,11 @@ class ShowcaseGalleryTest(unittest.TestCase):
         self.assertEqual("illustrated", agent_loop["icon_system"])
         self.assertEqual("2.5.0", agent_loop["resolved_presentation"]["icon_system"]["version"])
         self.assertEqual("showcase-v1", agent_loop["motion"]["profile"])
+        layered_loop = layout_showcase_specs()["layered-loop"]
+        self.assertEqual("composition-v1", layered_loop["composition_policy"])
+        self.assertEqual("illustrated", layered_loop["icon_system"])
+        self.assertEqual("2.5.0", layered_loop["resolved_presentation"]["icon_system"]["version"])
+        self.assertEqual("showcase-v1", layered_loop["motion"]["profile"])
 
     def test_showcase_manifest_points_to_generated_assets(self):
         manifest_path = ROOT / "gallery" / "showcase_manifest.json"
@@ -253,7 +258,7 @@ class ShowcaseGalleryTest(unittest.TestCase):
 
         self.assertEqual("Agent Runtime Flow", manifest["hero"]["title"])
         self.assertEqual(13, len(manifest["styles"]))
-        self.assertEqual(15, len(manifest["layouts"]))
+        self.assertEqual(16, len(manifest["layouts"]))
         self.assertEqual("runtime/motion-catalog.json", manifest["runtime_motion_catalog"])
         self.assertEqual("gallery/runtime-motion.html", manifest["runtime_motion_page"])
         self.assertEqual("illustrated", manifest["hero"]["icon_system"])
@@ -300,6 +305,7 @@ class ShowcaseGalleryTest(unittest.TestCase):
         self.assertIn("RAG Ingestion Pipeline", [entry["title"] for entry in manifest["layouts"]])
         self.assertIn("Personalized Agent Memory Flow", [entry["title"] for entry in manifest["layouts"]])
         self.assertIn("Agent Loop Runtime Architecture", [entry["title"] for entry in manifest["layouts"]])
+        self.assertIn("Loop Engineering Operating Architecture", [entry["title"] for entry in manifest["layouts"]])
 
         entries = [manifest["hero"], *manifest["styles"], *manifest["layouts"]]
         for entry in entries:

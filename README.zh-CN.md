@@ -11,7 +11,7 @@ AniDiagram 是一个 clean-room 的 DiagramScript 渲染器，用来生成可动
 AniDiagram 的 README 展示分成两套画廊：
 
 - **Style Showcase**：13 个签名案例，每个公共视觉风格一个，用来回答“它能长成什么气质？”
-- **Layout Showcase**：15 个教学案例，每个布局 preset 一个，用来回答“这个布局适合什么场景？”
+- **Layout Showcase**：16 个教学案例，每个布局 preset 一个，用来回答“这个布局适合什么场景？”
 
 画廊源文件：`gallery/index.html`
 机器可读 manifest：[gallery/showcase_manifest.json](./gallery/showcase_manifest.json)
@@ -103,9 +103,9 @@ GitHub Pages 发布，README 按钮应链接到 Pages URL，而不是 GitHub 的
 | --- | --- |
 | [![network layout showcase](./gallery/layouts/network.svg)](./gallery/layouts/network.svg)<br>Distributed Agent Runtime Mesh | [![agent-memory layout showcase](./gallery/layouts/agent-memory.svg)](./gallery/layouts/agent-memory.svg)<br>Personalized Agent Memory Flow |
 
-| `agent-loop` |
-| --- |
-| [![agent-loop layout showcase](./gallery/layouts/agent-loop.svg)](./gallery/layouts/agent-loop.svg)<br>Agent Loop Runtime Architecture |
+| `agent-loop` | `layered-loop` |
+| --- | --- |
+| [![agent-loop layout showcase](./gallery/layouts/agent-loop.svg)](./gallery/layouts/agent-loop.svg)<br>Agent Loop Runtime Architecture | [![layered-loop layout showcase](./gallery/layouts/layered-loop.svg)](./gallery/layouts/layered-loop.svg)<br>Loop Engineering Operating Architecture |
 
 完整布局画廊源文件：`gallery/layouts/index.html`
 
@@ -148,7 +148,7 @@ GitHub Pages 发布，README 按钮应链接到 Pages URL，而不是 GitHub 的
 - 支持 `motion_policy` 动效预算，控制同时运动的连线、节点和边框数量，避免复杂图变乱。
 - 可选输出 PNG、GIF、PDF、WebP、MP4、APNG、Lottie。
 - 生成 quality report，检查越界、重叠、文本溢出和显式路径碰撞。
-- 内置 15 个 clean-room 布局 preset 和 13 个公共视觉风格。
+- 内置 16 个 clean-room 布局 preset 和 13 个公共视觉风格。
 
 SVG、调试 viewer HTML、Lottie 和 quality report 只依赖 Python 标准库。主输出
 `html` 会写入高保真 runtime 页面，包含静态 SVG stage、命名 parts、Motion
@@ -308,7 +308,7 @@ legacy `explainer-board` 输出。当前本地 planner 和编译器见
 
 ## 布局 Preset
 
-AniDiagram 内置 15 个 clean-room 布局 preset。它们既可以直接渲染，也可以作为手写 DiagramScript 的参考。
+AniDiagram 内置 16 个 clean-room 布局 preset。它们既可以直接渲染，也可以作为手写 DiagramScript 的参考。
 
 | Preset | 布局形态 | 适合场景 | 默认风格 |
 | --- | --- | --- | --- |
@@ -327,6 +327,7 @@ AniDiagram 内置 15 个 clean-room 布局 preset。它们既可以直接渲染�
 | `network` | 分布式网络图 | 系统节点、缓存、worker、fanout | `dark-luxury` |
 | `agent-memory` | Agent runtime + knowledge panel | 工具调用、记忆、检索、回答 | `blueprint` |
 | `agent-loop` | 顶部触发、中部认知循环、底部三支撑域 | Agent 内部机制、记忆、安全闸门、工具执行 | `sketch-board` |
+| `layered-loop` | 多层蛇形主流程加外侧反馈 | 工程循环、分阶段执行、验证交付与外部状态 | `minimal-light` |
 
 列出全部 preset：
 

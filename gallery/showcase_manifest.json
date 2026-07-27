@@ -601,6 +601,27 @@
         "warnings": 0,
         "issues": 0
       }
+    },
+    {
+      "preset": "layered-loop",
+      "title": "Loop Engineering Operating Architecture",
+      "style": "minimal-light",
+      "icon_system": "illustrated",
+      "basename": "layered-loop",
+      "spec": "examples/showcase/layouts/layered-loop-loop-engineering-operating-architecture.diagram.json",
+      "svg": "gallery/layouts/layered-loop.svg",
+      "html": "gallery/layouts/layered-loop.html",
+      "quality": "gallery/layouts/layered-loop.quality.json",
+      "best_for": [
+        "Governed loops",
+        "Layered execution",
+        "External state"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
     }
   ],
   "runtime_motion_page": "gallery/runtime-motion.html",

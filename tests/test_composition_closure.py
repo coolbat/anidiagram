@@ -123,8 +123,82 @@ class CompositionClosureTest(unittest.TestCase):
                 (spec["canvas"]["width"], spec["canvas"]["height"]),
             )
 
-        self.assertEqual(15, len(signatures))
-        self.assertEqual(15, len(set(signatures.values())))
+        self.assertEqual(16, len(signatures))
+        self.assertEqual(16, len(set(signatures.values())))
+
+    def test_layered_loop_layout_uses_three_title_safe_serpentine_layers(self):
+        plan = json.loads((ROOT / "examples" / "loop-engineering-minimal-light.plan.json").read_text(encoding="utf-8"))
+        spec = compile_plan(plan)
+        scene = compile_scene(spec)
+
+        self.assertEqual("layered-loop", spec["layout"])
+        self.assertEqual(
+            {"value": "layered-loop", "source": "explicit"},
+            spec["resolved_presentation"]["layout"],
+        )
+        self.assertEqual({"nodes": 8, "edges": 8, "groups": 3}, scene.stats())
+        positions = {node["id"]: node["position"] for node in spec["nodes"]}
+        self.assertEqual([80, 235], positions["human-engineer"])
+        self.assertEqual([680, 235], positions["automation-heartbeat"])
+        self.assertEqual([680, 455], positions["isolated-worktree"])
+        self.assertEqual([380, 455], positions["project-skills"])
+        self.assertEqual([80, 455], positions["maker-agent"])
+        self.assertEqual([80, 675], positions["verifier-agent"])
+        self.assertEqual([380, 675], positions["tool-connectors"])
+        self.assertEqual([680, 675], positions["external-state"])
+        self.assertGreaterEqual(min(node["position"][1] for node in spec["nodes"]), 235)
+        self.assertGreaterEqual(min(group["bounds"][1] for group in spec["groups"]), 193)
+        self.assertGreaterEqual(spec["canvas"]["height"], 920)
+        edges = {edge["semantic_relation_id"]: edge for edge in spec["edges"]}
+        self.assertEqual("straight", edges["human-governs-automation"]["route"])
+        self.assertEqual("straight", edges["automation-opens-worktree"]["route"])
+        self.assertEqual("straight", edges["maker-submits-draft"]["route"])
+        self.assertEqual("points", edges["state-informs-human"]["route"])
+        self.assertLess(edges["state-informs-human"]["points"][2][0], 50)
+        self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, quality_report(scene)["summary"])
+
+    def test_layered_loop_routes_skip_lane_and_dense_feedback_outside_content(self):
+        plan = json.loads((ROOT / "examples" / "loop-engineering-minimal-light.plan.json").read_text(encoding="utf-8"))
+        relations = plan["semantic"]["relations"]
+        relations.append(
+            {
+                "id": "human-state-audit",
+                "from": "human-engineer",
+                "to": "external-state",
+                "kind": "governance",
+                "direction": "forward",
+                "importance": "supporting",
+            }
+        )
+        bottom_nodes = ("verifier-agent", "tool-connectors", "external-state")
+        top_nodes = ("human-engineer", "automation-heartbeat")
+        for index in range(7):
+            relations.append(
+                {
+                    "id": f"dense-feedback-{index + 1}",
+                    "from": bottom_nodes[index % len(bottom_nodes)],
+                    "to": top_nodes[index % len(top_nodes)],
+                    "kind": "feedback",
+                    "direction": "forward",
+                    "importance": "supporting",
+                }
+            )
+
+        spec = compile_plan(plan)
+        scene = compile_scene(spec)
+        edges = {edge["semantic_relation_id"]: edge for edge in spec["edges"]}
+        skip_lane = edges["human-state-audit"]
+        feedbacks = [
+            edge
+            for relation_id, edge in edges.items()
+            if relation_id == "state-informs-human" or relation_id.startswith("dense-feedback-")
+        ]
+        node_bottom = max(node["position"][1] + node["size"][1] for node in spec["nodes"])
+
+        self.assertIn(spec["canvas"]["width"] - 36, [point[0] for point in skip_lane["points"]])
+        self.assertTrue(all(edge["points"][2][0] == 36 for edge in feedbacks))
+        self.assertGreater(min(edge["points"][1][1] for edge in feedbacks), node_bottom)
+        self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, quality_report(scene)["summary"])
 
     def test_agent_loop_layout_reproduces_the_reference_zones(self):
         spec = compile_plan(self._agent_loop_plan())
@@ -399,9 +473,15 @@ class CompositionClosureTest(unittest.TestCase):
         self.assertIn("presentation", schema["required"])
         self.assertEqual("array", schema["$defs"]["intent"]["properties"]["exclusions"]["type"])
         self.assertIn("agent-loop", schema["$defs"]["presentation"]["properties"]["layout"]["enum"])
+        self.assertIn("layered-loop", schema["$defs"]["presentation"]["properties"]["layout"]["enum"])
         self.assertIn("agent-loop", script_schema["properties"]["layout"]["enum"])
+        self.assertIn("layered-loop", script_schema["properties"]["layout"]["enum"])
         self.assertIn(
             "agent-loop",
+            script_schema["$defs"]["resolved_presentation"]["properties"]["layout"]["allOf"][1]["properties"]["value"]["enum"],
+        )
+        self.assertIn(
+            "layered-loop",
             script_schema["$defs"]["resolved_presentation"]["properties"]["layout"]["allOf"][1]["properties"]["value"]["enum"],
         )
 

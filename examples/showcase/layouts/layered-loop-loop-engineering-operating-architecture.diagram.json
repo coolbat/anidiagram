@@ -1,0 +1,466 @@
+{
+  "version": "0.4",
+  "composition_policy": "composition-v1",
+  "resolved_presentation": {
+    "icon_system": {
+      "value": "illustrated",
+      "source": "default",
+      "version": "2.5.0"
+    },
+    "style": {
+      "value": "minimal-light",
+      "source": "explicit"
+    },
+    "layout": {
+      "value": "layered-loop",
+      "source": "explicit"
+    },
+    "motion": {
+      "value": "showcase-v1",
+      "source": "default"
+    }
+  },
+  "icon_system": "illustrated",
+  "layout": "layered-loop",
+  "preset": "layered-loop",
+  "canvas": {
+    "width": 1280,
+    "height": 920
+  },
+  "style": "minimal-light",
+  "title": {
+    "text": "Loop Engineering Operating Architecture",
+    "subtitle": "Show how automation, worktrees, skills, sub-agents, connectors, external state, and human judgement form a repeatable coding-agent loop."
+  },
+  "motion": {
+    "profile": "showcase-v1",
+    "sequence": "staged",
+    "ease": "spring",
+    "stagger": 0.12,
+    "duration_scale": 1.0,
+    "intensity": 1.0,
+    "edge": {
+      "preset": "packet-flow"
+    },
+    "node": {
+      "preset": "icon-performance"
+    },
+    "group": {
+      "preset": "border-scan"
+    },
+    "title": {
+      "preset": "highlight-sweep"
+    },
+    "reduced_motion": "subtle"
+  },
+  "motion_policy": {
+    "profile": "unrestricted",
+    "motion_area": "unrestricted",
+    "pulse_mode": "all"
+  },
+  "groups": [
+    {
+      "id": "governance-trigger",
+      "label": "Governance & Trigger",
+      "bounds": [
+        54,
+        193,
+        872,
+        176
+      ],
+      "role": "neutral",
+      "semantic_kind": "governance",
+      "importance": "primary",
+      "effect": {
+        "preset": "border-scan"
+      }
+    },
+    {
+      "id": "isolated-execution",
+      "label": "Isolated Execution",
+      "bounds": [
+        54,
+        413,
+        872,
+        176
+      ],
+      "role": "neutral",
+      "semantic_kind": "execution",
+      "importance": "primary",
+      "effect": {
+        "preset": "border-scan"
+      }
+    },
+    {
+      "id": "verification-delivery",
+      "label": "Verification, Delivery & State",
+      "bounds": [
+        54,
+        633,
+        872,
+        176
+      ],
+      "role": "neutral",
+      "semantic_kind": "delivery",
+      "importance": "primary",
+      "effect": {
+        "preset": "border-scan"
+      }
+    }
+  ],
+  "nodes": [
+    {
+      "id": "automation-heartbeat",
+      "label": "Automation Heartbeat",
+      "caption": "Scheduled triage",
+      "position": [
+        680,
+        235
+      ],
+      "size": [
+        220,
+        108
+      ],
+      "role": "process",
+      "icon": "scheduler",
+      "semantic_kind": "scheduler",
+      "icon_resolution": "exact",
+      "importance": "primary",
+      "step": 2,
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "isolated-worktree",
+      "label": "Isolated Worktree",
+      "caption": "Collision-free parallel work",
+      "position": [
+        680,
+        455
+      ],
+      "size": [
+        220,
+        108
+      ],
+      "role": "process",
+      "icon": "branch",
+      "semantic_kind": "branch",
+      "icon_resolution": "exact",
+      "importance": "primary",
+      "step": 3,
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "project-skills",
+      "label": "Project Skills",
+      "caption": "Rules + context",
+      "position": [
+        380,
+        455
+      ],
+      "size": [
+        220,
+        108
+      ],
+      "role": "memory",
+      "icon": "knowledge-base",
+      "semantic_kind": "knowledge-base",
+      "icon_resolution": "exact",
+      "importance": "primary",
+      "step": 4,
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "maker-agent",
+      "label": "Maker Sub-agent",
+      "caption": "Drafts implementation",
+      "position": [
+        80,
+        455
+      ],
+      "size": [
+        220,
+        108
+      ],
+      "role": "agent",
+      "icon": "agent",
+      "semantic_kind": "agent",
+      "icon_resolution": "exact",
+      "importance": "primary",
+      "step": 5,
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "verifier-agent",
+      "label": "Verifier Sub-agent",
+      "caption": "Tests + evidence",
+      "position": [
+        80,
+        675
+      ],
+      "size": [
+        220,
+        108
+      ],
+      "role": "risk",
+      "icon": "reasoning",
+      "semantic_kind": "reasoning",
+      "icon_resolution": "exact",
+      "importance": "primary",
+      "step": 6,
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "tool-connectors",
+      "label": "Connectors & Delivery",
+      "caption": "Publish verified PRs",
+      "position": [
+        380,
+        675
+      ],
+      "size": [
+        220,
+        108
+      ],
+      "role": "tool",
+      "icon": "gateway",
+      "semantic_kind": "gateway",
+      "icon_resolution": "exact",
+      "importance": "primary",
+      "step": 7,
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "external-state",
+      "label": "External State",
+      "caption": "Records done and next",
+      "position": [
+        680,
+        675
+      ],
+      "size": [
+        220,
+        108
+      ],
+      "role": "memory",
+      "icon": "memory",
+      "semantic_kind": "memory",
+      "icon_resolution": "exact",
+      "importance": "primary",
+      "step": 8,
+      "effect": {
+        "preset": "icon-performance"
+      }
+    },
+    {
+      "id": "human-engineer",
+      "label": "Human Governance",
+      "caption": "Goals + stop gates",
+      "position": [
+        80,
+        235
+      ],
+      "size": [
+        220,
+        108
+      ],
+      "role": "actor",
+      "icon": "developer",
+      "semantic_kind": "developer",
+      "icon_resolution": "exact",
+      "importance": "primary",
+      "step": 1,
+      "effect": {
+        "preset": "icon-performance"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "automation-heartbeat",
+      "to": "isolated-worktree",
+      "label": "discover + isolate",
+      "role": "process",
+      "direction": "forward",
+      "route": "straight",
+      "step": 2,
+      "semantic_relation_id": "automation-opens-worktree",
+      "semantic_kind": "orchestration",
+      "importance": "primary",
+      "effect": {
+        "preset": "stream-flow",
+        "particle_count": 1
+      },
+      "flow_id": "outer-loop",
+      "flow_importance": "primary",
+      "flow_repeat": "loop"
+    },
+    {
+      "from": "isolated-worktree",
+      "to": "project-skills",
+      "label": "load context",
+      "role": "process",
+      "direction": "forward",
+      "route": "straight",
+      "step": 3,
+      "semantic_relation_id": "worktree-loads-skills",
+      "semantic_kind": "context-loading",
+      "importance": "primary",
+      "effect": {
+        "preset": "stream-flow",
+        "particle_count": 1
+      },
+      "flow_id": "outer-loop",
+      "flow_importance": "primary",
+      "flow_repeat": "loop"
+    },
+    {
+      "from": "project-skills",
+      "to": "maker-agent",
+      "label": "use",
+      "role": "process",
+      "direction": "forward",
+      "route": "straight",
+      "step": 4,
+      "semantic_relation_id": "skills-guide-maker",
+      "semantic_kind": "instruction",
+      "importance": "primary",
+      "effect": {
+        "preset": "stream-flow",
+        "particle_count": 1
+      },
+      "flow_id": "outer-loop",
+      "flow_importance": "primary",
+      "flow_repeat": "loop"
+    },
+    {
+      "from": "maker-agent",
+      "to": "verifier-agent",
+      "label": "review",
+      "role": "process",
+      "direction": "bidirectional",
+      "route": "straight",
+      "step": 5,
+      "semantic_relation_id": "maker-submits-draft",
+      "semantic_kind": "verification",
+      "importance": "primary",
+      "effect": {
+        "preset": "stream-flow",
+        "particle_count": 1
+      },
+      "flow_id": "outer-loop",
+      "flow_importance": "primary",
+      "flow_repeat": "loop"
+    },
+    {
+      "from": "verifier-agent",
+      "to": "tool-connectors",
+      "label": "OK",
+      "role": "process",
+      "direction": "forward",
+      "route": "straight",
+      "step": 6,
+      "semantic_relation_id": "verifier-authorizes-connectors",
+      "semantic_kind": "approval",
+      "importance": "primary",
+      "effect": {
+        "preset": "stream-flow",
+        "particle_count": 1
+      },
+      "condition": "Tests and acceptance evidence pass",
+      "flow_id": "outer-loop",
+      "flow_importance": "primary",
+      "flow_repeat": "loop"
+    },
+    {
+      "from": "tool-connectors",
+      "to": "external-state",
+      "label": "publish + record",
+      "role": "process",
+      "direction": "forward",
+      "route": "straight",
+      "step": 7,
+      "semantic_relation_id": "connectors-update-state",
+      "semantic_kind": "delivery",
+      "importance": "primary",
+      "effect": {
+        "preset": "stream-flow",
+        "particle_count": 1
+      },
+      "flow_id": "outer-loop",
+      "flow_importance": "primary",
+      "flow_repeat": "loop"
+    },
+    {
+      "from": "external-state",
+      "to": "human-engineer",
+      "label": "review",
+      "role": "output",
+      "direction": "forward",
+      "route": "points",
+      "step": 8,
+      "semantic_relation_id": "state-informs-human",
+      "semantic_kind": "observability",
+      "importance": "primary",
+      "effect": {
+        "preset": "stream-flow",
+        "particle_count": 1
+      },
+      "flow_id": "outer-loop",
+      "flow_importance": "primary",
+      "flow_repeat": "loop",
+      "points": [
+        [
+          790,
+          783
+        ],
+        [
+          790,
+          890
+        ],
+        [
+          36,
+          890
+        ],
+        [
+          36,
+          289
+        ],
+        [
+          80,
+          289
+        ]
+      ]
+    },
+    {
+      "from": "human-engineer",
+      "to": "automation-heartbeat",
+      "label": "goals + stops",
+      "role": "process",
+      "direction": "forward",
+      "route": "straight",
+      "step": 1,
+      "semantic_relation_id": "human-governs-automation",
+      "semantic_kind": "governance",
+      "importance": "primary",
+      "effect": {
+        "preset": "stream-flow",
+        "particle_count": 1
+      },
+      "flow_id": "outer-loop",
+      "flow_importance": "primary",
+      "flow_repeat": "loop"
+    }
+  ]
+}
