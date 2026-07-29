@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         system: ["diagram-core-v1", "illustrated-2.5"]
-        shard: ["visual", "motion"]
+        shard: ["static", "webp", "gif", "apng", "mp4", "pdf", "lottie", "quality"]
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:

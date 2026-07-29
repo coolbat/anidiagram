@@ -195,7 +195,8 @@ The formal two-system export matrix is intentionally not generated on every
 pull request because the current evidence bundle is about 333 MB. Run
 `.github/workflows/icon-system-release-evidence.yml` through
 `workflow_dispatch` for a release candidate. It installs the pinned Playwright
-runtime plus ffmpeg, builds four bounded `system x format-shard` fragments,
+runtime plus ffmpeg, builds sixteen bounded `system x format-shard` fragments
+(one shard for each memory-heavy animated format),
 merges them back into the canonical two-system matrix, independently verifies
 the complete result, and uploads `outputs/release-evidence/icon-systems` as a
 commit-addressed GitHub Actions artifact retained for 14 days. Sharding changes

@@ -66,7 +66,7 @@ class ReleaseWorkflowContractTest(unittest.TestCase):
             "npm ci",
             "playwright install --with-deps chromium",
             'system: ["diagram-core-v1", "illustrated-2.5"]',
-            'shard: ["visual", "motion"]',
+            'shard: ["static", "webp", "gif", "apng", "mp4", "pdf", "lottie", "quality"]',
             '--system "${{ matrix.system }}" --shard "${{ matrix.shard }}"',
             "actions/download-artifact@v4",
             "merge-multiple: true",
