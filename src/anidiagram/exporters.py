@@ -390,11 +390,24 @@ def _write_browser_image_sequence(
         return _skipped(format_name, path, "Pillow is not installed")
     if not frame_paths:
         return _skipped(format_name, path, "no browser frames were captured")
-    images = [Image.open(frame_path).convert("RGBA") for frame_path in frame_paths]
+    images = []
+    gif_images = []
     duration_ms = max(1, int(round(1000 / max(1, fps))))
     try:
         if format_name == "gif":
-            gif_images = [_flatten_frame_for_gif(image, style) for image in images]
+            for frame_path in frame_paths:
+                with Image.open(frame_path) as source:
+                    rgba = source.convert("RGBA")
+                try:
+                    flattened = _flatten_frame_for_gif(rgba, style)
+                finally:
+                    rgba.close()
+                try:
+                    gif_images.append(
+                        flattened.convert("P", palette=Image.Palette.ADAPTIVE, colors=256)
+                    )
+                finally:
+                    flattened.close()
             gif_images[0].save(
                 path,
                 save_all=True,
@@ -406,8 +419,10 @@ def _write_browser_image_sequence(
                 disposal=2,
             )
         elif format_name == "apng":
+            images = [Image.open(frame_path) for frame_path in frame_paths]
             images[0].save(path, save_all=True, append_images=images[1:], duration=duration_ms, loop=0, format="PNG")
         elif format_name == "webp":
+            images = [Image.open(frame_path) for frame_path in frame_paths]
             images[0].save(
                 path,
                 save_all=True,
@@ -423,7 +438,7 @@ def _write_browser_image_sequence(
     except Exception as exc:
         return _skipped(format_name, path, str(exc))
     finally:
-        for image in images:
+        for image in [*images, *gif_images]:
             image.close()
     return _done(format_name, path)
 
@@ -798,7 +813,14 @@ def _flatten_frame_for_gif(image: Any, style: Dict[str, Any]) -> Any:
     background = style.get("canvas", {}).get("background", "#ffffff")
     if image.mode == "RGBA":
         base = Image.new("RGBA", image.size, background)
-        return Image.alpha_composite(base, image).convert("RGB")
+        try:
+            composite = Image.alpha_composite(base, image)
+            try:
+                return composite.convert("RGB")
+            finally:
+                composite.close()
+        finally:
+            base.close()
     return image.convert("RGB")
 
 

@@ -38,8 +38,14 @@ EXPORT_FORMATS: Tuple[str, ...] = (
     "quality",
 )
 FORMAT_SHARDS = {
-    "visual": EXPORT_FORMATS[:5],
-    "motion": EXPORT_FORMATS[5:],
+    "static": EXPORT_FORMATS[:3],
+    "webp": ("webp",),
+    "gif": ("gif",),
+    "apng": ("apng",),
+    "mp4": ("mp4",),
+    "pdf": ("pdf",),
+    "lottie": ("lottie",),
+    "quality": ("quality",),
 }
 ANIMATED_FORMATS = ("webp", "gif", "apng", "mp4", "lottie")
 CASES = (

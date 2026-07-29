@@ -8,6 +8,7 @@ from anidiagram.planner import compile_plan
 from anidiagram.renderer_html_runtime import render_html_runtime
 from anidiagram.schema import compile_scene
 from anidiagram.styles import load_style
+from anidiagram.exporters import _write_browser_image_sequence
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -75,6 +76,33 @@ class ProductizationTest(unittest.TestCase):
 
         self.assertIn("global-exclude *.py[cod]", manifest)
         self.assertIn('ignore_patterns("__pycache__", "*.pyc", "*.pyo")', setup_source)
+
+    def test_browser_image_packagers_preserve_small_animated_sequences(self):
+        try:
+            from PIL import Image
+        except ImportError:
+            self.skipTest("Pillow is not installed")
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            frames = []
+            for index, color in enumerate(((220, 40, 40, 255), (40, 180, 80, 255), (40, 90, 220, 255))):
+                frame = root / f"frame-{index:04d}.png"
+                Image.new("RGBA", (12, 12), color).save(frame)
+                frames.append(frame)
+            for format_name, suffix in (("gif", ".gif"), ("webp", ".webp"), ("apng", ".png")):
+                with self.subTest(format_name=format_name):
+                    output = root / f"animation{suffix}"
+                    result = _write_browser_image_sequence(
+                        format_name,
+                        frames,
+                        output,
+                        12,
+                        {"canvas": {"background": "#ffffff"}},
+                    )
+                    self.assertEqual("written", result["status"])
+                    with Image.open(output) as animation:
+                        self.assertEqual(3, animation.n_frames)
 
     def test_timeline_and_hybrid_manifests_are_explicit_without_changing_ambient(self):
         scene = self._scene()
