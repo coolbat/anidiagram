@@ -371,8 +371,9 @@ current public contracts and immutable archive boundary.
   state machines, or arbitrary interactive replay.
 - `illustrated` 2.5.0 freezes 56 approved static icons and 56 approved
   automatic `showcase-v1` performances.
-- Video and animated image export require browser capture. MP4 also requires
-  ffmpeg.
+- Video and animated image export require browser capture. MP4 requires
+  ffmpeg; large APNG capture prefers ffmpeg's streaming encoder and large WebP
+  capture prefers `img2webp`, with Pillow fallbacks when those tools are absent.
 - Browser-captured PNG/PDF use a settled runtime frame; GIF, WebP, APNG, MP4,
   and frame-based Lottie seek the GSAP-owned timelines at the requested FPS.
   Each written browser export reports `renderer`, `status`, `frames`, `fps`,

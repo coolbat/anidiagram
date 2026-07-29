@@ -102,7 +102,9 @@ Manifest 和浏览器 runtime；GSAP backend 默认使用精确的 `gsap@3.15.0`
 CDN 地址，离线或自托管页面可以通过 `--runtime-dependency inline` 内联用户
 提供的本地文件。Python wheel 不捆绑 GSAP。PNG/GIF/PDF/WebP/APNG/MP4
 默认走轻量 Python 导出器，适合快速预览；
-其中 PNG/GIF/PDF/WebP/APNG 依赖可选 Pillow，MP4 还需要 `ffmpeg`。如果要
+其中 PNG/GIF/PDF 依赖可选 Pillow；大体量 WebP 在有 `img2webp` 时使用
+原生流式编码，否则回退到 Pillow；APNG 同样优先使用 `ffmpeg`；MP4 需要
+`ffmpeg`。如果要
 最高质量导出，可以使用 `--export-renderer browser`，让 PNG、GIF、PDF、
 WebP、MP4、APNG 和 Lottie 从真实 `html` runtime 页面通过 Playwright/
 Chromium 捕获，完整保留高保真图标动效。browser Lottie 是帧序列型，视觉

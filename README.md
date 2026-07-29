@@ -121,8 +121,9 @@ video, PDF, and Lottie exports default to the lightweight Python renderer. For
 highest-fidelity output, pass `--export-renderer browser` so PNG, GIF, PDF,
 WebP, MP4, APNG, and Lottie are captured from the real HTML runtime with
 Playwright/Chromium. Browser-captured Lottie is frame-based, so it is visually
-faithful but larger than the default structured Lottie JSON. GIF/WebP/APNG
-packaging still needs Pillow, and MP4 still needs `ffmpeg`.
+faithful but larger than the default structured Lottie JSON. GIF packaging
+needs Pillow. Large WebP capture streams through `img2webp` when available and
+falls back to Pillow; APNG similarly prefers `ffmpeg`; MP4 needs `ffmpeg`.
 
 ## Quick Start
 

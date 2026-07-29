@@ -65,6 +65,7 @@ class ReleaseWorkflowContractTest(unittest.TestCase):
             "python3 -m pip install -e \".[raster]\"",
             "npm ci",
             "playwright install --with-deps chromium",
+            "sudo apt-get install --yes ffmpeg webp",
             'system: ["diagram-core-v1", "illustrated-2.5"]',
             'shard: ["static", "webp", "gif", "apng", "mp4", "pdf", "lottie", "quality"]',
             '--system "${{ matrix.system }}" --shard "${{ matrix.shard }}"',

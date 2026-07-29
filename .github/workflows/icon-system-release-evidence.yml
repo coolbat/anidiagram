@@ -35,7 +35,7 @@ jobs:
           npm ci
           npx playwright install --with-deps chromium
           sudo apt-get update
-          sudo apt-get install --yes ffmpeg
+          sudo apt-get install --yes ffmpeg webp
       - name: Build one public icon-system evidence fragment
         timeout-minutes: 20
         run: PYTHONPATH=src python3 scripts/build_icon_system_release_evidence.py --system "${{ matrix.system }}" --shard "${{ matrix.shard }}"
@@ -63,7 +63,7 @@ jobs:
         run: |
           python3 -m pip install -e ".[raster]"
           sudo apt-get update
-          sudo apt-get install --yes ffmpeg
+          sudo apt-get install --yes ffmpeg webp
       - name: Download public icon-system evidence fragments
         uses: actions/download-artifact@v4
         with:

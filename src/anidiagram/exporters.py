@@ -384,12 +384,20 @@ def _write_browser_image_sequence(
     style: Dict[str, Any],
     quality: int = 80,
 ) -> Dict[str, str]:
+    if not frame_paths:
+        return _skipped(format_name, path, "no browser frames were captured")
+    if format_name == "apng":
+        streamed = _write_apng_with_ffmpeg(frame_paths, path, fps)
+        if streamed is not None:
+            return streamed
+    if format_name == "webp":
+        streamed = _write_webp_with_img2webp(frame_paths, path, fps, quality)
+        if streamed is not None:
+            return streamed
     try:
         from PIL import Image
     except Exception:
         return _skipped(format_name, path, "Pillow is not installed")
-    if not frame_paths:
-        return _skipped(format_name, path, "no browser frames were captured")
     images = []
     gif_images = []
     duration_ms = max(1, int(round(1000 / max(1, fps))))
@@ -441,6 +449,82 @@ def _write_browser_image_sequence(
         for image in [*images, *gif_images]:
             image.close()
     return _done(format_name, path)
+
+
+def _write_apng_with_ffmpeg(
+    frame_paths: List[Path],
+    path: Path,
+    fps: int,
+) -> Optional[Dict[str, str]]:
+    """Stream an APNG through ffmpeg instead of retaining decoded frames."""
+
+    ffmpeg = shutil.which("ffmpeg")
+    if not ffmpeg:
+        return None
+    pattern = frame_paths[0].parent / "frame-%04d.png"
+    completed = subprocess.run(
+        [
+            ffmpeg,
+            "-y",
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-framerate",
+            str(max(1, int(fps))),
+            "-i",
+            str(pattern),
+            "-plays",
+            "0",
+            "-f",
+            "apng",
+            str(path),
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    if completed.returncode != 0:
+        reason = completed.stderr.strip() or completed.stdout.strip() or "ffmpeg APNG export failed"
+        return _skipped("apng", path, reason)
+    return _done("apng", path)
+
+
+def _write_webp_with_img2webp(
+    frame_paths: List[Path],
+    path: Path,
+    fps: int,
+    quality: int,
+) -> Optional[Dict[str, str]]:
+    """Stream an animated WebP through the native libwebp command-line tool."""
+
+    img2webp = shutil.which("img2webp")
+    if not img2webp:
+        return None
+    duration_ms = max(1, int(round(1000 / max(1, int(fps)))))
+    completed = subprocess.run(
+        [
+            img2webp,
+            "-loop",
+            "0",
+            "-d",
+            str(duration_ms),
+            "-q",
+            str(max(1, min(100, int(quality)))),
+            "-m",
+            "4",
+            "-lossy",
+            *[str(frame_path) for frame_path in frame_paths],
+            "-o",
+            str(path),
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    if completed.returncode != 0:
+        reason = completed.stderr.strip() or completed.stdout.strip() or "img2webp export failed"
+        return _skipped("webp", path, reason)
+    return _done("webp", path)
 
 
 def _write_browser_lottie(scene: Scene, frame_paths: List[Path], path: Path, fps: int, scale: float) -> Dict[str, str]:
