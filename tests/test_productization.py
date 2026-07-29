@@ -1,14 +1,16 @@
 import json
 import re
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from anidiagram.planner import compile_plan
 from anidiagram.renderer_html_runtime import render_html_runtime
 from anidiagram.schema import compile_scene
 from anidiagram.styles import load_style
-from anidiagram.exporters import _write_browser_image_sequence
+from anidiagram.exporters import _write_browser_image_sequence, _write_webp_with_img2webp
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -103,6 +105,26 @@ class ProductizationTest(unittest.TestCase):
                     self.assertEqual("written", result["status"])
                     with Image.open(output) as animation:
                         self.assertEqual(3, animation.n_frames)
+
+    def test_native_webp_streaming_command_preserves_capture_contract(self):
+        with patch("anidiagram.exporters.shutil.which", return_value="/usr/bin/img2webp"), patch(
+            "anidiagram.exporters.subprocess.run",
+            return_value=subprocess.CompletedProcess([], 0, "", ""),
+        ) as run:
+            result = _write_webp_with_img2webp(
+                [Path("frame-0000.png"), Path("frame-0001.png")],
+                Path("animation.webp"),
+                12,
+                65,
+            )
+
+        self.assertEqual("written", result["status"])
+        command = run.call_args.args[0]
+        self.assertIn("-loop", command)
+        self.assertIn("-d", command)
+        self.assertIn("83", command)
+        self.assertIn("65", command)
+        self.assertIn("-lossy", command)
 
     def test_timeline_and_hybrid_manifests_are_explicit_without_changing_ambient(self):
         scene = self._scene()
