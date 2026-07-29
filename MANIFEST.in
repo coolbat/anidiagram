@@ -2,3 +2,4 @@ recursive-include assets *
 recursive-include runtime *
 recursive-include schemas *
 recursive-include styles *
+global-exclude *.py[cod]
