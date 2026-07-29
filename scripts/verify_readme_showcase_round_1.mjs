@@ -108,10 +108,14 @@ async function main() {
           if (!surface || !text) return [];
           const card = surface.getBoundingClientRect();
           const content = text.getBoundingClientRect();
-          const inside = content.left >= card.left + 5
-            && content.top >= card.top + 5
-            && content.right <= card.right - 5
-            && content.bottom <= card.bottom - 5;
+          // System font metrics differ between macOS and Linux. The visual
+          // contract is containment, so allow only sub-pixel rounding rather
+          // than requiring an extra platform-dependent five-pixel inset.
+          const tolerance = 0.75;
+          const inside = content.left >= card.left - tolerance
+            && content.top >= card.top - tolerance
+            && content.right <= card.right + tolerance
+            && content.bottom <= card.bottom + tolerance;
           return inside ? [] : [node.id || "unknown-node"];
         });
         const edgeLabels = Array.from(document.querySelectorAll("g.edge > text.edge-label"))
