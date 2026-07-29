@@ -19,8 +19,7 @@ the README itself exhaustive.
 - **Template Showcase**: one semantic diagram rendered through three styles.
 - **Layout Showcase**: two topology-specific examples.
 
-Hosted gallery: [GitHub Pages](https://coolbat.github.io/anidiagram/gallery/) ·
-source gallery: [gallery/index.html](./gallery/index.html) ·
+Gallery source: [gallery/index.html](./gallery/index.html) ·
 [all styles](./gallery/styles/index.html) · [all layouts](./gallery/layouts/index.html) ·
 [runtime motion](./gallery/runtime-motion.html)
 
@@ -40,8 +39,9 @@ To open the interactive runtime locally:
 python3 -m http.server 8765
 ```
 
-Then visit `http://127.0.0.1:8765/gallery/readme-showcase/readme-showcase-round-1.html`,
-or use the [hosted review surface](https://coolbat.github.io/anidiagram/gallery/readme-showcase/readme-showcase-round-1.html).
+Then visit `http://127.0.0.1:8765/gallery/readme-showcase/readme-showcase-round-1.html`.
+A hosted link can replace this local URL when a static host is enabled for the
+repository.
 
 ### Template Showcase
 

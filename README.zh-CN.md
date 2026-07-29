@@ -15,8 +15,7 @@ README 现在使用 Round 1 已审核通过的 8 个精选案例。完整的 13 
 - **Template Showcase**：相同语义内容使用 3 种模板直接对照。
 - **Layout Showcase**：2 个针对不同拓扑的布局案例。
 
-在线入口：[GitHub Pages](https://coolbat.github.io/anidiagram/gallery/) ·
-源码 Gallery：[Gallery](./gallery/index.html) · [全部风格](./gallery/styles/index.html) ·
+Gallery 源码入口：[Gallery](./gallery/index.html) · [全部风格](./gallery/styles/index.html) ·
 [全部布局](./gallery/layouts/index.html) · [Runtime 动效](./gallery/runtime-motion.html)
 
 ### Hero Showcase
@@ -35,8 +34,8 @@ README 现在使用 Round 1 已审核通过的 8 个精选案例。完整的 13 
 python3 -m http.server 8765
 ```
 
-然后访问 `http://127.0.0.1:8765/gallery/readme-showcase/readme-showcase-round-1.html`，
-也可以直接打开[在线评审页](https://coolbat.github.io/anidiagram/gallery/readme-showcase/readme-showcase-round-1.html)。
+然后访问 `http://127.0.0.1:8765/gallery/readme-showcase/readme-showcase-round-1.html`。
+仓库启用静态托管后，可以再用在线地址替换这个本地 URL。
 
 ### Template Showcase
 
