@@ -26,9 +26,12 @@
 - Compatibility result: frozen `runtime/anidiagram-runtime.js` and
   `runtime/edge-motion-v1-runtime.js` remain unchanged at their approved
   SHA-256 values. Choreographer is an additive versioned layer.
-- Blocker class: none locally. Remote CI, formal two-system evidence retention,
-  Pages, and the tagged release are recorded by the corresponding GitHub run
-  and release rather than claimed by this pre-push record.
+- Blocker class: GitHub Pages is unavailable while this repository remains
+  private on the current account plan; the create request returned
+  `Your current plan does not support GitHub Pages for this repository. (HTTP
+  422)`. Repository visibility was intentionally not changed. Remote CI,
+  formal two-system evidence retention, and the tagged release are recorded by
+  their GitHub runs and release rather than claimed by this local record.
 - Verdict: local release candidate passed.
 
 ### Evidence E-M0-01
