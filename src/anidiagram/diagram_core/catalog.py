@@ -8,6 +8,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, FrozenSet, Optional, Tuple
 
+from ..resources import resource_path
+
 
 CATALOG_SYSTEM_ID = "diagram-core-v1"
 CATALOG_PUBLIC_NAME = "AniDiagram Diagram Core Icon System v1.0"
@@ -32,7 +34,7 @@ LEGACY_VALID_ICON_IDS = frozenset(
     }
 )
 
-_DEFAULT_ASSET_ROOT = Path(__file__).resolve().parents[3] / "assets" / "diagram-core"
+_DEFAULT_ASSET_ROOT = resource_path("assets", "diagram-core")
 _IDENTIFIER_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 _TOP_LEVEL_FIELDS = {"system", "public_name", "catalog_revision", "icons"}
 _ICON_FIELDS = {

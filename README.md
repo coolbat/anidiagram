@@ -2,7 +2,8 @@
 
 Language: English | [简体中文](./README.zh-CN.md)
 
-Clean-room DiagramScript renderer for animated architecture visuals.
+Clean-room DiagramScript renderer for animated architecture visuals. Current
+package release: **0.2.0**.
 
 This repository is not a GitHub fork and does not copy source code, documents,
 images, generated assets, or repository history from the projects listed in
@@ -18,7 +19,8 @@ the README itself exhaustive.
 - **Template Showcase**: one semantic diagram rendered through three styles.
 - **Layout Showcase**: two topology-specific examples.
 
-Full gallery: [gallery/index.html](./gallery/index.html) ·
+Hosted gallery: [GitHub Pages](https://coolbat.github.io/anidiagram/gallery/) ·
+source gallery: [gallery/index.html](./gallery/index.html) ·
 [all styles](./gallery/styles/index.html) · [all layouts](./gallery/layouts/index.html) ·
 [runtime motion](./gallery/runtime-motion.html)
 
@@ -38,9 +40,8 @@ To open the interactive runtime locally:
 python3 -m http.server 8765
 ```
 
-Then visit `http://127.0.0.1:8765/gallery/readme-showcase/readme-showcase-round-1.html`.
-When publishing with GitHub Pages, link README buttons to the Pages URL instead
-of GitHub's `blob` file view.
+Then visit `http://127.0.0.1:8765/gallery/readme-showcase/readme-showcase-round-1.html`,
+or use the [hosted review surface](https://coolbat.github.io/anidiagram/gallery/readme-showcase/readme-showcase-round-1.html).
 
 ### Template Showcase
 
@@ -103,11 +104,19 @@ or runtime scheduling must be confirmed before implementation.
 - Exports optional PNG, GIF, PDF, WebP, MP4, APNG, and Lottie files.
 - Produces quality reports for bounds, overlaps, text fit, and explicit paths.
 - Includes 16 clean-room preset compilers and 13 public visual styles.
+- Produces semantically equivalent English and Chinese plans from matching
+  briefs, including localized labels and descriptions.
+- Keeps `ambient` as the compatibility default while offering opt-in
+  `timeline` and `hybrid` Choreographer v1 playback.
+- Ships checkout-independent assets inside the wheel; installed CLI renders do
+  not depend on the source tree.
 
 SVG, debug viewer HTML, Lottie, and quality reports use the Python standard
 library. The primary `html` export writes a high-fidelity runtime page with a
-static SVG stage, named parts, a Motion Manifest, and a browser runtime; its
-GSAP backend loads GSAP from a CDN and does not add a Python dependency. Raster,
+static SVG stage, named parts, a Motion Manifest, and a browser runtime. Its
+GSAP backend uses an exact `gsap@3.15.0` CDN URL by default; offline/self-hosted
+pages can inline a user-provided local copy with `--runtime-dependency inline`.
+GSAP is not bundled in the Python wheel. Raster,
 video, PDF, and Lottie exports default to the lightweight Python renderer. For
 highest-fidelity output, pass `--export-renderer browser` so PNG, GIF, PDF,
 WebP, MP4, APNG, and Lottie are captured from the real HTML runtime with
@@ -116,6 +125,17 @@ faithful but larger than the default structured Lottie JSON. GIF/WebP/APNG
 packaging still needs Pillow, and MP4 still needs `ffmpeg`.
 
 ## Quick Start
+
+Build and install the standalone wheel:
+
+```bash
+python3 -m pip wheel . --no-deps --wheel-dir dist
+python3 -m pip install dist/anidiagram-0.2.0-py3-none-any.whl
+anidiagram --preset agent-memory --outdir outputs --formats svg,html,quality
+```
+
+The source-checkout examples below use `PYTHONPATH=src` so contributors can
+test local changes without installing them first.
 
 Render a JSON spec:
 
@@ -173,6 +193,24 @@ PYTHONPATH=src python3 -m anidiagram.cli \
   --formats svg,html,quality \
   --html-runtime gsap
 ```
+
+Render an offline, Chinese, causal walkthrough with a local GSAP copy:
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --plan examples/contracts/production-request-path.plan.json \
+  --outdir outputs/choreographer \
+  --basename production-request-path \
+  --formats html,quality \
+  --runtime-mode timeline \
+  --viewer-locale zh-CN \
+  --runtime-dependency inline \
+  --runtime-source node_modules/gsap/dist/gsap.min.js
+```
+
+Use `--runtime-mode hybrid` to keep the ambient overview until the user starts
+the explanation. Use `--runtime-dependency none` for a static, dependency-free
+HTML fallback.
 
 Write the legacy debug viewer when needed:
 
@@ -359,8 +397,18 @@ PYTHONPATH=src python3 scripts/render_readme_showcase_round_1.py \
   --outdir gallery/readme-showcase
 ```
 
-Re-recording requires the bundled Playwright/Chromium browser runtime and
-network access to the pinned GSAP dependency.
+Re-recording requires the bundled Playwright/Chromium browser runtime and the
+exact local `gsap@3.15.0` development dependency. The committed contract is 24
+frames at 12 FPS, 1x scale, four loop-blend frames, and WebP quality 65.
+Enforce its repository budgets with:
+
+```bash
+PYTHONPATH=src python3 scripts/check_asset_budget.py
+```
+
+The eight README WebPs must remain below 6 MiB total and 1 MiB each; the full
+gallery must remain below 55 MiB. To inspect disposable generated outputs
+without deleting evidence, run `PYTHONPATH=src python3 scripts/prune_outputs.py`.
 
 ## Motion Design
 
@@ -542,9 +590,12 @@ The current default runtime mode is `ambient`. A direct DiagramScript that
 omits motion uses the compatibility profile `expressive`; new composition-v1
 output resolves `showcase-v1`. In the runtime's Expressive toolbar mode, icon
 performances loop independently with small staggered delays, while the browser
-runtime generates GSAP-owned edge flow particles and title sweep. Whole-diagram timeline,
-event-driven, state-machine, interactive, and hybrid modes are future roadmap
-items, not default behavior. See [docs/html-runtime.md](./docs/html-runtime.md)
+runtime generates GSAP-owned edge flow particles and title sweep. Choreographer
+v1 adds explicit `timeline` and `hybrid` modes: it sequences each source, edge,
+and target as a causal step and exposes start/previous/next controls. Ambient
+remains unchanged unless one of those modes is requested. Event-driven,
+state-machine, and arbitrary node interaction remain roadmap items. See
+[docs/html-runtime.md](./docs/html-runtime.md)
 and [docs/runtime-motion-roadmap.md](./docs/runtime-motion-roadmap.md).
 
 ### Effect Object Fields

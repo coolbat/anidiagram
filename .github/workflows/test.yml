@@ -13,7 +13,37 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  package-install:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.11", "3.14"]
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Build standalone wheel
+        run: python3 -m pip wheel . --no-deps --wheel-dir build/wheels
+      - name: Install wheel into isolated environment
+        run: |
+          python3 -m venv build/wheel-smoke-venv
+          build/wheel-smoke-venv/bin/python -m pip install --no-deps build/wheels/*.whl
+      - name: Render outside the source checkout
+        working-directory: /tmp
+        run: |
+          "$GITHUB_WORKSPACE/build/wheel-smoke-venv/bin/anidiagram" \
+            --preset agent-memory \
+            --outdir /tmp/anidiagram-wheel-smoke \
+            --basename agent-memory \
+            --formats svg,html,quality \
+            --runtime-dependency none
+
   contract:
+    needs: package-install
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -35,11 +65,14 @@ jobs:
         run: PYTHONPATH=src python3 -m unittest discover -s tests
       - name: Validate all approved Diagram Core assets
         run: PYTHONPATH=src python3 scripts/validate_diagram_core_assets.py --strict --json
+      - name: Enforce committed gallery asset budgets
+        run: PYTHONPATH=src python3 scripts/check_asset_budget.py
       - name: Check runtime JavaScript syntax
         run: |
           node --check runtime/anidiagram-runtime.js
           node --check runtime/illustrated-performance-v6-runtime.js
           node --check runtime/edge-motion-v1-runtime.js
+          node --check runtime/choreographer-v1-runtime.js
       - name: Render composition smoke test
         run: |
           PYTHONPATH=src python3 -m anidiagram.cli \
@@ -89,6 +122,24 @@ jobs:
             --outdir build/ci/composition \
             --basename production-request-path \
             --formats svg,html,quality
+      - name: Render explicit Choreographer modes
+        run: |
+          PYTHONPATH=src python3 -m anidiagram.cli \
+            --plan examples/contracts/production-request-path.plan.json \
+            --outdir build/ci/choreographer \
+            --basename timeline \
+            --formats html,quality \
+            --runtime-mode timeline \
+            --runtime-dependency inline \
+            --runtime-source node_modules/gsap/dist/gsap.min.js
+          PYTHONPATH=src python3 -m anidiagram.cli \
+            --plan examples/contracts/production-request-path.plan.json \
+            --outdir build/ci/choreographer \
+            --basename hybrid \
+            --formats html,quality \
+            --runtime-mode hybrid \
+            --runtime-dependency inline \
+            --runtime-source node_modules/gsap/dist/gsap.min.js
       - name: Verify Illustrated rest poses and reduced motion
         run: |
           node scripts/verify_character_motion_rest.mjs \
@@ -107,6 +158,10 @@ jobs:
             build/ci/illustrated-case/illustrated-2.5-release-case.html 13 13 2
           node scripts/verify_stage_motion_modes.mjs \
             build/ci/composition/production-request-path.html
+          node scripts/verify_choreographer.mjs build/ci/choreographer/timeline.html timeline
+          node scripts/verify_choreographer.mjs build/ci/choreographer/hybrid.html hybrid
+      - name: Verify committed README visual quality
+        run: node scripts/verify_readme_showcase_round_1.mjs gallery/readme-showcase
       - name: Upload browser diagnostics on failure
         if: failure()
         uses: actions/upload-artifact@v4

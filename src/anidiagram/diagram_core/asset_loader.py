@@ -10,6 +10,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Optional, Tuple
 
+from ..resources import resource_path
+
 from .catalog import (
     CATALOG_STATUSES,
     CatalogValidationError,
@@ -23,7 +25,7 @@ from .manifest import (
 )
 
 
-_DEFAULT_ASSET_ROOT = Path(__file__).resolve().parents[3] / "assets" / "diagram-core"
+_DEFAULT_ASSET_ROOT = resource_path("assets", "diagram-core")
 _IDENTIFIER_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 _TOKEN_PATTERN = re.compile(r"--[a-z][a-z0-9-]*")
 _CSS_COMMENT_PATTERN = re.compile(r"/\*.*?\*/", re.DOTALL)

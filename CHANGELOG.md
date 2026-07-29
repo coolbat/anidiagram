@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.2.0 - 2026-07-29
+
+- Added a standalone wheel build that packages runtime, schema, style, and icon
+  resources; CI smoke-renders the installed wheel outside the source checkout
+  on Python 3.9, 3.11, and 3.14.
+- Added semantically equivalent Chinese and English brief planning with
+  localized labels and descriptions.
+- Added shared CJK-aware text layout for rendering and quality validation,
+  centered caption fitting, improved icon/text space allocation, and browser
+  checks for node-surface containment and edge-label collisions.
+- Added exact GSAP dependency modes: pinned `cdn`, user-supplied `inline`, and
+  dependency-free static `none`. GSAP remains outside the Python wheel.
+- Added localized, keyboard-focusable runtime controls, live status, visible
+  dependency warnings, and accessible stage/toolbar semantics.
+- Added opt-in Choreographer v1 `timeline` and `hybrid` modes with causal
+  source/edge/target steps and start/previous/next controls. Ambient remains the
+  compatibility default and the frozen legacy runtime files remain unchanged.
+- Reduced the eight committed README animated WebPs from about 15 MiB to about
+  3 MiB while preserving 24-frame motion, and added repository asset budgets.
+- Added a safe dry-run output-pruning helper that preserves release evidence
+  unless an explicit bounded deletion is requested.
+- Added 281-test local coverage plus browser, packaging, asset-budget, and
+  Choreographer CI gates.
+
 ## 2026-07-06
 
 - Added the optional `html-runtime` export target for high-fidelity browser

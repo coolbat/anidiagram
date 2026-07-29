@@ -22,6 +22,7 @@ class ReleaseWorkflowContractTest(unittest.TestCase):
             "node --check runtime/anidiagram-runtime.js",
             "node --check runtime/illustrated-performance-v6-runtime.js",
             "node --check runtime/edge-motion-v1-runtime.js",
+            "node --check runtime/choreographer-v1-runtime.js",
             "examples/illustrated-2.5-showcase.diagram.json",
             "examples/illustrated-2.5-release-case.diagram.json",
             "verify_character_motion_rest.mjs",
@@ -31,12 +32,20 @@ class ReleaseWorkflowContractTest(unittest.TestCase):
             "illustrated-2.5-release-case.html 13 13 2",
             "examples/contracts/production-request-path.plan.json",
             "verify_stage_motion_modes.mjs",
+            "verify_choreographer.mjs",
+            "verify_readme_showcase_round_1.mjs",
+            "scripts/check_asset_budget.py",
+            "--runtime-mode timeline",
+            "--runtime-mode hybrid",
         ):
             with self.subTest(command=command):
                 self.assertIn(command, workflow)
 
         self.assertIn("npm ci", workflow)
         self.assertIn("playwright install --with-deps chromium", workflow)
+        self.assertIn('python-version: ["3.9", "3.11", "3.14"]', workflow)
+        self.assertIn("python3 -m pip wheel . --no-deps --wheel-dir build/wheels", workflow)
+        self.assertIn("--runtime-dependency none", workflow)
 
     def test_contract_job_installs_node_dependencies_before_unit_tests(self):
         workflow = self._read(".github/workflows/test.yml")

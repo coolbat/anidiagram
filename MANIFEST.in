@@ -1,0 +1,4 @@
+recursive-include assets *
+recursive-include runtime *
+recursive-include schemas *
+recursive-include styles *

@@ -27,6 +27,7 @@ from .planner import brief_to_plan, compile_plan
 from .presets import compile_preset, preset_names
 from .schema import DiagramScriptValidationError, compile_scene
 from .styles import deep_merge, load_style
+from .resources import resource_root
 
 
 EXPORTERS = {
@@ -77,6 +78,25 @@ def main(argv: Optional[List[str]] = None) -> None:
     parser.add_argument("--formats", help="Comma-separated formats: svg,html,viewer,png,gif,pdf,webp,mp4,apng,lottie,quality. html-runtime is accepted as a legacy alias for html.")
     parser.add_argument("--html-runtime", choices=["gsap"], help="High-fidelity runtime backend for html output.")
     parser.add_argument(
+        "--runtime-dependency",
+        choices=["cdn", "inline", "none"],
+        default="cdn",
+        help="How HTML loads GSAP: exact-version CDN, inline local source, or static fallback.",
+    )
+    parser.add_argument("--runtime-source", help="Local gsap.min.js path required by --runtime-dependency inline.")
+    parser.add_argument(
+        "--viewer-locale",
+        choices=["auto", "en", "zh-CN"],
+        default="auto",
+        help="HTML viewer language; auto detects Chinese titles.",
+    )
+    parser.add_argument(
+        "--runtime-mode",
+        choices=["ambient", "timeline", "hybrid"],
+        default="ambient",
+        help="Explicit runtime scheduler mode.",
+    )
+    parser.add_argument(
         "--export-renderer",
         choices=["python", "browser"],
         default="python",
@@ -85,6 +105,7 @@ def main(argv: Optional[List[str]] = None) -> None:
     parser.add_argument("--export-scale", type=float, default=2.0, help="Browser export device scale factor.")
     parser.add_argument("--export-fps", type=int, default=24, help="Browser export frame rate for animated formats.")
     parser.add_argument("--export-frames", type=int, help="Browser export frame count for animated formats.")
+    parser.add_argument("--export-quality", type=int, default=80, help="Animated WebP quality from 1 to 100.")
     parser.add_argument(
         "--export-loop-blend-frames",
         type=int,
@@ -152,7 +173,19 @@ def main(argv: Optional[List[str]] = None) -> None:
         if format_name == "quality":
             outputs[format_name] = write_quality(scene, style, output_path)
         elif format_name == "html":
-            outputs[format_name] = write_html(scene, style, output_path, runtime=args.html_runtime or "gsap")
+            try:
+                outputs[format_name] = write_html(
+                    scene,
+                    style,
+                    output_path,
+                    runtime=args.html_runtime or "gsap",
+                    dependency_mode=args.runtime_dependency,
+                    dependency_source=Path(args.runtime_source) if args.runtime_source else None,
+                    locale=args.viewer_locale,
+                    runtime_mode=args.runtime_mode,
+                )
+            except ValueError as exc:
+                parser.error(str(exc))
         elif args.export_renderer == "browser" and format_name in BROWSER_CAPTURE_FORMATS:
             outputs[format_name] = write_browser_capture(
                 scene,
@@ -164,6 +197,7 @@ def main(argv: Optional[List[str]] = None) -> None:
                 fps=args.export_fps,
                 scale=args.export_scale,
                 loop_blend_frames=args.export_loop_blend_frames,
+                quality=args.export_quality,
             )
         else:
             outputs[format_name] = EXPORTERS[format_name](scene, style, output_path)
@@ -202,7 +236,7 @@ def resolve_style_path(style_arg: Optional[str], scene_style: Optional[str], spe
     candidates.extend(
         [
             Path.cwd() / "styles" / f"{value}.json",
-            Path(__file__).resolve().parents[2] / "styles" / f"{value}.json",
+            resource_root("styles") / f"{value}.json",
         ]
     )
     for candidate in candidates:

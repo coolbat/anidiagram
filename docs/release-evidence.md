@@ -2,6 +2,35 @@
 
 ## Evidence Ledger
 
+### Evidence E-PROD-0.2.0-01 — passed locally
+
+- Milestone: AniDiagram 0.2.0 productization and runtime hardening.
+- Recorded at: 2026-07-29 CST.
+- Scope: standalone wheel resources, English/Chinese brief parity, shared
+  CJK-aware text layout, accessible/localized viewer controls, exact runtime
+  dependency modes, opt-in Choreographer v1, and committed media budgets.
+- Unit and contract result: 281/281 tests passed; Diagram Core strict validation
+  reported 56 approved assets, zero errors, and zero warnings; npm audit
+  reported zero vulnerabilities.
+- Browser result: Illustrated passed 56/56 showcase and 13/13 real-case rest and
+  reduced-motion checks. Stage modes passed; timeline and hybrid each passed
+  three causal steps. The eight-case README surface passed 70 nodes, 66 edges,
+  66 active runtime edges, eight animated WebPs, and zero console, overflow,
+  text-fit, or edge-label-collision issues.
+- Package result: `anidiagram==0.2.0` installed from a wheel and rendered both a
+  preset and a composition-v1 plan from `/tmp`, each with clean SVG, HTML, and
+  quality output.
+- Asset result: eight README WebPs total 3,155,610 bytes; largest case 572,252
+  bytes; each contains 24 frames. Complete tracked gallery total is 35,579,349
+  bytes, within all enforced budgets.
+- Compatibility result: frozen `runtime/anidiagram-runtime.js` and
+  `runtime/edge-motion-v1-runtime.js` remain unchanged at their approved
+  SHA-256 values. Choreographer is an additive versioned layer.
+- Blocker class: none locally. Remote CI, formal two-system evidence retention,
+  Pages, and the tagged release are recorded by the corresponding GitHub run
+  and release rather than claimed by this pre-push record.
+- Verdict: local release candidate passed.
+
 ### Evidence E-M0-01
 
 - Milestone: M0

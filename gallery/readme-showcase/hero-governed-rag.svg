@@ -80,7 +80,7 @@
     <animate attributeName="opacity" values="0;0.92;0" dur="1.65s" begin="-0.19s" repeatCount="indefinite" />
   </circle>
 
-  <text x="315.0" y="271.0" class="edge-label" fill="#5b6778" opacity="1">
+  <text x="315.0" y="307.0" class="edge-label" fill="#5b6778" opacity="1">
     query
   </text>
 </g>
@@ -112,7 +112,7 @@
     <animate attributeName="opacity" values="0;0.20;0" dur="1.85s" begin="-0.24s" repeatCount="indefinite" />
   </circle>
 
-  <text x="625.0" y="271.0" class="edge-label" fill="#5b6778" opacity="1">
+  <text x="625.0" y="267.0" class="edge-label" fill="#5b6778" opacity="1">
     admit
   </text>
 </g>
@@ -132,7 +132,7 @@
   </path>
 
 
-  <text x="935.0" y="271.0" class="edge-label" fill="#5b6778" opacity="1">
+  <text x="935.0" y="307.0" class="edge-label" fill="#5b6778" opacity="1">
     grounded prompt
   </text>
 </g>
@@ -152,7 +152,7 @@
     <animate attributeName="opacity" values="0;0.92;0" dur="1.65s" begin="-1.00s" repeatCount="indefinite" />
   </circle>
 
-  <text x="1245.0" y="271.0" class="edge-label" fill="#5b6778" opacity="1">
+  <text x="1245.0" y="267.0" class="edge-label" fill="#5b6778" opacity="1">
     cited response
   </text>
 </g>
@@ -184,7 +184,7 @@
     <animate attributeName="opacity" values="0;0.20;0" dur="1.85s" begin="-1.04s" repeatCount="indefinite" />
   </circle>
 
-  <text x="315.0" y="661.0" class="edge-label" fill="#5b6778" opacity="1">
+  <text x="315.0" y="697.0" class="edge-label" fill="#5b6778" opacity="1">
     content
   </text>
 </g>
@@ -204,7 +204,7 @@
   </path>
 
 
-  <text x="625.0" y="661.0" class="edge-label" fill="#5b6778" opacity="1">
+  <text x="625.0" y="657.0" class="edge-label" fill="#5b6778" opacity="1">
     chunks
   </text>
 </g>
@@ -224,7 +224,7 @@
     <animate attributeName="opacity" values="0;0.92;0" dur="1.65s" begin="-0.16s" repeatCount="indefinite" />
   </circle>
 
-  <text x="935.0" y="661.0" class="edge-label" fill="#5b6778" opacity="1">
+  <text x="935.0" y="697.0" class="edge-label" fill="#5b6778" opacity="1">
     vectors
   </text>
 </g>
@@ -256,7 +256,7 @@
     <animate attributeName="opacity" values="0;0.20;0" dur="1.85s" begin="-0.01s" repeatCount="indefinite" />
   </circle>
 
-  <text x="935.0" y="466.0" class="edge-label" fill="#5b6778" opacity="1">
+  <text x="935.0" y="462.0" class="edge-label" fill="#5b6778" opacity="1">
     retrieve
   </text>
 </g>
@@ -276,7 +276,7 @@
   </path>
 
 
-  <text x="1090.0" y="466.0" class="edge-label" fill="#5b6778" opacity="1">
+  <text x="1090.0" y="502.0" class="edge-label" fill="#5b6778" opacity="1">
     telemetry
   </text>
 </g>
@@ -286,7 +286,7 @@
 
 
 
-  <rect x="40.0" y="210.0" width="240.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="40.0" y="210.0" width="240.0" height="150.0" rx="14.0"
         fill="#fff7ed" stroke="#f97316" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="user" data-node-id="user" opacity="1">
   <g id="icon-user-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="external-person-request-interact" data-rest-opacity="1" transform="translate(60.0 237.0) scale(0.8000)">
@@ -303,11 +303,11 @@
   </g>
 </g>
 
-  <text x="229.0" y="271.0" text-anchor="middle" fill="#172033">
-<tspan x="229.0" dy="18" class="node-title">Application</tspan>
-<tspan x="229.0" dy="18" class="node-title">User</tspan>
-<tspan x="229.0" dy="17" class="node-caption">submits</tspan>
-<tspan x="229.0" dy="17" class="node-caption">governed</tspan>
+  <text x="211.6" y="262.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="211.6" dy="0" class="node-title">Application</tspan>
+<tspan x="211.6" dy="18" class="node-title">User</tspan>
+<tspan x="211.6" dy="17" class="node-caption">submits governed</tspan>
+<tspan x="211.6" dy="17" class="node-caption">query</tspan>
 </text>
 </g>
 
@@ -316,7 +316,7 @@
 
 
 
-  <rect x="350.0" y="210.0" width="240.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="350.0" y="210.0" width="240.0" height="150.0" rx="14.0"
         fill="#fef2f2" stroke="#dc2626" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="gateway" data-node-id="gateway" opacity="1">
   <g id="icon-gateway-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="traffic-admit-route-mediate" data-rest-opacity="1" transform="translate(370.0 237.0) scale(0.8000)">
@@ -332,11 +332,11 @@
   </g>
 </g>
 
-  <text x="539.0" y="271.0" text-anchor="middle" fill="#172033">
-<tspan x="539.0" dy="18" class="node-title">Policy</tspan>
-<tspan x="539.0" dy="18" class="node-title">Gateway</tspan>
-<tspan x="539.0" dy="17" class="node-caption">authenticates</tspan>
-<tspan x="539.0" dy="17" class="node-caption">and scopes</tspan>
+  <text x="521.6" y="262.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="521.6" dy="0" class="node-title">Policy</tspan>
+<tspan x="521.6" dy="18" class="node-title">Gateway</tspan>
+<tspan x="521.6" dy="17" class="node-caption">authenticates</tspan>
+<tspan x="521.6" dy="17" class="node-caption">and scopes</tspan>
 </text>
 </g>
 
@@ -345,7 +345,7 @@
 
 
 
-  <rect x="660.0" y="210.0" width="240.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="660.0" y="210.0" width="240.0" height="150.0" rx="14.0"
         fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="agent" data-node-id="agent" opacity="1">
   <g id="icon-agent-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="input-reason-result" data-rest-opacity="1" transform="translate(680.0 237.0) scale(0.8000)">
@@ -364,11 +364,10 @@
   </g>
 </g>
 
-  <text x="849.0" y="271.0" text-anchor="middle" fill="#172033">
-<tspan x="849.0" dy="18" class="node-title">RAG</tspan>
-<tspan x="849.0" dy="18" class="node-title">Agent</tspan>
-<tspan x="849.0" dy="17" class="node-caption">plans</tspan>
-<tspan x="849.0" dy="17" class="node-caption">grounded</tspan>
+  <text x="831.6" y="271.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="831.6" dy="0" class="node-title">RAG Agent</tspan>
+<tspan x="831.6" dy="17" class="node-caption">plans grounded</tspan>
+<tspan x="831.6" dy="17" class="node-caption">response</tspan>
 </text>
 </g>
 
@@ -377,7 +376,7 @@
 
 
 
-  <rect x="970.0" y="210.0" width="240.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="970.0" y="210.0" width="240.0" height="150.0" rx="14.0"
         fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="llm" data-node-id="model" opacity="1">
   <g id="icon-model-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="language-context-transform-generate" data-rest-opacity="1" transform="translate(990.0 237.0) scale(0.8000)">
@@ -393,11 +392,11 @@
   </g>
 </g>
 
-  <text x="1159.0" y="271.0" text-anchor="middle" fill="#172033">
-<tspan x="1159.0" dy="18" class="node-title">Language</tspan>
-<tspan x="1159.0" dy="18" class="node-title">Model</tspan>
-<tspan x="1159.0" dy="17" class="node-caption">generates</tspan>
-<tspan x="1159.0" dy="17" class="node-caption">with</tspan>
+  <text x="1141.6" y="262.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="1141.6" dy="0" class="node-title">Language</tspan>
+<tspan x="1141.6" dy="18" class="node-title">Model</tspan>
+<tspan x="1141.6" dy="17" class="node-caption">generates with</tspan>
+<tspan x="1141.6" dy="17" class="node-caption">evidence</tspan>
 </text>
 </g>
 
@@ -406,7 +405,7 @@
 
 
 
-  <rect x="1280.0" y="210.0" width="240.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="1280.0" y="210.0" width="240.0" height="150.0" rx="14.0"
         fill="#f0fdf4" stroke="#16a34a" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="output" data-node-id="output" opacity="1">
   <g id="icon-output-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="artifact-deliver-confirm" data-rest-opacity="1" transform="translate(1300.0 237.0) scale(0.8000)">
@@ -422,11 +421,10 @@
   </g>
 </g>
 
-  <text x="1469.0" y="271.0" text-anchor="middle" fill="#172033">
-<tspan x="1469.0" dy="18" class="node-title">Cited</tspan>
-<tspan x="1469.0" dy="18" class="node-title">Output</tspan>
-<tspan x="1469.0" dy="17" class="node-caption">returns</tspan>
-<tspan x="1469.0" dy="17" class="node-caption">traceable</tspan>
+  <text x="1451.6" y="271.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="1451.6" dy="0" class="node-title">Cited Output</tspan>
+<tspan x="1451.6" dy="17" class="node-caption">returns</tspan>
+<tspan x="1451.6" dy="17" class="node-caption">traceable answer</tspan>
 </text>
 </g>
 
@@ -435,7 +433,7 @@
 
 
 
-  <rect x="40.0" y="600.0" width="240.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="40.0" y="600.0" width="240.0" height="150.0" rx="14.0"
         fill="#ecfeff" stroke="#0891b2" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="document" data-node-id="documents" opacity="1">
   <g id="icon-documents-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="document-author-read-reference" data-rest-opacity="1" transform="translate(60.0 627.0) scale(0.8000)">
@@ -450,11 +448,11 @@
   </g>
 </g>
 
-  <text x="229.0" y="661.0" text-anchor="middle" fill="#172033">
-<tspan x="229.0" dy="18" class="node-title">Source</tspan>
-<tspan x="229.0" dy="18" class="node-title">Documents</tspan>
-<tspan x="229.0" dy="17" class="node-caption">approved</tspan>
-<tspan x="229.0" dy="17" class="node-caption">knowledge</tspan>
+  <text x="211.6" y="652.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="211.6" dy="0" class="node-title">Source</tspan>
+<tspan x="211.6" dy="18" class="node-title">Documents</tspan>
+<tspan x="211.6" dy="17" class="node-caption">approved</tspan>
+<tspan x="211.6" dy="17" class="node-caption">knowledge corpus</tspan>
 </text>
 </g>
 
@@ -463,7 +461,7 @@
 
 
 
-  <rect x="350.0" y="600.0" width="240.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="350.0" y="600.0" width="240.0" height="150.0" rx="14.0"
         fill="#eff6ff" stroke="#2563eb" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="token" data-node-id="tokenizer" opacity="1">
   <g id="icon-tokenizer-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="tokenize-count-budget-consume" data-rest-opacity="1" transform="translate(370.0 627.0) scale(0.8000)">
@@ -479,10 +477,10 @@
   </g>
 </g>
 
-  <text x="539.0" y="661.0" text-anchor="middle" fill="#172033">
-<tspan x="539.0" dy="18" class="node-title">Tokenizer</tspan>
-<tspan x="539.0" dy="17" class="node-caption">segments</tspan>
-<tspan x="539.0" dy="17" class="node-caption">and</tspan>
+  <text x="521.6" y="661.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="521.6" dy="0" class="node-title">Tokenizer</tspan>
+<tspan x="521.6" dy="17" class="node-caption">segments and</tspan>
+<tspan x="521.6" dy="17" class="node-caption">budgets</tspan>
 </text>
 </g>
 
@@ -491,7 +489,7 @@
 
 
 
-  <rect x="660.0" y="600.0" width="240.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="660.0" y="600.0" width="240.0" height="150.0" rx="14.0"
         fill="#eff6ff" stroke="#2563eb" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="embedding" data-node-id="embedding" opacity="1">
   <g id="icon-embedding-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="content-vectorize-position-compare" data-rest-opacity="1" transform="translate(680.0 627.0) scale(0.8000)">
@@ -506,11 +504,11 @@
   </g>
 </g>
 
-  <text x="849.0" y="661.0" text-anchor="middle" fill="#172033">
-<tspan x="849.0" dy="18" class="node-title">Embedding</tspan>
-<tspan x="849.0" dy="18" class="node-title">Service</tspan>
-<tspan x="849.0" dy="17" class="node-caption">vectorizes</tspan>
-<tspan x="849.0" dy="17" class="node-caption">document</tspan>
+  <text x="831.6" y="652.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="831.6" dy="0" class="node-title">Embedding</tspan>
+<tspan x="831.6" dy="18" class="node-title">Service</tspan>
+<tspan x="831.6" dy="17" class="node-caption">vectorizes</tspan>
+<tspan x="831.6" dy="17" class="node-caption">document chunks</tspan>
 </text>
 </g>
 
@@ -519,7 +517,7 @@
 
 
 
-  <rect x="970.0" y="600.0" width="240.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="970.0" y="600.0" width="240.0" height="150.0" rx="14.0"
         fill="#ecfdf5" stroke="#059669" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="vector-database" data-node-id="index" opacity="1">
   <g id="icon-index-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="vector-embed-index-retrieve" data-rest-opacity="1" transform="translate(990.0 627.0) scale(0.8000)">
@@ -534,11 +532,10 @@
   </g>
 </g>
 
-  <text x="1159.0" y="661.0" text-anchor="middle" fill="#172033">
-<tspan x="1159.0" dy="18" class="node-title">Vector</tspan>
-<tspan x="1159.0" dy="18" class="node-title">Index</tspan>
-<tspan x="1159.0" dy="17" class="node-caption">retrieves</tspan>
-<tspan x="1159.0" dy="17" class="node-caption">semantic</tspan>
+  <text x="1141.6" y="661.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="1141.6" dy="0" class="node-title">Vector Index</tspan>
+<tspan x="1141.6" dy="17" class="node-caption">retrieves</tspan>
+<tspan x="1141.6" dy="17" class="node-caption">semantic matches</tspan>
 </text>
 </g>
 
@@ -547,7 +544,7 @@
 
 
 
-  <rect x="1280.0" y="600.0" width="240.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="1280.0" y="600.0" width="240.0" height="150.0" rx="14.0"
         fill="#eff6ff" stroke="#2563eb" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="monitoring" data-node-id="monitoring" opacity="1">
   <g id="icon-monitoring-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="metrics-observe-detect-report" data-rest-opacity="1" transform="translate(1300.0 627.0) scale(0.8000)">
@@ -562,11 +559,11 @@
   </g>
 </g>
 
-  <text x="1469.0" y="661.0" text-anchor="middle" fill="#172033">
-<tspan x="1469.0" dy="18" class="node-title">Runtime</tspan>
-<tspan x="1469.0" dy="18" class="node-title">Monitoring</tspan>
-<tspan x="1469.0" dy="17" class="node-caption">observes</tspan>
-<tspan x="1469.0" dy="17" class="node-caption">quality</tspan>
+  <text x="1451.6" y="652.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="1451.6" dy="0" class="node-title">Runtime</tspan>
+<tspan x="1451.6" dy="18" class="node-title">Monitoring</tspan>
+<tspan x="1451.6" dy="17" class="node-caption">observes quality</tspan>
+<tspan x="1451.6" dy="17" class="node-caption">and latency</tspan>
 </text>
 </g>
 </svg>

@@ -18,6 +18,7 @@ from .effects import canonical_edge_effect, channel_effect, effect_active
 from .model import Edge, Node, Point, Scene
 from .quality import quality_report
 from .renderer_html_runtime import render_html_runtime
+from .runtime_dependencies import GSAP_CDN_URL, GSAP_VERSION
 from .renderer_svg import CONTINUOUS_EDGE_MOTION, PARTICLE_EDGE_MOTION, particle_radii, policy_allows, render_html, render_svg
 from .styles import role_style
 
@@ -26,12 +27,10 @@ PointList = List[Point]
 BROWSER_CAPTURE_FORMATS = {"png", "gif", "pdf", "webp", "mp4", "apng", "lottie"}
 DEFAULT_BROWSER_CAPTURE_FPS = 24
 DEFAULT_BROWSER_CAPTURE_FRAMES = 48
-GSAP_BROWSER_CAPTURE_VERSION = "3.15.0"
+GSAP_BROWSER_CAPTURE_VERSION = GSAP_VERSION
 BROWSER_CAPTURE_CONTRACT_VERSION = "browser-capture-v1"
-_GSAP_FLOATING_CDN_URL = "https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"
-_GSAP_CAPTURE_CDN_URL = (
-    f"https://cdn.jsdelivr.net/npm/gsap@{GSAP_BROWSER_CAPTURE_VERSION}/dist/gsap.min.js"
-)
+_GSAP_CAPTURE_CDN_URL = GSAP_CDN_URL
+_GSAP_LEGACY_FLOATING_CDN_URL = "https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"
 
 
 def write_svg(scene: Scene, style: Dict[str, Any], path: Path) -> Dict[str, str]:
@@ -45,8 +44,29 @@ def write_viewer(scene: Scene, style: Dict[str, Any], path: Path) -> Dict[str, s
     return _done("viewer", path)
 
 
-def write_html(scene: Scene, style: Dict[str, Any], path: Path, runtime: str = "gsap") -> Dict[str, str]:
-    path.write_text(render_html_runtime(scene, style, runtime=runtime), encoding="utf-8")
+def write_html(
+    scene: Scene,
+    style: Dict[str, Any],
+    path: Path,
+    runtime: str = "gsap",
+    *,
+    dependency_mode: str = "cdn",
+    dependency_source: Optional[Path] = None,
+    locale: str = "auto",
+    runtime_mode: str = "ambient",
+) -> Dict[str, str]:
+    path.write_text(
+        render_html_runtime(
+            scene,
+            style,
+            runtime=runtime,
+            dependency_mode=dependency_mode,
+            dependency_source=dependency_source,
+            locale=locale,
+            runtime_mode=runtime_mode,
+        ),
+        encoding="utf-8",
+    )
     return _done("html", path)
 
 
@@ -91,6 +111,7 @@ def write_browser_capture(
     fps: int = DEFAULT_BROWSER_CAPTURE_FPS,
     scale: float = 2.0,
     loop_blend_frames: int = 0,
+    quality: int = 80,
 ) -> Dict[str, Any]:
     """Write visual export formats by recording the high-fidelity HTML runtime."""
 
@@ -99,6 +120,7 @@ def write_browser_capture(
     frame_count = 1 if format_name in {"png", "pdf"} else max(1, frames or DEFAULT_BROWSER_CAPTURE_FRAMES)
     fps = max(1, int(fps))
     scale = max(1.0, float(scale))
+    quality = max(1, min(100, int(quality)))
 
     with tempfile.TemporaryDirectory() as tmp:
         tmp_path = Path(tmp)
@@ -138,7 +160,7 @@ def write_browser_capture(
             if lottie_result["status"] == "skipped":
                 return lottie_result
         else:
-            packaged = _write_browser_image_sequence(format_name, frame_paths, path, fps, style)
+            packaged = _write_browser_image_sequence(format_name, frame_paths, path, fps, style, quality)
             if packaged["status"] == "skipped":
                 return packaged
 
@@ -148,6 +170,8 @@ def write_browser_capture(
     result["frames"] = frame_count
     result["scale"] = scale
     result["loop_blend_frames"] = applied_loop_blend
+    if format_name == "webp":
+        result["quality"] = quality
     if runtime == "gsap":
         result["runtime_dependency"] = f"gsap@{GSAP_BROWSER_CAPTURE_VERSION}"
     if format_name == "webp":
@@ -160,15 +184,13 @@ def write_browser_capture(
             fps=fps,
             scale=scale,
             loop_blend_frames=loop_blend_frames,
+            quality=quality,
         )
     return result
 
 
 def browser_capture_html(scene: Scene, style: Dict[str, Any], runtime: str = "gsap") -> str:
-    return _pin_browser_capture_dependencies(
-        render_html_runtime(scene, style, runtime=runtime),
-        runtime,
-    )
+    return render_html_runtime(scene, style, runtime=runtime, dependency_mode="cdn")
 
 
 def webp_browser_capture_input_sha256(
@@ -179,6 +201,7 @@ def webp_browser_capture_input_sha256(
     fps: int = DEFAULT_BROWSER_CAPTURE_FPS,
     scale: float = 2.0,
     loop_blend_frames: int = 0,
+    quality: int = 80,
 ) -> str:
     try:
         from PIL import __version__ as pillow_version
@@ -192,6 +215,7 @@ def webp_browser_capture_input_sha256(
         "fps": int(fps),
         "scale": float(scale),
         "loop_blend_frames": int(loop_blend_frames),
+        "quality": max(1, min(100, int(quality))),
         "capture_script": _browser_capture_script(),
         "blend_implementation": inspect.getsource(_blend_loop_seam),
         "packaging_implementation": inspect.getsource(_write_browser_image_sequence),
@@ -204,9 +228,11 @@ def webp_browser_capture_input_sha256(
 def _pin_browser_capture_dependencies(html_source: str, runtime: str) -> str:
     if runtime != "gsap":
         return html_source
-    if _GSAP_FLOATING_CDN_URL not in html_source:
-        raise RuntimeError("GSAP browser capture dependency marker changed")
-    return html_source.replace(_GSAP_FLOATING_CDN_URL, _GSAP_CAPTURE_CDN_URL, 1)
+    if _GSAP_CAPTURE_CDN_URL in html_source:
+        return html_source
+    if _GSAP_LEGACY_FLOATING_CDN_URL in html_source:
+        return html_source.replace(_GSAP_LEGACY_FLOATING_CDN_URL, _GSAP_CAPTURE_CDN_URL, 1)
+    raise RuntimeError("GSAP browser capture dependency marker changed")
 
 
 def write_png(scene: Scene, style: Dict[str, Any], path: Path) -> Dict[str, str]:
@@ -350,7 +376,14 @@ def _blend_loop_seam(frame_paths: List[Path], blend_frames: int) -> int:
     return applied
 
 
-def _write_browser_image_sequence(format_name: str, frame_paths: List[Path], path: Path, fps: int, style: Dict[str, Any]) -> Dict[str, str]:
+def _write_browser_image_sequence(
+    format_name: str,
+    frame_paths: List[Path],
+    path: Path,
+    fps: int,
+    style: Dict[str, Any],
+    quality: int = 80,
+) -> Dict[str, str]:
     try:
         from PIL import Image
     except Exception:
@@ -375,7 +408,16 @@ def _write_browser_image_sequence(format_name: str, frame_paths: List[Path], pat
         elif format_name == "apng":
             images[0].save(path, save_all=True, append_images=images[1:], duration=duration_ms, loop=0, format="PNG")
         elif format_name == "webp":
-            images[0].save(path, save_all=True, append_images=images[1:], duration=duration_ms, loop=0, format="WEBP")
+            images[0].save(
+                path,
+                save_all=True,
+                append_images=images[1:],
+                duration=duration_ms,
+                loop=0,
+                format="WEBP",
+                quality=max(1, min(100, int(quality))),
+                method=6,
+            )
         else:
             return _skipped(format_name, path, "browser image sequence does not support this format")
     except Exception as exc:

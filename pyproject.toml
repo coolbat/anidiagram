@@ -1,6 +1,10 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "anidiagram"
-version = "0.1.0"
+version = "0.2.0"
 description = "Clean-room JSON-to-animated-SVG renderer for AniDiagram architecture visuals."
 readme = "README.md"
 requires-python = ">=3.9"

@@ -36,13 +36,14 @@
       "webp": "gallery/readme-showcase/hero-loop-engineering.webp",
       "webp_capture": {
         "renderer": "browser",
-        "fps": 24,
-        "frames": 72,
+        "fps": 12,
+        "frames": 24,
         "scale": 1.0,
-        "loop_blend_frames": 8,
+        "loop_blend_frames": 4,
+        "quality": 65,
         "runtime_dependency": "gsap@3.15.0",
         "capture_contract": "browser-capture-v1",
-        "input_sha256": "db9302ca72d559e998ff67bbde52c024d8f51c5d380cc9ca218c31a36c37db39"
+        "input_sha256": "091dadca583b104d97d9506a85d60071e53d894037367426f6f9c8a78b1ad5a8"
       }
     },
     {
@@ -70,13 +71,14 @@
       "webp": "gallery/readme-showcase/hero-governed-rag.webp",
       "webp_capture": {
         "renderer": "browser",
-        "fps": 24,
-        "frames": 72,
+        "fps": 12,
+        "frames": 24,
         "scale": 1.0,
-        "loop_blend_frames": 8,
+        "loop_blend_frames": 4,
+        "quality": 65,
         "runtime_dependency": "gsap@3.15.0",
         "capture_contract": "browser-capture-v1",
-        "input_sha256": "d955bc55aca640a401df26e0230370df29ea7ea2aa484f1629d3787b52374ace"
+        "input_sha256": "6108d45a942d0e2a67c4df4d9fa7dcb3e6a43568772f8b7566198da643f501aa"
       }
     },
     {
@@ -104,13 +106,14 @@
       "webp": "gallery/readme-showcase/hero-kubernetes-three-layer.webp",
       "webp_capture": {
         "renderer": "browser",
-        "fps": 24,
-        "frames": 72,
+        "fps": 12,
+        "frames": 24,
         "scale": 1.0,
-        "loop_blend_frames": 8,
+        "loop_blend_frames": 4,
+        "quality": 65,
         "runtime_dependency": "gsap@3.15.0",
         "capture_contract": "browser-capture-v1",
-        "input_sha256": "cec5763a1a5fa80fe467bfa25d35bc651875c791806bb396af20364841a8ef24"
+        "input_sha256": "3a44ab1f1f416315b9322122ae6031d240308b4a5aff3d161ee8f3e9fafc4573"
       }
     },
     {
@@ -138,13 +141,14 @@
       "webp": "gallery/readme-showcase/template-agent-lifecycle-minimal-light.webp",
       "webp_capture": {
         "renderer": "browser",
-        "fps": 24,
-        "frames": 72,
+        "fps": 12,
+        "frames": 24,
         "scale": 1.0,
-        "loop_blend_frames": 8,
+        "loop_blend_frames": 4,
+        "quality": 65,
         "runtime_dependency": "gsap@3.15.0",
         "capture_contract": "browser-capture-v1",
-        "input_sha256": "cdc347a0899b45688db8dd2cbcfdd392c6cd0be96705512016b8d6d7a488b678"
+        "input_sha256": "b35043b3244330126e78267b1bde1144dfd84b6f3522f5840109b1e8d3418c1c"
       }
     },
     {
@@ -172,13 +176,14 @@
       "webp": "gallery/readme-showcase/template-agent-lifecycle-deep-tech.webp",
       "webp_capture": {
         "renderer": "browser",
-        "fps": 24,
-        "frames": 72,
+        "fps": 12,
+        "frames": 24,
         "scale": 1.0,
-        "loop_blend_frames": 8,
+        "loop_blend_frames": 4,
+        "quality": 65,
         "runtime_dependency": "gsap@3.15.0",
         "capture_contract": "browser-capture-v1",
-        "input_sha256": "b354b57f54ae144229cac93e2be3d07f96843aade8262a27e64df9d216c79cdd"
+        "input_sha256": "ac9c9011f1d8c5ed5c2c58e8c1909bee56e18f1b7fcc9670d72dbae2e4f7c707"
       }
     },
     {
@@ -206,13 +211,14 @@
       "webp": "gallery/readme-showcase/template-agent-lifecycle-claude-warm.webp",
       "webp_capture": {
         "renderer": "browser",
-        "fps": 24,
-        "frames": 72,
+        "fps": 12,
+        "frames": 24,
         "scale": 1.0,
-        "loop_blend_frames": 8,
+        "loop_blend_frames": 4,
+        "quality": 65,
         "runtime_dependency": "gsap@3.15.0",
         "capture_contract": "browser-capture-v1",
-        "input_sha256": "c0b383c83acae6d20aed9f6e31b107adbee4ea26f58fe89ff6f4b9b733607a0b"
+        "input_sha256": "d3c31a22adf84e4c918e4b8c361282e43a3116dea3a3b7cc26c9d17939cb8f79"
       }
     },
     {
@@ -240,13 +246,14 @@
       "webp": "gallery/readme-showcase/layout-enterprise-rag-pipeline.webp",
       "webp_capture": {
         "renderer": "browser",
-        "fps": 24,
-        "frames": 72,
+        "fps": 12,
+        "frames": 24,
         "scale": 1.0,
-        "loop_blend_frames": 8,
+        "loop_blend_frames": 4,
+        "quality": 65,
         "runtime_dependency": "gsap@3.15.0",
         "capture_contract": "browser-capture-v1",
-        "input_sha256": "9a45d6bd207bf3b6c848cfd98c7afe014392beb660e490b84fc577fda238d677"
+        "input_sha256": "f88734c58ca3b9800c2e34b2037ad746aecae3871305da019cdd39b28516e1c8"
       }
     },
     {
@@ -274,13 +281,14 @@
       "webp": "gallery/readme-showcase/layout-mcp-tool-hub.webp",
       "webp_capture": {
         "renderer": "browser",
-        "fps": 24,
-        "frames": 72,
+        "fps": 12,
+        "frames": 24,
         "scale": 1.0,
-        "loop_blend_frames": 8,
+        "loop_blend_frames": 4,
+        "quality": 65,
         "runtime_dependency": "gsap@3.15.0",
         "capture_contract": "browser-capture-v1",
-        "input_sha256": "f6f6666498a69ad237107244e732339a879a581fad91f4d9ea7ff95a06103c5b"
+        "input_sha256": "5ab12ad8cbeb9bbfef12bc2bb2a251b43915d7fe1b25b25cc6de5399be643136"
       }
     }
   ]

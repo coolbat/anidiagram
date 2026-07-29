@@ -118,8 +118,10 @@ class ShowcaseGalleryTest(unittest.TestCase):
 
         capture_docs = (ROOT / "docs" / "html-runtime.md").read_text(encoding="utf-8")
         readme_command = capture_docs.split("For a README hero preview", 1)[1].split("Use the animated WebP", 1)[0]
-        self.assertIn("--export-fps 24", readme_command)
-        self.assertIn("--export-loop-blend-frames", readme_command)
+        self.assertIn("--export-fps 12", readme_command)
+        self.assertIn("--export-frames 24", readme_command)
+        self.assertIn("--export-loop-blend-frames 4", readme_command)
+        self.assertIn("--export-quality 65", readme_command)
 
     def test_representative_examples_use_default_character_icons_and_readable_budgets(self):
         targets = (
@@ -390,14 +392,16 @@ class ShowcaseGalleryTest(unittest.TestCase):
             self.assertIn(f'src="{path.name}"', review)
             self.assertNotIn(f'src="{case["id"]}.preview.svg"', review)
             self.assertEqual("browser", case["webp_capture"]["renderer"])
-            self.assertEqual(72, case["webp_capture"]["frames"])
+            self.assertEqual(24, case["webp_capture"]["frames"])
+            self.assertEqual(12, case["webp_capture"]["fps"])
+            self.assertEqual(65, case["webp_capture"]["quality"])
             self.assertEqual("gsap@3.15.0", case["webp_capture"]["runtime_dependency"])
             self.assertEqual("browser-capture-v1", case["webp_capture"]["capture_contract"])
             self.assertEqual(64, len(case["webp_capture"]["input_sha256"]))
             with Image.open(path) as image:
                 self.assertTrue(getattr(image, "is_animated", False), case["webp"])
-                self.assertEqual(72, image.n_frames, case["webp"])
-        self.assertLess(total_bytes, 30_000_000)
+                self.assertEqual(24, image.n_frames, case["webp"])
+        self.assertLess(total_bytes, 6_000_000)
 
     def test_full_gallery_builders_keep_two_column_style_grids(self):
 

@@ -13,6 +13,7 @@ from .styles import deep_merge
 from .illustrated_character_icons import character_icon_ids
 from .illustrated_registry import illustrated_icon_ids
 from .model import Edge, Node, Point, Scene
+from .text_layout import node_text_region, text_block_layout
 
 
 Rect = Tuple[float, float, float, float]
@@ -52,7 +53,8 @@ def quality_report(scene: Scene, style: Optional[Dict[str, object]] = None) -> D
     nodes = {node.node_id: node for node in scene.nodes}
     _check_node_bounds(scene, issues)
     _check_node_collisions(scene.nodes, issues)
-    _check_text_fit(scene.nodes, issues)
+    quality_icon_system = scene.icon_system or (resolve_icon_system(style) if style is not None else "semantic-line-v1")
+    _check_text_fit(scene.nodes, issues, quality_icon_system)
     _check_edge_node_collisions(scene.edges, nodes, issues)
     _check_motion_budget(scene, issues)
     _check_semantic_icon_fallbacks(scene, issues)
@@ -165,12 +167,17 @@ def _check_node_collisions(nodes: List[Node], issues: List[QualityIssue]) -> Non
                 )
 
 
-def _check_text_fit(nodes: List[Node], issues: List[QualityIssue]) -> None:
+def _check_text_fit(nodes: List[Node], issues: List[QualityIssue], icon_system: str) -> None:
     for index, node in enumerate(nodes):
         width, height = node.size
-        label_capacity = max(8, int((width - 24) / 9))
-        caption_capacity = max(10, int((width - 24) / 7))
-        if len(node.label) > label_capacity * 2:
+        _offset, text_width = node_text_region(
+            width,
+            icon_system=icon_system,
+            has_icon=bool(node.icon),
+            decision=node.shape == "decision",
+        )
+        layout = text_block_layout(node.label, node.caption, text_width, height)
+        if layout.all_label_lines > 2:
             issues.append(
                 QualityIssue(
                     "text_overflow",
@@ -179,7 +186,7 @@ def _check_text_fit(nodes: List[Node], issues: List[QualityIssue]) -> None:
                     f"label on node {node.node_id!r} is likely to overflow",
                 )
             )
-        if len(node.caption) > caption_capacity * 2 or height < 64:
+        if layout.all_caption_lines > len(layout.caption_lines) or layout.total_height + 20 > height:
             issues.append(
                 QualityIssue(
                     "caption_overflow",

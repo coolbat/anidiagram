@@ -5,18 +5,15 @@ from __future__ import annotations
 import json
 import re
 from functools import lru_cache
-from pathlib import Path
 from types import MappingProxyType
 from typing import Any, Mapping
 
 from .icon_system import ILLUSTRATED_ICON_SYSTEM, ILLUSTRATED_ICON_SYSTEM_VERSION
+from .resources import resource_path
 
 
-_TOKEN_PATH = (
-    Path(__file__).resolve().parents[2]
-    / "assets"
-    / "illustrated"
-    / f"tokens-{ILLUSTRATED_ICON_SYSTEM_VERSION}.json"
+_TOKEN_PATH = resource_path(
+    "assets", "illustrated", f"tokens-{ILLUSTRATED_ICON_SYSTEM_VERSION}.json"
 )
 _HEX_COLOR = re.compile(r"#[0-9a-fA-F]{6}\Z")
 _REQUIRED_GEOMETRY = {

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 from functools import lru_cache
-from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from .diagram_core.instance_ids import part_dom_id
@@ -25,11 +24,13 @@ from .illustrated_expansion_batch_4_motion import (
 from .illustrated_icons import illustrated_definition as legacy_illustrated_definition, is_illustrated_style
 from .model import EffectConfig, Node, Scene
 from .styles import deep_merge
+from .resources import resource_path
 
 
 MOTION_MANIFEST_VERSION = "motion-manifest-0.1"
 DEFAULT_RUNTIME_MODE = "ambient"
-_MOTION_CATALOG_PATH = Path(__file__).resolve().parents[2] / "runtime" / "motion-catalog.json"
+SUPPORTED_RUNTIME_MODES = frozenset({"ambient", "timeline", "hybrid"})
+_MOTION_CATALOG_PATH = resource_path("runtime", "motion-catalog.json")
 
 ICON_PERFORMANCE_V2 = {
     "agent": "agent-think-act-v2",
@@ -249,8 +250,10 @@ def build_motion_manifest(
 ) -> Dict[str, Any]:
     """Build the runtime manifest consumed by the browser animation layer."""
 
-    if mode != DEFAULT_RUNTIME_MODE:
-        raise ValueError('HTML runtime mode must be "ambient" in the current release')
+    if mode not in SUPPORTED_RUNTIME_MODES:
+        raise ValueError(
+            f"HTML runtime mode must be one of: {', '.join(sorted(SUPPORTED_RUNTIME_MODES))}"
+        )
 
     if scene.icon_system:
         style = deep_merge(style, {"icon_system": scene.icon_system})
@@ -395,13 +398,32 @@ def build_motion_manifest(
         "runtime": runtime,
         "mode": mode,
         "profile": scene.motion.profile,
-        "sequence": "independent-icon-loops",
+        "sequence": "independent-icon-loops" if mode == "ambient" else "causal-edge-steps",
         "scene_sequence": scene.motion.sequence,
         "reduced_motion": scene.motion.reduced_motion,
         "stage": stage,
         "icons": icons,
         "edges": edges,
     }
+    if mode in {"timeline", "hybrid"}:
+        manifest["choreographer"] = {
+            "version": "choreographer-v1",
+            "initial_state": "ambient" if mode == "hybrid" else "timeline",
+            "autoplay": mode == "timeline",
+            "steps": [
+                {
+                    "index": index,
+                    "edge_index": index,
+                    "source": edge.source,
+                    "target": edge.target,
+                    "label": edge.label or edge.semantic_kind or f"step {index + 1}",
+                    "relation_id": edge.semantic_relation_id,
+                    "flow_id": edge.flow_id,
+                    "duration": 1.2,
+                }
+                for index, edge in enumerate(scene.edges)
+            ],
+        }
     manifest["icon_system"] = icon_system
     resolved_icon_system_version = icon_system_version(icon_system)
     if resolved_icon_system_version is not None:
