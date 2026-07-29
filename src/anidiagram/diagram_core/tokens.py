@@ -1,12 +1,13 @@
 """Diagram Core theme-token resolution."""
 
 import re
-from pathlib import Path
 from types import MappingProxyType
 from typing import Any, Mapping, Optional, Tuple
 
+from ..resources import resource_path
 
-_TOKEN_PATH = Path(__file__).resolve().parents[3] / "assets" / "diagram-core" / "tokens.css"
+
+_TOKEN_PATH = resource_path("assets", "diagram-core", "tokens.css")
 
 _APPROVED_DEFAULTS = MappingProxyType(
     {

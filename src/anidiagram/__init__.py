@@ -6,7 +6,7 @@ from .presets import compile_preset, preset_names
 from .quality import quality_report
 from .schema import DiagramScriptValidationError, ValidationIssue, compile_scene, validate_scene
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "Canvas",

@@ -48,10 +48,11 @@ Spec = dict[str, Any]
 CANVAS = {"width": 1600, "height": 900}
 README_WEBP_CAPTURE = {
     "runtime": "gsap",
-    "frames": 72,
-    "fps": 24,
+    "frames": 24,
+    "fps": 12,
     "scale": 1.0,
-    "loop_blend_frames": 8,
+    "loop_blend_frames": 4,
+    "quality": 65,
 }
 
 CASES = (
@@ -611,6 +612,7 @@ def render_round(
                 fps=README_WEBP_CAPTURE["fps"],
                 scale=README_WEBP_CAPTURE["scale"],
                 loop_blend_frames=README_WEBP_CAPTURE["loop_blend_frames"],
+                quality=README_WEBP_CAPTURE["quality"],
             )
             if source_case["webp_capture"].get("input_sha256") != expected_hash:
                 raise RuntimeError(f"Committed WebP capture input changed for {case_id}; explicitly re-record it")
@@ -650,6 +652,7 @@ def render_round(
                             "frames",
                             "scale",
                             "loop_blend_frames",
+                            "quality",
                             "runtime_dependency",
                             "capture_contract",
                             "input_sha256",

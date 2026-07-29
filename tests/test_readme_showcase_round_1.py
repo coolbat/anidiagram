@@ -154,6 +154,7 @@ class ReadmeShowcaseRound1Test(unittest.TestCase):
                 "frames": options["frames"],
                 "scale": options["scale"],
                 "loop_blend_frames": options["loop_blend_frames"],
+                "quality": options["quality"],
                 "runtime_dependency": "gsap@3.15.0",
                 "capture_contract": "browser-capture-v1",
                 "input_sha256": "fake-input-hash",
@@ -168,10 +169,11 @@ class ReadmeShowcaseRound1Test(unittest.TestCase):
             for _title, format_name, options in captures:
                 self.assertEqual("webp", format_name)
                 self.assertEqual("gsap", options["runtime"])
-                self.assertEqual(24, options["fps"])
-                self.assertEqual(72, options["frames"])
+                self.assertEqual(12, options["fps"])
+                self.assertEqual(24, options["frames"])
                 self.assertEqual(1.0, options["scale"])
-                self.assertEqual(8, options["loop_blend_frames"])
+                self.assertEqual(4, options["loop_blend_frames"])
+                self.assertEqual(65, options["quality"])
 
             manifest = json.loads((root / "outputs" / "manifest.json").read_text(encoding="utf-8"))
             for case in manifest["cases"]:
@@ -179,10 +181,11 @@ class ReadmeShowcaseRound1Test(unittest.TestCase):
                 self.assertEqual(
                     {
                         "renderer": "browser",
-                        "fps": 24,
-                        "frames": 72,
+                        "fps": 12,
+                        "frames": 24,
                         "scale": 1.0,
-                        "loop_blend_frames": 8,
+                        "loop_blend_frames": 4,
+                        "quality": 65,
                         "runtime_dependency": "gsap@3.15.0",
                         "capture_contract": "browser-capture-v1",
                         "input_sha256": "fake-input-hash",
@@ -210,8 +213,8 @@ class ReadmeShowcaseRound1Test(unittest.TestCase):
                     {
                         "id": case["id"],
                         "webp_capture": {
-                            "renderer": "browser", "fps": 24, "frames": 72, "scale": 1.0,
-                            "loop_blend_frames": 8, "runtime_dependency": "gsap@3.15.0",
+                            "renderer": "browser", "fps": 12, "frames": 24, "scale": 1.0,
+                            "loop_blend_frames": 4, "quality": 65, "runtime_dependency": "gsap@3.15.0",
                             "capture_contract": "browser-capture-v1",
                             "input_sha256": "fake-input-hash",
                         },
@@ -274,6 +277,8 @@ class ReadmeShowcaseRound1Test(unittest.TestCase):
             self.assertEqual(0, report["animated_webp_previews"])
             self.assertEqual([], report["console_errors"])
             self.assertEqual([], report["overflow"])
+            self.assertEqual([], report["text_overflow"])
+            self.assertEqual([], report["label_collisions"])
 
 
 if __name__ == "__main__":

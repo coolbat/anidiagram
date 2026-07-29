@@ -12,6 +12,7 @@
     .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
     button, a { border: 1px solid #475569; background: #111827; color: #f8fafc; border-radius: 8px; padding: 8px 10px; font: inherit; text-decoration: none; cursor: pointer; }
     button:hover, a:hover { background: #1f2937; }
+    button:focus-visible, a:focus-visible, .stage:focus-visible { outline: 3px solid #38bdf8; outline-offset: 2px; }
     button[aria-pressed="true"] { background: #475569; border-color: #94a3b8; }
     .stage { width: 100%; min-height: 0; overflow: hidden; border: 1px solid #334155; border-radius: 12px; background: #020617; cursor: grab; }
     .stage.dragging { cursor: grabbing; }
@@ -27,22 +28,32 @@
     main.motion-off .node-glow,
     main.motion-off .icon-breathe-halo { display: none; }
     main.motion-off .semantic-icon-breathe { animation: none !important; }
+    .runtime-warning { margin: 0; padding: 8px 10px; border: 1px solid #f59e0b; border-radius: 8px; color: #fde68a; background: #451a03; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
   </style>
 </head>
 <body>
-  <main id="viewer" class="motion-expressive" data-runtime="gsap">
-    <div class="toolbar">
+  <main id="viewer" class="motion-expressive" data-runtime="gsap" data-runtime-mode="ambient"
+        data-label-play="Play" data-label-pause="Pause"
+        data-label-ready="Diagram ready" data-label-restarted="Animation restarted"
+        data-label-dependency-warning="GSAP did not load; showing the static diagram.">
+    <div class="toolbar" role="toolbar" aria-label="Diagram playback and view controls">
       <button type="button" id="toggle">Pause</button>
       <button type="button" id="restart">Restart</button>
+      <button type="button" id="timeline-start" hidden>Start Explanation</button>
+      <button type="button" id="timeline-previous" hidden>Previous Step</button>
+      <button type="button" id="timeline-next" hidden>Next Step</button>
       <button type="button" class="motion-choice" data-motion="expressive" aria-pressed="true">Expressive</button>
       <button type="button" class="motion-choice" data-motion="readable" aria-pressed="false">Readable</button>
-      <button type="button" class="motion-choice" data-motion="off" aria-pressed="false">Off</button>
+      <button type="button" class="motion-choice" data-motion="off" aria-pressed="false">Motion Off</button>
       <button type="button" id="zoom-in">Zoom In</button>
       <button type="button" id="zoom-out">Zoom Out</button>
-      <button type="button" id="reset">Reset</button>
+      <button type="button" id="reset">Reset View</button>
       <a id="download" download="Enterprise RAG Ingestion Pipeline.svg">Download SVG</a>
     </div>
-    <div class="stage" id="stage">
+    <p id="runtime-warning" class="runtime-warning" role="alert" hidden></p>
+    <p id="runtime-status" class="sr-only" role="status" aria-live="polite">Diagram ready</p>
+    <div class="stage" id="stage" tabindex="0" aria-label="Zoomable and pannable animated diagram">
       <div class="viewport" id="viewport">
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="showcase-v1" data-motion-sequence="staged" data-motion-edge="packet-flow" data-motion-node="icon-performance" data-motion-group="none" data-motion-title="highlight-sweep" data-motion-reduced="static" data-icon-system="diagram-core-v1">
 <title id="diagram-title">Enterprise RAG Ingestion Pipeline</title>
@@ -195,7 +206,7 @@
 
 
 
-  <rect x="45.0" y="355.0" width="215.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="45.0" y="355.0" width="215.0" height="150.0" rx="14.0"
         fill="#ecfeff" stroke="#0891b2" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="document" data-node-id="documents" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(55 384) scale(0.958333333333333)" data-icon="document" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#94a3b8;--icon-accent-secondary:#2563eb;--icon-detail:#5b6778;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#172033;--icon-surface-main:#f8fafc;--icon-surface-recessed:#edf2f7;--icon-surface-secondary:#ffffff" id="node_u2x2edocuments__document__root"><g data-part="body" id="node_u2x2edocuments__document__body">
     <g data-part="page" id="node_u2x2edocuments__document__page">
@@ -221,10 +232,10 @@
   </g>
 </g></g>
 
-  <text x="195.5" y="416.0" text-anchor="middle" fill="#172033">
-<tspan x="195.5" dy="18" class="node-title">Documents</tspan>
-<tspan x="195.5" dy="17" class="node-caption">approved</tspan>
-<tspan x="195.5" dy="17" class="node-caption">source</tspan>
+  <text x="191.5" y="416.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="191.5" dy="0" class="node-title">Documents</tspan>
+<tspan x="191.5" dy="17" class="node-caption" textLength="105.0" lengthAdjust="spacingAndGlyphs">approved source</tspan>
+<tspan x="191.5" dy="17" class="node-caption">files</tspan>
 </text>
 </g>
 
@@ -233,7 +244,7 @@
 
 
 
-  <rect x="305.0" y="355.0" width="215.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="305.0" y="355.0" width="215.0" height="150.0" rx="14.0"
         fill="#eff6ff" stroke="#2563eb" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="token" data-node-id="tokenizer" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(315 384) scale(0.958333333333333)" data-icon="token" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#94a3b8;--icon-accent-secondary:#2563eb;--icon-detail:#5b6778;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#172033;--icon-surface-main:#f8fafc;--icon-surface-recessed:#edf2f7;--icon-surface-secondary:#ffffff" id="node_u2x2etokenizer__token__root"><g data-part="body" id="node_u2x2etokenizer__token__body">
   <g data-part="shell" id="node_u2x2etokenizer__token__shell">
@@ -259,10 +270,9 @@
   </g>
 </g></g>
 
-  <text x="455.5" y="416.0" text-anchor="middle" fill="#172033">
-<tspan x="455.5" dy="18" class="node-title">Tokenizer</tspan>
-<tspan x="455.5" dy="17" class="node-caption">split and</tspan>
-<tspan x="455.5" dy="17" class="node-caption">budget</tspan>
+  <text x="451.5" y="424.5" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="451.5" dy="0" class="node-title">Tokenizer</tspan>
+<tspan x="451.5" dy="17" class="node-caption" textLength="105.0" lengthAdjust="spacingAndGlyphs">split and budget</tspan>
 </text>
 </g>
 
@@ -271,7 +281,7 @@
 
 
 
-  <rect x="565.0" y="355.0" width="215.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="565.0" y="355.0" width="215.0" height="150.0" rx="14.0"
         fill="#eff6ff" stroke="#2563eb" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="embedding" data-node-id="embedding" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(575 384) scale(0.958333333333333)" data-icon="embedding" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#94a3b8;--icon-accent-secondary:#2563eb;--icon-detail:#5b6778;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#172033;--icon-surface-main:#f8fafc;--icon-surface-recessed:#edf2f7;--icon-surface-secondary:#ffffff" id="node_u2x2eembedding__embedding__root"><g data-part="body" id="node_u2x2eembedding__embedding__body">
     <rect x="11" y="16" width="74" height="64" rx="18" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
@@ -304,10 +314,9 @@
   </g>
 </g></g>
 
-  <text x="715.5" y="416.0" text-anchor="middle" fill="#172033">
-<tspan x="715.5" dy="18" class="node-title">Embedding</tspan>
-<tspan x="715.5" dy="17" class="node-caption">encode</tspan>
-<tspan x="715.5" dy="17" class="node-caption">semantics</tspan>
+  <text x="711.5" y="424.5" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="711.5" dy="0" class="node-title">Embedding</tspan>
+<tspan x="711.5" dy="17" class="node-caption" textLength="105.0" lengthAdjust="spacingAndGlyphs">encode semantics</tspan>
 </text>
 </g>
 
@@ -316,7 +325,7 @@
 
 
 
-  <rect x="825.0" y="355.0" width="215.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="825.0" y="355.0" width="215.0" height="150.0" rx="14.0"
         fill="#ecfdf5" stroke="#059669" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="vector-database" data-node-id="index" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(835 384) scale(0.958333333333333)" data-icon="vector-database" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#94a3b8;--icon-accent-secondary:#2563eb;--icon-detail:#5b6778;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#172033;--icon-surface-main:#f8fafc;--icon-surface-recessed:#edf2f7;--icon-surface-secondary:#ffffff" id="node_u2x2eindex__vector-database__root"><g data-part="body" id="node_u2x2eindex__vector-database__body">
   <g data-part="shell" id="node_u2x2eindex__vector-database__shell">
@@ -344,11 +353,10 @@
   </g>
 </g></g>
 
-  <text x="975.5" y="416.0" text-anchor="middle" fill="#172033">
-<tspan x="975.5" dy="18" class="node-title">Vector</tspan>
-<tspan x="975.5" dy="18" class="node-title">Index</tspan>
-<tspan x="975.5" dy="17" class="node-caption">store</tspan>
-<tspan x="975.5" dy="17" class="node-caption">searchable</tspan>
+  <text x="971.5" y="416.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="971.5" dy="0" class="node-title" textLength="105.0" lengthAdjust="spacingAndGlyphs">Vector Index</tspan>
+<tspan x="971.5" dy="17" class="node-caption" textLength="105.0" lengthAdjust="spacingAndGlyphs">store searchable</tspan>
+<tspan x="971.5" dy="17" class="node-caption">vectors</tspan>
 </text>
 </g>
 
@@ -357,7 +365,7 @@
 
 
 
-  <rect x="1085.0" y="355.0" width="215.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="1085.0" y="355.0" width="215.0" height="150.0" rx="14.0"
         fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="search" data-node-id="retrieval" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(1095 384) scale(0.958333333333333)" data-icon="search" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#94a3b8;--icon-accent-secondary:#2563eb;--icon-detail:#5b6778;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#172033;--icon-surface-main:#f8fafc;--icon-surface-recessed:#edf2f7;--icon-surface-secondary:#ffffff" id="node_u2x2eretrieval__search__root"><g data-part="body" id="node_u2x2eretrieval__search__body">
   <g data-part="lens" id="node_u2x2eretrieval__search__lens">
@@ -380,10 +388,10 @@
   </g>
 </g></g>
 
-  <text x="1235.5" y="416.0" text-anchor="middle" fill="#172033">
-<tspan x="1235.5" dy="18" class="node-title">Retrieval</tspan>
-<tspan x="1235.5" dy="17" class="node-caption">rank</tspan>
-<tspan x="1235.5" dy="17" class="node-caption">relevant</tspan>
+  <text x="1231.5" y="416.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="1231.5" dy="0" class="node-title">Retrieval</tspan>
+<tspan x="1231.5" dy="17" class="node-caption">rank relevant</tspan>
+<tspan x="1231.5" dy="17" class="node-caption">context</tspan>
 </text>
 </g>
 
@@ -392,7 +400,7 @@
 
 
 
-  <rect x="1345.0" y="355.0" width="215.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="1345.0" y="355.0" width="215.0" height="150.0" rx="14.0"
         fill="#f0fdf4" stroke="#16a34a" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="output" data-node-id="output" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(1355 384) scale(0.958333333333333)" data-icon="output" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#94a3b8;--icon-accent-secondary:#2563eb;--icon-detail:#5b6778;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#172033;--icon-surface-main:#f8fafc;--icon-surface-recessed:#edf2f7;--icon-surface-secondary:#ffffff" id="node_u2x2eoutput__output__root"><g data-part="body" id="node_u2x2eoutput__output__body">
   <g data-part="shell" id="node_u2x2eoutput__output__shell">
@@ -416,11 +424,11 @@
   </g>
 </g></g>
 
-  <text x="1495.5" y="416.0" text-anchor="middle" fill="#172033">
-<tspan x="1495.5" dy="18" class="node-title">Grounded</tspan>
-<tspan x="1495.5" dy="18" class="node-title">Output</tspan>
-<tspan x="1495.5" dy="17" class="node-caption">answer with</tspan>
-<tspan x="1495.5" dy="17" class="node-caption">citations</tspan>
+  <text x="1491.5" y="407.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="1491.5" dy="0" class="node-title">Grounded</tspan>
+<tspan x="1491.5" dy="18" class="node-title">Output</tspan>
+<tspan x="1491.5" dy="17" class="node-caption">answer with</tspan>
+<tspan x="1491.5" dy="17" class="node-caption">citations</tspan>
 </text>
 </g>
 </svg>
@@ -1392,7 +1400,7 @@
   "edge_motion_version": "1.0.0"
 }
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" crossorigin="anonymous"></script>
   <script>
 (function () {
   function getManifest() {
@@ -3921,6 +3929,234 @@
   characterPerformanceIds.add("illustrated-logs-record-order-inspect-v1");
   characterPerformanceIds.add("illustrated-alert-detect-escalate-acknowledge-v1");
   characterPerformanceIds.add("illustrated-debug-reproduce-inspect-fix-v1");
+
+  function playChoreographer(manifest, autoplay = true) {
+    if (!window.gsap || !manifest || !isPlainObject(manifest.choreographer)) return [];
+    stop();
+    if (window.AniDiagramEdgeMotion && window.AniDiagramEdgeMotion.clear) {
+      window.AniDiagramEdgeMotion.clear();
+    }
+    const steps = Array.isArray(manifest.choreographer.steps) ? manifest.choreographer.steps : [];
+    const edges = Array.from(document.querySelectorAll("g.edge"));
+    const timeline = window.gsap.timeline({ paused: !autoplay });
+    const stepStates = [];
+    steps.forEach((step, index) => {
+      const source = document.getElementById(`node-${step.source}`);
+      const target = document.getElementById(`node-${step.target}`);
+      const edge = edges[Number(step.edge_index)];
+      const path = edge && (edge.querySelector(".edge-draw") || edge.querySelector(".edge-base"));
+      const start = timeline.duration();
+      timeline.addLabel(`step-${index}`, start);
+      if (source) {
+        timeline.to(source, {
+          scale: 1.025,
+          transformOrigin: "center center",
+          duration: 0.18,
+          ease: "power1.out",
+        }, start);
+      }
+      if (path) {
+        timeline.fromTo(path, {
+          strokeDasharray: 1,
+          strokeDashoffset: 1,
+          opacity: 0.35,
+        }, {
+          strokeDashoffset: 0,
+          opacity: 1,
+          duration: 0.58,
+          ease: "power1.inOut",
+        }, start + 0.18);
+      }
+      if (source) timeline.to(source, { scale: 1, duration: 0.2 }, start + 0.58);
+      if (target) {
+        timeline.to(target, {
+          scale: 1.035,
+          transformOrigin: "center center",
+          duration: 0.2,
+          ease: "back.out(1.5)",
+        }, start + 0.68);
+        timeline.to(target, { scale: 1, duration: 0.24 }, start + 0.9);
+      }
+      const duration = Math.max(1.2, Number(step.duration) || 1.2);
+      timeline.to({}, { duration: Math.max(0, start + duration - timeline.duration()) });
+      stepStates.push({ index, start, end: start + duration, label: step.label || `Step ${index + 1}` });
+    });
+    timeline.addLabel("timeline-end", timeline.duration());
+    timeline.__anidiagramChoreographer = true;
+    window.__ANIDIAGRAM_CHOREOGRAPHER__ = { timeline, steps: stepStates, current: -1 };
+    window.__ANIDIAGRAM_STAGE_TIMELINES__ = [timeline];
+    window.__ANIDIAGRAM_ICON_TIMELINES__ = [];
+    syncTimelineStore();
+    if (autoplay) timeline.play(0);
+    return [timeline];
+  }
+
+  function startChoreographer() {
+    const manifest = getManifest();
+    return playChoreographer(manifest, true);
+  }
+
+  function stepChoreographer(direction) {
+    const state = window.__ANIDIAGRAM_CHOREOGRAPHER__;
+    if (!state || !state.timeline || !state.steps.length) {
+      playChoreographer(getManifest(), false);
+    }
+    const current = window.__ANIDIAGRAM_CHOREOGRAPHER__;
+    if (!current || !current.steps.length) return null;
+    const targetIndex = Math.max(0, Math.min(current.steps.length - 1, current.current + direction));
+    const step = current.steps[targetIndex];
+    current.current = targetIndex;
+    current.timeline.pause(step.start);
+    if (direction > 0) {
+      current.timeline.tweenTo(step.end, { onComplete: () => current.timeline.pause() });
+    }
+    return step;
+  }
+
+  function enhanceProductViewer(originalManifest) {
+    const viewer = document.getElementById("viewer");
+    const stage = document.getElementById("stage");
+    const viewport = document.getElementById("viewport");
+    const status = document.getElementById("runtime-status");
+    const warning = document.getElementById("runtime-warning");
+    if (!viewer || !stage || !viewport) return;
+    const notify = (message) => {
+      if (status) status.textContent = message || viewer.dataset.labelReady || "Diagram ready";
+    };
+    const showWarning = (message) => {
+      if (!warning) return;
+      warning.textContent = message || "";
+      warning.hidden = !message;
+    };
+    if (!window.gsap) showWarning(viewer.dataset.labelDependencyWarning);
+    else showWarning("");
+
+    const timelineStart = document.getElementById("timeline-start");
+    const timelinePrevious = document.getElementById("timeline-previous");
+    const timelineNext = document.getElementById("timeline-next");
+    if (["timeline", "hybrid"].includes(originalManifest.mode)) {
+      [timelineStart, timelinePrevious, timelineNext].forEach((button) => {
+        if (button) button.hidden = false;
+      });
+      if (timelineStart) timelineStart.addEventListener("click", () => {
+        startChoreographer();
+        notify(timelineStart.textContent);
+      });
+      if (timelinePrevious) timelinePrevious.addEventListener("click", () => {
+        const step = stepChoreographer(-1);
+        if (step) notify(step.label);
+      });
+      if (timelineNext) timelineNext.addEventListener("click", () => {
+        const step = stepChoreographer(1);
+        if (step) notify(step.label);
+      });
+    }
+
+    const toggle = document.getElementById("toggle");
+    const restartButton = document.getElementById("restart");
+    const zoomIn = document.getElementById("zoom-in");
+    const zoomOut = document.getElementById("zoom-out");
+    const reset = document.getElementById("reset");
+    const svg = viewport.querySelector("svg");
+    const localizeToggle = () => {
+      if (!toggle || !svg) return;
+      const paused = svg.animationsPaused && svg.animationsPaused();
+      toggle.textContent = paused ? viewer.dataset.labelPlay || "Play" : viewer.dataset.labelPause || "Pause";
+    };
+    if (toggle) toggle.addEventListener("click", () => setTimeout(localizeToggle, 0));
+    if (restartButton) restartButton.addEventListener("click", () => {
+      setTimeout(localizeToggle, 0);
+      notify(viewer.dataset.labelRestarted);
+    });
+    document.querySelectorAll(".motion-choice").forEach((button) => {
+      button.addEventListener("click", () => {
+        notify(button.textContent);
+        if (originalManifest.mode === "timeline" && button.dataset.motion !== "off") {
+          setTimeout(startChoreographer, 0);
+        }
+      });
+    });
+
+    let keyboardX = 0;
+    let keyboardY = 0;
+    const applyKeyboardPan = () => {
+      viewport.style.translate = `${keyboardX}px ${keyboardY}px`;
+    };
+    stage.addEventListener("keydown", (event) => {
+      if (["+", "="].includes(event.key)) {
+        event.preventDefault();
+        if (zoomIn) zoomIn.click();
+      } else if (event.key === "-") {
+        event.preventDefault();
+        if (zoomOut) zoomOut.click();
+      } else if (event.key === "0") {
+        event.preventDefault();
+        keyboardX = 0;
+        keyboardY = 0;
+        applyKeyboardPan();
+        if (reset) reset.click();
+      } else if (event.key === " " && toggle) {
+        event.preventDefault();
+        toggle.click();
+      } else if (event.key.toLowerCase() === "r" && restartButton) {
+        event.preventDefault();
+        restartButton.click();
+      } else if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        keyboardX -= 24;
+        applyKeyboardPan();
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        keyboardX += 24;
+        applyKeyboardPan();
+      } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        keyboardY -= 24;
+        applyKeyboardPan();
+      } else if (event.key === "ArrowDown") {
+        event.preventDefault();
+        keyboardY += 24;
+        applyKeyboardPan();
+      }
+    });
+  }
+
+  const productManifestElement = document.getElementById("anidiagram-motion-manifest");
+  let productManifest = null;
+  if (productManifestElement) {
+    try {
+      productManifest = JSON.parse(productManifestElement.textContent || "{}");
+    } catch (_error) {
+      productManifest = null;
+    }
+  }
+  if (productManifest && ["timeline", "hybrid"].includes(productManifest.mode)) {
+    const ambientManifest = {
+      ...productManifest,
+      mode: "ambient",
+      sequence: "independent-icon-loops",
+    };
+    delete ambientManifest.choreographer;
+    productManifestElement.textContent = JSON.stringify(ambientManifest);
+  }
+
+  Object.assign(window.AniDiagramRuntime, {
+    startChoreographer,
+    nextStep: () => stepChoreographer(1),
+    previousStep: () => stepChoreographer(-1),
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => {
+      if (productManifestElement && productManifest) {
+        productManifestElement.textContent = JSON.stringify(productManifest);
+      }
+      enhanceProductViewer(productManifest || {});
+      if (productManifest && productManifest.mode === "timeline") {
+        playChoreographer(productManifest, productManifest.choreographer.autoplay !== false);
+      }
+    }, 0);
+  });
 
 })();
 

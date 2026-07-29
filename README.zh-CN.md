@@ -2,7 +2,7 @@
 
 语言：[English](./README.md) | 简体中文
 
-AniDiagram 是一个 clean-room 的 DiagramScript 渲染器，用来生成可动画的架构图、流程图、教学图和产品说明图。
+AniDiagram 是一个 clean-room 的 DiagramScript 渲染器，用来生成可动画的架构图、流程图、教学图和产品说明图。当前包版本：**0.2.0**。
 
 本仓库不是 GitHub fork，也不复制 [REFERENCES.md](./REFERENCES.md) 中列出的参考项目的源码、文档、图片、生成资产或 git 历史。旧项目和外部项目只作为产品方向与功能验证参考。
 
@@ -15,7 +15,8 @@ README 现在使用 Round 1 已审核通过的 8 个精选案例。完整的 13 
 - **Template Showcase**：相同语义内容使用 3 种模板直接对照。
 - **Layout Showcase**：2 个针对不同拓扑的布局案例。
 
-完整入口：[Gallery](./gallery/index.html) · [全部风格](./gallery/styles/index.html) ·
+在线入口：[GitHub Pages](https://coolbat.github.io/anidiagram/gallery/) ·
+源码 Gallery：[Gallery](./gallery/index.html) · [全部风格](./gallery/styles/index.html) ·
 [全部布局](./gallery/layouts/index.html) · [Runtime 动效](./gallery/runtime-motion.html)
 
 ### Hero Showcase
@@ -34,9 +35,8 @@ README 现在使用 Round 1 已审核通过的 8 个精选案例。完整的 13 
 python3 -m http.server 8765
 ```
 
-然后访问 `http://127.0.0.1:8765/gallery/readme-showcase/readme-showcase-round-1.html`。如果用
-GitHub Pages 发布，README 按钮应链接到 Pages URL，而不是 GitHub 的 `blob`
-源码页。
+然后访问 `http://127.0.0.1:8765/gallery/readme-showcase/readme-showcase-round-1.html`，
+也可以直接打开[在线评审页](https://coolbat.github.io/anidiagram/gallery/readme-showcase/readme-showcase-round-1.html)。
 
 ### Template Showcase
 
@@ -92,11 +92,17 @@ GitHub Pages 发布，README 按钮应链接到 Pages URL，而不是 GitHub 的
 - 可选输出 PNG、GIF、PDF、WebP、MP4、APNG、Lottie。
 - 生成 quality report，检查越界、重叠、文本溢出和显式路径碰撞。
 - 内置 16 个 clean-room 布局 preset 和 13 个公共视觉风格。
+- 相同语义的中英文 brief 会生成拓扑等价的计划，并本地化节点标签与说明。
+- 默认保持兼容的 `ambient`，同时提供显式启用的 Choreographer v1
+  `timeline` 与 `hybrid` 播放。
+- wheel 内包含运行所需资源，安装后的 CLI 不依赖源码检出目录。
 
 SVG、调试 viewer HTML、Lottie 和 quality report 只依赖 Python 标准库。主输出
 `html` 会写入高保真 runtime 页面，包含静态 SVG stage、命名 parts、Motion
-Manifest 和浏览器 runtime；GSAP backend 通过 CDN 加载 GSAP，不增加 Python
-依赖。PNG/GIF/PDF/WebP/APNG/MP4 默认走轻量 Python 导出器，适合快速预览；
+Manifest 和浏览器 runtime；GSAP backend 默认使用精确的 `gsap@3.15.0`
+CDN 地址，离线或自托管页面可以通过 `--runtime-dependency inline` 内联用户
+提供的本地文件。Python wheel 不捆绑 GSAP。PNG/GIF/PDF/WebP/APNG/MP4
+默认走轻量 Python 导出器，适合快速预览；
 其中 PNG/GIF/PDF/WebP/APNG 依赖可选 Pillow，MP4 还需要 `ffmpeg`。如果要
 最高质量导出，可以使用 `--export-renderer browser`，让 PNG、GIF、PDF、
 WebP、MP4、APNG 和 Lottie 从真实 `html` runtime 页面通过 Playwright/
@@ -104,6 +110,16 @@ Chromium 捕获，完整保留高保真图标动效。browser Lottie 是帧序�
 更准，但文件会比默认结构化 Lottie 更大。
 
 ## 快速开始
+
+构建并安装可脱离源码目录运行的 wheel：
+
+```bash
+python3 -m pip wheel . --no-deps --wheel-dir dist
+python3 -m pip install dist/anidiagram-0.2.0-py3-none-any.whl
+anidiagram --preset agent-memory --outdir outputs --formats svg,html,quality
+```
+
+下面的源码示例使用 `PYTHONPATH=src`，方便贡献者不安装就验证本地改动。
 
 渲染 JSON spec：
 
@@ -161,6 +177,23 @@ PYTHONPATH=src python3 -m anidiagram.cli \
   --formats svg,html,quality \
   --html-runtime gsap
 ```
+
+使用本地 GSAP 渲染中文因果讲解：
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --plan examples/contracts/production-request-path.plan.json \
+  --outdir outputs/choreographer \
+  --basename production-request-path \
+  --formats html,quality \
+  --runtime-mode timeline \
+  --viewer-locale zh-CN \
+  --runtime-dependency inline \
+  --runtime-source node_modules/gsap/dist/gsap.min.js
+```
+
+`--runtime-mode hybrid` 会先展示 ambient 总览，用户开始讲解后再进入时间线；
+`--runtime-dependency none` 可生成不加载浏览器动画依赖的静态 HTML fallback。
 
 需要旧调试 viewer 时显式导出：
 
@@ -457,13 +490,15 @@ fallback，避免两套动效叠加：
 这个模式会在 HTML 中写入 `anidiagram-motion-manifest`，manifest 指向稳定
 SVG part ID，例如 `#icon-agent-outline-left`、`#icon-api-request-token`。
 `html` runtime 会关闭 SVG 图标 fallback，避免同一个图标同时跑 SMIL 和 GSAP；
-它通过 CDN 加载 GSAP，不把 GSAP 变成 Python 依赖。
+默认从精确版本 CDN 加载 GSAP，也可内联用户提供的本地文件，不把 GSAP
+捆绑进 Python 包。
 当前默认 runtime mode 是 `ambient`。直接 DiagramScript 未声明 motion 时使用
 兼容 profile `expressive`；新 composition-v1 输出解析为 `showcase-v1`。runtime
 工具栏的 Expressive 模式下，各图标独立循环播放高保真局部表演，并带少量 stagger delay；浏览器 runtime
-还会生成由 GSAP 控制的 edge flow 粒子和标题扫光。全图 timeline、
-event-driven、state-machine、
-interactive、hybrid 都是后续路线图，不是默认行为。更多 runtime 所有权、
+还会生成由 GSAP 控制的 edge flow 粒子和标题扫光。Choreographer v1 已提供
+显式 `timeline` 与 `hybrid` 模式，按“源节点 → 连线 → 目标节点”组织因果步骤，
+并提供开始、上一步、下一步控制；不传参数时仍保持 ambient。event-driven、
+state-machine 和任意节点交互仍在路线图中。更多 runtime 所有权、
 当前 performance 覆盖和导出说明见 [docs/html-runtime.md](./docs/html-runtime.md)
 和 [docs/runtime-motion-roadmap.md](./docs/runtime-motion-roadmap.md)。
 
@@ -483,8 +518,17 @@ PYTHONPATH=src python3 scripts/render_readme_showcase_round_1.py \
   --outdir gallery/readme-showcase
 ```
 
-重新录制需要项目内的 Playwright/Chromium 浏览器运行环境，并能访问固定的
-GSAP 依赖。
+重新录制需要项目内的 Playwright/Chromium 浏览器运行环境和精确的本地
+`gsap@3.15.0` 开发依赖。提交资产的合约是 24 帧、12 FPS、1x、4 个循环混合
+帧和 WebP 质量 65。体积门禁：
+
+```bash
+PYTHONPATH=src python3 scripts/check_asset_budget.py
+```
+
+8 个 README WebP 合计必须小于 6 MiB、单个小于 1 MiB，完整 Gallery 小于
+55 MiB。`PYTHONPATH=src python3 scripts/prune_outputs.py` 只做安全预览，不会
+删除 release evidence；只有显式追加 `--apply` 才会清理符合条件的旧输出。
 
 ## 测试
 

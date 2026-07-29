@@ -26,6 +26,8 @@ async function main() {
     animated_webp_previews: 0,
     console_errors: [],
     overflow: [],
+    text_overflow: [],
+    label_collisions: [],
   };
   const browser = await chromium.launch({ headless: true });
   try {
@@ -100,6 +102,35 @@ async function main() {
         const motion = JSON.parse(document.getElementById("anidiagram-motion-manifest").textContent);
         const activeEdges = (window.__ANIDIAGRAM_STAGE_TIMELINES__ || [])
           .filter((timeline) => timeline.__anidiagramStage === "edge-motion").length;
+        const textOverflow = Array.from(document.querySelectorAll("g.node")).flatMap((node) => {
+          const surface = node.querySelector(":scope > .node-surface");
+          const text = node.querySelector(":scope > .node-text-block");
+          if (!surface || !text) return [];
+          const card = surface.getBoundingClientRect();
+          const content = text.getBoundingClientRect();
+          // System font metrics differ between macOS and Linux. The visual
+          // contract is containment, so allow only sub-pixel rounding rather
+          // than requiring an extra platform-dependent five-pixel inset.
+          const tolerance = 0.75;
+          const inside = content.left >= card.left - tolerance
+            && content.top >= card.top - tolerance
+            && content.right <= card.right + tolerance
+            && content.bottom <= card.bottom + tolerance;
+          return inside ? [] : [node.id || "unknown-node"];
+        });
+        const edgeLabels = Array.from(document.querySelectorAll("g.edge > text.edge-label"))
+          .filter((label) => label.textContent.trim() && Number(getComputedStyle(label).opacity) > 0)
+          .map((label) => ({ text: label.textContent.trim(), rect: label.getBoundingClientRect() }));
+        const labelCollisions = [];
+        for (let left = 0; left < edgeLabels.length; left += 1) {
+          for (let right = left + 1; right < edgeLabels.length; right += 1) {
+            const a = edgeLabels[left];
+            const b = edgeLabels[right];
+            const overlap = !(a.rect.right + 3 <= b.rect.left || b.rect.right + 3 <= a.rect.left
+              || a.rect.bottom + 2 <= b.rect.top || b.rect.bottom + 2 <= a.rect.top);
+            if (overlap) labelCollisions.push(`${a.text} <> ${b.text}`);
+          }
+        }
         return {
           width: Number(svg.getAttribute("width")),
           height: Number(svg.getAttribute("height")),
@@ -111,6 +142,8 @@ async function main() {
           motionEdges: motion.edges.length,
           activeEdges,
           outside,
+          textOverflow,
+          labelCollisions,
           pageOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
         };
       });
@@ -126,6 +159,8 @@ async function main() {
       report.edges += state.edges;
       report.active_runtime_edges += state.activeEdges;
       state.outside.forEach((nodeId) => report.overflow.push(`${entry.id}: ${nodeId} outside SVG`));
+      state.textOverflow.forEach((nodeId) => report.text_overflow.push(`${entry.id}: ${nodeId}`));
+      state.labelCollisions.forEach((collision) => report.label_collisions.push(`${entry.id}: ${collision}`));
       if (state.pageOverflow) report.overflow.push(`${entry.id}: horizontal overflow`);
     }
   } finally {
@@ -134,6 +169,8 @@ async function main() {
 
   assert(report.console_errors.length === 0, `console errors:\n${report.console_errors.join("\n")}`);
   assert(report.overflow.length === 0, `overflow:\n${report.overflow.join("\n")}`);
+  assert(report.text_overflow.length === 0, `text overflow:\n${report.text_overflow.join("\n")}`);
+  assert(report.label_collisions.length === 0, `label collisions:\n${report.label_collisions.join("\n")}`);
   process.stdout.write(`${JSON.stringify(report)}\n`);
 }
 

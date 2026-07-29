@@ -28,6 +28,9 @@ The runtime renderer builds:
 2. A Motion Manifest in `#anidiagram-motion-manifest`.
 3. A GSAP-powered JavaScript runtime from `runtime/anidiagram-runtime.js`.
 4. Runtime-generated stage effects for expressive edge flow and title sweep.
+5. An additive Choreographer v1 layer from
+   `runtime/choreographer-v1-runtime.js` when `timeline` or `hybrid` is
+   explicitly selected.
 
 The default runtime mode is `ambient`. A direct DiagramScript that omits motion
 uses the compatibility profile `expressive`; DiagramPlan v0.2 composition-v1
@@ -78,10 +81,63 @@ All built-in semantic icons currently have runtime performances. Unsupported
 future or custom icons stay static in the HTML runtime. Static is preferable to
 mixing a SMIL fallback with a GSAP performance.
 
-Timeline/choreographer, event-driven, state-machine, interactive, and hybrid
-runtime modes are future roadmap items. They must be explicitly requested when
-implemented and should not change the default `html` behavior. See
+Choreographer v1 ships as explicit `timeline` and `hybrid` runtime modes.
+Timeline starts as a causal source -> edge -> target explanation; hybrid starts
+with the familiar ambient overview and enters that explanation only when the
+user selects Start Explanation. Both add start, previous, and next controls and
+preserve the reduced-motion static contract. Event-driven scheduling, explicit
+node state machines, and arbitrary hover/click replay remain roadmap items. See
 [runtime-motion-roadmap.md](./runtime-motion-roadmap.md).
+
+## Runtime dependency ownership
+
+The default `cdn` mode writes the exact
+`https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js` URL. This keeps the
+page small, but viewing animation requires network access.
+
+For offline or self-hosted output, `inline` reads a user-provided local GSAP
+file and embeds it in the generated HTML:
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --spec examples/high-fidelity-runtime.diagram.json \
+  --outdir outputs/offline \
+  --formats html,quality \
+  --runtime-dependency inline \
+  --runtime-source node_modules/gsap/dist/gsap.min.js
+```
+
+`none` omits GSAP and leaves the canonical static stage. AniDiagram does not
+bundle GSAP in its Python wheel; the inline source remains the user's chosen
+local dependency and license responsibility.
+
+## Choreographer v1
+
+Use `--runtime-mode timeline` for immediate causal playback, or
+`--runtime-mode hybrid` for ambient-first playback:
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --plan examples/contracts/production-request-path.plan.json \
+  --outdir outputs/choreographer \
+  --basename timeline \
+  --formats html,quality \
+  --runtime-mode timeline \
+  --viewer-locale auto
+```
+
+The manifest stores `mode`, `sequence=causal-edge-steps`, and ordered steps
+derived from authored scene edges. Each step activates its source, draws the
+edge, and responds at the target. Auto locale chooses Chinese controls when the
+scene title or subtitle contains CJK text; `--viewer-locale en|zh-CN` overrides
+it. Toolbar and stage controls expose keyboard focus, accessible names, live
+status, and a visible dependency warning when animation cannot start.
+
+Verify the browser contract with:
+
+```bash
+node scripts/verify_choreographer.mjs outputs/choreographer/timeline.html timeline
+```
 
 Gallery cards can use SVG fallback previews, but a README hero should use
 browser-captured runtime media. GitHub repository file views show `.html` files
@@ -217,9 +273,10 @@ PYTHONPATH=src python3 -m anidiagram.cli \
   --html-runtime gsap \
   --export-renderer browser \
   --export-scale 1 \
-  --export-fps 24 \
-  --export-frames 72 \
-  --export-loop-blend-frames 8
+  --export-fps 12 \
+  --export-frames 24 \
+  --export-loop-blend-frames 4 \
+  --export-quality 65
 ```
 
 Use the animated WebP or GIF as the inline README image. Use MP4 as the click
@@ -307,10 +364,11 @@ current public contracts and immutable archive boundary.
 ## Limits
 
 - Standalone SVG cannot display GSAP high-fidelity runtime motion.
-- The runtime currently loads GSAP from the CDN.
-- The Motion Manifest currently covers icon performances plus ambient stage
-  edge flow and title sweep; it does not yet model camera choreography,
-  edge-triggered node performances, or step mode.
+- CDN mode requires network access. Inline mode requires a user-provided local
+  GSAP source; AniDiagram intentionally does not redistribute it in the wheel.
+- Choreographer v1 models authored edge order as source/edge/target steps. It
+  does not yet model camera choreography, data-driven arrival events, node
+  state machines, or arbitrary interactive replay.
 - `illustrated` 2.5.0 freezes 56 approved static icons and 56 approved
   automatic `showcase-v1` performances.
 - Video and animated image export require browser capture. MP4 also requires

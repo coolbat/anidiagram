@@ -5,7 +5,7 @@
     "verify:stage": "node scripts/verify_stage_motion_modes.mjs"
   },
   "devDependencies": {
-    "gsap": "^3.13.0",
+    "gsap": "3.15.0",
     "playwright": "1.61.1"
   }
 }

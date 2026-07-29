@@ -40,6 +40,24 @@ _STOP_WORDS = {
     "with",
 }
 
+_MEMORY_TERMS = (
+    "memory", "context", "remember", "knowledge", "notes",
+    "记忆", "上下文", "知识", "知识库", "笔记",
+)
+_TOOL_TERMS = (
+    "tool", "api", "browser", "search", "call", "execute",
+    "工具", "接口", "浏览器", "搜索", "调用", "执行",
+)
+_SAFETY_TERMS = (
+    "safe", "safety", "guard", "policy", "risk", "validate", "validation", "budget", "constraint", "review",
+    "安全", "护栏", "策略", "风险", "校验", "验证", "预算", "约束", "审核",
+)
+_LOOP_TERMS = (
+    "loop", "iterate", "feedback", "retry", "observe", "reflect",
+    "循环", "迭代", "反馈", "重试", "观察", "反思", "回路",
+)
+_SEARCH_TERMS = ("search", "browser", "搜索", "浏览器")
+
 
 def brief_to_plan(
     brief: str,
@@ -66,10 +84,10 @@ def _brief_to_plan_v01(brief: str, title: str = "", style: str = "sketch-board")
     cleaned = " ".join(brief.split())
     keywords = _keywords(cleaned)
     plan_title = title or _title_from_brief(cleaned, keywords)
-    has_memory = _contains(cleaned, ("memory", "context", "remember", "knowledge", "notes"))
-    has_tools = _contains(cleaned, ("tool", "api", "browser", "search", "call", "execute"))
-    has_safety = _contains(cleaned, ("safe", "guard", "policy", "risk", "validate", "budget", "constraint"))
-    has_loop = _contains(cleaned, ("loop", "iterate", "feedback", "retry", "observe", "reflect"))
+    has_memory = _contains(cleaned, _MEMORY_TERMS)
+    has_tools = _contains(cleaned, _TOOL_TERMS)
+    has_safety = _contains(cleaned, _SAFETY_TERMS)
+    has_loop = _contains(cleaned, _LOOP_TERMS)
 
     sections = [
         {"id": "inputs", "label": "Inputs", "role": "source"},
@@ -191,16 +209,26 @@ def _brief_to_plan_v02(brief: str, title: str = "", style: Optional[str] = None)
     keywords = _keywords(cleaned)
     plan_title = title or _title_from_brief(cleaned, keywords)
     summary = _source_summary(cleaned)
-    has_memory = _contains(cleaned, ("memory", "context", "remember", "knowledge", "notes"))
-    has_tools = _contains(cleaned, ("tool", "api", "browser", "search", "call", "execute"))
-    has_safety = _contains(cleaned, ("safe", "guard", "policy", "risk", "validate", "budget", "constraint"))
-    has_loop = _contains(cleaned, ("loop", "iterate", "feedback", "retry", "observe", "reflect"))
+    has_memory = _contains(cleaned, _MEMORY_TERMS)
+    has_tools = _contains(cleaned, _TOOL_TERMS)
+    has_safety = _contains(cleaned, _SAFETY_TERMS)
+    has_loop = _contains(cleaned, _LOOP_TERMS)
+    is_chinese = _contains_cjk(cleaned)
+
+    labels = {
+        "request": "请求" if is_chinese else "Request",
+        "agent": "智能体" if is_chinese else "Agent",
+        "memory": "长期记忆" if is_chinese else "Memory",
+        "tool": "搜索工具" if is_chinese and _contains(cleaned, _SEARCH_TERMS) else "工具" if is_chinese else "Tool",
+        "guardrail": "安全校验" if is_chinese else "Guardrail",
+        "output": "已验证输出" if is_chinese else "Verified output",
+    }
 
     entities: List[Dict[str, Any]] = [
         {
             "id": "request",
-            "label": "Request",
-            "description": _caption("input brief", keywords, 0),
+            "label": labels["request"],
+            "description": "输入需求" if is_chinese else _caption("input brief", keywords, 0),
             "kind": "http-request",
             "role": "source",
             "importance": "primary",
@@ -209,8 +237,8 @@ def _brief_to_plan_v02(brief: str, title: str = "", style: Optional[str] = None)
         },
         {
             "id": "agent",
-            "label": "Agent",
-            "description": _caption("reason and coordinate", keywords, 1),
+            "label": labels["agent"],
+            "description": "推理与协调" if is_chinese else _caption("reason and coordinate", keywords, 1),
             "kind": "agent",
             "role": "agent",
             "importance": "primary",
@@ -222,8 +250,8 @@ def _brief_to_plan_v02(brief: str, title: str = "", style: Optional[str] = None)
         entities.append(
             {
                 "id": "memory",
-                "label": "Memory",
-                "description": "read and update working context",
+                "label": labels["memory"],
+                "description": "读取并更新工作上下文" if is_chinese else "read and update working context",
                 "kind": "memory",
                 "role": "memory",
                 "importance": "supporting",
@@ -234,9 +262,9 @@ def _brief_to_plan_v02(brief: str, title: str = "", style: Optional[str] = None)
         entities.append(
             {
                 "id": "tool",
-                "label": "Tool",
-                "description": _caption("execute external action", keywords, 2),
-                "kind": "search" if _contains(cleaned, ("search", "browser")) else "tool",
+                "label": labels["tool"],
+                "description": "执行外部操作" if is_chinese else _caption("execute external action", keywords, 2),
+                "kind": "search" if _contains(cleaned, _SEARCH_TERMS) else "tool",
                 "role": "tool",
                 "importance": "primary",
                 "source_refs": ["input-brief"],
@@ -246,8 +274,8 @@ def _brief_to_plan_v02(brief: str, title: str = "", style: Optional[str] = None)
         entities.append(
             {
                 "id": "guardrail",
-                "label": "Guardrail",
-                "description": "validate policy and constraints",
+                "label": labels["guardrail"],
+                "description": "验证策略与约束" if is_chinese else "validate policy and constraints",
                 "kind": "shield",
                 "role": "risk",
                 "importance": "supporting",
@@ -257,8 +285,8 @@ def _brief_to_plan_v02(brief: str, title: str = "", style: Optional[str] = None)
     entities.append(
         {
             "id": "output",
-            "label": "Verified output",
-            "description": "deliver the checked result",
+            "label": labels["output"],
+            "description": "交付经过校验的结果" if is_chinese else "deliver the checked result",
             "kind": "output",
             "role": "output",
             "importance": "primary",
@@ -446,6 +474,10 @@ def _keywords(text: str) -> List[str]:
 def _contains(text: str, needles: Iterable[str]) -> bool:
     lowered = text.lower()
     return any(needle in lowered for needle in needles)
+
+
+def _contains_cjk(text: str) -> bool:
+    return re.search(r"[\u3400-\u9fff]", text) is not None
 
 
 def _title_from_brief(text: str, keywords: List[str]) -> str:

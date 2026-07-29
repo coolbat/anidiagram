@@ -213,7 +213,7 @@
     <animate attributeName="opacity" values="0;0.20;0" dur="1.85s" begin="-1.04s" repeatCount="indefinite" />
   </circle>
 
-  <text x="392.5" y="438.5" class="edge-label" fill="#cbd5e1" opacity="1">
+  <text x="392.5" y="474.5" class="edge-label" fill="#cbd5e1" opacity="1">
     admit
   </text>
 </g>
@@ -233,7 +233,7 @@
   </path>
 
 
-  <text x="757.5" y="438.5" class="edge-label" fill="#cbd5e1" opacity="1">
+  <text x="757.5" y="434.5" class="edge-label" fill="#cbd5e1" opacity="1">
     schedule
   </text>
 </g>
@@ -253,7 +253,7 @@
     <animate attributeName="opacity" values="0;0.92;0" dur="1.65s" begin="-0.16s" repeatCount="indefinite" />
   </circle>
 
-  <text x="1122.5" y="438.5" class="edge-label" fill="#cbd5e1" opacity="1">
+  <text x="1122.5" y="474.5" class="edge-label" fill="#cbd5e1" opacity="1">
     reconcile
   </text>
 </g>
@@ -367,7 +367,7 @@
 
 
 
-  <rect x="85.0" y="185.0" width="250.0" height="120.0" rx="14.0"
+  <rect class="node-surface" x="85.0" y="185.0" width="250.0" height="120.0" rx="14.0"
         fill="#1f1a0d" stroke="#fbbf24" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="user" data-node-id="external-users" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(95 199) scale(0.958333333333333)" data-icon="user" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2eexternal_u2x2dusers__user__root"><g data-part="body" id="node_u2x2eexternal_u2x2dusers__user__body">
   <g data-part="profile" id="node_u2x2eexternal_u2x2dusers__user__profile">
@@ -392,11 +392,10 @@
   </g>
 </g></g>
 
-  <text x="257.8" y="231.0" text-anchor="middle" fill="#f8fafc">
-<tspan x="257.8" dy="18" class="node-title">External</tspan>
-<tspan x="257.8" dy="18" class="node-title">Users</tspan>
-<tspan x="257.8" dy="17" class="node-caption">production</tspan>
-<tspan x="257.8" dy="17" class="node-caption">application</tspan>
+  <text x="254.0" y="231.0" class="node-text-block" text-anchor="middle" fill="#f8fafc">
+<tspan x="254.0" dy="0" class="node-title" textLength="130.0" lengthAdjust="spacingAndGlyphs">External Users</tspan>
+<tspan x="254.0" dy="17" class="node-caption">production</tspan>
+<tspan x="254.0" dy="17" class="node-caption" textLength="130.0" lengthAdjust="spacingAndGlyphs">application traffic</tspan>
 </text>
 </g>
 
@@ -405,7 +404,7 @@
 
 
 
-  <rect x="450.0" y="185.0" width="250.0" height="120.0" rx="14.0"
+  <rect class="node-surface" x="450.0" y="185.0" width="250.0" height="120.0" rx="14.0"
         fill="#071f2f" stroke="#22d3ee" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="api" data-node-id="automation-clients" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(460 199) scale(0.958333333333333)" data-icon="api" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2eautomation_u2x2dclients__api__root"><g data-part="body" id="node_u2x2eautomation_u2x2dclients__api__body">
   <g data-part="shell" id="node_u2x2eautomation_u2x2dclients__api__shell">
@@ -432,11 +431,11 @@
   </g>
 </g></g>
 
-  <text x="622.8" y="231.0" text-anchor="middle" fill="#f8fafc">
-<tspan x="622.8" dy="18" class="node-title">Automation</tspan>
-<tspan x="622.8" dy="18" class="node-title">Clients</tspan>
-<tspan x="622.8" dy="17" class="node-caption">CI/CD and</tspan>
-<tspan x="622.8" dy="17" class="node-caption">platform APIs</tspan>
+  <text x="619.0" y="222.0" class="node-text-block" text-anchor="middle" fill="#f8fafc">
+<tspan x="619.0" dy="0" class="node-title">Automation</tspan>
+<tspan x="619.0" dy="18" class="node-title">Clients</tspan>
+<tspan x="619.0" dy="17" class="node-caption" textLength="130.0" lengthAdjust="spacingAndGlyphs">CI/CD and platform</tspan>
+<tspan x="619.0" dy="17" class="node-caption">APIs</tspan>
 </text>
 </g>
 
@@ -445,7 +444,7 @@
 
 
 
-  <rect x="815.0" y="185.0" width="250.0" height="120.0" rx="14.0"
+  <rect class="node-surface" x="815.0" y="185.0" width="250.0" height="120.0" rx="14.0"
         fill="#1f1a0d" stroke="#fbbf24" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="operator" data-node-id="platform-operators" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(825 199) scale(0.958333333333333)" data-icon="operator" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2eplatform_u2x2doperators__operator__root"><g data-part="body" id="node_u2x2eplatform_u2x2doperators__operator__body">
   <g data-part="shell" id="node_u2x2eplatform_u2x2doperators__operator__shell">
@@ -468,11 +467,11 @@
   </g>
 </g></g>
 
-  <text x="987.8" y="231.0" text-anchor="middle" fill="#f8fafc">
-<tspan x="987.8" dy="18" class="node-title">Platform</tspan>
-<tspan x="987.8" dy="18" class="node-title">Operators</tspan>
-<tspan x="987.8" dy="17" class="node-caption">operate and</tspan>
-<tspan x="987.8" dy="17" class="node-caption">troubleshoot</tspan>
+  <text x="984.0" y="222.0" class="node-text-block" text-anchor="middle" fill="#f8fafc">
+<tspan x="984.0" dy="0" class="node-title">Platform</tspan>
+<tspan x="984.0" dy="18" class="node-title">Operators</tspan>
+<tspan x="984.0" dy="17" class="node-caption">operate and</tspan>
+<tspan x="984.0" dy="17" class="node-caption">troubleshoot</tspan>
 </text>
 </g>
 
@@ -481,7 +480,7 @@
 
 
 
-  <rect x="1180.0" y="185.0" width="250.0" height="120.0" rx="14.0"
+  <rect class="node-surface" x="1180.0" y="185.0" width="250.0" height="120.0" rx="14.0"
         fill="#2a0f16" stroke="#fb7185" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="shield" data-node-id="security-policy" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(1190 199) scale(0.958333333333333)" data-icon="shield" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2esecurity_u2x2dpolicy__shield__root"><g data-part="body" id="node_u2x2esecurity_u2x2dpolicy__shield__body">
   <g data-part="shell" id="node_u2x2esecurity_u2x2dpolicy__shield__shell">
@@ -502,11 +501,10 @@
   </g>
 </g></g>
 
-  <text x="1352.8" y="231.0" text-anchor="middle" fill="#f8fafc">
-<tspan x="1352.8" dy="18" class="node-title">Security</tspan>
-<tspan x="1352.8" dy="18" class="node-title">Policy</tspan>
-<tspan x="1352.8" dy="17" class="node-caption">identity and</tspan>
-<tspan x="1352.8" dy="17" class="node-caption">admission</tspan>
+  <text x="1349.0" y="231.0" class="node-text-block" text-anchor="middle" fill="#f8fafc">
+<tspan x="1349.0" dy="0" class="node-title" textLength="130.0" lengthAdjust="spacingAndGlyphs">Security Policy</tspan>
+<tspan x="1349.0" dy="17" class="node-caption">identity and</tspan>
+<tspan x="1349.0" dy="17" class="node-caption">admission rules</tspan>
 </text>
 </g>
 
@@ -515,7 +513,7 @@
 
 
 
-  <rect x="85.0" y="390.0" width="250.0" height="125.0" rx="14.0"
+  <rect class="node-surface" x="85.0" y="390.0" width="250.0" height="125.0" rx="14.0"
         fill="#2a0f16" stroke="#fb7185" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="gateway" data-node-id="ingress" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(95 406.5) scale(0.958333333333333)" data-icon="gateway" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2eingress__gateway__root"><g data-part="body" id="node_u2x2eingress__gateway__body">
     <g data-part="gate" id="node_u2x2eingress__gateway__gate">
@@ -542,11 +540,10 @@
   </g>
 </g></g>
 
-  <text x="257.8" y="438.5" text-anchor="middle" fill="#f8fafc">
-<tspan x="257.8" dy="18" class="node-title">Ingress</tspan>
-<tspan x="257.8" dy="18" class="node-title">Gateway</tspan>
-<tspan x="257.8" dy="17" class="node-caption">routes trusted</tspan>
-<tspan x="257.8" dy="17" class="node-caption">traffic</tspan>
+  <text x="254.0" y="438.5" class="node-text-block" text-anchor="middle" fill="#f8fafc">
+<tspan x="254.0" dy="0" class="node-title" textLength="130.0" lengthAdjust="spacingAndGlyphs">Ingress Gateway</tspan>
+<tspan x="254.0" dy="17" class="node-caption">routes trusted</tspan>
+<tspan x="254.0" dy="17" class="node-caption">traffic</tspan>
 </text>
 </g>
 
@@ -555,7 +552,7 @@
 
 
 
-  <rect x="450.0" y="390.0" width="250.0" height="125.0" rx="14.0"
+  <rect class="node-surface" x="450.0" y="390.0" width="250.0" height="125.0" rx="14.0"
         fill="#0f172a" stroke="#38bdf8" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="api" data-node-id="api-server" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(460 406.5) scale(0.958333333333333)" data-icon="api" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2eapi_u2x2dserver__api__root"><g data-part="body" id="node_u2x2eapi_u2x2dserver__api__body">
   <g data-part="shell" id="node_u2x2eapi_u2x2dserver__api__shell">
@@ -582,11 +579,10 @@
   </g>
 </g></g>
 
-  <text x="622.8" y="438.5" text-anchor="middle" fill="#f8fafc">
-<tspan x="622.8" dy="18" class="node-title">Kubernetes</tspan>
-<tspan x="622.8" dy="18" class="node-title">API</tspan>
-<tspan x="622.8" dy="17" class="node-caption">declares</tspan>
-<tspan x="622.8" dy="17" class="node-caption">desired state</tspan>
+  <text x="619.0" y="438.5" class="node-text-block" text-anchor="middle" fill="#f8fafc">
+<tspan x="619.0" dy="0" class="node-title" textLength="130.0" lengthAdjust="spacingAndGlyphs">Kubernetes API</tspan>
+<tspan x="619.0" dy="17" class="node-caption">declares desired</tspan>
+<tspan x="619.0" dy="17" class="node-caption">state</tspan>
 </text>
 </g>
 
@@ -595,7 +591,7 @@
 
 
 
-  <rect x="815.0" y="390.0" width="250.0" height="125.0" rx="14.0"
+  <rect class="node-surface" x="815.0" y="390.0" width="250.0" height="125.0" rx="14.0"
         fill="#0f172a" stroke="#38bdf8" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="scheduler" data-node-id="scheduler" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(825 406.5) scale(0.958333333333333)" data-icon="scheduler" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2escheduler__scheduler__root"><g data-part="body" id="node_u2x2escheduler__scheduler__body">
     <rect x="11" y="20" width="74" height="57" rx="18" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
@@ -621,10 +617,9 @@
   </g>
 </g></g>
 
-  <text x="987.8" y="438.5" text-anchor="middle" fill="#f8fafc">
-<tspan x="987.8" dy="18" class="node-title">Scheduler</tspan>
-<tspan x="987.8" dy="17" class="node-caption">places</tspan>
-<tspan x="987.8" dy="17" class="node-caption">workloads</tspan>
+  <text x="984.0" y="447.0" class="node-text-block" text-anchor="middle" fill="#f8fafc">
+<tspan x="984.0" dy="0" class="node-title">Scheduler</tspan>
+<tspan x="984.0" dy="17" class="node-caption">places workloads</tspan>
 </text>
 </g>
 
@@ -633,7 +628,7 @@
 
 
 
-  <rect x="1180.0" y="390.0" width="250.0" height="125.0" rx="14.0"
+  <rect class="node-surface" x="1180.0" y="390.0" width="250.0" height="125.0" rx="14.0"
         fill="#1e1b4b" stroke="#a78bfa" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="server-cluster" data-node-id="controller" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(1190 406.5) scale(0.958333333333333)" data-icon="server-cluster" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2econtroller__server-cluster__root"><g data-part="body" id="node_u2x2econtroller__server-cluster__body">
     <g data-part="node-a" id="node_u2x2econtroller__server-cluster__node-a">
@@ -662,11 +657,10 @@
   </g>
 </g></g>
 
-  <text x="1352.8" y="438.5" text-anchor="middle" fill="#f8fafc">
-<tspan x="1352.8" dy="18" class="node-title">Control</tspan>
-<tspan x="1352.8" dy="18" class="node-title">Plane</tspan>
-<tspan x="1352.8" dy="17" class="node-caption">reconciles</tspan>
-<tspan x="1352.8" dy="17" class="node-caption">cluster state</tspan>
+  <text x="1349.0" y="438.5" class="node-text-block" text-anchor="middle" fill="#f8fafc">
+<tspan x="1349.0" dy="0" class="node-title" textLength="130.0" lengthAdjust="spacingAndGlyphs">Control Plane</tspan>
+<tspan x="1349.0" dy="17" class="node-caption" textLength="130.0" lengthAdjust="spacingAndGlyphs">reconciles cluster</tspan>
+<tspan x="1349.0" dy="17" class="node-caption">state</tspan>
 </text>
 </g>
 
@@ -675,7 +669,7 @@
 
 
 
-  <rect x="85.0" y="620.0" width="250.0" height="140.0" rx="14.0"
+  <rect class="node-surface" x="85.0" y="620.0" width="250.0" height="140.0" rx="14.0"
         fill="#0f172a" stroke="#38bdf8" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="deployment" data-node-id="deployments" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(95 644) scale(0.958333333333333)" data-icon="deployment" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2edeployments__deployment__root"><g data-part="body" id="node_u2x2edeployments__deployment__body">
     <rect x="11" y="21" width="74" height="56" rx="19" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
@@ -702,10 +696,11 @@
   </g>
 </g></g>
 
-  <text x="257.8" y="676.0" text-anchor="middle" fill="#f8fafc">
-<tspan x="257.8" dy="18" class="node-title">Deployments</tspan>
-<tspan x="257.8" dy="17" class="node-caption">versioned</tspan>
-<tspan x="257.8" dy="17" class="node-caption">application</tspan>
+  <text x="254.0" y="667.5" class="node-text-block" text-anchor="middle" fill="#f8fafc">
+<tspan x="254.0" dy="0" class="node-title">Deployments</tspan>
+<tspan x="254.0" dy="17" class="node-caption">versioned</tspan>
+<tspan x="254.0" dy="17" class="node-caption">application</tspan>
+<tspan x="254.0" dy="17" class="node-caption">releases</tspan>
 </text>
 </g>
 
@@ -714,7 +709,7 @@
 
 
 
-  <rect x="450.0" y="620.0" width="250.0" height="140.0" rx="14.0"
+  <rect class="node-surface" x="450.0" y="620.0" width="250.0" height="140.0" rx="14.0"
         fill="#0f172a" stroke="#38bdf8" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="container" data-node-id="containers" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(460 644) scale(0.958333333333333)" data-icon="container" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2econtainers__container__root"><g data-part="body" id="node_u2x2econtainers__container__body">
     <g data-part="shell" id="node_u2x2econtainers__container__shell">
@@ -740,11 +735,10 @@
   </g>
 </g></g>
 
-  <text x="622.8" y="676.0" text-anchor="middle" fill="#f8fafc">
-<tspan x="622.8" dy="18" class="node-title">Container</tspan>
-<tspan x="622.8" dy="18" class="node-title">Workloads</tspan>
-<tspan x="622.8" dy="17" class="node-caption">replicated</tspan>
-<tspan x="622.8" dy="17" class="node-caption">services</tspan>
+  <text x="619.0" y="675.5" class="node-text-block" text-anchor="middle" fill="#f8fafc">
+<tspan x="619.0" dy="0" class="node-title">Container</tspan>
+<tspan x="619.0" dy="18" class="node-title">Workloads</tspan>
+<tspan x="619.0" dy="17" class="node-caption" textLength="130.0" lengthAdjust="spacingAndGlyphs">replicated services</tspan>
 </text>
 </g>
 
@@ -753,7 +747,7 @@
 
 
 
-  <rect x="815.0" y="620.0" width="250.0" height="140.0" rx="14.0"
+  <rect class="node-surface" x="815.0" y="620.0" width="250.0" height="140.0" rx="14.0"
         fill="#052e24" stroke="#34d399" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="database" data-node-id="stateful-data" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(825 644) scale(0.958333333333333)" data-icon="database" data-icon-source="diagram-core-v1" data-asset-revision="2" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2estateful_u2x2ddata__database__root"><g data-part="body" id="node_u2x2estateful_u2x2ddata__database__body">
   <g data-part="shell" id="node_u2x2estateful_u2x2ddata__database__shell">
@@ -782,11 +776,10 @@
   </g>
 </g></g>
 
-  <text x="987.8" y="676.0" text-anchor="middle" fill="#f8fafc">
-<tspan x="987.8" dy="18" class="node-title">Stateful</tspan>
-<tspan x="987.8" dy="18" class="node-title">Data</tspan>
-<tspan x="987.8" dy="17" class="node-caption">persistent</tspan>
-<tspan x="987.8" dy="17" class="node-caption">production</tspan>
+  <text x="984.0" y="676.0" class="node-text-block" text-anchor="middle" fill="#f8fafc">
+<tspan x="984.0" dy="0" class="node-title" textLength="130.0" lengthAdjust="spacingAndGlyphs">Stateful Data</tspan>
+<tspan x="984.0" dy="17" class="node-caption">persistent</tspan>
+<tspan x="984.0" dy="17" class="node-caption">production data</tspan>
 </text>
 </g>
 
@@ -795,7 +788,7 @@
 
 
 
-  <rect x="1180.0" y="620.0" width="250.0" height="140.0" rx="14.0"
+  <rect class="node-surface" x="1180.0" y="620.0" width="250.0" height="140.0" rx="14.0"
         fill="#052e16" stroke="#4ade80" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="monitoring" data-node-id="observability" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(1190 644) scale(0.958333333333333)" data-icon="monitoring" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#64748b;--icon-accent-secondary:#22d3ee;--icon-detail:#cbd5e1;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#f8fafc;--icon-surface-main:#111827;--icon-surface-recessed:#111c36;--icon-surface-secondary:#050816" id="node_u2x2eobservability__monitoring__root"><g data-part="body" id="node_u2x2eobservability__monitoring__body">
     <g data-part="shell" id="node_u2x2eobservability__monitoring__shell">
@@ -820,10 +813,10 @@
   </g>
 </g></g>
 
-  <text x="1352.8" y="676.0" text-anchor="middle" fill="#f8fafc">
-<tspan x="1352.8" dy="18" class="node-title">Observability</tspan>
-<tspan x="1352.8" dy="17" class="node-caption">metrics, logs,</tspan>
-<tspan x="1352.8" dy="17" class="node-caption">and alerts</tspan>
+  <text x="1349.0" y="676.0" class="node-text-block" text-anchor="middle" fill="#f8fafc">
+<tspan x="1349.0" dy="0" class="node-title" textLength="130.0" lengthAdjust="spacingAndGlyphs">Observability</tspan>
+<tspan x="1349.0" dy="17" class="node-caption" textLength="130.0" lengthAdjust="spacingAndGlyphs">metrics, logs, and</tspan>
+<tspan x="1349.0" dy="17" class="node-caption">alerts</tspan>
 </text>
 </g>
 </svg>

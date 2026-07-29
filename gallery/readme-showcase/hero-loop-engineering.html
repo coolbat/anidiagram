@@ -12,6 +12,7 @@
     .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
     button, a { border: 1px solid #475569; background: #111827; color: #f8fafc; border-radius: 8px; padding: 8px 10px; font: inherit; text-decoration: none; cursor: pointer; }
     button:hover, a:hover { background: #1f2937; }
+    button:focus-visible, a:focus-visible, .stage:focus-visible { outline: 3px solid #38bdf8; outline-offset: 2px; }
     button[aria-pressed="true"] { background: #475569; border-color: #94a3b8; }
     .stage { width: 100%; min-height: 0; overflow: hidden; border: 1px solid #334155; border-radius: 12px; background: #020617; cursor: grab; }
     .stage.dragging { cursor: grabbing; }
@@ -27,22 +28,32 @@
     main.motion-off .node-glow,
     main.motion-off .icon-breathe-halo { display: none; }
     main.motion-off .semantic-icon-breathe { animation: none !important; }
+    .runtime-warning { margin: 0; padding: 8px 10px; border: 1px solid #f59e0b; border-radius: 8px; color: #fde68a; background: #451a03; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
   </style>
 </head>
 <body>
-  <main id="viewer" class="motion-expressive" data-runtime="gsap">
-    <div class="toolbar">
+  <main id="viewer" class="motion-expressive" data-runtime="gsap" data-runtime-mode="ambient"
+        data-label-play="Play" data-label-pause="Pause"
+        data-label-ready="Diagram ready" data-label-restarted="Animation restarted"
+        data-label-dependency-warning="GSAP did not load; showing the static diagram.">
+    <div class="toolbar" role="toolbar" aria-label="Diagram playback and view controls">
       <button type="button" id="toggle">Pause</button>
       <button type="button" id="restart">Restart</button>
+      <button type="button" id="timeline-start" hidden>Start Explanation</button>
+      <button type="button" id="timeline-previous" hidden>Previous Step</button>
+      <button type="button" id="timeline-next" hidden>Next Step</button>
       <button type="button" class="motion-choice" data-motion="expressive" aria-pressed="true">Expressive</button>
       <button type="button" class="motion-choice" data-motion="readable" aria-pressed="false">Readable</button>
-      <button type="button" class="motion-choice" data-motion="off" aria-pressed="false">Off</button>
+      <button type="button" class="motion-choice" data-motion="off" aria-pressed="false">Motion Off</button>
       <button type="button" id="zoom-in">Zoom In</button>
       <button type="button" id="zoom-out">Zoom Out</button>
-      <button type="button" id="reset">Reset</button>
+      <button type="button" id="reset">Reset View</button>
       <a id="download" download="Loop Engineering Operating Architecture.svg">Download SVG</a>
     </div>
-    <div class="stage" id="stage">
+    <p id="runtime-warning" class="runtime-warning" role="alert" hidden></p>
+    <p id="runtime-status" class="sr-only" role="status" aria-live="polite">Diagram ready</p>
+    <div class="stage" id="stage" tabindex="0" aria-label="Zoomable and pannable animated diagram">
       <div class="viewport" id="viewport">
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="920" viewBox="0 0 1280 920" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="showcase-v1" data-motion-sequence="staged" data-motion-edge="packet-flow" data-motion-node="icon-performance" data-motion-group="border-scan" data-motion-title="highlight-sweep" data-motion-reduced="subtle" data-icon-system="illustrated" data-icon-system-version="2.5.0">
 <title id="diagram-title">Loop Engineering Operating Architecture</title>
@@ -257,9 +268,9 @@
 
 
 
-  <circle cx="407.0" cy="523.0" r="14" fill="#16a34a" />
-  <text x="407.0" y="528.0" class="step-label" fill="#ffffff" text-anchor="middle">8</text>
-  <text x="429.0" y="528.0" class="edge-label" fill="#5b6778" opacity="1">
+  <circle cx="407.0" cy="559.0" r="14" fill="#16a34a" />
+  <text x="407.0" y="564.0" class="step-label" fill="#ffffff" text-anchor="middle">8</text>
+  <text x="429.0" y="564.0" class="edge-label" fill="#5b6778" opacity="1">
     review
   </text>
 </g>
@@ -288,7 +299,7 @@
 
 
 
-  <rect x="680.0" y="235.0" width="220.0" height="108.0" rx="14.0"
+  <rect class="node-surface" x="680.0" y="235.0" width="220.0" height="108.0" rx="14.0"
         fill="#eff6ff" stroke="#2563eb" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="scheduler" data-node-id="automation-heartbeat" opacity="1">
   <g id="icon-automation-heartbeat-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="schedule-plan-trigger-repeat" data-rest-opacity="1" transform="translate(704.0 245.0) scale(0.7333)">
@@ -305,11 +316,11 @@
 
   <circle cx="698.0" cy="253.0" r="14" fill="#2563eb" />
   <text x="698.0" y="258.0" class="step-label" fill="#eff6ff" text-anchor="middle">2</text>
-  <text x="859.0" y="275.0" text-anchor="middle" fill="#172033">
-<tspan x="859.0" dy="18" class="node-title">Automation</tspan>
-<tspan x="859.0" dy="18" class="node-title">Heartbeat</tspan>
-<tspan x="859.0" dy="17" class="node-caption">Scheduled</tspan>
-<tspan x="859.0" dy="17" class="node-caption">triage</tspan>
+  <text x="840.0" y="266.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="840.0" dy="0" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Automation</tspan>
+<tspan x="840.0" dy="18" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Heartbeat</tspan>
+<tspan x="840.0" dy="17" class="node-caption">Scheduled</tspan>
+<tspan x="840.0" dy="17" class="node-caption">triage</tspan>
 </text>
 </g>
 
@@ -318,7 +329,7 @@
 
 
 
-  <rect x="680.0" y="455.0" width="220.0" height="108.0" rx="14.0"
+  <rect class="node-surface" x="680.0" y="455.0" width="220.0" height="108.0" rx="14.0"
         fill="#eff6ff" stroke="#2563eb" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="branch" data-node-id="isolated-worktree" opacity="1">
   <g id="icon-isolated-worktree-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="branch-diverge-develop-rejoin" data-rest-opacity="1" transform="translate(704.0 465.0) scale(0.7333)">
@@ -335,11 +346,11 @@
 
   <circle cx="698.0" cy="473.0" r="14" fill="#2563eb" />
   <text x="698.0" y="478.0" class="step-label" fill="#eff6ff" text-anchor="middle">3</text>
-  <text x="859.0" y="495.0" text-anchor="middle" fill="#172033">
-<tspan x="859.0" dy="18" class="node-title">Isolated</tspan>
-<tspan x="859.0" dy="18" class="node-title">Worktree</tspan>
-<tspan x="859.0" dy="17" class="node-caption">Collision-free</tspan>
-<tspan x="859.0" dy="17" class="node-caption">parallel</tspan>
+  <text x="840.0" y="486.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="840.0" dy="0" class="node-title">Isolated</tspan>
+<tspan x="840.0" dy="18" class="node-title">Worktree</tspan>
+<tspan x="840.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">Collision-free</tspan>
+<tspan x="840.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">parallel work</tspan>
 </text>
 </g>
 
@@ -348,7 +359,7 @@
 
 
 
-  <rect x="380.0" y="455.0" width="220.0" height="108.0" rx="14.0"
+  <rect class="node-surface" x="380.0" y="455.0" width="220.0" height="108.0" rx="14.0"
         fill="#ecfdf5" stroke="#059669" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="knowledge-base" data-node-id="project-skills" opacity="1">
   <g id="icon-project-skills-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="knowledge-curate-connect-reference" data-rest-opacity="1" transform="translate(404.0 465.0) scale(0.7333)">
@@ -366,11 +377,11 @@
 
   <circle cx="398.0" cy="473.0" r="14" fill="#059669" />
   <text x="398.0" y="478.0" class="step-label" fill="#ecfdf5" text-anchor="middle">4</text>
-  <text x="559.0" y="495.0" text-anchor="middle" fill="#172033">
-<tspan x="559.0" dy="18" class="node-title">Project</tspan>
-<tspan x="559.0" dy="18" class="node-title">Skills</tspan>
-<tspan x="559.0" dy="17" class="node-caption">Rules +</tspan>
-<tspan x="559.0" dy="17" class="node-caption">context</tspan>
+  <text x="540.0" y="486.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="540.0" dy="0" class="node-title">Project</tspan>
+<tspan x="540.0" dy="18" class="node-title">Skills</tspan>
+<tspan x="540.0" dy="17" class="node-caption">Rules +</tspan>
+<tspan x="540.0" dy="17" class="node-caption">context</tspan>
 </text>
 </g>
 
@@ -379,7 +390,7 @@
 
 
 
-  <rect x="80.0" y="455.0" width="220.0" height="108.0" rx="14.0"
+  <rect class="node-surface" x="80.0" y="455.0" width="220.0" height="108.0" rx="14.0"
         fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="agent" data-node-id="maker-agent" opacity="1">
   <g id="icon-maker-agent-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="input-reason-result" data-rest-opacity="1" transform="translate(104.0 465.0) scale(0.7333)">
@@ -400,11 +411,11 @@
 
   <circle cx="98.0" cy="473.0" r="14" fill="#7c3aed" />
   <text x="98.0" y="478.0" class="step-label" fill="#f5f3ff" text-anchor="middle">5</text>
-  <text x="259.0" y="495.0" text-anchor="middle" fill="#172033">
-<tspan x="259.0" dy="18" class="node-title">Maker</tspan>
-<tspan x="259.0" dy="18" class="node-title">Sub-agent</tspan>
-<tspan x="259.0" dy="17" class="node-caption">Drafts</tspan>
-<tspan x="259.0" dy="17" class="node-caption">implementation</tspan>
+  <text x="240.0" y="486.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="240.0" dy="0" class="node-title">Maker</tspan>
+<tspan x="240.0" dy="18" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Sub-agent</tspan>
+<tspan x="240.0" dy="17" class="node-caption">Drafts</tspan>
+<tspan x="240.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">implementation</tspan>
 </text>
 </g>
 
@@ -413,7 +424,7 @@
 
 
 
-  <rect x="80.0" y="675.0" width="220.0" height="108.0" rx="14.0"
+  <rect class="node-surface" x="80.0" y="675.0" width="220.0" height="108.0" rx="14.0"
         fill="#fef2f2" stroke="#dc2626" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="reasoning" data-node-id="verifier-agent" opacity="1">
   <g id="icon-verifier-agent-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="premise-connect-infer-conclude" data-rest-opacity="1" transform="translate(104.0 685.0) scale(0.7333)">
@@ -431,11 +442,11 @@
 
   <circle cx="98.0" cy="693.0" r="14" fill="#dc2626" />
   <text x="98.0" y="698.0" class="step-label" fill="#fef2f2" text-anchor="middle">6</text>
-  <text x="259.0" y="715.0" text-anchor="middle" fill="#172033">
-<tspan x="259.0" dy="18" class="node-title">Verifier</tspan>
-<tspan x="259.0" dy="18" class="node-title">Sub-agent</tspan>
-<tspan x="259.0" dy="17" class="node-caption">Tests +</tspan>
-<tspan x="259.0" dy="17" class="node-caption">evidence</tspan>
+  <text x="240.0" y="706.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="240.0" dy="0" class="node-title">Verifier</tspan>
+<tspan x="240.0" dy="18" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Sub-agent</tspan>
+<tspan x="240.0" dy="17" class="node-caption">Tests +</tspan>
+<tspan x="240.0" dy="17" class="node-caption">evidence</tspan>
 </text>
 </g>
 
@@ -444,7 +455,7 @@
 
 
 
-  <rect x="380.0" y="675.0" width="220.0" height="108.0" rx="14.0"
+  <rect class="node-surface" x="380.0" y="675.0" width="220.0" height="108.0" rx="14.0"
         fill="#fffbeb" stroke="#d97706" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="gateway" data-node-id="tool-connectors" opacity="1">
   <g id="icon-tool-connectors-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="traffic-admit-route-mediate" data-rest-opacity="1" transform="translate(404.0 685.0) scale(0.7333)">
@@ -462,11 +473,11 @@
 
   <circle cx="398.0" cy="693.0" r="14" fill="#d97706" />
   <text x="398.0" y="698.0" class="step-label" fill="#fffbeb" text-anchor="middle">7</text>
-  <text x="559.0" y="715.0" text-anchor="middle" fill="#172033">
-<tspan x="559.0" dy="18" class="node-title">Connectors</tspan>
-<tspan x="559.0" dy="18" class="node-title">&amp;</tspan>
-<tspan x="559.0" dy="17" class="node-caption">Publish</tspan>
-<tspan x="559.0" dy="17" class="node-caption">verified</tspan>
+  <text x="540.0" y="706.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="540.0" dy="0" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Connectors</tspan>
+<tspan x="540.0" dy="18" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">&amp; Delivery</tspan>
+<tspan x="540.0" dy="17" class="node-caption">Publish</tspan>
+<tspan x="540.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">verified PRs</tspan>
 </text>
 </g>
 
@@ -475,7 +486,7 @@
 
 
 
-  <rect x="680.0" y="675.0" width="220.0" height="108.0" rx="14.0"
+  <rect class="node-surface" x="680.0" y="675.0" width="220.0" height="108.0" rx="14.0"
         fill="#ecfdf5" stroke="#059669" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="memory" data-node-id="external-state" opacity="1">
   <g id="icon-external-state-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="context-capture-index-recall" data-rest-opacity="1" transform="translate(704.0 685.0) scale(0.7333)">
@@ -493,11 +504,11 @@
 
   <circle cx="698.0" cy="693.0" r="14" fill="#059669" />
   <text x="698.0" y="698.0" class="step-label" fill="#ecfdf5" text-anchor="middle">8</text>
-  <text x="859.0" y="715.0" text-anchor="middle" fill="#172033">
-<tspan x="859.0" dy="18" class="node-title">External</tspan>
-<tspan x="859.0" dy="18" class="node-title">State</tspan>
-<tspan x="859.0" dy="17" class="node-caption">Records</tspan>
-<tspan x="859.0" dy="17" class="node-caption">done and</tspan>
+  <text x="840.0" y="706.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="840.0" dy="0" class="node-title">External</tspan>
+<tspan x="840.0" dy="18" class="node-title">State</tspan>
+<tspan x="840.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">Records done</tspan>
+<tspan x="840.0" dy="17" class="node-caption">and next</tspan>
 </text>
 </g>
 
@@ -506,7 +517,7 @@
 
 
 
-  <rect x="80.0" y="235.0" width="220.0" height="108.0" rx="14.0"
+  <rect class="node-surface" x="80.0" y="235.0" width="220.0" height="108.0" rx="14.0"
         fill="#fff7ed" stroke="#f97316" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="developer" data-node-id="human-engineer" opacity="1">
   <g id="icon-human-engineer-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="person-code-build-deliver" data-rest-opacity="1" transform="translate(104.0 245.0) scale(0.7333)">
@@ -525,11 +536,11 @@
 
   <circle cx="98.0" cy="253.0" r="14" fill="#f97316" />
   <text x="98.0" y="258.0" class="step-label" fill="#fff7ed" text-anchor="middle">1</text>
-  <text x="259.0" y="275.0" text-anchor="middle" fill="#172033">
-<tspan x="259.0" dy="18" class="node-title">Human</tspan>
-<tspan x="259.0" dy="18" class="node-title">Governance</tspan>
-<tspan x="259.0" dy="17" class="node-caption">Goals +</tspan>
-<tspan x="259.0" dy="17" class="node-caption">stop gates</tspan>
+  <text x="240.0" y="266.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="240.0" dy="0" class="node-title">Human</tspan>
+<tspan x="240.0" dy="18" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Governance</tspan>
+<tspan x="240.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">Goals + stop</tspan>
+<tspan x="240.0" dy="17" class="node-caption">gates</tspan>
 </text>
 </g>
 </svg>
@@ -1020,7 +1031,7 @@
   "edge_motion_version": "1.0.0"
 }
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" crossorigin="anonymous"></script>
   <script>
 (function () {
   function getManifest() {
@@ -3549,6 +3560,234 @@
   characterPerformanceIds.add("illustrated-logs-record-order-inspect-v1");
   characterPerformanceIds.add("illustrated-alert-detect-escalate-acknowledge-v1");
   characterPerformanceIds.add("illustrated-debug-reproduce-inspect-fix-v1");
+
+  function playChoreographer(manifest, autoplay = true) {
+    if (!window.gsap || !manifest || !isPlainObject(manifest.choreographer)) return [];
+    stop();
+    if (window.AniDiagramEdgeMotion && window.AniDiagramEdgeMotion.clear) {
+      window.AniDiagramEdgeMotion.clear();
+    }
+    const steps = Array.isArray(manifest.choreographer.steps) ? manifest.choreographer.steps : [];
+    const edges = Array.from(document.querySelectorAll("g.edge"));
+    const timeline = window.gsap.timeline({ paused: !autoplay });
+    const stepStates = [];
+    steps.forEach((step, index) => {
+      const source = document.getElementById(`node-${step.source}`);
+      const target = document.getElementById(`node-${step.target}`);
+      const edge = edges[Number(step.edge_index)];
+      const path = edge && (edge.querySelector(".edge-draw") || edge.querySelector(".edge-base"));
+      const start = timeline.duration();
+      timeline.addLabel(`step-${index}`, start);
+      if (source) {
+        timeline.to(source, {
+          scale: 1.025,
+          transformOrigin: "center center",
+          duration: 0.18,
+          ease: "power1.out",
+        }, start);
+      }
+      if (path) {
+        timeline.fromTo(path, {
+          strokeDasharray: 1,
+          strokeDashoffset: 1,
+          opacity: 0.35,
+        }, {
+          strokeDashoffset: 0,
+          opacity: 1,
+          duration: 0.58,
+          ease: "power1.inOut",
+        }, start + 0.18);
+      }
+      if (source) timeline.to(source, { scale: 1, duration: 0.2 }, start + 0.58);
+      if (target) {
+        timeline.to(target, {
+          scale: 1.035,
+          transformOrigin: "center center",
+          duration: 0.2,
+          ease: "back.out(1.5)",
+        }, start + 0.68);
+        timeline.to(target, { scale: 1, duration: 0.24 }, start + 0.9);
+      }
+      const duration = Math.max(1.2, Number(step.duration) || 1.2);
+      timeline.to({}, { duration: Math.max(0, start + duration - timeline.duration()) });
+      stepStates.push({ index, start, end: start + duration, label: step.label || `Step ${index + 1}` });
+    });
+    timeline.addLabel("timeline-end", timeline.duration());
+    timeline.__anidiagramChoreographer = true;
+    window.__ANIDIAGRAM_CHOREOGRAPHER__ = { timeline, steps: stepStates, current: -1 };
+    window.__ANIDIAGRAM_STAGE_TIMELINES__ = [timeline];
+    window.__ANIDIAGRAM_ICON_TIMELINES__ = [];
+    syncTimelineStore();
+    if (autoplay) timeline.play(0);
+    return [timeline];
+  }
+
+  function startChoreographer() {
+    const manifest = getManifest();
+    return playChoreographer(manifest, true);
+  }
+
+  function stepChoreographer(direction) {
+    const state = window.__ANIDIAGRAM_CHOREOGRAPHER__;
+    if (!state || !state.timeline || !state.steps.length) {
+      playChoreographer(getManifest(), false);
+    }
+    const current = window.__ANIDIAGRAM_CHOREOGRAPHER__;
+    if (!current || !current.steps.length) return null;
+    const targetIndex = Math.max(0, Math.min(current.steps.length - 1, current.current + direction));
+    const step = current.steps[targetIndex];
+    current.current = targetIndex;
+    current.timeline.pause(step.start);
+    if (direction > 0) {
+      current.timeline.tweenTo(step.end, { onComplete: () => current.timeline.pause() });
+    }
+    return step;
+  }
+
+  function enhanceProductViewer(originalManifest) {
+    const viewer = document.getElementById("viewer");
+    const stage = document.getElementById("stage");
+    const viewport = document.getElementById("viewport");
+    const status = document.getElementById("runtime-status");
+    const warning = document.getElementById("runtime-warning");
+    if (!viewer || !stage || !viewport) return;
+    const notify = (message) => {
+      if (status) status.textContent = message || viewer.dataset.labelReady || "Diagram ready";
+    };
+    const showWarning = (message) => {
+      if (!warning) return;
+      warning.textContent = message || "";
+      warning.hidden = !message;
+    };
+    if (!window.gsap) showWarning(viewer.dataset.labelDependencyWarning);
+    else showWarning("");
+
+    const timelineStart = document.getElementById("timeline-start");
+    const timelinePrevious = document.getElementById("timeline-previous");
+    const timelineNext = document.getElementById("timeline-next");
+    if (["timeline", "hybrid"].includes(originalManifest.mode)) {
+      [timelineStart, timelinePrevious, timelineNext].forEach((button) => {
+        if (button) button.hidden = false;
+      });
+      if (timelineStart) timelineStart.addEventListener("click", () => {
+        startChoreographer();
+        notify(timelineStart.textContent);
+      });
+      if (timelinePrevious) timelinePrevious.addEventListener("click", () => {
+        const step = stepChoreographer(-1);
+        if (step) notify(step.label);
+      });
+      if (timelineNext) timelineNext.addEventListener("click", () => {
+        const step = stepChoreographer(1);
+        if (step) notify(step.label);
+      });
+    }
+
+    const toggle = document.getElementById("toggle");
+    const restartButton = document.getElementById("restart");
+    const zoomIn = document.getElementById("zoom-in");
+    const zoomOut = document.getElementById("zoom-out");
+    const reset = document.getElementById("reset");
+    const svg = viewport.querySelector("svg");
+    const localizeToggle = () => {
+      if (!toggle || !svg) return;
+      const paused = svg.animationsPaused && svg.animationsPaused();
+      toggle.textContent = paused ? viewer.dataset.labelPlay || "Play" : viewer.dataset.labelPause || "Pause";
+    };
+    if (toggle) toggle.addEventListener("click", () => setTimeout(localizeToggle, 0));
+    if (restartButton) restartButton.addEventListener("click", () => {
+      setTimeout(localizeToggle, 0);
+      notify(viewer.dataset.labelRestarted);
+    });
+    document.querySelectorAll(".motion-choice").forEach((button) => {
+      button.addEventListener("click", () => {
+        notify(button.textContent);
+        if (originalManifest.mode === "timeline" && button.dataset.motion !== "off") {
+          setTimeout(startChoreographer, 0);
+        }
+      });
+    });
+
+    let keyboardX = 0;
+    let keyboardY = 0;
+    const applyKeyboardPan = () => {
+      viewport.style.translate = `${keyboardX}px ${keyboardY}px`;
+    };
+    stage.addEventListener("keydown", (event) => {
+      if (["+", "="].includes(event.key)) {
+        event.preventDefault();
+        if (zoomIn) zoomIn.click();
+      } else if (event.key === "-") {
+        event.preventDefault();
+        if (zoomOut) zoomOut.click();
+      } else if (event.key === "0") {
+        event.preventDefault();
+        keyboardX = 0;
+        keyboardY = 0;
+        applyKeyboardPan();
+        if (reset) reset.click();
+      } else if (event.key === " " && toggle) {
+        event.preventDefault();
+        toggle.click();
+      } else if (event.key.toLowerCase() === "r" && restartButton) {
+        event.preventDefault();
+        restartButton.click();
+      } else if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        keyboardX -= 24;
+        applyKeyboardPan();
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        keyboardX += 24;
+        applyKeyboardPan();
+      } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        keyboardY -= 24;
+        applyKeyboardPan();
+      } else if (event.key === "ArrowDown") {
+        event.preventDefault();
+        keyboardY += 24;
+        applyKeyboardPan();
+      }
+    });
+  }
+
+  const productManifestElement = document.getElementById("anidiagram-motion-manifest");
+  let productManifest = null;
+  if (productManifestElement) {
+    try {
+      productManifest = JSON.parse(productManifestElement.textContent || "{}");
+    } catch (_error) {
+      productManifest = null;
+    }
+  }
+  if (productManifest && ["timeline", "hybrid"].includes(productManifest.mode)) {
+    const ambientManifest = {
+      ...productManifest,
+      mode: "ambient",
+      sequence: "independent-icon-loops",
+    };
+    delete ambientManifest.choreographer;
+    productManifestElement.textContent = JSON.stringify(ambientManifest);
+  }
+
+  Object.assign(window.AniDiagramRuntime, {
+    startChoreographer,
+    nextStep: () => stepChoreographer(1),
+    previousStep: () => stepChoreographer(-1),
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => {
+      if (productManifestElement && productManifest) {
+        productManifestElement.textContent = JSON.stringify(productManifest);
+      }
+      enhanceProductViewer(productManifest || {});
+      if (productManifest && productManifest.mode === "timeline") {
+        playChoreographer(productManifest, productManifest.choreographer.autoplay !== false);
+      }
+    }, 0);
+  });
 
 })();
 

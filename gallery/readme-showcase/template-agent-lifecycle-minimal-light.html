@@ -12,6 +12,7 @@
     .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
     button, a { border: 1px solid #475569; background: #111827; color: #f8fafc; border-radius: 8px; padding: 8px 10px; font: inherit; text-decoration: none; cursor: pointer; }
     button:hover, a:hover { background: #1f2937; }
+    button:focus-visible, a:focus-visible, .stage:focus-visible { outline: 3px solid #38bdf8; outline-offset: 2px; }
     button[aria-pressed="true"] { background: #475569; border-color: #94a3b8; }
     .stage { width: 100%; min-height: 0; overflow: hidden; border: 1px solid #334155; border-radius: 12px; background: #020617; cursor: grab; }
     .stage.dragging { cursor: grabbing; }
@@ -27,22 +28,32 @@
     main.motion-off .node-glow,
     main.motion-off .icon-breathe-halo { display: none; }
     main.motion-off .semantic-icon-breathe { animation: none !important; }
+    .runtime-warning { margin: 0; padding: 8px 10px; border: 1px solid #f59e0b; border-radius: 8px; color: #fde68a; background: #451a03; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
   </style>
 </head>
 <body>
-  <main id="viewer" class="motion-expressive" data-runtime="gsap">
-    <div class="toolbar">
+  <main id="viewer" class="motion-expressive" data-runtime="gsap" data-runtime-mode="ambient"
+        data-label-play="Play" data-label-pause="Pause"
+        data-label-ready="Diagram ready" data-label-restarted="Animation restarted"
+        data-label-dependency-warning="GSAP did not load; showing the static diagram.">
+    <div class="toolbar" role="toolbar" aria-label="Diagram playback and view controls">
       <button type="button" id="toggle">Pause</button>
       <button type="button" id="restart">Restart</button>
+      <button type="button" id="timeline-start" hidden>Start Explanation</button>
+      <button type="button" id="timeline-previous" hidden>Previous Step</button>
+      <button type="button" id="timeline-next" hidden>Next Step</button>
       <button type="button" class="motion-choice" data-motion="expressive" aria-pressed="true">Expressive</button>
       <button type="button" class="motion-choice" data-motion="readable" aria-pressed="false">Readable</button>
-      <button type="button" class="motion-choice" data-motion="off" aria-pressed="false">Off</button>
+      <button type="button" class="motion-choice" data-motion="off" aria-pressed="false">Motion Off</button>
       <button type="button" id="zoom-in">Zoom In</button>
       <button type="button" id="zoom-out">Zoom Out</button>
-      <button type="button" id="reset">Reset</button>
+      <button type="button" id="reset">Reset View</button>
       <a id="download" download="Production AI Agent Request Lifecycle.svg">Download SVG</a>
     </div>
-    <div class="stage" id="stage">
+    <p id="runtime-warning" class="runtime-warning" role="alert" hidden></p>
+    <p id="runtime-status" class="sr-only" role="status" aria-live="polite">Diagram ready</p>
+    <div class="stage" id="stage" tabindex="0" aria-label="Zoomable and pannable animated diagram">
       <div class="viewport" id="viewport">
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="showcase-v1" data-motion-sequence="staged" data-motion-edge="packet-flow" data-motion-node="icon-performance" data-motion-group="none" data-motion-title="highlight-sweep" data-motion-reduced="static" data-icon-system="illustrated" data-icon-system-version="2.5.0">
 <title id="diagram-title">Production AI Agent Request Lifecycle</title>
@@ -117,7 +128,7 @@
 
 
 
-  <text x="315.0" y="276.0" class="edge-label" fill="#5b6778" opacity="1">
+  <text x="315.0" y="312.0" class="edge-label" fill="#5b6778" opacity="1">
     request
   </text>
 </g>
@@ -134,7 +145,7 @@
 
 
 
-  <text x="625.0" y="276.0" class="edge-label" fill="#5b6778" opacity="1">
+  <text x="625.0" y="272.0" class="edge-label" fill="#5b6778" opacity="1">
     dispatch
   </text>
 </g>
@@ -151,7 +162,7 @@
 
 
 
-  <text x="935.0" y="276.0" class="edge-label" fill="#5b6778" opacity="1">
+  <text x="935.0" y="312.0" class="edge-label" fill="#5b6778" opacity="1">
     prompt
   </text>
 </g>
@@ -168,7 +179,7 @@
 
 
 
-  <text x="1245.0" y="276.0" class="edge-label" fill="#5b6778" opacity="1">
+  <text x="1245.0" y="272.0" class="edge-label" fill="#5b6778" opacity="1">
     answer
   </text>
 </g>
@@ -185,7 +196,7 @@
 
 
 
-  <text x="547.5" y="471.0" class="edge-label" fill="#5b6778" opacity="1">
+  <text x="547.5" y="507.0" class="edge-label" fill="#5b6778" opacity="1">
     grounding
   </text>
 </g>
@@ -202,7 +213,7 @@
 
 
 
-  <text x="702.5" y="471.0" class="edge-label" fill="#5b6778" opacity="1">
+  <text x="702.5" y="467.0" class="edge-label" fill="#5b6778" opacity="1">
     recall
   </text>
 </g>
@@ -219,7 +230,7 @@
 
 
 
-  <text x="857.5" y="471.0" class="edge-label" fill="#5b6778" opacity="1">
+  <text x="857.5" y="507.0" class="edge-label" fill="#5b6778" opacity="1">
     execute
   </text>
 </g>
@@ -236,7 +247,7 @@
 
 
 
-  <text x="857.5" y="471.0" class="edge-label" fill="#5b6778" opacity="1">
+  <text x="857.5" y="467.0" class="edge-label" fill="#5b6778" opacity="1">
     result
   </text>
 </g>
@@ -253,7 +264,7 @@
 
 
 
-  <text x="1012.5" y="471.0" class="edge-label" fill="#5b6778" opacity="1">
+  <text x="1012.5" y="507.0" class="edge-label" fill="#5b6778" opacity="1">
     telemetry
   </text>
 </g>
@@ -263,7 +274,7 @@
 
 
 
-  <rect x="40.0" y="215.0" width="240.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="40.0" y="215.0" width="240.0" height="150.0" rx="14.0"
         fill="#fff7ed" stroke="#f97316" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="user" data-node-id="user" opacity="1">
   <g id="icon-user-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="external-person-request-interact" data-rest-opacity="1" transform="translate(60.0 242.0) scale(0.8000)">
@@ -280,11 +291,9 @@
   </g>
 </g>
 
-  <text x="229.0" y="276.0" text-anchor="middle" fill="#172033">
-<tspan x="229.0" dy="18" class="node-title">User</tspan>
-<tspan x="229.0" dy="18" class="node-title">Request</tspan>
-<tspan x="229.0" dy="17" class="node-caption">goal and</tspan>
-<tspan x="229.0" dy="17" class="node-caption">context</tspan>
+  <text x="211.6" y="284.5" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="211.6" dy="0" class="node-title" textLength="104.8" lengthAdjust="spacingAndGlyphs">User Request</tspan>
+<tspan x="211.6" dy="17" class="node-caption" textLength="104.8" lengthAdjust="spacingAndGlyphs">goal and context</tspan>
 </text>
 </g>
 
@@ -293,7 +302,7 @@
 
 
 
-  <rect x="350.0" y="215.0" width="240.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="350.0" y="215.0" width="240.0" height="150.0" rx="14.0"
         fill="#fef2f2" stroke="#dc2626" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="gateway" data-node-id="gateway" opacity="1">
   <g id="icon-gateway-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="traffic-admit-route-mediate" data-rest-opacity="1" transform="translate(370.0 242.0) scale(0.8000)">
@@ -309,11 +318,10 @@
   </g>
 </g>
 
-  <text x="539.0" y="276.0" text-anchor="middle" fill="#172033">
-<tspan x="539.0" dy="18" class="node-title">API</tspan>
-<tspan x="539.0" dy="18" class="node-title">Gateway</tspan>
-<tspan x="539.0" dy="17" class="node-caption">authenticate</tspan>
-<tspan x="539.0" dy="17" class="node-caption">and route</tspan>
+  <text x="521.6" y="276.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="521.6" dy="0" class="node-title" textLength="104.8" lengthAdjust="spacingAndGlyphs">API Gateway</tspan>
+<tspan x="521.6" dy="17" class="node-caption" textLength="104.8" lengthAdjust="spacingAndGlyphs">authenticate and</tspan>
+<tspan x="521.6" dy="17" class="node-caption">route</tspan>
 </text>
 </g>
 
@@ -322,7 +330,7 @@
 
 
 
-  <rect x="660.0" y="215.0" width="240.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="660.0" y="215.0" width="240.0" height="150.0" rx="14.0"
         fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="agent" data-node-id="agent" opacity="1">
   <g id="icon-agent-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="input-reason-result" data-rest-opacity="1" transform="translate(680.0 242.0) scale(0.8000)">
@@ -341,11 +349,11 @@
   </g>
 </g>
 
-  <text x="849.0" y="276.0" text-anchor="middle" fill="#172033">
-<tspan x="849.0" dy="18" class="node-title">Agent</tspan>
-<tspan x="849.0" dy="18" class="node-title">Runtime</tspan>
-<tspan x="849.0" dy="17" class="node-caption">plan and</tspan>
-<tspan x="849.0" dy="17" class="node-caption">coordinate</tspan>
+  <text x="831.6" y="267.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="831.6" dy="0" class="node-title">Agent</tspan>
+<tspan x="831.6" dy="18" class="node-title">Runtime</tspan>
+<tspan x="831.6" dy="17" class="node-caption">plan and</tspan>
+<tspan x="831.6" dy="17" class="node-caption">coordinate</tspan>
 </text>
 </g>
 
@@ -354,7 +362,7 @@
 
 
 
-  <rect x="970.0" y="215.0" width="240.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="970.0" y="215.0" width="240.0" height="150.0" rx="14.0"
         fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="llm" data-node-id="model" opacity="1">
   <g id="icon-model-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="language-context-transform-generate" data-rest-opacity="1" transform="translate(990.0 242.0) scale(0.8000)">
@@ -370,11 +378,11 @@
   </g>
 </g>
 
-  <text x="1159.0" y="276.0" text-anchor="middle" fill="#172033">
-<tspan x="1159.0" dy="18" class="node-title">Language</tspan>
-<tspan x="1159.0" dy="18" class="node-title">Model</tspan>
-<tspan x="1159.0" dy="17" class="node-caption">reason and</tspan>
-<tspan x="1159.0" dy="17" class="node-caption">generate</tspan>
+  <text x="1141.6" y="267.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="1141.6" dy="0" class="node-title">Language</tspan>
+<tspan x="1141.6" dy="18" class="node-title">Model</tspan>
+<tspan x="1141.6" dy="17" class="node-caption">reason and</tspan>
+<tspan x="1141.6" dy="17" class="node-caption">generate</tspan>
 </text>
 </g>
 
@@ -383,7 +391,7 @@
 
 
 
-  <rect x="1280.0" y="215.0" width="240.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="1280.0" y="215.0" width="240.0" height="150.0" rx="14.0"
         fill="#f0fdf4" stroke="#16a34a" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="output" data-node-id="output" opacity="1">
   <g id="icon-output-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="artifact-deliver-confirm" data-rest-opacity="1" transform="translate(1300.0 242.0) scale(0.8000)">
@@ -399,11 +407,11 @@
   </g>
 </g>
 
-  <text x="1469.0" y="276.0" text-anchor="middle" fill="#172033">
-<tspan x="1469.0" dy="18" class="node-title">Verified</tspan>
-<tspan x="1469.0" dy="18" class="node-title">Output</tspan>
-<tspan x="1469.0" dy="17" class="node-caption">deliver</tspan>
-<tspan x="1469.0" dy="17" class="node-caption">and</tspan>
+  <text x="1451.6" y="267.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="1451.6" dy="0" class="node-title">Verified</tspan>
+<tspan x="1451.6" dy="18" class="node-title">Output</tspan>
+<tspan x="1451.6" dy="17" class="node-caption">deliver and</tspan>
+<tspan x="1451.6" dy="17" class="node-caption">explain</tspan>
 </text>
 </g>
 
@@ -412,7 +420,7 @@
 
 
 
-  <rect x="195.0" y="605.0" width="240.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="195.0" y="605.0" width="240.0" height="150.0" rx="14.0"
         fill="#ecfeff" stroke="#0891b2" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="knowledge-base" data-node-id="knowledge" opacity="1">
   <g id="icon-knowledge-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="knowledge-curate-connect-reference" data-rest-opacity="1" transform="translate(215.0 632.0) scale(0.8000)">
@@ -428,11 +436,11 @@
   </g>
 </g>
 
-  <text x="384.0" y="666.0" text-anchor="middle" fill="#172033">
-<tspan x="384.0" dy="18" class="node-title">Knowledge</tspan>
-<tspan x="384.0" dy="18" class="node-title">Base</tspan>
-<tspan x="384.0" dy="17" class="node-caption">retrieve</tspan>
-<tspan x="384.0" dy="17" class="node-caption">trusted</tspan>
+  <text x="366.6" y="657.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="366.6" dy="0" class="node-title">Knowledge</tspan>
+<tspan x="366.6" dy="18" class="node-title">Base</tspan>
+<tspan x="366.6" dy="17" class="node-caption" textLength="104.8" lengthAdjust="spacingAndGlyphs">retrieve trusted</tspan>
+<tspan x="366.6" dy="17" class="node-caption">facts</tspan>
 </text>
 </g>
 
@@ -441,7 +449,7 @@
 
 
 
-  <rect x="505.0" y="605.0" width="240.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="505.0" y="605.0" width="240.0" height="150.0" rx="14.0"
         fill="#ecfdf5" stroke="#059669" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="memory" data-node-id="memory" opacity="1">
   <g id="icon-memory-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="context-capture-index-recall" data-rest-opacity="1" transform="translate(525.0 632.0) scale(0.8000)">
@@ -457,11 +465,11 @@
   </g>
 </g>
 
-  <text x="694.0" y="666.0" text-anchor="middle" fill="#172033">
-<tspan x="694.0" dy="18" class="node-title">Working</tspan>
-<tspan x="694.0" dy="18" class="node-title">Memory</tspan>
-<tspan x="694.0" dy="17" class="node-caption">retain</tspan>
-<tspan x="694.0" dy="17" class="node-caption">task</tspan>
+  <text x="676.6" y="657.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="676.6" dy="0" class="node-title">Working</tspan>
+<tspan x="676.6" dy="18" class="node-title">Memory</tspan>
+<tspan x="676.6" dy="17" class="node-caption">retain task</tspan>
+<tspan x="676.6" dy="17" class="node-caption">context</tspan>
 </text>
 </g>
 
@@ -470,7 +478,7 @@
 
 
 
-  <rect x="815.0" y="605.0" width="240.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="815.0" y="605.0" width="240.0" height="150.0" rx="14.0"
         fill="#fffbeb" stroke="#d97706" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="tool" data-node-id="tool" opacity="1">
   <g id="icon-tool-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="tool-action-complete" data-rest-opacity="1" transform="translate(835.0 632.0) scale(0.8000)">
@@ -488,11 +496,11 @@
   </g>
 </g>
 
-  <text x="1004.0" y="666.0" text-anchor="middle" fill="#172033">
-<tspan x="1004.0" dy="18" class="node-title">Tool</tspan>
-<tspan x="1004.0" dy="18" class="node-title">Execution</tspan>
-<tspan x="1004.0" dy="17" class="node-caption">act on</tspan>
-<tspan x="1004.0" dy="17" class="node-caption">external</tspan>
+  <text x="986.6" y="657.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="986.6" dy="0" class="node-title">Tool</tspan>
+<tspan x="986.6" dy="18" class="node-title">Execution</tspan>
+<tspan x="986.6" dy="17" class="node-caption" textLength="104.8" lengthAdjust="spacingAndGlyphs">act on external</tspan>
+<tspan x="986.6" dy="17" class="node-caption">systems</tspan>
 </text>
 </g>
 
@@ -501,7 +509,7 @@
 
 
 
-  <rect x="1125.0" y="605.0" width="240.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="1125.0" y="605.0" width="240.0" height="150.0" rx="14.0"
         fill="#eff6ff" stroke="#2563eb" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="monitoring" data-node-id="monitoring" opacity="1">
   <g id="icon-monitoring-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="metrics-observe-detect-report" data-rest-opacity="1" transform="translate(1145.0 632.0) scale(0.8000)">
@@ -516,11 +524,11 @@
   </g>
 </g>
 
-  <text x="1314.0" y="666.0" text-anchor="middle" fill="#172033">
-<tspan x="1314.0" dy="18" class="node-title">Runtime</tspan>
-<tspan x="1314.0" dy="18" class="node-title">Monitoring</tspan>
-<tspan x="1314.0" dy="17" class="node-caption">measure</tspan>
-<tspan x="1314.0" dy="17" class="node-caption">quality</tspan>
+  <text x="1296.6" y="657.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="1296.6" dy="0" class="node-title">Runtime</tspan>
+<tspan x="1296.6" dy="18" class="node-title">Monitoring</tspan>
+<tspan x="1296.6" dy="17" class="node-caption" textLength="104.8" lengthAdjust="spacingAndGlyphs">measure quality</tspan>
+<tspan x="1296.6" dy="17" class="node-caption">and cost</tspan>
 </text>
 </g>
 </svg>
@@ -1049,7 +1057,7 @@
   "edge_motion_version": "1.0.0"
 }
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" crossorigin="anonymous"></script>
   <script>
 (function () {
   function getManifest() {
@@ -3578,6 +3586,234 @@
   characterPerformanceIds.add("illustrated-logs-record-order-inspect-v1");
   characterPerformanceIds.add("illustrated-alert-detect-escalate-acknowledge-v1");
   characterPerformanceIds.add("illustrated-debug-reproduce-inspect-fix-v1");
+
+  function playChoreographer(manifest, autoplay = true) {
+    if (!window.gsap || !manifest || !isPlainObject(manifest.choreographer)) return [];
+    stop();
+    if (window.AniDiagramEdgeMotion && window.AniDiagramEdgeMotion.clear) {
+      window.AniDiagramEdgeMotion.clear();
+    }
+    const steps = Array.isArray(manifest.choreographer.steps) ? manifest.choreographer.steps : [];
+    const edges = Array.from(document.querySelectorAll("g.edge"));
+    const timeline = window.gsap.timeline({ paused: !autoplay });
+    const stepStates = [];
+    steps.forEach((step, index) => {
+      const source = document.getElementById(`node-${step.source}`);
+      const target = document.getElementById(`node-${step.target}`);
+      const edge = edges[Number(step.edge_index)];
+      const path = edge && (edge.querySelector(".edge-draw") || edge.querySelector(".edge-base"));
+      const start = timeline.duration();
+      timeline.addLabel(`step-${index}`, start);
+      if (source) {
+        timeline.to(source, {
+          scale: 1.025,
+          transformOrigin: "center center",
+          duration: 0.18,
+          ease: "power1.out",
+        }, start);
+      }
+      if (path) {
+        timeline.fromTo(path, {
+          strokeDasharray: 1,
+          strokeDashoffset: 1,
+          opacity: 0.35,
+        }, {
+          strokeDashoffset: 0,
+          opacity: 1,
+          duration: 0.58,
+          ease: "power1.inOut",
+        }, start + 0.18);
+      }
+      if (source) timeline.to(source, { scale: 1, duration: 0.2 }, start + 0.58);
+      if (target) {
+        timeline.to(target, {
+          scale: 1.035,
+          transformOrigin: "center center",
+          duration: 0.2,
+          ease: "back.out(1.5)",
+        }, start + 0.68);
+        timeline.to(target, { scale: 1, duration: 0.24 }, start + 0.9);
+      }
+      const duration = Math.max(1.2, Number(step.duration) || 1.2);
+      timeline.to({}, { duration: Math.max(0, start + duration - timeline.duration()) });
+      stepStates.push({ index, start, end: start + duration, label: step.label || `Step ${index + 1}` });
+    });
+    timeline.addLabel("timeline-end", timeline.duration());
+    timeline.__anidiagramChoreographer = true;
+    window.__ANIDIAGRAM_CHOREOGRAPHER__ = { timeline, steps: stepStates, current: -1 };
+    window.__ANIDIAGRAM_STAGE_TIMELINES__ = [timeline];
+    window.__ANIDIAGRAM_ICON_TIMELINES__ = [];
+    syncTimelineStore();
+    if (autoplay) timeline.play(0);
+    return [timeline];
+  }
+
+  function startChoreographer() {
+    const manifest = getManifest();
+    return playChoreographer(manifest, true);
+  }
+
+  function stepChoreographer(direction) {
+    const state = window.__ANIDIAGRAM_CHOREOGRAPHER__;
+    if (!state || !state.timeline || !state.steps.length) {
+      playChoreographer(getManifest(), false);
+    }
+    const current = window.__ANIDIAGRAM_CHOREOGRAPHER__;
+    if (!current || !current.steps.length) return null;
+    const targetIndex = Math.max(0, Math.min(current.steps.length - 1, current.current + direction));
+    const step = current.steps[targetIndex];
+    current.current = targetIndex;
+    current.timeline.pause(step.start);
+    if (direction > 0) {
+      current.timeline.tweenTo(step.end, { onComplete: () => current.timeline.pause() });
+    }
+    return step;
+  }
+
+  function enhanceProductViewer(originalManifest) {
+    const viewer = document.getElementById("viewer");
+    const stage = document.getElementById("stage");
+    const viewport = document.getElementById("viewport");
+    const status = document.getElementById("runtime-status");
+    const warning = document.getElementById("runtime-warning");
+    if (!viewer || !stage || !viewport) return;
+    const notify = (message) => {
+      if (status) status.textContent = message || viewer.dataset.labelReady || "Diagram ready";
+    };
+    const showWarning = (message) => {
+      if (!warning) return;
+      warning.textContent = message || "";
+      warning.hidden = !message;
+    };
+    if (!window.gsap) showWarning(viewer.dataset.labelDependencyWarning);
+    else showWarning("");
+
+    const timelineStart = document.getElementById("timeline-start");
+    const timelinePrevious = document.getElementById("timeline-previous");
+    const timelineNext = document.getElementById("timeline-next");
+    if (["timeline", "hybrid"].includes(originalManifest.mode)) {
+      [timelineStart, timelinePrevious, timelineNext].forEach((button) => {
+        if (button) button.hidden = false;
+      });
+      if (timelineStart) timelineStart.addEventListener("click", () => {
+        startChoreographer();
+        notify(timelineStart.textContent);
+      });
+      if (timelinePrevious) timelinePrevious.addEventListener("click", () => {
+        const step = stepChoreographer(-1);
+        if (step) notify(step.label);
+      });
+      if (timelineNext) timelineNext.addEventListener("click", () => {
+        const step = stepChoreographer(1);
+        if (step) notify(step.label);
+      });
+    }
+
+    const toggle = document.getElementById("toggle");
+    const restartButton = document.getElementById("restart");
+    const zoomIn = document.getElementById("zoom-in");
+    const zoomOut = document.getElementById("zoom-out");
+    const reset = document.getElementById("reset");
+    const svg = viewport.querySelector("svg");
+    const localizeToggle = () => {
+      if (!toggle || !svg) return;
+      const paused = svg.animationsPaused && svg.animationsPaused();
+      toggle.textContent = paused ? viewer.dataset.labelPlay || "Play" : viewer.dataset.labelPause || "Pause";
+    };
+    if (toggle) toggle.addEventListener("click", () => setTimeout(localizeToggle, 0));
+    if (restartButton) restartButton.addEventListener("click", () => {
+      setTimeout(localizeToggle, 0);
+      notify(viewer.dataset.labelRestarted);
+    });
+    document.querySelectorAll(".motion-choice").forEach((button) => {
+      button.addEventListener("click", () => {
+        notify(button.textContent);
+        if (originalManifest.mode === "timeline" && button.dataset.motion !== "off") {
+          setTimeout(startChoreographer, 0);
+        }
+      });
+    });
+
+    let keyboardX = 0;
+    let keyboardY = 0;
+    const applyKeyboardPan = () => {
+      viewport.style.translate = `${keyboardX}px ${keyboardY}px`;
+    };
+    stage.addEventListener("keydown", (event) => {
+      if (["+", "="].includes(event.key)) {
+        event.preventDefault();
+        if (zoomIn) zoomIn.click();
+      } else if (event.key === "-") {
+        event.preventDefault();
+        if (zoomOut) zoomOut.click();
+      } else if (event.key === "0") {
+        event.preventDefault();
+        keyboardX = 0;
+        keyboardY = 0;
+        applyKeyboardPan();
+        if (reset) reset.click();
+      } else if (event.key === " " && toggle) {
+        event.preventDefault();
+        toggle.click();
+      } else if (event.key.toLowerCase() === "r" && restartButton) {
+        event.preventDefault();
+        restartButton.click();
+      } else if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        keyboardX -= 24;
+        applyKeyboardPan();
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        keyboardX += 24;
+        applyKeyboardPan();
+      } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        keyboardY -= 24;
+        applyKeyboardPan();
+      } else if (event.key === "ArrowDown") {
+        event.preventDefault();
+        keyboardY += 24;
+        applyKeyboardPan();
+      }
+    });
+  }
+
+  const productManifestElement = document.getElementById("anidiagram-motion-manifest");
+  let productManifest = null;
+  if (productManifestElement) {
+    try {
+      productManifest = JSON.parse(productManifestElement.textContent || "{}");
+    } catch (_error) {
+      productManifest = null;
+    }
+  }
+  if (productManifest && ["timeline", "hybrid"].includes(productManifest.mode)) {
+    const ambientManifest = {
+      ...productManifest,
+      mode: "ambient",
+      sequence: "independent-icon-loops",
+    };
+    delete ambientManifest.choreographer;
+    productManifestElement.textContent = JSON.stringify(ambientManifest);
+  }
+
+  Object.assign(window.AniDiagramRuntime, {
+    startChoreographer,
+    nextStep: () => stepChoreographer(1),
+    previousStep: () => stepChoreographer(-1),
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => {
+      if (productManifestElement && productManifest) {
+        productManifestElement.textContent = JSON.stringify(productManifest);
+      }
+      enhanceProductViewer(productManifest || {});
+      if (productManifest && productManifest.mode === "timeline") {
+        playChoreographer(productManifest, productManifest.choreographer.autoplay !== false);
+      }
+    }, 0);
+  });
 
 })();
 

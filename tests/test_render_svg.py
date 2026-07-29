@@ -393,8 +393,8 @@ class SvgRendererTest(unittest.TestCase):
         covered_svg = render_svg(self._scene_with_icon("agent", motion={"profile": "off"}), style)
         token_svg = render_svg(self._scene_with_icon("token", motion={"profile": "off"}), style)
 
-        self.assertIn('<text x="369.0" y="186.0"', covered_svg)
-        self.assertIn('<text x="369.0" y="186.0"', token_svg)
+        self.assertIn('<text x="351.6" y="194.5"', covered_svg)
+        self.assertIn('<text x="351.6" y="194.5"', token_svg)
 
     def test_character_registry_and_manifest_cover_every_known_icon(self):
         self.assertEqual(set(character_icon_ids()), KNOWN_ICONS)
@@ -912,7 +912,7 @@ class SvgRendererTest(unittest.TestCase):
             {icon["performance"] for icon in manifest["icons"]},
         )
         self.assertIn("window.AniDiagramRuntime", html)
-        self.assertIn("https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js", html)
+        self.assertIn("https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js", html)
         self.assertNotIn("data-icon-motion=", html)
         self.assertNotIn("<animate", html)
         self.assertNotIn("<set", html)
@@ -1371,7 +1371,7 @@ class SvgRendererTest(unittest.TestCase):
         svg = render_svg(scene, load_style(ROOT / "styles" / "minimal-light.json"))
 
         self.assertEqual(
-            "93ec1da93169f635bfb7bb695b1f7f78b2c2fd209b61a4f32f0d56aa33e040ea",
+            "54a1c50fb78341e399ba9b4276c025aea621d869eff7d05565b432a395d41231",
             hashlib.sha256(svg.encode("utf-8")).hexdigest(),
         )
 

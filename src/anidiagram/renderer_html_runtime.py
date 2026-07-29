@@ -3,24 +3,39 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from .motion_manifest_v2 import build_motion_manifest
 from .renderer_svg import esc, render_svg
 from .model import Scene
+from .resources import resource_path
+from .runtime_dependencies import runtime_dependency_markup
 
 
-def render_html_runtime(scene: Scene, style: Dict[str, Any], runtime: str = "gsap") -> str:
-    manifest = build_motion_manifest(scene, style, runtime=runtime)
+_CJK_PATTERN = re.compile(r"[\u3400-\u9fff]")
+
+
+def render_html_runtime(
+    scene: Scene,
+    style: Dict[str, Any],
+    runtime: str = "gsap",
+    *,
+    dependency_mode: str = "cdn",
+    dependency_source: Optional[Path] = None,
+    locale: str = "auto",
+    runtime_mode: str = "ambient",
+) -> str:
+    manifest = build_motion_manifest(scene, style, runtime=runtime, mode=runtime_mode)
     svg = render_svg(scene, style, animation_mode="runtime-stage")
     manifest_json = json.dumps(manifest, ensure_ascii=False, indent=2).replace("</", "<\\/")
     runtime_js = _runtime_source()
-    gsap_script = ""
-    if runtime == "gsap":
-        gsap_script = '<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>'
+    gsap_script = runtime_dependency_markup(runtime, dependency_mode, dependency_source)
+    resolved_locale = _resolve_locale(scene, locale)
+    labels = _viewer_labels(resolved_locale)
     return f"""<!doctype html>
-<html lang="en">
+<html lang="{esc(resolved_locale)}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -32,6 +47,7 @@ def render_html_runtime(scene: Scene, style: Dict[str, Any], runtime: str = "gsa
     .toolbar {{ display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }}
     button, a {{ border: 1px solid #475569; background: #111827; color: #f8fafc; border-radius: 8px; padding: 8px 10px; font: inherit; text-decoration: none; cursor: pointer; }}
     button:hover, a:hover {{ background: #1f2937; }}
+    button:focus-visible, a:focus-visible, .stage:focus-visible {{ outline: 3px solid #38bdf8; outline-offset: 2px; }}
     button[aria-pressed="true"] {{ background: #475569; border-color: #94a3b8; }}
     .stage {{ width: 100%; min-height: 0; overflow: hidden; border: 1px solid #334155; border-radius: 12px; background: #020617; cursor: grab; }}
     .stage.dragging {{ cursor: grabbing; }}
@@ -47,22 +63,32 @@ def render_html_runtime(scene: Scene, style: Dict[str, Any], runtime: str = "gsa
     main.motion-off .node-glow,
     main.motion-off .icon-breathe-halo {{ display: none; }}
     main.motion-off .semantic-icon-breathe {{ animation: none !important; }}
+    .runtime-warning {{ margin: 0; padding: 8px 10px; border: 1px solid #f59e0b; border-radius: 8px; color: #fde68a; background: #451a03; }}
+    .sr-only {{ position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }}
   </style>
 </head>
 <body>
-  <main id="viewer" class="motion-expressive" data-runtime="{esc(runtime)}">
-    <div class="toolbar">
-      <button type="button" id="toggle">Pause</button>
-      <button type="button" id="restart">Restart</button>
-      <button type="button" class="motion-choice" data-motion="expressive" aria-pressed="true">Expressive</button>
-      <button type="button" class="motion-choice" data-motion="readable" aria-pressed="false">Readable</button>
-      <button type="button" class="motion-choice" data-motion="off" aria-pressed="false">Off</button>
-      <button type="button" id="zoom-in">Zoom In</button>
-      <button type="button" id="zoom-out">Zoom Out</button>
-      <button type="button" id="reset">Reset</button>
-      <a id="download" download="{esc(scene.title.text)}.svg">Download SVG</a>
+  <main id="viewer" class="motion-expressive" data-runtime="{esc(runtime)}" data-runtime-mode="{esc(runtime_mode)}"
+        data-label-play="{esc(labels['play'])}" data-label-pause="{esc(labels['pause'])}"
+        data-label-ready="{esc(labels['ready'])}" data-label-restarted="{esc(labels['restarted'])}"
+        data-label-dependency-warning="{esc(labels['dependency_warning'])}">
+    <div class="toolbar" role="toolbar" aria-label="{esc(labels['toolbar'])}">
+      <button type="button" id="toggle">{esc(labels['pause'])}</button>
+      <button type="button" id="restart">{esc(labels['restart'])}</button>
+      <button type="button" id="timeline-start" hidden>{esc(labels['explain'])}</button>
+      <button type="button" id="timeline-previous" hidden>{esc(labels['previous'])}</button>
+      <button type="button" id="timeline-next" hidden>{esc(labels['next'])}</button>
+      <button type="button" class="motion-choice" data-motion="expressive" aria-pressed="true">{esc(labels['expressive'])}</button>
+      <button type="button" class="motion-choice" data-motion="readable" aria-pressed="false">{esc(labels['readable'])}</button>
+      <button type="button" class="motion-choice" data-motion="off" aria-pressed="false">{esc(labels['off'])}</button>
+      <button type="button" id="zoom-in">{esc(labels['zoom_in'])}</button>
+      <button type="button" id="zoom-out">{esc(labels['zoom_out'])}</button>
+      <button type="button" id="reset">{esc(labels['reset'])}</button>
+      <a id="download" download="{esc(scene.title.text)}.svg">{esc(labels['download'])}</a>
     </div>
-    <div class="stage" id="stage">
+    <p id="runtime-warning" class="runtime-warning" role="alert" hidden></p>
+    <p id="runtime-status" class="sr-only" role="status" aria-live="polite">{esc(labels['ready'])}</p>
+    <div class="stage" id="stage" tabindex="0" aria-label="{esc(labels['stage'])}">
       <div class="viewport" id="viewport">
 {svg}
       </div>
@@ -81,13 +107,41 @@ def render_html_runtime(scene: Scene, style: Dict[str, Any], runtime: str = "gsa
 
 
 def _runtime_source() -> str:
-    root = Path(__file__).resolve().parents[2]
-    legacy = (root / "runtime" / "anidiagram-runtime.js").read_text(encoding="utf-8")
-    illustrated = (root / "runtime" / "illustrated-performance-v6-runtime.js").read_text(encoding="utf-8")
-    edge_motion = (root / "runtime" / "edge-motion-v1-runtime.js").read_text(encoding="utf-8")
+    legacy = resource_path("runtime", "anidiagram-runtime.js").read_text(encoding="utf-8")
+    illustrated = resource_path("runtime", "illustrated-performance-v6-runtime.js").read_text(encoding="utf-8")
+    choreographer = resource_path("runtime", "choreographer-v1-runtime.js").read_text(encoding="utf-8")
+    edge_motion = resource_path("runtime", "edge-motion-v1-runtime.js").read_text(encoding="utf-8")
     marker = "\n})();"
     if marker not in legacy:
         raise RuntimeError("AniDiagram runtime closure marker changed")
     prefix, suffix = legacy.rsplit(marker, 1)
-    legacy = f"{prefix}\n{illustrated}{marker}{suffix}"
+    legacy = f"{prefix}\n{illustrated}\n{choreographer}{marker}{suffix}"
     return f"{legacy}\n{edge_motion}"
+
+
+def _resolve_locale(scene: Scene, locale: str) -> str:
+    if locale != "auto":
+        return locale
+    return "zh-CN" if _CJK_PATTERN.search(f"{scene.title.text} {scene.title.subtitle}") else "en"
+
+
+def _viewer_labels(locale: str) -> Dict[str, str]:
+    if locale.lower().startswith("zh"):
+        return {
+            "play": "播放", "pause": "暂停", "restart": "重新播放",
+            "explain": "开始讲解", "previous": "上一步", "next": "下一步",
+            "expressive": "表现模式", "readable": "易读模式", "off": "关闭动效",
+            "zoom_in": "放大", "zoom_out": "缩小", "reset": "重置视图",
+            "download": "下载 SVG", "toolbar": "图表播放与视图控制",
+            "stage": "可缩放和平移的动画图表", "ready": "图表已就绪",
+            "restarted": "动画已重新播放", "dependency_warning": "GSAP 未加载，已降级为静态图表。",
+        }
+    return {
+        "play": "Play", "pause": "Pause", "restart": "Restart",
+        "explain": "Start Explanation", "previous": "Previous Step", "next": "Next Step",
+        "expressive": "Expressive", "readable": "Readable", "off": "Motion Off",
+        "zoom_in": "Zoom In", "zoom_out": "Zoom Out", "reset": "Reset View",
+        "download": "Download SVG", "toolbar": "Diagram playback and view controls",
+        "stage": "Zoomable and pannable animated diagram", "ready": "Diagram ready",
+        "restarted": "Animation restarted", "dependency_warning": "GSAP did not load; showing the static diagram.",
+    }

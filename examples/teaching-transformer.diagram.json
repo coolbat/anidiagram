@@ -39,8 +39,8 @@
     {"id": "key", "label": "Key", "caption": "what matches", "position": [575, 715], "size": [130, 78], "role": "process", "icon": "file"},
     {"id": "value", "label": "Value", "caption": "what flows", "position": [730, 715], "size": [130, 78], "role": "memory", "icon": "database"},
     {"id": "heads", "label": "Heads", "caption": "parallel views", "position": [885, 715], "size": [130, 78], "role": "agent", "icon": "agent"},
-    {"id": "paper", "label": "No Recurrence", "caption": "parallel path", "position": [1125, 695], "size": [140, 78], "role": "memory", "icon": "file"},
-    {"id": "long", "label": "Long Range", "caption": "direct links", "position": [1280, 695], "size": [130, 78], "role": "memory", "icon": "search"},
+    {"id": "paper", "label": "No Recurrence", "caption": "parallel", "position": [1125, 695], "size": [140, 78], "role": "memory", "icon": "file"},
+    {"id": "long", "label": "Long Range", "caption": "direct", "position": [1280, 695], "size": [130, 78], "role": "memory", "icon": "search"},
     {"id": "parallel", "label": "Reusable", "caption": "shared block", "position": [1165, 785], "size": [170, 72], "role": "memory", "icon": "folder"}
   ],
   "edges": [

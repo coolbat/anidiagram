@@ -149,7 +149,7 @@
 
 
 
-  <rect x="45.0" y="355.0" width="215.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="45.0" y="355.0" width="215.0" height="150.0" rx="14.0"
         fill="#ecfeff" stroke="#0891b2" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="document" data-node-id="documents" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(55 384) scale(0.958333333333333)" data-icon="document" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#94a3b8;--icon-accent-secondary:#2563eb;--icon-detail:#5b6778;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#172033;--icon-surface-main:#f8fafc;--icon-surface-recessed:#edf2f7;--icon-surface-secondary:#ffffff" id="node_u2x2edocuments__document__root"><g data-part="body" id="node_u2x2edocuments__document__body">
     <g data-part="page" id="node_u2x2edocuments__document__page">
@@ -175,10 +175,10 @@
   </g>
 </g></g>
 
-  <text x="195.5" y="416.0" text-anchor="middle" fill="#172033">
-<tspan x="195.5" dy="18" class="node-title">Documents</tspan>
-<tspan x="195.5" dy="17" class="node-caption">approved</tspan>
-<tspan x="195.5" dy="17" class="node-caption">source</tspan>
+  <text x="191.5" y="416.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="191.5" dy="0" class="node-title">Documents</tspan>
+<tspan x="191.5" dy="17" class="node-caption" textLength="105.0" lengthAdjust="spacingAndGlyphs">approved source</tspan>
+<tspan x="191.5" dy="17" class="node-caption">files</tspan>
 </text>
 </g>
 
@@ -187,7 +187,7 @@
 
 
 
-  <rect x="305.0" y="355.0" width="215.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="305.0" y="355.0" width="215.0" height="150.0" rx="14.0"
         fill="#eff6ff" stroke="#2563eb" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="token" data-node-id="tokenizer" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(315 384) scale(0.958333333333333)" data-icon="token" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#94a3b8;--icon-accent-secondary:#2563eb;--icon-detail:#5b6778;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#172033;--icon-surface-main:#f8fafc;--icon-surface-recessed:#edf2f7;--icon-surface-secondary:#ffffff" id="node_u2x2etokenizer__token__root"><g data-part="body" id="node_u2x2etokenizer__token__body">
   <g data-part="shell" id="node_u2x2etokenizer__token__shell">
@@ -213,10 +213,9 @@
   </g>
 </g></g>
 
-  <text x="455.5" y="416.0" text-anchor="middle" fill="#172033">
-<tspan x="455.5" dy="18" class="node-title">Tokenizer</tspan>
-<tspan x="455.5" dy="17" class="node-caption">split and</tspan>
-<tspan x="455.5" dy="17" class="node-caption">budget</tspan>
+  <text x="451.5" y="424.5" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="451.5" dy="0" class="node-title">Tokenizer</tspan>
+<tspan x="451.5" dy="17" class="node-caption" textLength="105.0" lengthAdjust="spacingAndGlyphs">split and budget</tspan>
 </text>
 </g>
 
@@ -225,7 +224,7 @@
 
 
 
-  <rect x="565.0" y="355.0" width="215.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="565.0" y="355.0" width="215.0" height="150.0" rx="14.0"
         fill="#eff6ff" stroke="#2563eb" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="embedding" data-node-id="embedding" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(575 384) scale(0.958333333333333)" data-icon="embedding" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#94a3b8;--icon-accent-secondary:#2563eb;--icon-detail:#5b6778;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#172033;--icon-surface-main:#f8fafc;--icon-surface-recessed:#edf2f7;--icon-surface-secondary:#ffffff" id="node_u2x2eembedding__embedding__root"><g data-part="body" id="node_u2x2eembedding__embedding__body">
     <rect x="11" y="16" width="74" height="64" rx="18" fill="var(--icon-surface-main, #fffaf2)" stroke="var(--icon-stroke, #14213d)" stroke-width="2.125" data-stroke-role="outer" />
@@ -258,10 +257,9 @@
   </g>
 </g></g>
 
-  <text x="715.5" y="416.0" text-anchor="middle" fill="#172033">
-<tspan x="715.5" dy="18" class="node-title">Embedding</tspan>
-<tspan x="715.5" dy="17" class="node-caption">encode</tspan>
-<tspan x="715.5" dy="17" class="node-caption">semantics</tspan>
+  <text x="711.5" y="424.5" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="711.5" dy="0" class="node-title">Embedding</tspan>
+<tspan x="711.5" dy="17" class="node-caption" textLength="105.0" lengthAdjust="spacingAndGlyphs">encode semantics</tspan>
 </text>
 </g>
 
@@ -270,7 +268,7 @@
 
 
 
-  <rect x="825.0" y="355.0" width="215.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="825.0" y="355.0" width="215.0" height="150.0" rx="14.0"
         fill="#ecfdf5" stroke="#059669" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="vector-database" data-node-id="index" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(835 384) scale(0.958333333333333)" data-icon="vector-database" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#94a3b8;--icon-accent-secondary:#2563eb;--icon-detail:#5b6778;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#172033;--icon-surface-main:#f8fafc;--icon-surface-recessed:#edf2f7;--icon-surface-secondary:#ffffff" id="node_u2x2eindex__vector-database__root"><g data-part="body" id="node_u2x2eindex__vector-database__body">
   <g data-part="shell" id="node_u2x2eindex__vector-database__shell">
@@ -298,11 +296,10 @@
   </g>
 </g></g>
 
-  <text x="975.5" y="416.0" text-anchor="middle" fill="#172033">
-<tspan x="975.5" dy="18" class="node-title">Vector</tspan>
-<tspan x="975.5" dy="18" class="node-title">Index</tspan>
-<tspan x="975.5" dy="17" class="node-caption">store</tspan>
-<tspan x="975.5" dy="17" class="node-caption">searchable</tspan>
+  <text x="971.5" y="416.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="971.5" dy="0" class="node-title" textLength="105.0" lengthAdjust="spacingAndGlyphs">Vector Index</tspan>
+<tspan x="971.5" dy="17" class="node-caption" textLength="105.0" lengthAdjust="spacingAndGlyphs">store searchable</tspan>
+<tspan x="971.5" dy="17" class="node-caption">vectors</tspan>
 </text>
 </g>
 
@@ -311,7 +308,7 @@
 
 
 
-  <rect x="1085.0" y="355.0" width="215.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="1085.0" y="355.0" width="215.0" height="150.0" rx="14.0"
         fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="search" data-node-id="retrieval" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(1095 384) scale(0.958333333333333)" data-icon="search" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#94a3b8;--icon-accent-secondary:#2563eb;--icon-detail:#5b6778;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#172033;--icon-surface-main:#f8fafc;--icon-surface-recessed:#edf2f7;--icon-surface-secondary:#ffffff" id="node_u2x2eretrieval__search__root"><g data-part="body" id="node_u2x2eretrieval__search__body">
   <g data-part="lens" id="node_u2x2eretrieval__search__lens">
@@ -334,10 +331,10 @@
   </g>
 </g></g>
 
-  <text x="1235.5" y="416.0" text-anchor="middle" fill="#172033">
-<tspan x="1235.5" dy="18" class="node-title">Retrieval</tspan>
-<tspan x="1235.5" dy="17" class="node-caption">rank</tspan>
-<tspan x="1235.5" dy="17" class="node-caption">relevant</tspan>
+  <text x="1231.5" y="416.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="1231.5" dy="0" class="node-title">Retrieval</tspan>
+<tspan x="1231.5" dy="17" class="node-caption">rank relevant</tspan>
+<tspan x="1231.5" dy="17" class="node-caption">context</tspan>
 </text>
 </g>
 
@@ -346,7 +343,7 @@
 
 
 
-  <rect x="1345.0" y="355.0" width="215.0" height="150.0" rx="14.0"
+  <rect class="node-surface" x="1345.0" y="355.0" width="215.0" height="150.0" rx="14.0"
         fill="#f0fdf4" stroke="#16a34a" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-diagram-core-wrap" data-icon="output" data-node-id="output" data-icon-presentation="showcase"><g xmlns="http://www.w3.org/2000/svg" transform="translate(1355 384) scale(0.958333333333333)" data-icon="output" data-icon-source="diagram-core-v1" data-asset-revision="1" aria-hidden="true" style="--icon-accent:#94a3b8;--icon-accent-secondary:#2563eb;--icon-detail:#5b6778;--icon-status-active:#38bdf8;--icon-status-error:#e65b65;--icon-status-idle:#94a3b8;--icon-status-success:#35b66f;--icon-status-warning:#f3a53a;--icon-stroke:#172033;--icon-surface-main:#f8fafc;--icon-surface-recessed:#edf2f7;--icon-surface-secondary:#ffffff" id="node_u2x2eoutput__output__root"><g data-part="body" id="node_u2x2eoutput__output__body">
   <g data-part="shell" id="node_u2x2eoutput__output__shell">
@@ -370,11 +367,11 @@
   </g>
 </g></g>
 
-  <text x="1495.5" y="416.0" text-anchor="middle" fill="#172033">
-<tspan x="1495.5" dy="18" class="node-title">Grounded</tspan>
-<tspan x="1495.5" dy="18" class="node-title">Output</tspan>
-<tspan x="1495.5" dy="17" class="node-caption">answer with</tspan>
-<tspan x="1495.5" dy="17" class="node-caption">citations</tspan>
+  <text x="1491.5" y="407.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="1491.5" dy="0" class="node-title">Grounded</tspan>
+<tspan x="1491.5" dy="18" class="node-title">Output</tspan>
+<tspan x="1491.5" dy="17" class="node-caption">answer with</tspan>
+<tspan x="1491.5" dy="17" class="node-caption">citations</tspan>
 </text>
 </g>
 </svg>

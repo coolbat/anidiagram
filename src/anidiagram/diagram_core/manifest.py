@@ -11,9 +11,10 @@ from types import MappingProxyType
 from typing import Any, Dict, Mapping, Optional, Tuple
 
 from .catalog import CATALOG_STATUSES, CATALOG_SYSTEM_ID
+from ..resources import resource_path
 
 
-_DEFAULT_ASSET_ROOT = Path(__file__).resolve().parents[3] / "assets" / "diagram-core"
+_DEFAULT_ASSET_ROOT = resource_path("assets", "diagram-core")
 _IDENTIFIER_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 _JSON_PATH_MEMBER_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 _APPROVAL_DATE_PATTERN = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")

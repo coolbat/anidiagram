@@ -23,7 +23,8 @@ Composition-v1 resolves `motion.profile=showcase-v1` together with
 
 `ambient` is the default HTML runtime mode. It is not an icon system or a
 motion profile. The runtime toolbar's Expressive mode is also distinct from the
-serialized `showcase-v1` composition profile.
+serialized `showcase-v1` composition profile. `timeline` and `hybrid` are
+explicit Choreographer v1 modes and never replace ambient by omission.
 
 ## Current public systems
 
@@ -87,6 +88,20 @@ The canonical sources and release evidence are:
 Edge Motion and Illustrated are independently versioned. Illustrated 2.5.0 was
 promoted only after its separate real-case and public-registration approvals.
 
+## Choreographer v1
+
+`runtime/choreographer-v1-runtime.js` is an additive scheduling layer for
+explicit `timeline` and `hybrid` output. It leaves the frozen ambient runtime
+and Edge Motion runtime sources byte-for-byte unchanged. Ordered scene edges
+become causal source/edge/target steps with start, previous, and next controls.
+Timeline begins the explanation immediately; hybrid begins in ambient and
+switches only after user action.
+
+The layer is independently syntax-checked and browser-verified by
+`scripts/verify_choreographer.mjs`. It does not redefine Illustrated or Edge
+Motion contract versions, and does not yet claim event-driven scheduling,
+camera choreography, or node state machines.
+
 ## Immutable archive boundary
 
 Do not update historical facts merely to match the current release. In
@@ -124,12 +139,24 @@ PYTHONPATH=src python3 -m anidiagram.cli \
   --formats svg,html,quality
 node --check runtime/anidiagram-runtime.js
 node --check runtime/illustrated-performance-v6-runtime.js
+node --check runtime/edge-motion-v1-runtime.js
+node --check runtime/choreographer-v1-runtime.js
 node scripts/verify_character_motion_rest.mjs \
   outputs/illustrated-2.5-showcase/illustrated-2.5-showcase.html 56 illustrated
 node scripts/verify_character_reduced_motion.mjs \
   outputs/illustrated-2.5-showcase/illustrated-2.5-showcase.html 56 illustrated
 node scripts/verify_stage_motion_modes.mjs \
   outputs/illustrated-2.5-showcase/illustrated-2.5-showcase.html
+```
+
+Standalone package, Choreographer, and committed visual-asset gates are also
+part of the release contract:
+
+```bash
+python3 -m pip wheel . --no-deps --wheel-dir build/wheels
+PYTHONPATH=src python3 scripts/check_asset_budget.py
+node scripts/verify_choreographer.mjs build/ci/choreographer/timeline.html timeline
+node scripts/verify_readme_showcase_round_1.mjs gallery/readme-showcase
 ```
 
 The generated quality report must contain zero errors. Contract or renderer
@@ -154,13 +181,15 @@ changes in the frame-based Lottie capture.
 
 ## CI and evidence retention
 
-`.github/workflows/test.yml` protects pull requests and `main` with two levels
-of validation. The contract job runs the complete Python suite, strict 56-icon
-Diagram Core validation, JavaScript syntax checking, and a render smoke test.
-The browser job regenerates the current Illustrated showcase and a
-composition-v1 edge-flow proof, then checks all 56 Illustrated rest poses,
-reduced motion, runtime mode switching, and nonzero edge-flow coverage in
-Chromium.
+`.github/workflows/test.yml` protects pull requests and `main` with three
+levels of validation. The package matrix builds and smoke-renders the installed
+wheel outside the checkout on Python 3.9, 3.11, and 3.14. The contract job runs
+the complete Python suite, strict 56-icon Diagram Core validation, asset
+budgets, JavaScript syntax checking, and a render smoke test. The browser job
+regenerates the current Illustrated showcase, composition-v1 edge-flow proof,
+and explicit timeline/hybrid pages, then checks all 56 Illustrated rest poses,
+reduced motion, runtime mode switching, Choreographer controls, README text
+containment, edge-label collisions, and nonzero edge-flow coverage in Chromium.
 
 The formal two-system export matrix is intentionally not generated on every
 pull request because the current evidence bundle is about 333 MB. Run

@@ -26,6 +26,7 @@ from .renderer_illustrated_character_v2 import render_character_v2_icon
 from .schema import compile_scene
 from .styles import deep_merge, role_style
 from .icon_system import icon_system_version, resolve_icon_system
+from .text_layout import fitted_text_length, node_text_region, text_block_layout, wrap_text
 
 
 Point = Tuple[float, float]
@@ -354,19 +355,7 @@ def render_style_defs(style: Dict[str, Any], grid: str) -> str:
 
 
 def wrap_words(text: str, max_chars: int) -> List[str]:
-    words = str(text or "").split()
-    if not words:
-        return []
-    lines: List[str] = []
-    current = words[0]
-    for word in words[1:]:
-        if len(current) + 1 + len(word) <= max_chars:
-            current += " " + word
-        else:
-            lines.append(current)
-            current = word
-    lines.append(current)
-    return lines
+    return wrap_text(text, max_chars)
 
 
 def node_box(node: Node) -> NodeBox:
@@ -427,16 +416,19 @@ def curve_path(start: Point, end: Point) -> str:
     return f"M {sx:.1f} {sy:.1f} C {c1[0]:.1f} {c1[1]:.1f}, {c2[0]:.1f} {c2[1]:.1f}, {ex:.1f} {ey:.1f}"
 
 
-def render_text_block(x: float, y: float, width: float, label: str, caption: str, color: str) -> str:
-    label_lines = wrap_words(label, max(8, int(width / 12)))
-    caption_lines = wrap_words(caption, max(10, int(width / 9)))
-    parts = [f'<text x="{x + width / 2:.1f}" y="{y:.1f}" text-anchor="middle" fill="{esc(color)}">']
-    line_y = 0
-    for line in label_lines[:2]:
-        parts.append(f'<tspan x="{x + width / 2:.1f}" dy="{18 if line_y == 0 else 18}" class="node-title">{esc(line)}</tspan>')
-        line_y += 1
-    for line in caption_lines[:2]:
-        parts.append(f'<tspan x="{x + width / 2:.1f}" dy="17" class="node-caption">{esc(line)}</tspan>')
+def render_text_block(x: float, y: float, width: float, height: float, label: str, caption: str, color: str) -> str:
+    layout = text_block_layout(label, caption, width, height)
+    parts = [f'<text x="{x + width / 2:.1f}" y="{y + layout.first_baseline:.1f}" class="node-text-block" text-anchor="middle" fill="{esc(color)}">']
+    first = True
+    for line in layout.label_lines:
+        fitted = fitted_text_length(line, width, 18)
+        fit = "" if fitted is None else f' textLength="{fitted:.1f}" lengthAdjust="spacingAndGlyphs"'
+        parts.append(f'<tspan x="{x + width / 2:.1f}" dy="{0 if first else 18}" class="node-title"{fit}>{esc(line)}</tspan>')
+        first = False
+    for line in layout.caption_lines:
+        fitted = fitted_text_length(line, width, 13)
+        fit = "" if fitted is None else f' textLength="{fitted:.1f}" lengthAdjust="spacingAndGlyphs"'
+        parts.append(f'<tspan x="{x + width / 2:.1f}" dy="17" class="node-caption"{fit}>{esc(line)}</tspan>')
     parts.append("</text>")
     return "\n".join(parts)
 
@@ -1197,10 +1189,10 @@ def render_node_surface(
 ) -> str:
     if node.shape == "decision":
         points = diamond_points(box)
-        return f"""  <polygon class="node-decision-shape" points="{points}"
+        return f"""  <polygon class="node-surface node-decision-shape" points="{points}"
         fill="{esc(fill)}" stroke="{esc(stroke)}" stroke-width="{stroke_width:.1f}" />"""
     if not aurora_nodes_enabled(style) or node.fill:
-        return f"""  <rect x="{box.x:.1f}" y="{box.y:.1f}" width="{box.w:.1f}" height="{box.h:.1f}" rx="{radius:.1f}"
+        return f"""  <rect class="node-surface" x="{box.x:.1f}" y="{box.y:.1f}" width="{box.w:.1f}" height="{box.h:.1f}" rx="{radius:.1f}"
         fill="{esc(fill)}" stroke="{esc(stroke)}" stroke-width="{stroke_width:.1f}" />"""
     role = role_style(style, node.role)
     clip_id = f"clip-{svg_fragment_id(box.node_id)}"
@@ -1234,7 +1226,7 @@ def render_node_surface(
     <rect x="{box.x:.1f}" y="{box.y:.1f}" width="{box.w:.1f}" height="{box.h:.1f}" rx="{radius:.1f}"
           fill="#ffffff" opacity="{grain_opacity:.2f}" filter="url(#grain-texture)" />
   </g>
-  <rect x="{box.x:.1f}" y="{box.y:.1f}" width="{box.w:.1f}" height="{box.h:.1f}" rx="{radius:.1f}"
+  <rect class="node-surface" x="{box.x:.1f}" y="{box.y:.1f}" width="{box.w:.1f}" height="{box.h:.1f}" rx="{radius:.1f}"
         fill="none" stroke="{esc(stroke)}" stroke-width="{stroke_width:.1f}" opacity="{border_opacity:.2f}" />"""
 
 
@@ -1278,24 +1270,14 @@ def render_node(
     text = role.get("text", style.get("canvas", {}).get("text", "#172033"))
     label = node.label
     caption = node.caption
-    content_y = box.y + max(26, box.h / 2 - 14)
-    text_x = box.x + 12
-    text_width = box.w - 24
-    if node.icon:
-        icon_system = resolve_icon_system(style)
-        if icon_system == "diagram-core-v1":
-            text_x = box.x + min(116, max(98, box.w * 0.43))
-        elif icon_system == "illustrated" and illustrated_definition(node.icon or "") is not None:
-            text_x = box.x + min(174, max(150, box.w * 0.31))
-        elif illustrated_icons_enabled(style):
-            text_x = box.x + min(86, max(68, box.w * 0.40))
-        else:
-            text_x = box.x + min(68, max(54, box.w * 0.36))
-        text_width = max(42, box.w - (text_x - box.x) - 12)
-    if node.shape == "decision":
-        content_y = box.y + box.h / 2 - 14
-        text_x = box.x + 34
-        text_width = max(50, box.w - 68)
+    icon_system = resolve_icon_system(style)
+    text_offset, text_width = node_text_region(
+        box.w,
+        icon_system=icon_system,
+        has_icon=bool(node.icon),
+        decision=node.shape == "decision",
+    )
+    text_x = box.x + text_offset
     badge = ""
     if node.step is not None:
         badge = render_step_badge(box.x + 18, box.y + 18, node.step, stroke, fill)
@@ -1352,7 +1334,7 @@ def render_node(
 {render_node_surface(node, box, radius, fill, stroke, stroke_width, style, index)}
 {icon}
 {badge}
-  {render_text_block(text_x, content_y, text_width, label, caption, text)}
+  {render_text_block(text_x, box.y, text_width, box.h, label, caption, text)}
 </g>"""
 
 
@@ -1505,7 +1487,8 @@ def render_edge(
     except ValueError:
         duration_value = 4.2
     mid_x = (start[0] + end[0]) / 2
-    mid_y = (start[1] + end[1]) / 2 - 14
+    label_offset = -14 if edge.route == "straight" else (-18 if index % 2 == 0 else 22)
+    mid_y = (start[1] + end[1]) / 2 + label_offset
     label = edge.label if edge_label_has_clearance(edge, start, end) else ""
     marker_id = f"arrow-{index}"
     marker_orient = "auto-start-reverse" if edge.direction == "bidirectional" else "auto"
