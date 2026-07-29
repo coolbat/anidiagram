@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import unicodedata
 from dataclasses import dataclass
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 
 LABEL_LINE_HEIGHT = 18
@@ -19,6 +19,20 @@ def visual_units(text: str) -> float:
         2.0 if unicodedata.east_asian_width(character) in {"W", "F"} else 1.0
         for character in str(text or "")
     )
+
+
+def fitted_text_length(text: str, max_width: float, font_size: float) -> Optional[float]:
+    """Return a deterministic SVG text length only when a line needs fitting.
+
+    System sans-serif metrics differ across operating systems. Lines that are
+    comfortably short keep their natural glyph metrics; lines near the layout
+    boundary receive an explicit width so Linux and macOS stay inside the same
+    authored text region.
+    """
+
+    limit = max(1.0, float(max_width) - 8.0)
+    estimated = visual_units(text) * float(font_size) * 0.58
+    return limit if estimated > limit else None
 
 
 def wrap_text(text: str, max_units: int) -> List[str]:

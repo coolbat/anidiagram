@@ -304,9 +304,9 @@
 </g>
 
   <text x="211.6" y="262.0" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="211.6" dy="0" class="node-title">Application</tspan>
+<tspan x="211.6" dy="0" class="node-title" textLength="104.8" lengthAdjust="spacingAndGlyphs">Application</tspan>
 <tspan x="211.6" dy="18" class="node-title">User</tspan>
-<tspan x="211.6" dy="17" class="node-caption">submits governed</tspan>
+<tspan x="211.6" dy="17" class="node-caption" textLength="104.8" lengthAdjust="spacingAndGlyphs">submits governed</tspan>
 <tspan x="211.6" dy="17" class="node-caption">query</tspan>
 </text>
 </g>
@@ -366,7 +366,7 @@
 
   <text x="831.6" y="271.0" class="node-text-block" text-anchor="middle" fill="#172033">
 <tspan x="831.6" dy="0" class="node-title">RAG Agent</tspan>
-<tspan x="831.6" dy="17" class="node-caption">plans grounded</tspan>
+<tspan x="831.6" dy="17" class="node-caption" textLength="104.8" lengthAdjust="spacingAndGlyphs">plans grounded</tspan>
 <tspan x="831.6" dy="17" class="node-caption">response</tspan>
 </text>
 </g>
@@ -395,7 +395,7 @@
   <text x="1141.6" y="262.0" class="node-text-block" text-anchor="middle" fill="#172033">
 <tspan x="1141.6" dy="0" class="node-title">Language</tspan>
 <tspan x="1141.6" dy="18" class="node-title">Model</tspan>
-<tspan x="1141.6" dy="17" class="node-caption">generates with</tspan>
+<tspan x="1141.6" dy="17" class="node-caption" textLength="104.8" lengthAdjust="spacingAndGlyphs">generates with</tspan>
 <tspan x="1141.6" dy="17" class="node-caption">evidence</tspan>
 </text>
 </g>
@@ -422,9 +422,9 @@
 </g>
 
   <text x="1451.6" y="271.0" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="1451.6" dy="0" class="node-title">Cited Output</tspan>
+<tspan x="1451.6" dy="0" class="node-title" textLength="104.8" lengthAdjust="spacingAndGlyphs">Cited Output</tspan>
 <tspan x="1451.6" dy="17" class="node-caption">returns</tspan>
-<tspan x="1451.6" dy="17" class="node-caption">traceable answer</tspan>
+<tspan x="1451.6" dy="17" class="node-caption" textLength="104.8" lengthAdjust="spacingAndGlyphs">traceable answer</tspan>
 </text>
 </g>
 
@@ -452,7 +452,7 @@
 <tspan x="211.6" dy="0" class="node-title">Source</tspan>
 <tspan x="211.6" dy="18" class="node-title">Documents</tspan>
 <tspan x="211.6" dy="17" class="node-caption">approved</tspan>
-<tspan x="211.6" dy="17" class="node-caption">knowledge corpus</tspan>
+<tspan x="211.6" dy="17" class="node-caption" textLength="104.8" lengthAdjust="spacingAndGlyphs">knowledge corpus</tspan>
 </text>
 </g>
 
@@ -508,7 +508,7 @@
 <tspan x="831.6" dy="0" class="node-title">Embedding</tspan>
 <tspan x="831.6" dy="18" class="node-title">Service</tspan>
 <tspan x="831.6" dy="17" class="node-caption">vectorizes</tspan>
-<tspan x="831.6" dy="17" class="node-caption">document chunks</tspan>
+<tspan x="831.6" dy="17" class="node-caption" textLength="104.8" lengthAdjust="spacingAndGlyphs">document chunks</tspan>
 </text>
 </g>
 
@@ -533,9 +533,9 @@
 </g>
 
   <text x="1141.6" y="661.0" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="1141.6" dy="0" class="node-title">Vector Index</tspan>
+<tspan x="1141.6" dy="0" class="node-title" textLength="104.8" lengthAdjust="spacingAndGlyphs">Vector Index</tspan>
 <tspan x="1141.6" dy="17" class="node-caption">retrieves</tspan>
-<tspan x="1141.6" dy="17" class="node-caption">semantic matches</tspan>
+<tspan x="1141.6" dy="17" class="node-caption" textLength="104.8" lengthAdjust="spacingAndGlyphs">semantic matches</tspan>
 </text>
 </g>
 
@@ -562,7 +562,7 @@
   <text x="1451.6" y="652.0" class="node-text-block" text-anchor="middle" fill="#172033">
 <tspan x="1451.6" dy="0" class="node-title">Runtime</tspan>
 <tspan x="1451.6" dy="18" class="node-title">Monitoring</tspan>
-<tspan x="1451.6" dy="17" class="node-caption">observes quality</tspan>
+<tspan x="1451.6" dy="17" class="node-caption" textLength="104.8" lengthAdjust="spacingAndGlyphs">observes quality</tspan>
 <tspan x="1451.6" dy="17" class="node-caption">and latency</tspan>
 </text>
 </g>

@@ -311,8 +311,8 @@
   <circle cx="698.0" cy="253.0" r="14" fill="#2563eb" />
   <text x="698.0" y="258.0" class="step-label" fill="#eff6ff" text-anchor="middle">2</text>
   <text x="840.0" y="266.0" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="840.0" dy="0" class="node-title">Automation</tspan>
-<tspan x="840.0" dy="18" class="node-title">Heartbeat</tspan>
+<tspan x="840.0" dy="0" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Automation</tspan>
+<tspan x="840.0" dy="18" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Heartbeat</tspan>
 <tspan x="840.0" dy="17" class="node-caption">Scheduled</tspan>
 <tspan x="840.0" dy="17" class="node-caption">triage</tspan>
 </text>
@@ -343,8 +343,8 @@
   <text x="840.0" y="486.0" class="node-text-block" text-anchor="middle" fill="#172033">
 <tspan x="840.0" dy="0" class="node-title">Isolated</tspan>
 <tspan x="840.0" dy="18" class="node-title">Worktree</tspan>
-<tspan x="840.0" dy="17" class="node-caption">Collision-free</tspan>
-<tspan x="840.0" dy="17" class="node-caption">parallel work</tspan>
+<tspan x="840.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">Collision-free</tspan>
+<tspan x="840.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">parallel work</tspan>
 </text>
 </g>
 
@@ -407,9 +407,9 @@
   <text x="98.0" y="478.0" class="step-label" fill="#f5f3ff" text-anchor="middle">5</text>
   <text x="240.0" y="486.0" class="node-text-block" text-anchor="middle" fill="#172033">
 <tspan x="240.0" dy="0" class="node-title">Maker</tspan>
-<tspan x="240.0" dy="18" class="node-title">Sub-agent</tspan>
+<tspan x="240.0" dy="18" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Sub-agent</tspan>
 <tspan x="240.0" dy="17" class="node-caption">Drafts</tspan>
-<tspan x="240.0" dy="17" class="node-caption">implementation</tspan>
+<tspan x="240.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">implementation</tspan>
 </text>
 </g>
 
@@ -438,7 +438,7 @@
   <text x="98.0" y="698.0" class="step-label" fill="#fef2f2" text-anchor="middle">6</text>
   <text x="240.0" y="706.0" class="node-text-block" text-anchor="middle" fill="#172033">
 <tspan x="240.0" dy="0" class="node-title">Verifier</tspan>
-<tspan x="240.0" dy="18" class="node-title">Sub-agent</tspan>
+<tspan x="240.0" dy="18" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Sub-agent</tspan>
 <tspan x="240.0" dy="17" class="node-caption">Tests +</tspan>
 <tspan x="240.0" dy="17" class="node-caption">evidence</tspan>
 </text>
@@ -468,10 +468,10 @@
   <circle cx="398.0" cy="693.0" r="14" fill="#d97706" />
   <text x="398.0" y="698.0" class="step-label" fill="#fffbeb" text-anchor="middle">7</text>
   <text x="540.0" y="706.0" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="540.0" dy="0" class="node-title">Connectors</tspan>
-<tspan x="540.0" dy="18" class="node-title">&amp; Delivery</tspan>
+<tspan x="540.0" dy="0" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Connectors</tspan>
+<tspan x="540.0" dy="18" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">&amp; Delivery</tspan>
 <tspan x="540.0" dy="17" class="node-caption">Publish</tspan>
-<tspan x="540.0" dy="17" class="node-caption">verified PRs</tspan>
+<tspan x="540.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">verified PRs</tspan>
 </text>
 </g>
 
@@ -501,7 +501,7 @@
   <text x="840.0" y="706.0" class="node-text-block" text-anchor="middle" fill="#172033">
 <tspan x="840.0" dy="0" class="node-title">External</tspan>
 <tspan x="840.0" dy="18" class="node-title">State</tspan>
-<tspan x="840.0" dy="17" class="node-caption">Records done</tspan>
+<tspan x="840.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">Records done</tspan>
 <tspan x="840.0" dy="17" class="node-caption">and next</tspan>
 </text>
 </g>
@@ -532,8 +532,8 @@
   <text x="98.0" y="258.0" class="step-label" fill="#fff7ed" text-anchor="middle">1</text>
   <text x="240.0" y="266.0" class="node-text-block" text-anchor="middle" fill="#172033">
 <tspan x="240.0" dy="0" class="node-title">Human</tspan>
-<tspan x="240.0" dy="18" class="node-title">Governance</tspan>
-<tspan x="240.0" dy="17" class="node-caption">Goals + stop</tspan>
+<tspan x="240.0" dy="18" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Governance</tspan>
+<tspan x="240.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">Goals + stop</tspan>
 <tspan x="240.0" dy="17" class="node-caption">gates</tspan>
 </text>
 </g>

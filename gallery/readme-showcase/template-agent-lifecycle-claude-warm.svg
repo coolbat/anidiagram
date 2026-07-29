@@ -304,8 +304,8 @@
 </g>
 
   <text x="211.6" y="284.5" class="node-text-block" text-anchor="middle" fill="#2f2a24">
-<tspan x="211.6" dy="0" class="node-title">User Request</tspan>
-<tspan x="211.6" dy="17" class="node-caption">goal and context</tspan>
+<tspan x="211.6" dy="0" class="node-title" textLength="104.8" lengthAdjust="spacingAndGlyphs">User Request</tspan>
+<tspan x="211.6" dy="17" class="node-caption" textLength="104.8" lengthAdjust="spacingAndGlyphs">goal and context</tspan>
 </text>
 </g>
 
@@ -331,8 +331,8 @@
 </g>
 
   <text x="521.6" y="276.0" class="node-text-block" text-anchor="middle" fill="#2f2a24">
-<tspan x="521.6" dy="0" class="node-title">API Gateway</tspan>
-<tspan x="521.6" dy="17" class="node-caption">authenticate and</tspan>
+<tspan x="521.6" dy="0" class="node-title" textLength="104.8" lengthAdjust="spacingAndGlyphs">API Gateway</tspan>
+<tspan x="521.6" dy="17" class="node-caption" textLength="104.8" lengthAdjust="spacingAndGlyphs">authenticate and</tspan>
 <tspan x="521.6" dy="17" class="node-caption">route</tspan>
 </text>
 </g>
@@ -451,7 +451,7 @@
   <text x="366.6" y="657.0" class="node-text-block" text-anchor="middle" fill="#2f2a24">
 <tspan x="366.6" dy="0" class="node-title">Knowledge</tspan>
 <tspan x="366.6" dy="18" class="node-title">Base</tspan>
-<tspan x="366.6" dy="17" class="node-caption">retrieve trusted</tspan>
+<tspan x="366.6" dy="17" class="node-caption" textLength="104.8" lengthAdjust="spacingAndGlyphs">retrieve trusted</tspan>
 <tspan x="366.6" dy="17" class="node-caption">facts</tspan>
 </text>
 </g>
@@ -511,7 +511,7 @@
   <text x="986.6" y="657.0" class="node-text-block" text-anchor="middle" fill="#2f2a24">
 <tspan x="986.6" dy="0" class="node-title">Tool</tspan>
 <tspan x="986.6" dy="18" class="node-title">Execution</tspan>
-<tspan x="986.6" dy="17" class="node-caption">act on external</tspan>
+<tspan x="986.6" dy="17" class="node-caption" textLength="104.8" lengthAdjust="spacingAndGlyphs">act on external</tspan>
 <tspan x="986.6" dy="17" class="node-caption">systems</tspan>
 </text>
 </g>
@@ -539,7 +539,7 @@
   <text x="1296.6" y="657.0" class="node-text-block" text-anchor="middle" fill="#2f2a24">
 <tspan x="1296.6" dy="0" class="node-title">Runtime</tspan>
 <tspan x="1296.6" dy="18" class="node-title">Monitoring</tspan>
-<tspan x="1296.6" dy="17" class="node-caption">measure quality</tspan>
+<tspan x="1296.6" dy="17" class="node-caption" textLength="104.8" lengthAdjust="spacingAndGlyphs">measure quality</tspan>
 <tspan x="1296.6" dy="17" class="node-caption">and cost</tspan>
 </text>
 </g>

@@ -20,8 +20,8 @@
 - Package result: `anidiagram==0.2.0` installed from a wheel and rendered both a
   preset and a composition-v1 plan from `/tmp`, each with clean SVG, HTML, and
   quality output.
-- Asset result: eight README WebPs total 3,155,610 bytes; largest case 572,252
-  bytes; each contains 24 frames. Complete tracked gallery total is 35,579,349
+- Asset result: eight README WebPs total 3,129,182 bytes; largest case 560,174
+  bytes; each contains 24 frames. Complete tracked gallery total is 35,581,011
   bytes, within all enforced budgets.
 - Compatibility result: frozen `runtime/anidiagram-runtime.js` and
   `runtime/edge-motion-v1-runtime.js` remain unchanged at their approved

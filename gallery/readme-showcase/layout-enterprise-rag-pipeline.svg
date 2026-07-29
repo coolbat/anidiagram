@@ -222,7 +222,7 @@
 
   <text x="191.5" y="416.0" class="node-text-block" text-anchor="middle" fill="#172033">
 <tspan x="191.5" dy="0" class="node-title">Documents</tspan>
-<tspan x="191.5" dy="17" class="node-caption">approved source</tspan>
+<tspan x="191.5" dy="17" class="node-caption" textLength="105.0" lengthAdjust="spacingAndGlyphs">approved source</tspan>
 <tspan x="191.5" dy="17" class="node-caption">files</tspan>
 </text>
 </g>
@@ -260,7 +260,7 @@
 
   <text x="451.5" y="424.5" class="node-text-block" text-anchor="middle" fill="#172033">
 <tspan x="451.5" dy="0" class="node-title">Tokenizer</tspan>
-<tspan x="451.5" dy="17" class="node-caption">split and budget</tspan>
+<tspan x="451.5" dy="17" class="node-caption" textLength="105.0" lengthAdjust="spacingAndGlyphs">split and budget</tspan>
 </text>
 </g>
 
@@ -304,7 +304,7 @@
 
   <text x="711.5" y="424.5" class="node-text-block" text-anchor="middle" fill="#172033">
 <tspan x="711.5" dy="0" class="node-title">Embedding</tspan>
-<tspan x="711.5" dy="17" class="node-caption">encode semantics</tspan>
+<tspan x="711.5" dy="17" class="node-caption" textLength="105.0" lengthAdjust="spacingAndGlyphs">encode semantics</tspan>
 </text>
 </g>
 
@@ -342,8 +342,8 @@
 </g></g>
 
   <text x="971.5" y="416.0" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="971.5" dy="0" class="node-title">Vector Index</tspan>
-<tspan x="971.5" dy="17" class="node-caption">store searchable</tspan>
+<tspan x="971.5" dy="0" class="node-title" textLength="105.0" lengthAdjust="spacingAndGlyphs">Vector Index</tspan>
+<tspan x="971.5" dy="17" class="node-caption" textLength="105.0" lengthAdjust="spacingAndGlyphs">store searchable</tspan>
 <tspan x="971.5" dy="17" class="node-caption">vectors</tspan>
 </text>
 </g>

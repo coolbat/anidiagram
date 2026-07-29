@@ -303,9 +303,9 @@
 </g></g>
 
   <text x="254.0" y="231.0" class="node-text-block" text-anchor="middle" fill="#f8fafc">
-<tspan x="254.0" dy="0" class="node-title">External Users</tspan>
+<tspan x="254.0" dy="0" class="node-title" textLength="130.0" lengthAdjust="spacingAndGlyphs">External Users</tspan>
 <tspan x="254.0" dy="17" class="node-caption">production</tspan>
-<tspan x="254.0" dy="17" class="node-caption">application traffic</tspan>
+<tspan x="254.0" dy="17" class="node-caption" textLength="130.0" lengthAdjust="spacingAndGlyphs">application traffic</tspan>
 </text>
 </g>
 
@@ -344,7 +344,7 @@
   <text x="619.0" y="222.0" class="node-text-block" text-anchor="middle" fill="#f8fafc">
 <tspan x="619.0" dy="0" class="node-title">Automation</tspan>
 <tspan x="619.0" dy="18" class="node-title">Clients</tspan>
-<tspan x="619.0" dy="17" class="node-caption">CI/CD and platform</tspan>
+<tspan x="619.0" dy="17" class="node-caption" textLength="130.0" lengthAdjust="spacingAndGlyphs">CI/CD and platform</tspan>
 <tspan x="619.0" dy="17" class="node-caption">APIs</tspan>
 </text>
 </g>
@@ -412,7 +412,7 @@
 </g></g>
 
   <text x="1349.0" y="231.0" class="node-text-block" text-anchor="middle" fill="#f8fafc">
-<tspan x="1349.0" dy="0" class="node-title">Security Policy</tspan>
+<tspan x="1349.0" dy="0" class="node-title" textLength="130.0" lengthAdjust="spacingAndGlyphs">Security Policy</tspan>
 <tspan x="1349.0" dy="17" class="node-caption">identity and</tspan>
 <tspan x="1349.0" dy="17" class="node-caption">admission rules</tspan>
 </text>
@@ -451,7 +451,7 @@
 </g></g>
 
   <text x="254.0" y="438.5" class="node-text-block" text-anchor="middle" fill="#f8fafc">
-<tspan x="254.0" dy="0" class="node-title">Ingress Gateway</tspan>
+<tspan x="254.0" dy="0" class="node-title" textLength="130.0" lengthAdjust="spacingAndGlyphs">Ingress Gateway</tspan>
 <tspan x="254.0" dy="17" class="node-caption">routes trusted</tspan>
 <tspan x="254.0" dy="17" class="node-caption">traffic</tspan>
 </text>
@@ -490,7 +490,7 @@
 </g></g>
 
   <text x="619.0" y="438.5" class="node-text-block" text-anchor="middle" fill="#f8fafc">
-<tspan x="619.0" dy="0" class="node-title">Kubernetes API</tspan>
+<tspan x="619.0" dy="0" class="node-title" textLength="130.0" lengthAdjust="spacingAndGlyphs">Kubernetes API</tspan>
 <tspan x="619.0" dy="17" class="node-caption">declares desired</tspan>
 <tspan x="619.0" dy="17" class="node-caption">state</tspan>
 </text>
@@ -568,8 +568,8 @@
 </g></g>
 
   <text x="1349.0" y="438.5" class="node-text-block" text-anchor="middle" fill="#f8fafc">
-<tspan x="1349.0" dy="0" class="node-title">Control Plane</tspan>
-<tspan x="1349.0" dy="17" class="node-caption">reconciles cluster</tspan>
+<tspan x="1349.0" dy="0" class="node-title" textLength="130.0" lengthAdjust="spacingAndGlyphs">Control Plane</tspan>
+<tspan x="1349.0" dy="17" class="node-caption" textLength="130.0" lengthAdjust="spacingAndGlyphs">reconciles cluster</tspan>
 <tspan x="1349.0" dy="17" class="node-caption">state</tspan>
 </text>
 </g>
@@ -648,7 +648,7 @@
   <text x="619.0" y="675.5" class="node-text-block" text-anchor="middle" fill="#f8fafc">
 <tspan x="619.0" dy="0" class="node-title">Container</tspan>
 <tspan x="619.0" dy="18" class="node-title">Workloads</tspan>
-<tspan x="619.0" dy="17" class="node-caption">replicated services</tspan>
+<tspan x="619.0" dy="17" class="node-caption" textLength="130.0" lengthAdjust="spacingAndGlyphs">replicated services</tspan>
 </text>
 </g>
 
@@ -687,7 +687,7 @@
 </g></g>
 
   <text x="984.0" y="676.0" class="node-text-block" text-anchor="middle" fill="#f8fafc">
-<tspan x="984.0" dy="0" class="node-title">Stateful Data</tspan>
+<tspan x="984.0" dy="0" class="node-title" textLength="130.0" lengthAdjust="spacingAndGlyphs">Stateful Data</tspan>
 <tspan x="984.0" dy="17" class="node-caption">persistent</tspan>
 <tspan x="984.0" dy="17" class="node-caption">production data</tspan>
 </text>
@@ -724,8 +724,8 @@
 </g></g>
 
   <text x="1349.0" y="676.0" class="node-text-block" text-anchor="middle" fill="#f8fafc">
-<tspan x="1349.0" dy="0" class="node-title">Observability</tspan>
-<tspan x="1349.0" dy="17" class="node-caption">metrics, logs, and</tspan>
+<tspan x="1349.0" dy="0" class="node-title" textLength="130.0" lengthAdjust="spacingAndGlyphs">Observability</tspan>
+<tspan x="1349.0" dy="17" class="node-caption" textLength="130.0" lengthAdjust="spacingAndGlyphs">metrics, logs, and</tspan>
 <tspan x="1349.0" dy="17" class="node-caption">alerts</tspan>
 </text>
 </g>

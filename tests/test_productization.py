@@ -61,6 +61,14 @@ class ProductizationTest(unittest.TestCase):
         self.assertIn('id="runtime-status"', html)
         self.assertIn('tabindex="0" aria-label="可缩放和平移的动画图表"', html)
 
+    def test_long_node_text_uses_cross_platform_svg_fitting(self):
+        html = render_html_runtime(self._scene(), load_style(), dependency_mode="none")
+
+        self.assertRegex(
+            html,
+            r'<tspan[^>]+class="node-title"[^>]+textLength="[0-9.]+"[^>]+lengthAdjust="spacingAndGlyphs"',
+        )
+
     def test_timeline_and_hybrid_manifests_are_explicit_without_changing_ambient(self):
         scene = self._scene()
         ambient = self._manifest(render_html_runtime(scene, load_style(), dependency_mode="none"))

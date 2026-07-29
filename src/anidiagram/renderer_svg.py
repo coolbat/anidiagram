@@ -26,7 +26,7 @@ from .renderer_illustrated_character_v2 import render_character_v2_icon
 from .schema import compile_scene
 from .styles import deep_merge, role_style
 from .icon_system import icon_system_version, resolve_icon_system
-from .text_layout import node_text_region, text_block_layout, wrap_text
+from .text_layout import fitted_text_length, node_text_region, text_block_layout, wrap_text
 
 
 Point = Tuple[float, float]
@@ -421,10 +421,14 @@ def render_text_block(x: float, y: float, width: float, height: float, label: st
     parts = [f'<text x="{x + width / 2:.1f}" y="{y + layout.first_baseline:.1f}" class="node-text-block" text-anchor="middle" fill="{esc(color)}">']
     first = True
     for line in layout.label_lines:
-        parts.append(f'<tspan x="{x + width / 2:.1f}" dy="{0 if first else 18}" class="node-title">{esc(line)}</tspan>')
+        fitted = fitted_text_length(line, width, 18)
+        fit = "" if fitted is None else f' textLength="{fitted:.1f}" lengthAdjust="spacingAndGlyphs"'
+        parts.append(f'<tspan x="{x + width / 2:.1f}" dy="{0 if first else 18}" class="node-title"{fit}>{esc(line)}</tspan>')
         first = False
     for line in layout.caption_lines:
-        parts.append(f'<tspan x="{x + width / 2:.1f}" dy="17" class="node-caption">{esc(line)}</tspan>')
+        fitted = fitted_text_length(line, width, 13)
+        fit = "" if fitted is None else f' textLength="{fitted:.1f}" lengthAdjust="spacingAndGlyphs"'
+        parts.append(f'<tspan x="{x + width / 2:.1f}" dy="17" class="node-caption"{fit}>{esc(line)}</tspan>')
     parts.append("</text>")
     return "\n".join(parts)
 

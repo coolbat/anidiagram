@@ -289,7 +289,7 @@
 </g></g>
 
   <text x="839.0" y="201.0" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="839.0" dy="0" class="node-title">MCP Gateway</tspan>
+<tspan x="839.0" dy="0" class="node-title" textLength="110.0" lengthAdjust="spacingAndGlyphs">MCP Gateway</tspan>
 <tspan x="839.0" dy="17" class="node-caption">policy and</tspan>
 <tspan x="839.0" dy="17" class="node-caption">protocol</tspan>
 </text>
@@ -408,7 +408,7 @@
 </g></g>
 
   <text x="319.0" y="649.5" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="319.0" dy="0" class="node-title">Code Runtime</tspan>
+<tspan x="319.0" dy="0" class="node-title" textLength="110.0" lengthAdjust="spacingAndGlyphs">Code Runtime</tspan>
 <tspan x="319.0" dy="17" class="node-caption">execute safely</tspan>
 </text>
 </g>
@@ -443,7 +443,7 @@
 </g></g>
 
   <text x="839.0" y="689.5" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="839.0" dy="0" class="node-title">Agent Memory</tspan>
+<tspan x="839.0" dy="0" class="node-title" textLength="110.0" lengthAdjust="spacingAndGlyphs">Agent Memory</tspan>
 <tspan x="839.0" dy="17" class="node-caption">retain context</tspan>
 </text>
 </g>
