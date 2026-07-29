@@ -69,6 +69,13 @@ class ProductizationTest(unittest.TestCase):
             r'<tspan[^>]+class="node-title"[^>]+textLength="[0-9.]+"[^>]+lengthAdjust="spacingAndGlyphs"',
         )
 
+    def test_packaging_excludes_python_cache_artifacts(self):
+        manifest = (ROOT / "MANIFEST.in").read_text(encoding="utf-8")
+        setup_source = (ROOT / "setup.py").read_text(encoding="utf-8")
+
+        self.assertIn("global-exclude *.py[cod]", manifest)
+        self.assertIn('ignore_patterns("__pycache__", "*.pyc", "*.pyo")', setup_source)
+
     def test_timeline_and_hybrid_manifests_are_explicit_without_changing_ambient(self):
         scene = self._scene()
         ambient = self._manifest(render_html_runtime(scene, load_style(), dependency_mode="none"))

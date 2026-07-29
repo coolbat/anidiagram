@@ -8,7 +8,8 @@ version = "0.2.0"
 description = "Clean-room JSON-to-animated-SVG renderer for AniDiagram architecture visuals."
 readme = "README.md"
 requires-python = ">=3.9"
-license = {file = "LICENSE"}
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [{name = "AniDiagram contributors"}]
 
 [project.optional-dependencies]
