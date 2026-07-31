@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="380" viewBox="0 0 1200 380" role="img" aria-labelledby="title desc">
+  <title id="title">AniDiagram — semantic-first animated architecture diagrams</title>
+  <desc id="desc">A project-native title showing architecture intent flowing through semantic composition into animated SVG, HTML, and video outputs.</desc>
+  <defs>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M24 0H0V24" fill="none" stroke="#1B2840" stroke-width="1" opacity="0.52"/>
+    </pattern>
+    <linearGradient id="flow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#36C5F0"/>
+      <stop offset="0.52" stop-color="#8B5CF6"/>
+      <stop offset="1" stop-color="#34D399"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="380" rx="28" fill="#070B17"/>
+  <rect x="650" y="0" width="550" height="380" rx="28" fill="url(#grid)"/>
+  <path d="M650 28V352" stroke="#25324A"/>
+
+  <g id="title-block" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+    <text x="64" y="66" fill="#36C5F0" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15" font-weight="700" letter-spacing="2.4">SEMANTIC-FIRST · ANIMATED ARCHITECTURE</text>
+    <text x="64" y="150" fill="#F8FAFC" font-size="70" font-weight="760" letter-spacing="-2">AniDiagram</text>
+    <text x="64" y="205" fill="#CBD5E1" font-size="27" font-weight="560">Turn architecture intent into diagrams</text>
+    <text x="64" y="241" fill="#CBD5E1" font-size="27" font-weight="560">that explain, move, and export.</text>
+
+    <g transform="translate(64 292)" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" font-weight="650">
+      <rect width="112" height="34" rx="17" fill="#0D1B2D" stroke="#28536B"/>
+      <text x="56" y="22" text-anchor="middle" fill="#8BE2FA">PYTHON 3.9+</text>
+      <rect x="124" width="112" height="34" rx="17" fill="#17142B" stroke="#493B83"/>
+      <text x="180" y="22" text-anchor="middle" fill="#C4B5FD">16 LAYOUTS</text>
+      <rect x="248" width="104" height="34" rx="17" fill="#0D241F" stroke="#276553"/>
+      <text x="300" y="22" text-anchor="middle" fill="#86EFAC">13 STYLES</text>
+      <rect x="364" width="92" height="34" rx="17" fill="#111827" stroke="#334155"/>
+      <text x="410" y="22" text-anchor="middle" fill="#CBD5E1">MIT</text>
+    </g>
+  </g>
+
+  <g id="project-proof" transform="translate(686 40)" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+    <rect width="466" height="300" rx="22" fill="#0A1020" stroke="#2A3852" stroke-width="1.5"/>
+    <text x="24" y="34" fill="#94A3B8" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" letter-spacing="1.7">COMPOSITION PIPELINE</text>
+    <circle cx="421" cy="29" r="5" fill="#34D399"/>
+    <text x="404" y="58" fill="#64748B" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" text-anchor="middle">VALIDATED</text>
+
+    <g transform="translate(24 78)">
+      <rect width="130" height="70" rx="14" fill="#0E2435" stroke="#36C5F0" stroke-width="1.5"/>
+      <circle cx="17" cy="17" r="5" fill="#36C5F0"/>
+      <text x="18" y="40" fill="#E2E8F0" font-size="18" font-weight="700">Intent</text>
+      <text x="18" y="59" fill="#7DD3FC" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11">brief / plan</text>
+    </g>
+    <g transform="translate(288 78)">
+      <rect width="154" height="70" rx="14" fill="#1A1731" stroke="#8B5CF6" stroke-width="1.5"/>
+      <circle cx="17" cy="17" r="5" fill="#8B5CF6"/>
+      <text x="18" y="40" fill="#EDE9FE" font-size="18" font-weight="700">Semantics</text>
+      <text x="18" y="59" fill="#C4B5FD" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11">entities + flows</text>
+    </g>
+    <path d="M154 113H274" stroke="url(#flow)" stroke-width="3"/>
+    <path d="M274 113l-10-6v12z" fill="#8B5CF6"/>
+    <circle cx="214" cy="113" r="6" fill="#36C5F0" stroke="#0A1020" stroke-width="3"/>
+
+    <g transform="translate(24 194)">
+      <rect width="154" height="70" rx="14" fill="#17142B" stroke="#A78BFA" stroke-width="1.5"/>
+      <circle cx="17" cy="17" r="5" fill="#A78BFA"/>
+      <text x="18" y="40" fill="#F5F3FF" font-size="18" font-weight="700">Compose</text>
+      <text x="18" y="59" fill="#C4B5FD" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11">style · layout · motion</text>
+    </g>
+    <g transform="translate(288 194)">
+      <rect width="154" height="70" rx="14" fill="#0D241F" stroke="#34D399" stroke-width="1.5"/>
+      <circle cx="17" cy="17" r="5" fill="#34D399"/>
+      <text x="18" y="40" fill="#ECFDF5" font-size="18" font-weight="700">Deliver</text>
+      <text x="18" y="59" fill="#86EFAC" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11">SVG · HTML · MP4</text>
+    </g>
+    <path d="M365 148V176H101V194" fill="none" stroke="#8B5CF6" stroke-width="3"/>
+    <path d="M101 194l-6-10h12z" fill="#A78BFA"/>
+    <path d="M178 229H274" stroke="url(#flow)" stroke-width="3"/>
+    <path d="M274 229l-10-6v12z" fill="#34D399"/>
+    <circle cx="226" cy="229" r="6" fill="#A78BFA" stroke="#0A1020" stroke-width="3"/>
+  </g>
+</svg>

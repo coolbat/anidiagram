@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="330" viewBox="0 0 1200 330" role="img" aria-labelledby="title desc">
+  <title id="title">AniDiagram 语义编排工作流</title>
+  <desc id="desc">输入先形成稳定语义，再通过四个独立表现轴编译成 DiagramScript，最后输出可视化文件与质量报告。</desc>
+  <rect width="1200" height="330" rx="26" fill="#070B17"/>
+  <text x="60" y="58" fill="#F8FAFC" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="30" font-weight="720">一份稳定语义，多种表现与交付结果。</text>
+  <text x="60" y="84" fill="#94A3B8" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" letter-spacing="1.3">DIAGRAMPLAN → COMPOSITION-V1 → DIAGRAMSCRIPT → RENDER / EXPORT / QUALITY</text>
+
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+    <g transform="translate(60 116)">
+      <rect width="230" height="158" rx="18" fill="#0D1B2D" stroke="#28536B"/>
+      <text x="20" y="31" fill="#7DD3FC" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" font-weight="700">01 · 输入</text>
+      <text x="20" y="66" fill="#F8FAFC" font-size="21" font-weight="700">架构意图</text>
+      <text x="20" y="98" fill="#CBD5E1" font-size="16">自然语言 brief</text>
+      <text x="20" y="123" fill="#CBD5E1" font-size="16">DiagramPlan JSON</text>
+      <text x="20" y="148" fill="#CBD5E1" font-size="16">手写 DiagramScript</text>
+    </g>
+    <path d="M290 195H326" stroke="#36C5F0" stroke-width="3"/>
+    <path d="M326 195l-10-6v12z" fill="#36C5F0"/>
+
+    <g transform="translate(326 116)">
+      <rect width="230" height="158" rx="18" fill="#12152B" stroke="#5B4B9A"/>
+      <text x="20" y="31" fill="#C4B5FD" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" font-weight="700">02 · 语义</text>
+      <text x="20" y="66" fill="#F8FAFC" font-size="21" font-weight="700">稳定的系统含义</text>
+      <text x="20" y="98" fill="#CBD5E1" font-size="16">实体与关系</text>
+      <text x="20" y="123" fill="#CBD5E1" font-size="16">分组与有序流程</text>
+      <text x="20" y="148" fill="#CBD5E1" font-size="16">语言与来源</text>
+    </g>
+    <path d="M556 195H592" stroke="#8B5CF6" stroke-width="3"/>
+    <path d="M592 195l-10-6v12z" fill="#8B5CF6"/>
+
+    <g transform="translate(592 116)">
+      <rect width="230" height="158" rx="18" fill="#17142B" stroke="#8B5CF6"/>
+      <text x="20" y="31" fill="#C4B5FD" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" font-weight="700">03 · 编排</text>
+      <text x="20" y="66" fill="#F8FAFC" font-size="21" font-weight="700">四个独立表现轴</text>
+      <text x="20" y="98" fill="#CBD5E1" font-size="16">图标系统与风格</text>
+      <text x="20" y="123" fill="#CBD5E1" font-size="16">布局与动效</text>
+      <text x="20" y="148" fill="#CBD5E1" font-size="16">解析来源记录</text>
+    </g>
+    <path d="M822 195H858" stroke="#A78BFA" stroke-width="3"/>
+    <path d="M858 195l-10-6v12z" fill="#34D399"/>
+
+    <g transform="translate(858 116)">
+      <rect width="282" height="158" rx="18" fill="#0D241F" stroke="#276553"/>
+      <text x="20" y="31" fill="#86EFAC" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" font-weight="700">04 · 交付</text>
+      <text x="20" y="66" fill="#F8FAFC" font-size="21" font-weight="700">可视化与验证证据</text>
+      <text x="20" y="98" fill="#CBD5E1" font-size="16">动态 SVG 与 HTML</text>
+      <text x="20" y="123" fill="#CBD5E1" font-size="16">PNG · WebP · MP4 · PDF</text>
+      <text x="20" y="148" fill="#CBD5E1" font-size="16">质量报告 JSON</text>
+    </g>
+  </g>
+</svg>
