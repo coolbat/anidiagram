@@ -10,6 +10,7 @@ from typing import Any, Dict, Iterable, List, Mapping, Sequence, Tuple
 
 from .icon_system import canonical_icon_system_id, icon_system_version
 from .illustrated_registry import illustrated_icon_ids
+from .localization import resolve_locale
 
 
 DEFAULT_ICON_SYSTEM = "illustrated"
@@ -123,7 +124,7 @@ _KIND_PATTERN = re.compile(r"^[a-z][a-z0-9-]*$")
 _ROLES = {"actor", "source", "process", "agent", "memory", "tool", "output", "risk", "neutral"}
 _IMPORTANCE = {"primary", "supporting", "context"}
 _PLAN_FIELDS = {"version", "semantic", "presentation", "presentation_sources"}
-_SEMANTIC_FIELDS = {"title", "subtitle", "summary", "intent", "entities", "relations", "groups", "flows", "sources", "annotations"}
+_SEMANTIC_FIELDS = {"language", "title", "subtitle", "summary", "intent", "entities", "relations", "groups", "flows", "sources", "annotations"}
 _INTENT_FIELDS = {"diagram_kind", "primary_question", "audience", "scope", "exclusions"}
 _ENTITY_FIELDS = {"id", "label", "description", "kind", "role", "importance", "tags", "attributes", "state", "source_refs"}
 _RELATION_FIELDS = {"id", "from", "to", "kind", "label", "description", "direction", "importance", "condition", "protocol", "attributes", "source_refs"}
@@ -185,9 +186,20 @@ def compile_plan_v02(plan: Mapping[str, Any]) -> Dict[str, Any]:
         )
         _apply_layered_loop_presentation(edges, nodes, lane_by_entity, lanes, canvas)
     groups = _compile_semantic_groups(groups_semantic, nodes)
+    locale = resolve_locale(
+        str(semantic.get("language") or "auto"),
+        (
+            semantic.get("title"),
+            semantic.get("subtitle"),
+            semantic.get("summary"),
+            *(entity.get("label") for entity in entities),
+            *(relation.get("label") for relation in relations),
+        ),
+    )
 
     return {
         "version": "0.4",
+        "locale": locale,
         "composition_policy": "composition-v1",
         "resolved_presentation": deepcopy(resolved),
         "icon_system": icon_system,
@@ -255,6 +267,8 @@ def _validate_plan(plan: Mapping[str, Any]) -> Mapping[str, Any]:
     if not isinstance(semantic, Mapping):
         raise ValueError("DiagramPlan v0.2 requires a semantic object")
     _assert_keys(semantic, _SEMANTIC_FIELDS, "semantic")
+    if semantic.get("language", "auto") not in {"auto", "en", "zh-CN"}:
+        raise ValueError("semantic.language must be 'auto', 'en', or 'zh-CN'")
     _required_text(semantic, "title", "semantic.title")
     for field in ("subtitle", "summary"):
         _optional_text(semantic, field, f"semantic.{field}")
@@ -656,17 +670,22 @@ def _layered_loop_layout(
         for lane in lanes
     }
     max_count = max((len(items) for items in items_by_lane.values()), default=1)
-    right = 80 + max(0, max_count - 1) * 300
-    width = max(1020, right + 600)
+    node_width = 220
+    column_gap = 300
+    outer_padding = 100
+    row_width = node_width + max(0, max_count - 1) * column_gap
+    width = max(1020, row_width + outer_padding * 2)
+    left = (width - row_width) // 2
+    right = left + max(0, max_count - 1) * column_gap
     positions: Dict[str, Tuple[int, int]] = {}
     for lane_index, lane in enumerate(lanes):
         items = items_by_lane[lane]
         if len(items) == 1:
-            positions[items[0]] = ((width - 220) // 2, 235 + lane_index * 220)
+            positions[items[0]] = ((width - node_width) // 2, 235 + lane_index * 220)
             continue
         for index, item_id in enumerate(items):
             slot = index if lane_index % 2 == 0 else len(items) - 1 - index
-            x = round(80 + (right - 80) * slot / (len(items) - 1))
+            x = round(left + (right - left) * slot / (len(items) - 1))
             positions[item_id] = (x, 235 + lane_index * 220)
     return positions, {
         "width": width,
@@ -1114,32 +1133,148 @@ def _apply_layered_loop_presentation(
     lanes: Sequence[str],
     canvas: Dict[str, int],
 ) -> None:
-    """Keep layered-loop transfers in gutters and feedback outside the layers."""
+    """Keep layered-loop transfers legible without overlapping reciprocal paths.
+
+    Reciprocal relations between adjacent layers use independent anchors and
+    parallel gutter channels. Same-layer feedback loops travel outside the node
+    row instead of crossing the primary path. Only unmatched upward transfers
+    retain the outer-canvas fallback used by older layered-loop diagrams.
+    """
 
     node_by_id = {str(node["id"]): node for node in nodes}
     lane_index = {lane: index for index, lane in enumerate(lanes)}
+    indexed_edges = list(enumerate(edges))
+    directions = {(str(edge["from"]), str(edge["to"])) for edge in edges}
+    paired_adjacent = {
+        index
+        for index, edge in indexed_edges
+        if (str(edge["to"]), str(edge["from"])) in directions
+        and abs(
+            lane_index[lane_by_entity[str(edge["from"])]]
+            - lane_index[lane_by_entity[str(edge["to"])]]
+        ) == 1
+    }
+
+    anchor_requests: Dict[Tuple[str, str], List[Tuple[int, str, float, int]]] = defaultdict(list)
+    boundary_edges: Dict[Tuple[int, int], List[int]] = defaultdict(list)
+    for index, edge in indexed_edges:
+        if index not in paired_adjacent:
+            continue
+        source_id = str(edge["from"])
+        target_id = str(edge["to"])
+        source_lane = lane_index[lane_by_entity[source_id]]
+        target_lane = lane_index[lane_by_entity[target_id]]
+        source_side = "bottom" if source_lane < target_lane else "top"
+        target_side = "top" if source_lane < target_lane else "bottom"
+        source_center = _node_center_x(node_by_id[source_id])
+        target_center = _node_center_x(node_by_id[target_id])
+        anchor_requests[(source_id, source_side)].append((index, "source", target_center, 0))
+        anchor_requests[(target_id, target_side)].append((index, "target", source_center, 1))
+        boundary_edges[(min(source_lane, target_lane), max(source_lane, target_lane))].append(index)
+
+    anchors: Dict[Tuple[int, str], List[int]] = {}
+    for (node_id, side), requests in anchor_requests.items():
+        node = node_by_id[node_id]
+        x, y = (int(value) for value in node["position"])
+        width, height = (int(value) for value in node["size"])
+        ordered_requests = sorted(requests, key=lambda item: (item[2], item[3], item[0]))
+        count = len(ordered_requests)
+        center = x + width / 2
+        span = min(width * 0.60, max(36, (count - 1) * 26))
+        left = center - span / 2
+        right = center + span / 2
+        for slot, (edge_index, endpoint, _, _) in enumerate(ordered_requests):
+            anchor_x = round(center) if count == 1 else round(left + (right - left) * slot / (count - 1))
+            anchor_y = y if side == "top" else y + height
+            anchors[(edge_index, endpoint)] = [anchor_x, anchor_y]
+
+    corridors: Dict[int, int] = {}
+    for (upper_lane, lower_lane), edge_indices in boundary_edges.items():
+        upper_bottom = max(
+            int(node["position"][1]) + int(node["size"][1])
+            for node in nodes
+            if lane_index[lane_by_entity[str(node["id"])]] == upper_lane
+        )
+        lower_top = min(
+            int(node["position"][1])
+            for node in nodes
+            if lane_index[lane_by_entity[str(node["id"])]] == lower_lane
+        )
+
+        def boundary_order(edge_index: int) -> Tuple[float, int, int]:
+            edge = edges[edge_index]
+            source_lane = lane_index[lane_by_entity[str(edge["from"])]]
+            lower_id = str(edge["to"]) if source_lane == upper_lane else str(edge["from"])
+            direction_rank = 0 if source_lane == upper_lane else 1
+            return (_node_center_x(node_by_id[lower_id]), direction_rank, edge_index)
+
+        ordered_indices = sorted(edge_indices, key=boundary_order)
+        first = upper_bottom + 38
+        last = lower_top - 20
+        if first > last:
+            first = last = (upper_bottom + lower_top) // 2
+        for slot, edge_index in enumerate(ordered_indices):
+            corridor = (first + last) // 2 if len(ordered_indices) == 1 else round(
+                first + (last - first) * slot / (len(ordered_indices) - 1)
+            )
+            corridors[edge_index] = corridor
+
     lane_spacing = 12
     outer_margin = 36
     bottom_margin = 30
     upward_count = sum(
         1
-        for edge in edges
-        if lane_index[lane_by_entity[str(edge["from"])]]
+        for index, edge in indexed_edges
+        if index not in paired_adjacent
+        and lane_index[lane_by_entity[str(edge["from"])]]
         > lane_index[lane_by_entity[str(edge["to"])]]
     )
     canvas["height"] += max(0, upward_count - 1) * lane_spacing
     upward_lane = 0
-    for edge in edges:
+    same_lane_feedback: Dict[str, int] = defaultdict(int)
+    for index, edge in indexed_edges:
+        if edge.get("flow_repeat") == "loop" and edge.get("flow_importance") != "primary":
+            edge.pop("step", None)
         source_id = str(edge["from"])
         target_id = str(edge["to"])
         source_lane = lane_index[lane_by_entity[source_id]]
         target_lane = lane_index[lane_by_entity[target_id]]
-        if source_lane == target_lane:
-            edge["route"] = "straight"
-            continue
-
         source = node_by_id[source_id]
         target = node_by_id[target_id]
+
+        if index in paired_adjacent:
+            source_anchor = anchors[(index, "source")]
+            target_anchor = anchors[(index, "target")]
+            corridor = corridors[index]
+            edge["route"] = "points"
+            edge["points"] = [
+                source_anchor,
+                [source_anchor[0], corridor],
+                [target_anchor[0], corridor],
+                target_anchor,
+            ]
+            continue
+
+        if source_lane == target_lane:
+            is_feedback = edge.get("semantic_kind") == "feedback"
+            if not is_feedback:
+                edge["route"] = "straight"
+                continue
+            feedback_slot = same_lane_feedback[lane_by_entity[source_id]]
+            same_lane_feedback[lane_by_entity[source_id]] += 1
+            source_anchor = list(_node_anchor(source, "bottom"))
+            target_anchor = list(_node_anchor(target, "bottom"))
+            row_bottom = max(source_anchor[1], target_anchor[1])
+            corridor = row_bottom + 18 + feedback_slot * lane_spacing
+            edge["route"] = "points"
+            edge["points"] = [
+                source_anchor,
+                [source_anchor[0], corridor],
+                [target_anchor[0], corridor],
+                target_anchor,
+            ]
+            continue
+
         sx, sy = _node_anchor(source, "bottom")
         tx, ty = _node_anchor(target, "top")
         if source_lane < target_lane and target_lane - source_lane == 1 and sx == tx:
@@ -1183,6 +1318,10 @@ def _apply_layered_loop_presentation(
             [left_corridor, target_left[1]],
             target_left,
         ]
+
+
+def _node_center_x(node: Mapping[str, Any]) -> float:
+    return float(node["position"][0]) + float(node["size"][0]) / 2
 
 
 def _apply_agent_loop_presentation(

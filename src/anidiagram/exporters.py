@@ -16,11 +16,13 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 from .effects import canonical_edge_effect, channel_effect, effect_active
 from .model import Edge, Node, Point, Scene
+from .localization import raster_font_path
 from .quality import quality_report
 from .renderer_html_runtime import render_html_runtime
 from .runtime_dependencies import GSAP_CDN_URL, GSAP_VERSION
 from .renderer_svg import CONTINUOUS_EDGE_MOTION, PARTICLE_EDGE_MOTION, particle_radii, policy_allows, render_html, render_svg
 from .styles import role_style
+from .text_layout import CAPTION_LINE_HEIGHT, LABEL_LINE_HEIGHT, text_block_layout
 
 
 PointList = List[Point]
@@ -40,7 +42,7 @@ def write_svg(scene: Scene, style: Dict[str, Any], path: Path) -> Dict[str, str]
 
 def write_viewer(scene: Scene, style: Dict[str, Any], path: Path) -> Dict[str, str]:
     svg = render_svg(scene, style)
-    path.write_text(render_html(svg, scene.title.text), encoding="utf-8")
+    path.write_text(render_html(svg, scene.title.text, locale=scene.locale), encoding="utf-8")
     return _done("viewer", path)
 
 
@@ -843,16 +845,19 @@ def _render_frame(scene: Scene, style: Dict[str, Any], frame: int = 0, frames: i
         draw.line((x, 0, x, scene.canvas.height), fill=grid, width=1)
     for y in range(0, scene.canvas.height, 32):
         draw.line((0, y, scene.canvas.width, y), fill=grid, width=1)
-    font = ImageFont.load_default()
-    title_font = ImageFont.load_default()
+    font = _load_raster_font(ImageFont, scene.locale, 14)
+    small_font = _load_raster_font(ImageFont, scene.locale, 12)
+    title_font = _load_raster_font(ImageFont, scene.locale, 34)
+    node_title_font = _load_raster_font(ImageFont, scene.locale, 16)
+    node_caption_font = _load_raster_font(ImageFont, scene.locale, 13)
     draw.text((90, 64), scene.title.text, fill=canvas.get("text", "#172033"), font=title_font)
-    draw.text((74, 112), scene.title.subtitle, fill=muted, font=font)
+    draw.text((74, 112), scene.title.subtitle, fill=muted, font=small_font)
 
     for group in scene.groups:
         x, y, w, h = group.bounds
         role = role_style(style, group.role)
         draw.rounded_rectangle((x, y, x + w, y + h), radius=22, outline=group.stroke or role.get("stroke", "#94a3b8"), width=2)
-        draw.text((x + 18, y + 18), group.label, fill=muted, font=font)
+        draw.text((x + 18, y + 18), group.label, fill=muted, font=small_font)
 
     node_map = {node.node_id: node for node in scene.nodes}
     for edge_index, edge in enumerate(scene.edges):
@@ -863,7 +868,7 @@ def _render_frame(scene: Scene, style: Dict[str, Any], frame: int = 0, frames: i
         if edge.label:
             sx, sy = points[0]
             ex, ey = points[-1]
-            draw.text(((sx + ex) / 2, (sy + ey) / 2 - 16), edge.label, fill=muted, font=font)
+            draw.text(((sx + ex) / 2, (sy + ey) / 2 - 16), edge.label, fill=muted, font=small_font, anchor="mm")
 
     for node in scene.nodes:
         x, y = node.position
@@ -882,13 +887,30 @@ def _render_frame(scene: Scene, style: Dict[str, Any], frame: int = 0, frames: i
             draw.rounded_rectangle((x, y, x + w, y + h), radius=int(node.radius or style.get("node", {}).get("radius", 14)), fill=fill, outline=stroke, width=stroke_width)
         if node.step is not None:
             draw.ellipse((x + 4, y + 4, x + 32, y + 32), fill=stroke)
-            draw.text((x + 14, y + 12), str(node.step), fill=fill, font=font)
-        text_x = x + 14 if node.shape != "decision" else x + 34
-        draw.text((text_x, y + h / 2 - 12), node.label, fill=text, font=font)
-        draw.text((text_x, y + h / 2 + 8), node.caption, fill=text, font=font)
+            draw.text((x + 18, y + 18), str(node.step), fill=fill, font=small_font, anchor="mm")
+        horizontal_padding = 34 if node.shape == "decision" else 14
+        layout = text_block_layout(node.label, node.caption, w - horizontal_padding * 2, h)
+        text_x = x + w / 2
+        baseline = y + layout.first_baseline
+        for line in layout.label_lines:
+            draw.text((text_x, baseline), line, fill=text, font=node_title_font, anchor="mm")
+            baseline += LABEL_LINE_HEIGHT
+        for line in layout.caption_lines:
+            draw.text((text_x, baseline), line, fill=text, font=node_caption_font, anchor="mm")
+            baseline += CAPTION_LINE_HEIGHT
     if frames > 1 and scene.motion.profile != "off":
         _draw_raster_particles(draw, scene, style, node_map, frame, frames)
     return image
+
+
+def _load_raster_font(image_font: Any, locale: str, size: int) -> Any:
+    path = raster_font_path(locale)
+    if path is not None:
+        try:
+            return image_font.truetype(str(path), size=size)
+        except (OSError, ValueError):
+            pass
+    return image_font.load_default()
 
 
 def _flatten_frame_for_gif(image: Any, style: Dict[str, Any]) -> Any:

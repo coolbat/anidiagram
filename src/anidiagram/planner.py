@@ -7,6 +7,7 @@ from copy import deepcopy
 from typing import Any, Dict, Iterable, List, Mapping, Optional
 
 from .composition import compile_plan_v02
+from .localization import contains_cjk, resolve_locale
 
 
 PlanDict = Dict[str, Any]
@@ -64,6 +65,7 @@ def brief_to_plan(
     title: str = "",
     style: Optional[str] = None,
     version: str = "0.2",
+    language: str = "auto",
 ) -> PlanDict:
     """Create a deterministic plan; new calls default to composition-v1."""
 
@@ -71,7 +73,7 @@ def brief_to_plan(
         return _brief_to_plan_v01(brief, title=title, style=style or "sketch-board")
     if version != "0.2":
         raise ValueError("DiagramPlan version must be '0.1' or '0.2'")
-    return _brief_to_plan_v02(brief, title=title, style=style)
+    return _brief_to_plan_v02(brief, title=title, style=style, language=language)
 
 
 def _brief_to_plan_v01(brief: str, title: str = "", style: str = "sketch-board") -> PlanDict:
@@ -202,19 +204,24 @@ def _brief_to_plan_v01(brief: str, title: str = "", style: str = "sketch-board")
     }
 
 
-def _brief_to_plan_v02(brief: str, title: str = "", style: Optional[str] = None) -> PlanDict:
+def _brief_to_plan_v02(
+    brief: str,
+    title: str = "",
+    style: Optional[str] = None,
+    language: str = "auto",
+) -> PlanDict:
     """Extract a native semantic v0.2 plan without routing through v0.1 geometry."""
 
     cleaned = " ".join(brief.split())
     keywords = _keywords(cleaned)
-    plan_title = title or _title_from_brief(cleaned, keywords)
+    resolved_language = resolve_locale(language, (title, cleaned))
+    is_chinese = resolved_language == "zh-CN"
+    plan_title = title or _title_from_brief(cleaned, keywords, language=resolved_language)
     summary = _source_summary(cleaned)
     has_memory = _contains(cleaned, _MEMORY_TERMS)
     has_tools = _contains(cleaned, _TOOL_TERMS)
     has_safety = _contains(cleaned, _SAFETY_TERMS)
     has_loop = _contains(cleaned, _LOOP_TERMS)
-    is_chinese = _contains_cjk(cleaned)
-
     labels = {
         "request": "请求" if is_chinese else "Request",
         "agent": "智能体" if is_chinese else "Agent",
@@ -312,30 +319,45 @@ def _brief_to_plan_v02(brief: str, title: str = "", style: Optional[str] = None)
         )
         return relation_id
 
-    primary_relations = [add_relation("request-agent", "request", "agent", "request", "request", "primary")]
+    relation_labels = {
+        "request": "处理请求" if is_chinese else "request",
+        "read_context": "读取上下文" if is_chinese else "read context",
+        "return_context": "返回上下文" if is_chinese else "context",
+        "dispatch": "调用工具" if is_chinese else "dispatch",
+        "validate": "执行校验" if is_chinese else "validate",
+        "result": "输出结果" if is_chinese else "verified result",
+        "retry": "失败重试" if is_chinese else "retry",
+    }
+    primary_relations = [
+        add_relation("request-agent", "request", "agent", "request", relation_labels["request"], "primary")
+    ]
     if has_memory:
         primary_relations.extend(
             [
-                add_relation("agent-memory", "agent", "memory", "context-read", "read context", "supporting"),
-                add_relation("memory-agent", "memory", "agent", "context-return", "context", "supporting"),
+                add_relation("agent-memory", "agent", "memory", "context-read", relation_labels["read_context"], "supporting"),
+                add_relation("memory-agent", "memory", "agent", "context-return", relation_labels["return_context"], "supporting"),
             ]
         )
     previous = "agent"
     if has_tools:
-        primary_relations.append(add_relation("agent-tool", "agent", "tool", "tool-call", "dispatch", "primary"))
+        primary_relations.append(
+            add_relation("agent-tool", "agent", "tool", "tool-call", relation_labels["dispatch"], "primary")
+        )
         previous = "tool"
     if has_safety:
         primary_relations.append(
-            add_relation("result-guardrail", previous, "guardrail", "validation", "validate", "supporting")
+            add_relation("result-guardrail", previous, "guardrail", "validation", relation_labels["validate"], "supporting")
         )
         previous = "guardrail"
-    primary_relations.append(add_relation("result-output", previous, "output", "result", "verified result", "primary"))
+    primary_relations.append(
+        add_relation("result-output", previous, "output", "result", relation_labels["result"], "primary")
+    )
 
     flows: List[Dict[str, Any]] = [
         {
             "id": "primary-flow",
-            "label": "Primary request flow",
-            "description": "Ordered execution extracted directly from the brief.",
+            "label": "主请求流程" if is_chinese else "Primary request flow",
+            "description": "根据输入需求提取的有序执行流程。" if is_chinese else "Ordered execution extracted directly from the brief.",
             "relation_ids": primary_relations,
             "importance": "primary",
             "repeat": "event-driven",
@@ -343,11 +365,13 @@ def _brief_to_plan_v02(brief: str, title: str = "", style: Optional[str] = None)
         }
     ]
     if has_loop:
-        feedback_relation = add_relation("output-feedback", "output", "agent", "feedback", "retry", "supporting")
+        feedback_relation = add_relation(
+            "output-feedback", "output", "agent", "feedback", relation_labels["retry"], "supporting"
+        )
         flows.append(
             {
                 "id": "feedback-loop",
-                "label": "Feedback loop",
+                "label": "反馈重试循环" if is_chinese else "Feedback loop",
                 "relation_ids": [feedback_relation],
                 "importance": "supporting",
                 "repeat": "loop",
@@ -363,14 +387,15 @@ def _brief_to_plan_v02(brief: str, title: str = "", style: Optional[str] = None)
     return {
         "version": "0.2",
         "semantic": {
+            "language": resolved_language,
             "title": plan_title,
-            "subtitle": "Semantic-first brief compiled with composition-v1.",
+            "subtitle": "由自然语言需求生成的语义优先架构图。" if is_chinese else "Semantic-first brief compiled with composition-v1.",
             "summary": summary,
             "intent": {
                 "diagram_kind": "workflow",
                 "primary_question": summary or plan_title,
-                "audience": ["technical"],
-                "scope": "Entities, relations, state, and execution flows stated or implied by the brief.",
+                "audience": ["技术团队"] if is_chinese else ["technical"],
+                "scope": "需求中明确或隐含的实体、关系、状态与执行流程。" if is_chinese else "Entities, relations, state, and execution flows stated or implied by the brief.",
                 "exclusions": [],
             },
             "entities": entities,
@@ -380,7 +405,7 @@ def _brief_to_plan_v02(brief: str, title: str = "", style: Optional[str] = None)
                 {
                     "id": "input-brief",
                     "type": "brief",
-                    "title": "Input brief",
+                    "title": "输入需求" if is_chinese else "Input brief",
                     "note": summary,
                 }
             ],
@@ -450,10 +475,15 @@ def compile_plan(plan: Mapping[str, Any]) -> SpecDict:
     return spec
 
 
-def brief_to_diagram_script(brief: str, title: str = "", style: str = "sketch-board") -> SpecDict:
+def brief_to_diagram_script(
+    brief: str,
+    title: str = "",
+    style: str = "sketch-board",
+    language: str = "auto",
+) -> SpecDict:
     """Convenience helper for callers that do not need the intermediate plan."""
 
-    return compile_plan(brief_to_plan(brief, title=title, style=style))
+    return compile_plan(brief_to_plan(brief, title=title, style=style, language=language))
 
 
 def _keywords(text: str) -> List[str]:
@@ -477,12 +507,16 @@ def _contains(text: str, needles: Iterable[str]) -> bool:
 
 
 def _contains_cjk(text: str) -> bool:
-    return re.search(r"[\u3400-\u9fff]", text) is not None
+    return contains_cjk(text)
 
 
-def _title_from_brief(text: str, keywords: List[str]) -> str:
+def _title_from_brief(text: str, keywords: List[str], language: str = "auto") -> str:
     if not text:
-        return "Brief to Diagram Flow"
+        return "中文架构图" if language == "zh-CN" else "Brief to Diagram Flow"
+    if language == "zh-CN" or _contains_cjk(text):
+        candidate = re.split(r"[：:，,。！？；;\n]", text.strip(), maxsplit=1)[0].strip()
+        candidate = re.sub(r"^(?:请(?:帮我)?|帮我|构建|绘制|生成|创建|设计|输出|展示)", "", candidate).strip()
+        return candidate[:28].rstrip() or "中文架构图"
     sentence = re.split(r"[.!?\n]", text.strip(), maxsplit=1)[0]
     sentence = sentence.strip()
     if 8 <= len(sentence) <= 52:

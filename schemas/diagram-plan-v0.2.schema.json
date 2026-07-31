@@ -172,6 +172,7 @@
       "required": ["title", "intent", "entities"],
       "additionalProperties": false,
       "properties": {
+        "language": {"enum": ["auto", "en", "zh-CN"], "default": "auto"},
         "title": {"type": "string", "minLength": 1},
         "subtitle": {"type": "string"},
         "summary": {"type": "string"},

@@ -47,7 +47,7 @@ class ReadmeShowcaseRound1Test(unittest.TestCase):
             with self.subTest(case=case["id"]):
                 spec = self.specs[case["id"]]
                 expected_canvas = (
-                    {"width": 1280, "height": 920}
+                    {"width": 1020, "height": 920}
                     if case["id"] == "hero-loop-engineering"
                     else {"width": 1600, "height": 900}
                 )

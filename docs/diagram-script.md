@@ -70,6 +70,8 @@ Schema: `schemas/diagram-script-v0.3.schema.json`.
 
 `0.4` adds `composition-v1` output fields:
 
+- top-level `locale` (`auto`, `en`, or `zh-CN`) for accessible language
+  metadata and locale-aware font fallback selection;
 - top-level `icon_system`, independent from the style profile;
 - `composition_policy: "composition-v1"`;
 - `resolved_presentation`, recording the concrete icon, style, layout, and

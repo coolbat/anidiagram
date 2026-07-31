@@ -1,0 +1,130 @@
+{
+  "version": "0.2",
+  "semantic": {
+    "language": "zh-CN",
+    "title": "企业级智能体平台架构",
+    "subtitle": "请求编排、知识检索、安全校验与反馈重试",
+    "summary": "用户请求经 API 网关进入智能体，智能体结合长期记忆、知识库和搜索工具完成任务，并在安全校验后输出结果。",
+    "intent": {
+      "diagram_kind": "agent-platform",
+      "primary_question": "企业级智能体平台如何安全地处理请求并形成可验证输出？",
+      "audience": ["架构师", "研发团队", "产品负责人"],
+      "scope": "请求入口、智能体编排、知识与工具、安全校验、结果输出和失败重试。",
+      "exclusions": ["具体模型供应商", "部署区域与容量参数"]
+    },
+    "entities": [
+      {
+        "id": "user-request",
+        "label": "用户请求",
+        "description": "业务目标与上下文",
+        "kind": "http-request",
+        "role": "source",
+        "importance": "primary",
+        "source_refs": ["architecture-brief"]
+      },
+      {
+        "id": "api-gateway",
+        "label": "API 网关",
+        "description": "认证、限流与请求路由",
+        "kind": "gateway",
+        "role": "process",
+        "importance": "primary",
+        "source_refs": ["architecture-brief"]
+      },
+      {
+        "id": "agent-orchestrator",
+        "label": "智能编排",
+        "description": "理解意图、规划步骤并协调执行",
+        "kind": "agent",
+        "role": "agent",
+        "importance": "primary",
+        "source_refs": ["architecture-brief"]
+      },
+      {
+        "id": "long-term-memory",
+        "label": "长期记忆",
+        "description": "保存用户偏好与历史决策",
+        "kind": "memory",
+        "role": "memory",
+        "importance": "supporting",
+        "source_refs": ["architecture-brief"]
+      },
+      {
+        "id": "knowledge-base",
+        "label": "企业知识库",
+        "description": "提供经过治理的业务知识",
+        "kind": "knowledge-base",
+        "role": "memory",
+        "importance": "supporting",
+        "source_refs": ["architecture-brief"]
+      },
+      {
+        "id": "search-tool",
+        "label": "搜索工具",
+        "description": "获取外部实时信息",
+        "kind": "search",
+        "role": "tool",
+        "importance": "supporting",
+        "source_refs": ["architecture-brief"]
+      },
+      {
+        "id": "safety-gate",
+        "label": "安全校验",
+        "description": "检查权限、策略、风险与证据",
+        "kind": "shield",
+        "role": "risk",
+        "importance": "primary",
+        "source_refs": ["architecture-brief"]
+      },
+      {
+        "id": "verified-output",
+        "label": "可信结果",
+        "description": "交付可追溯的最终响应",
+        "kind": "output",
+        "role": "output",
+        "importance": "primary",
+        "source_refs": ["architecture-brief"]
+      }
+    ],
+    "relations": [
+      {"id": "request-enters", "from": "user-request", "to": "api-gateway", "kind": "request", "label": "提交请求", "direction": "forward", "importance": "primary", "source_refs": ["architecture-brief"]},
+      {"id": "gateway-routes", "from": "api-gateway", "to": "agent-orchestrator", "kind": "routing", "label": "认证并路由", "direction": "forward", "importance": "primary", "source_refs": ["architecture-brief"]},
+      {"id": "agent-reads-memory", "from": "agent-orchestrator", "to": "long-term-memory", "kind": "context-read", "label": "读取上下文", "direction": "forward", "importance": "supporting", "source_refs": ["architecture-brief"]},
+      {"id": "memory-returns", "from": "long-term-memory", "to": "agent-orchestrator", "kind": "context-return", "label": "", "description": "向智能编排返回历史信息", "direction": "forward", "importance": "supporting", "source_refs": ["architecture-brief"]},
+      {"id": "agent-retrieves", "from": "agent-orchestrator", "to": "knowledge-base", "kind": "retrieval", "label": "检索知识", "direction": "forward", "importance": "supporting", "source_refs": ["architecture-brief"]},
+      {"id": "knowledge-grounds", "from": "knowledge-base", "to": "agent-orchestrator", "kind": "grounding", "label": "", "description": "向智能编排返回知识依据", "direction": "forward", "importance": "supporting", "source_refs": ["architecture-brief"]},
+      {"id": "agent-searches", "from": "agent-orchestrator", "to": "search-tool", "kind": "tool-call", "label": "调用搜索", "direction": "forward", "importance": "supporting", "source_refs": ["architecture-brief"]},
+      {"id": "search-returns", "from": "search-tool", "to": "agent-orchestrator", "kind": "tool-result", "label": "", "description": "向智能编排返回实时信息", "direction": "forward", "importance": "supporting", "source_refs": ["architecture-brief"]},
+      {"id": "agent-validates", "from": "agent-orchestrator", "to": "safety-gate", "kind": "validation", "label": "提交校验", "direction": "forward", "importance": "primary", "source_refs": ["architecture-brief"]},
+      {"id": "gate-delivers", "from": "safety-gate", "to": "verified-output", "kind": "delivery", "label": "通过后输出", "direction": "forward", "importance": "primary", "source_refs": ["architecture-brief"]},
+      {"id": "output-retries", "from": "verified-output", "to": "agent-orchestrator", "kind": "feedback", "label": "失败时反馈重试", "direction": "forward", "importance": "supporting", "source_refs": ["architecture-brief"]}
+    ],
+    "groups": [
+      {"id": "access-layer", "label": "接入层", "kind": "architecture-layer", "members": ["user-request", "api-gateway"], "importance": "primary", "source_refs": ["architecture-brief"]},
+      {"id": "intelligence-layer", "label": "智能编排层", "kind": "architecture-layer", "members": ["agent-orchestrator", "safety-gate", "verified-output"], "importance": "primary", "source_refs": ["architecture-brief"]},
+      {"id": "resource-layer", "label": "知识与工具层", "kind": "architecture-layer", "members": ["long-term-memory", "knowledge-base", "search-tool"], "importance": "supporting", "source_refs": ["architecture-brief"]}
+    ],
+    "flows": [
+      {"id": "primary-request-flow", "label": "主请求链路", "relation_ids": ["request-enters", "gateway-routes", "agent-validates", "gate-delivers"], "importance": "primary", "repeat": "event-driven", "source_refs": ["architecture-brief"]},
+      {"id": "memory-loop", "label": "记忆上下文回路", "relation_ids": ["agent-reads-memory", "memory-returns"], "importance": "supporting", "repeat": "loop", "source_refs": ["architecture-brief"]},
+      {"id": "knowledge-loop", "label": "知识检索回路", "relation_ids": ["agent-retrieves", "knowledge-grounds"], "importance": "supporting", "repeat": "loop", "source_refs": ["architecture-brief"]},
+      {"id": "search-loop", "label": "实时搜索回路", "relation_ids": ["agent-searches", "search-returns"], "importance": "supporting", "repeat": "loop", "source_refs": ["architecture-brief"]},
+      {"id": "retry-loop", "label": "失败重试回路", "relation_ids": ["output-retries"], "importance": "supporting", "repeat": "loop", "source_refs": ["architecture-brief"]}
+    ],
+    "sources": [
+      {"id": "architecture-brief", "type": "brief", "title": "企业级智能体平台中文架构需求", "note": "用于验证中文 DiagramPlan、DiagramScript、SVG、HTML 与栅格导出链路。"}
+    ]
+  },
+  "presentation": {
+    "icon_system": "illustrated",
+    "style": "deep-tech",
+    "layout": "layered-loop",
+    "motion": "showcase-v1"
+  },
+  "presentation_sources": {
+    "icon_system": "model",
+    "style": "model",
+    "layout": "model",
+    "motion": "model"
+  }
+}

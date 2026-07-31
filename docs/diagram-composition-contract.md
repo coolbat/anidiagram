@@ -53,6 +53,7 @@ It MUST NOT contain:
 {
   "version": "0.2",
   "semantic": {
+    "language": "en",
     "title": "Production Kubernetes request path",
     "subtitle": "Ingress, control plane, workloads, and observability",
     "summary": "Show how an external request reaches a workload and how the platform observes it.",
@@ -121,6 +122,12 @@ visual result.
 - `audience`: one or more audience labels such as `technical`, `executive`,
   `mixed`, or `beginner`.
 - `scope`: what the diagram includes. Exclusions MAY be recorded separately.
+
+`semantic.language` MAY be `auto`, `en`, or `zh-CN`. It describes authored
+semantic copy rather than visual style. The compiler resolves it into the
+DiagramScript `locale`; renderers use that locale for language metadata,
+viewer copy, and the font fallback stack without moving language into the
+presentation axes.
 
 ### Entities
 

@@ -100,6 +100,8 @@ jobs:
           python3 -m pip install -e ".[raster]"
           npm ci
           npx playwright install --with-deps chromium
+          sudo apt-get update
+          sudo apt-get install --yes fonts-noto-cjk
       - name: Render current Illustrated public showcase
         run: |
           PYTHONPATH=src python3 -m anidiagram.cli \
@@ -122,6 +124,18 @@ jobs:
             --outdir build/ci/composition \
             --basename production-request-path \
             --formats svg,html,quality
+      - name: Render Simplified Chinese architecture proof
+        run: |
+          PYTHONPATH=src python3 -m anidiagram.cli \
+            --plan examples/zh-CN/enterprise-agent-platform.plan.json \
+            --spec-out build/ci/zh-CN/enterprise-agent-platform.diagram.json \
+            --outdir build/ci/zh-CN \
+            --basename enterprise-agent-platform \
+            --formats svg,html,quality \
+            --diagram-locale zh-CN \
+            --viewer-locale auto \
+            --runtime-dependency inline \
+            --runtime-source node_modules/gsap/dist/gsap.min.js
       - name: Render explicit Choreographer modes
         run: |
           PYTHONPATH=src python3 -m anidiagram.cli \
@@ -162,6 +176,8 @@ jobs:
           node scripts/verify_choreographer.mjs build/ci/choreographer/hybrid.html hybrid
       - name: Verify committed README visual quality
         run: node scripts/verify_readme_showcase_round_1.mjs gallery/readme-showcase
+      - name: Verify Simplified Chinese rendering and geometry
+        run: node scripts/verify_chinese_architecture.mjs build/ci/zh-CN/enterprise-agent-platform.html
       - name: Upload browser diagnostics on failure
         if: failure()
         uses: actions/upload-artifact@v4

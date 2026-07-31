@@ -3,18 +3,15 @@
 from __future__ import annotations
 
 import json
-import re
 from pathlib import Path
 from typing import Any, Dict, Optional
 
 from .motion_manifest_v2 import build_motion_manifest
+from .localization import font_stack, scene_locale, viewer_labels
 from .renderer_svg import esc, render_svg
 from .model import Scene
 from .resources import resource_path
 from .runtime_dependencies import runtime_dependency_markup
-
-
-_CJK_PATTERN = re.compile(r"[\u3400-\u9fff]")
 
 
 def render_html_runtime(
@@ -34,15 +31,16 @@ def render_html_runtime(
     gsap_script = runtime_dependency_markup(runtime, dependency_mode, dependency_source)
     resolved_locale = _resolve_locale(scene, locale)
     labels = _viewer_labels(resolved_locale)
+    font_family = font_stack(resolved_locale)
     return f"""<!doctype html>
 <html lang="{esc(resolved_locale)}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{esc(scene.title.text)} Runtime</title>
+  <title>{esc(scene.title.text)} {esc(labels['runtime_suffix'])}</title>
   <link rel="icon" href="data:,">
   <style>
-    body {{ margin: 0; background: #0b1020; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }}
+    body {{ margin: 0; background: #0b1020; color: #f8fafc; font-family: {font_family}; }}
     main {{ min-height: 100vh; display: grid; grid-template-rows: auto 1fr; gap: 12px; padding: 16px; box-sizing: border-box; }}
     .toolbar {{ display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }}
     button, a {{ border: 1px solid #475569; background: #111827; color: #f8fafc; border-radius: 8px; padding: 8px 10px; font: inherit; text-decoration: none; cursor: pointer; }}
@@ -120,28 +118,8 @@ def _runtime_source() -> str:
 
 
 def _resolve_locale(scene: Scene, locale: str) -> str:
-    if locale != "auto":
-        return locale
-    return "zh-CN" if _CJK_PATTERN.search(f"{scene.title.text} {scene.title.subtitle}") else "en"
+    return scene_locale(scene, locale)
 
 
 def _viewer_labels(locale: str) -> Dict[str, str]:
-    if locale.lower().startswith("zh"):
-        return {
-            "play": "播放", "pause": "暂停", "restart": "重新播放",
-            "explain": "开始讲解", "previous": "上一步", "next": "下一步",
-            "expressive": "表现模式", "readable": "易读模式", "off": "关闭动效",
-            "zoom_in": "放大", "zoom_out": "缩小", "reset": "重置视图",
-            "download": "下载 SVG", "toolbar": "图表播放与视图控制",
-            "stage": "可缩放和平移的动画图表", "ready": "图表已就绪",
-            "restarted": "动画已重新播放", "dependency_warning": "GSAP 未加载，已降级为静态图表。",
-        }
-    return {
-        "play": "Play", "pause": "Pause", "restart": "Restart",
-        "explain": "Start Explanation", "previous": "Previous Step", "next": "Next Step",
-        "expressive": "Expressive", "readable": "Readable", "off": "Motion Off",
-        "zoom_in": "Zoom In", "zoom_out": "Zoom Out", "reset": "Reset View",
-        "download": "Download SVG", "toolbar": "Diagram playback and view controls",
-        "stage": "Zoomable and pannable animated diagram", "ready": "Diagram ready",
-        "restarted": "Animation restarted", "dependency_warning": "GSAP did not load; showing the static diagram.",
-    }
+    return viewer_labels(locale)

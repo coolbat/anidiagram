@@ -156,6 +156,42 @@ PYTHONPATH=src python3 -m anidiagram.cli \
   --spec-out outputs/loop-engineering.diagram.json
 ```
 
+### 输出中文架构图
+
+中文 brief 会自动解析为 `zh-CN`。也可以用 `--diagram-locale zh-CN`
+强制生成全中文的标题、节点、连线、流程说明和 HTML 控件：
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --text "构建企业级智能体平台架构：请求经过 API 网关进入智能体，读取长期记忆和知识库，调用搜索工具，通过安全校验后输出结果，失败时反馈重试。" \
+  --diagram-locale zh-CN \
+  --viewer-locale auto \
+  --outdir outputs/zh-CN \
+  --basename enterprise-agent-platform \
+  --formats svg,html,png,pdf,quality \
+  --runtime-dependency none \
+  --plan-out outputs/zh-CN/enterprise-agent-platform.plan.json \
+  --spec-out outputs/zh-CN/enterprise-agent-platform.diagram.json
+```
+
+也可以直接渲染完整中文样例：
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --plan examples/zh-CN/enterprise-agent-platform.plan.json \
+  --diagram-locale zh-CN \
+  --outdir outputs/zh-CN \
+  --basename enterprise-agent-platform \
+  --formats svg,html,png,pdf,quality \
+  --runtime-dependency none
+```
+
+SVG 和 HTML 会写入 `lang="zh-CN"`，并使用 Noto Sans CJK SC、思源黑体、
+苹方、微软雅黑和文泉驿等跨平台字体回退。轻量 Python 栅格导出会自动查找
+本机中文字体；需要固定构建字体时，可设置
+`ANIDIAGRAM_CJK_FONT=/absolute/path/to/font.ttf`。最高保真 PNG/PDF 建议继续
+使用 `--export-renderer browser`。
+
 把已编写的 DiagramPlan v0.2 编译为已解析的 DiagramScript v0.4：
 
 ```bash

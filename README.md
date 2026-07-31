@@ -172,6 +172,32 @@ PYTHONPATH=src python3 -m anidiagram.cli \
   --spec-out outputs/loop-engineering.diagram.json
 ```
 
+### Generate a Simplified Chinese architecture diagram
+
+Chinese briefs resolve to `zh-CN` automatically. Use
+`--diagram-locale zh-CN` to force localized titles, nodes, relations, flow
+copy, and HTML controls:
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --text "构建企业级智能体平台架构：请求经过 API 网关进入智能体，读取长期记忆和知识库，调用搜索工具，通过安全校验后输出结果，失败时反馈重试。" \
+  --diagram-locale zh-CN \
+  --viewer-locale auto \
+  --outdir outputs/zh-CN \
+  --basename enterprise-agent-platform \
+  --formats svg,html,png,pdf,quality \
+  --runtime-dependency none \
+  --plan-out outputs/zh-CN/enterprise-agent-platform.plan.json \
+  --spec-out outputs/zh-CN/enterprise-agent-platform.diagram.json
+```
+
+The authored Chinese example is
+`examples/zh-CN/enterprise-agent-platform.plan.json`. SVG and HTML outputs
+declare `lang="zh-CN"` and use a cross-platform CJK font stack. Lightweight
+Python raster exports auto-discover a local Chinese font; set
+`ANIDIAGRAM_CJK_FONT=/absolute/path/to/font.ttf` for a deterministic build.
+Use `--export-renderer browser` for the highest-fidelity PNG/PDF output.
+
 Compile an authored DiagramPlan v0.2 into resolved DiagramScript v0.4:
 
 ```bash

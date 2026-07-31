@@ -26,6 +26,7 @@ from .renderer_illustrated_character_v2 import render_character_v2_icon
 from .schema import compile_scene
 from .styles import deep_merge, role_style
 from .icon_system import icon_system_version, resolve_icon_system
+from .localization import font_stack, resolve_locale, scene_locale, viewer_labels
 from .text_layout import fitted_text_length, node_text_region, text_block_layout, wrap_text
 
 
@@ -1609,6 +1610,15 @@ def render_svg(
     grid = canvas_style.get("grid", "#edf2f7")
     title_text = scene.title.text
     subtitle = scene.title.subtitle
+    resolved_locale = scene_locale(scene)
+    font_family = font_stack(resolved_locale)
+    group_text_transform = "none" if resolved_locale == "zh-CN" else "uppercase"
+    group_letter_spacing = "0.04em" if resolved_locale == "zh-CN" else "0.08em"
+    edge_label_halo = (
+        f" paint-order: stroke; stroke: {background}; stroke-width: 4px; stroke-linejoin: round;"
+        if resolved_locale == "zh-CN"
+        else ""
+    )
     nodes = {node.node_id: node_box(node) for node in scene.nodes}
     motion = scene.motion
     if runtime_stage:
@@ -1718,18 +1728,23 @@ def render_svg(
     resolved_icon_system_version = icon_system_version(resolved_icon_system)
     if resolved_icon_system_version is not None:
         icon_system_attr += f' data-icon-system-version="{esc(resolved_icon_system_version)}"'
+    locale_attr = (
+        f' lang="{esc(resolved_locale)}" xml:lang="{esc(resolved_locale)}" data-locale="{esc(resolved_locale)}"'
+        if resolved_locale == "zh-CN"
+        else ""
+    )
 
-    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="{esc(data_motion.profile)}" data-motion-sequence="{esc(data_motion.sequence)}" data-motion-edge="{esc(data_edge_effect.preset)}" data-motion-node="{esc(data_motion.node)}" data-motion-group="{esc(data_motion.group)}" data-motion-title="{esc(data_title_effect.preset)}" data-motion-reduced="{esc(data_motion.reduced_motion)}"{icon_system_attr}>
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="diagram-title diagram-desc"{locale_attr} data-motion-profile="{esc(data_motion.profile)}" data-motion-sequence="{esc(data_motion.sequence)}" data-motion-edge="{esc(data_edge_effect.preset)}" data-motion-node="{esc(data_motion.node)}" data-motion-group="{esc(data_motion.group)}" data-motion-title="{esc(data_title_effect.preset)}" data-motion-reduced="{esc(data_motion.reduced_motion)}"{icon_system_attr}>
 <title id="diagram-title">{esc(title_text)}</title>
 <desc id="diagram-desc">{esc(subtitle)}</desc>
 <style>
-  .title {{ font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }}
-  .subtitle {{ font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }}
-  .node-title {{ font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }}
-  .node-caption {{ font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }}
-  .group-label {{ font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }}
-  .edge-label {{ font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }}
-  .step-label {{ font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }}
+  .title {{ font: 700 42px {font_family}; letter-spacing: 0; }}
+  .subtitle {{ font: 400 16px {font_family}; }}
+  .node-title {{ font: 700 18px {font_family}; }}
+  .node-caption {{ font: 400 13px {font_family}; opacity: 0.84; }}
+  .group-label {{ font: 700 14px {font_family}; text-transform: {group_text_transform}; letter-spacing: {group_letter_spacing}; }}
+  .edge-label {{ font: 600 13px {font_family};{edge_label_halo} }}
+  .step-label {{ font: 700 12px {font_family}; }}
   .edge-flow {{ stroke-linecap: round; }}
   .edge-draw, .edge-base {{ stroke-linecap: butt; stroke-linejoin: round; }}
   .edge-particle {{ filter: url(#particle-glow); }}
@@ -1767,15 +1782,18 @@ def render_svg(
 """
 
 
-def render_html(svg: str, title: str) -> str:
+def render_html(svg: str, title: str, locale: str = "en") -> str:
+    resolved_locale = resolve_locale(locale, (title,))
+    labels = viewer_labels(resolved_locale)
+    font_family = font_stack(resolved_locale)
     return f"""<!doctype html>
-<html lang="en">
+<html lang="{esc(resolved_locale)}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{esc(title)}</title>
   <style>
-    body {{ margin: 0; background: #111827; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }}
+    body {{ margin: 0; background: #111827; color: #f8fafc; font-family: {font_family}; }}
     main {{ min-height: 100vh; display: grid; grid-template-rows: auto 1fr; gap: 12px; padding: 16px; box-sizing: border-box; }}
     .toolbar {{ display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }}
     button, a {{ border: 1px solid #475569; background: #1f2937; color: #f8fafc; border-radius: 8px; padding: 8px 10px; font: inherit; text-decoration: none; cursor: pointer; }}
@@ -1801,15 +1819,15 @@ def render_html(svg: str, title: str) -> str:
 <body>
   <main id="viewer" class="motion-full">
     <div class="toolbar">
-      <button type="button" id="toggle">Pause</button>
-      <button type="button" id="restart">Restart</button>
-      <button type="button" class="motion-choice" data-motion="full" aria-pressed="true">Full Motion</button>
-      <button type="button" class="motion-choice" data-motion="subtle" aria-pressed="false">Subtle</button>
-      <button type="button" class="motion-choice" data-motion="off" aria-pressed="false">Off</button>
-      <button type="button" id="zoom-in">Zoom In</button>
-      <button type="button" id="zoom-out">Zoom Out</button>
-      <button type="button" id="reset">Reset</button>
-      <a id="download" download="{esc(title)}.svg">Download SVG</a>
+      <button type="button" id="toggle">{esc(labels['pause'])}</button>
+      <button type="button" id="restart">{esc(labels['restart'])}</button>
+      <button type="button" class="motion-choice" data-motion="full" aria-pressed="true">{esc(labels['full'])}</button>
+      <button type="button" class="motion-choice" data-motion="subtle" aria-pressed="false">{esc(labels['subtle'])}</button>
+      <button type="button" class="motion-choice" data-motion="off" aria-pressed="false">{esc(labels['off'])}</button>
+      <button type="button" id="zoom-in">{esc(labels['zoom_in'])}</button>
+      <button type="button" id="zoom-out">{esc(labels['zoom_out'])}</button>
+      <button type="button" id="reset">{esc(labels['reset'])}</button>
+      <a id="download" download="{esc(title)}.svg">{esc(labels['download'])}</a>
     </div>
     <div class="stage" id="stage">
       <div class="viewport" id="viewport">

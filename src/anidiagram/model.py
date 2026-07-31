@@ -149,6 +149,7 @@ class Scene:
     nodes: List[Node]
     edges: List[Edge]
     groups: List[Group]
+    locale: str = "en"
     icon_system: Optional[str] = None
     composition_policy: Optional[str] = None
     resolved_presentation: Dict[str, Any] = field(default_factory=dict)

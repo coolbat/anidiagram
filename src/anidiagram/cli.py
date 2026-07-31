@@ -85,6 +85,12 @@ def main(argv: Optional[List[str]] = None) -> None:
     )
     parser.add_argument("--runtime-source", help="Local gsap.min.js path required by --runtime-dependency inline.")
     parser.add_argument(
+        "--diagram-locale",
+        choices=["auto", "en", "zh-CN"],
+        default="auto",
+        help="Diagram content language; auto detects Chinese text.",
+    )
+    parser.add_argument(
         "--viewer-locale",
         choices=["auto", "en", "zh-CN"],
         default="auto",
@@ -148,12 +154,16 @@ def main(argv: Optional[List[str]] = None) -> None:
             brief_text or "",
             title=args.title or "",
             style=style_name_from_arg(args.style),
+            language=args.diagram_locale,
         )
         spec = compile_plan(generated_plan)
         if args.plan_out:
             write_json(args.plan_out, generated_plan)
         if args.spec_out:
             write_json(args.spec_out, spec)
+    if args.diagram_locale != "auto":
+        spec = dict(spec)
+        spec["locale"] = args.diagram_locale
     try:
         scene = compile_scene(spec)
     except DiagramScriptValidationError as exc:
@@ -206,6 +216,7 @@ def main(argv: Optional[List[str]] = None) -> None:
         "ok": True,
         "schema": {"name": "DiagramScript", "version": scene.version},
         "source": source_kind,
+        "locale": scene.locale,
         "preset": scene.preset,
         "icon_system": scene.icon_system or style.get("icon_system"),
         "style": style.get("name", scene.style.name or "minimal-light"),

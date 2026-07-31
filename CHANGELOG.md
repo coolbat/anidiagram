@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Added end-to-end Simplified Chinese diagram output with an explicit
+  `semantic.language` / DiagramScript `locale` contract, `--diagram-locale`,
+  localized brief titles, subtitles, relations, flows, audiences, and sources.
+- Added CJK language metadata and cross-platform Chinese font fallbacks to SVG,
+  HTML, browser exports, and the lightweight Pillow raster renderer.
+- Added a complete Chinese enterprise agent-platform architecture example and
+  end-to-end Chinese plan, spec, SVG, HTML, PNG, PDF, and quality gates.
+
 ## 0.2.0 - 2026-07-29
 
 - Added a standalone wheel build that packages runtime, schema, style, and icon

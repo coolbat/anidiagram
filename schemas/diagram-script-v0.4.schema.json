@@ -22,6 +22,9 @@
     "version": {
       "const": "0.4"
     },
+    "locale": {
+      "enum": ["auto", "en", "zh-CN"]
+    },
     "preset": {
       "type": "string"
     },

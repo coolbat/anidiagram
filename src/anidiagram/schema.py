@@ -11,6 +11,7 @@ from .composition import DIAGRAM_CORE_ICONS, ICON_SYSTEMS, LAYOUTS, MOTIONS, STY
 from .edge_motion import KNOWN_EDGE_MOTION
 from .icon_system import canonical_icon_system_id, icon_system_version
 from .illustrated_registry import illustrated_icon_ids
+from .localization import resolve_locale
 from .model import Bounds, Canvas, Edge, EffectConfig, Group, Motion, MotionPolicy, Node, Point, Scene, SceneMotion, Style, Title
 
 
@@ -148,6 +149,17 @@ def compile_scene(data: Dict[str, Any]) -> Scene:
     nodes = _parse_nodes(data.get("nodes"), "$.nodes", issues, canvas, allowed_icons)
     node_ids = {node.node_id for node in nodes}
     edges = _parse_edges(data.get("edges", []), "$.edges", node_ids, issues)
+    requested_locale = _optional_enum(data, "locale", "$.locale", {"auto", "en", "zh-CN"}, issues) or "auto"
+    locale = resolve_locale(
+        requested_locale,
+        (
+            title.text,
+            title.subtitle,
+            *(value for node in nodes for value in (node.label, node.caption)),
+            *(edge.label for edge in edges),
+            *(group.label for group in groups),
+        ),
+    )
     preset = _string(data, "preset", "$.preset", issues, required=False)
     layout = _optional_enum(data, "layout", "$.layout", LAYOUTS, issues)
     _validate_resolved_presentation(
@@ -171,6 +183,7 @@ def compile_scene(data: Dict[str, Any]) -> Scene:
         nodes=nodes,
         edges=edges,
         groups=groups,
+        locale=locale,
         icon_system=icon_system,
         composition_policy=composition_policy,
         resolved_presentation=dict(resolved_presentation),

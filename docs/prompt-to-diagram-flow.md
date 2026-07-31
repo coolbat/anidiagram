@@ -18,8 +18,8 @@ and [the v0.2 schema](../schemas/diagram-plan-v0.2.schema.json).
 ## Pipeline
 
 1. Read the user brief, article, document, or notes completely.
-2. Build DiagramPlan v0.2 `semantic`: intent, entities, relations, groups,
-   flows, importance, state, and source provenance.
+2. Build DiagramPlan v0.2 `semantic`: language, intent, entities, relations,
+   groups, flows, importance, state, and source provenance.
 3. Resolve the four presentation requests. User choices win; otherwise the
    model may choose style and layout, the icon default is `illustrated` 2.5.0,
    and the motion default is `showcase-v1`.
