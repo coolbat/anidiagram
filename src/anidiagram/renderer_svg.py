@@ -1610,6 +1610,10 @@ def render_svg(
     grid = canvas_style.get("grid", "#edf2f7")
     title_text = scene.title.text
     subtitle = scene.title.subtitle
+    # Keep the title inset stable on compact, README-oriented canvases. Linux
+    # fallback fonts are slightly wider than their macOS equivalents, so the
+    # desktop 42px treatment can overflow even when the copy fits locally.
+    title_font_size = 38 if width <= 1100 else 42
     resolved_locale = scene_locale(scene)
     font_family = font_stack(resolved_locale)
     group_text_transform = "none" if resolved_locale == "zh-CN" else "uppercase"
@@ -1738,7 +1742,7 @@ def render_svg(
 <title id="diagram-title">{esc(title_text)}</title>
 <desc id="diagram-desc">{esc(subtitle)}</desc>
 <style>
-  .title {{ font: 700 42px {font_family}; letter-spacing: 0; }}
+  .title {{ font: 700 {title_font_size}px {font_family}; letter-spacing: 0; }}
   .subtitle {{ font: 400 16px {font_family}; }}
   .node-title {{ font: 700 18px {font_family}; }}
   .node-caption {{ font: 400 13px {font_family}; opacity: 0.84; }}

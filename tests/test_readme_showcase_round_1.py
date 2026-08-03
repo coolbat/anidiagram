@@ -14,6 +14,7 @@ if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
 from anidiagram.quality import quality_report
+from anidiagram.renderer_svg import render_svg
 from anidiagram.schema import compile_scene
 from anidiagram.styles import load_style
 from render_readme_showcase_round_1 import CASES, _validate_reused_webp, build_specs, render_round
@@ -118,6 +119,17 @@ class ReadmeShowcaseRound1Test(unittest.TestCase):
         self.assertEqual("minimal-light", spec["style"])
         self.assertEqual("illustrated", spec["icon_system"])
         self.assertEqual({"nodes": 8, "edges": 8, "groups": 3}, compile_scene(spec).stats())
+        compact_svg = render_svg(
+            compile_scene(spec),
+            load_style(ROOT / "styles" / "minimal-light.json"),
+        )
+        self.assertIn(".title { font: 700 38px", compact_svg)
+
+        desktop_svg = render_svg(
+            compile_scene(self.specs["hero-governed-rag"]),
+            load_style(ROOT / "styles" / "minimal-light.json"),
+        )
+        self.assertIn(".title { font: 700 42px", desktop_svg)
 
     def test_renderer_writes_eight_complete_readme_bundles(self):
         with tempfile.TemporaryDirectory() as directory:

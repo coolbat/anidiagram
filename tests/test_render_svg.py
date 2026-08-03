@@ -1371,7 +1371,7 @@ class SvgRendererTest(unittest.TestCase):
         svg = render_svg(scene, load_style(ROOT / "styles" / "minimal-light.json"))
 
         self.assertEqual(
-            "54a1c50fb78341e399ba9b4276c025aea621d869eff7d05565b432a395d41231",
+            "751d2fea24512192829dac3d57727c9a87498ba890deba968da157784ad6cb5d",
             hashlib.sha256(svg.encode("utf-8")).hexdigest(),
         )
 
