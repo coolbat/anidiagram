@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="920" viewBox="0 0 1280 920" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="showcase-v1" data-motion-sequence="staged" data-motion-edge="packet-flow" data-motion-node="icon-performance" data-motion-group="border-scan" data-motion-title="highlight-sweep" data-motion-reduced="subtle" data-icon-system="illustrated" data-icon-system-version="2.5.0">
+<svg xmlns="http://www.w3.org/2000/svg" width="1020" height="920" viewBox="0 0 1020 920" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="showcase-v1" data-motion-sequence="staged" data-motion-edge="packet-flow" data-motion-node="icon-performance" data-motion-group="border-scan" data-motion-title="highlight-sweep" data-motion-reduced="subtle" data-icon-system="illustrated" data-icon-system-version="2.5.0">
 <title id="diagram-title">Loop Engineering Operating Architecture</title>
-<desc id="diagram-desc">Show how automation, worktrees, skills, sub-agents, connectors, external state, and human judgement form a repeatable coding-agent loop.</desc>
+<desc id="diagram-desc">Governed automation · isolated execution · verified delivery · external state</desc>
 <style>
   .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
   .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
@@ -47,7 +47,7 @@
   </pattern>
 </defs>
 <rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
-<rect x="28" y="26" width="1224" height="868" rx="26" fill="none" stroke="#94a3b8" stroke-width="1.4" opacity="1.00" />
+<rect x="28" y="26" width="964" height="868" rx="26" fill="none" stroke="#94a3b8" stroke-width="1.4" opacity="1.00" />
 <rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#2563eb" />
 <rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#e8f1ff" />
 
@@ -61,55 +61,55 @@
 </text>
 <text x="74" y="126" class="subtitle" fill="#5b6778" opacity="0">
   <animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />
-  Show how automation, worktrees, skills, sub-agents, connectors, external state, and human judgement form a repeatable coding-agent loop.
+  Governed automation · isolated execution · verified delivery · external state
 </text>
 
 <g id="group-governance-trigger" class="group" opacity="0">
   <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.17s" fill="freeze" />
-  <rect x="54.0" y="193.0" width="872.0" height="176.0" rx="22"
+  <rect x="74.0" y="193.0" width="872.0" height="176.0" rx="22"
         fill="#f8fafc" fill-opacity="0.34" stroke="#94a3b8" stroke-width="1.6" stroke-dasharray="9 8">
     <animate attributeName="stroke-dashoffset" values="0;-34" dur="5.60s" begin="0.17s" repeatCount="indefinite" />
   </rect>
 
-  <rect class="group-border-scan" x="54.0" y="193.0" width="872.0" height="176.0" rx="22"
+  <rect class="group-border-scan" x="74.0" y="193.0" width="872.0" height="176.0" rx="22"
         fill="none" stroke="#94a3b8" stroke-width="3.4" stroke-linecap="round"
         stroke-dasharray="125.8 733.6" opacity="0.72" filter="url(#soft-glow)">
     <animate attributeName="stroke-dashoffset" values="0;-2096.0" dur="7.15s" begin="0.27s" repeatCount="indefinite" />
   </rect>
 
-  <text x="72.0" y="223.0" class="group-label" fill="#5b6778">Governance &amp; Trigger</text>
+  <text x="92.0" y="223.0" class="group-label" fill="#5b6778">Governance &amp; Trigger</text>
 </g>
 
 <g id="group-isolated-execution" class="group" opacity="0">
   <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.29s" fill="freeze" />
-  <rect x="54.0" y="413.0" width="872.0" height="176.0" rx="22"
+  <rect x="74.0" y="413.0" width="872.0" height="176.0" rx="22"
         fill="#f8fafc" fill-opacity="0.34" stroke="#94a3b8" stroke-width="1.6" stroke-dasharray="9 8">
     <animate attributeName="stroke-dashoffset" values="0;-34" dur="6.00s" begin="0.29s" repeatCount="indefinite" />
   </rect>
 
-  <rect class="group-border-scan" x="54.0" y="413.0" width="872.0" height="176.0" rx="22"
+  <rect class="group-border-scan" x="74.0" y="413.0" width="872.0" height="176.0" rx="22"
         fill="none" stroke="#94a3b8" stroke-width="3.4" stroke-linecap="round"
         stroke-dasharray="125.8 733.6" opacity="0.72" filter="url(#soft-glow)">
     <animate attributeName="stroke-dashoffset" values="0;-2096.0" dur="7.50s" begin="0.39s" repeatCount="indefinite" />
   </rect>
 
-  <text x="72.0" y="443.0" class="group-label" fill="#5b6778">Isolated Execution</text>
+  <text x="92.0" y="443.0" class="group-label" fill="#5b6778">Isolated Execution</text>
 </g>
 
 <g id="group-verification-delivery" class="group" opacity="0">
   <animate attributeName="opacity" values="0;1" dur="0.70s" begin="0.41s" fill="freeze" />
-  <rect x="54.0" y="633.0" width="872.0" height="176.0" rx="22"
+  <rect x="74.0" y="633.0" width="872.0" height="176.0" rx="22"
         fill="#f8fafc" fill-opacity="0.34" stroke="#94a3b8" stroke-width="1.6" stroke-dasharray="9 8">
     <animate attributeName="stroke-dashoffset" values="0;-34" dur="6.40s" begin="0.41s" repeatCount="indefinite" />
   </rect>
 
-  <rect class="group-border-scan" x="54.0" y="633.0" width="872.0" height="176.0" rx="22"
+  <rect class="group-border-scan" x="74.0" y="633.0" width="872.0" height="176.0" rx="22"
         fill="none" stroke="#94a3b8" stroke-width="3.4" stroke-linecap="round"
         stroke-dasharray="125.8 733.6" opacity="0.72" filter="url(#soft-glow)">
     <animate attributeName="stroke-dashoffset" values="0;-2096.0" dur="7.85s" begin="0.51s" repeatCount="indefinite" />
   </rect>
 
-  <text x="72.0" y="663.0" class="group-label" fill="#5b6778">Verification, Delivery &amp; State</text>
+  <text x="92.0" y="663.0" class="group-label" fill="#5b6778">Verification, Delivery &amp; State</text>
 </g>
 
 <defs>
@@ -118,18 +118,18 @@
   </marker>
 </defs>
 <g class="edge" data-role="process">
-  <path class="edge-base" d="M 790.0 355.0 L 790.0 443.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
-  <path class="edge-draw" d="M 790.0 355.0 L 790.0 443.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+  <path class="edge-base" d="M 810.0 355.0 L 810.0 443.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 810.0 355.0 L 810.0 443.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-1)" />
-  <path class="edge-flow edge-flow-stream-flow" d="M 790.0 355.0 L 790.0 443.0" fill="none" stroke="#2563eb" stroke-width="2.1"
+  <path class="edge-flow edge-flow-stream-flow" d="M 810.0 355.0 L 810.0 443.0" fill="none" stroke="#2563eb" stroke-width="2.1"
         stroke-linecap="round" stroke-dasharray="8 14" opacity="0.58">
     <animate attributeName="stroke-dashoffset" values="0;-44" dur="1.35s" begin="-0.11s" repeatCount="indefinite" />
   </path>
 
 
-  <circle cx="768.0" cy="380.0" r="14" fill="#2563eb" />
-  <text x="768.0" y="385.0" class="step-label" fill="#ffffff" text-anchor="middle">2</text>
-  <text x="790.0" y="385.0" class="edge-label" fill="#5b6778" opacity="1">
+  <circle cx="788.0" cy="380.0" r="14" fill="#2563eb" />
+  <text x="788.0" y="385.0" class="step-label" fill="#ffffff" text-anchor="middle">2</text>
+  <text x="810.0" y="385.0" class="edge-label" fill="#5b6778" opacity="1">
     discover + isolate
   </text>
 </g>
@@ -140,18 +140,18 @@
   </marker>
 </defs>
 <g class="edge" data-role="process">
-  <path class="edge-base" d="M 668.0 509.0 L 612.0 509.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
-  <path class="edge-draw" d="M 668.0 509.0 L 612.0 509.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+  <path class="edge-base" d="M 688.0 509.0 L 632.0 509.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 688.0 509.0 L 632.0 509.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-2)" />
-  <path class="edge-flow edge-flow-stream-flow" d="M 668.0 509.0 L 612.0 509.0" fill="none" stroke="#2563eb" stroke-width="2.1"
+  <path class="edge-flow edge-flow-stream-flow" d="M 688.0 509.0 L 632.0 509.0" fill="none" stroke="#2563eb" stroke-width="2.1"
         stroke-linecap="round" stroke-dasharray="8 14" opacity="0.58">
     <animate attributeName="stroke-dashoffset" values="0;-44" dur="1.35s" begin="-0.22s" repeatCount="indefinite" />
   </path>
 
 
-  <circle cx="618.0" cy="490.0" r="14" fill="#2563eb" />
-  <text x="618.0" y="495.0" class="step-label" fill="#ffffff" text-anchor="middle">3</text>
-  <text x="640.0" y="495.0" class="edge-label" fill="#5b6778" opacity="1">
+  <circle cx="638.0" cy="490.0" r="14" fill="#2563eb" />
+  <text x="638.0" y="495.0" class="step-label" fill="#ffffff" text-anchor="middle">3</text>
+  <text x="660.0" y="495.0" class="edge-label" fill="#5b6778" opacity="1">
 
   </text>
 </g>
@@ -162,18 +162,18 @@
   </marker>
 </defs>
 <g class="edge" data-role="process">
-  <path class="edge-base" d="M 368.0 509.0 L 312.0 509.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
-  <path class="edge-draw" d="M 368.0 509.0 L 312.0 509.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+  <path class="edge-base" d="M 388.0 509.0 L 332.0 509.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 388.0 509.0 L 332.0 509.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-3)" />
-  <path class="edge-flow edge-flow-stream-flow" d="M 368.0 509.0 L 312.0 509.0" fill="none" stroke="#2563eb" stroke-width="2.1"
+  <path class="edge-flow edge-flow-stream-flow" d="M 388.0 509.0 L 332.0 509.0" fill="none" stroke="#2563eb" stroke-width="2.1"
         stroke-linecap="round" stroke-dasharray="8 14" opacity="0.58">
     <animate attributeName="stroke-dashoffset" values="0;-44" dur="1.35s" begin="-0.33s" repeatCount="indefinite" />
   </path>
 
 
-  <circle cx="318.0" cy="490.0" r="14" fill="#2563eb" />
-  <text x="318.0" y="495.0" class="step-label" fill="#ffffff" text-anchor="middle">4</text>
-  <text x="340.0" y="495.0" class="edge-label" fill="#5b6778" opacity="1">
+  <circle cx="338.0" cy="490.0" r="14" fill="#2563eb" />
+  <text x="338.0" y="495.0" class="step-label" fill="#ffffff" text-anchor="middle">4</text>
+  <text x="360.0" y="495.0" class="edge-label" fill="#5b6778" opacity="1">
     use
   </text>
 </g>
@@ -184,18 +184,18 @@
   </marker>
 </defs>
 <g class="edge" data-role="process">
-  <path class="edge-base" d="M 190.0 575.0 L 190.0 663.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
-  <path class="edge-draw" d="M 190.0 575.0 L 190.0 663.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+  <path class="edge-base" d="M 210.0 575.0 L 210.0 663.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 210.0 575.0 L 210.0 663.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-start="url(#arrow-4)" marker-end="url(#arrow-4)" />
-  <path class="edge-flow edge-flow-stream-flow" d="M 190.0 575.0 L 190.0 663.0" fill="none" stroke="#2563eb" stroke-width="2.1"
+  <path class="edge-flow edge-flow-stream-flow" d="M 210.0 575.0 L 210.0 663.0" fill="none" stroke="#2563eb" stroke-width="2.1"
         stroke-linecap="round" stroke-dasharray="8 14" opacity="0.58">
     <animate attributeName="stroke-dashoffset" values="0;-44" dur="1.35s" begin="-0.44s" repeatCount="indefinite" />
   </path>
 
 
-  <circle cx="168.0" cy="600.0" r="14" fill="#2563eb" />
-  <text x="168.0" y="605.0" class="step-label" fill="#ffffff" text-anchor="middle">5</text>
-  <text x="190.0" y="605.0" class="edge-label" fill="#5b6778" opacity="1">
+  <circle cx="188.0" cy="600.0" r="14" fill="#2563eb" />
+  <text x="188.0" y="605.0" class="step-label" fill="#ffffff" text-anchor="middle">5</text>
+  <text x="210.0" y="605.0" class="edge-label" fill="#5b6778" opacity="1">
     review
   </text>
 </g>
@@ -206,18 +206,18 @@
   </marker>
 </defs>
 <g class="edge" data-role="process">
-  <path class="edge-base" d="M 312.0 729.0 L 368.0 729.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
-  <path class="edge-draw" d="M 312.0 729.0 L 368.0 729.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+  <path class="edge-base" d="M 332.0 729.0 L 388.0 729.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 332.0 729.0 L 388.0 729.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-5)" />
-  <path class="edge-flow edge-flow-stream-flow" d="M 312.0 729.0 L 368.0 729.0" fill="none" stroke="#2563eb" stroke-width="2.1"
+  <path class="edge-flow edge-flow-stream-flow" d="M 332.0 729.0 L 388.0 729.0" fill="none" stroke="#2563eb" stroke-width="2.1"
         stroke-linecap="round" stroke-dasharray="8 14" opacity="0.58">
     <animate attributeName="stroke-dashoffset" values="0;-44" dur="1.35s" begin="-0.55s" repeatCount="indefinite" />
   </path>
 
 
-  <circle cx="318.0" cy="710.0" r="14" fill="#2563eb" />
-  <text x="318.0" y="715.0" class="step-label" fill="#ffffff" text-anchor="middle">6</text>
-  <text x="340.0" y="715.0" class="edge-label" fill="#5b6778" opacity="1">
+  <circle cx="338.0" cy="710.0" r="14" fill="#2563eb" />
+  <text x="338.0" y="715.0" class="step-label" fill="#ffffff" text-anchor="middle">6</text>
+  <text x="360.0" y="715.0" class="edge-label" fill="#5b6778" opacity="1">
     OK
   </text>
 </g>
@@ -228,18 +228,18 @@
   </marker>
 </defs>
 <g class="edge" data-role="process">
-  <path class="edge-base" d="M 612.0 729.0 L 668.0 729.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
-  <path class="edge-draw" d="M 612.0 729.0 L 668.0 729.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+  <path class="edge-base" d="M 632.0 729.0 L 688.0 729.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 632.0 729.0 L 688.0 729.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-6)" />
-  <path class="edge-flow edge-flow-stream-flow" d="M 612.0 729.0 L 668.0 729.0" fill="none" stroke="#2563eb" stroke-width="2.1"
+  <path class="edge-flow edge-flow-stream-flow" d="M 632.0 729.0 L 688.0 729.0" fill="none" stroke="#2563eb" stroke-width="2.1"
         stroke-linecap="round" stroke-dasharray="8 14" opacity="0.58">
     <animate attributeName="stroke-dashoffset" values="0;-44" dur="1.35s" begin="-0.66s" repeatCount="indefinite" />
   </path>
 
 
-  <circle cx="618.0" cy="710.0" r="14" fill="#2563eb" />
-  <text x="618.0" y="715.0" class="step-label" fill="#ffffff" text-anchor="middle">7</text>
-  <text x="640.0" y="715.0" class="edge-label" fill="#5b6778" opacity="1">
+  <circle cx="638.0" cy="710.0" r="14" fill="#2563eb" />
+  <text x="638.0" y="715.0" class="step-label" fill="#ffffff" text-anchor="middle">7</text>
+  <text x="660.0" y="715.0" class="edge-label" fill="#5b6778" opacity="1">
 
   </text>
 </g>
@@ -250,18 +250,18 @@
   </marker>
 </defs>
 <g class="edge" data-role="output">
-  <path class="edge-base" d="M 790.0 795.0 L 790.0 890.0 L 36.0 890.0 L 36.0 289.0 L 68.0 289.0" fill="none" stroke="#16a34a" stroke-width="1.7" opacity="0.24" />
-  <path class="edge-draw" d="M 790.0 795.0 L 790.0 890.0 L 36.0 890.0 L 36.0 289.0 L 68.0 289.0" fill="none" stroke="#16a34a" stroke-width="2.4" pathLength="1"
+  <path class="edge-base" d="M 810.0 795.0 L 810.0 890.0 L 36.0 890.0 L 36.0 289.0 L 88.0 289.0" fill="none" stroke="#16a34a" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 810.0 795.0 L 810.0 890.0 L 36.0 890.0 L 36.0 289.0 L 88.0 289.0" fill="none" stroke="#16a34a" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-7)" />
-  <path class="edge-flow edge-flow-stream-flow" d="M 790.0 795.0 L 790.0 890.0 L 36.0 890.0 L 36.0 289.0 L 68.0 289.0" fill="none" stroke="#16a34a" stroke-width="2.1"
+  <path class="edge-flow edge-flow-stream-flow" d="M 810.0 795.0 L 810.0 890.0 L 36.0 890.0 L 36.0 289.0 L 88.0 289.0" fill="none" stroke="#16a34a" stroke-width="2.1"
         stroke-linecap="round" stroke-dasharray="8 14" opacity="0.58">
     <animate attributeName="stroke-dashoffset" values="0;-44" dur="1.35s" begin="-0.77s" repeatCount="indefinite" />
   </path>
 
 
-  <circle cx="407.0" cy="559.0" r="14" fill="#16a34a" />
-  <text x="407.0" y="564.0" class="step-label" fill="#ffffff" text-anchor="middle">8</text>
-  <text x="429.0" y="564.0" class="edge-label" fill="#5b6778" opacity="1">
+  <circle cx="427.0" cy="559.0" r="14" fill="#16a34a" />
+  <text x="427.0" y="564.0" class="step-label" fill="#ffffff" text-anchor="middle">8</text>
+  <text x="449.0" y="564.0" class="edge-label" fill="#5b6778" opacity="1">
     review
   </text>
 </g>
@@ -272,18 +272,18 @@
   </marker>
 </defs>
 <g class="edge" data-role="process">
-  <path class="edge-base" d="M 312.0 289.0 L 668.0 289.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
-  <path class="edge-draw" d="M 312.0 289.0 L 668.0 289.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
+  <path class="edge-base" d="M 332.0 289.0 L 688.0 289.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 332.0 289.0 L 688.0 289.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-8)" />
-  <path class="edge-flow edge-flow-stream-flow" d="M 312.0 289.0 L 668.0 289.0" fill="none" stroke="#2563eb" stroke-width="2.1"
+  <path class="edge-flow edge-flow-stream-flow" d="M 332.0 289.0 L 688.0 289.0" fill="none" stroke="#2563eb" stroke-width="2.1"
         stroke-linecap="round" stroke-dasharray="8 14" opacity="0.58">
     <animate attributeName="stroke-dashoffset" values="0;-44" dur="1.35s" begin="-0.88s" repeatCount="indefinite" />
   </path>
 
 
-  <circle cx="468.0" cy="270.0" r="14" fill="#2563eb" />
-  <text x="468.0" y="275.0" class="step-label" fill="#ffffff" text-anchor="middle">1</text>
-  <text x="490.0" y="275.0" class="edge-label" fill="#5b6778" opacity="1">
+  <circle cx="488.0" cy="270.0" r="14" fill="#2563eb" />
+  <text x="488.0" y="275.0" class="step-label" fill="#ffffff" text-anchor="middle">1</text>
+  <text x="510.0" y="275.0" class="edge-label" fill="#5b6778" opacity="1">
     goals + stops
   </text>
 </g>
@@ -293,10 +293,10 @@
 
 
 
-  <rect class="node-surface" x="680.0" y="235.0" width="220.0" height="108.0" rx="14.0"
+  <rect class="node-surface" x="700.0" y="235.0" width="220.0" height="108.0" rx="14.0"
         fill="#eff6ff" stroke="#2563eb" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="scheduler" data-node-id="automation-heartbeat" opacity="1">
-  <g id="icon-automation-heartbeat-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="schedule-plan-trigger-repeat" data-rest-opacity="1" transform="translate(704.0 245.0) scale(0.7333)">
+  <g id="icon-automation-heartbeat-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="schedule-plan-trigger-repeat" data-rest-opacity="1" transform="translate(724.0 245.0) scale(0.7333)">
     <g class="illustrated-character-motion-shell">
       <circle id="icon-automation-heartbeat-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#f3efff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
       <rect id="icon-automation-heartbeat-calendar-shell" class="illustrated-part illustrated-calendar-shell" data-rest-opacity="1" x="13" y="21" width="78" height="78" rx="14" fill="#ffffff" stroke="#172033" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
@@ -308,13 +308,13 @@
   </g>
 </g>
 
-  <circle cx="698.0" cy="253.0" r="14" fill="#2563eb" />
-  <text x="698.0" y="258.0" class="step-label" fill="#eff6ff" text-anchor="middle">2</text>
-  <text x="840.0" y="266.0" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="840.0" dy="0" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Automation</tspan>
-<tspan x="840.0" dy="18" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Heartbeat</tspan>
-<tspan x="840.0" dy="17" class="node-caption">Scheduled</tspan>
-<tspan x="840.0" dy="17" class="node-caption">triage</tspan>
+  <circle cx="718.0" cy="253.0" r="14" fill="#2563eb" />
+  <text x="718.0" y="258.0" class="step-label" fill="#eff6ff" text-anchor="middle">2</text>
+  <text x="860.0" y="266.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="860.0" dy="0" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Automation</tspan>
+<tspan x="860.0" dy="18" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Heartbeat</tspan>
+<tspan x="860.0" dy="17" class="node-caption">Scheduled</tspan>
+<tspan x="860.0" dy="17" class="node-caption">triage</tspan>
 </text>
 </g>
 
@@ -323,10 +323,10 @@
 
 
 
-  <rect class="node-surface" x="680.0" y="455.0" width="220.0" height="108.0" rx="14.0"
+  <rect class="node-surface" x="700.0" y="455.0" width="220.0" height="108.0" rx="14.0"
         fill="#eff6ff" stroke="#2563eb" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="branch" data-node-id="isolated-worktree" opacity="1">
-  <g id="icon-isolated-worktree-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="branch-diverge-develop-rejoin" data-rest-opacity="1" transform="translate(704.0 465.0) scale(0.7333)">
+  <g id="icon-isolated-worktree-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="branch-diverge-develop-rejoin" data-rest-opacity="1" transform="translate(724.0 465.0) scale(0.7333)">
     <g class="illustrated-character-motion-shell">
       <circle id="icon-isolated-worktree-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#eaf6ff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
       <path id="icon-isolated-worktree-main-rail" class="illustrated-part illustrated-main-rail" data-rest-opacity="1" d="M39 20v80" fill="none" stroke="#0f8f87" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
@@ -338,13 +338,13 @@
   </g>
 </g>
 
-  <circle cx="698.0" cy="473.0" r="14" fill="#2563eb" />
-  <text x="698.0" y="478.0" class="step-label" fill="#eff6ff" text-anchor="middle">3</text>
-  <text x="840.0" y="486.0" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="840.0" dy="0" class="node-title">Isolated</tspan>
-<tspan x="840.0" dy="18" class="node-title">Worktree</tspan>
-<tspan x="840.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">Collision-free</tspan>
-<tspan x="840.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">parallel work</tspan>
+  <circle cx="718.0" cy="473.0" r="14" fill="#2563eb" />
+  <text x="718.0" y="478.0" class="step-label" fill="#eff6ff" text-anchor="middle">3</text>
+  <text x="860.0" y="486.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="860.0" dy="0" class="node-title">Isolated</tspan>
+<tspan x="860.0" dy="18" class="node-title">Worktree</tspan>
+<tspan x="860.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">Collision-free</tspan>
+<tspan x="860.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">parallel work</tspan>
 </text>
 </g>
 
@@ -353,10 +353,10 @@
 
 
 
-  <rect class="node-surface" x="380.0" y="455.0" width="220.0" height="108.0" rx="14.0"
+  <rect class="node-surface" x="400.0" y="455.0" width="220.0" height="108.0" rx="14.0"
         fill="#ecfdf5" stroke="#059669" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="knowledge-base" data-node-id="project-skills" opacity="1">
-  <g id="icon-project-skills-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="knowledge-curate-connect-reference" data-rest-opacity="1" transform="translate(404.0 465.0) scale(0.7333)">
+  <g id="icon-project-skills-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="knowledge-curate-connect-reference" data-rest-opacity="1" transform="translate(424.0 465.0) scale(0.7333)">
     <g class="illustrated-character-motion-shell">
       <circle id="icon-project-skills-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#fff7dd" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
       <path id="icon-project-skills-book-left" class="illustrated-part illustrated-book-left" data-rest-opacity="1" d="M11 31c18-6 35-4 49 8v65c-14-10-31-13-49-7Z" fill="#ffffff" stroke="#172033" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
@@ -369,13 +369,13 @@
   </g>
 </g>
 
-  <circle cx="398.0" cy="473.0" r="14" fill="#059669" />
-  <text x="398.0" y="478.0" class="step-label" fill="#ecfdf5" text-anchor="middle">4</text>
-  <text x="540.0" y="486.0" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="540.0" dy="0" class="node-title">Project</tspan>
-<tspan x="540.0" dy="18" class="node-title">Skills</tspan>
-<tspan x="540.0" dy="17" class="node-caption">Rules +</tspan>
-<tspan x="540.0" dy="17" class="node-caption">context</tspan>
+  <circle cx="418.0" cy="473.0" r="14" fill="#059669" />
+  <text x="418.0" y="478.0" class="step-label" fill="#ecfdf5" text-anchor="middle">4</text>
+  <text x="560.0" y="486.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="560.0" dy="0" class="node-title">Project</tspan>
+<tspan x="560.0" dy="18" class="node-title">Skills</tspan>
+<tspan x="560.0" dy="17" class="node-caption">Rules +</tspan>
+<tspan x="560.0" dy="17" class="node-caption">context</tspan>
 </text>
 </g>
 
@@ -384,10 +384,10 @@
 
 
 
-  <rect class="node-surface" x="80.0" y="455.0" width="220.0" height="108.0" rx="14.0"
+  <rect class="node-surface" x="100.0" y="455.0" width="220.0" height="108.0" rx="14.0"
         fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="agent" data-node-id="maker-agent" opacity="1">
-  <g id="icon-maker-agent-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="input-reason-result" data-rest-opacity="1" transform="translate(104.0 465.0) scale(0.7333)">
+  <g id="icon-maker-agent-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="input-reason-result" data-rest-opacity="1" transform="translate(124.0 465.0) scale(0.7333)">
     <g class="illustrated-character-motion-shell">
       <circle id="icon-maker-agent-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="59" cy="61" r="49" fill="#f3efff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
       <path id="icon-maker-agent-brain-left" class="illustrated-part illustrated-brain-left" data-rest-opacity="1" d="M57 27C45 18 30 25 31 38c-11 4-12 19-2 25-5 12 7 23 18 18 3 8 10 9 15 3V38c-1-5-2-8-5-11Z" fill="#34c38f" stroke="#172033" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
@@ -403,13 +403,13 @@
   </g>
 </g>
 
-  <circle cx="98.0" cy="473.0" r="14" fill="#7c3aed" />
-  <text x="98.0" y="478.0" class="step-label" fill="#f5f3ff" text-anchor="middle">5</text>
-  <text x="240.0" y="486.0" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="240.0" dy="0" class="node-title">Maker</tspan>
-<tspan x="240.0" dy="18" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Sub-agent</tspan>
-<tspan x="240.0" dy="17" class="node-caption">Drafts</tspan>
-<tspan x="240.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">implementation</tspan>
+  <circle cx="118.0" cy="473.0" r="14" fill="#7c3aed" />
+  <text x="118.0" y="478.0" class="step-label" fill="#f5f3ff" text-anchor="middle">5</text>
+  <text x="260.0" y="486.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="260.0" dy="0" class="node-title">Maker</tspan>
+<tspan x="260.0" dy="18" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Sub-agent</tspan>
+<tspan x="260.0" dy="17" class="node-caption">Drafts</tspan>
+<tspan x="260.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">implementation</tspan>
 </text>
 </g>
 
@@ -418,10 +418,10 @@
 
 
 
-  <rect class="node-surface" x="80.0" y="675.0" width="220.0" height="108.0" rx="14.0"
+  <rect class="node-surface" x="100.0" y="675.0" width="220.0" height="108.0" rx="14.0"
         fill="#fef2f2" stroke="#dc2626" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="reasoning" data-node-id="verifier-agent" opacity="1">
-  <g id="icon-verifier-agent-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="premise-connect-infer-conclude" data-rest-opacity="1" transform="translate(104.0 685.0) scale(0.7333)">
+  <g id="icon-verifier-agent-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="premise-connect-infer-conclude" data-rest-opacity="1" transform="translate(124.0 685.0) scale(0.7333)">
     <g class="illustrated-character-motion-shell">
       <circle id="icon-verifier-agent-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#fff7dd" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
       <path id="icon-verifier-agent-reasoning-shell" class="illustrated-part illustrated-reasoning-shell" data-rest-opacity="1" d="M60 13c-24 0-40 16-40 38 0 15 8 25 21 33v11h38V84c13-8 21-19 21-34 0-21-17-37-40-37Z" fill="#ffffff" stroke="#172033" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
@@ -434,13 +434,13 @@
   </g>
 </g>
 
-  <circle cx="98.0" cy="693.0" r="14" fill="#dc2626" />
-  <text x="98.0" y="698.0" class="step-label" fill="#fef2f2" text-anchor="middle">6</text>
-  <text x="240.0" y="706.0" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="240.0" dy="0" class="node-title">Verifier</tspan>
-<tspan x="240.0" dy="18" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Sub-agent</tspan>
-<tspan x="240.0" dy="17" class="node-caption">Tests +</tspan>
-<tspan x="240.0" dy="17" class="node-caption">evidence</tspan>
+  <circle cx="118.0" cy="693.0" r="14" fill="#dc2626" />
+  <text x="118.0" y="698.0" class="step-label" fill="#fef2f2" text-anchor="middle">6</text>
+  <text x="260.0" y="706.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="260.0" dy="0" class="node-title">Verifier</tspan>
+<tspan x="260.0" dy="18" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Sub-agent</tspan>
+<tspan x="260.0" dy="17" class="node-caption">Tests +</tspan>
+<tspan x="260.0" dy="17" class="node-caption">evidence</tspan>
 </text>
 </g>
 
@@ -449,10 +449,10 @@
 
 
 
-  <rect class="node-surface" x="380.0" y="675.0" width="220.0" height="108.0" rx="14.0"
+  <rect class="node-surface" x="400.0" y="675.0" width="220.0" height="108.0" rx="14.0"
         fill="#fffbeb" stroke="#d97706" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="gateway" data-node-id="tool-connectors" opacity="1">
-  <g id="icon-tool-connectors-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="traffic-admit-route-mediate" data-rest-opacity="1" transform="translate(404.0 685.0) scale(0.7333)">
+  <g id="icon-tool-connectors-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="traffic-admit-route-mediate" data-rest-opacity="1" transform="translate(424.0 685.0) scale(0.7333)">
     <g class="illustrated-character-motion-shell">
       <circle id="icon-tool-connectors-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#f3efff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
       <rect id="icon-tool-connectors-boundary-appliance" class="illustrated-part illustrated-boundary-appliance" data-rest-opacity="1" x="35" y="15" width="50" height="91" rx="17" fill="#ffffff" stroke="#172033" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
@@ -465,13 +465,13 @@
   </g>
 </g>
 
-  <circle cx="398.0" cy="693.0" r="14" fill="#d97706" />
-  <text x="398.0" y="698.0" class="step-label" fill="#fffbeb" text-anchor="middle">7</text>
-  <text x="540.0" y="706.0" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="540.0" dy="0" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Connectors</tspan>
-<tspan x="540.0" dy="18" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">&amp; Delivery</tspan>
-<tspan x="540.0" dy="17" class="node-caption">Publish</tspan>
-<tspan x="540.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">verified PRs</tspan>
+  <circle cx="418.0" cy="693.0" r="14" fill="#d97706" />
+  <text x="418.0" y="698.0" class="step-label" fill="#fffbeb" text-anchor="middle">7</text>
+  <text x="560.0" y="706.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="560.0" dy="0" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Connectors</tspan>
+<tspan x="560.0" dy="18" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">&amp; Delivery</tspan>
+<tspan x="560.0" dy="17" class="node-caption">Publish</tspan>
+<tspan x="560.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">verified PRs</tspan>
 </text>
 </g>
 
@@ -480,10 +480,10 @@
 
 
 
-  <rect class="node-surface" x="680.0" y="675.0" width="220.0" height="108.0" rx="14.0"
+  <rect class="node-surface" x="700.0" y="675.0" width="220.0" height="108.0" rx="14.0"
         fill="#ecfdf5" stroke="#059669" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="memory" data-node-id="external-state" opacity="1">
-  <g id="icon-external-state-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="context-capture-index-recall" data-rest-opacity="1" transform="translate(704.0 685.0) scale(0.7333)">
+  <g id="icon-external-state-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="context-capture-index-recall" data-rest-opacity="1" transform="translate(724.0 685.0) scale(0.7333)">
     <g class="illustrated-character-motion-shell">
       <circle id="icon-external-state-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="59" cy="61" r="49" fill="#e8f8ef" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
       <path id="icon-external-state-context-stack" class="illustrated-part illustrated-context-stack" data-rest-opacity="1" d="M19 31h66v65H19Zm7-8h66v65" fill="#c4b5fd" stroke="#172033" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
@@ -496,13 +496,13 @@
   </g>
 </g>
 
-  <circle cx="698.0" cy="693.0" r="14" fill="#059669" />
-  <text x="698.0" y="698.0" class="step-label" fill="#ecfdf5" text-anchor="middle">8</text>
-  <text x="840.0" y="706.0" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="840.0" dy="0" class="node-title">External</tspan>
-<tspan x="840.0" dy="18" class="node-title">State</tspan>
-<tspan x="840.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">Records done</tspan>
-<tspan x="840.0" dy="17" class="node-caption">and next</tspan>
+  <circle cx="718.0" cy="693.0" r="14" fill="#059669" />
+  <text x="718.0" y="698.0" class="step-label" fill="#ecfdf5" text-anchor="middle">8</text>
+  <text x="860.0" y="706.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="860.0" dy="0" class="node-title">External</tspan>
+<tspan x="860.0" dy="18" class="node-title">State</tspan>
+<tspan x="860.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">Records done</tspan>
+<tspan x="860.0" dy="17" class="node-caption">and next</tspan>
 </text>
 </g>
 
@@ -511,10 +511,10 @@
 
 
 
-  <rect class="node-surface" x="80.0" y="235.0" width="220.0" height="108.0" rx="14.0"
+  <rect class="node-surface" x="100.0" y="235.0" width="220.0" height="108.0" rx="14.0"
         fill="#fff7ed" stroke="#f97316" stroke-width="2.0" />
 <g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="developer" data-node-id="human-engineer" opacity="1">
-  <g id="icon-human-engineer-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="person-code-build-deliver" data-rest-opacity="1" transform="translate(104.0 245.0) scale(0.7333)">
+  <g id="icon-human-engineer-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="person-code-build-deliver" data-rest-opacity="1" transform="translate(124.0 245.0) scale(0.7333)">
     <g class="illustrated-character-motion-shell">
       <circle id="icon-human-engineer-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#eaf6ff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
       <path id="icon-human-engineer-body" class="illustrated-part illustrated-body" data-rest-opacity="1" d="M31 75c3-17 14-26 29-26s26 9 29 26Z" fill="#60a5fa" stroke="#172033" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
@@ -528,13 +528,13 @@
   </g>
 </g>
 
-  <circle cx="98.0" cy="253.0" r="14" fill="#f97316" />
-  <text x="98.0" y="258.0" class="step-label" fill="#fff7ed" text-anchor="middle">1</text>
-  <text x="240.0" y="266.0" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="240.0" dy="0" class="node-title">Human</tspan>
-<tspan x="240.0" dy="18" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Governance</tspan>
-<tspan x="240.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">Goals + stop</tspan>
-<tspan x="240.0" dy="17" class="node-caption">gates</tspan>
+  <circle cx="118.0" cy="253.0" r="14" fill="#f97316" />
+  <text x="118.0" y="258.0" class="step-label" fill="#fff7ed" text-anchor="middle">1</text>
+  <text x="260.0" y="266.0" class="node-text-block" text-anchor="middle" fill="#172033">
+<tspan x="260.0" dy="0" class="node-title">Human</tspan>
+<tspan x="260.0" dy="18" class="node-title" textLength="88.0" lengthAdjust="spacingAndGlyphs">Governance</tspan>
+<tspan x="260.0" dy="17" class="node-caption" textLength="88.0" lengthAdjust="spacingAndGlyphs">Goals + stop</tspan>
+<tspan x="260.0" dy="17" class="node-caption">gates</tspan>
 </text>
 </g>
 </svg>

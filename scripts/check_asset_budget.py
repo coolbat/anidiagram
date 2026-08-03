@@ -13,6 +13,7 @@ README_TOTAL_BUDGET = 6 * 1024 * 1024
 README_CASE_BUDGET = 1024 * 1024
 TRACKED_GALLERY_BUDGET = 55 * 1024 * 1024
 README_FRAME_CONTRACT = 24
+README_ASSET_COUNT = 9
 
 
 def audit(gallery: Path) -> dict:
@@ -23,7 +24,11 @@ def audit(gallery: Path) -> dict:
     readme = gallery / "readme-showcase"
     cases = []
     issues = []
-    for path in sorted(readme.glob("*.webp")):
+    readme_paths = [
+        *readme.glob("*.webp"),
+        *(ROOT / "assets" / "readme").glob("*.webp"),
+    ]
+    for path in sorted(readme_paths):
         with Image.open(path) as image:
             frames = int(getattr(image, "n_frames", 1))
             dimensions = list(image.size)
@@ -35,8 +40,10 @@ def audit(gallery: Path) -> dict:
             issues.append(f"{path.name}: {frames} frames, expected {README_FRAME_CONTRACT}")
     readme_total = sum(item["bytes"] for item in cases)
     gallery_total = sum(path.stat().st_size for path in gallery.rglob("*") if path.is_file())
-    if len(cases) != 8:
-        issues.append(f"README showcase contains {len(cases)} WebP files, expected 8")
+    if len(cases) != README_ASSET_COUNT:
+        issues.append(
+            f"README assets contain {len(cases)} WebP files, expected {README_ASSET_COUNT}"
+        )
     if readme_total > README_TOTAL_BUDGET:
         issues.append(f"README showcase: {readme_total} bytes exceeds {README_TOTAL_BUDGET}")
     if gallery_total > TRACKED_GALLERY_BUDGET:

@@ -342,31 +342,45 @@ class ShowcaseGalleryTest(unittest.TestCase):
                 self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, summary)
 
     def test_readmes_use_the_approved_curated_showcase_in_order(self):
-        for relative in ("README.md", "README.zh-CN.md"):
+        expected_by_readme = {
+            "README.md": [
+                "gallery/readme-showcase/hero-loop-engineering.webp",
+                "gallery/readme-showcase/hero-governed-rag.webp",
+                "gallery/readme-showcase/hero-kubernetes-three-layer.webp",
+                "gallery/readme-showcase/template-agent-lifecycle-minimal-light.webp",
+                "gallery/readme-showcase/template-agent-lifecycle-deep-tech.webp",
+                "gallery/readme-showcase/template-agent-lifecycle-claude-warm.webp",
+                "gallery/readme-showcase/layout-enterprise-rag-pipeline.webp",
+                "gallery/readme-showcase/layout-mcp-tool-hub.webp",
+            ],
+            "README.zh-CN.md": [
+                "assets/readme/enterprise-agent-platform-zh.webp",
+                "gallery/readme-showcase/hero-governed-rag.webp",
+                "gallery/readme-showcase/hero-kubernetes-three-layer.webp",
+                "gallery/readme-showcase/template-agent-lifecycle-minimal-light.webp",
+                "gallery/readme-showcase/template-agent-lifecycle-deep-tech.webp",
+                "gallery/readme-showcase/template-agent-lifecycle-claude-warm.webp",
+                "gallery/readme-showcase/layout-enterprise-rag-pipeline.webp",
+                "gallery/readme-showcase/layout-mcp-tool-hub.webp",
+            ],
+        }
+        for relative, expected_paths in expected_by_readme.items():
             source = (ROOT / relative).read_text(encoding="utf-8")
-            expected = [
-                "hero-loop-engineering",
-                "hero-governed-rag",
-                "hero-kubernetes-three-layer",
-                "template-agent-lifecycle-minimal-light",
-                "template-agent-lifecycle-deep-tech",
-                "template-agent-lifecycle-claude-warm",
-                "layout-enterprise-rag-pipeline",
-                "layout-mcp-tool-hub",
-            ]
-            positions = [source.index(f"gallery/readme-showcase/{case_id}.webp") for case_id in expected]
+            positions = [source.index(path) for path in expected_paths]
             self.assertEqual(sorted(positions), positions, relative)
             self.assertNotIn("gallery/previews/agent-runtime-flow.webp", source)
             self.assertNotIn("gallery/styles/minimal-light.svg", source)
             self.assertNotIn("gallery/layouts/pipeline.svg", source)
             self.assertIn("scripts/render_readme_showcase_round_1.py", source)
-            for case_id in expected:
+            for path in expected_paths:
+                self.assertIn(f"](./{path})", source, f"{relative}: {path}")
+            gallery_case_ids = [
+                Path(path).stem
+                for path in expected_paths
+                if path.startswith("gallery/readme-showcase/")
+            ]
+            for case_id in gallery_case_ids:
                 self.assertNotIn(f"gallery/readme-showcase/{case_id}.preview.svg", source)
-                self.assertIn(
-                    f"](./gallery/readme-showcase/{case_id}.webp)",
-                    source,
-                    f"{relative}: {case_id} animated WebP image",
-                )
                 self.assertNotIn(
                     f"](./gallery/readme-showcase/{case_id}.svg)",
                     source,
@@ -377,6 +391,23 @@ class ShowcaseGalleryTest(unittest.TestCase):
                         (ROOT / "gallery" / "readme-showcase" / f"{case_id}.{suffix}").is_file(),
                         f"{relative}: {case_id}.{suffix}",
                     )
+
+    @unittest.skipIf(Image is None, "Pillow is required to inspect animated WebP frames")
+    def test_chinese_readme_uses_centered_chinese_animated_proof(self):
+        webp_path = ROOT / "assets" / "readme" / "enterprise-agent-platform-zh.webp"
+        svg_path = ROOT / "assets" / "readme" / "enterprise-agent-platform-zh.svg"
+        self.assertLess(webp_path.stat().st_size, 1024 * 1024)
+        with Image.open(webp_path) as image:
+            self.assertTrue(getattr(image, "is_animated", False))
+            self.assertEqual(24, image.n_frames)
+            self.assertEqual((1020, 920), image.size)
+        svg = svg_path.read_text(encoding="utf-8")
+        self.assertIn('lang="zh-CN"', svg)
+        self.assertIn("企业级智能体平台架构", svg)
+
+    def test_readmes_do_not_repeat_clean_room_boundary_declarations(self):
+        self.assertNotIn("Clean-room boundary", (ROOT / "README.md").read_text(encoding="utf-8"))
+        self.assertNotIn("Clean-Room 边界", (ROOT / "README.zh-CN.md").read_text(encoding="utf-8"))
 
     @unittest.skipIf(Image is None, "Pillow is required to inspect animated WebP frames")
     def test_curated_showcase_uses_animated_webp_previews(self):

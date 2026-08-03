@@ -2,6 +2,7 @@
   "version": "0.2",
   "semantic": {
     "title": "Loop Engineering Operating Architecture",
+    "subtitle": "Governed automation · isolated execution · verified delivery · external state",
     "summary": "Show how automation, worktrees, skills, sub-agents, connectors, external state, and human judgement form a repeatable coding-agent loop.",
     "intent": {
       "diagram_kind": "architecture",

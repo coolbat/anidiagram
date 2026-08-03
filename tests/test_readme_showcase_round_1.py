@@ -278,6 +278,7 @@ class ReadmeShowcaseRound1Test(unittest.TestCase):
             self.assertEqual([], report["console_errors"])
             self.assertEqual([], report["overflow"])
             self.assertEqual([], report["text_overflow"])
+            self.assertEqual([], report["title_text_overflow"])
             self.assertEqual([], report["label_collisions"])
 
 

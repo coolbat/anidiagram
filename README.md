@@ -17,7 +17,7 @@
   <a href="./docs/html-runtime.md">Runtime</a>
 </p>
 
-AniDiagram is a clean-room renderer and composition pipeline for animated
+AniDiagram is a renderer and composition pipeline for animated
 architecture diagrams. Give it a brief, a semantic `DiagramPlan`, or an authored
 `DiagramScript`; it resolves the visual system, validates the scene, and exports
 portable SVG, an interactive HTML runtime, or raster and video deliverables.
@@ -286,7 +286,7 @@ python3 -m pip install -e ".[raster]"
 PYTHONPATH=src python3 scripts/build_showcase.py --quality
 ```
 
-The eight curated README previews are committed animated WebP assets. Re-record
+The curated README previews are committed animated WebP assets. Re-record
 them only when intentionally updating the frozen capture contract:
 
 ```bash
@@ -306,14 +306,6 @@ PYTHONPATH=src python3 scripts/check_asset_budget.py
 - [Illustrated 2.5 expansion](./docs/illustrated-2.5-full-expansion.md)
 - [Runtime motion roadmap](./docs/runtime-motion-roadmap.md)
 - [Release evidence](./docs/release-evidence.md)
-
-## Clean-room boundary
-
-This repository is not a GitHub fork and does not copy source code, documents,
-images, generated assets, or repository history from the projects listed in
-[REFERENCES.md](./REFERENCES.md). External projects may inform product research;
-the implementation, schemas, documentation, and generated examples remain
-independent.
 
 ## License
 

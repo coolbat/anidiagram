@@ -30,7 +30,7 @@
         "issues": 0
       },
       "canvas": {
-        "width": 1280,
+        "width": 1020,
         "height": 920
       },
       "webp": "gallery/readme-showcase/hero-loop-engineering.webp",
@@ -43,7 +43,7 @@
         "quality": 65,
         "runtime_dependency": "gsap@3.15.0",
         "capture_contract": "browser-capture-v1",
-        "input_sha256": "9d98f42f26c1637733e1f5ca8387757857313cb63488bd860b1337ef09fc2aea"
+        "input_sha256": "69204cb0187d895a07ab8ef195041e41f24b803533fb12e56995e215246ff2fb"
       }
     },
     {

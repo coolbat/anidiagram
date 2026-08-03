@@ -27,6 +27,7 @@ async function main() {
     console_errors: [],
     overflow: [],
     text_overflow: [],
+    title_text_overflow: [],
     label_collisions: [],
   };
   const browser = await chromium.launch({ headless: true });
@@ -118,6 +119,16 @@ async function main() {
             && content.bottom <= card.bottom + tolerance;
           return inside ? [] : [node.id || "unknown-node"];
         });
+        const titleTextOverflow = Array.from(svg.querySelectorAll(".title, .subtitle")).flatMap((element) => {
+          const box = element.getBBox();
+          const viewBox = svg.viewBox.baseVal;
+          const tolerance = 0.75;
+          const inside = box.x >= viewBox.x - tolerance
+            && box.y >= viewBox.y - tolerance
+            && box.x + box.width <= viewBox.x + viewBox.width + tolerance
+            && box.y + box.height <= viewBox.y + viewBox.height + tolerance;
+          return inside ? [] : [(element.textContent || "").trim() || element.classList.value];
+        });
         const edgeLabels = Array.from(document.querySelectorAll("g.edge > text.edge-label"))
           .filter((label) => label.textContent.trim() && Number(getComputedStyle(label).opacity) > 0)
           .map((label) => ({ text: label.textContent.trim(), rect: label.getBoundingClientRect() }));
@@ -143,6 +154,7 @@ async function main() {
           activeEdges,
           outside,
           textOverflow,
+          titleTextOverflow,
           labelCollisions,
           pageOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
         };
@@ -160,6 +172,7 @@ async function main() {
       report.active_runtime_edges += state.activeEdges;
       state.outside.forEach((nodeId) => report.overflow.push(`${entry.id}: ${nodeId} outside SVG`));
       state.textOverflow.forEach((nodeId) => report.text_overflow.push(`${entry.id}: ${nodeId}`));
+      state.titleTextOverflow.forEach((label) => report.title_text_overflow.push(`${entry.id}: ${label}`));
       state.labelCollisions.forEach((collision) => report.label_collisions.push(`${entry.id}: ${collision}`));
       if (state.pageOverflow) report.overflow.push(`${entry.id}: horizontal overflow`);
     }
@@ -170,6 +183,10 @@ async function main() {
   assert(report.console_errors.length === 0, `console errors:\n${report.console_errors.join("\n")}`);
   assert(report.overflow.length === 0, `overflow:\n${report.overflow.join("\n")}`);
   assert(report.text_overflow.length === 0, `text overflow:\n${report.text_overflow.join("\n")}`);
+  assert(
+    report.title_text_overflow.length === 0,
+    `title text overflow:\n${report.title_text_overflow.join("\n")}`,
+  );
   assert(report.label_collisions.length === 0, `label collisions:\n${report.label_collisions.join("\n")}`);
   process.stdout.write(`${JSON.stringify(report)}\n`);
 }

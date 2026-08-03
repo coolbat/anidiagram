@@ -17,7 +17,7 @@
   <a href="./docs/html-runtime.md">Runtime</a>
 </p>
 
-AniDiagram 是一个 clean-room 的动态架构图渲染器与语义编排管线。输入一段
+AniDiagram 是一个动态架构图渲染器与语义编排管线。输入一段
 自然语言、一个语义化 `DiagramPlan` 或手写 `DiagramScript`，它会解析视觉系统、
 校验场景，并输出可移植 SVG、可交互 HTML runtime，以及栅格或视频交付物。
 
@@ -41,12 +41,13 @@ AniDiagram 是一个 clean-room 的动态架构图渲染器与语义编排管线
 
 下面的案例全部来自仓库自有语义计划，并通过 CLI 使用的同一条公共管线生成。
 
-### 有治理的工程循环
+### 企业级智能体平台
 
-![Loop Engineering Operating Architecture](./gallery/readme-showcase/hero-loop-engineering.webp)
+![企业级智能体平台架构](./assets/readme/enterprise-agent-platform-zh.webp)
 
-`illustrated` 2.5 · `minimal-light` · `layered-loop` —— 将治理、隔离执行、
-验证交付与外部状态组织成一个完整运行循环。
+`illustrated` 2.5 · `deep-tech` · `layered-loop` —— 请求经接入层进入智能编排，
+结合长期记忆、企业知识库与搜索工具完成任务，并在安全校验后输出可信结果。
+[查看 SVG 静态版本](./assets/readme/enterprise-agent-platform-zh.svg)。
 
 | Governed RAG 生产架构 | Kubernetes 生产分层 |
 | --- | --- |
@@ -275,7 +276,7 @@ python3 -m pip install -e ".[raster]"
 PYTHONPATH=src python3 scripts/build_showcase.py --quality
 ```
 
-README 的 8 个精选预览是已经提交的 animated WebP。只有需要明确更新冻结捕获
+README 的精选预览是已经提交的 animated WebP。只有需要明确更新冻结捕获
 合约时才重新录制：
 
 ```bash
@@ -295,12 +296,6 @@ PYTHONPATH=src python3 scripts/check_asset_budget.py
 - [Illustrated 2.5 扩展说明](./docs/illustrated-2.5-full-expansion.md)
 - [Runtime 动效路线图](./docs/runtime-motion-roadmap.md)
 - [发布验证证据](./docs/release-evidence.md)
-
-## Clean-Room 边界
-
-本仓库不是 GitHub fork，也不复制 [REFERENCES.md](./REFERENCES.md) 中参考项目的
-源码、文档、图片、生成资产或仓库历史。外部项目只用于产品研究；实现、schema、
-文档和生成示例均保持独立。
 
 ## License
 
