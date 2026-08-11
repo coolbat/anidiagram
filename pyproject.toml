@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "anidiagram"
 version = "0.2.0"
-description = "Clean-room JSON-to-animated-SVG renderer for AniDiagram architecture visuals."
+description = "Semantic-first animated architecture diagrams with portable SVG and a high-fidelity browser runtime."
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"

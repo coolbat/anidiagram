@@ -1,4 +1,5 @@
 import json
+import re
 import sys
 import unittest
 from html.parser import HTMLParser
@@ -341,56 +342,49 @@ class ShowcaseGalleryTest(unittest.TestCase):
                 summary = json.loads((ROOT / entry["quality"]).read_text(encoding="utf-8"))["summary"]
                 self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, summary)
 
-    def test_readmes_use_the_approved_curated_showcase_in_order(self):
+    def test_readmes_use_one_animated_proof_with_reproducible_live_links(self):
         expected_by_readme = {
-            "README.md": [
-                "gallery/readme-showcase/hero-loop-engineering.webp",
-                "gallery/readme-showcase/hero-governed-rag.webp",
-                "gallery/readme-showcase/hero-kubernetes-three-layer.webp",
-                "gallery/readme-showcase/template-agent-lifecycle-minimal-light.webp",
-                "gallery/readme-showcase/template-agent-lifecycle-deep-tech.webp",
-                "gallery/readme-showcase/template-agent-lifecycle-claude-warm.webp",
-                "gallery/readme-showcase/layout-enterprise-rag-pipeline.webp",
-                "gallery/readme-showcase/layout-mcp-tool-hub.webp",
-            ],
-            "README.zh-CN.md": [
-                "assets/readme/enterprise-agent-platform-zh.webp",
-                "gallery/readme-showcase/hero-governed-rag.webp",
-                "gallery/readme-showcase/hero-kubernetes-three-layer.webp",
-                "gallery/readme-showcase/template-agent-lifecycle-minimal-light.webp",
-                "gallery/readme-showcase/template-agent-lifecycle-deep-tech.webp",
-                "gallery/readme-showcase/template-agent-lifecycle-claude-warm.webp",
-                "gallery/readme-showcase/layout-enterprise-rag-pipeline.webp",
-                "gallery/readme-showcase/layout-mcp-tool-hub.webp",
-            ],
+            "README.md": {
+                "animated": "gallery/readme-showcase/hero-loop-engineering.webp",
+                "local_links": [
+                    "examples/loop-engineering-minimal-light.plan.json",
+                    "examples/readme-showcase-round-1/hero-loop-engineering.diagram.json",
+                    "gallery/readme-showcase/hero-loop-engineering.svg",
+                    "gallery/readme-showcase/hero-loop-engineering.quality.json",
+                ],
+                "live": "https://coolbat.github.io/anidiagram/gallery/readme-showcase/hero-loop-engineering.html",
+            },
+            "README.zh-CN.md": {
+                "animated": "assets/readme/enterprise-agent-platform-zh.webp",
+                "local_links": [
+                    "examples/zh-CN/enterprise-agent-platform.plan.json",
+                    "assets/readme/enterprise-agent-platform-zh.svg",
+                ],
+                "live": "https://coolbat.github.io/anidiagram/gallery/readme-showcase/enterprise-agent-platform-zh.html",
+            },
         }
-        for relative, expected_paths in expected_by_readme.items():
+        all_secondary_webps = {
+            "gallery/readme-showcase/hero-governed-rag.webp",
+            "gallery/readme-showcase/hero-kubernetes-three-layer.webp",
+            "gallery/readme-showcase/template-agent-lifecycle-minimal-light.webp",
+            "gallery/readme-showcase/template-agent-lifecycle-deep-tech.webp",
+            "gallery/readme-showcase/template-agent-lifecycle-claude-warm.webp",
+            "gallery/readme-showcase/layout-enterprise-rag-pipeline.webp",
+            "gallery/readme-showcase/layout-mcp-tool-hub.webp",
+        }
+        for relative, expected in expected_by_readme.items():
             source = (ROOT / relative).read_text(encoding="utf-8")
-            positions = [source.index(path) for path in expected_paths]
-            self.assertEqual(sorted(positions), positions, relative)
-            self.assertNotIn("gallery/previews/agent-runtime-flow.webp", source)
-            self.assertNotIn("gallery/styles/minimal-light.svg", source)
-            self.assertNotIn("gallery/layouts/pipeline.svg", source)
+            self.assertEqual(1, len(re.findall(r"\]\(\./[^)]+\.webp\)", source)), relative)
+            self.assertIn(f'](./{expected["animated"]})', source)
+            self.assertIn(expected["live"], source)
+            for path in expected["local_links"]:
+                self.assertIn(f'](./{path})', source)
+                self.assertTrue((ROOT / path).is_file(), path)
+            for path in all_secondary_webps:
+                self.assertNotIn(path, source)
             self.assertIn("scripts/render_readme_showcase_round_1.py", source)
-            for path in expected_paths:
-                self.assertIn(f"](./{path})", source, f"{relative}: {path}")
-            gallery_case_ids = [
-                Path(path).stem
-                for path in expected_paths
-                if path.startswith("gallery/readme-showcase/")
-            ]
-            for case_id in gallery_case_ids:
-                self.assertNotIn(f"gallery/readme-showcase/{case_id}.preview.svg", source)
-                self.assertNotIn(
-                    f"](./gallery/readme-showcase/{case_id}.svg)",
-                    source,
-                    f"{relative}: {case_id} static click target",
-                )
-                for suffix in ("preview.svg", "html", "quality.json"):
-                    self.assertTrue(
-                        (ROOT / "gallery" / "readme-showcase" / f"{case_id}.{suffix}").is_file(),
-                        f"{relative}: {case_id}.{suffix}",
-                    )
+        self.assertTrue((ROOT / ".nojekyll").is_file())
+        self.assertTrue((ROOT / "gallery" / "readme-showcase" / "enterprise-agent-platform-zh.html").is_file())
 
     @unittest.skipIf(Image is None, "Pillow is required to inspect animated WebP frames")
     def test_chinese_readme_uses_centered_chinese_animated_proof(self):

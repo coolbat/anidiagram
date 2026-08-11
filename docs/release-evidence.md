@@ -40,7 +40,7 @@
 - Attempt number: 1
 - Recorded at: 2026-07-13 11:27:08 CST
 - Changed assumptions: current dirty feature branch is the approved single writer.
-- Command or observation: `PYTHONPATH=src python3 -m unittest discover -s tests && node --check runtime/anidiagram-runtime.js && git diff --check` in `/Users/coolbat/anidiagram`.
+- Command or observation: `PYTHONPATH=src python3 -m unittest discover -s tests && node --check runtime/anidiagram-runtime.js && git diff --check` from the repository root.
 - Result: exit 0; 64 tests passed; runtime syntax and diff checks passed.
 - Artifact or output: terminal output; scoped ledger in `Documentation.md`.
 - Known failure: none.
@@ -56,7 +56,7 @@
 - Attempt number: 2
 - Recorded at: 2026-07-13 11:36:12 CST
 - Changed assumptions: dynamic SVG particle filters removed after Chromium compositor evidence.
-- Command or observation: M1 validation command in `/Users/coolbat/anidiagram`; browser screenshots for Default, Deep Tech, Teaching Sketch, and fixed Readable mode.
+- Command or observation: M1 validation command from the repository root; browser screenshots for Default, Deep Tech, Teaching Sketch, and fixed Readable mode.
 - Result: exit 0; 66 tests; character rest 13/13; reduced motion 13/13 and 8/8; stage modes verified with 8 characters, 7 edges, 2 readable packets.
 - Artifact or output: `outputs/illustrated-character-v1-flow/checkpoint-a-expressive.png`, `checkpoint-a-readable-fixed.png`, `outputs/theme-deep-tech-checkpoint-a.png`, `outputs/theme-teaching-sketch-checkpoint-a.png`.
 - Known failure: F-M1-01, F-M1-02, F-M1-03 repaired.

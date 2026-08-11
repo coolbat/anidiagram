@@ -1327,7 +1327,7 @@ def _write_gallery_index(
     </section>
     <section>
       <h2>Layout Showcase</h2>
-      <p>One standard teaching case for every clean-room layout preset.</p>
+      <p>One standard teaching case for every semantic layout preset.</p>
       <div class="grid">
 {layout_cards}
       </div>

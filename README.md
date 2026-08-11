@@ -3,101 +3,61 @@
 </p>
 
 <p align="center">
-  <strong>From natural-language brief to semantic plan, animated runtime, and production-ready exports.</strong>
+  <a href="https://coolbat.github.io/anidiagram/gallery/"><strong>Live Gallery</strong></a> ·
+  <a href="#quick-start">Quick start</a> ·
+  <a href="https://github.com/coolbat/anidiagram/releases/tag/v0.2.0">v0.2.0</a> ·
+  <a href="./README.zh-CN.md">简体中文</a>
 </p>
 
-<p align="center">
-  <code>Python 3.9+</code> · <code>DiagramScript 0.4</code> · <code>16 layouts</code> · <code>13 styles</code> · <code>56 illustrated icons</code> · <code>MIT</code>
-</p>
+AniDiagram turns a natural-language architecture brief into an animated,
+validated diagram that can ship as SVG, interactive HTML, images, video, or a
+machine-readable quality report. It is built for platform engineers, technical
+authors, and teams that need more control than a lightweight text diagram but
+less manual work than a design or video tool.
 
-<p align="center">
-  English · <a href="./README.zh-CN.md">简体中文</a> ·
-  <a href="./gallery/index.html">Gallery</a> ·
-  <a href="./docs/diagram-script.md">DiagramScript</a> ·
-  <a href="./docs/html-runtime.md">Runtime</a>
-</p>
+**Core contract:** `DiagramPlan 0.2` → `DiagramScript 0.4` → `SVG / HTML / quality`
 
-AniDiagram is a renderer and composition pipeline for animated
-architecture diagrams. Give it a brief, a semantic `DiagramPlan`, or an authored
-`DiagramScript`; it resolves the visual system, validates the scene, and exports
-portable SVG, an interactive HTML runtime, or raster and video deliverables.
+## See it in action
 
-Current package release: **0.2.0**.
-
-## Contents
-
-- [See AniDiagram in action](#see-anidiagram-in-action)
-- [Why AniDiagram](#why-anidiagram)
-- [Quick start](#quick-start)
-- [How it works](#how-it-works)
-- [Inputs and outputs](#inputs-and-outputs)
-- [Simplified Chinese output](#simplified-chinese-output)
-- [Layouts and styles](#layouts-and-styles)
-- [Motion and runtime](#motion-and-runtime)
-- [Contracts and compatibility](#contracts-and-compatibility)
-- [Development](#development)
-- [Documentation](#documentation)
-
-## See AniDiagram in action
-
-The examples below are generated from repository-owned semantic plans and
-rendered through the same public pipeline used by the CLI.
-
-### Governed engineering loop
+This governed engineering loop is generated from repository-owned semantic
+sources through the same composition and rendering pipeline used by the CLI.
 
 ![Loop Engineering Operating Architecture](./gallery/readme-showcase/hero-loop-engineering.webp)
 
-`illustrated` 2.5 · `minimal-light` · `layered-loop` — governance, isolated
-execution, verification, and external state arranged as one operating cycle.
+**Reproduce or inspect it:**
+[Plan](./examples/loop-engineering-minimal-light.plan.json) ·
+[DiagramScript](./examples/readme-showcase-round-1/hero-loop-engineering.diagram.json) ·
+[Live HTML](https://coolbat.github.io/anidiagram/gallery/readme-showcase/hero-loop-engineering.html) ·
+[SVG](./gallery/readme-showcase/hero-loop-engineering.svg) ·
+[Quality report](./gallery/readme-showcase/hero-loop-engineering.quality.json)
 
-| Governed RAG production | Kubernetes production layers |
-| --- | --- |
-| ![Governed RAG Production Architecture](./gallery/readme-showcase/hero-governed-rag.webp) | ![Kubernetes Production Architecture](./gallery/readme-showcase/hero-kubernetes-three-layer.webp) |
-| `illustrated` 2.5 · `minimal-light` | `diagram-core-v1` · `deep-tech` |
+The full gallery contains the two public icon systems, 16 semantic layouts,
+13 styles, runtime motion proofs, and copyable CLI commands:
+**[open the live Gallery →](https://coolbat.github.io/anidiagram/gallery/)**
 
 <details>
-<summary><strong>Compare styles and topology-specific layouts</strong></summary>
+<summary><strong>Explore more generated proofs</strong></summary>
 
-The next three diagrams keep semantic content and geometry fixed so only the
-visual style changes.
-
-| Minimal Light | Deep Tech | Claude Warm |
-| --- | --- | --- |
-| ![Production AI Agent Request Lifecycle in Minimal Light](./gallery/readme-showcase/template-agent-lifecycle-minimal-light.webp) | ![Production AI Agent Request Lifecycle in Deep Tech](./gallery/readme-showcase/template-agent-lifecycle-deep-tech.webp) | ![Production AI Agent Request Lifecycle in Claude Warm](./gallery/readme-showcase/template-agent-lifecycle-claude-warm.webp) |
-
-The final two examples show why layout is a semantic choice rather than a skin.
-
-| Sequential transformation | Orchestration hub |
-| --- | --- |
-| ![Enterprise RAG Ingestion Pipeline](./gallery/readme-showcase/layout-enterprise-rag-pipeline.webp) | ![MCP Tool Orchestration Hub](./gallery/readme-showcase/layout-mcp-tool-hub.webp) |
-| `pipeline` | `hub-spoke` |
+- [Governed RAG production](https://coolbat.github.io/anidiagram/gallery/readme-showcase/hero-governed-rag.html) — illustrated 2.5, minimal-light, layered.
+- [Kubernetes production layers](https://coolbat.github.io/anidiagram/gallery/readme-showcase/hero-kubernetes-three-layer.html) — Diagram Core v1, deep-tech, layered.
+- [Style comparison](https://coolbat.github.io/anidiagram/gallery/readme-showcase/readme-showcase-round-1.html) — identical semantics rendered in Minimal Light, Deep Tech, and Claude Warm.
+- [Layout gallery](https://coolbat.github.io/anidiagram/gallery/layouts/) — choose topology independently from visual style.
 
 </details>
 
-[Open the complete style and layout gallery →](./gallery/index.html)
-
-## Why AniDiagram
-
-| Capability | What it gives you |
-| --- | --- |
-| **Semantic-first composition** | Meaning lives in entities, relations, groups, and flows. Icon system, style, layout, and motion remain independent presentation axes. |
-| **Brief-to-diagram pipeline** | Compile natural language into DiagramPlan v0.2, then into resolved DiagramScript v0.4 with presentation provenance. |
-| **Two visual languages** | Use the 56-icon Illustrated 2.5 system for expressive explanation or `diagram-core-v1` for precise technical linework. |
-| **Animation with structure** | Animate semantic icon parts, data-flow edges, groups, and titles without moving meaning into renderer-specific code. |
-| **English and Chinese** | Detect Chinese briefs automatically, emit `zh-CN` metadata and controls, and use cross-platform CJK font fallbacks. |
-| **Export from one source** | Produce SVG, HTML, PNG, GIF, PDF, WebP, MP4, APNG, Lottie, and a machine-readable quality report. |
-| **Built-in visual range** | Start from 16 topology-aware layouts and 13 public styles, or author exact node and edge geometry. |
-| **Validation as a deliverable** | Check schema correctness, bounds, text fit, overlaps, explicit routes, asset contracts, and browser runtime behavior. |
-
 ## Quick start
 
-Clone the repository and install the CLI in editable mode:
+Clone the repository, create an isolated environment, and install the CLI:
 
 ```bash
+git clone https://github.com/coolbat/anidiagram.git
+cd anidiagram
+python3 -m venv .venv
+source .venv/bin/activate
 python3 -m pip install -e .
 ```
 
-Generate an architecture diagram from one sentence:
+Generate your first architecture diagram from one sentence:
 
 ```bash
 anidiagram \
@@ -107,7 +67,7 @@ anidiagram \
   --formats svg,html,quality
 ```
 
-The first successful run writes:
+The first run writes:
 
 ```text
 outputs/quickstart/
@@ -116,19 +76,38 @@ outputs/quickstart/
 └── request-flow.quality.json
 ```
 
-Preview the HTML runtime locally:
+Preview the interactive runtime locally:
 
 ```bash
 python3 -m http.server 8765
 ```
 
-Then open `http://127.0.0.1:8765/outputs/quickstart/request-flow.html`.
+Open `http://127.0.0.1:8765/outputs/quickstart/request-flow.html`.
+Install `.[raster]` when you also need PNG, PDF, GIF, WebP, APNG, MP4, or
+Lottie export support.
 
-For raster and video formats, install the optional dependencies:
+## Choose the right tool
 
-```bash
-python3 -m pip install -e ".[raster]"
-```
+| Need | Best fit |
+| --- | --- |
+| A lightweight static diagram authored close to text | Mermaid, D2, or Graphviz |
+| Semantic entities and flows, controlled visual systems, animation, multi-format delivery, and quality evidence | **AniDiagram** |
+| Frame-level art direction or hand-tuned video editing | A design or video tool |
+
+AniDiagram is a renderer and composition pipeline, not a browser-based
+drag-and-drop editor. Choose it when the semantic model and repeatable output
+matter more than manual canvas editing.
+
+## Why AniDiagram
+
+| Capability | What it gives you |
+| --- | --- |
+| **Semantic-first composition** | Meaning stays in entities, relations, groups, and flows while icon system, style, layout, and motion remain independent axes. |
+| **Brief-to-diagram pipeline** | Natural language compiles to DiagramPlan v0.2 and then resolved DiagramScript v0.4 with presentation provenance. |
+| **Two visual languages** | Use 56 illustrated icons for expressive explanation or `diagram-core-v1` for precise technical linework. |
+| **Structured motion** | Animate semantic icon parts and data flows without moving business meaning into renderer-specific code. |
+| **English and Chinese** | Detect Chinese briefs automatically, emit `zh-CN` metadata and controls, and use cross-platform CJK font fallbacks. |
+| **Validation as output** | Check schema, bounds, text fit, overlaps, routes, asset contracts, and browser runtime behavior. |
 
 ## How it works
 
@@ -136,46 +115,37 @@ python3 -m pip install -e ".[raster]"
   <img src="./assets/readme/workflow.svg" width="100%" alt="AniDiagram workflow from architecture intent through semantics and composition to visual outputs and quality proof">
 </p>
 
-1. **Describe meaning** — provide a brief, DiagramPlan, or DiagramScript.
-2. **Build stable semantics** — entities, relations, groups, flows, locale, and
-   provenance stay renderer-independent.
-3. **Resolve presentation** — choose icon system, style, layout, and motion as
-   four separate axes.
-4. **Compile once** — DiagramScript v0.4 records concrete geometry and resolved
-   presentation choices.
-5. **Render and verify** — create visual artifacts and a quality report from the
-   same scene.
+1. **Describe meaning** with a brief, DiagramPlan, DiagramScript, or preset.
+2. **Build stable semantics** from entities, relations, groups, flows, locale, and provenance.
+3. **Resolve presentation** across icon system, style, layout, and motion.
+4. **Compile once** into renderer-ready DiagramScript v0.4 geometry.
+5. **Render and verify** visual artifacts and quality evidence from the same scene.
 
 ## Inputs and outputs
-
-### Input paths
 
 | Input | Use it when | CLI |
 | --- | --- | --- |
 | Natural-language brief | You want the shortest path from intent to a diagram | `--text` or `--brief` |
-| DiagramPlan v0.2 | You want stable semantics with model- or user-selected presentation | `--plan` |
-| DiagramScript v0.4 | You want explicit geometry, effects, and renderer-ready control | `--spec` |
-| Built-in preset | You want a known topology as a fast starting point | `--preset` |
+| DiagramPlan v0.2 | You want stable semantics with selectable presentation | `--plan` |
+| DiagramScript v0.4 | You want explicit geometry, effects, and renderer control | `--spec` |
+| Built-in preset | You want a known topology as a starting point | `--preset` |
 
-### Output formats
+| Output | Best for |
+| --- | --- |
+| `svg` | Portable documentation and static hosting |
+| `html` | Highest-fidelity interactive playback with localized controls |
+| `png`, `pdf` | Documents, reviews, and slide decks |
+| `gif`, `webp`, `apng`, `mp4` | Shareable animation and video |
+| `lottie` | Structured or frame-faithful animation exchange |
+| `quality` | CI and review evidence |
 
-| Output | Best for | Notes |
-| --- | --- | --- |
-| `svg` | Portable documentation and static hosting | Includes lightweight semantic motion fallbacks |
-| `html` | Highest-fidelity interactive playback | Motion Manifest + GSAP runtime with localized controls |
-| `png`, `pdf` | Documents, reviews, and slide decks | Python renderer by default; browser capture for maximum fidelity |
-| `gif`, `webp`, `apng` | Shareable animated previews | Configurable frame rate, quality, and loop blending |
-| `mp4` | Video delivery | Requires `ffmpeg` |
-| `lottie` | Structured or frame-faithful animation exchange | Renderer-dependent representation |
-| `quality` | CI and review evidence | JSON summary for geometry and rendering issues |
-
-Use `--export-renderer browser` when the exported artifact must match the
+Use `--export-renderer browser` when an exported artifact must match the
 high-fidelity HTML runtime.
 
 ## Simplified Chinese output
 
 Chinese briefs resolve to `zh-CN` automatically. Use
-`--diagram-locale zh-CN` when you want to force Chinese generation explicitly:
+`--diagram-locale zh-CN` to lock the generated diagram to Chinese explicitly:
 
 ```bash
 anidiagram \
@@ -187,114 +157,88 @@ anidiagram \
   --formats svg,html,quality
 ```
 
-The authored example is
-[examples/zh-CN/enterprise-agent-platform.plan.json](./examples/zh-CN/enterprise-agent-platform.plan.json).
-SVG and HTML outputs declare `lang="zh-CN"`; raster exporters discover an
-available CJK font or use `ANIDIAGRAM_CJK_FONT=/absolute/path/to/font.ttf` for
-a deterministic build.
+Inspect the authored
+[Chinese DiagramPlan](./examples/zh-CN/enterprise-agent-platform.plan.json),
+[live Chinese runtime](https://coolbat.github.io/anidiagram/gallery/readme-showcase/enterprise-agent-platform-zh.html),
+or [static SVG proof](./assets/readme/enterprise-agent-platform-zh.svg).
+Raster exporters discover an available CJK font, or you can set
+`ANIDIAGRAM_CJK_FONT=/absolute/path/to/font.ttf` for deterministic builds.
 
-## Layouts and styles
+## Visual systems
 
-### 16 semantic layouts
+- **16 layouts:** `pipeline`, `loop`, `hub-spoke`, `layered`, `swimlane`,
+  `compare`, `matrix`, `timeline`, `stack`, `funnel`, `sequence`, `er`,
+  `network`, `agent-memory`, `agent-loop`, and `layered-loop`.
+- **13 styles:** `minimal-light`, `deep-tech`, `blueprint`, `flat-icon`,
+  `dark-terminal`, `notion-clean`, `glassmorphism`, `claude-warm`,
+  `openai-minimal`, `dark-luxury`, `aurora-orb`, `illustrated-semantic`, and
+  `sketch-board`.
 
-`pipeline` · `loop` · `hub-spoke` · `layered` · `swimlane` · `compare` ·
-`matrix` · `timeline` · `stack` · `funnel` · `sequence` · `er` · `network` ·
-`agent-memory` · `agent-loop` · `layered-loop`
+Browse the [live style gallery](https://coolbat.github.io/anidiagram/gallery/styles/),
+[live layout gallery](https://coolbat.github.io/anidiagram/gallery/layouts/), or
+[machine-readable style catalog](./styles/catalog.json).
 
-Choose by topology: sequential work uses `pipeline`, central coordination uses
-`hub-spoke`, tiered systems use `layered`, agent internals use `agent-loop`, and
-governed cyclic operations use `layered-loop`.
+## Motion and compatibility
 
-### 13 public styles
-
-`minimal-light` · `deep-tech` · `blueprint` · `flat-icon` · `dark-terminal` ·
-`notion-clean` · `glassmorphism` · `claude-warm` · `openai-minimal` ·
-`dark-luxury` · `aurora-orb` · `illustrated-semantic` · `sketch-board`
-
-Browse the [style gallery](./gallery/styles/index.html),
-[layout gallery](./gallery/layouts/index.html), or machine-readable
-[style catalog](./styles/catalog.json).
-
-## Motion and runtime
-
-New composition-v1 diagrams resolve to `showcase-v1`: eligible illustrated
-icons perform their semantic action, data-flow edges remain visibly active,
-and reduced-motion users receive a stable rest state. Discrete transfers use a
-single `packet-flow` dot; continuous or cyclic relations use `stream-flow`
-dashes that move continuously; `comet-flow` is reserved for explicit emphasis.
-
-The HTML runtime supports three viewing modes:
-
-- **Expressive** — full semantic icon performances and active flow coverage.
-- **Readable** — reduced visual density while preserving the important actions.
-- **Off** — canonical static structure for review or reduced motion.
-
-Review the frozen motion baseline in
-[Runtime Motion](./gallery/runtime-motion.html) and compare legacy character
-themes in [gallery/character-themes.html](./gallery/character-themes.html).
+The HTML runtime exposes three viewing modes: **Expressive** for full semantic
+performances, **Readable** for lower visual density, and **Off** for a canonical
+static structure. Discrete transfers use packet motion; continuous or cyclic
+relations use continuously moving stream flows. Reduced-motion users receive a
+stable rest state.
 
 ### Motion Policy
 
 `motion` describes how an element moves; `motion_policy` limits how much motion
 may remain active. The composition-v1 default pairs `showcase-v1` with
-`motion_policy.profile=unrestricted`, `motion_area=unrestricted`, and
-`pulse_mode=all`. Dense explanatory diagrams can select `readable` or `focused`
-budgets without changing their semantic graph.
+`motion_policy.profile=unrestricted`, while dense diagrams can select readable
+or focused budgets without changing their semantic graph.
 
 ### Node Motion Types
 
-The public node path is `icon-performance`: each supported icon resolves to a
-versioned semantic performance with stable SVG part IDs. Illustrated 2.5.0 has
-56 approved icons and uses the public `illustrated-performance-v6` contract.
-See [HTML runtime](./docs/html-runtime.md) for the complete performance catalog,
-rest-pose contract, and reduced-motion behavior.
+The public node path is `icon-performance`. Illustrated 2.5.0 contains 56
+approved icons using the versioned `illustrated-performance-v6` contract and
+stable SVG part IDs. Review the live
+[runtime catalog](https://coolbat.github.io/anidiagram/gallery/runtime-motion.html)
+and legacy [character themes](./gallery/character-themes.html).
 
-Edge Motion v1.0.0 is independently versioned and documented in
-[docs/edge-motion-v1.md](./docs/edge-motion-v1.md).
-
-## Contracts and compatibility
+<details>
+<summary><strong>Compatibility contracts</strong></summary>
 
 | Input contract | Default icon system | Default motion |
 | --- | --- | --- |
-| DiagramPlan v0.2 compiled through `composition-v1` | `illustrated` 2.5.0 | `showcase-v1` |
+| DiagramPlan v0.2 through `composition-v1` | `illustrated` 2.5.0 | `showcase-v1` |
 | Direct DiagramScript v0.4 without `composition_policy` | `diagram-core-v1` | `expressive` when omitted |
 | Legacy DiagramScript v0.1–v0.3 | `illustrated-character-v1` | `expressive` when omitted |
 
-The **composition-v1 default** is the stable public `illustrated` ID. Select
-`diagram-core-v1` explicitly for the technical line-icon language. Legacy
+The **composition-v1 default** is the stable public `illustrated` ID. Legacy
 aliases `illustrated-v1` and `semantic-line-v1` remain explicit compatibility
-paths; they are not silently selected for new plans.
+paths and are not silently selected for new plans.
 
-Schemas live in [schemas/](./schemas/). The semantic/presentation separation is
-defined by [ADR-001](./docs/decisions/ADR-001-separate-semantic-content-from-presentation.md)
-and the [composition contract](./docs/diagram-composition-contract.md).
+</details>
 
 ## Development
 
-Run the project gates:
+Run the primary project gates:
 
 ```bash
 PYTHONPATH=src python3 -m unittest discover -s tests
 PYTHONPATH=src python3 scripts/validate_diagram_core_assets.py --strict --json
+PYTHONPATH=src python3 scripts/check_asset_budget.py
 node --check runtime/anidiagram-runtime.js
 ```
 
-Regenerate the full gallery:
+<details>
+<summary><strong>Regenerate Gallery and README capture assets</strong></summary>
 
 ```bash
 python3 -m pip install -e ".[raster]"
 PYTHONPATH=src python3 scripts/build_showcase.py --quality
-```
-
-The curated README previews are committed animated WebP assets. Re-record
-them only when intentionally updating the frozen capture contract:
-
-```bash
 PYTHONPATH=src python3 scripts/render_readme_showcase_round_1.py \
   --spec-root examples/readme-showcase-round-1 \
   --outdir gallery/readme-showcase
-PYTHONPATH=src python3 scripts/check_asset_budget.py
 ```
+
+</details>
 
 ## Documentation
 
@@ -303,7 +247,6 @@ PYTHONPATH=src python3 scripts/check_asset_budget.py
 - [Composition contract](./docs/diagram-composition-contract.md)
 - [HTML runtime and motion modes](./docs/html-runtime.md)
 - [Icon-system release status](./docs/icon-system-release-status.md)
-- [Illustrated 2.5 expansion](./docs/illustrated-2.5-full-expansion.md)
 - [Runtime motion roadmap](./docs/runtime-motion-roadmap.md)
 - [Release evidence](./docs/release-evidence.md)
 

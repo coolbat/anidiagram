@@ -11,10 +11,10 @@
 - Planned node-icon catalog: 56 icons
 - Default-promotion gate: all existing 13 DiagramScript icon semantics plus
   `server` render in the new visual language without fallback
-- Product and visual source:
-  `/Users/coolbat/Cbrain/prd/anidiagram/AniDiagram-Diagram-Core-Icon-System-v1.0.md`
+- Product and visual source: approved maintainer PRD
+  `AniDiagram-Diagram-Core-Icon-System-v1.0.md` (not bundled)
 
-This document defines the repository integration contract. The Cbrain PRD owns
+This document defines the repository integration contract. The source PRD owns
 the visual language, icon taxonomy, icon-specific concepts, and reference art.
 This repository document owns asset boundaries, compatibility, runtime data
 flow, failure behavior, rollout gates, and automated acceptance.

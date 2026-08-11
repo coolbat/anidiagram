@@ -174,5 +174,5 @@ Generate the legacy gallery with:
 PYTHONPATH=src python3 scripts/batch_render.py --outdir gallery --quality
 ```
 
-Do not reuse files from `/Users/coolbat/animated-diagram`. Treat that project
-only as product validation context, never as implementation or asset source.
+Do not reuse files from sibling prototype checkouts. Treat them only as product
+validation context, never as implementation or asset sources.

@@ -36,7 +36,7 @@
 
 - Milestone: M0
 - Changed assumptions: none beyond the approved current-branch exception.
-- Command or observation: `PYTHONPATH=src python3 -m unittest discover -s tests && node --check runtime/anidiagram-runtime.js && git diff --check` in `/Users/coolbat/anidiagram`.
+- Command or observation: `PYTHONPATH=src python3 -m unittest discover -s tests && node --check runtime/anidiagram-runtime.js && git diff --check` from the repository root.
 - Result: exit 0; 64 tests passed; runtime syntax and diff checks passed.
 - Known failure: none.
 - Blocker class: none.

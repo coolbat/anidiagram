@@ -268,7 +268,7 @@
         "id": "loop-engineering-article",
         "type": "article",
         "title": "Loop Engineering",
-        "uri": "/Users/coolbat/Cbrain/raw/Loop Engineering.md",
+        "uri": "source://loop-engineering-article",
         "note": "Addy Osmani article, published 2026-06-07; bilingual clipping used as the sole semantic source."
       }
     ]

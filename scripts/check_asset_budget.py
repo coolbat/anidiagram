@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from pathlib import Path
 
 
@@ -13,7 +14,30 @@ README_TOTAL_BUDGET = 6 * 1024 * 1024
 README_CASE_BUDGET = 1024 * 1024
 TRACKED_GALLERY_BUDGET = 55 * 1024 * 1024
 README_FRAME_CONTRACT = 24
-README_ASSET_COUNT = 9
+README_ASSET_COUNT = 2
+README_FILES = (ROOT / "README.md", ROOT / "README.zh-CN.md")
+README_WEBP_PATTERN = re.compile(r"\]\(\./([^)]+\.webp)\)")
+
+
+def _readme_webp_paths() -> list[Path]:
+    paths = {
+        ROOT / match
+        for readme in README_FILES
+        for match in README_WEBP_PATTERN.findall(readme.read_text(encoding="utf-8"))
+    }
+    return sorted(paths)
+
+
+def _inspect_webp(path: Path, image_module) -> dict:
+    with image_module.open(path) as image:
+        frames = int(getattr(image, "n_frames", 1))
+        dimensions = list(image.size)
+    return {
+        "path": str(path.relative_to(ROOT)),
+        "bytes": path.stat().st_size,
+        "frames": frames,
+        "dimensions": dimensions,
+    }
 
 
 def audit(gallery: Path) -> dict:
@@ -22,27 +46,26 @@ def audit(gallery: Path) -> dict:
     except ImportError as exc:
         raise RuntimeError("Pillow is required for asset-budget validation") from exc
     readme = gallery / "readme-showcase"
-    cases = []
     issues = []
-    readme_paths = [
-        *readme.glob("*.webp"),
-        *(ROOT / "assets" / "readme").glob("*.webp"),
-    ]
-    for path in sorted(readme_paths):
-        with Image.open(path) as image:
-            frames = int(getattr(image, "n_frames", 1))
-            dimensions = list(image.size)
-        size = path.stat().st_size
-        cases.append({"path": str(path.relative_to(ROOT)), "bytes": size, "frames": frames, "dimensions": dimensions})
-        if size > README_CASE_BUDGET:
-            issues.append(f"{path.name}: {size} bytes exceeds {README_CASE_BUDGET}")
-        if frames != README_FRAME_CONTRACT:
-            issues.append(f"{path.name}: {frames} frames, expected {README_FRAME_CONTRACT}")
+    readme_paths = _readme_webp_paths()
+    showcase_paths = sorted(readme.glob("*.webp"))
+    contract_paths = sorted(set(readme_paths) | set(showcase_paths))
+    missing = [path for path in contract_paths if not path.is_file()]
+    issues.extend(f"missing animated WebP: {path.relative_to(ROOT)}" for path in missing)
+    inspected = [_inspect_webp(path, Image) for path in contract_paths if path.is_file()]
+    by_path = {item["path"]: item for item in inspected}
+    cases = [by_path[str(path.relative_to(ROOT))] for path in readme_paths if path.is_file()]
+    showcase_cases = [by_path[str(path.relative_to(ROOT))] for path in showcase_paths if path.is_file()]
+    for item in inspected:
+        if item["bytes"] > README_CASE_BUDGET:
+            issues.append(f'{item["path"]}: {item["bytes"]} bytes exceeds {README_CASE_BUDGET}')
+        if item["frames"] != README_FRAME_CONTRACT:
+            issues.append(f'{item["path"]}: {item["frames"]} frames, expected {README_FRAME_CONTRACT}')
     readme_total = sum(item["bytes"] for item in cases)
     gallery_total = sum(path.stat().st_size for path in gallery.rglob("*") if path.is_file())
     if len(cases) != README_ASSET_COUNT:
         issues.append(
-            f"README assets contain {len(cases)} WebP files, expected {README_ASSET_COUNT}"
+            f"README pages reference {len(cases)} WebP files, expected {README_ASSET_COUNT}"
         )
     if readme_total > README_TOTAL_BUDGET:
         issues.append(f"README showcase: {readme_total} bytes exceeds {README_TOTAL_BUDGET}")
@@ -59,6 +82,7 @@ def audit(gallery: Path) -> dict:
             "readme_frames": README_FRAME_CONTRACT,
         },
         "cases": cases,
+        "showcase_cases": showcase_cases,
         "issues": issues,
     }
 
