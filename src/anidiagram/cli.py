@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
+from .delivery import DeliveryError, canonical_json_bytes, deliver_artifacts, source_record
 from .exporters import (
     BROWSER_CAPTURE_FORMATS,
     write_apng,
@@ -25,6 +26,7 @@ from .exporters import (
 )
 from .planner import brief_to_plan, compile_plan
 from .presets import compile_preset, preset_names
+from .quality import quality_report
 from .schema import DiagramScriptValidationError, compile_scene
 from .styles import deep_merge, load_style
 from .resources import resource_root
@@ -122,10 +124,22 @@ def main(argv: Optional[List[str]] = None) -> None:
     parser.add_argument("--html", action="store_true", help="Also write the high-fidelity HTML runtime output.")
     parser.add_argument("--viewer", action="store_true", help="Also write the debug HTML viewer output.")
     parser.add_argument("--quality", action="store_true", help="Also write a quality report JSON.")
+    parser.add_argument(
+        "--deliver",
+        action="store_true",
+        help="Validate and transactionally replace all requested artifacts with a SHA-256 receipt.",
+    )
+    parser.add_argument(
+        "--receipt",
+        help="Optional delivery receipt path; must be in --outdir and requires --deliver.",
+    )
     parser.add_argument("--result", help="Optional path for the structured CLI result JSON.")
     parser.add_argument("--plan-out", help="Optional path for a generated DiagramPlan JSON when using --brief or --text.")
     parser.add_argument("--spec-out", help="Optional path for a compiled DiagramScript JSON when using --plan, --brief, or --text.")
     args = parser.parse_args(argv)
+
+    if args.receipt and not args.deliver:
+        parser.error("--receipt requires --deliver")
 
     if args.list_presets:
         print(json.dumps({"presets": preset_names()}, ensure_ascii=False, indent=2))
@@ -134,22 +148,33 @@ def main(argv: Optional[List[str]] = None) -> None:
         parser.error("one of --spec, --plan, --preset, --brief, or --text is required")
 
     spec_path = Path(args.spec) if args.spec else None
+    source_path: Optional[Path] = None
+    source_bytes: bytes
     source_kind = "spec"
     generated_plan: Optional[Dict[str, Any]] = None
     if spec_path:
-        spec = read_json(spec_path)
+        source_path = spec_path
+        source_bytes = spec_path.read_bytes()
+        spec = json.loads(source_bytes.decode("utf-8"))
     elif args.plan:
         source_kind = "plan"
-        generated_plan = read_json(args.plan)
+        source_path = Path(args.plan)
+        source_bytes = source_path.read_bytes()
+        generated_plan = json.loads(source_bytes.decode("utf-8"))
         spec = compile_plan(generated_plan)
-        if args.spec_out:
-            write_json(args.spec_out, spec)
     elif args.preset:
         source_kind = "preset"
+        source_bytes = canonical_json_bytes({"preset": args.preset, "title": args.title or ""})
         spec = compile_preset(args.preset, title=args.title or "")
     else:
         source_kind = "brief"
-        brief_text = Path(args.brief).read_text(encoding="utf-8") if args.brief else args.text
+        if args.brief:
+            source_path = Path(args.brief)
+            source_bytes = source_path.read_bytes()
+            brief_text = source_bytes.decode("utf-8")
+        else:
+            brief_text = args.text or ""
+            source_bytes = brief_text.encode("utf-8")
         generated_plan = brief_to_plan(
             brief_text or "",
             title=args.title or "",
@@ -157,13 +182,20 @@ def main(argv: Optional[List[str]] = None) -> None:
             language=args.diagram_locale,
         )
         spec = compile_plan(generated_plan)
-        if args.plan_out:
-            write_json(args.plan_out, generated_plan)
-        if args.spec_out:
-            write_json(args.spec_out, spec)
     if args.diagram_locale != "auto":
         spec = dict(spec)
         spec["locale"] = args.diagram_locale
+    additional_artifacts: Dict[str, Any] = {}
+    if args.deliver:
+        if args.plan_out and generated_plan is not None and source_kind == "brief":
+            additional_artifacts["compiled_plan"] = (Path(args.plan_out), json_output_bytes(generated_plan))
+        if args.spec_out and source_kind in {"plan", "brief"}:
+            additional_artifacts["compiled_specification"] = (Path(args.spec_out), json_output_bytes(spec))
+    else:
+        if args.plan_out and generated_plan is not None and source_kind == "brief":
+            write_json(args.plan_out, generated_plan)
+        if args.spec_out and source_kind in {"plan", "brief"}:
+            write_json(args.spec_out, spec)
     try:
         scene = compile_scene(spec)
     except DiagramScriptValidationError as exc:
@@ -177,25 +209,107 @@ def main(argv: Optional[List[str]] = None) -> None:
     outdir = Path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
     formats = _requested_formats(args)
+    if args.deliver and args.result:
+        result_path = Path(args.result).resolve()
+        receipt_path = (
+            Path(args.receipt) if args.receipt else outdir / f"{args.basename}.delivery.json"
+        ).resolve()
+        delivery_targets = {
+            (outdir / f"{args.basename}{FORMAT_EXTENSIONS[format_name]}").resolve()
+            for format_name in formats
+        }
+        delivery_targets.add(receipt_path)
+        delivery_targets.update(target.resolve() for target, _data in additional_artifacts.values())
+        if result_path in delivery_targets:
+            parser.error("--result must not overwrite a delivered artifact or receipt")
+    frozen_runtime_source: Optional[bytes] = None
+    if args.deliver and args.runtime_dependency == "inline" and args.runtime_source:
+        frozen_runtime_source = Path(args.runtime_source).read_bytes()
+    if args.deliver:
+        try:
+            outputs, delivery = deliver_artifacts(
+                outdir=outdir,
+                basename=args.basename,
+                formats=formats,
+                extensions=FORMAT_EXTENSIONS,
+                source=source_record(source_kind, source_bytes, source_path),
+                specification=spec,
+                style=style,
+                render_options=_render_options(args, frozen_runtime_source),
+                quality=quality_report(scene, style),
+                render=lambda stage_dir: _render_outputs(
+                    scene,
+                    style,
+                    args,
+                    formats,
+                    stage_dir,
+                    frozen_runtime_source=frozen_runtime_source,
+                ),
+                receipt_path=Path(args.receipt) if args.receipt else None,
+                additional_artifacts=additional_artifacts,
+            )
+        except DeliveryError as exc:
+            _emit_result(exc.to_result(), args.result, stderr=True)
+            raise SystemExit(3)
+    else:
+        try:
+            outputs = _render_outputs(scene, style, args, formats, outdir)
+        except ValueError as exc:
+            parser.error(str(exc))
+
+    result = {
+        "ok": True,
+        "schema": {"name": "DiagramScript", "version": scene.version},
+        "source": source_kind,
+        "locale": scene.locale,
+        "preset": scene.preset,
+        "icon_system": scene.icon_system or style.get("icon_system"),
+        "style": style.get("name", scene.style.name or "minimal-light"),
+        "outputs": outputs,
+        "stats": scene.stats(),
+    }
+    if args.deliver:
+        result["delivery"] = delivery
+    if generated_plan is not None:
+        result["plan"] = {
+            "schema": {"name": "DiagramPlan", "version": generated_plan["version"]},
+        }
+        if generated_plan.get("version") == "0.1":
+            result["plan"]["layout_strategy"] = generated_plan["layout_strategy"]
+        else:
+            result["plan"]["resolved_presentation"] = scene.resolved_presentation
+    _emit_result(result, args.result)
+
+
+def _render_outputs(
+    scene: Any,
+    style: Dict[str, Any],
+    args: argparse.Namespace,
+    formats: List[str],
+    outdir: Path,
+    *,
+    frozen_runtime_source: Optional[bytes] = None,
+) -> Dict[str, Dict[str, Any]]:
     outputs: Dict[str, Dict[str, Any]] = {}
+    runtime_source = Path(args.runtime_source) if args.runtime_source else None
+    if frozen_runtime_source is not None:
+        runtime_source = outdir / ".runtime-source.js"
+        runtime_source.write_bytes(frozen_runtime_source)
     for format_name in formats:
         output_path = outdir / f"{args.basename}{FORMAT_EXTENSIONS[format_name]}"
         if format_name == "quality":
             outputs[format_name] = write_quality(scene, style, output_path)
         elif format_name == "html":
-            try:
-                outputs[format_name] = write_html(
-                    scene,
-                    style,
-                    output_path,
-                    runtime=args.html_runtime or "gsap",
-                    dependency_mode=args.runtime_dependency,
-                    dependency_source=Path(args.runtime_source) if args.runtime_source else None,
-                    locale=args.viewer_locale,
-                    runtime_mode=args.runtime_mode,
-                )
-            except ValueError as exc:
-                parser.error(str(exc))
+            outputs[format_name] = write_html(
+                scene,
+                style,
+                output_path,
+                runtime=args.html_runtime or "gsap",
+                dependency_mode=args.runtime_dependency,
+                dependency_source=runtime_source,
+                locale=args.viewer_locale,
+                runtime_mode=args.runtime_mode,
+            )
         elif args.export_renderer == "browser" and format_name in BROWSER_CAPTURE_FORMATS:
             outputs[format_name] = write_browser_capture(
                 scene,
@@ -211,27 +325,30 @@ def main(argv: Optional[List[str]] = None) -> None:
             )
         else:
             outputs[format_name] = EXPORTERS[format_name](scene, style, output_path)
+    return outputs
 
-    result = {
-        "ok": True,
-        "schema": {"name": "DiagramScript", "version": scene.version},
-        "source": source_kind,
-        "locale": scene.locale,
-        "preset": scene.preset,
-        "icon_system": scene.icon_system or style.get("icon_system"),
-        "style": style.get("name", scene.style.name or "minimal-light"),
-        "outputs": outputs,
-        "stats": scene.stats(),
+
+def _render_options(args: argparse.Namespace, frozen_runtime_source: Optional[bytes] = None) -> Dict[str, Any]:
+    options = {
+        "html_runtime": args.html_runtime or "gsap",
+        "runtime_dependency": args.runtime_dependency,
+        "runtime_mode": args.runtime_mode,
+        "export_renderer": args.export_renderer,
+        "export_scale": args.export_scale,
+        "export_fps": args.export_fps,
+        "export_frames": args.export_frames,
+        "export_quality": args.export_quality,
+        "export_loop_blend_frames": args.export_loop_blend_frames,
+        "diagram_locale": args.diagram_locale,
+        "viewer_locale": args.viewer_locale,
     }
-    if generated_plan is not None:
-        result["plan"] = {
-            "schema": {"name": "DiagramPlan", "version": generated_plan["version"]},
-        }
-        if generated_plan.get("version") == "0.1":
-            result["plan"]["layout_strategy"] = generated_plan["layout_strategy"]
-        else:
-            result["plan"]["resolved_presentation"] = scene.resolved_presentation
-    _emit_result(result, args.result)
+    if frozen_runtime_source is not None:
+        options["runtime_source"] = source_record(
+            "runtime-dependency",
+            frozen_runtime_source,
+            Path(args.runtime_source),
+        )
+    return options
 
 
 def resolve_style_path(style_arg: Optional[str], scene_style: Optional[str], spec_path: Optional[Path]) -> Optional[Path]:
@@ -267,7 +384,11 @@ def style_name_from_arg(style_arg: Optional[str]) -> Optional[str]:
 
 def write_json(path: Union[str, Path], data: Dict[str, Any]) -> None:
     Path(path).parent.mkdir(parents=True, exist_ok=True)
-    Path(path).write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    Path(path).write_bytes(json_output_bytes(data))
+
+
+def json_output_bytes(data: Dict[str, Any]) -> bytes:
+    return (json.dumps(data, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
 
 
 def _requested_formats(args: argparse.Namespace) -> List[str]:
@@ -276,6 +397,8 @@ def _requested_formats(args: argparse.Namespace) -> List[str]:
     requested = ["svg"]
     if args.formats:
         requested = [_canonical_format(item.strip()) for item in args.formats.split(",") if item.strip()]
+        if not requested:
+            raise SystemExit("at least one output format is required")
     if args.html and "html" not in requested:
         requested.append("html")
     if args.viewer and "viewer" not in requested:

@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anidiagram.dev/schemas/delivery-receipt-v0.1.schema.json",
+  "title": "AniDiagram Delivery Receipt v0.1",
+  "type": "object",
+  "required": ["schema", "status", "input", "request", "validation", "artifacts"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "type": "object",
+      "required": ["name", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"const": "AniDiagramDeliveryReceipt"},
+        "version": {"const": "0.1"}
+      }
+    },
+    "status": {"const": "committed"},
+    "input": {
+      "type": "object",
+      "required": ["source", "specification", "style"],
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "allOf": [
+            {"$ref": "#/$defs/digest"},
+            {
+              "type": "object",
+              "required": ["kind"],
+              "properties": {
+                "kind": {"enum": ["spec", "plan", "preset", "brief"]},
+                "path": {"type": "string", "minLength": 1}
+              }
+            }
+          ]
+        },
+        "specification": {
+          "allOf": [
+            {"$ref": "#/$defs/digest"},
+            {
+              "type": "object",
+              "required": ["schema", "version"],
+              "properties": {
+                "schema": {"const": "DiagramScript"},
+                "version": {"type": "string", "minLength": 1}
+              }
+            }
+          ]
+        },
+        "style": {
+          "allOf": [
+            {"$ref": "#/$defs/digest"},
+            {
+              "type": "object",
+              "required": ["name"],
+              "properties": {"name": {"type": "string", "minLength": 1}}
+            }
+          ]
+        }
+      }
+    },
+    "request": {
+      "type": "object",
+      "required": ["basename", "formats", "render_options"],
+      "additionalProperties": false,
+      "properties": {
+        "basename": {"type": "string", "minLength": 1},
+        "formats": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "render_options": {"type": "object"}
+      }
+    },
+    "validation": {
+      "type": "object",
+      "required": ["quality"],
+      "additionalProperties": false,
+      "properties": {
+        "quality": {
+          "type": "object",
+          "required": ["ok", "score", "errors", "warnings", "issues", "advisories"],
+          "additionalProperties": false,
+          "properties": {
+            "ok": {"const": true},
+            "score": {"type": "integer", "minimum": 0, "maximum": 100},
+            "errors": {"const": 0},
+            "warnings": {"type": "integer", "minimum": 0},
+            "issues": {"type": "integer", "minimum": 0},
+            "advisories": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {"$ref": "#/$defs/artifact"}
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "object",
+      "required": ["sha256", "bytes"],
+      "properties": {
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "bytes": {"type": "integer", "minimum": 0}
+      }
+    },
+    "artifact": {
+      "allOf": [
+        {"$ref": "#/$defs/digest"},
+        {
+          "type": "object",
+          "required": ["format", "path"],
+          "properties": {
+            "format": {"type": "string", "minLength": 1},
+            "path": {"type": "string", "minLength": 1}
+          }
+        }
+      ]
+    }
+  }
+}
