@@ -43,12 +43,17 @@ PYTHONPATH=src python3 -m anidiagram.cli \
   --spec-out <name>.diagram.json \
   --outdir outputs \
   --basename <name> \
-  --formats svg,html,quality
+  --formats svg,html,quality \
+  --deliver
 ```
 
-4. Inspect the structured CLI result and the rendered SVG/HTML. Quality must
-   report zero errors. Resolve collisions, text fit, missing mappings, and
-   runtime problems before presenting the work for acceptance.
+4. Inspect the structured CLI result, the rendered SVG/HTML, and
+   `<name>.delivery.json`. Final acceptance output must use `--deliver`, report
+   zero quality errors, and include matching source/spec/artifact SHA-256
+   values. Resolve collisions, text fit, missing mappings, and runtime problems
+   before presenting the work for acceptance. A failed delivery must leave the
+   last-good targets unchanged; if rollback itself is denied, retain and report
+   the emitted `delivery.recovery_path`.
 5. Add requested export formats with
    `--formats svg,html,png,gif,pdf,webp,mp4,apng,lottie,quality` or `--all`.
    Browser-recorded animated exports use `--export-renderer browser` and may

@@ -64,7 +64,8 @@ anidiagram \
   --text "Show a user request flowing through an API gateway, an AI agent, tools, validation, and a verified output." \
   --outdir outputs/quickstart \
   --basename request-flow \
-  --formats svg,html,quality
+  --formats svg,html,quality \
+  --deliver
 ```
 
 The first run writes:
@@ -73,7 +74,8 @@ The first run writes:
 outputs/quickstart/
 ├── request-flow.svg
 ├── request-flow.html
-└── request-flow.quality.json
+├── request-flow.quality.json
+└── request-flow.delivery.json
 ```
 
 Preview the interactive runtime locally:
@@ -137,10 +139,26 @@ matter more than manual canvas editing.
 | `png`, `pdf` | Documents, reviews, and slide decks |
 | `gif`, `webp`, `apng`, `mp4` | Shareable animation and video |
 | `lottie` | Structured or frame-faithful animation exchange |
-| `quality` | CI and review evidence |
+| `quality` | Actionable CI and review evidence with measured repair hints |
 
 Use `--export-renderer browser` when an exported artifact must match the
 high-fidelity HTML runtime.
+
+### Atomic delivery
+
+Add `--deliver` for acceptance or release output. AniDiagram reads the source
+once, resolves the DiagramScript and style in memory, runs the quality gate,
+renders every requested format into a private directory on the target
+filesystem, verifies that every exporter wrote a non-empty file, and only then
+replaces the public targets. If rendering or replacement fails, existing
+last-good artifacts are restored.
+
+Each successful transaction writes `<basename>.delivery.json` with SHA-256 and
+byte counts for the exact source bytes, resolved DiagramScript, style, and
+every artifact. `--plan-out` and `--spec-out` join the same transaction when
+their paths are inside `--outdir`. Quality warnings and advisories are recorded
+in the receipt; quality errors block delivery. A failed delivery exits with
+code 3 and emits one structured JSON error to stderr.
 
 ## Simplified Chinese output
 

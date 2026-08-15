@@ -220,6 +220,62 @@ Runtime-loop example:
 }
 ```
 
+## Actionable quality diagnostics
+
+Quality issues keep the stable `code`, `severity`, `path`, and `message`
+fields and also expose three repair-oriented fields:
+
+- `subject`: stable node or edge identities affected by the issue;
+- `evidence`: measured rectangles, segments, widths, limits, or other facts;
+- `supported_fixes`: bounded repair operations understood by the current
+  authoring contract.
+
+For example, `edge_node_collision` identifies the edge, blocking node, and
+first intersecting segment when an authored waypoint enters a node. New checks
+that reveal compatibility-sensitive legacy output live in the separate
+non-blocking `advisories` array: `edge_segment_node_collision` detects a route
+segment crossing a node even when both waypoints are outside, and
+`edge_label_hidden` reports the available and required width before the
+renderer would omit a cramped straight-edge label. Advisories do not change
+`ok`, `score`, or the existing error/warning summary. These diagnostics are
+guidance, not automatic mutation: update the DiagramPlan or DiagramScript,
+then rerender and require a clean quality report.
+
+## Atomic delivery receipt
+
+Use `--deliver` when the rendered files are acceptance or release artifacts:
+
+```bash
+PYTHONPATH=src python3 -m anidiagram.cli \
+  --plan examples/contracts/production-request-path.plan.json \
+  --spec-out outputs/production/production-request-path.diagram.json \
+  --outdir outputs/production \
+  --basename production-request-path \
+  --formats svg,html,quality \
+  --deliver
+```
+
+The delivery path freezes the exact source bytes and the resolved in-memory
+DiagramScript, validates quality before touching public targets, writes every
+format into a same-filesystem private directory, rejects skipped, missing, or
+empty artifacts, and commits targets with same-directory `os.replace` plus
+rollback. The generated `.delivery.json` receipt follows
+[`delivery-receipt-v0.1.schema.json`](../schemas/delivery-receipt-v0.1.schema.json)
+and identifies itself as `AniDiagramDeliveryReceipt` v0.1. It records:
+
+- the source kind, optional absolute source path, SHA-256, and byte count;
+- canonical resolved DiagramScript and style SHA-256 values;
+- render options and the quality summary, including advisory count;
+- final absolute path, SHA-256, and byte count for each committed artifact.
+
+Generated `--plan-out` and `--spec-out` files participate in the transaction
+when they are in `--outdir`. A blocking quality error, skipped exporter,
+missing staged output, or replacement failure produces exit code 3 and one
+structured JSON error on stderr. Previously published targets remain unchanged
+or are restored from the private transaction backup. If the operating system
+also prevents rollback, the error exposes `delivery.recovery_path` and retains
+the private backup for manual recovery.
+
 ## Effect Objects
 
 DiagramScript v0.3 keeps the existing string motion channels as compatibility

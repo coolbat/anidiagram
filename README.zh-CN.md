@@ -61,7 +61,8 @@ anidiagram \
   --text "展示用户请求经过 API 网关、智能体、工具、安全校验，最终形成可信结果。" \
   --outdir outputs/quickstart \
   --basename request-flow \
-  --formats svg,html,quality
+  --formats svg,html,quality \
+  --deliver
 ```
 
 第一次运行会生成：
@@ -70,7 +71,8 @@ anidiagram \
 outputs/quickstart/
 ├── request-flow.svg
 ├── request-flow.html
-└── request-flow.quality.json
+├── request-flow.quality.json
+└── request-flow.delivery.json
 ```
 
 本地预览交互式 runtime（运行时）：
@@ -132,10 +134,23 @@ AniDiagram 是语义编排和渲染管线，不是浏览器拖拽式编辑器。
 | `png`, `pdf` | 文档、评审和演示 |
 | `gif`, `webp`, `apng`, `mp4` | 可直接分享的动图和视频 |
 | `lottie` | 结构化或逐帧动画交换 |
-| `quality` | CI 与评审证据 |
+| `quality` | 带测量证据与局部修复建议的 CI / 评审报告 |
 
 当导出结果必须与高保真 HTML runtime 一致时，使用
 `--export-renderer browser`。
+
+### 原子交付
+
+验收或发布产物应增加 `--deliver`。AniDiagram 会只读取一次源输入，在内存中解析
+DiagramScript 和风格，执行质量门禁，把所有指定格式写入目标文件系统上的私有
+目录，确认每个导出器都生成了非空文件，然后才替换公开目标。渲染或替换失败时，
+已有 last-good 产物会被恢复。
+
+成功事务会生成 `<basename>.delivery.json`，记录源输入原始字节、已解析
+DiagramScript、风格和每个产物的 SHA-256 与字节数。`--plan-out` 和
+`--spec-out` 位于 `--outdir` 时也会加入同一个事务。quality warning 和 advisory
+会写入回执，但只有 error 会阻断交付。失败时进程以状态码 3 退出，并向 stderr
+输出一个结构化 JSON 错误。
 
 ## 生成中文版
 
