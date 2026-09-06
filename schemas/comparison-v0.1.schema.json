@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anidiagram.dev/schemas/comparison-v0.1.schema.json",
+  "type": "object",
+  "required": ["schema", "semantic_changes", "presentation_changes", "geometry_changes", "semantic_equal", "summary", "canonical"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": {"name": "AniDiagramComparison", "version": "0.1"}},
+    "semantic_equal": {"type": "boolean"},
+    "semantic_changes": {"type": "array", "items": {"type": "object", "required": ["collection", "id", "status", "categories", "fields", "before", "after"]}},
+    "presentation_changes": {"type": "array", "items": {"type": "object", "required": ["field", "before", "after"]}},
+    "geometry_changes": {"type": "array", "items": {"type": "object", "required": ["collection", "id", "status", "before", "after"]}},
+    "summary": {"type": "object", "required": ["semantic", "presentation", "geometry"], "additionalProperties": {"type": "integer", "minimum": 0}},
+    "canonical": {"$ref": "#/$defs/pair"},
+    "inputs": {"$ref": "#/$defs/pair"},
+    "validation": {"type": "array", "minItems": 2, "maxItems": 2},
+    "artifact": {"allOf": [{"$ref": "#/$defs/digest"}, {"required": ["path"], "properties": {"path": {"type": "string"}}}]}
+  },
+  "$defs": {
+    "digest": {"type": "object", "required": ["sha256", "bytes"], "properties": {"sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "bytes": {"type": "integer", "minimum": 0}}},
+    "pair": {"type": "object", "required": ["base", "head"], "properties": {"base": {"$ref": "#/$defs/digest"}, "head": {"$ref": "#/$defs/digest"}}}
+  }
+}

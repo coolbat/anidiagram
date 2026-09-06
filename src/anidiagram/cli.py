@@ -73,6 +73,11 @@ def _compile_cli_plan(plan: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def main(argv: Optional[List[str]] = None) -> None:
+    arguments = list(sys.argv[1:] if argv is None else argv)
+    if arguments and arguments[0] in {"compare", "visual-check"}:
+        from .commands import main as command_main
+        command_main(arguments)
+        return
     parser = argparse.ArgumentParser(description="Render DiagramScript JSON or clean-room presets.")
     source = parser.add_mutually_exclusive_group(required=False)
     source.add_argument("--spec", help="Path to DiagramScript JSON.")
