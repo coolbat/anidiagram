@@ -1,0 +1,95 @@
+{
+  "version": "0.2",
+  "semantic": {
+    "language": "zh-CN",
+    "title": "请求与返回示例",
+    "intent": {
+      "diagram_kind": "sequence",
+      "primary_question": "如何理解示例中已经定义的关系？",
+      "audience": [
+        "技术读者"
+      ],
+      "scope": "用于验证类型约束的示例，不代表生产部署"
+    },
+    "entities": [
+      {
+        "id": "a",
+        "label": "调用方",
+        "kind": "server",
+        "role": "source"
+      },
+      {
+        "id": "b",
+        "label": "服务",
+        "kind": "server",
+        "role": "process"
+      },
+      {
+        "id": "c",
+        "label": "日志",
+        "kind": "server",
+        "role": "output"
+      }
+    ],
+    "relations": [
+      {
+        "id": "request",
+        "from": "a",
+        "to": "b",
+        "label": "发起请求",
+        "kind": "data-flow"
+      },
+      {
+        "id": "reply",
+        "from": "b",
+        "to": "a",
+        "label": "返回结果",
+        "kind": "data-flow"
+      },
+      {
+        "id": "log",
+        "from": "b",
+        "to": "c",
+        "label": "异步日志",
+        "kind": "data-flow"
+      }
+    ],
+    "type_details": {
+      "participants": [
+        "a",
+        "b",
+        "c"
+      ],
+      "messages": [
+        {
+          "relation_id": "request",
+          "mode": "sync"
+        },
+        {
+          "relation_id": "reply",
+          "mode": "return",
+          "reply_to": "request"
+        },
+        {
+          "relation_id": "log",
+          "mode": "async"
+        }
+      ],
+      "activations": [
+        {
+          "participant": "b",
+          "start": "request",
+          "end": "reply"
+        }
+      ]
+    }
+  },
+  "presentation": {
+    "style": "minimal-light",
+    "layout": "pipeline",
+    "motion": "showcase-v1"
+  },
+  "reader": {
+    "enabled": true
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "version": "0.2",
+  "semantic": {
+    "language": "zh-CN",
+    "title": "审批分支示例",
+    "intent": {
+      "diagram_kind": "workflow",
+      "primary_question": "如何理解示例中已经定义的关系？",
+      "audience": [
+        "技术读者"
+      ],
+      "scope": "用于验证类型约束的示例，不代表生产部署"
+    },
+    "entities": [
+      {
+        "id": "a",
+        "label": "审批",
+        "kind": "server",
+        "role": "source"
+      },
+      {
+        "id": "b",
+        "label": "已批准",
+        "kind": "server",
+        "role": "process"
+      },
+      {
+        "id": "c",
+        "label": "已退回",
+        "kind": "server",
+        "role": "output"
+      }
+    ],
+    "relations": [
+      {
+        "id": "yes",
+        "from": "a",
+        "to": "b",
+        "label": "批准",
+        "kind": "data-flow",
+        "condition": "批准"
+      },
+      {
+        "id": "no",
+        "from": "a",
+        "to": "c",
+        "label": "退回",
+        "kind": "data-flow",
+        "condition": "退回"
+      }
+    ],
+    "type_details": {
+      "approvals": [
+        {
+          "entity_id": "a",
+          "approved": "yes",
+          "rejected": "no"
+        }
+      ]
+    }
+  },
+  "presentation": {
+    "style": "minimal-light",
+    "layout": "pipeline",
+    "motion": "showcase-v1"
+  },
+  "reader": {
+    "enabled": true
+  }
+}

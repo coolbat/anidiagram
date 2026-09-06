@@ -40,3 +40,11 @@ class ReaderTest(unittest.TestCase):
         spec = {"version": "0.1", "nodes": [{"id": "a", "label": "A", "position": [100, 100], "size": [180, 80]}], "reader": {"enabled": True}}
         with self.assertRaisesRegex(DiagramScriptValidationError, "0.4"):
             compile_scene(spec)
+
+    def test_views_reference_real_stable_ids(self):
+        self.plan["reader"] = {"enabled": True, "views": [{"id": "request", "label": "Request", "relation_ids": ["client-request", "ingress-route"]}]}
+        spec = compile_plan(self.plan)
+        self.assertEqual("request", compile_scene(spec).reader["views"][0]["id"])
+        self.plan["reader"]["views"][0]["relation_ids"].append("invented")
+        with self.assertRaisesRegex(ValueError, "authored"):
+            compile_plan(self.plan)

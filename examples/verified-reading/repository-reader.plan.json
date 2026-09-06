@@ -1,0 +1,153 @@
+{
+  "version": "0.2",
+  "semantic": {
+    "language": "zh-CN",
+    "title": "AniDiagram 源码与交付",
+    "intent": {
+      "diagram_kind": "architecture",
+      "primary_question": "源码模块如何把语义输入变成可核验的图与交付回执？",
+      "audience": [
+        "维护者"
+      ],
+      "scope": "编译、渲染与产物交付的数据依赖"
+    },
+    "entities": [
+      {
+        "id": "cli",
+        "label": "命令行入口",
+        "kind": "api",
+        "role": "source",
+        "source_refs": [
+          "src-cli"
+        ]
+      },
+      {
+        "id": "compiler",
+        "label": "语义编译",
+        "kind": "reasoning",
+        "role": "process",
+        "source_refs": [
+          "src-compiler"
+        ]
+      },
+      {
+        "id": "renderer",
+        "label": "渲染与导出",
+        "kind": "output",
+        "role": "output",
+        "source_refs": [
+          "src-renderer"
+        ]
+      },
+      {
+        "id": "delivery",
+        "label": "交付回执",
+        "kind": "shield",
+        "role": "risk",
+        "source_refs": [
+          "src-delivery"
+        ]
+      }
+    ],
+    "relations": [
+      {
+        "id": "input-plan",
+        "from": "cli",
+        "to": "compiler",
+        "kind": "data-flow",
+        "label": "输入计划"
+      },
+      {
+        "id": "plan-render",
+        "from": "compiler",
+        "to": "renderer",
+        "kind": "data-flow",
+        "label": "解析后的 Scene"
+      },
+      {
+        "id": "render-receipt",
+        "from": "renderer",
+        "to": "delivery",
+        "kind": "data-flow",
+        "label": "产物与哈希"
+      }
+    ],
+    "sources": [
+      {
+        "id": "src-cli",
+        "type": "repository",
+        "title": "命令行入口",
+        "repository": {
+          "url": "https://github.com/coolbat/anidiagram",
+          "revision": "18cb0f35e41f907210852de5ca0edbe9adcc2970",
+          "path": "src/anidiagram/cli.py",
+          "line": 1
+        }
+      },
+      {
+        "id": "src-compiler",
+        "type": "repository",
+        "title": "语义编译",
+        "repository": {
+          "url": "https://github.com/coolbat/anidiagram",
+          "revision": "18cb0f35e41f907210852de5ca0edbe9adcc2970",
+          "path": "src/anidiagram/composition.py",
+          "line": 1
+        }
+      },
+      {
+        "id": "src-renderer",
+        "type": "repository",
+        "title": "渲染与导出",
+        "repository": {
+          "url": "https://github.com/coolbat/anidiagram",
+          "revision": "18cb0f35e41f907210852de5ca0edbe9adcc2970",
+          "path": "src/anidiagram/renderer_html_runtime.py",
+          "line": 1
+        }
+      },
+      {
+        "id": "src-delivery",
+        "type": "repository",
+        "title": "交付回执",
+        "repository": {
+          "url": "https://github.com/coolbat/anidiagram",
+          "revision": "18cb0f35e41f907210852de5ca0edbe9adcc2970",
+          "path": "src/anidiagram/delivery.py",
+          "line": 1
+        }
+      }
+    ]
+  },
+  "presentation": {
+    "layout": "matrix",
+    "style": "minimal-light",
+    "motion": "showcase-v1"
+  },
+  "reader": {
+    "enabled": true,
+    "views": [
+      {
+        "id": "compile",
+        "label": "1. 编译输入",
+        "relation_ids": [
+          "input-plan"
+        ]
+      },
+      {
+        "id": "render",
+        "label": "2. 渲染产物",
+        "relation_ids": [
+          "plan-render"
+        ]
+      },
+      {
+        "id": "deliver",
+        "label": "3. 核验交付",
+        "relation_ids": [
+          "render-receipt"
+        ]
+      }
+    ]
+  }
+}

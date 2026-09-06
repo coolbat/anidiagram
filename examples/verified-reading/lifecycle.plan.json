@@ -1,0 +1,79 @@
+{
+  "version": "0.2",
+  "semantic": {
+    "language": "zh-CN",
+    "title": "任务恢复示例",
+    "intent": {
+      "diagram_kind": "lifecycle",
+      "primary_question": "如何理解示例中已经定义的关系？",
+      "audience": [
+        "技术读者"
+      ],
+      "scope": "用于验证类型约束的示例，不代表生产部署"
+    },
+    "entities": [
+      {
+        "id": "a",
+        "label": "运行中",
+        "kind": "server",
+        "role": "source"
+      },
+      {
+        "id": "b",
+        "label": "失败",
+        "kind": "server",
+        "role": "process",
+        "state": {
+          "result": "failure",
+          "phase": "failed"
+        }
+      },
+      {
+        "id": "c",
+        "label": "完成",
+        "kind": "server",
+        "role": "output"
+      }
+    ],
+    "relations": [
+      {
+        "id": "fail",
+        "from": "a",
+        "to": "b",
+        "label": "执行失败",
+        "kind": "data-flow"
+      },
+      {
+        "id": "retry",
+        "from": "b",
+        "to": "a",
+        "label": "恢复执行",
+        "kind": "data-flow"
+      },
+      {
+        "id": "finish",
+        "from": "a",
+        "to": "c",
+        "label": "执行完成",
+        "kind": "data-flow"
+      }
+    ],
+    "type_details": {
+      "initial": "a",
+      "terminal": [
+        "c"
+      ],
+      "recovery_relations": [
+        "retry"
+      ]
+    }
+  },
+  "presentation": {
+    "style": "minimal-light",
+    "layout": "pipeline",
+    "motion": "showcase-v1"
+  },
+  "reader": {
+    "enabled": true
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "version": "0.2",
+  "semantic": {
+    "language": "zh-CN",
+    "title": "数据转换示例",
+    "intent": {
+      "diagram_kind": "dataflow",
+      "primary_question": "如何理解示例中已经定义的关系？",
+      "audience": [
+        "技术读者"
+      ],
+      "scope": "用于验证类型约束的示例，不代表生产部署"
+    },
+    "entities": [
+      {
+        "id": "a",
+        "label": "原始数据",
+        "kind": "dataset",
+        "role": "source"
+      },
+      {
+        "id": "b",
+        "label": "转换任务",
+        "kind": "server",
+        "role": "process"
+      },
+      {
+        "id": "c",
+        "label": "输出数据",
+        "kind": "dataset",
+        "role": "output"
+      }
+    ],
+    "relations": [
+      {
+        "id": "read",
+        "from": "a",
+        "to": "b",
+        "label": "读取原始数据",
+        "kind": "data-flow"
+      },
+      {
+        "id": "write",
+        "from": "b",
+        "to": "c",
+        "label": "写入结果",
+        "kind": "data-flow"
+      }
+    ],
+    "type_details": {
+      "datasets": [
+        "a",
+        "c"
+      ],
+      "transformations": [
+        {
+          "entity_id": "b",
+          "inputs": [
+            "read"
+          ],
+          "outputs": [
+            "write"
+          ]
+        }
+      ]
+    }
+  },
+  "presentation": {
+    "style": "minimal-light",
+    "layout": "pipeline",
+    "motion": "showcase-v1"
+  },
+  "reader": {
+    "enabled": true
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "version": "0.2",
+  "semantic": {
+    "language": "zh-CN",
+    "title": "边界与归属示例",
+    "intent": {
+      "diagram_kind": "architecture",
+      "primary_question": "如何理解示例中已经定义的关系？",
+      "audience": [
+        "技术读者"
+      ],
+      "scope": "用于验证类型约束的示例，不代表生产部署"
+    },
+    "entities": [
+      {
+        "id": "a",
+        "label": "客户端",
+        "kind": "server",
+        "role": "source"
+      },
+      {
+        "id": "b",
+        "label": "服务",
+        "kind": "server",
+        "role": "process"
+      },
+      {
+        "id": "c",
+        "label": "数据库",
+        "kind": "database",
+        "role": "output"
+      }
+    ],
+    "relations": [
+      {
+        "id": "request",
+        "from": "a",
+        "to": "b",
+        "label": "请求",
+        "kind": "data-flow"
+      },
+      {
+        "id": "store",
+        "from": "b",
+        "to": "c",
+        "label": "写入数据",
+        "kind": "data-flow"
+      }
+    ],
+    "groups": [
+      {
+        "id": "service",
+        "label": "示例服务边界",
+        "kind": "security-boundary",
+        "members": [
+          "b",
+          "c"
+        ]
+      }
+    ],
+    "type_details": {
+      "ownership": [
+        {
+          "group_id": "service",
+          "owner": "示例平台团队"
+        }
+      ],
+      "trust_boundaries": [
+        "service"
+      ],
+      "crossings": [
+        {
+          "relation_id": "request",
+          "mechanism": "mTLS"
+        }
+      ]
+    }
+  },
+  "presentation": {
+    "style": "minimal-light",
+    "layout": "pipeline",
+    "motion": "showcase-v1"
+  },
+  "reader": {
+    "enabled": true
+  }
+}

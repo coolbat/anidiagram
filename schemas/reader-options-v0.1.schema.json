@@ -4,5 +4,20 @@
   "type": "object",
   "required": ["enabled"],
   "additionalProperties": false,
-  "properties": {"enabled": {"type": "boolean"}}
+  "properties": {
+    "enabled": {"type": "boolean"},
+    "views": {
+      "type": "array", "maxItems": 5,
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["id", "label"],
+        "anyOf": [{"required": ["node_ids"], "properties": {"node_ids": {"minItems": 1}}}, {"required": ["relation_ids"], "properties": {"relation_ids": {"minItems": 1}}}],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+          "label": {"type": "string", "minLength": 1}, "description": {"type": "string"},
+          "node_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+          "relation_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+        }
+      }
+    }
+  }
 }
