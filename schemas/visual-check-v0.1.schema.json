@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anidiagram.dev/schemas/visual-check-v0.1.schema.json",
+  "type": "object",
+  "required": ["schema", "status", "artifact", "checks", "captures", "visual_review", "capture_mode", "theme_scope", "contact_sheet"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": {"name": "AniDiagramVisualCheck", "version": "0.1"}},
+    "status": {"enum": ["passed", "failed", "skipped"]},
+    "reason": {"type": "string"},
+    "artifact": {"$ref": "#/$defs/file"},
+    "contact_sheet": {"$ref": "#/$defs/file"},
+    "visual_review": {"const": "pending"},
+    "capture_mode": {"const": "frozen-html-reduced-motion"},
+    "theme_scope": {"type": "string"},
+    "checks": {"type": "array", "items": {"type": "object", "required": ["viewport", "color_scheme_preference", "document_contained", "stage_content_contained", "errors", "ok"]}},
+    "captures": {"type": "array", "items": {"allOf": [{"$ref": "#/$defs/file"}, {"required": ["viewport", "color_scheme_preference"]}]}}
+  },
+  "$defs": {
+    "file": {"type": "object", "required": ["path", "sha256", "bytes"], "properties": {
+      "path": {"type": "string"}, "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "bytes": {"type": "integer", "minimum": 0}
+    }}
+  }
+}
