@@ -176,6 +176,16 @@ def compile_scene(data: Dict[str, Any], *, repo_root=None) -> Scene:
     if issues:
         raise DiagramScriptValidationError(issues)
 
+    type_semantics = {}
+    if "type_semantics" in data:
+        from .type_semantics import validate_compiled_type
+        try:
+            if version != "0.4":
+                raise ValueError("typed semantics require DiagramScript 0.4")
+            validate_compiled_type(data["type_semantics"], nodes, edges, groups)
+            type_semantics = dict(data["type_semantics"])
+        except ValueError as error:
+            raise DiagramScriptValidationError([ValidationIssue("$.type_semantics", str(error))]) from error
     reader = {}
     if "reader" in data:
         from .reader import validate_reader
@@ -216,6 +226,7 @@ def compile_scene(data: Dict[str, Any], *, repo_root=None) -> Scene:
         layout=layout,
         source_evidence=source_evidence,
         reader=reader,
+        type_semantics=type_semantics,
     )
 
 

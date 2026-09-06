@@ -125,7 +125,7 @@ _KIND_PATTERN = re.compile(r"^[a-z][a-z0-9-]*$")
 _ROLES = {"actor", "source", "process", "agent", "memory", "tool", "output", "risk", "neutral"}
 _IMPORTANCE = {"primary", "supporting", "context"}
 _PLAN_FIELDS = {"version", "semantic", "presentation", "presentation_sources", "reader"}
-_SEMANTIC_FIELDS = {"language", "title", "subtitle", "summary", "intent", "entities", "relations", "groups", "flows", "sources", "annotations"}
+_SEMANTIC_FIELDS = {"language", "title", "subtitle", "summary", "intent", "entities", "relations", "groups", "flows", "sources", "annotations", "type_details"}
 _INTENT_FIELDS = {"diagram_kind", "primary_question", "audience", "scope", "exclusions"}
 _ENTITY_FIELDS = {"id", "label", "description", "kind", "role", "importance", "tags", "attributes", "state", "source_refs"}
 _RELATION_FIELDS = {"id", "from", "to", "kind", "label", "description", "direction", "importance", "condition", "protocol", "attributes", "source_refs"}
@@ -138,6 +138,8 @@ def compile_plan_v02(plan: Mapping[str, Any]) -> Dict[str, Any]:
     """Validate DiagramPlan v0.2 and compile it to resolved DiagramScript v0.4."""
 
     semantic = _validate_plan(plan)
+    from .type_semantics import compile_type_semantics
+    typed = compile_type_semantics(semantic)
     resolved = resolve_presentation(plan.get("presentation"), plan.get("presentation_sources"))
     icon_system = resolved["icon_system"]["value"]
     entities = list(semantic["entities"])
@@ -221,6 +223,13 @@ def compile_plan_v02(plan: Mapping[str, Any]) -> Dict[str, Any]:
     evidence = compile_evidence(semantic)
     if evidence is not None:
         specification["evidence"] = evidence
+    if typed is not None:
+        specification["type_semantics"] = typed
+        if typed["kind"] == "sequence":
+            steps = {message["relation_id"]: index + 1 for index, message in enumerate(typed["details"]["messages"])}
+            for edge in specification["edges"]:
+                if edge["semantic_relation_id"] in steps:
+                    edge["step"] = steps[edge["semantic_relation_id"]]
     if "reader" in plan:
         from .reader import validate_reader
         validate_reader(plan["reader"], entities, relations)

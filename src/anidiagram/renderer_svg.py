@@ -7,6 +7,7 @@ uses a web-native SVG scene model and Python standard-library string rendering.
 from __future__ import annotations
 
 import html
+import json
 import math
 from dataclasses import dataclass, replace
 from typing import Any, Dict, Iterable, List, Optional, Tuple
@@ -1738,10 +1739,11 @@ def render_svg(
         else ""
     )
 
+    typed_markup = ('<metadata id="anidiagram-type-semantics">' + esc(json.dumps(scene.type_semantics, ensure_ascii=False)) + '</metadata>\n') if scene.type_semantics else ''
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="diagram-title diagram-desc"{locale_attr} data-motion-profile="{esc(data_motion.profile)}" data-motion-sequence="{esc(data_motion.sequence)}" data-motion-edge="{esc(data_edge_effect.preset)}" data-motion-node="{esc(data_motion.node)}" data-motion-group="{esc(data_motion.group)}" data-motion-title="{esc(data_title_effect.preset)}" data-motion-reduced="{esc(data_motion.reduced_motion)}"{icon_system_attr}>
 <title id="diagram-title">{esc(title_text)}</title>
 <desc id="diagram-desc">{esc(subtitle)}</desc>
-<style>
+{typed_markup}<style>
   .title {{ font: 700 {title_font_size}px {font_family}; letter-spacing: 0; }}
   .subtitle {{ font: 400 16px {font_family}; }}
   .node-title {{ font: 700 18px {font_family}; }}

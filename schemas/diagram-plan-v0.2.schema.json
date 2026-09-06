@@ -184,9 +184,18 @@
     },
     "semantic": {
       "type": "object",
+      "allOf": [
+        {"if": {"required": ["type_details"]}, "then": {"properties": {"intent": {"properties": {"diagram_kind": {"enum": ["architecture", "workflow", "sequence", "dataflow", "lifecycle"]}}}}}},
+        {"if": {"properties": {"intent": {"properties": {"diagram_kind": {"const": "sequence"}}}}}, "then": {"properties": {"type_details": {"$ref": "type-semantics-v0.1.schema.json#/$defs/sequence"}}}},
+        {"if": {"properties": {"intent": {"properties": {"diagram_kind": {"const": "lifecycle"}}}}}, "then": {"properties": {"type_details": {"$ref": "type-semantics-v0.1.schema.json#/$defs/lifecycle"}}}},
+        {"if": {"properties": {"intent": {"properties": {"diagram_kind": {"const": "dataflow"}}}}}, "then": {"properties": {"type_details": {"$ref": "type-semantics-v0.1.schema.json#/$defs/dataflow"}}}},
+        {"if": {"properties": {"intent": {"properties": {"diagram_kind": {"const": "workflow"}}}}}, "then": {"properties": {"type_details": {"$ref": "type-semantics-v0.1.schema.json#/$defs/workflow"}}}},
+        {"if": {"properties": {"intent": {"properties": {"diagram_kind": {"const": "architecture"}}}}}, "then": {"properties": {"type_details": {"$ref": "type-semantics-v0.1.schema.json#/$defs/architecture"}}}}
+      ],
       "required": ["title", "intent", "entities"],
       "additionalProperties": false,
       "properties": {
+        "type_details": {"$ref": "type-semantics-v0.1.schema.json#/$defs/details"},
         "language": {"enum": ["auto", "en", "zh-CN"], "default": "auto"},
         "title": {"type": "string", "minLength": 1},
         "subtitle": {"type": "string"},

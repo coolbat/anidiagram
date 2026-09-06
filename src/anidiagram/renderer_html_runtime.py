@@ -108,6 +108,11 @@ def render_html_runtime(
     if scene.reader.get("enabled"):
         from .reader import add_reader
         html = add_reader(html, scene, resolved_locale)
+    if scene.type_semantics:
+        from .type_semantics import semantic_facts
+        label = "图类型语义" if resolved_locale == "zh-CN" else "Diagram semantics"
+        facts = ''.join('<li>' + esc(fact) + '</li>' for fact in semantic_facts(scene, resolved_locale))
+        html = html.replace('    <p id="runtime-warning"', f'<details id="type-semantics"><summary>{label}</summary><ol>{facts}</ol></details>\n    <p id="runtime-warning"', 1)
     return html
 
 

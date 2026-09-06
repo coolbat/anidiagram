@@ -19,6 +19,7 @@
     }
   ],
   "properties": {
+    "type_semantics": {"$ref": "type-semantics-v0.1.schema.json"},
     "reader": {"$ref": "reader-options-v0.1.schema.json"},
     "evidence": {
       "type": "object",
