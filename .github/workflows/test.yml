@@ -82,6 +82,7 @@ jobs:
           node --check runtime/diagram-reader.js
           node --check runtime/reader-share-card.js
           node --check runtime/visual-check.mjs
+          node --check runtime/label-audit.mjs
       - name: Render composition smoke test
         run: |
           PYTHONPATH=src python3 -m anidiagram.cli \
@@ -141,6 +142,8 @@ jobs:
           node scripts/verify_reader.mjs build/ci/composition/production-request-path.html
           PYTHONPATH=src python3 -m anidiagram.cli visual-check build/ci/reader/reader-fixture.html --json
           PYTHONPATH=src python3 scripts/verify_visual_check.py
+      - name: Verify accuracy label fixtures and negative browser gates
+        run: PYTHONPATH=src python3 scripts/verify_accuracy_loop.py --outdir build/ci/accuracy
       - name: Render Simplified Chinese architecture proof
         run: |
           PYTHONPATH=src python3 -m anidiagram.cli \
