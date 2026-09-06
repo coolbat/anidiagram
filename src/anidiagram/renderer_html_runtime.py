@@ -113,6 +113,10 @@ def render_html_runtime(
         label = "图类型语义" if resolved_locale == "zh-CN" else "Diagram semantics"
         facts = ''.join('<li>' + esc(fact) + '</li>' for fact in semantic_facts(scene, resolved_locale))
         html = html.replace('    <p id="runtime-warning"', f'<details id="type-semantics"><summary>{label}</summary><ol>{facts}</ol></details>\n    <p id="runtime-warning"', 1)
+    from .label_placement import readable_labels
+    if readable_labels(style):
+        from .relation_table import add_relation_table
+        html = add_relation_table(html, scene, resolved_locale)
     return html
 
 

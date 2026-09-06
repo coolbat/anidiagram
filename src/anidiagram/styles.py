@@ -83,6 +83,9 @@ def validate_style_profile(data: Dict[str, Any]) -> list:
         issues.append(ValidationIssue("$.name", "expected a string", "type"))
     if "icon_system" in data:
         _validate_icon_system(data["icon_system"], "$.icon_system", issues)
+    edge = data.get('edge', {})
+    if isinstance(edge, dict) and 'label_placement' in edge and edge['label_placement'] not in ('legacy', 'avoid-nodes'):
+        issues.append(ValidationIssue('$.edge.label_placement', "expected 'legacy' or 'avoid-nodes'", 'enum'))
     if "illustrated_tokens" in data:
         try:
             illustrated_tokens_for_style(data)

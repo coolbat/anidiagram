@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "source": "delivery_source.py",
+  "oracle": "Hand-reviewed source facts, backed by executable behavior tests.",
+  "limit": "Reference existence, token matching, and this finite fixture cannot prove arbitrary architectural semantics.",
+  "facts": [
+    {
+      "id": "quality-gate", "symbol": "DeliveryCoordinator.deliver",
+      "true_claim": "A positive error count raises DeliveryError before render or commit.",
+      "false_claim": "A positive error count permits render and commit.",
+      "error_class": "inverted-condition"
+    },
+    {
+      "id": "quality-owner", "symbol": "QualityAnalyzer.analyze",
+      "true_claim": "QualityAnalyzer owns analyze; DeliveryCoordinator consumes its report.",
+      "false_claim": "DeliveryCoordinator owns analyze.",
+      "error_class": "wrong-function-owner"
+    },
+    {
+      "id": "direct-export", "symbol": "export_direct",
+      "true_claim": "A later render failure leaves an earlier output updated; there is no rollback.",
+      "false_claim": "Direct export rolls back all outputs when a later render fails.",
+      "error_class": "invented-transaction"
+    },
+    {
+      "id": "receipt-return", "symbol": "entry",
+      "true_claim": "entry calls deliver; the returned receipt flows from deliver to entry.",
+      "false_claim": "The returned receipt flows from entry to deliver.",
+      "error_class": "reversed-return-flow"
+    }
+  ]
+}

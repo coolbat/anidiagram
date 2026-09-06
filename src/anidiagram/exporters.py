@@ -42,7 +42,13 @@ def write_svg(scene: Scene, style: Dict[str, Any], path: Path) -> Dict[str, str]
 
 def write_viewer(scene: Scene, style: Dict[str, Any], path: Path) -> Dict[str, str]:
     svg = render_svg(scene, style)
-    path.write_text(render_html(svg, scene.title.text, locale=scene.locale), encoding="utf-8")
+    html = render_html(svg, scene.title.text, locale=scene.locale)
+    from .label_placement import readable_labels
+    if readable_labels(style):
+        from .relation_table import add_relation_table
+        from .localization import scene_locale
+        html = add_relation_table(html, scene, scene_locale(scene, scene.locale))
+    path.write_text(html, encoding="utf-8")
     return _done("viewer", path)
 
 

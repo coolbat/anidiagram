@@ -33,7 +33,7 @@ def parse_viewports(value):
     return result
 
 
-def visual_check(artifact, *, outdir=None, viewports=DEFAULT_VIEWPORTS):
+def visual_check(artifact, *, outdir=None, viewports=DEFAULT_VIEWPORTS, strict_labels=False):
     artifact = Path(artifact).resolve()
     sizes = parse_viewports(viewports)
     content = artifact.read_bytes()
@@ -51,7 +51,10 @@ def visual_check(artifact, *, outdir=None, viewports=DEFAULT_VIEWPORTS):
             receipt = {"status": "skipped", "reason": "Node.js is unavailable", "checks": [], "captures": []}
         else:
             try:
-                process = subprocess.run([node, str(resource_path("runtime", "visual-check.mjs")), str(frozen), str(stage), json.dumps(sizes)],
+                command = [node, str(resource_path("runtime", "visual-check.mjs")), str(frozen), str(stage), json.dumps(sizes)]
+                if strict_labels:
+                    command.append(json.dumps({'strict_labels': True}))
+                process = subprocess.run(command,
                                          capture_output=True, text=True, timeout=max(60, len(sizes) * 55), check=False)
                 if process.returncode:
                     raise ValueError(process.stderr.strip() or "browser evidence process failed")
@@ -65,6 +68,10 @@ def visual_check(artifact, *, outdir=None, viewports=DEFAULT_VIEWPORTS):
         if artifact.read_bytes() != content:
             receipt["status"] = "failed"
             receipt["reason"] = "The input artifact changed during capture; evidence covers the frozen hash only."
+        if strict_labels:
+            receipt['strict_labels'] = True
+            receipt['gates'] = {'source_references': 'not-reverified', 'semantic_review': 'not-checked',
+                                'rendered_readability': receipt['status']}
         files = {}
         for capture in receipt["captures"]:
             captured = (stage / capture["path"]).read_bytes()

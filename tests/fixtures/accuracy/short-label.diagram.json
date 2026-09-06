@@ -1,0 +1,18 @@
+{
+  "version": "0.4",
+  "title": {"text": "Short edge condition"},
+  "canvas": {"width": 640, "height": 380},
+  "motion": {"profile": "off"},
+  "nodes": [
+    {"id": "quality", "label": "Quality", "position": [80, 180], "size": [140, 76]},
+    {"id": "render", "label": "Render", "position": [250, 180], "size": [140, 76]}
+  ],
+  "edges": [
+    {
+      "from": "quality", "to": "render", "semantic_relation_id": "quality-gate",
+      "semantic_kind": "function-call", "importance": "primary", "direction": "forward",
+      "route": "straight", "label": "quality errors = 0",
+      "condition": "quality.summary.errors == 0", "protocol": "Python callback"
+    }
+  ]
+}

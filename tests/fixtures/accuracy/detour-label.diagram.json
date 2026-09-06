@@ -1,0 +1,20 @@
+{
+  "version": "0.4",
+  "title": {"text": "Routed edge label"},
+  "canvas": {"width": 860, "height": 440},
+  "motion": {"profile": "off"},
+  "nodes": [
+    {"id": "source", "label": "Source", "position": [60, 260], "size": [160, 80]},
+    {"id": "obstacle", "label": "Unrelated node", "position": [320, 260], "size": [160, 80]},
+    {"id": "target", "label": "Target", "position": [640, 260], "size": [160, 80]}
+  ],
+  "edges": [
+    {
+      "from": "source", "to": "target", "semantic_relation_id": "staged-render",
+      "semantic_kind": "function-call", "importance": "primary", "direction": "forward",
+      "route": "points", "label": "render after quality gate",
+      "condition": "quality.summary.errors == 0",
+      "points": [[220, 300], [260, 300], [260, 180], [600, 180], [600, 300], [640, 300]]
+    }
+  ]
+}

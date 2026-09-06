@@ -1,0 +1,18 @@
+{
+  "version": "0.4",
+  "locale": "zh-CN",
+  "title": {"text": "诊断返回交付协调器"},
+  "canvas": {"width": 720, "height": 380},
+  "motion": {"profile": "off"},
+  "nodes": [
+    {"id": "delivery", "label": "交付协调", "position": [140, 180], "size": [160, 80]},
+    {"id": "quality", "label": "质量分析", "position": [380, 180], "size": [160, 80]}
+  ],
+  "edges": [
+    {
+      "from": "quality", "to": "delivery", "semantic_relation_id": "diagnostics-return",
+      "semantic_kind": "data-transfer", "direction": "forward", "importance": "primary",
+      "route": "straight", "label": "数据：诊断", "condition": "--deliver；经 CLI"
+    }
+  ]
+}

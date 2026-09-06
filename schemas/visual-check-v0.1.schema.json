@@ -8,6 +8,11 @@
     "schema": {"const": {"name": "AniDiagramVisualCheck", "version": "0.1"}},
     "status": {"enum": ["passed", "failed", "skipped"]},
     "reason": {"type": "string"},
+    "strict_labels": {"const": true},
+    "gates": {"type": "object", "required": ["source_references", "semantic_review", "rendered_readability"], "additionalProperties": false, "properties": {
+      "source_references": {"const": "not-reverified"}, "semantic_review": {"const": "not-checked"},
+      "rendered_readability": {"enum": ["passed", "failed", "skipped"]}
+    }},
     "artifact": {"$ref": "#/$defs/file"},
     "contact_sheet": {"$ref": "#/$defs/file"},
     "visual_review": {"const": "pending"},

@@ -74,7 +74,7 @@ def _compile_cli_plan(plan: Dict[str, Any]) -> Dict[str, Any]:
 
 def main(argv: Optional[List[str]] = None) -> None:
     arguments = list(sys.argv[1:] if argv is None else argv)
-    if arguments and arguments[0] in {"compare", "visual-check"}:
+    if arguments and arguments[0] in {"compare", "visual-check", "accuracy-check"}:
         from .commands import main as command_main
         command_main(arguments)
         return
@@ -89,6 +89,7 @@ def main(argv: Optional[List[str]] = None) -> None:
     parser.add_argument("--title", help="Override title when rendering a preset.")
     parser.add_argument("--repo-root", help="Local Git top-level for verifying explicitly authored repository sources.")
     parser.add_argument("--reader", action="store_true", help="Enable the optional authored-topology reader for DiagramScript 0.4.")
+    parser.add_argument("--readable-labels", action="store_true", help="Keep complete SVG/HTML edge labels away from nodes; add an HTML relation table.")
     parser.add_argument("--style", help="Optional style profile JSON or bundled style name.")
     parser.add_argument("--outdir", default="outputs", help="Output directory.")
     parser.add_argument("--basename", default="diagram", help="Output basename.")
@@ -225,9 +226,14 @@ def main(argv: Optional[List[str]] = None) -> None:
     style = load_style(resolve_style_path(args.style, scene.style.name, spec_path))
     if scene.icon_system:
         style = deep_merge(style, {"icon_system": scene.icon_system})
+    if args.readable_labels:
+        style = deep_merge(style, {"edge": {"label_placement": "avoid-nodes"}})
     outdir = Path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
     formats = _requested_formats(args)
+    from .label_placement import readable_labels
+    if readable_labels(style) and any(f not in {'svg', 'html', 'viewer', 'quality'} for f in formats):
+        parser.error("readable labels currently support only svg, html, viewer and quality; other export modes remain unchanged without this option")
     if args.deliver and args.result:
         result_path = Path(args.result).resolve()
         receipt_path = (
@@ -368,6 +374,8 @@ def _render_options(args: argparse.Namespace, frozen_runtime_source: Optional[by
             frozen_runtime_source,
             Path(args.runtime_source),
         )
+    if args.readable_labels:
+        options['readable_labels'] = True
     return options
 
 

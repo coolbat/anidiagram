@@ -405,7 +405,7 @@ def trim_route_endpoints(points: List[Point], gap: float = EDGE_NODE_GAP) -> Lis
     return compact_points(trimmed)
 
 
-def curve_path(start: Point, end: Point) -> str:
+def curve_controls(start: Point, end: Point) -> Tuple[Point, Point]:
     sx, sy = start
     ex, ey = end
     bend = max(40, min(180, abs(ex - sx) * 0.42))
@@ -415,6 +415,13 @@ def curve_path(start: Point, end: Point) -> str:
     else:
         c1 = (sx, sy + math.copysign(bend, ey - sy))
         c2 = (ex, ey - math.copysign(bend, ey - sy))
+    return c1, c2
+
+
+def curve_path(start: Point, end: Point) -> str:
+    sx, sy = start
+    ex, ey = end
+    c1, c2 = curve_controls(start, end)
     return f"M {sx:.1f} {sy:.1f} C {c1[0]:.1f} {c1[1]:.1f}, {c2[0]:.1f} {c2[1]:.1f}, {ex:.1f} {ey:.1f}"
 
 
@@ -1476,6 +1483,7 @@ def render_edge(
     policy: MotionPolicy,
     edge_motion_rank: Optional[int],
     particle_motion_rank: Optional[int],
+    label_placement: Optional[Dict[str, Any]] = None,
 ) -> str:
     start, end = edge_points(edge, nodes)
     path = edge_path(edge, nodes)
@@ -1492,6 +1500,8 @@ def render_edge(
     label_offset = -14 if edge.route == "straight" else (-18 if index % 2 == 0 else 22)
     mid_y = (start[1] + end[1]) / 2 + label_offset
     label = edge.label if edge_label_has_clearance(edge, start, end) else ""
+    if label_placement is not None:
+        mid_x, mid_y, label = label_placement['x'], label_placement['y'], edge.label
     marker_id = f"arrow-{index}"
     marker_orient = "auto-start-reverse" if edge.direction == "bidirectional" else "auto"
     marker_attributes = (
@@ -1560,25 +1570,37 @@ def render_edge(
   </circle>"""
             )
         motion_markup = "\n".join(particles)
-    label_static = not edge_is_active or edge_mode in CONTINUOUS_EDGE_MOTION or runtime_loop_active(motion)
+    label_static = label_placement is not None or not edge_is_active or edge_mode in CONTINUOUS_EDGE_MOTION or runtime_loop_active(motion)
     label_opacity = "1" if label_static else "0"
     label_motion = ""
     if not label_static and label:
         label_motion = f'<animate attributeName="opacity" values="0;1" dur="{seconds(scaled_duration(0.45, motion))}" begin="{seconds(motion_delay(index, motion, "label") + edge.motion.delay)}" fill="freeze" />'
     label_motion_line = f"    {label_motion}\n" if label_motion else ""
     label_text = f"    {esc(label)}" if label else ""
+    placement_attrs = ''
+    leader = ''
+    if label_placement is not None:
+        placement_attrs = (' data-label-placement="' + ('placed' if label_placement['placed'] else 'failed') +
+                           '" data-expected-label="' + esc(edge.label) + '" data-direction="' + esc(edge.direction) +
+                           '" data-relation-id="' + esc(edge.semantic_relation_id or f'@edge:{index - 1}') +
+                           '" data-source="' + esc(edge.source) + '" data-target="' + esc(edge.target) + '"')
+        if label_placement['placed']:
+            ax, ay = label_placement['anchor']
+            box = label_placement['box']
+            lx, ly = max(box[0], min(ax, box[0] + box[2])), max(box[1], min(ay, box[1] + box[3]))
+            leader = f'<path class="edge-label-leader" d="M {ax:.1f} {ay:.1f} L {lx:.1f} {ly:.1f}" fill="none" stroke="{esc(stroke)}" stroke-width="1" stroke-dasharray="2 3" opacity="0.55" pointer-events="none" />\n'
     return f"""
 <defs>
   <marker id="{marker_id}" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="{marker_orient}" markerUnits="userSpaceOnUse">
     <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="{esc(stroke)}" />
   </marker>
 </defs>
-<g class="edge" data-role="{esc(edge.role)}">
+<g class="edge" data-role="{esc(edge.role)}"{placement_attrs}>
   <path class="edge-base" d="{path}" fill="none" stroke="{esc(stroke)}" stroke-width="{max(1, width - 0.7):.1f}" opacity="0.24" />
 {draw_markup}
 {flow_markup}
 {motion_markup}
-{badge}
+{leader}{badge}
   <text x="{mid_x:.1f}" y="{mid_y:.1f}" class="edge-label" fill="{esc(style.get("canvas", {}).get("muted", "#5b6778"))}" opacity="{label_opacity}">
 {label_motion_line}{label_text}
   </text>
@@ -1663,8 +1685,10 @@ def render_svg(
         render_group(group, style, index, motion, policy, group_motion_ranks.get(index))
         for index, group in enumerate(scene.groups, start=1)
     )
+    from .label_placement import place_labels, readable_labels
+    label_placements = place_labels(scene) if readable_labels(style) else {}
     edges_markup = "\n".join(
-        render_edge(edge, nodes, style, index, motion, policy, edge_motion_ranks.get(index), particle_motion_ranks.get(index))
+        render_edge(edge, nodes, style, index, motion, policy, edge_motion_ranks.get(index), particle_motion_ranks.get(index), label_placements.get(index))
         for index, edge in enumerate(scene.edges, start=1)
     )
     nodes_markup = "\n".join(

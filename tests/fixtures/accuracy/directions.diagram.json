@@ -1,0 +1,29 @@
+{
+  "version": "0.4",
+  "title": {"text": "Relationship directions"},
+  "canvas": {"width": 860, "height": 660},
+  "motion": {"profile": "off"},
+  "nodes": [
+    {"id": "caller", "label": "Caller", "position": [60, 170], "size": [160, 80]},
+    {"id": "callee", "label": "Callee", "position": [620, 170], "size": [160, 80]},
+    {"id": "peer-a", "label": "Peer A", "position": [60, 350], "size": [160, 80]},
+    {"id": "peer-b", "label": "Peer B", "position": [620, 350], "size": [160, 80]},
+    {"id": "context-a", "label": "Context A", "position": [60, 530], "size": [160, 80]},
+    {"id": "context-b", "label": "Context B", "position": [620, 530], "size": [160, 80]}
+  ],
+  "edges": [
+    {
+      "from": "callee", "to": "caller", "semantic_relation_id": "return-receipt",
+      "semantic_kind": "data-transfer", "direction": "forward", "route": "straight",
+      "label": "return receipt", "condition": "commit succeeded", "protocol": "Python return"
+    },
+    {
+      "from": "peer-a", "to": "peer-b", "semantic_relation_id": "peer-exchange",
+      "semantic_kind": "data-transfer", "direction": "bidirectional", "route": "straight", "label": "exchange"
+    },
+    {
+      "from": "context-a", "to": "context-b", "semantic_relation_id": "context-link",
+      "semantic_kind": "association", "direction": "undirected", "route": "straight", "label": "related"
+    }
+  ]
+}

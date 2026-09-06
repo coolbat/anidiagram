@@ -63,7 +63,15 @@ def quality_report(scene: Scene, style: Optional[Dict[str, object]] = None) -> D
     quality_icon_system = scene.icon_system or (resolve_icon_system(style) if style is not None else "semantic-line-v1")
     _check_text_fit(scene.nodes, issues, quality_icon_system)
     _check_edge_node_collisions(scene.edges, nodes, issues, advisories)
-    _check_hidden_edge_labels(scene.edges, nodes, advisories)
+    from .label_placement import place_labels, readable_labels
+    if style is not None and readable_labels(style):
+        for index, placement in place_labels(scene).items():
+            if not placement['placed']:
+                issues.append(QualityIssue('label_unplaced', 'error', f'$.edges[{index - 1}].label',
+                                           placement['reason'], subject={'edge_index': index - 1},
+                                           supported_fixes=('expand_canvas', 'rearrange_nodes')))
+    else:
+        _check_hidden_edge_labels(scene.edges, nodes, advisories)
     _check_motion_budget(scene, issues)
     _check_semantic_icon_fallbacks(scene, issues)
     if style is not None:
