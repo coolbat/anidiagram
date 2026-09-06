@@ -64,6 +64,14 @@ def read_json(path: Union[str, Path]) -> Dict[str, Any]:
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
+def _compile_cli_plan(plan: Dict[str, Any]) -> Dict[str, Any]:
+    try:
+        return compile_plan(plan)
+    except ValueError as error:
+        print(json.dumps({"ok": False, "error": {"code": "diagram_plan_validation_failed", "message": str(error)}}), file=sys.stderr)
+        raise SystemExit(2) from error
+
+
 def main(argv: Optional[List[str]] = None) -> None:
     parser = argparse.ArgumentParser(description="Render DiagramScript JSON or clean-room presets.")
     source = parser.add_mutually_exclusive_group(required=False)
@@ -74,6 +82,7 @@ def main(argv: Optional[List[str]] = None) -> None:
     source.add_argument("--text", help="Inline natural-language brief to compile into DiagramScript.")
     parser.add_argument("--list-presets", action="store_true", help="Print available preset names and exit.")
     parser.add_argument("--title", help="Override title when rendering a preset.")
+    parser.add_argument("--repo-root", help="Local Git top-level for verifying explicitly authored repository sources.")
     parser.add_argument("--style", help="Optional style profile JSON or bundled style name.")
     parser.add_argument("--outdir", default="outputs", help="Output directory.")
     parser.add_argument("--basename", default="diagram", help="Output basename.")
@@ -161,7 +170,7 @@ def main(argv: Optional[List[str]] = None) -> None:
         source_path = Path(args.plan)
         source_bytes = source_path.read_bytes()
         generated_plan = json.loads(source_bytes.decode("utf-8"))
-        spec = compile_plan(generated_plan)
+        spec = _compile_cli_plan(generated_plan)
     elif args.preset:
         source_kind = "preset"
         source_bytes = canonical_json_bytes({"preset": args.preset, "title": args.title or ""})
@@ -181,7 +190,7 @@ def main(argv: Optional[List[str]] = None) -> None:
             style=style_name_from_arg(args.style),
             language=args.diagram_locale,
         )
-        spec = compile_plan(generated_plan)
+        spec = _compile_cli_plan(generated_plan)
     if args.diagram_locale != "auto":
         spec = dict(spec)
         spec["locale"] = args.diagram_locale
@@ -191,17 +200,18 @@ def main(argv: Optional[List[str]] = None) -> None:
             additional_artifacts["compiled_plan"] = (Path(args.plan_out), json_output_bytes(generated_plan))
         if args.spec_out and source_kind in {"plan", "brief"}:
             additional_artifacts["compiled_specification"] = (Path(args.spec_out), json_output_bytes(spec))
-    else:
-        if args.plan_out and generated_plan is not None and source_kind == "brief":
-            write_json(args.plan_out, generated_plan)
-        if args.spec_out and source_kind in {"plan", "brief"}:
-            write_json(args.spec_out, spec)
     try:
-        scene = compile_scene(spec)
+        scene = compile_scene(spec, repo_root=args.repo_root)
     except DiagramScriptValidationError as exc:
         result = {"ok": False, "error": exc.to_result()}
         _emit_result(result, args.result, stderr=True)
         raise SystemExit(2)
+
+    if not args.deliver:
+        if args.plan_out and generated_plan is not None and source_kind == "brief":
+            write_json(args.plan_out, generated_plan)
+        if args.spec_out and source_kind in {"plan", "brief"}:
+            write_json(args.spec_out, spec)
 
     style = load_style(resolve_style_path(args.style, scene.style.name, spec_path))
     if scene.icon_system:
@@ -247,6 +257,7 @@ def main(argv: Optional[List[str]] = None) -> None:
                 ),
                 receipt_path=Path(args.receipt) if args.receipt else None,
                 additional_artifacts=additional_artifacts,
+                evidence=scene.source_evidence,
             )
         except DeliveryError as exc:
             _emit_result(exc.to_result(), args.result, stderr=True)

@@ -164,8 +164,22 @@
         "type": {"$ref": "#/$defs/semantic_kind"},
         "title": {"type": "string"},
         "uri": {"type": "string"},
-        "note": {"type": "string"}
+        "note": {"type": "string"},
+        "repository": {"$ref": "#/$defs/repository_source"}
       }
+    },
+    "repository_source": {
+      "type": "object",
+      "required": ["url", "revision", "path"],
+      "additionalProperties": false,
+      "properties": {
+        "url": {"type": "string", "pattern": "^https://github\\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/?$"},
+        "revision": {"type": "string", "pattern": "^[a-fA-F0-9]{40}$"},
+        "path": {"type": "string", "minLength": 1},
+        "line": {"type": "integer", "minimum": 1},
+        "end_line": {"type": "integer", "minimum": 1}
+      },
+      "dependentRequired": {"end_line": ["line"]}
     },
     "semantic": {
       "type": "object",

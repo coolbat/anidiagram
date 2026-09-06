@@ -83,6 +83,7 @@ def deliver_artifacts(
     render: Callable[[Path], Dict[str, Dict[str, Any]]],
     receipt_path: Optional[Path] = None,
     additional_artifacts: Optional[Mapping[str, Tuple[Path, bytes]]] = None,
+    evidence: Optional[Mapping[str, Any]] = None,
 ) -> Tuple[Dict[str, Dict[str, Any]], Dict[str, Any]]:
     """Render and commit all requested artifacts as one best-effort transaction.
 
@@ -176,6 +177,8 @@ def deliver_artifacts(
             "artifacts": artifact_receipt,
         }
         staged_receipt = stage_dir / receipt_path.name
+        if evidence:
+            receipt["evidence"] = dict(evidence)
         staged_receipt.write_bytes(
             (json.dumps(receipt, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
         )

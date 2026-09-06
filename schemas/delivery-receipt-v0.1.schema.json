@@ -6,6 +6,7 @@
   "required": ["schema", "status", "input", "request", "validation", "artifacts"],
   "additionalProperties": false,
   "properties": {
+    "evidence": {"$ref": "evidence-receipt-v0.1.schema.json"},
     "schema": {
       "type": "object",
       "required": ["name", "version"],

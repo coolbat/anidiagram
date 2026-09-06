@@ -11,6 +11,7 @@ from typing import Any, Dict, Iterable, List, Mapping, Sequence, Tuple
 from .icon_system import canonical_icon_system_id, icon_system_version
 from .illustrated_registry import illustrated_icon_ids
 from .localization import resolve_locale
+from .repository_evidence import compile_evidence, validate_repository
 
 
 DEFAULT_ICON_SYSTEM = "illustrated"
@@ -130,7 +131,7 @@ _ENTITY_FIELDS = {"id", "label", "description", "kind", "role", "importance", "t
 _RELATION_FIELDS = {"id", "from", "to", "kind", "label", "description", "direction", "importance", "condition", "protocol", "attributes", "source_refs"}
 _GROUP_FIELDS = {"id", "label", "description", "kind", "members", "importance", "parent", "source_refs"}
 _FLOW_FIELDS = {"id", "label", "description", "relation_ids", "importance", "repeat", "source_refs"}
-_SOURCE_FIELDS = {"id", "type", "title", "uri", "note"}
+_SOURCE_FIELDS = {"id", "type", "title", "uri", "note", "repository"}
 
 
 def compile_plan_v02(plan: Mapping[str, Any]) -> Dict[str, Any]:
@@ -197,7 +198,7 @@ def compile_plan_v02(plan: Mapping[str, Any]) -> Dict[str, Any]:
         ),
     )
 
-    return {
+    specification = {
         "version": "0.4",
         "locale": locale,
         "composition_policy": "composition-v1",
@@ -217,6 +218,10 @@ def compile_plan_v02(plan: Mapping[str, Any]) -> Dict[str, Any]:
         "nodes": nodes,
         "edges": edges,
     }
+    evidence = compile_evidence(semantic)
+    if evidence is not None:
+        specification["evidence"] = evidence
+    return specification
 
 
 def resolve_presentation(value: Any, source_value: Any = None) -> Dict[str, Dict[str, str]]:
@@ -388,6 +393,8 @@ def _validate_plan(plan: Mapping[str, Any]) -> Mapping[str, Any]:
         _semantic_kind_value(source.get("type"), f"{path}.type")
         for field in ("title", "uri", "note"):
             _optional_text(source, field, f"{path}.{field}", allow_empty=True)
+        if "repository" in source:
+            validate_repository(source["repository"])
     for collection in ("entities", "relations", "groups", "flows"):
         for index, item in enumerate(semantic.get(collection, [])):
             refs = item.get("source_refs", [])

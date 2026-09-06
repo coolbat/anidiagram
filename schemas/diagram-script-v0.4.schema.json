@@ -19,6 +19,26 @@
     }
   ],
   "properties": {
+    "evidence": {
+      "type": "object",
+      "required": ["sources", "subjects"],
+      "additionalProperties": false,
+      "properties": {
+        "sources": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "allOf": [
+              {"$ref": "diagram-plan-v0.2.schema.json#/$defs/source"},
+              {"required": ["repository"]}
+            ]
+          }
+        },
+        "subjects": {
+          "type": "object",
+          "additionalProperties": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+        }
+      }
+    },
     "version": {
       "const": "0.4"
     },

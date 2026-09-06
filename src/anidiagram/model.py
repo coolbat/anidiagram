@@ -157,6 +157,7 @@ class Scene:
     motion_policy: MotionPolicy = field(default_factory=MotionPolicy)
     preset: Optional[str] = None
     layout: Optional[str] = None
+    source_evidence: Dict[str, Any] = field(default_factory=dict)
 
     def stats(self) -> dict:
         return {

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anidiagram.dev/schemas/evidence-receipt-v0.1.schema.json",
+  "type": "object",
+  "required": ["schema", "status", "sources", "subjects"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": {"name": "AniDiagramEvidence", "version": "0.1"}},
+    "status": {"const": "references-verified"},
+    "sources": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "repository", "href", "blob", "sha256", "bytes"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string"}, "title": {"type": "string"},
+          "repository": {"$ref": "diagram-plan-v0.2.schema.json#/$defs/repository_source"},
+          "href": {"type": "string", "pattern": "^https://github\\.com/"},
+          "blob": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "bytes": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "subjects": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "string"}}}
+  }
+}

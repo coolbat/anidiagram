@@ -32,7 +32,7 @@ def render_html_runtime(
     resolved_locale = _resolve_locale(scene, locale)
     labels = _viewer_labels(resolved_locale)
     font_family = font_stack(resolved_locale)
-    return f"""<!doctype html>
+    html = f"""<!doctype html>
 <html lang="{esc(resolved_locale)}">
 <head>
   <meta charset="utf-8">
@@ -102,6 +102,10 @@ def render_html_runtime(
 </body>
 </html>
 """
+    if scene.source_evidence:
+        from .reader import evidence_markup
+        html = html.replace('    <p id="runtime-warning"', evidence_markup(scene, resolved_locale) + '    <p id="runtime-warning"', 1)
+    return html
 
 
 def _runtime_source() -> str:

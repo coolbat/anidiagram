@@ -12,6 +12,7 @@ from .edge_motion import KNOWN_EDGE_MOTION
 from .icon_system import canonical_icon_system_id, icon_system_version
 from .illustrated_registry import illustrated_icon_ids
 from .localization import resolve_locale
+from .repository_evidence import EvidenceError, verify_evidence
 from .model import Bounds, Canvas, Edge, EffectConfig, Group, Motion, MotionPolicy, Node, Point, Scene, SceneMotion, Style, Title
 
 
@@ -93,7 +94,7 @@ class DiagramScriptValidationError(ValueError):
         }
 
 
-def compile_scene(data: Dict[str, Any]) -> Scene:
+def compile_scene(data: Dict[str, Any], *, repo_root=None) -> Scene:
     """Validate DiagramScript JSON and compile it to the AniDiagram IR."""
 
     issues: List[ValidationIssue] = []
@@ -175,6 +176,18 @@ def compile_scene(data: Dict[str, Any]) -> Scene:
     if issues:
         raise DiagramScriptValidationError(issues)
 
+    source_evidence = {}
+    if "evidence" in data:
+        try:
+            if version != "0.4":
+                raise EvidenceError("evidence_version", "repository evidence requires DiagramScript 0.4")
+            subject_ids = node_ids | {group.group_id for group in groups} | {
+                edge.semantic_relation_id for edge in edges if edge.semantic_relation_id
+            }
+            source_evidence = verify_evidence(data["evidence"], repo_root, subject_ids)
+        except EvidenceError as error:
+            raise DiagramScriptValidationError([ValidationIssue("$.evidence", str(error), error.code)]) from error
+
     return Scene(
         version=version or SUPPORTED_VERSIONS[0],
         canvas=canvas,
@@ -191,6 +204,7 @@ def compile_scene(data: Dict[str, Any]) -> Scene:
         motion_policy=motion_policy,
         preset=preset,
         layout=layout,
+        source_evidence=source_evidence,
     )
 
 
