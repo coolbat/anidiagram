@@ -176,6 +176,16 @@ def compile_scene(data: Dict[str, Any], *, repo_root=None) -> Scene:
     if issues:
         raise DiagramScriptValidationError(issues)
 
+    reader = {}
+    if "reader" in data:
+        from .reader import validate_reader
+        try:
+            if version != "0.4":
+                raise ValueError("reader requires DiagramScript 0.4")
+            validate_reader(data["reader"], data["nodes"], data.get("edges", []))
+            reader = dict(data["reader"])
+        except ValueError as error:
+            raise DiagramScriptValidationError([ValidationIssue("$.reader", str(error))]) from error
     source_evidence = {}
     if "evidence" in data:
         try:
@@ -205,6 +215,7 @@ def compile_scene(data: Dict[str, Any], *, repo_root=None) -> Scene:
         preset=preset,
         layout=layout,
         source_evidence=source_evidence,
+        reader=reader,
     )
 
 

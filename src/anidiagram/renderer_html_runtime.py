@@ -105,6 +105,9 @@ def render_html_runtime(
     if scene.source_evidence:
         from .reader import evidence_markup
         html = html.replace('    <p id="runtime-warning"', evidence_markup(scene, resolved_locale) + '    <p id="runtime-warning"', 1)
+    if scene.reader.get("enabled"):
+        from .reader import add_reader
+        html = add_reader(html, scene, resolved_locale)
     return html
 
 

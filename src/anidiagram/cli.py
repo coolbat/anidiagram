@@ -88,6 +88,7 @@ def main(argv: Optional[List[str]] = None) -> None:
     parser.add_argument("--list-presets", action="store_true", help="Print available preset names and exit.")
     parser.add_argument("--title", help="Override title when rendering a preset.")
     parser.add_argument("--repo-root", help="Local Git top-level for verifying explicitly authored repository sources.")
+    parser.add_argument("--reader", action="store_true", help="Enable the optional authored-topology reader for DiagramScript 0.4.")
     parser.add_argument("--style", help="Optional style profile JSON or bundled style name.")
     parser.add_argument("--outdir", default="outputs", help="Output directory.")
     parser.add_argument("--basename", default="diagram", help="Output basename.")
@@ -199,6 +200,9 @@ def main(argv: Optional[List[str]] = None) -> None:
     if args.diagram_locale != "auto":
         spec = dict(spec)
         spec["locale"] = args.diagram_locale
+    if args.reader:
+        spec = dict(spec)
+        spec["reader"] = {**spec.get("reader", {}), "enabled": True}
     additional_artifacts: Dict[str, Any] = {}
     if args.deliver:
         if args.plan_out and generated_plan is not None and source_kind == "brief":

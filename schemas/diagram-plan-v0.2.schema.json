@@ -10,7 +10,8 @@
     "version": {"const": "0.2"},
     "semantic": {"$ref": "#/$defs/semantic"},
     "presentation": {"$ref": "#/$defs/presentation"},
-    "presentation_sources": {"$ref": "#/$defs/presentation_sources"}
+    "presentation_sources": {"$ref": "#/$defs/presentation_sources"},
+    "reader": {"$ref": "reader-options-v0.1.schema.json"}
   },
   "$defs": {
     "id": {

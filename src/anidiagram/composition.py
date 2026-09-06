@@ -124,7 +124,7 @@ _ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]*$")
 _KIND_PATTERN = re.compile(r"^[a-z][a-z0-9-]*$")
 _ROLES = {"actor", "source", "process", "agent", "memory", "tool", "output", "risk", "neutral"}
 _IMPORTANCE = {"primary", "supporting", "context"}
-_PLAN_FIELDS = {"version", "semantic", "presentation", "presentation_sources"}
+_PLAN_FIELDS = {"version", "semantic", "presentation", "presentation_sources", "reader"}
 _SEMANTIC_FIELDS = {"language", "title", "subtitle", "summary", "intent", "entities", "relations", "groups", "flows", "sources", "annotations"}
 _INTENT_FIELDS = {"diagram_kind", "primary_question", "audience", "scope", "exclusions"}
 _ENTITY_FIELDS = {"id", "label", "description", "kind", "role", "importance", "tags", "attributes", "state", "source_refs"}
@@ -221,6 +221,10 @@ def compile_plan_v02(plan: Mapping[str, Any]) -> Dict[str, Any]:
     evidence = compile_evidence(semantic)
     if evidence is not None:
         specification["evidence"] = evidence
+    if "reader" in plan:
+        from .reader import validate_reader
+        validate_reader(plan["reader"], entities, relations)
+        specification["reader"] = deepcopy(plan["reader"])
     return specification
 
 

@@ -158,6 +158,7 @@ class Scene:
     preset: Optional[str] = None
     layout: Optional[str] = None
     source_evidence: Dict[str, Any] = field(default_factory=dict)
+    reader: Dict[str, Any] = field(default_factory=dict)
 
     def stats(self) -> dict:
         return {
