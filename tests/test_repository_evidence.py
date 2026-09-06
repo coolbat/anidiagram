@@ -92,3 +92,15 @@ class RepositoryEvidenceTest(unittest.TestCase):
             main(args)
         self.assertEqual(2, raised.exception.code)
         self.assertEqual(before, (self.root / "proof.html").read_bytes())
+
+    def test_script_evidence_revalidates_source_shape(self):
+        for change in ({"type": None}, {"type": "invalid type"}, {"title": []}, {"uri": 1}, {"note": {}}):
+            spec = compile_plan(self.plan)
+            spec["evidence"]["sources"][0].update(change)
+            with self.subTest(change=change), self.assertRaises(DiagramScriptValidationError):
+                compile_scene(spec, repo_root=self.root)
+        spec = compile_plan(self.plan)
+        subject = next(iter(spec["evidence"]["subjects"]))
+        spec["evidence"]["subjects"][subject].append("code")
+        with self.assertRaisesRegex(DiagramScriptValidationError, "unique"):
+            compile_scene(spec, repo_root=self.root)

@@ -36,12 +36,12 @@
     body += text(labels.nodes, 48, 146, 370, 18, 1, "#475569") + text(labels.edges, 470, 146, 680, 18, 1, "#475569");
     selectedNodes.forEach((node, index) => {
       const y = 192 + index * rowHeight;
-      body += `<rect x="40" y="${y - 28}" width="400" height="${rowHeight - 4}" rx="7" fill="#e8efff"/>` + text(node.label, 54, y, 365, rowFont);
+      body += `<rect x="40" y="${y - 24}" width="400" height="${rowHeight - 4}" rx="7" fill="#e8efff"/>` + text(node.label, 54, y - 4, 365, rowFont);
     });
     selectedEdges.forEach((edge, index) => {
       const arrow = edge.direction === "bidirectional" ? " ↔ " : edge.direction === "undirected" ? " — " : " → ";
       const label = nodes.get(edge.from).label + arrow + nodes.get(edge.to).label + (edge.label ? " · " + edge.label : "");
-      body += text(label, 470, 192 + index * rowHeight, 680, rowFont);
+      body += text(label, 470, 188 + index * rowHeight, 680, rowFont);
     });
     body += text(`AniDiagram · ${labels.nodes} ${selection.nodes.length}/${data.nodes.length} · ${labels.edges} ${selection.edges.length}/${data.edges.length} · ${data.graph_sha256.slice(0, 12)}`, 48, 596, 1100, 14, 1, "#64748b");
     return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img"><title>${esc(data.title)}</title><metadata>${esc(JSON.stringify(metadata))}</metadata><g font-family="system-ui, sans-serif">${body}</g></svg>`;

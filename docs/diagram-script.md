@@ -12,6 +12,11 @@ their previous default behavior; v0.3 is not silently changed.
 See [the composition contract](./diagram-composition-contract.md) and
 [ADR-001](./decisions/ADR-001-separate-semantic-content-from-presentation.md).
 
+Plan 0.2 / Script 0.4 also support opt-in repository evidence, typed semantics,
+and an authored-topology reader. See [verified reading](./verified-reading.md)
+for the contracts, comparison command, chapters, share cards, and visual receipts.
+These extensions do not change legacy defaults or create a second renderer.
+
 ## v0.1
 
 `0.1` is the compatibility schema. It supports:

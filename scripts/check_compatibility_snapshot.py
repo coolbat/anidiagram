@@ -61,6 +61,7 @@ if __name__ == "__main__":
         print(f"Recorded {len(current)} cases, four output hashes each.")
     else:
         before = json.loads(args.receipt.read_text())
-        changed = [key for key in sorted(set(before) | set(current)) if before.get(key) != current.get(key)]
-        print(json.dumps({"ok": not changed, "cases": len(current), "changed": changed}, indent=2))
+        changed = [key for key in sorted(before) if before[key] != current.get(key)]
+        print(json.dumps({"ok": not changed, "cases": len(before), "changed": changed,
+                          "additional_cases": sorted(set(current) - set(before))}, indent=2))
         raise SystemExit(bool(changed))

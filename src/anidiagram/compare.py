@@ -45,6 +45,8 @@ def _fields(before, after):
 
 
 def compare_plans(base, head):
+    if not isinstance(base, dict) or not isinstance(head, dict):
+        raise ValueError("comparison inputs must be DiagramPlan JSON objects")
     if base.get("version") != "0.2" or head.get("version") != "0.2":
         raise ValueError("semantic comparison requires DiagramPlan 0.2 with stable IDs")
     specifications = [compile_plan(plan) for plan in (base, head)]
@@ -73,6 +75,9 @@ def compare_plans(base, head):
         changes.append({"collection": "semantic", "id": field, "status": "changed", "categories": ["semantic"],
                         "fields": [field], "before": old.get(field), "after": new.get(field)})
     geometry = []
+    if specifications[0]["canvas"] != specifications[1]["canvas"]:
+        geometry.append({"collection": "canvas", "id": "canvas", "status": "resized",
+                         "before": specifications[0]["canvas"], "after": specifications[1]["canvas"]})
     for collection, identity, fields in (("nodes", "id", ("position", "size", "shape")),
                                         ("edges", "semantic_relation_id", ("route", "points")),
                                         ("groups", "id", ("bounds",))):

@@ -78,11 +78,15 @@ def verify_evidence(value, repo_root, subject_ids):
         _require(isinstance(source, dict) and isinstance(source.get("id"), str), "evidence_shape", "each evidence source requires an id")
         _require(source["id"] not in source_ids and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]*", source["id"]), "evidence_shape", "evidence source ids must be unique semantic ids")
         _require(not set(source) - {"id", "type", "title", "uri", "note", "repository"}, "evidence_shape", "unsupported evidence source field")
+        _require(isinstance(source.get("type"), str) and re.fullmatch(r"[a-z][a-z0-9-]*", source["type"]), "evidence_shape", "evidence sources require a semantic type")
+        for field in ("title", "uri", "note"):
+            _require(field not in source or isinstance(source[field], str), "evidence_shape", "evidence source copy must be text")
         validate_repository(source.get("repository"))
         source_ids.add(source["id"])
     for subject, refs in subjects.items():
         _require(subject in subject_ids, "evidence_subject", "evidence references a missing scene subject")
         _require(isinstance(refs, list) and all(isinstance(ref, str) and ref in source_ids for ref in refs), "evidence_subject", "evidence subject references a missing source")
+        _require(len(refs) == len(set(refs)), "evidence_subject", "source references must be unique")
     _require(repo_root is not None, "repository_required", "repository-backed evidence requires --repo-root (or compile_scene(..., repo_root=...))")
     root = Path(repo_root).resolve()
     _require(Path(_git(root, "rev-parse", "--show-toplevel").decode().strip()).resolve() == root, "repository_root", "repo-root must be the Git top-level directory")

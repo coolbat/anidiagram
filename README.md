@@ -160,6 +160,18 @@ their paths are inside `--outdir`. Quality warnings and advisories are recorded
 in the receipt; quality errors block delivery. A failed delivery exits with
 code 3 and emits one structured JSON error to stderr.
 
+## Optional verified reading and review
+
+Add `--reader` to a DiagramPlan 0.2 render for node search, authored upstream/downstream
+reach, shortest routes, reading links, curated chapters, and SVG/PNG selection cards.
+Repository sources can pin Git files and lines for verification with `--repo-root`.
+`anidiagram compare old.plan.json new.plan.json --out delta.html` separates semantic,
+presentation, and geometry changes; `anidiagram visual-check diagram.html` produces
+artifact-bound screenshots and a receipt with human review still pending.
+
+These are opt-in extensions; existing render defaults remain unchanged. See the
+[verified reading guide](docs/verified-reading.md) and [runnable examples](examples/verified-reading/).
+
 ## Simplified Chinese output
 
 Chinese briefs resolve to `zh-CN` automatically. Use

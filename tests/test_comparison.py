@@ -62,6 +62,11 @@ class ComparisonTest(unittest.TestCase):
             with self.assertRaises(ValueError):
                 compare_plans(self.base, head)
 
+    def test_non_object_inputs_fail_as_validation_errors(self):
+        for value in (None, [], "not a plan"):
+            with self.subTest(value=value), self.assertRaisesRegex(ValueError, "JSON objects"):
+                compare_plans(value, self.base)
+
     def test_pair_delivery_hash_and_input_collision(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

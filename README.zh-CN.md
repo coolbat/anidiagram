@@ -152,6 +152,16 @@ DiagramScript、风格和每个产物的 SHA-256 与字节数。`--plan-out` 和
 会写入回执，但只有 error 会阻断交付。失败时进程以状态码 3 退出，并向 stderr
 输出一个结构化 JSON 错误。
 
+## 可选的源码核验与阅读工具
+
+渲染 Plan 0.2 时加入 `--reader`，可启用节点搜索、上游/下游、最短路径、阅读链接、
+章节与 SVG／PNG 分享卡。源码来源可固定 Git 提交、文件和行号，通过 `--repo-root`
+核验；`anidiagram compare old.plan.json new.plan.json --out delta.html` 分别报告语义、
+表现与几何变化，`anidiagram visual-check diagram.html` 生成截图和待人工检查的回执。
+
+新能力均为可选扩展，旧图默认行为不变。详见[使用指南](docs/verified-reading.md)
+和[可运行示例](examples/verified-reading/)。
+
 ## 生成中文版
 
 默认语言策略是 `auto`：中文需求会自动解析为 `zh-CN`，英文需求输出英文。

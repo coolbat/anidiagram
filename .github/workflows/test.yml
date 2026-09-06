@@ -59,10 +59,15 @@ jobs:
       - name: Install contract dependencies
         run: |
           python3 -m pip install -e ".[raster]"
+          python3 -m pip install jsonschema==4.23.0
           npm ci
           npx playwright install --with-deps chromium
       - name: Run unit and contract tests
-        run: PYTHONPATH=src python3 -m unittest discover -s tests
+        run: |
+          PYTHONPATH=src python3 -m unittest discover -s tests
+          node --test tests/reader-graph.test.cjs
+          PYTHONPATH=src python3 scripts/verify_reading_schemas.py
+          PYTHONPATH=src python3 scripts/check_compatibility_snapshot.py tests/compatibility-baseline-18cb0f3.json
       - name: Validate all approved Diagram Core assets
         run: PYTHONPATH=src python3 scripts/validate_diagram_core_assets.py --strict --json
       - name: Enforce committed gallery asset budgets
@@ -73,6 +78,10 @@ jobs:
           node --check runtime/illustrated-performance-v6-runtime.js
           node --check runtime/edge-motion-v1-runtime.js
           node --check runtime/choreographer-v1-runtime.js
+          node --check runtime/reader-graph.js
+          node --check runtime/diagram-reader.js
+          node --check runtime/reader-share-card.js
+          node --check runtime/visual-check.mjs
       - name: Render composition smoke test
         run: |
           PYTHONPATH=src python3 -m anidiagram.cli \
@@ -123,7 +132,15 @@ jobs:
             --spec-out build/ci/composition/production-request-path.diagram.json \
             --outdir build/ci/composition \
             --basename production-request-path \
-            --formats svg,html,quality
+            --formats svg,html,quality \
+            --reader
+      - name: Verify reader chapters, share cards and visual evidence
+        run: |
+          PYTHONPATH=src python3 scripts/build_verified_reading_proofs.py --reader-fixture-only --outdir build/ci/reader
+          node scripts/verify_reader_sharing.mjs build/ci/reader/reader-fixture.html
+          node scripts/verify_reader.mjs build/ci/composition/production-request-path.html
+          PYTHONPATH=src python3 -m anidiagram.cli visual-check build/ci/reader/reader-fixture.html --json
+          PYTHONPATH=src python3 scripts/verify_visual_check.py
       - name: Render Simplified Chinese architecture proof
         run: |
           PYTHONPATH=src python3 -m anidiagram.cli \
