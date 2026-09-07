@@ -35,6 +35,8 @@ class ReleaseWorkflowContractTest(unittest.TestCase):
             "verify_choreographer.mjs",
             "verify_readme_showcase_round_1.mjs",
             "scripts/check_asset_budget.py",
+            "scripts/verify_skill_install.py --outdir build/ci/skill-install",
+            "python3 -m unittest discover -s tests -p test_skill_launcher.py",
             "--runtime-mode timeline",
             "--runtime-mode hybrid",
         ):
@@ -49,7 +51,7 @@ class ReleaseWorkflowContractTest(unittest.TestCase):
 
     def test_contract_job_installs_node_dependencies_before_unit_tests(self):
         workflow = self._read(".github/workflows/test.yml")
-        contract_job = workflow.split("  runtime-browser:", 1)[0]
+        contract_job = workflow.split("  contract:\n", 1)[1].split("  runtime-browser:\n", 1)[0]
 
         self.assertIn("npm ci", contract_job)
         self.assertLess(

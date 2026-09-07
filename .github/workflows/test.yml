@@ -41,6 +41,8 @@ jobs:
             --basename agent-memory \
             --formats svg,html,quality \
             --runtime-dependency none
+      - name: Verify portable Skill launcher on this Python version
+        run: PYTHONPATH=src python3 -m unittest discover -s tests -p test_skill_launcher.py
 
   contract:
     needs: package-install
@@ -68,6 +70,8 @@ jobs:
           node --test tests/reader-graph.test.cjs
           PYTHONPATH=src python3 scripts/verify_reading_schemas.py
           PYTHONPATH=src python3 scripts/check_compatibility_snapshot.py tests/compatibility-baseline-18cb0f3.json
+      - name: Verify portable Agent Skill installation
+        run: python3 scripts/verify_skill_install.py --outdir build/ci/skill-install
       - name: Validate all approved Diagram Core assets
         run: PYTHONPATH=src python3 scripts/validate_diagram_core_assets.py --strict --json
       - name: Enforce committed gallery asset budgets
