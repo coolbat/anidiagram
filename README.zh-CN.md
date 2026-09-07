@@ -44,6 +44,26 @@ AniDiagram 可以把一段自然语言架构需求变成经过校验、带有动
 
 ## 快速开始
 
+### Agent Skill：让 Agent 分析项目并画图
+
+在你想分析的项目中安装，选择实际使用的 Agent；需要用户级安装时再加 `-g`：
+
+```bash
+npx skills add coolbat/anidiagram --skill anidiagram -a claude-code
+# 也可改为：-a codex 或 -a cursor
+```
+
+然后对 Agent 说：**“使用 AniDiagram 分析当前项目的核心请求链路，核验源码依据，
+标出未知项，生成可读的 SVG/HTML 和准确性检查报告。”**
+
+Skill 自带 Python 引擎，无需先全局安装 CLI。基础出图需要 Python 3.9+；
+浏览器验收和高级导出的可选依赖会先检查，不会自动安装。
+查看 [Skill 安装、依赖检查与跨 Agent 测试提示词](./docs/agent-skill.md)。
+必须安装完整 Skill 目录，不能只复制 SKILL.md；源码语义复核与呈现检查分别报告，
+不把检查通过等同于“架构准确率 100%”。
+
+### CLI：直接调用或接入自动化
+
 克隆仓库、建立隔离环境并安装 CLI：
 
 ```bash

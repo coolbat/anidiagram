@@ -47,6 +47,28 @@ The full gallery contains the two public icon systems, 16 semantic layouts,
 
 ## Quick start
 
+### Agent Skill — let your agent analyze and draw
+
+Install from the project you want to analyze (choose your agent; add `-g` for
+user-wide installation):
+
+```bash
+npx skills add coolbat/anidiagram --skill anidiagram -a claude-code
+# Also supported: -a codex or -a cursor
+```
+
+Then ask: **“Use AniDiagram to explain this project's core request flow. Check
+source evidence, show unknowns, and generate readable SVG/HTML with an accuracy
+report.”** The Skill uses its bundled Python engine; a global CLI install is not
+required. Basic output needs Python 3.9+. Browser verification and advanced
+exports have optional dependencies, which the Skill checks before use.
+
+See [Skill setup, dependency checks and cross-agent test prompt](./docs/agent-skill.md).
+The Skill must be installed as a complete directory, not a standalone SKILL.md.
+Source review and rendered readability are separate gates, not an accuracy score.
+
+### CLI — direct commands and automation
+
 Clone the repository, create an isolated environment, and install the CLI:
 
 ```bash
