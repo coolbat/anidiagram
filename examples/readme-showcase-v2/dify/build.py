@@ -19,6 +19,36 @@ from english import localize_facts, localize_plan
 
 REVISION = "09a855dcef24c0edc7431c46c0cfaa494481daf5"
 REPOSITORY = "https://github.com/langgenius/dify"
+STYLES = ("minimal-light", "deep-tech")
+
+
+def variant_stem(language: str, style: str = "minimal-light") -> str:
+    return "dify" + ("-deep-tech" if style == "deep-tech" else "") + ("-en" if language == "en" else "")
+
+
+def page_name(language: str, style: str = "minimal-light") -> str:
+    return "index" + (".deep-tech" if style == "deep-tech" else "") + (".en" if language == "en" else "") + ".html"
+
+
+def page_source(language: str, style: str = "minimal-light") -> str:
+    text = (HERE / page_name(language)).read_text(encoding="utf-8")
+    if style == "deep-tech":
+        for lang in ("zh-CN", "en"):
+            text = text.replace(f'"{page_name(lang)}"', f'"{page_name(lang, style)}"')
+        stem = variant_stem(language)
+        for suffix in (".html", ".plan.json", "-static.svg", "-motion.webp"):
+            text = text.replace(stem + suffix, variant_stem(language, style) + suffix)
+        text = text.replace("accuracy" + (".en" if language == "en" else "") + ".json",
+                            "accuracy.deep-tech" + (".en" if language == "en" else "") + ".json")
+        text = text.replace('<html lang=', '<html data-style="deep-tech" lang=')
+        text = text.replace("</title>", " · Deep Tech</title>")
+        for light, dark in (("#2563eb", "#60a5fa"), ("#0f766e", "#34d399"), ("#64748b", "#94a3b8")):
+            text = text.replace(light, dark)
+    label = "Visual style" if language == "en" else "视觉风格"
+    note = "Same architecture and source evidence; presentation only." if language == "en" else "同一份架构与源码证据，仅改变视觉表现。"
+    links = " ".join(f'<a href="{page_name(language, key)}"' + (' aria-current="page"' if key == style else '') + f'>{title}</a>'
+                     for key, title in (("minimal-light", "Minimal Light"), ("deep-tech", "Deep Tech")))
+    return text.replace("<!-- STYLE_SWITCH -->", f'<nav class="styles" aria-label="{label}">{links}</nav><p class="style-note">{note}</p>')
 
 # Each source is a bounded, manually read range in the pinned repository.
 LOCATIONS = [
@@ -57,7 +87,9 @@ LOCATIONS = [
 ]
 
 
-def make_plan(language: str = "zh-CN") -> dict:
+def make_plan(language: str = "zh-CN", style: str = "minimal-light") -> dict:
+    if style not in STYLES:
+        raise ValueError(f"Unsupported Dify style: {style}")
     if language not in ("zh-CN", "en"):
         raise ValueError(f"Unsupported showcase language: {language}")
     entities = [
@@ -121,8 +153,8 @@ def make_plan(language: str = "zh-CN") -> dict:
                          "repository": {"url": REPOSITORY, "revision": REVISION, "path": path, "line": first, "end_line": last}}
                         for key, path, first, last, title in LOCATIONS],
         },
-        "presentation": {"icon_system": "auto", "style": "minimal-light", "layout": "layered", "motion": "showcase-v1"},
-        "presentation_sources": {"style": "model", "layout": "model"},
+        "presentation": {"icon_system": "auto", "style": style, "layout": "layered", "motion": "showcase-v1"},
+        "presentation_sources": {"style": "explicit" if style == "deep-tech" else "model", "layout": "model"},
     }
     result["reader"] = {"enabled": True, "views": [{"id": flow, "label": label, "relation_ids": [r[0] for r in relations if r[7] in (flow, "shared")]}
                                                   for flow, label in [("ingest", "文档入库"), ("query", "在线问答")]]}
@@ -188,11 +220,13 @@ def author_geometry(spec: dict, semantic: dict) -> dict:
     }
     shared = {"nginx-api", "api-redis"}
     query = {"caller-nginx", "api-vector", "api-plugin"}
+    shared_color, query_color, ingest_color = (("#94a3b8", "#34d399", "#60a5fa") if spec["style"] == "deep-tech"
+                                              else ("#64748b", "#0f766e", "#2563eb"))
     for edge in result["edges"]:
         key = edge["semantic_relation_id"]
         edge.pop("step", None)
         edge.update(points=paths[key], route="orthogonal", animated=True,
-                    stroke="#64748b" if key in shared else "#0f766e" if key in query else "#2563eb")
+                    stroke=shared_color if key in shared else query_color if key in query else ingest_color)
     assert result["evidence"] == spec["evidence"], "Geometry cannot rewrite source bindings"
     assert {n["id"] for n in result["nodes"]} == {e["id"] for e in semantic["entities"]}
     for edge in result["edges"]:
@@ -205,11 +239,13 @@ def write_json(path: Path, value: object) -> None:
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def build_variant(source: Path, out: Path, language: str, browser_channel: str | None = None) -> list[str]:
-    stem = "dify-en" if language == "en" else "dify"
+def build_variant(source: Path, out: Path, language: str, browser_channel: str | None = None, visual_style: str = "minimal-light") -> list[str]:
+    stem = variant_stem(language, visual_style)
     suffix = ".en" if language == "en" else ""
-    facts_name, accuracy_name = f"facts{suffix}.json", f"accuracy{suffix}.json"
-    plan = make_plan(language)
+    style_suffix = ".deep-tech" if visual_style == "deep-tech" else ""
+    style_name = f"style{style_suffix}.json"
+    facts_name, accuracy_name = f"facts{suffix}.json", f"accuracy{style_suffix}{suffix}.json"
+    plan = make_plan(language, visual_style)
     spec = author_geometry(compile_plan(plan), plan["semantic"])
     static = copy.deepcopy(spec)
     static["motion"]["profile"] = "off"
@@ -219,8 +255,11 @@ def build_variant(source: Path, out: Path, language: str, browser_channel: str |
              "effects": {"frame_opacity": 0, "grid_opacity": 0},
              "roles": {"process": {"stroke": "#94a3b8", "fill": "#ffffff", "text": "#172033"},
                        "neutral": {"stroke": "#cbd5e1", "fill": "#f1f5f9", "text": "#334155"}}}
+    if visual_style == "deep-tech":
+        style = json.loads((ROOT / "styles/deep-tech.json").read_text())
+        style.update(node={"radius": 10, "stroke_width": 1.2}, effects={"frame_opacity": 0, "grid_opacity": 0.08})
     for name, value in ((f"{stem}.plan.json", plan), (f"{stem}.diagram.json", spec), (f"{stem}-static.diagram.json", static),
-                        (facts_name, make_facts(plan)), ("style.json", style)):
+                        (facts_name, make_facts(plan)), (style_name, style)):
         write_json(out / name, value)
     launcher = [sys.executable, "-I", str(ROOT / "scripts/run_anidiagram.py")]
     checked = subprocess.run(launcher + ["accuracy-check", str(out / f"{stem}.diagram.json"), "--facts", str(out / facts_name),
@@ -233,7 +272,7 @@ def build_variant(source: Path, out: Path, language: str, browser_channel: str |
     if any(c.get("status") == "contradicted" for c in accuracy.get("claims", [])):
         raise SystemExit("Contradicted fact; inspect accuracy.json")
     for name in (stem, f"{stem}-static"):
-        rendered = subprocess.run(launcher + ["--spec", str(out / f"{name}.diagram.json"), "--style", str(out / "style.json"),
+        rendered = subprocess.run(launcher + ["--spec", str(out / f"{name}.diagram.json"), "--style", str(out / style_name),
                                    "--repo-root", str(source), "--outdir", str(out), "--basename", name, "--readable-labels",
                                    "--formats", "svg,html,quality", "--deliver", "--runtime-dependency", "inline",
                                    "--runtime-source", str(ROOT / "node_modules/gsap/dist/gsap.min.js")], check=False, capture_output=True, text=True)
@@ -242,7 +281,7 @@ def build_variant(source: Path, out: Path, language: str, browser_channel: str |
             raise SystemExit(rendered.returncode)
         report = json.loads(rendered.stdout)
         print(json.dumps({"render": name, "ok": report["ok"], "quality": report["outputs"]["quality"]["summary"]}))
-    names = [f"{stem}.plan.json", f"{stem}.diagram.json", f"{stem}-static.diagram.json", facts_name, accuracy_name]
+    names = [f"{stem}.plan.json", f"{stem}.diagram.json", f"{stem}-static.diagram.json", facts_name, accuracy_name, style_name]
     names += [f"{name}.{ext}" for name in (stem, f"{stem}-static") for ext in ("svg", "html", "quality.json", "delivery.json")]
     command = ["node", str(HERE / "capture_motion.mjs"), str(out), stem]
     if browser_channel:
@@ -272,15 +311,21 @@ def main() -> None:
     if sha != REVISION or subprocess.check_output(["git", "-C", str(source), "status", "--porcelain"], text=True).strip():
         raise SystemExit("Refusing source drift: expected the clean pinned Dify 1.17.0 checkout")
     out.mkdir(parents=True, exist_ok=True)
-    names = [name for language in ("zh-CN", "en") for name in build_variant(source, out, language, args.browser_channel)]
-    shared = ("index.html", "index.en.html", "evidence.md", "evidence.en.md", "showcase.css", "preview-motion.js")
+    names = [name for style in STYLES for language in ("zh-CN", "en")
+             for name in build_variant(source, out, language, args.browser_channel, style)]
+    shared = ("evidence.md", "evidence.en.md", "showcase.css", "preview-motion.js")
     for name in shared:
         (out / name).write_bytes((HERE / name).read_bytes())
-    names += ["style.json", *shared]
+    pages = [page_name(language, style) for style in STYLES for language in ("zh-CN", "en")]
+    for style in STYLES:
+        for language in ("zh-CN", "en"):
+            (out / page_name(language, style)).write_text(page_source(language, style), encoding="utf-8")
+    names += [*pages, *shared]
     write_json(out / "manifest.json", {"status": "draft", "repository": REPOSITORY, "revision": REVISION,
                                       "source_root": str(source), "independent_semantic_review": "pending", "dify_runtime": "not run",
                                       "languages": {"zh-CN": "index.html", "en": "index.en.html"},
-                                      "source_files": {name: hashlib.sha256((HERE / name).read_bytes()).hexdigest() for name in ("build.py", "english.py", "publish.py", "capture_motion.mjs", *shared)},
+                                      "styles": {style: {language: page_name(language, style) for language in ("zh-CN", "en")} for style in STYLES},
+                                      "source_files": {name: hashlib.sha256((HERE / name).read_bytes()).hexdigest() for name in ("build.py", "english.py", "publish.py", "capture_motion.mjs", "index.html", "index.en.html", *shared)},
                                       "files": {name: hashlib.sha256((out / name).read_bytes()).hexdigest() for name in names}})
     print(f"Drafts: {out / 'index.html'} and {out / 'index.en.html'}")
 

@@ -1,0 +1,845 @@
+{
+  "version": "0.2",
+  "semantic": {
+    "language": "en",
+    "title": "Dify · From documents to answers",
+    "subtitle": "1.17.0 · Three layers · Knowledge ingestion and basic Chat",
+    "summary": "Blue: document ingestion. Green: online chat. Gray: shared interfaces. Arrows show selected calls or task delivery, not timing, all dependencies, or one global execution order.",
+    "intent": {
+      "diagram_kind": "architecture",
+      "primary_question": "Which services handle indexing and online chat, and what does each read or write?",
+      "audience": [
+        "Developers new to Dify architecture"
+      ],
+      "scope": "Self-hosted Dify 1.17.0; local text uploads; high_quality paragraph indexing; basic AppMode.CHAT; a configured and selected internal dataset with semantic_search; successful paths.",
+      "exclusions": [
+        "Not all of Dify: Workflow, Chatflow, Agent, knowledge pipelines, multimodal processing, reranking, errors and retries are excluded.",
+        "Three logical layers are not three deployed services. Chat and RAG are internal API code, not separate microservices. Other app modes may use asynchronous queues.",
+        "Model calls are traced only to the Plugin Daemon HTTP interface. Plugin execution and downstream providers were not reviewed, so downstream edges are not drawn.",
+        "Other SQL/Redis consumers, Web server hosting, authentication, callback details and cache-hit branches are omitted from the overview.",
+        "Dify has not been run and no real model calls were made. Independent semantic review is pending."
+      ]
+    },
+    "entities": [
+      {
+        "id": "web",
+        "label": "Web console",
+        "description": "Browser client\nUpload · create",
+        "kind": "browser",
+        "role": "process",
+        "importance": "primary",
+        "source_refs": [
+          "src-web",
+          "src-file"
+        ]
+      },
+      {
+        "id": "nginx",
+        "label": "Nginx",
+        "description": "Reverse proxy\nURL routing",
+        "kind": "gateway",
+        "role": "process",
+        "importance": "primary",
+        "source_refs": [
+          "src-nginx"
+        ]
+      },
+      {
+        "id": "caller",
+        "label": "API client",
+        "description": "Chat requests\nStreamed replies",
+        "kind": "client",
+        "role": "process",
+        "importance": "primary",
+        "source_refs": [
+          "src-chat-api",
+          "src-nginx"
+        ]
+      },
+      {
+        "id": "api",
+        "label": "API service",
+        "description": "Chat · RAG\nIn-process thread",
+        "kind": "server",
+        "role": "process",
+        "importance": "primary",
+        "source_refs": [
+          "src-deploy",
+          "src-dispatch",
+          "src-thread",
+          "src-chat",
+          "src-file"
+        ]
+      },
+      {
+        "id": "worker",
+        "label": "Indexer",
+        "description": "Celery worker\nExtract · split",
+        "kind": "worker",
+        "role": "process",
+        "importance": "primary",
+        "source_refs": [
+          "src-deploy",
+          "src-task",
+          "src-index"
+        ]
+      },
+      {
+        "id": "plugin",
+        "label": "Plugins",
+        "description": "Plugin Daemon\nModel boundary",
+        "kind": "plugin",
+        "role": "process",
+        "importance": "primary",
+        "source_refs": [
+          "src-plugin-deploy",
+          "src-plugin-llm",
+          "src-plugin-embedding",
+          "src-plugin-base"
+        ]
+      },
+      {
+        "id": "files",
+        "label": "File store",
+        "description": "Original files\nLocal by default",
+        "kind": "storage",
+        "role": "process",
+        "importance": "primary",
+        "source_refs": [
+          "src-file",
+          "src-extract",
+          "src-deploy",
+          "src-stores"
+        ]
+      },
+      {
+        "id": "redis",
+        "label": "Redis",
+        "description": "Task broker\nQuery vector cache",
+        "kind": "queue",
+        "role": "process",
+        "importance": "primary",
+        "source_refs": [
+          "src-broker",
+          "src-broker-default",
+          "src-query-embedding"
+        ]
+      },
+      {
+        "id": "sql",
+        "label": "SQL store",
+        "description": "Metadata · chunks\nPostgreSQL here",
+        "kind": "database",
+        "role": "process",
+        "importance": "primary",
+        "source_refs": [
+          "src-file",
+          "src-index",
+          "src-postgres"
+        ]
+      },
+      {
+        "id": "vector",
+        "label": "Vector DB",
+        "description": "Document vectors\nWeaviate here",
+        "kind": "database",
+        "role": "process",
+        "importance": "primary",
+        "source_refs": [
+          "src-vector-create",
+          "src-vector-query",
+          "src-stores"
+        ]
+      }
+    ],
+    "groups": [
+      {
+        "id": "access",
+        "label": "01  Access · Requests",
+        "kind": "logical-layer",
+        "members": [
+          "web",
+          "nginx",
+          "caller"
+        ]
+      },
+      {
+        "id": "services",
+        "label": "02  Execution · API and indexing",
+        "kind": "logical-layer",
+        "members": [
+          "api",
+          "worker",
+          "plugin"
+        ]
+      },
+      {
+        "id": "data",
+        "label": "03  Data · Files, tasks and vectors",
+        "kind": "logical-layer",
+        "members": [
+          "files",
+          "redis",
+          "sql",
+          "vector"
+        ]
+      }
+    ],
+    "relations": [
+      {
+        "id": "web-nginx",
+        "from": "web",
+        "to": "nginx",
+        "label": "Upload / create",
+        "kind": "http",
+        "direction": "forward",
+        "condition": "Console request succeeds",
+        "importance": "primary",
+        "source_refs": [
+          "src-web",
+          "src-file",
+          "src-nginx"
+        ]
+      },
+      {
+        "id": "caller-nginx",
+        "from": "caller",
+        "to": "nginx",
+        "label": "Ask / SSE",
+        "kind": "http",
+        "direction": "bidirectional",
+        "condition": "Basic CHAT; streaming response mode",
+        "importance": "primary",
+        "source_refs": [
+          "src-nginx",
+          "src-chat-api"
+        ]
+      },
+      {
+        "id": "nginx-api",
+        "from": "nginx",
+        "to": "api",
+        "label": "API request / reply",
+        "kind": "http",
+        "direction": "bidirectional",
+        "condition": "Console API or /v1 route",
+        "importance": "primary",
+        "source_refs": [
+          "src-nginx",
+          "src-chat-api"
+        ]
+      },
+      {
+        "id": "api-files",
+        "from": "api",
+        "to": "files",
+        "label": "Store file",
+        "kind": "storage-access",
+        "direction": "forward",
+        "condition": "Local uploaded text file; validation succeeds",
+        "importance": "primary",
+        "source_refs": [
+          "src-file"
+        ]
+      },
+      {
+        "id": "api-sql",
+        "from": "api",
+        "to": "sql",
+        "label": "Store metadata",
+        "kind": "database-access",
+        "direction": "forward",
+        "condition": "Upload and document creation succeed",
+        "importance": "primary",
+        "source_refs": [
+          "src-file",
+          "src-document"
+        ]
+      },
+      {
+        "id": "api-redis",
+        "from": "api",
+        "to": "redis",
+        "label": "Tasks / query cache",
+        "kind": "dependency",
+        "direction": "forward",
+        "condition": "Index dispatch after document commit; query embedding cache access on semantic retrieval",
+        "importance": "primary",
+        "source_refs": [
+          "src-document",
+          "src-task-proxy",
+          "src-task-policy",
+          "src-broker",
+          "src-broker-default",
+          "src-query-embedding"
+        ]
+      },
+      {
+        "id": "redis-worker",
+        "from": "redis",
+        "to": "worker",
+        "label": "Consume index job",
+        "kind": "task-delivery",
+        "direction": "forward",
+        "condition": "Worker consumes Celery broker; self-hosted priority_dataset queue",
+        "importance": "primary",
+        "source_refs": [
+          "src-broker",
+          "src-task-policy",
+          "src-task",
+          "src-task-run"
+        ]
+      },
+      {
+        "id": "worker-files",
+        "from": "worker",
+        "to": "files",
+        "label": "Read source file",
+        "kind": "storage-access",
+        "direction": "forward",
+        "condition": "FILE source in extraction",
+        "importance": "primary",
+        "source_refs": [
+          "src-task-run",
+          "src-index",
+          "src-extract"
+        ]
+      },
+      {
+        "id": "worker-sql",
+        "from": "worker",
+        "to": "sql",
+        "label": "Store chunks",
+        "kind": "database-access",
+        "direction": "forward",
+        "condition": "Successful paragraph indexing",
+        "importance": "primary",
+        "source_refs": [
+          "src-index",
+          "src-doc-embedding"
+        ]
+      },
+      {
+        "id": "worker-vector",
+        "from": "worker",
+        "to": "vector",
+        "label": "Write index",
+        "kind": "vector-access",
+        "direction": "forward",
+        "condition": "high_quality paragraph indexing; embedding succeeds",
+        "importance": "primary",
+        "source_refs": [
+          "src-index",
+          "src-paragraph",
+          "src-vector-create"
+        ]
+      },
+      {
+        "id": "api-vector",
+        "from": "api",
+        "to": "vector",
+        "label": "Semantic search",
+        "kind": "vector-access",
+        "direction": "forward",
+        "condition": "Dataset configured and selected; internal high_quality semantic retrieval; filters permit results",
+        "importance": "primary",
+        "source_refs": [
+          "src-chat",
+          "src-retrieval",
+          "src-search",
+          "src-vector-query"
+        ]
+      },
+      {
+        "id": "worker-plugin",
+        "from": "worker",
+        "to": "plugin",
+        "label": "Embed documents",
+        "kind": "model-invocation",
+        "direction": "forward",
+        "condition": "Document embedding cache miss; model configured",
+        "importance": "primary",
+        "source_refs": [
+          "src-vector-create",
+          "src-doc-embedding",
+          "src-model",
+          "src-plugin-embedding",
+          "src-plugin-base"
+        ]
+      },
+      {
+        "id": "api-plugin",
+        "from": "api",
+        "to": "plugin",
+        "label": "Embedding / LLM",
+        "kind": "model-invocation",
+        "direction": "forward",
+        "condition": "Query embedding cache miss and/or LLM invocation; validated normal CHAT path",
+        "importance": "primary",
+        "source_refs": [
+          "src-chat",
+          "src-query-embedding",
+          "src-model",
+          "src-plugin-runtime",
+          "src-plugin-llm",
+          "src-plugin-embedding",
+          "src-plugin-base"
+        ]
+      }
+    ],
+    "flows": [
+      {
+        "id": "index-path",
+        "label": "Index dispatch and write",
+        "importance": "primary",
+        "repeat": "event-driven",
+        "relation_ids": [
+          "web-nginx",
+          "nginx-api",
+          "api-redis",
+          "redis-worker",
+          "worker-vector"
+        ]
+      },
+      {
+        "id": "retrieval-path",
+        "label": "Retrieval within chat",
+        "importance": "primary",
+        "repeat": "event-driven",
+        "relation_ids": [
+          "caller-nginx",
+          "nginx-api",
+          "api-vector"
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "src-web",
+        "type": "repository",
+        "title": "Web creates dataset documents",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "web/service/datasets.ts",
+          "line": 153,
+          "end_line": 170
+        }
+      },
+      {
+        "id": "src-nginx",
+        "type": "repository",
+        "title": "Nginx API routes",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "docker/nginx/conf.d/default.conf.template",
+          "line": 8,
+          "end_line": 45
+        }
+      },
+      {
+        "id": "src-deploy",
+        "type": "repository",
+        "title": "API and Worker are separate services",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "docker/docker-compose.yaml",
+          "line": 227,
+          "end_line": 352
+        }
+      },
+      {
+        "id": "src-plugin-deploy",
+        "type": "repository",
+        "title": "Plugin daemon service",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "docker/docker-compose.yaml",
+          "line": 573,
+          "end_line": 602
+        }
+      },
+      {
+        "id": "src-file",
+        "type": "repository",
+        "title": "File bytes and SQL metadata are separate",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/services/file_service.py",
+          "line": 37,
+          "end_line": 125
+        }
+      },
+      {
+        "id": "src-document",
+        "type": "repository",
+        "title": "Commit documents before submitting indexing",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/services/dataset_service.py",
+          "line": 2482,
+          "end_line": 2499
+        }
+      },
+      {
+        "id": "src-broker",
+        "type": "repository",
+        "title": "Celery broker configuration",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/extensions/ext_celery.py",
+          "line": 113,
+          "end_line": 132
+        }
+      },
+      {
+        "id": "src-broker-default",
+        "type": "repository",
+        "title": "Redis broker default",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "docker/.env.example",
+          "line": 115,
+          "end_line": 124
+        }
+      },
+      {
+        "id": "src-stores",
+        "type": "repository",
+        "title": "Storage and vector store defaults",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "docker/.env.example",
+          "line": 159,
+          "end_line": 164
+        }
+      },
+      {
+        "id": "src-postgres",
+        "type": "repository",
+        "title": "PostgreSQL deployment option",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "docker/docker-compose.yaml",
+          "line": 425,
+          "end_line": 437
+        }
+      },
+      {
+        "id": "src-task-proxy",
+        "type": "repository",
+        "title": "Direct Celery dispatch",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/services/document_indexing_proxy/batch_indexing_base.py",
+          "line": 37,
+          "end_line": 47
+        }
+      },
+      {
+        "id": "src-task-policy",
+        "type": "repository",
+        "title": "Self-hosted dispatch policy",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/services/document_indexing_proxy/base.py",
+          "line": 79,
+          "end_line": 111
+        }
+      },
+      {
+        "id": "src-task",
+        "type": "repository",
+        "title": "Indexing task entry points",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/tasks/document_indexing_task.py",
+          "line": 200,
+          "end_line": 267
+        }
+      },
+      {
+        "id": "src-task-run",
+        "type": "repository",
+        "title": "Task invokes IndexingRunner",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/tasks/document_indexing_task.py",
+          "line": 49,
+          "end_line": 125
+        }
+      },
+      {
+        "id": "src-index",
+        "type": "repository",
+        "title": "Extract, transform, persist segments, load index",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/indexing_runner.py",
+          "line": 81,
+          "end_line": 159
+        }
+      },
+      {
+        "id": "src-extract",
+        "type": "repository",
+        "title": "Download uploaded file for extraction",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/rag/extractor/extract_processor.py",
+          "line": 115,
+          "end_line": 137
+        }
+      },
+      {
+        "id": "src-paragraph",
+        "type": "repository",
+        "title": "High-quality paragraph vector indexing",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/rag/index_processor/processor/paragraph_index_processor.py",
+          "line": 134,
+          "end_line": 149
+        }
+      },
+      {
+        "id": "src-vector-create",
+        "type": "repository",
+        "title": "Embed documents then write vectors",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/rag/datasource/vdb/vector_factory.py",
+          "line": 168,
+          "end_line": 189
+        }
+      },
+      {
+        "id": "src-vector-query",
+        "type": "repository",
+        "title": "Embed query then search vectors",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/rag/datasource/vdb/vector_factory.py",
+          "line": 252,
+          "end_line": 259
+        }
+      },
+      {
+        "id": "src-doc-embedding",
+        "type": "repository",
+        "title": "Document embedding SQL cache",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/rag/embedding/cached_embedding.py",
+          "line": 29,
+          "end_line": 103
+        }
+      },
+      {
+        "id": "src-query-embedding",
+        "type": "repository",
+        "title": "Query embedding Redis cache",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/rag/embedding/cached_embedding.py",
+          "line": 194,
+          "end_line": 241
+        }
+      },
+      {
+        "id": "src-chat-api",
+        "type": "repository",
+        "title": "Generate chat and return response stream",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/controllers/service_api/app/completion.py",
+          "line": 388,
+          "end_line": 419
+        }
+      },
+      {
+        "id": "src-dispatch",
+        "type": "repository",
+        "title": "Basic CHAT dispatch",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/services/app_generate_service.py",
+          "line": 218,
+          "end_line": 231
+        }
+      },
+      {
+        "id": "src-thread",
+        "type": "repository",
+        "title": "API-local thread and ChatAppRunner",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/app/apps/chat/app_generator.py",
+          "line": 208,
+          "end_line": 272
+        }
+      },
+      {
+        "id": "src-chat",
+        "type": "repository",
+        "title": "Retrieve context then generate answer",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/app/apps/chat/app_runner.py",
+          "line": 160,
+          "end_line": 256
+        }
+      },
+      {
+        "id": "src-retrieval",
+        "type": "repository",
+        "title": "Selected internal dataset retrieval",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/rag/retrieval/dataset_retrieval.py",
+          "line": 660,
+          "end_line": 754
+        }
+      },
+      {
+        "id": "src-search",
+        "type": "repository",
+        "title": "Semantic vector retrieval",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/rag/datasource/retrieval_service.py",
+          "line": 303,
+          "end_line": 347
+        }
+      },
+      {
+        "id": "src-model",
+        "type": "repository",
+        "title": "LLM and embedding model invocation",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/model_manager.py",
+          "line": 181,
+          "end_line": 266
+        }
+      },
+      {
+        "id": "src-plugin-runtime",
+        "type": "repository",
+        "title": "Model runtime delegates to plugin client",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/plugin/impl/model_runtime.py",
+          "line": 309,
+          "end_line": 351
+        }
+      },
+      {
+        "id": "src-plugin-llm",
+        "type": "repository",
+        "title": "Plugin daemon LLM HTTP contract",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/plugin/impl/model.py",
+          "line": 170,
+          "end_line": 217
+        }
+      },
+      {
+        "id": "src-plugin-embedding",
+        "type": "repository",
+        "title": "Plugin daemon embedding HTTP contract",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/plugin/impl/model.py",
+          "line": 360,
+          "end_line": 399
+        }
+      },
+      {
+        "id": "src-plugin-base",
+        "type": "repository",
+        "title": "HTTP client points at plugin daemon",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/plugin/impl/base.py",
+          "line": 98,
+          "end_line": 165
+        }
+      }
+    ]
+  },
+  "presentation": {
+    "icon_system": "auto",
+    "style": "deep-tech",
+    "layout": "layered",
+    "motion": "showcase-v1"
+  },
+  "presentation_sources": {
+    "style": "explicit",
+    "layout": "model"
+  },
+  "reader": {
+    "enabled": true,
+    "views": [
+      {
+        "id": "ingest",
+        "label": "Document ingestion",
+        "relation_ids": [
+          "web-nginx",
+          "nginx-api",
+          "api-files",
+          "api-sql",
+          "api-redis",
+          "redis-worker",
+          "worker-files",
+          "worker-sql",
+          "worker-vector",
+          "worker-plugin"
+        ]
+      },
+      {
+        "id": "query",
+        "label": "Online chat",
+        "relation_ids": [
+          "caller-nginx",
+          "nginx-api",
+          "api-redis",
+          "api-vector",
+          "api-plugin"
+        ]
+      }
+    ]
+  }
+}

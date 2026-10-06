@@ -44,12 +44,15 @@ Run from the AniDiagram repository with Python 3.10+, Pillow, Playwright and its
 ```bash
 git clone --branch 1.17.0 --depth 1 https://github.com/langgenius/dify.git outputs/readme-showcase-v2/source/dify-1.17.0
 python3 examples/readme-showcase-v2/dify/build.py --source outputs/readme-showcase-v2/source/dify-1.17.0
+python3 examples/readme-showcase-v2/dify/publish.py
 python3 -m unittest discover -s examples/readme-showcase-v2/dify -p 'test_*.py'
 python3 -I scripts/run_anidiagram.py visual-check outputs/readme-showcase-v2/dify/dify-en.html --strict-labels --viewports 1440x1100,1920x1320 --outdir outputs/readme-showcase-v2/dify/visual-en
 python3 -m http.server 8769 --bind 127.0.0.1 --directory outputs/readme-showcase-v2/dify
 ```
 
 Skip cloning if the checkout exists. The builder rejects a dirty source tree or a different full SHA. Open `index.en.html` for English or `index.html` for Chinese.
+
+The builder produces both Minimal Light and Deep Tech. Open `index.deep-tech.en.html` or `index.deep-tech.html` for the dark variant. Language switching preserves the style; style switching preserves the language. Both themes share the same semantic plan, facts, source references, node positions and routes. Only presentation and contrast-aware edge colors change. Each theme has separate rendered artifacts, motion previews and delivery receipts; the gallery reuses its delivered static SVG as the fallback without editing the case bundle.
 
 Both languages are derived from the same canonical topology. Stable IDs, endpoints, direction, conditions, grouping, path selection and source references remain identical; English copy is keyed by IDs in `english.py`. Each language has its own fact report and delivery receipts; a review of one artifact is not silently reused for the other.
 

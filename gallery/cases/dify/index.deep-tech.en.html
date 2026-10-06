@@ -1,30 +1,30 @@
 <!doctype html>
-<html lang="en">
+<html data-style="deep-tech" lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dify — From documents to answers · AniDiagram case study draft</title>
+<title>Dify — From documents to answers · AniDiagram case study draft · Deep Tech</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="showcase.css">
-<link rel="alternate" hreflang="zh-CN" href="index.html">
+<link rel="alternate" hreflang="zh-CN" href="index.deep-tech.html">
 <script src="preview-motion.js" defer></script>
 <main>
-  <nav class="languages" aria-label="Language"><a href="index.html" lang="zh-CN" hreflang="zh-CN">中文</a><span aria-hidden="true">/</span><a href="index.en.html" lang="en" hreflang="en" aria-current="page">English</a></nav>
+  <nav class="languages" aria-label="Language"><a href="index.deep-tech.html" lang="zh-CN" hreflang="zh-CN">中文</a><span aria-hidden="true">/</span><a href="index.deep-tech.en.html" lang="en" hreflang="en" aria-current="page">English</a></nav>
   <p class="eyebrow">ANIDIAGRAM / SOURCE-BACKED CASE STUDY &nbsp; <span>SOURCE-READING DRAFT</span></p>
   <h1>From documents to answers.<br>How do Dify’s three layers work?</h1>
   <p class="intro">Uploading a file does not finish a knowledge index. Online chat does not always go through a task queue. Follow both paths across real service and storage boundaries.</p>
   <nav aria-label="Case study links">
-    <a href="dify-en.html">Explore the diagram →</a>
+    <a href="dify-deep-tech-en.html">Explore the diagram →</a>
     <a href="#scope">Scope and boundaries</a>
     <a href="evidence.en.md">Source evidence</a>
   </nav>
-  <div class="legend" aria-label="Legend"><span style="--ink:#2563eb">Document ingestion</span><span style="--ink:#0f766e">Online chat</span><span style="--ink:#64748b">Shared interfaces</span></div>
-  <!-- STYLE_SWITCH -->
+  <div class="legend" aria-label="Legend"><span style="--ink:#60a5fa">Document ingestion</span><span style="--ink:#34d399">Online chat</span><span style="--ink:#94a3b8">Shared interfaces</span></div>
+  <nav class="styles" aria-label="Visual style"><a href="index.en.html">Minimal Light</a> <a href="index.deep-tech.en.html" aria-current="page">Deep Tech</a></nav><p class="style-note">Same architecture and source evidence; presentation only.</p>
   <figure>
-    <a href="dify-en.html" aria-label="Zoom into Dify’s architecture and focus on ingestion or online chat">
-      <img src="dify-en-static.svg" data-motion-src="dify-en-motion.webp" width="900" height="1130" alt="Dify architecture in three logical layers. Access: Web console, Nginx and API client. Execution: API service, indexing Worker and Plugin Daemon. Data: file store, Redis, SQL and vector database. Indexing tasks reach the Worker through Redis; basic Chat performs retrieval and model calls inside the API process.">
+    <a href="dify-deep-tech-en.html" aria-label="Zoom into Dify’s architecture and focus on ingestion or online chat">
+      <img src="dify-deep-tech-en-static.svg" data-motion-src="dify-deep-tech-en-motion.webp" width="900" height="1130" alt="Dify architecture in three logical layers. Access: Web console, Nginx and API client. Execution: API service, indexing Worker and Plugin Daemon. Data: file store, Redis, SQL and vector database. Indexing tasks reach the Worker through Redis; basic Chat performs retrieval and model calls inside the API process.">
     </a>
     <figcaption>10 nodes · 13 selected relationships · Three logical layers, not three deployed services. Switch between “Document ingestion” and “Online chat” in the interactive viewer. On small screens, open it and zoom in. Arrows show calls or task delivery, not a complete execution sequence.</figcaption>
-    <div class="preview-controls"><button id="preview-motion" type="button" hidden aria-pressed="false" data-play-label="Play icon motion" data-pause-label="Pause icon motion">Play icon motion</button><a href="dify-en-static.svg">Static SVG</a></div>
+    <div class="preview-controls"><button id="preview-motion" type="button" hidden aria-pressed="false" data-play-label="Play icon motion" data-pause-label="Pause icon motion">Play icon motion</button><a href="dify-deep-tech-en-static.svg">Static SVG</a></div>
   </figure>
   <div class="insight">
     <p><strong>Indexing is queued. The chat path shown here is not.</strong></p>
@@ -53,7 +53,7 @@ Which process owns the Chat worker thread? What do files, SQL, Redis and
 the vector database store? How do embedding cache hits change model calls?
 Distinguish modules from deployed services. Do not route all chat through Celery.
 Give pinned source references for each key edge. Review semantics before visuals.</pre>
-    <p><a href="evidence.en.md">Source index and build commands</a> · <a href="accuracy.en.json">Fact-check report</a> · <a href="dify-en.plan.json">Semantic Plan</a></p>
+    <p><a href="evidence.en.md">Source index and build commands</a> · <a href="accuracy.deep-tech.en.json">Fact-check report</a> · <a href="dify-deep-tech-en.plan.json">Semantic Plan</a></p>
   </details>
 </main>
 <footer>An AniDiagram source-reading case study, not an official Dify architecture diagram. The diagram is rendered by AniDiagram; motion indicates direction, not real request duration.</footer>

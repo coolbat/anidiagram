@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import unittest
 from PIL import Image
+from build import STYLES, page_source, variant_stem
 
 HERE = Path(__file__).resolve().parent
 PUBLIC = HERE.parents[2] / "gallery/cases/dify"
@@ -11,14 +12,14 @@ PUBLIC = HERE.parents[2] / "gallery/cases/dify"
 
 class DifyMotionTests(unittest.TestCase):
     def test_case_pages_expose_motion_and_static_controls(self):
-        for name in ("index.html", "index.en.html"):
-            html = (HERE / name).read_text()
+        for style, language in [(s, l) for s in STYLES for l in ("zh-CN", "en")]:
+            html = page_source(language, style)
             self.assertIn('id="preview-motion"', html)
             self.assertIn('data-motion-src=', html)
             self.assertIn('src="preview-motion.js"', html)
 
     def test_each_encoded_preview_animates_all_ten_icon_regions(self):
-        for stem in ("dify", "dify-en"):
+        for stem in (variant_stem(l, s) for s in STYLES for l in ("zh-CN", "en")):
             receipt = json.loads((PUBLIC / f"{stem}-motion.json").read_text())
             image_path = PUBLIC / f"{stem}-motion.webp"
             self.assertEqual(receipt["html_sha256"], hashlib.sha256((PUBLIC / f"{stem}.html").read_bytes()).hexdigest())

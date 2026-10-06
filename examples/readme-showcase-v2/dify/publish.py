@@ -8,14 +8,15 @@ import hashlib
 import json
 from pathlib import Path
 
-from build import HERE, REPOSITORY, REVISION, ROOT
+from build import HERE, REPOSITORY, REVISION, ROOT, STYLES, variant_stem, page_name
 
-SHARED = {"style.json", "index.html", "index.en.html", "evidence.md", "evidence.en.md", "showcase.css", "preview-motion.js"}
-EXPECTED = SHARED | {f"{stem}{suffix}" for stem in ("dify", "dify-en") for suffix in (
+PAGE_FILES = {page_name(language, style) for style in STYLES for language in ("zh-CN", "en")}
+SHARED = {"style.json", "style.deep-tech.json", "evidence.md", "evidence.en.md", "showcase.css", "preview-motion.js"} | PAGE_FILES
+EXPECTED = SHARED | {f"{variant_stem(language, style)}{suffix}" for style in STYLES for language in ("zh-CN", "en") for suffix in (
     ".plan.json", ".diagram.json", "-static.diagram.json", ".svg", ".html", ".quality.json", ".delivery.json",
     "-static.svg", "-static.html", "-static.quality.json", "-static.delivery.json", "-motion.webp", "-motion.json",
-)} | {"facts.json", "facts.en.json", "accuracy.json", "accuracy.en.json"}
-SOURCE_FILES = {"build.py", "english.py", "publish.py", "capture_motion.mjs"} | (SHARED - {"style.json"})
+)} | {"facts.json", "facts.en.json", "accuracy.json", "accuracy.en.json", "accuracy.deep-tech.json", "accuracy.deep-tech.en.json"}
+SOURCE_FILES = {"build.py", "english.py", "publish.py", "capture_motion.mjs", "index.html", "index.en.html", "evidence.md", "evidence.en.md", "showcase.css", "preview-motion.js"}
 
 
 def digest(data: bytes) -> str:

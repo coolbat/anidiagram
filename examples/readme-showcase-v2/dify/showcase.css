@@ -25,3 +25,16 @@
   .preview-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 12px; font-size: 13px; }
   .preview-controls button { color: inherit; background: transparent; border: 1px solid #8c959f; border-radius: 6px; padding: 8px 12px; font: inherit; cursor: pointer; }
   button:focus-visible { outline: 3px solid #0969da; outline-offset: 4px; }
+  .styles { gap: 10px; margin: 20px 0 8px; }
+  .styles a { border: 1px solid #8c959f; border-radius: 6px; padding: 8px 12px; text-decoration: none; }
+  .styles [aria-current="page"] { color: inherit; font-weight: 600; border-color: currentColor; }
+  .style-note { margin: 0 0 12px; font-size: 13px; color: #526176; }
+  :root[data-style="deep-tech"] { color-scheme: dark; color: #e6edf3; background: #050816; }
+  [data-style="deep-tech"] main { background: #0b1224; border-color: #263653; }
+  [data-style="deep-tech"] :is(.intro, figcaption, .status, .eyebrow, footer, .style-note) { color: #b5c4d9; }
+  [data-style="deep-tech"] a { color: #67e8f9; }
+  [data-style="deep-tech"] .eyebrow span { color: #fbbf24; }
+  [data-style="deep-tech"] pre { background: #111c33; }
+  [data-style="deep-tech"] .status { border-color: #263653; }
+  [data-style="deep-tech"] .insight { border-color: #34d399; }
+  @media (prefers-color-scheme: dark) { .style-note { color: #a5afbd; } }

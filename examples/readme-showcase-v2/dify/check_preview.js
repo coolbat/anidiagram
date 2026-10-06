@@ -2,14 +2,17 @@
 async (page) => {
   const base = new URL('.', page.url()).href;
   const out = 'outputs/readme-showcase-v2/dify/';
-  const english = /\/(?:index\.en|dify-en)\./.test(page.url());
+  const english = /(?:\.en|-en)\.html$/.test(new URL(page.url()).pathname);
+  const deepTech = page.url().includes('deep-tech');
+  const theme = deepTech ? '.deep-tech' : '';
   const language = english ? 'en' : 'zh-CN';
-  const index = english ? 'index.en.html' : 'index.html';
-  const otherIndex = english ? 'index.html' : 'index.en.html';
-  const stem = english ? 'dify-en' : 'dify';
-  const prefix = english ? 'en-' : '';
+  const index = `index${theme}${english ? '.en' : ''}.html`;
+  const otherIndex = `index${theme}${english ? '' : '.en'}.html`;
+  const otherStyleIndex = `index${deepTech ? '' : '.deep-tech'}${english ? '.en' : ''}.html`;
+  const stem = `dify${deepTech ? '-deep-tech' : ''}${english ? '-en' : ''}`;
+  const prefix = `${deepTech ? 'deep-tech-' : ''}${english ? 'en-' : ''}`;
   const evidence = english ? 'evidence.en.md' : 'evidence.md';
-  const accuracy = english ? 'accuracy.en.json' : 'accuracy.json';
+  const accuracy = `accuracy${theme}${english ? '.en' : ''}.json`;
   const errors = [];
   const onError = error => errors.push(String(error));
   page.on('pageerror', onError);
@@ -105,6 +108,11 @@ async (page) => {
   if (otherLanguage !== (english ? 'zh-CN' : 'en')) throw new Error('Language switch failed');
   await page.locator(`.languages a[href="${index}"]`).click();
   if (page.url() !== base + index) throw new Error('Language switch did not return');
+  await page.locator(`.styles a[href="${otherStyleIndex}"]`).click();
+  if (page.url() !== base + otherStyleIndex || await page.locator('html').getAttribute('lang') !== language) throw new Error('Style switch lost language');
+  await page.locator(`.styles a[href="${index}"]`).click();
+  if (page.url() !== base + index) throw new Error('Style switch did not return');
+  if ((await page.locator('html').getAttribute('data-style') === 'deep-tech') !== deepTech) throw new Error('Wrong theme');
   await page.getByRole('link', {name: english ? 'Explore the diagram →' : '打开交互图 →', exact: true}).click();
   const interactiveNavigates = page.url() === base + stem + '.html';
   if (!interactiveNavigates) throw new Error('Interactive link failed');
@@ -126,7 +134,7 @@ async (page) => {
   await page.locator('figure img').screenshot({path: out + stem + '-poster.png'});
   page.off('pageerror', onError);
   if (errors.length) throw new Error('Browser errors: ' + errors.join('; '));
-  return {passed: true, language, languageSwitch: true, motionControls: true, reducedMotionFallback: true, artifact_sha256: hashes, captures, localLinks, typography, staticState,
+  return {passed: true, language, style: deepTech ? 'deep-tech' : 'minimal-light', styleSwitch: true, languageSwitch: true, motionControls: true, reducedMotionFallback: true, artifact_sha256: hashes, captures, localLinks, typography, staticState,
           interactiveNavigates, queryView, ingestView, queryWorkerOpacity, ingestWorkerOpacity, pageErrors: errors, semanticReview: 'pending',
           scope: 'Local README-width mock, not the live GitHub page. Mobile diagram is overview-only; full labels are available in the interactive viewer.'};
 }

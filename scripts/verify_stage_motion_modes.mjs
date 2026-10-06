@@ -76,7 +76,7 @@ async function main() {
     }
   }
   const { chromium } = loadPlaywright();
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({ headless: true, ...(process.env.ANIDIAGRAM_BROWSER_CHANNEL ? {channel: process.env.ANIDIAGRAM_BROWSER_CHANNEL} : {}) });
   try {
     const page = await browser.newPage();
     await page.goto(pathToFileURL(htmlPath).href, { waitUntil: "load" });

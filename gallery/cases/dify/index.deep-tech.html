@@ -1,30 +1,30 @@
 <!doctype html>
-<html lang="zh-CN">
+<html data-style="deep-tech" lang="zh-CN">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dify — 从文档到答案 · AniDiagram 案例试稿</title>
+<title>Dify — 从文档到答案 · AniDiagram 案例试稿 · Deep Tech</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="showcase.css">
-<link rel="alternate" hreflang="en" href="index.en.html">
+<link rel="alternate" hreflang="en" href="index.deep-tech.en.html">
 <script src="preview-motion.js" defer></script>
 <main>
-  <nav class="languages" aria-label="语言切换"><a href="index.html" lang="zh-CN" hreflang="zh-CN" aria-current="page">中文</a><span aria-hidden="true">/</span><a href="index.en.html" lang="en" hreflang="en">English</a></nav>
+  <nav class="languages" aria-label="语言切换"><a href="index.deep-tech.html" lang="zh-CN" hreflang="zh-CN" aria-current="page">中文</a><span aria-hidden="true">/</span><a href="index.deep-tech.en.html" lang="en" hreflang="en">English</a></nav>
   <p class="eyebrow">ANIDIAGRAM / SOURCE-BACKED CASE STUDY &nbsp; <span>源码解读稿 · 待独立复核</span></p>
   <h1>从文档到答案，<br>Dify 的三层如何协作？</h1>
   <p class="intro">上传文件不等于完成知识库索引，在线问答也不一定经过任务队列。<br>把两条路径放回真实服务与存储边界，看看每一步由谁负责。</p>
   <nav aria-label="案例入口">
-    <a href="dify.html">打开交互图 →</a>
+    <a href="dify-deep-tech.html">打开交互图 →</a>
     <a href="#scope">查看范围与边界</a>
     <a href="evidence.md">源码证据</a>
   </nav>
-  <div class="legend" aria-label="图例"><span style="--ink:#2563eb">文档入库</span><span style="--ink:#0f766e">在线问答</span><span style="--ink:#64748b">共享接口</span></div>
-  <!-- STYLE_SWITCH -->
+  <div class="legend" aria-label="图例"><span style="--ink:#60a5fa">文档入库</span><span style="--ink:#34d399">在线问答</span><span style="--ink:#94a3b8">共享接口</span></div>
+  <nav class="styles" aria-label="视觉风格"><a href="index.html">Minimal Light</a> <a href="index.deep-tech.html" aria-current="page">Deep Tech</a></nav><p class="style-note">同一份架构与源码证据，仅改变视觉表现。</p>
   <figure>
-    <a href="dify.html" aria-label="放大 Dify 架构图，按文档入库或在线问答聚焦关系">
-      <img src="dify-static.svg" data-motion-src="dify-motion.webp" width="900" height="1130" alt="Dify 三层架构。接入层为 Web 控制台、Nginx 和 API 调用方；执行层为 API 服务、索引 Worker 和 Plugin Daemon；数据层为文件存储、Redis、SQL 数据库和向量库。索引经 Redis 任务队列交给 Worker；基础 Chat 在 API 内处理检索和模型调用。">
+    <a href="dify-deep-tech.html" aria-label="放大 Dify 架构图，按文档入库或在线问答聚焦关系">
+      <img src="dify-deep-tech-static.svg" data-motion-src="dify-deep-tech-motion.webp" width="900" height="1130" alt="Dify 三层架构。接入层为 Web 控制台、Nginx 和 API 调用方；执行层为 API 服务、索引 Worker 和 Plugin Daemon；数据层为文件存储、Redis、SQL 数据库和向量库。索引经 Redis 任务队列交给 Worker；基础 Chat 在 API 内处理检索和模型调用。">
     </a>
     <figcaption>10 个节点 · 13 条选定关系 · 三个逻辑层，不是三个部署服务。交互图可切换「文档入库 / 在线问答」；窄屏请打开后放大。箭头表示调用或任务交付，非完整时序。</figcaption>
-    <div class="preview-controls"><button id="preview-motion" type="button" hidden aria-pressed="false" data-play-label="播放图标动效" data-pause-label="暂停图标动效">播放图标动效</button><a href="dify-static.svg">静态 SVG</a></div>
+    <div class="preview-controls"><button id="preview-motion" type="button" hidden aria-pressed="false" data-play-label="播放图标动效" data-pause-label="暂停图标动效">播放图标动效</button><a href="dify-deep-tech-static.svg">静态 SVG</a></div>
   </figure>
   <div class="insight">
     <p><strong>异步的是文档索引，不是这里的全部问答。</strong></p>
@@ -52,7 +52,7 @@
 文件、SQL、Redis、向量库分别存什么？Embedding 缓存命中怎样改变模型调用？
 分清模块与独立服务；不要把所有问答都画进 Celery 队列。
 每条关键边给出固定 SHA 的源码依据。先审计语义，再评价视觉效果。</pre>
-    <p><a href="evidence.md">完整源码索引与构建命令</a> · <a href="accuracy.json">事实检查报告</a> · <a href="dify.plan.json">语义 Plan</a></p>
+    <p><a href="evidence.md">完整源码索引与构建命令</a> · <a href="accuracy.deep-tech.json">事实检查报告</a> · <a href="dify-deep-tech.plan.json">语义 Plan</a></p>
   </details>
 </main>
 <footer>这是 AniDiagram 的源码解读案例，不是 Dify 官方架构图。图由 AniDiagram 实际渲染；动效表示流向，不表示真实请求耗时。</footer>

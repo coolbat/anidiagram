@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from build import HERE, REVISION, ROOT, make_facts, make_plan
+from build import HERE, REVISION, ROOT, STYLES, make_facts, make_plan, page_name, page_source, variant_stem
 from publish import EXPECTED, SOURCE_FILES, digest, encoded, prepare
 
 PUBLIC = ROOT / "gallery/cases/dify"
@@ -33,11 +33,14 @@ class DifyPublicationTests(unittest.TestCase):
                 self.assertNotRegex(data.decode(), r"/Users/|/home/")
 
     def test_both_languages_match_builder_and_keep_unresolved_facts(self):
-        for stem, suffix, language in [("dify", "", "zh-CN"), ("dify-en", ".en", "en")]:
+        for style, language in [(s, l) for s in STYLES for l in ("zh-CN", "en")]:
+            stem = variant_stem(language, style)
+            suffix = ".en" if language == "en" else ""
+            style_suffix = ".deep-tech" if style == "deep-tech" else ""
             plan = json.loads((PUBLIC / f"{stem}.plan.json").read_text())
-            self.assertEqual(plan, make_plan(language))
+            self.assertEqual(plan, make_plan(language, style))
             self.assertEqual(json.loads((PUBLIC / f"facts{suffix}.json").read_text()), make_facts(plan))
-            accuracy = json.loads((PUBLIC / f"accuracy{suffix}.json").read_text())
+            accuracy = json.loads((PUBLIC / f"accuracy{style_suffix}{suffix}.json").read_text())
             self.assertFalse(accuracy["ready"])
             self.assertEqual(sum(c["status"] == "pending" for c in accuracy["claims"]), 19)
             self.assertEqual(sum(c["status"] == "supported" for c in accuracy["claims"]), 4)
@@ -53,9 +56,14 @@ class DifyPublicationTests(unittest.TestCase):
                     self.assertEqual(item["bytes"], len(data), name)
 
     def test_page_assets_and_local_links_exist(self):
-        for name in ("index.html", "index.en.html"):
+        for style, language in [(s, l) for s in STYLES for l in ("zh-CN", "en")]:
+            name = page_name(language, style)
             text = (PUBLIC / name).read_text()
-            self.assertEqual(text, (HERE / name).read_text())
+            self.assertEqual(text, page_source(language, style))
+            other_language = "zh-CN" if language == "en" else "en"
+            self.assertIn(f'href="{page_name(other_language, style)}"', text)
+            self.assertIn(f'src="{variant_stem(language, style)}-static.svg"', text)
+            self.assertNotIn("<!-- STYLE_SWITCH -->", text)
             for href in re.findall(r'(?:href|src)="([^"]+)"', text):
                 if not href.startswith(("#", "https:", "data:")):
                     self.assertIn(href, EXPECTED)

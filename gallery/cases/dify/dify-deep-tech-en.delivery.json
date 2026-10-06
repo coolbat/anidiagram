@@ -1,0 +1,695 @@
+{
+  "schema": {
+    "name": "AniDiagramDeliveryReceipt",
+    "version": "0.1"
+  },
+  "status": "committed",
+  "input": {
+    "source": {
+      "kind": "spec",
+      "sha256": "79e1242e54d97bf4a289592d2b599b9f4f68061d15cc5d82a49ae02a28089878",
+      "bytes": 31916,
+      "path": "dify-deep-tech-en.diagram.json"
+    },
+    "specification": {
+      "schema": "DiagramScript",
+      "version": "0.4",
+      "sha256": "3645c85565887b7e42c081c966cdf91a4a9760757d94450b15666fc7af3fe691",
+      "bytes": 20380
+    },
+    "style": {
+      "name": "deep-tech",
+      "sha256": "bc5b728ded3239522833cc0f1a7b20dc2395d7562be12b826d136ec1a3e853a0",
+      "bytes": 1305
+    }
+  },
+  "request": {
+    "basename": "dify-deep-tech-en",
+    "formats": [
+      "svg",
+      "html",
+      "quality"
+    ],
+    "render_options": {
+      "html_runtime": "gsap",
+      "runtime_dependency": "inline",
+      "runtime_mode": "ambient",
+      "export_renderer": "python",
+      "export_scale": 2.0,
+      "export_fps": 24,
+      "export_frames": null,
+      "export_quality": 80,
+      "export_loop_blend_frames": 0,
+      "diagram_locale": "auto",
+      "viewer_locale": "auto",
+      "runtime_source": {
+        "kind": "runtime-dependency",
+        "sha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb",
+        "bytes": 72927,
+        "path": "../../../node_modules/gsap/dist/gsap.min.js"
+      },
+      "readable_labels": true
+    }
+  },
+  "validation": {
+    "quality": {
+      "ok": true,
+      "score": 100,
+      "errors": 0,
+      "warnings": 0,
+      "issues": 0,
+      "advisories": 0
+    }
+  },
+  "artifacts": {
+    "svg": {
+      "format": "svg",
+      "path": "dify-deep-tech-en.svg",
+      "sha256": "e0af2bb58ec52f2341217dd899c243c706efecd7e92af50fc09f1de208d0bcca",
+      "bytes": 55948
+    },
+    "html": {
+      "format": "html",
+      "path": "dify-deep-tech-en.html",
+      "sha256": "8cfc0f0812e25366687207aaa62ace0e76e60502e25a36ee9ede80ad05bae89f",
+      "bytes": 363816
+    },
+    "quality": {
+      "format": "quality",
+      "path": "dify-deep-tech-en.quality.json",
+      "sha256": "a23e831b20162c087217e67f911c0aa297e98f402d7976687be632d23d8ccf30",
+      "bytes": 140
+    }
+  },
+  "evidence": {
+    "schema": {
+      "name": "AniDiagramEvidence",
+      "version": "0.1"
+    },
+    "status": "references-verified",
+    "sources": [
+      {
+        "id": "src-broker",
+        "title": "Celery broker configuration",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/extensions/ext_celery.py",
+          "line": 113,
+          "end_line": 132
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/extensions/ext_celery.py#L113-L132",
+        "blob": "724fb4774cc11c373a949b4399aacc5aa7e33848",
+        "sha256": "e1bfce9a6f06061ae5a84ee9fa769d2221b4fb486d98ff43920118dcd73537f7",
+        "bytes": 13033
+      },
+      {
+        "id": "src-broker-default",
+        "title": "Redis broker default",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "docker/.env.example",
+          "line": 115,
+          "end_line": 124
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/docker/.env.example#L115-L124",
+        "blob": "2020a70017e09e25918ae90ab3bb213a3a9b17fc",
+        "sha256": "364289f13b59a8483de65a83ef86baeaa54ecf75d7ae79adab33e6574d79b152",
+        "bytes": 9946
+      },
+      {
+        "id": "src-chat",
+        "title": "Retrieve context then generate answer",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/app/apps/chat/app_runner.py",
+          "line": 160,
+          "end_line": 256
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/core/app/apps/chat/app_runner.py#L160-L256",
+        "blob": "65d60748d1e5e6c84e86c0a9b79c03dbcac97d84",
+        "sha256": "909e66563e57114b9e37844848a505f1575bbdded6178c98446c9f33ff0369b1",
+        "bytes": 10127
+      },
+      {
+        "id": "src-chat-api",
+        "title": "Generate chat and return response stream",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/controllers/service_api/app/completion.py",
+          "line": 388,
+          "end_line": 419
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/controllers/service_api/app/completion.py#L388-L419",
+        "blob": "c16118f7799d526ef67a9368e7c7f1845fe42c8f",
+        "sha256": "a411baf66b34a0f78848a6e0c7187c3d42b7236d5658d26ed814ffa9dcbd6d81",
+        "bytes": 21375
+      },
+      {
+        "id": "src-deploy",
+        "title": "API and Worker are separate services",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "docker/docker-compose.yaml",
+          "line": 227,
+          "end_line": 352
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/docker/docker-compose.yaml#L227-L352",
+        "blob": "aea50d76f2a83dccad25e867215fc29ba4788d78",
+        "sha256": "0a40c493ec17d24d4c200e2e54f761ee34d0fa221be33bcc73930c9086fe3124",
+        "bytes": 47678
+      },
+      {
+        "id": "src-dispatch",
+        "title": "Basic CHAT dispatch",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/services/app_generate_service.py",
+          "line": 218,
+          "end_line": 231
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/services/app_generate_service.py#L218-L231",
+        "blob": "4b271c6e94e987dce02163d72c74f4c9f0d00162",
+        "sha256": "d207a27c82aff76df1d11b631873dbd55f9f8bc26a71bb3504446d90b11df8ec",
+        "bytes": 20903
+      },
+      {
+        "id": "src-doc-embedding",
+        "title": "Document embedding SQL cache",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/rag/embedding/cached_embedding.py",
+          "line": 29,
+          "end_line": 103
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/core/rag/embedding/cached_embedding.py#L29-L103",
+        "blob": "cbf37fc7544da8aa503a4161613da224d06dbb01",
+        "sha256": "997d745b43dbbf9dce731143337f1443ed127a56a6d01c793d64936f36b8ad34",
+        "bytes": 13783
+      },
+      {
+        "id": "src-document",
+        "title": "Commit documents before submitting indexing",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/services/dataset_service.py",
+          "line": 2482,
+          "end_line": 2499
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/services/dataset_service.py#L2482-L2499",
+        "blob": "004e927b6756665b82654602b1d07d3c7629344d",
+        "sha256": "a62ca51af062793cacc6572ed9c3f2c1e38ad0a59550ae29d180ea4b4545abc9",
+        "bytes": 205025
+      },
+      {
+        "id": "src-extract",
+        "title": "Download uploaded file for extraction",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/rag/extractor/extract_processor.py",
+          "line": 115,
+          "end_line": 137
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/core/rag/extractor/extract_processor.py#L115-L137",
+        "blob": "0a008b5f31ef66241758f6abd67f2ff3d6541aab",
+        "sha256": "f7d67b599cd99e08ca977e04bd30d701d32cc8a06cc1021c5f81a9ae1e08ad64",
+        "bytes": 14392
+      },
+      {
+        "id": "src-file",
+        "title": "File bytes and SQL metadata are separate",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/services/file_service.py",
+          "line": 37,
+          "end_line": 125
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/services/file_service.py#L37-L125",
+        "blob": "4497639eb25c6b3c91aba0a0875772369a6c2ff7",
+        "sha256": "0e620314d757d1ae08388f92210ed675807af3bc51e2820f95de321a28bf6aea",
+        "bytes": 16218
+      },
+      {
+        "id": "src-index",
+        "title": "Extract, transform, persist segments, load index",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/indexing_runner.py",
+          "line": 81,
+          "end_line": 159
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/core/indexing_runner.py#L81-L159",
+        "blob": "02b9255cfc608d0ecabfbac4c21389f22bc26963",
+        "sha256": "461f4f5ec25dc2850b5116e5981859bc55afb8cac33a18c0cf5c99db6ede725a",
+        "bytes": 41285
+      },
+      {
+        "id": "src-model",
+        "title": "LLM and embedding model invocation",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/model_manager.py",
+          "line": 181,
+          "end_line": 266
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/core/model_manager.py#L181-L266",
+        "blob": "4d197146a1d52436156b7d0e53e638b6ec2961e7",
+        "sha256": "9d5359e7b9bb81a58d6c9097582d03e5d1c09a0961898b538766110ba8da5d81",
+        "bytes": 45484
+      },
+      {
+        "id": "src-nginx",
+        "title": "Nginx API routes",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "docker/nginx/conf.d/default.conf.template",
+          "line": 8,
+          "end_line": 45
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/docker/nginx/conf.d/default.conf.template#L8-L45",
+        "blob": "feee1cb7e67b2955f26824ae7613d32453bb30f6",
+        "sha256": "3861d4e5f77eeb9ca83e7495707ff2af570f65999a62e7aa1af1380056ec8fd8",
+        "bytes": 2066
+      },
+      {
+        "id": "src-paragraph",
+        "title": "High-quality paragraph vector indexing",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/rag/index_processor/processor/paragraph_index_processor.py",
+          "line": 134,
+          "end_line": 149
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/core/rag/index_processor/processor/paragraph_index_processor.py#L134-L149",
+        "blob": "d0b322db70c278828371d0026c0a14c8dc72f901",
+        "sha256": "24e151c7cc303d7647eae423c023c62bb5862ae7de25b88e6fa3d041cc22ad4c",
+        "bytes": 28415
+      },
+      {
+        "id": "src-plugin-base",
+        "title": "HTTP client points at plugin daemon",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/plugin/impl/base.py",
+          "line": 98,
+          "end_line": 165
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/core/plugin/impl/base.py#L98-L165",
+        "blob": "385ab67e34f3004b899d7447d92465a19797ef62",
+        "sha256": "3de799476d75e09f6acedc9fc0e59954d28f0ed50dbb4d817894ed64d6682878",
+        "bytes": 18787
+      },
+      {
+        "id": "src-plugin-deploy",
+        "title": "Plugin daemon service",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "docker/docker-compose.yaml",
+          "line": 573,
+          "end_line": 602
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/docker/docker-compose.yaml#L573-L602",
+        "blob": "aea50d76f2a83dccad25e867215fc29ba4788d78",
+        "sha256": "0a40c493ec17d24d4c200e2e54f761ee34d0fa221be33bcc73930c9086fe3124",
+        "bytes": 47678
+      },
+      {
+        "id": "src-plugin-embedding",
+        "title": "Plugin daemon embedding HTTP contract",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/plugin/impl/model.py",
+          "line": 360,
+          "end_line": 399
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/core/plugin/impl/model.py#L360-L399",
+        "blob": "ebdb4667f7464db6e272aa164cd6c75e3bd987f7",
+        "sha256": "be6f53a409a1154f54775667f112e3f59da33661700cd595fc81825ec6261c16",
+        "bytes": 24482
+      },
+      {
+        "id": "src-plugin-llm",
+        "title": "Plugin daemon LLM HTTP contract",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/plugin/impl/model.py",
+          "line": 170,
+          "end_line": 217
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/core/plugin/impl/model.py#L170-L217",
+        "blob": "ebdb4667f7464db6e272aa164cd6c75e3bd987f7",
+        "sha256": "be6f53a409a1154f54775667f112e3f59da33661700cd595fc81825ec6261c16",
+        "bytes": 24482
+      },
+      {
+        "id": "src-plugin-runtime",
+        "title": "Model runtime delegates to plugin client",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/plugin/impl/model_runtime.py",
+          "line": 309,
+          "end_line": 351
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/core/plugin/impl/model_runtime.py#L309-L351",
+        "blob": "2957906bd1dcc09a7dc584415d8792c50e917cbd",
+        "sha256": "32810fdfbd5caafb25af8f4fd2e13aeb1c2b7a8ce1113616883f53ebd61607e8",
+        "bytes": 25486
+      },
+      {
+        "id": "src-postgres",
+        "title": "PostgreSQL deployment option",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "docker/docker-compose.yaml",
+          "line": 425,
+          "end_line": 437
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/docker/docker-compose.yaml#L425-L437",
+        "blob": "aea50d76f2a83dccad25e867215fc29ba4788d78",
+        "sha256": "0a40c493ec17d24d4c200e2e54f761ee34d0fa221be33bcc73930c9086fe3124",
+        "bytes": 47678
+      },
+      {
+        "id": "src-query-embedding",
+        "title": "Query embedding Redis cache",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/rag/embedding/cached_embedding.py",
+          "line": 194,
+          "end_line": 241
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/core/rag/embedding/cached_embedding.py#L194-L241",
+        "blob": "cbf37fc7544da8aa503a4161613da224d06dbb01",
+        "sha256": "997d745b43dbbf9dce731143337f1443ed127a56a6d01c793d64936f36b8ad34",
+        "bytes": 13783
+      },
+      {
+        "id": "src-retrieval",
+        "title": "Selected internal dataset retrieval",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/rag/retrieval/dataset_retrieval.py",
+          "line": 660,
+          "end_line": 754
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/core/rag/retrieval/dataset_retrieval.py#L660-L754",
+        "blob": "a9a3cbb16b936cc50954fb2ddf646c19d3f6cbee",
+        "sha256": "cb3304cecf741e0e6ab4eb0c90acbc28c9abd7e0b266f84f5ae1e1cee977a8ef",
+        "bytes": 95139
+      },
+      {
+        "id": "src-search",
+        "title": "Semantic vector retrieval",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/rag/datasource/retrieval_service.py",
+          "line": 303,
+          "end_line": 347
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/core/rag/datasource/retrieval_service.py#L303-L347",
+        "blob": "15854a44c477abf18d0cd291fbcf7c14ba451942",
+        "sha256": "85ff27cab00cf4d196c75782d3b454a4237f63b809f4c363827fddafabc7cca6",
+        "bytes": 44994
+      },
+      {
+        "id": "src-stores",
+        "title": "Storage and vector store defaults",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "docker/.env.example",
+          "line": 159,
+          "end_line": 164
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/docker/.env.example#L159-L164",
+        "blob": "2020a70017e09e25918ae90ab3bb213a3a9b17fc",
+        "sha256": "364289f13b59a8483de65a83ef86baeaa54ecf75d7ae79adab33e6574d79b152",
+        "bytes": 9946
+      },
+      {
+        "id": "src-task",
+        "title": "Indexing task entry points",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/tasks/document_indexing_task.py",
+          "line": 200,
+          "end_line": 267
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/tasks/document_indexing_task.py#L200-L267",
+        "blob": "2ad17d31577747dfa9e0b55a4b4ef9e94a85b5e5",
+        "sha256": "4f283d0df4c9f9f8c55116eab61fa251eb880efd31eba7031283b048dd4846ad",
+        "bytes": 11783
+      },
+      {
+        "id": "src-task-policy",
+        "title": "Self-hosted dispatch policy",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/services/document_indexing_proxy/base.py",
+          "line": 79,
+          "end_line": 111
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/services/document_indexing_proxy/base.py#L79-L111",
+        "blob": "91835c8abb233f6bd6f5eb8a46aedaa8f63bc3e9",
+        "sha256": "70f4f45b31abba1880bb482becc79fca84dec7c092771fd780b78cd4ad8aa299",
+        "bytes": 3708
+      },
+      {
+        "id": "src-task-proxy",
+        "title": "Direct Celery dispatch",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/services/document_indexing_proxy/batch_indexing_base.py",
+          "line": 37,
+          "end_line": 47
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/services/document_indexing_proxy/batch_indexing_base.py#L37-L47",
+        "blob": "7631e9ca8f440760202447c6e8a10f7b7806d4ea",
+        "sha256": "f2cc47cf5a22350060ae21ef7bff120eb6f32211ba832bc0ea8e55971690eb5f",
+        "bytes": 2993
+      },
+      {
+        "id": "src-task-run",
+        "title": "Task invokes IndexingRunner",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/tasks/document_indexing_task.py",
+          "line": 49,
+          "end_line": 125
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/tasks/document_indexing_task.py#L49-L125",
+        "blob": "2ad17d31577747dfa9e0b55a4b4ef9e94a85b5e5",
+        "sha256": "4f283d0df4c9f9f8c55116eab61fa251eb880efd31eba7031283b048dd4846ad",
+        "bytes": 11783
+      },
+      {
+        "id": "src-thread",
+        "title": "API-local thread and ChatAppRunner",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/app/apps/chat/app_generator.py",
+          "line": 208,
+          "end_line": 272
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/core/app/apps/chat/app_generator.py#L208-L272",
+        "blob": "a67b246233f9d91b91f3eba9bf5cd5dbc0d44901",
+        "sha256": "9240cd6d14248d839474de8519774d0eaf155a99d9bc7fa07813ecf3a8a607b2",
+        "bytes": 11503
+      },
+      {
+        "id": "src-vector-create",
+        "title": "Embed documents then write vectors",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/rag/datasource/vdb/vector_factory.py",
+          "line": 168,
+          "end_line": 189
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/core/rag/datasource/vdb/vector_factory.py#L168-L189",
+        "blob": "a355a90d0f40e5e0b7bba442b7db506fd0e9f0f8",
+        "sha256": "bb4053dfee28c01c62ae16d8d5cfcec8a7c027f9cf8a1f8936ce724342dc2910",
+        "bytes": 14019
+      },
+      {
+        "id": "src-vector-query",
+        "title": "Embed query then search vectors",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "api/core/rag/datasource/vdb/vector_factory.py",
+          "line": 252,
+          "end_line": 259
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/api/core/rag/datasource/vdb/vector_factory.py#L252-L259",
+        "blob": "a355a90d0f40e5e0b7bba442b7db506fd0e9f0f8",
+        "sha256": "bb4053dfee28c01c62ae16d8d5cfcec8a7c027f9cf8a1f8936ce724342dc2910",
+        "bytes": 14019
+      },
+      {
+        "id": "src-web",
+        "title": "Web creates dataset documents",
+        "repository": {
+          "url": "https://github.com/langgenius/dify",
+          "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+          "path": "web/service/datasets.ts",
+          "line": 153,
+          "end_line": 170
+        },
+        "href": "https://github.com/langgenius/dify/blob/09a855dcef24c0edc7431c46c0cfaa494481daf5/web/service/datasets.ts#L153-L170",
+        "blob": "6ac4f328267306eecf46eb700a0366fbd16751c9",
+        "sha256": "e5277febabf43ffc3d54b8fa6ff52305e9fd5ef18052c1ee404e78f958425a01",
+        "bytes": 8246
+      }
+    ],
+    "subjects": {
+      "web": [
+        "src-file",
+        "src-web"
+      ],
+      "nginx": [
+        "src-nginx"
+      ],
+      "caller": [
+        "src-chat-api",
+        "src-nginx"
+      ],
+      "api": [
+        "src-chat",
+        "src-deploy",
+        "src-dispatch",
+        "src-file",
+        "src-thread"
+      ],
+      "worker": [
+        "src-deploy",
+        "src-index",
+        "src-task"
+      ],
+      "plugin": [
+        "src-plugin-base",
+        "src-plugin-deploy",
+        "src-plugin-embedding",
+        "src-plugin-llm"
+      ],
+      "files": [
+        "src-deploy",
+        "src-extract",
+        "src-file",
+        "src-stores"
+      ],
+      "redis": [
+        "src-broker",
+        "src-broker-default",
+        "src-query-embedding"
+      ],
+      "sql": [
+        "src-file",
+        "src-index",
+        "src-postgres"
+      ],
+      "vector": [
+        "src-stores",
+        "src-vector-create",
+        "src-vector-query"
+      ],
+      "web-nginx": [
+        "src-file",
+        "src-nginx",
+        "src-web"
+      ],
+      "caller-nginx": [
+        "src-chat-api",
+        "src-nginx"
+      ],
+      "nginx-api": [
+        "src-chat-api",
+        "src-nginx"
+      ],
+      "api-files": [
+        "src-file"
+      ],
+      "api-sql": [
+        "src-document",
+        "src-file"
+      ],
+      "api-redis": [
+        "src-broker",
+        "src-broker-default",
+        "src-document",
+        "src-query-embedding",
+        "src-task-policy",
+        "src-task-proxy"
+      ],
+      "redis-worker": [
+        "src-broker",
+        "src-task",
+        "src-task-policy",
+        "src-task-run"
+      ],
+      "worker-files": [
+        "src-extract",
+        "src-index",
+        "src-task-run"
+      ],
+      "worker-sql": [
+        "src-doc-embedding",
+        "src-index"
+      ],
+      "worker-vector": [
+        "src-index",
+        "src-paragraph",
+        "src-vector-create"
+      ],
+      "api-vector": [
+        "src-chat",
+        "src-retrieval",
+        "src-search",
+        "src-vector-query"
+      ],
+      "worker-plugin": [
+        "src-doc-embedding",
+        "src-model",
+        "src-plugin-base",
+        "src-plugin-embedding",
+        "src-vector-create"
+      ],
+      "api-plugin": [
+        "src-chat",
+        "src-model",
+        "src-plugin-base",
+        "src-plugin-embedding",
+        "src-plugin-llm",
+        "src-plugin-runtime",
+        "src-query-embedding"
+      ]
+    }
+  }
+}

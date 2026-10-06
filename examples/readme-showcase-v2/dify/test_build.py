@@ -7,6 +7,24 @@ from build import REVISION, author_geometry, compile_plan, make_facts, make_plan
 
 
 class DifyBuildTests(unittest.TestCase):
+    def test_deep_tech_changes_presentation_only_in_both_languages(self):
+        for language in ("zh-CN", "en"):
+            light = make_plan(language)
+            dark = make_plan(language, style="deep-tech")
+            self.assertEqual(light["semantic"], dark["semantic"])
+            self.assertEqual(light["reader"], dark["reader"])
+            self.assertEqual(make_facts(light), make_facts(dark))
+            self.assertEqual(dark["presentation"]["style"], "deep-tech")
+            self.assertEqual(dark["presentation_sources"]["style"], "explicit")
+            a = author_geometry(compile_plan(light), light["semantic"])
+            b = author_geometry(compile_plan(dark), dark["semantic"])
+            self.assertEqual(a["nodes"], b["nodes"])
+            self.assertEqual(a["groups"], b["groups"])
+            self.assertEqual(a["evidence"], b["evidence"])
+            self.assertEqual([{k: v for k, v in edge.items() if k != "stroke"} for edge in a["edges"]],
+                             [{k: v for k, v in edge.items() if k != "stroke"} for edge in b["edges"]])
+            self.assertEqual({edge["stroke"] for edge in b["edges"]}, {"#60a5fa", "#34d399", "#94a3b8"})
+
     def test_translation_changes_copy_only(self):
         def structural(plan):
             result = copy.deepcopy(plan)

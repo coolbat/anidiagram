@@ -18,7 +18,7 @@ if (!chromium) {
   let browser;
   const checks = [], captures = [];
   try {
-    browser = await chromium.launch({ headless: true });
+    browser = await chromium.launch({ headless: true, ...(process.env.ANIDIAGRAM_BROWSER_CHANNEL ? {channel: process.env.ANIDIAGRAM_BROWSER_CHANNEL} : {}) });
     for (const viewport of viewports) {
       for (const colorScheme of ["light", "dark"]) {
         const page = await browser.newPage({ viewport, colorScheme, reducedMotion: "reduce", deviceScaleFactor: 1 });

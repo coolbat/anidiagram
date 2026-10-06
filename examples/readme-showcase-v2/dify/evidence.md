@@ -44,6 +44,7 @@ Plugin Daemon 实现及供应商模型代码不在这次审计内；不额外画
 ```bash
 git clone --branch 1.17.0 --depth 1 https://github.com/langgenius/dify.git outputs/readme-showcase-v2/source/dify-1.17.0
 python3 examples/readme-showcase-v2/dify/build.py --source outputs/readme-showcase-v2/source/dify-1.17.0
+python3 examples/readme-showcase-v2/dify/publish.py
 python3 -m unittest discover -s examples/readme-showcase-v2/dify -p 'test_*.py'
 python3 -I scripts/run_anidiagram.py visual-check outputs/readme-showcase-v2/dify/dify.html --strict-labels --viewports 1440x1100,1920x1320 --outdir outputs/readme-showcase-v2/dify/visual
 python3 -m http.server 8769 --bind 127.0.0.1 --directory outputs/readme-showcase-v2/dify
@@ -51,6 +52,7 @@ python3 -m http.server 8769 --bind 127.0.0.1 --directory outputs/readme-showcase
 
 已有 clone 时跳过 clone；构建器核对完整 SHA 和干净状态，版本不符则拒绝执行。
 构建器同时生成中英文：`index.html` / `index.en.html`。英文通过稳定 ID 映射翻译文案，保留相同拓扑、分组、方向、条件与固定源码；分别运行事实与渲染检查，不沿用另一语言产物的复核记录。
+同时生成 Minimal Light 与 Deep Tech 两种风格；深色版入口为 `index.deep-tech.html` / `index.deep-tech.en.html`。切换语言时保留风格，切换风格时保留语言。两种风格共用语义、事实、源码引用、节点位置与连线路径，只调整视觉表现和连线对比度；分别生成渲染产物、图标动图及交付回执。Gallery 直接复用已交付的静态 SVG 作为后备，不改写案例产物。
 静态与交互图共用同一语义。静态版只关闭动效；几何定制不修改 ID、来源、标签、方向或条件。
 图标在表现层用公共图标作显式别名映射（例如 browser → api、worker → task），保留原 semantic kind，不把任意组件自动画成 AI Agent。
 本例使用 900×1130 竖向三层布局，不强求先前 Flask 试稿的 2:1 横向比例；840 px README 宽度下保持标签可读。
