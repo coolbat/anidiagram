@@ -21,10 +21,16 @@ AniDiagram 可以把一段自然语言架构需求变成经过校验、带有动
 Dify：**文档如何成为答案**。沿着文档入库和基础 Chat 问答两条链路，
 看清接入层、执行层和数据层如何协作，区分 Celery 索引任务与 API 进程内的问答线程。
 
-[![Dify：三层架构中的文档入库与在线问答](./gallery/cases/dify/dify-static.svg)](https://coolbat.github.io/anidiagram/gallery/cases/dify/index.html)
+<a href="https://coolbat.github.io/anidiagram/gallery/cases/dify/index.html">
+  <picture>
+    <source media="(prefers-reduced-motion: reduce)" srcset="./gallery/cases/dify/dify-static.svg">
+    <img src="./gallery/cases/dify/dify-motion.webp" width="900" alt="Dify：三层架构中的文档入库与在线问答，包含图标动效">
+  </picture>
+</a>
 
 **[打开中英文案例 →](https://coolbat.github.io/anidiagram/gallery/cases/dify/index.html)** ·
 [交互架构图](https://coolbat.github.io/anidiagram/gallery/cases/dify/dify.html) ·
+[静态 SVG](./gallery/cases/dify/dify-static.svg) ·
 [源码依据与复现](./examples/readme-showcase-v2/dify/evidence.md) ·
 [DiagramPlan](./gallery/cases/dify/dify.plan.json) ·
 [事实核验报告](./gallery/cases/dify/accuracy.json)

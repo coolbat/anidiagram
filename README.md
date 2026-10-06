@@ -23,10 +23,16 @@ Dify: **from documents to answers**. Follow document ingestion and basic Chat
 across three logical layers: access, execution, and data. The diagram separates
 Celery indexing from the chat thread inside the API process.
 
-[![Dify: document ingestion and online chat across three logical layers](./gallery/cases/dify/dify-en-static.svg)](https://coolbat.github.io/anidiagram/gallery/cases/dify/index.en.html)
+<a href="https://coolbat.github.io/anidiagram/gallery/cases/dify/index.en.html">
+  <picture>
+    <source media="(prefers-reduced-motion: reduce)" srcset="./gallery/cases/dify/dify-en-static.svg">
+    <img src="./gallery/cases/dify/dify-en-motion.webp" width="900" alt="Dify: document ingestion and online chat across three logical layers, with animated icons">
+  </picture>
+</a>
 
 **[Explore the bilingual case →](https://coolbat.github.io/anidiagram/gallery/cases/dify/index.en.html)** ·
 [Interactive diagram](https://coolbat.github.io/anidiagram/gallery/cases/dify/dify-en.html) ·
+[Static SVG](./gallery/cases/dify/dify-en-static.svg) ·
 [Source evidence & reproduction](./examples/readme-showcase-v2/dify/evidence.en.md) ·
 [Plan](./gallery/cases/dify/dify-en.plan.json) ·
 [Fact-check report](./gallery/cases/dify/accuracy.en.json)

@@ -29,7 +29,8 @@ class DifyPublicationTests(unittest.TestCase):
         for name, expected in manifest["files"].items():
             data = (PUBLIC / name).read_bytes()
             self.assertEqual(digest(data), expected, name)
-            self.assertNotRegex(data.decode(), r"/Users/|/home/")
+            if not name.endswith(".webp"):
+                self.assertNotRegex(data.decode(), r"/Users/|/home/")
 
     def test_both_languages_match_builder_and_keep_unresolved_facts(self):
         for stem, suffix, language in [("dify", "", "zh-CN"), ("dify-en", ".en", "en")]:

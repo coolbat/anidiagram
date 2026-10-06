@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[3]
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "src"))
 from anidiagram.planner import compile_plan
+from anidiagram.exporters import _blend_loop_seam, _write_browser_image_sequence
 from english import localize_facts, localize_plan
 
 REVISION = "09a855dcef24c0edc7431c46c0cfaa494481daf5"
@@ -204,7 +205,7 @@ def write_json(path: Path, value: object) -> None:
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def build_variant(source: Path, out: Path, language: str) -> list[str]:
+def build_variant(source: Path, out: Path, language: str, browser_channel: str | None = None) -> list[str]:
     stem = "dify-en" if language == "en" else "dify"
     suffix = ".en" if language == "en" else ""
     facts_name, accuracy_name = f"facts{suffix}.json", f"accuracy{suffix}.json"
@@ -243,6 +244,20 @@ def build_variant(source: Path, out: Path, language: str) -> list[str]:
         print(json.dumps({"render": name, "ok": report["ok"], "quality": report["outputs"]["quality"]["summary"]}))
     names = [f"{stem}.plan.json", f"{stem}.diagram.json", f"{stem}-static.diagram.json", facts_name, accuracy_name]
     names += [f"{name}.{ext}" for name in (stem, f"{stem}-static") for ext in ("svg", "html", "quality.json", "delivery.json")]
+    command = ["node", str(HERE / "capture_motion.mjs"), str(out), stem]
+    if browser_channel:
+        command.append(browser_channel)
+    subprocess.run(command, check=True)
+    frames = [out / f"{stem}-frames/frame-{index:04d}.png" for index in range(24)]
+    _blend_loop_seam(frames, 4)
+    result = _write_browser_image_sequence("webp", frames, out / f"{stem}-motion.webp", 12, style, 80)
+    if result["status"] != "written":
+        raise RuntimeError(f"Animated preview encoding failed: {result}")
+    receipt_path = out / f"{stem}-motion.json"
+    receipt = json.loads(receipt_path.read_text())
+    receipt.update(webp_sha256=hashlib.sha256((out / f"{stem}-motion.webp").read_bytes()).hexdigest(), loop_blend_frames=4, quality=80)
+    write_json(receipt_path, receipt)
+    names += [f"{stem}-motion.webp", f"{stem}-motion.json"]
     return names
 
 
@@ -250,21 +265,22 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", required=True, type=Path)
     parser.add_argument("--outdir", type=Path, default=ROOT / "outputs/readme-showcase-v2/dify")
+    parser.add_argument("--browser-channel", choices=("chrome", "msedge"), help="Use an already installed browser instead of Playwright Chromium")
     args = parser.parse_args()
     source, out = args.source.resolve(), args.outdir.resolve()
     sha = subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD"], text=True).strip()
     if sha != REVISION or subprocess.check_output(["git", "-C", str(source), "status", "--porcelain"], text=True).strip():
         raise SystemExit("Refusing source drift: expected the clean pinned Dify 1.17.0 checkout")
     out.mkdir(parents=True, exist_ok=True)
-    names = [name for language in ("zh-CN", "en") for name in build_variant(source, out, language)]
-    shared = ("index.html", "index.en.html", "evidence.md", "evidence.en.md", "showcase.css")
+    names = [name for language in ("zh-CN", "en") for name in build_variant(source, out, language, args.browser_channel)]
+    shared = ("index.html", "index.en.html", "evidence.md", "evidence.en.md", "showcase.css", "preview-motion.js")
     for name in shared:
         (out / name).write_bytes((HERE / name).read_bytes())
     names += ["style.json", *shared]
     write_json(out / "manifest.json", {"status": "draft", "repository": REPOSITORY, "revision": REVISION,
                                       "source_root": str(source), "independent_semantic_review": "pending", "dify_runtime": "not run",
                                       "languages": {"zh-CN": "index.html", "en": "index.en.html"},
-                                      "source_files": {name: hashlib.sha256((HERE / name).read_bytes()).hexdigest() for name in ("build.py", "english.py", "publish.py", *shared)},
+                                      "source_files": {name: hashlib.sha256((HERE / name).read_bytes()).hexdigest() for name in ("build.py", "english.py", "publish.py", "capture_motion.mjs", *shared)},
                                       "files": {name: hashlib.sha256((out / name).read_bytes()).hexdigest() for name in names}})
     print(f"Drafts: {out / 'index.html'} and {out / 'index.en.html'}")
 

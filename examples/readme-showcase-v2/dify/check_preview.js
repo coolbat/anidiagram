@@ -85,6 +85,18 @@ async (page) => {
   await page.setViewportSize({width: 1200, height: 1100});
   await page.emulateMedia({colorScheme: 'light', reducedMotion: 'no-preference'});
   await page.goto(base + index);
+  const preview = page.locator('figure img');
+  await preview.evaluate(image => image.decode());
+  if (!(await preview.getAttribute('src')).endsWith('-motion.webp')) throw new Error('Normal preview has no icon animation');
+  const motionButton = page.locator('#preview-motion');
+  await motionButton.click();
+  if ((await motionButton.getAttribute('aria-pressed')) !== 'false' || !(await preview.getAttribute('src')).endsWith('-static.svg')) throw new Error('Pause did not switch to static SVG');
+  await motionButton.click();
+  if ((await motionButton.getAttribute('aria-pressed')) !== 'true' || !(await preview.getAttribute('src')).endsWith('-motion.webp')) throw new Error('Play did not restore animated preview');
+  await page.emulateMedia({reducedMotion: 'reduce'});
+  await page.waitForFunction(() => document.querySelector('figure img').getAttribute('src').endsWith('-static.svg'));
+  await page.emulateMedia({reducedMotion: 'no-preference'});
+  await page.waitForFunction(() => document.querySelector('figure img').getAttribute('src').endsWith('-motion.webp'));
   await page.locator('#reproduce summary').click();
   if (!(await page.locator('#reproduce').getAttribute('open') !== null)) throw new Error('Reproduction instructions are inaccessible');
   if (english && await page.locator('body').evaluate(body => /[\u3400-\u9fff]/.test(body.innerText.replaceAll('中文', '')))) throw new Error('Untranslated Chinese on English case page');
@@ -114,7 +126,7 @@ async (page) => {
   await page.locator('figure img').screenshot({path: out + stem + '-poster.png'});
   page.off('pageerror', onError);
   if (errors.length) throw new Error('Browser errors: ' + errors.join('; '));
-  return {passed: true, language, languageSwitch: true, artifact_sha256: hashes, captures, localLinks, typography, staticState,
+  return {passed: true, language, languageSwitch: true, motionControls: true, reducedMotionFallback: true, artifact_sha256: hashes, captures, localLinks, typography, staticState,
           interactiveNavigates, queryView, ingestView, queryWorkerOpacity, ingestWorkerOpacity, pageErrors: errors, semanticReview: 'pending',
           scope: 'Local README-width mock, not the live GitHub page. Mobile diagram is overview-only; full labels are available in the interactive viewer.'};
 }

@@ -14,16 +14,18 @@ README_TOTAL_BUDGET = 6 * 1024 * 1024
 README_CASE_BUDGET = 1024 * 1024
 TRACKED_GALLERY_BUDGET = 55 * 1024 * 1024
 README_FRAME_CONTRACT = 24
-README_ASSET_COUNT = 2
+README_ASSET_COUNT = 4
 README_FILES = (ROOT / "README.md", ROOT / "README.zh-CN.md")
 README_WEBP_PATTERN = re.compile(r"\]\(\./([^)]+\.webp)\)")
+README_HTML_WEBP_PATTERN = re.compile(r'src="\./([^"]+\.webp)"')
 
 
 def _readme_webp_paths() -> list[Path]:
     paths = {
         ROOT / match
         for readme in README_FILES
-        for match in README_WEBP_PATTERN.findall(readme.read_text(encoding="utf-8"))
+        for pattern in (README_WEBP_PATTERN, README_HTML_WEBP_PATTERN)
+        for match in pattern.findall(readme.read_text(encoding="utf-8"))
     }
     return sorted(paths)
 

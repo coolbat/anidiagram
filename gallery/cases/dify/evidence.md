@@ -63,6 +63,10 @@ python3 -m http.server 8769 --bind 127.0.0.1 --directory outputs/readme-showcase
 - 静态 / HTML 渲染：查看各自 quality 与 visual 报告；渲染通过不代替语义准确。
 - 发布：仓库在 `gallery/cases/dify/` 收录此中英文解读稿。GitHub Pages 部署是独立门禁；发布不改变语义复核仍待完成的状态。
 
+## 图标动效预览
+
+构建动图还需要 Pillow、Playwright 和浏览器；可使用 Playwright Chromium，或在构建命令加 `--browser-channel chrome` 复用已安装的 Chrome，不自动安装依赖。WebP 直接录制已交付、开启可读标签的 HTML，使用现有 10 个图标表演，不改变架构语义。动效回执绑定 HTML 与图片哈希，测试逐一检查图标区域的帧变化，不把连线在动算成图标在动。案例页可暂停切回静态 SVG；无 JavaScript 或偏好减少动态效果时默认静态。
+
 ## 发布固定产物
 
 构建后，在仓库根目录运行 `python3 examples/readme-showcase-v2/dify/publish.py`。脚本先核对构建清单，再将白名单文件复制到 `gallery/cases/dify/`；SVG/HTML 渲染字节及证据保持不变，仅将交付回执中的本机路径改为可移植的定位信息。发布清单记录原始回执哈希和发布文件新哈希，不复制临时截图或 Dify 源码副本。

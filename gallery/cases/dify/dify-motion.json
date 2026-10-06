@@ -1,0 +1,90 @@
+{
+  "capture_contract": "dify-readable-runtime-v1",
+  "html": "dify.html",
+  "html_sha256": "71ee63a5d4edb135fc0b289b409a3a8f26a8fbaedc9c0254e5ac936866c0a250",
+  "browser": "154.0.8037.98",
+  "frames": 24,
+  "fps": 12,
+  "width": 900,
+  "height": 1130,
+  "icon_regions": {
+    "node-web": [
+      86,
+      194,
+      160,
+      267
+    ],
+    "node-nginx": [
+      359,
+      194,
+      439,
+      267
+    ],
+    "node-caller": [
+      645,
+      194,
+      721,
+      267
+    ],
+    "node-api": [
+      87,
+      454,
+      159,
+      527
+    ],
+    "node-worker": [
+      367,
+      454,
+      439,
+      528
+    ],
+    "node-plugin": [
+      646,
+      453,
+      721,
+      527
+    ],
+    "node-files": [
+      87,
+      809,
+      159,
+      882
+    ],
+    "node-redis": [
+      367,
+      809,
+      439,
+      882
+    ],
+    "node-sql": [
+      639,
+      809,
+      719,
+      882
+    ],
+    "node-vector": [
+      367,
+      994,
+      439,
+      1067
+    ]
+  },
+  "distinct_icon_states": {
+    "node-web": 13,
+    "node-nginx": 16,
+    "node-caller": 15,
+    "node-api": 17,
+    "node-worker": 18,
+    "node-plugin": 19,
+    "node-files": 22,
+    "node-redis": 21,
+    "node-sql": 22,
+    "node-vector": 19
+  },
+  "readability": "passed",
+  "semantic_review": "pending",
+  "scope": "Browser capture of the delivered HTML. Motion illustrates activity, not measured Dify execution or duration.",
+  "webp_sha256": "2cbbb8af91b2c85f78b78324833a989ecb8965fa75c6b2d5556ddc193c67a0b1",
+  "loop_blend_frames": 4,
+  "quality": 80
+}

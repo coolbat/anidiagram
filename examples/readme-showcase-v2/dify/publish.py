@@ -10,12 +10,12 @@ from pathlib import Path
 
 from build import HERE, REPOSITORY, REVISION, ROOT
 
-SHARED = {"style.json", "index.html", "index.en.html", "evidence.md", "evidence.en.md", "showcase.css"}
+SHARED = {"style.json", "index.html", "index.en.html", "evidence.md", "evidence.en.md", "showcase.css", "preview-motion.js"}
 EXPECTED = SHARED | {f"{stem}{suffix}" for stem in ("dify", "dify-en") for suffix in (
     ".plan.json", ".diagram.json", "-static.diagram.json", ".svg", ".html", ".quality.json", ".delivery.json",
-    "-static.svg", "-static.html", "-static.quality.json", "-static.delivery.json",
+    "-static.svg", "-static.html", "-static.quality.json", "-static.delivery.json", "-motion.webp", "-motion.json",
 )} | {"facts.json", "facts.en.json", "accuracy.json", "accuracy.en.json"}
-SOURCE_FILES = {"build.py", "english.py", "publish.py"} | (SHARED - {"style.json"})
+SOURCE_FILES = {"build.py", "english.py", "publish.py", "capture_motion.mjs"} | (SHARED - {"style.json"})
 
 
 def digest(data: bytes) -> str:

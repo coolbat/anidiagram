@@ -6,6 +6,7 @@
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="showcase.css">
 <link rel="alternate" hreflang="zh-CN" href="index.html">
+<script src="preview-motion.js" defer></script>
 <main>
   <nav class="languages" aria-label="Language"><a href="index.html" lang="zh-CN" hreflang="zh-CN">中文</a><span aria-hidden="true">/</span><a href="index.en.html" lang="en" hreflang="en" aria-current="page">English</a></nav>
   <p class="eyebrow">ANIDIAGRAM / SOURCE-BACKED CASE STUDY &nbsp; <span>SOURCE-READING DRAFT</span></p>
@@ -19,9 +20,10 @@
   <div class="legend" aria-label="Legend"><span style="--ink:#2563eb">Document ingestion</span><span style="--ink:#0f766e">Online chat</span><span style="--ink:#64748b">Shared interfaces</span></div>
   <figure>
     <a href="dify-en.html" aria-label="Zoom into Dify’s architecture and focus on ingestion or online chat">
-      <img src="dify-en-static.svg" width="900" height="1130" alt="Dify architecture in three logical layers. Access: Web console, Nginx and API client. Execution: API service, indexing Worker and Plugin Daemon. Data: file store, Redis, SQL and vector database. Indexing tasks reach the Worker through Redis; basic Chat performs retrieval and model calls inside the API process.">
+      <img src="dify-en-static.svg" data-motion-src="dify-en-motion.webp" width="900" height="1130" alt="Dify architecture in three logical layers. Access: Web console, Nginx and API client. Execution: API service, indexing Worker and Plugin Daemon. Data: file store, Redis, SQL and vector database. Indexing tasks reach the Worker through Redis; basic Chat performs retrieval and model calls inside the API process.">
     </a>
     <figcaption>10 nodes · 13 selected relationships · Three logical layers, not three deployed services. Switch between “Document ingestion” and “Online chat” in the interactive viewer. On small screens, open it and zoom in. Arrows show calls or task delivery, not a complete execution sequence.</figcaption>
+    <div class="preview-controls"><button id="preview-motion" type="button" hidden aria-pressed="false" data-play-label="Play icon motion" data-pause-label="Pause icon motion">Play icon motion</button><a href="dify-en-static.svg">Static SVG</a></div>
   </figure>
   <div class="insight">
     <p><strong>Indexing is queued. The chat path shown here is not.</strong></p>

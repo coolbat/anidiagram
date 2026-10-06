@@ -22,3 +22,6 @@
   @media (prefers-color-scheme: dark) { :root { color: #e6edf3; background: #010409; } main { background: #0d1117; border-color: #30363d; } .intro, figcaption, .status, .eyebrow, footer { color: #a5afbd; } .eyebrow span { color: #d29922; } a { color: #58a6ff; } pre { background: #161b22; } .status { border-color: #30363d; } }
   .languages { justify-content: flex-end; margin: 0 0 18px; gap: 10px; font-size: 13px; }
   .languages [aria-current="page"] { color: inherit; font-weight: 600; text-decoration: none; }
+  .preview-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 12px; font-size: 13px; }
+  .preview-controls button { color: inherit; background: transparent; border: 1px solid #8c959f; border-radius: 6px; padding: 8px 12px; font: inherit; cursor: pointer; }
+  button:focus-visible { outline: 3px solid #0969da; outline-offset: 4px; }

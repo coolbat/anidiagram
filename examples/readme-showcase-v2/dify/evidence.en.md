@@ -39,7 +39,7 @@ Plugin Daemon internals and model-provider code are outside this review. No extr
 
 ## Reproduce both languages
 
-Run from the AniDiagram repository with Python 3.10+ and its existing GSAP dependency. Do not install Dify dependencies.
+Run from the AniDiagram repository with Python 3.10+, Pillow, Playwright and its existing GSAP dependency. The animated preview needs a browser: use Playwright Chromium, or pass `--browser-channel chrome` to reuse an installed Chrome. No dependency is installed automatically. Do not install Dify dependencies.
 
 ```bash
 git clone --branch 1.17.0 --depth 1 https://github.com/langgenius/dify.git outputs/readme-showcase-v2/source/dify-1.17.0
@@ -53,7 +53,7 @@ Skip cloning if the checkout exists. The builder rejects a dirty source tree or 
 
 Both languages are derived from the same canonical topology. Stable IDs, endpoints, direction, conditions, grouping, path selection and source references remain identical; English copy is keyed by IDs in `english.py`. Each language has its own fact report and delivery receipts; a review of one artifact is not silently reused for the other.
 
-The static variant disables motion without changing meaning. Presentation uses explicit aliases to public icons while retaining semantic kinds. A 900×1130 vertical layout preserves legibility at an 840 px README content width; narrow screens should use the interactive viewer for details.
+The static variant disables motion without changing meaning. The animated WebP is captured from the delivered readable HTML, preserving all labels and using the existing ten icon performances. Its motion receipt binds the HTML and image hashes; tests check changes inside every icon region, not only moving edges. The case page can pause to a static SVG and defaults to static for reduced-motion preferences or without JavaScript. Presentation uses explicit aliases to public icons while retaining semantic kinds. A 900×1130 vertical layout preserves legibility at an 840 px README content width; narrow screens should use the interactive viewer for details.
 
 ## Acceptance boundaries
 

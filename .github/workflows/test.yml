@@ -208,6 +208,10 @@ jobs:
             python3 -I scripts/run_anidiagram.py visual-check "gallery/cases/dify/$name.html" \
               --strict-labels --viewports 1440x1100,1920x1320 --outdir "build/ci/dify/$name"
           done
+      - name: Verify all Dify icon performances and motion modes
+        run: |
+          node scripts/verify_stage_motion_modes.mjs gallery/cases/dify/dify.html 10 13
+          node scripts/verify_stage_motion_modes.mjs gallery/cases/dify/dify-en.html 10 13
       - name: Verify Simplified Chinese rendering and geometry
         run: node scripts/verify_chinese_architecture.mjs build/ci/zh-CN/enterprise-agent-platform.html
       - name: Upload browser diagnostics on failure
