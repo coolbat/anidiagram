@@ -1304,6 +1304,11 @@ def _write_gallery_index(
     <h1>AniDiagram Showcase</h1>
     <p>Style Showcase makes diagrams look right. Layout Showcase makes diagram purpose obvious. The hero preview is browser-captured runtime media when available; card images stay lightweight SVG previews.</p>
     <section>
+      <h2>Source-backed case study: Dify</h2>
+      <p>Follow document ingestion and basic Chat across three logical layers. Pinned to Dify 1.17.0; independent semantic review is pending, and Dify runtime has not been tested.</p>
+      <p class="links"><a href="cases/dify/index.en.html">English case study</a><a href="cases/dify/index.html" lang="zh-CN">中文案例</a></p>
+    </section>
+    <section>
       <h2>Public Icon Systems</h2>
       <p>The current frozen Diagram Core v1 and Illustrated 2.5 public releases, each with complete static and automatic-motion coverage.</p>
       <p class="links"><a href="icon-systems/index.html">Open public icon systems</a></p>

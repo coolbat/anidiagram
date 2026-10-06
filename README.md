@@ -19,17 +19,22 @@ less manual work than a design or video tool.
 
 ## See it in action
 
-This governed engineering loop is generated from repository-owned semantic
-sources through the same composition and rendering pipeline used by the CLI.
+Dify: **from documents to answers**. Follow document ingestion and basic Chat
+across three logical layers: access, execution, and data. The diagram separates
+Celery indexing from the chat thread inside the API process.
 
-![Loop Engineering Operating Architecture](./gallery/readme-showcase/hero-loop-engineering.webp)
+[![Dify: document ingestion and online chat across three logical layers](./gallery/cases/dify/dify-en-static.svg)](https://coolbat.github.io/anidiagram/gallery/cases/dify/index.en.html)
 
-**Reproduce or inspect it:**
-[Plan](./examples/loop-engineering-minimal-light.plan.json) ·
-[DiagramScript](./examples/readme-showcase-round-1/hero-loop-engineering.diagram.json) ·
-[Live HTML](https://coolbat.github.io/anidiagram/gallery/readme-showcase/hero-loop-engineering.html) ·
-[SVG](./gallery/readme-showcase/hero-loop-engineering.svg) ·
-[Quality report](./gallery/readme-showcase/hero-loop-engineering.quality.json)
+**[Explore the bilingual case →](https://coolbat.github.io/anidiagram/gallery/cases/dify/index.en.html)** ·
+[Interactive diagram](https://coolbat.github.io/anidiagram/gallery/cases/dify/dify-en.html) ·
+[Source evidence & reproduction](./examples/readme-showcase-v2/dify/evidence.en.md) ·
+[Plan](./gallery/cases/dify/dify-en.plan.json) ·
+[Fact-check report](./gallery/cases/dify/accuracy.en.json)
+
+Pinned to Dify **1.17.0**, commit `09a855d`; this is a scoped source-reading
+draft, not the whole platform or an official Dify diagram. Independent semantic
+review is pending; Dify and real model calls have not been run. Verified source
+references and rendering checks are not proof of architecture accuracy.
 
 The full gallery contains the two public icon systems, 16 semantic layouts,
 13 styles, runtime motion proofs, and copyable CLI commands:
@@ -37,6 +42,16 @@ The full gallery contains the two public icon systems, 16 semantic layouts,
 
 <details>
 <summary><strong>Explore more generated proofs</strong></summary>
+
+Earlier conceptual showcase: the governed engineering loop.
+
+![Loop Engineering Operating Architecture](./gallery/readme-showcase/hero-loop-engineering.webp)
+
+[Plan](./examples/loop-engineering-minimal-light.plan.json) ·
+[DiagramScript](./examples/readme-showcase-round-1/hero-loop-engineering.diagram.json) ·
+[Live HTML](https://coolbat.github.io/anidiagram/gallery/readme-showcase/hero-loop-engineering.html) ·
+[SVG](./gallery/readme-showcase/hero-loop-engineering.svg) ·
+[Quality report](./gallery/readme-showcase/hero-loop-engineering.quality.json)
 
 - [Governed RAG production](https://coolbat.github.io/anidiagram/gallery/readme-showcase/hero-governed-rag.html) — illustrated 2.5, minimal-light, layered.
 - [Kubernetes production layers](https://coolbat.github.io/anidiagram/gallery/readme-showcase/hero-kubernetes-three-layer.html) — Diagram Core v1, deep-tech, layered.

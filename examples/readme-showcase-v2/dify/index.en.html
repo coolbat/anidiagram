@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dify — From documents to answers · AniDiagram case study draft</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="showcase.css">
+<link rel="alternate" hreflang="zh-CN" href="index.html">
+<main>
+  <nav class="languages" aria-label="Language"><a href="index.html" lang="zh-CN" hreflang="zh-CN">中文</a><span aria-hidden="true">/</span><a href="index.en.html" lang="en" hreflang="en" aria-current="page">English</a></nav>
+  <p class="eyebrow">ANIDIAGRAM / SOURCE-BACKED CASE STUDY &nbsp; <span>SOURCE-READING DRAFT</span></p>
+  <h1>From documents to answers.<br>How do Dify’s three layers work?</h1>
+  <p class="intro">Uploading a file does not finish a knowledge index. Online chat does not always go through a task queue. Follow both paths across real service and storage boundaries.</p>
+  <nav aria-label="Case study links">
+    <a href="dify-en.html">Explore the diagram →</a>
+    <a href="#scope">Scope and boundaries</a>
+    <a href="evidence.en.md">Source evidence</a>
+  </nav>
+  <div class="legend" aria-label="Legend"><span style="--ink:#2563eb">Document ingestion</span><span style="--ink:#0f766e">Online chat</span><span style="--ink:#64748b">Shared interfaces</span></div>
+  <figure>
+    <a href="dify-en.html" aria-label="Zoom into Dify’s architecture and focus on ingestion or online chat">
+      <img src="dify-en-static.svg" width="900" height="1130" alt="Dify architecture in three logical layers. Access: Web console, Nginx and API client. Execution: API service, indexing Worker and Plugin Daemon. Data: file store, Redis, SQL and vector database. Indexing tasks reach the Worker through Redis; basic Chat performs retrieval and model calls inside the API process.">
+    </a>
+    <figcaption>10 nodes · 13 selected relationships · Three logical layers, not three deployed services. Switch between “Document ingestion” and “Online chat” in the interactive viewer. On small screens, open it and zoom in. Arrows show calls or task delivery, not a complete execution sequence.</figcaption>
+  </figure>
+  <div class="insight">
+    <p><strong>Indexing is queued. The chat path shown here is not.</strong></p>
+    <p>Basic <code>CHAT</code> retrieves knowledge, assembles context and calls the model in a new thread inside the API process. A separate Celery Worker extracts, splits and embeds documents, then writes the index.</p>
+  </div>
+  <p class="status">Pinned source: Dify <strong>1.17.0</strong> · <a href="https://github.com/langgenius/dify/tree/09a855dcef24c0edc7431c46c0cfaa494481daf5">09a855d</a><br>This architecture draft is based on source reading. Verified references do not establish semantic accuracy. Independent semantic review is pending; Dify has not been run and no real model calls were made.</p>
+  <details id="scope">
+    <summary>What does this diagram include—and leave out?</summary>
+    <ul>
+      <li>Scope: self-hosted Dify, local text files, <code>high_quality</code> paragraph indexing, basic <code>AppMode.CHAT</code>, a configured and selected internal dataset with semantic retrieval, and successful paths.</li>
+      <li>Three data forms: original files in file storage; metadata and chunks in SQL; vector indexes in the vector database. PostgreSQL and Weaviate are the choices shown here, not the only supported stores.</li>
+      <li>The indexing Worker is a separate Celery process. Chat and RAG code within the API are not additional microservices.</li>
+      <li>A Redis query-embedding cache hit skips the embedding-model call. Dataset routing may call an LLM first, so the edges are not a strict execution order.</li>
+      <li>Model calls are traced only to the Plugin Daemon HTTP interface. Its separate repository and specific provider plugins have not been reviewed; downstream calls are not drawn as verified relationships.</li>
+      <li>Workflow, Chatflow, Agent, knowledge pipelines, multimodal processing, reranking, errors, retries, Web server hosting and other database/cache accesses are excluded.</li>
+    </ul>
+  </details>
+  <details id="reproduce">
+    <summary>Ask another Agent to review this case</summary>
+    <pre>Use AniDiagram to analyze langgenius/dify at the pinned commit
+09a855dcef24c0edc7431c46c0cfaa494481daf5 (1.17.0).
+Trace high_quality paragraph indexing of local text files and basic CHAT
+using semantic_search on a selected internal dataset to generate an answer.
+Check when documents are committed and indexing tasks are dispatched.
+Which process owns the Chat worker thread? What do files, SQL, Redis and
+the vector database store? How do embedding cache hits change model calls?
+Distinguish modules from deployed services. Do not route all chat through Celery.
+Give pinned source references for each key edge. Review semantics before visuals.</pre>
+    <p><a href="evidence.en.md">Source index and build commands</a> · <a href="accuracy.en.json">Fact-check report</a> · <a href="dify-en.plan.json">Semantic Plan</a></p>
+  </details>
+</main>
+<footer>An AniDiagram source-reading case study, not an official Dify architecture diagram. The diagram is rendered by AniDiagram; motion indicates direction, not real request duration.</footer>
+</html>

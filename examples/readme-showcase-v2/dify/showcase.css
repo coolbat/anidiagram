@@ -1,0 +1,24 @@
+  :root { color-scheme: light dark; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif; color: #172033; background: #f6f8fa; }
+  * { box-sizing: border-box; } body { margin: 0; padding: 36px 20px; }
+  main { max-width: 936px; margin: auto; padding: 40px 47px; border: 1px solid #d1d9e0; border-radius: 8px; background: #fff; }
+  .eyebrow { font-size: 12px; letter-spacing: .07em; color: #526176; margin: 0 0 18px; }
+  .eyebrow span { color: #9a6700; letter-spacing: 0; }
+  h1 { font-size: clamp(27px, 4vw, 36px); line-height: 1.35; letter-spacing: -.035em; margin: 0 0 16px; }
+  p { font-size: 16px; line-height: 1.8; margin: 12px 0; } .intro { color: #526176; max-width: 740px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 12px 24px; margin: 26px 0 0; font-size: 13px; }
+  .legend span::before { content: ''; display: inline-block; width: 22px; height: 3px; vertical-align: middle; margin-right: 8px; background: var(--ink); }
+  figure { margin: 12px 0 24px; } figure img { display: block; width: 100%; height: auto; background: white; }
+  figcaption, .status { font-size: 13px; line-height: 1.75; color: #526176; }
+  a { color: #0969da; text-underline-offset: 3px; } a:focus-visible, summary:focus-visible { outline: 3px solid #0969da; outline-offset: 4px; }
+  nav { display: flex; flex-wrap: wrap; gap: 12px 24px; margin: 24px 0; font-size: 15px; }
+  .insight { padding: 4px 0 4px 17px; border-left: 3px solid #0f766e; margin: 20px 0; }
+  .insight strong { font-weight: 600; } .insight p { margin: 6px 0; }
+  .status { border-top: 1px solid #d1d9e0; padding-top: 16px; }
+  details { margin-top: 24px; font-size: 14px; line-height: 1.8; } summary { cursor: pointer; font-weight: 600; }
+  ul { padding-left: 22px; } li { margin: 8px 0; } code { font-size: .9em; background: #afb8c122; padding: .15em .3em; border-radius: 4px; overflow-wrap: anywhere; }
+  pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #f6f8fa; padding: 18px; border-radius: 6px; font-size: 13px; line-height: 1.8; }
+  footer { max-width: 840px; margin: 20px auto; font-size: 12px; line-height: 1.8; color: #526176; }
+  @media (max-width: 600px) { body { padding: 16px 12px; } main { padding: 24px 16px; } figure { margin-left: -8px; margin-right: -8px; } nav { gap: 14px; } }
+  @media (prefers-color-scheme: dark) { :root { color: #e6edf3; background: #010409; } main { background: #0d1117; border-color: #30363d; } .intro, figcaption, .status, .eyebrow, footer { color: #a5afbd; } .eyebrow span { color: #d29922; } a { color: #58a6ff; } pre { background: #161b22; } .status { border-color: #30363d; } }
+  .languages { justify-content: flex-end; margin: 0 0 18px; gap: 10px; font-size: 13px; }
+  .languages [aria-current="page"] { color: inherit; font-weight: 600; text-decoration: none; }

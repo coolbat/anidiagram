@@ -1,0 +1,65 @@
+{
+  "status": "draft",
+  "repository": "https://github.com/langgenius/dify",
+  "revision": "09a855dcef24c0edc7431c46c0cfaa494481daf5",
+  "independent_semantic_review": "pending",
+  "dify_runtime": "not run",
+  "languages": {
+    "zh-CN": "index.html",
+    "en": "index.en.html"
+  },
+  "source_files": {
+    "build.py": "e3b037afe3ae3f39ac9b1e597105eb557ddd425bb7e53407134794e7e2b291f4",
+    "english.py": "b5f48b845bb4eff82d962da741115f6da68a9b5e2ef45d3cb39bb809ce781022",
+    "publish.py": "314828cb57b08bf18aa736efa4c7454b007035ecf035721d2197f1a1cdefe074",
+    "index.html": "2e8fdbc6fdf3df35606bbe783471d5bcd27db255b18779a30d23e64b991bf42b",
+    "index.en.html": "f3713673453b48a2fe28b7eba5d1090d0f156aa314215bcf2116f91a0883f7dd",
+    "evidence.md": "d9b356aff8a6ebbe58a0a816a7086260eea450d95b75684b6f6f6fe8569b6936",
+    "evidence.en.md": "deb803da9d15cd157470754b755e1ecca3f2f39d9344216c3f803098d38ed186",
+    "showcase.css": "d1ccf864449ffc9ce82f3be67beff7f0636832bc3ec351bb4404e289ecc70302"
+  },
+  "files": {
+    "accuracy.en.json": "5c75944e4ae9f3ae057b6ac13d75d6697dee6b14d4c062e599e871663063a965",
+    "accuracy.json": "9bf486b80483d946320df8639fd90496bdfb648e31592ad666278c58652c4a3f",
+    "dify-en-static.delivery.json": "92c4153f7a9aff1af5ffeaef7878a5bef8506489c091a83e2ff25ca141cd4d7b",
+    "dify-en-static.diagram.json": "8b36d84b9e43ef7b9b8a1fb12b1c390640878281771f1e1d461231e0bd82aa2a",
+    "dify-en-static.html": "1bd80459090a4e78f02f8d47736890bee113f40a7bfb7f7f74ae87585987a498",
+    "dify-en-static.quality.json": "a23e831b20162c087217e67f911c0aa297e98f402d7976687be632d23d8ccf30",
+    "dify-en-static.svg": "0a0463e713ac8172bbf5513c144aa5ea72904adabbca09891b4bfa25080aa8af",
+    "dify-en.delivery.json": "4414c2927e75b643801f6fafb1594c5c973680d94a33c47fa1edb2016fff458a",
+    "dify-en.diagram.json": "41718b5f900815fd5ec01d4308b9753c24b238eb7e389e00555a07403d2353fd",
+    "dify-en.html": "6b93a2c2369ea26bada44e3debf0fb74ec7a33219e6fe5f9e94d168bd4b0a8c5",
+    "dify-en.plan.json": "d6e06c5dc76a4d4708f2498801b6acc7c0c1b456f1927acfafd59208b0cc75d5",
+    "dify-en.quality.json": "a23e831b20162c087217e67f911c0aa297e98f402d7976687be632d23d8ccf30",
+    "dify-en.svg": "b3dd351477cd1e18d80c3b4add5826650079f27cdcdb35dadd81cebdeb1e3f67",
+    "dify-static.delivery.json": "fdc47a35ef98066584cd685544c00a5411fc80f376ed1c2a540889a4d44e1d20",
+    "dify-static.diagram.json": "bab80a3d03ffe44cae590b11edc59e5b46efbd2561b8c0fdb179352bab1a9067",
+    "dify-static.html": "cdb6b454eaa532fe83bc2e495ef9dda20d548996bb55b92e4b1cff2f9161d457",
+    "dify-static.quality.json": "a23e831b20162c087217e67f911c0aa297e98f402d7976687be632d23d8ccf30",
+    "dify-static.svg": "d7939b0fff2e72479a2fc809313166e7308b2e493e3e36f8cc66b253c6492fb9",
+    "dify.delivery.json": "923dde28c729ae31f3fa4bdc8a2fee0be4d2521ad98668e764cacb185e977c80",
+    "dify.diagram.json": "edcab18420c69e8106d68ca69a695631e476d1aca86fb076518975163b3521ef",
+    "dify.html": "71ee63a5d4edb135fc0b289b409a3a8f26a8fbaedc9c0254e5ac936866c0a250",
+    "dify.plan.json": "f003d44e8a7543f94c4bfe9e1c0f7f5e36f59cd040e97ed78e84ccae49e95e20",
+    "dify.quality.json": "a23e831b20162c087217e67f911c0aa297e98f402d7976687be632d23d8ccf30",
+    "dify.svg": "83d31b150bd15abb347203ca25e605fefe191bca671f0639a6d64db1592afedc",
+    "evidence.en.md": "deb803da9d15cd157470754b755e1ecca3f2f39d9344216c3f803098d38ed186",
+    "evidence.md": "d9b356aff8a6ebbe58a0a816a7086260eea450d95b75684b6f6f6fe8569b6936",
+    "facts.en.json": "33043a663f0cccfb087df01c7ab9981c96d4cbe44e3913b46233f149eef1fe34",
+    "facts.json": "4c4a2bb21d550e9314a626d094189a0a9ef9404b133b1685bc3abcec634649bc",
+    "index.en.html": "f3713673453b48a2fe28b7eba5d1090d0f156aa314215bcf2116f91a0883f7dd",
+    "index.html": "2e8fdbc6fdf3df35606bbe783471d5bcd27db255b18779a30d23e64b991bf42b",
+    "showcase.css": "d1ccf864449ffc9ce82f3be67beff7f0636832bc3ec351bb4404e289ecc70302",
+    "style.json": "f8ff58e3fc7ad8edbd979b26e9076022211ae0687f913534c7515c7ca4f2f3a0"
+  },
+  "publication": {
+    "format": 1,
+    "original_delivery_sha256": {
+      "dify-en-static.delivery.json": "fedc48c0a03ee30941db390e50345de438b0063e5166c0583d32480f9445d4da",
+      "dify-en.delivery.json": "c3e23689cd4f6937e23573b22f02a8de2fe1f4e5b5290eba929569e087ff8c69",
+      "dify-static.delivery.json": "ee0520139ca315fd8f62630c4c2bfa390ccb2ade82ae32f21a54facdc2f8db9f",
+      "dify.delivery.json": "f6516335cd44554bb0407c9807a3d7013bc1739e0a1168cfcde5afcc63e5402f"
+    },
+    "path_policy": "Delivery input/artifact paths are bundle-relative; runtime source is repository-relative from this bundle. Rendered bytes and evidence are unchanged. Original local receipts remain in the build directory."
+  }
+}

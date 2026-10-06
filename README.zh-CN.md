@@ -18,15 +18,20 @@ AniDiagram 可以把一段自然语言架构需求变成经过校验、带有动
 
 ## 先看实际效果
 
-下面的企业级智能体平台案例来自仓库自有语义计划，并通过 CLI 使用的同一条
-语义编排与渲染管线生成。
+Dify：**文档如何成为答案**。沿着文档入库和基础 Chat 问答两条链路，
+看清接入层、执行层和数据层如何协作，区分 Celery 索引任务与 API 进程内的问答线程。
 
-![企业级智能体平台架构](./assets/readme/enterprise-agent-platform-zh.webp)
+[![Dify：三层架构中的文档入库与在线问答](./gallery/cases/dify/dify-static.svg)](https://coolbat.github.io/anidiagram/gallery/cases/dify/index.html)
 
-**复现或检查这个案例：**
-[DiagramPlan](./examples/zh-CN/enterprise-agent-platform.plan.json) ·
-[在线 HTML](https://coolbat.github.io/anidiagram/gallery/readme-showcase/enterprise-agent-platform-zh.html) ·
-[SVG](./assets/readme/enterprise-agent-platform-zh.svg)
+**[打开中英文案例 →](https://coolbat.github.io/anidiagram/gallery/cases/dify/index.html)** ·
+[交互架构图](https://coolbat.github.io/anidiagram/gallery/cases/dify/dify.html) ·
+[源码依据与复现](./examples/readme-showcase-v2/dify/evidence.md) ·
+[DiagramPlan](./gallery/cases/dify/dify.plan.json) ·
+[事实核验报告](./gallery/cases/dify/accuracy.json)
+
+固定 Dify **1.17.0**（提交 `09a855d`），只覆盖选定链路，不代表完整平台，也不是
+Dify 官方架构图。当前为源码解读稿，**独立语义复核待完成**；未运行 Dify 或调用
+真实模型。源码引用有效、渲染检查通过，不等于架构准确性已经得到证明。
 
 完整 Gallery 包含两套公共图标系统、16 种语义布局、13 种风格、运行时动效证明
 和可以直接复制的 CLI 命令：
@@ -34,6 +39,14 @@ AniDiagram 可以把一段自然语言架构需求变成经过校验、带有动
 
 <details>
 <summary><strong>查看更多生成案例</strong></summary>
+
+此前的概念架构案例：企业级智能体平台。
+
+![企业级智能体平台架构](./assets/readme/enterprise-agent-platform-zh.webp)
+
+[DiagramPlan](./examples/zh-CN/enterprise-agent-platform.plan.json) ·
+[在线 HTML](https://coolbat.github.io/anidiagram/gallery/readme-showcase/enterprise-agent-platform-zh.html) ·
+[SVG](./assets/readme/enterprise-agent-platform-zh.svg)
 
 - [Governed RAG 生产架构](https://coolbat.github.io/anidiagram/gallery/readme-showcase/hero-governed-rag.html) —— 英文案例，Illustrated 2.5、Minimal Light、Layered。
 - [Kubernetes 生产分层](https://coolbat.github.io/anidiagram/gallery/readme-showcase/hero-kubernetes-three-layer.html) —— 英文案例，Diagram Core v1、Deep Tech、Layered。

@@ -1,0 +1,33 @@
+{
+  "name": "readme-dify-trial",
+  "canvas": {
+    "background": "#ffffff",
+    "text": "#172033",
+    "muted": "#526176",
+    "grid": "#ffffff"
+  },
+  "title": {
+    "accent": "#2563eb",
+    "highlight": "#eff6ff"
+  },
+  "node": {
+    "radius": 10,
+    "stroke_width": 1.2
+  },
+  "effects": {
+    "frame_opacity": 0,
+    "grid_opacity": 0
+  },
+  "roles": {
+    "process": {
+      "stroke": "#94a3b8",
+      "fill": "#ffffff",
+      "text": "#172033"
+    },
+    "neutral": {
+      "stroke": "#cbd5e1",
+      "fill": "#f1f5f9",
+      "text": "#334155"
+    }
+  }
+}

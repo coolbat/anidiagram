@@ -1,0 +1,396 @@
+{
+  "version": "0.1",
+  "claims": [
+    {
+      "id": "relation-web-nginx",
+      "subject": "web-nginx",
+      "predicate": "relation",
+      "object": {
+        "from": "web",
+        "to": "nginx",
+        "direction": "forward",
+        "kind": "http"
+      },
+      "condition": "Console request succeeds",
+      "source_refs": [
+        "src-web",
+        "src-file",
+        "src-nginx"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "relation-caller-nginx",
+      "subject": "caller-nginx",
+      "predicate": "relation",
+      "object": {
+        "from": "caller",
+        "to": "nginx",
+        "direction": "bidirectional",
+        "kind": "http"
+      },
+      "condition": "Basic CHAT; streaming response mode",
+      "source_refs": [
+        "src-nginx",
+        "src-chat-api"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "relation-nginx-api",
+      "subject": "nginx-api",
+      "predicate": "relation",
+      "object": {
+        "from": "nginx",
+        "to": "api",
+        "direction": "bidirectional",
+        "kind": "http"
+      },
+      "condition": "Console API or /v1 route",
+      "source_refs": [
+        "src-nginx",
+        "src-chat-api"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "relation-api-files",
+      "subject": "api-files",
+      "predicate": "relation",
+      "object": {
+        "from": "api",
+        "to": "files",
+        "direction": "forward",
+        "kind": "storage-access"
+      },
+      "condition": "Local uploaded text file; validation succeeds",
+      "source_refs": [
+        "src-file"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "relation-api-sql",
+      "subject": "api-sql",
+      "predicate": "relation",
+      "object": {
+        "from": "api",
+        "to": "sql",
+        "direction": "forward",
+        "kind": "database-access"
+      },
+      "condition": "Upload and document creation succeed",
+      "source_refs": [
+        "src-file",
+        "src-document"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "relation-api-redis",
+      "subject": "api-redis",
+      "predicate": "relation",
+      "object": {
+        "from": "api",
+        "to": "redis",
+        "direction": "forward",
+        "kind": "dependency"
+      },
+      "condition": "Index dispatch after document commit; query embedding cache access on semantic retrieval",
+      "source_refs": [
+        "src-document",
+        "src-task-proxy",
+        "src-task-policy",
+        "src-broker",
+        "src-broker-default",
+        "src-query-embedding"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "relation-redis-worker",
+      "subject": "redis-worker",
+      "predicate": "relation",
+      "object": {
+        "from": "redis",
+        "to": "worker",
+        "direction": "forward",
+        "kind": "task-delivery"
+      },
+      "condition": "Worker consumes Celery broker; self-hosted priority_dataset queue",
+      "source_refs": [
+        "src-broker",
+        "src-task-policy",
+        "src-task",
+        "src-task-run"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "relation-worker-files",
+      "subject": "worker-files",
+      "predicate": "relation",
+      "object": {
+        "from": "worker",
+        "to": "files",
+        "direction": "forward",
+        "kind": "storage-access"
+      },
+      "condition": "FILE source in extraction",
+      "source_refs": [
+        "src-task-run",
+        "src-index",
+        "src-extract"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "relation-worker-sql",
+      "subject": "worker-sql",
+      "predicate": "relation",
+      "object": {
+        "from": "worker",
+        "to": "sql",
+        "direction": "forward",
+        "kind": "database-access"
+      },
+      "condition": "Successful paragraph indexing",
+      "source_refs": [
+        "src-index",
+        "src-doc-embedding"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "relation-worker-vector",
+      "subject": "worker-vector",
+      "predicate": "relation",
+      "object": {
+        "from": "worker",
+        "to": "vector",
+        "direction": "forward",
+        "kind": "vector-access"
+      },
+      "condition": "high_quality paragraph indexing; embedding succeeds",
+      "source_refs": [
+        "src-index",
+        "src-paragraph",
+        "src-vector-create"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "relation-api-vector",
+      "subject": "api-vector",
+      "predicate": "relation",
+      "object": {
+        "from": "api",
+        "to": "vector",
+        "direction": "forward",
+        "kind": "vector-access"
+      },
+      "condition": "Dataset configured and selected; internal high_quality semantic retrieval; filters permit results",
+      "source_refs": [
+        "src-chat",
+        "src-retrieval",
+        "src-search",
+        "src-vector-query"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "relation-worker-plugin",
+      "subject": "worker-plugin",
+      "predicate": "relation",
+      "object": {
+        "from": "worker",
+        "to": "plugin",
+        "direction": "forward",
+        "kind": "model-invocation"
+      },
+      "condition": "Document embedding cache miss; model configured",
+      "source_refs": [
+        "src-vector-create",
+        "src-doc-embedding",
+        "src-model",
+        "src-plugin-embedding",
+        "src-plugin-base"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "relation-api-plugin",
+      "subject": "api-plugin",
+      "predicate": "relation",
+      "object": {
+        "from": "api",
+        "to": "plugin",
+        "direction": "forward",
+        "kind": "model-invocation"
+      },
+      "condition": "Query embedding cache miss and/or LLM invocation; validated normal CHAT path",
+      "source_refs": [
+        "src-chat",
+        "src-query-embedding",
+        "src-model",
+        "src-plugin-runtime",
+        "src-plugin-llm",
+        "src-plugin-embedding",
+        "src-plugin-base"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "thread-not-celery",
+      "subject": "api",
+      "predicate": "behavior",
+      "object": "基础 CHAT 的 ChatAppGenerator 创建 threading.Thread 并调用 ChatAppRunner；这里的 worker 是 API 内线程，不是 Celery Worker。",
+      "condition": "",
+      "source_refs": [
+        "src-dispatch",
+        "src-thread",
+        "src-chat"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "separate-storage",
+      "subject": "files",
+      "predicate": "behavior",
+      "object": "上传文件内容由 storage.save 保存，SQL 保存 UploadFile 元数据。",
+      "condition": "",
+      "source_refs": [
+        "src-file"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "commit-before-queue",
+      "subject": "api-redis",
+      "predicate": "behavior",
+      "object": "创建文档先提交 SQL，再通过 DocumentIndexingTaskProxy.delay 投递索引任务。",
+      "condition": "",
+      "source_refs": [
+        "src-document",
+        "src-task-policy",
+        "src-task-proxy"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "cache-condition",
+      "subject": "api-plugin",
+      "predicate": "behavior",
+      "object": "查询 Embedding 命中 Redis 缓存时直接使用缓存，不是每次检索都调用 Embedding 模型。",
+      "condition": "",
+      "source_refs": [
+        "src-query-embedding"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "retrieval-condition",
+      "subject": "api-vector",
+      "predicate": "behavior",
+      "object": "本图检索发生于已配置且选中的内部知识库；单知识库路由也可能先调用 LLM，主图不是严格时序。",
+      "condition": "",
+      "source_refs": [
+        "src-chat",
+        "src-retrieval"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "plugin-boundary",
+      "subject": "plugin",
+      "predicate": "behavior",
+      "object": "主仓库用 HTTP 调用 Plugin Daemon 的模型接口；本次审阅没有覆盖插件服务实现与具体模型供应商。",
+      "condition": "",
+      "source_refs": [
+        "src-plugin-base",
+        "src-plugin-llm",
+        "src-plugin-embedding"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "definition-file",
+      "subject": "files",
+      "predicate": "python-definition",
+      "object": {
+        "path": "api/services/file_service.py",
+        "symbol": "FileService.upload_file"
+      },
+      "condition": "",
+      "source_refs": [
+        "src-file"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "definition-index",
+      "subject": "worker",
+      "predicate": "python-definition",
+      "object": {
+        "path": "api/core/indexing_runner.py",
+        "symbol": "IndexingRunner.run"
+      },
+      "condition": "",
+      "source_refs": [
+        "src-index"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "definition-vector-query",
+      "subject": "vector",
+      "predicate": "python-definition",
+      "object": {
+        "path": "api/core/rag/datasource/vdb/vector_factory.py",
+        "symbol": "Vector.search_by_vector"
+      },
+      "condition": "",
+      "source_refs": [
+        "src-vector-query"
+      ],
+      "confidence": "asserted",
+      "required": true
+    },
+    {
+      "id": "definition-plugin-llm",
+      "subject": "plugin",
+      "predicate": "python-definition",
+      "object": {
+        "path": "api/core/plugin/impl/model.py",
+        "symbol": "PluginModelClient.invoke_llm"
+      },
+      "condition": "",
+      "source_refs": [
+        "src-plugin-llm"
+      ],
+      "confidence": "asserted",
+      "required": true
+    }
+  ]
+}

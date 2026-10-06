@@ -72,6 +72,8 @@ jobs:
           PYTHONPATH=src python3 scripts/check_compatibility_snapshot.py tests/compatibility-baseline-18cb0f3.json
       - name: Verify portable Agent Skill installation
         run: python3 scripts/verify_skill_install.py --outdir build/ci/skill-install
+      - name: Verify bilingual Dify publication and source consistency
+        run: python3 -m unittest discover -s examples/readme-showcase-v2/dify -p 'test_*.py'
       - name: Validate all approved Diagram Core assets
         run: PYTHONPATH=src python3 scripts/validate_diagram_core_assets.py --strict --json
       - name: Enforce committed gallery asset budgets
@@ -200,6 +202,12 @@ jobs:
           node scripts/verify_choreographer.mjs build/ci/choreographer/hybrid.html hybrid
       - name: Verify committed README visual quality
         run: node scripts/verify_readme_showcase_round_1.mjs gallery/readme-showcase
+      - name: Verify bilingual Dify diagram labels
+        run: |
+          for name in dify dify-static dify-en dify-en-static; do
+            python3 -I scripts/run_anidiagram.py visual-check "gallery/cases/dify/$name.html" \
+              --strict-labels --viewports 1440x1100,1920x1320 --outdir "build/ci/dify/$name"
+          done
       - name: Verify Simplified Chinese rendering and geometry
         run: node scripts/verify_chinese_architecture.mjs build/ci/zh-CN/enterprise-agent-platform.html
       - name: Upload browser diagnostics on failure

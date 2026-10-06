@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dify — 从文档到答案 · AniDiagram 案例试稿</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="showcase.css">
+<link rel="alternate" hreflang="en" href="index.en.html">
+<main>
+  <nav class="languages" aria-label="语言切换"><a href="index.html" lang="zh-CN" hreflang="zh-CN" aria-current="page">中文</a><span aria-hidden="true">/</span><a href="index.en.html" lang="en" hreflang="en">English</a></nav>
+  <p class="eyebrow">ANIDIAGRAM / SOURCE-BACKED CASE STUDY &nbsp; <span>源码解读稿 · 待独立复核</span></p>
+  <h1>从文档到答案，<br>Dify 的三层如何协作？</h1>
+  <p class="intro">上传文件不等于完成知识库索引，在线问答也不一定经过任务队列。<br>把两条路径放回真实服务与存储边界，看看每一步由谁负责。</p>
+  <nav aria-label="案例入口">
+    <a href="dify.html">打开交互图 →</a>
+    <a href="#scope">查看范围与边界</a>
+    <a href="evidence.md">源码证据</a>
+  </nav>
+  <div class="legend" aria-label="图例"><span style="--ink:#2563eb">文档入库</span><span style="--ink:#0f766e">在线问答</span><span style="--ink:#64748b">共享接口</span></div>
+  <figure>
+    <a href="dify.html" aria-label="放大 Dify 架构图，按文档入库或在线问答聚焦关系">
+      <img src="dify-static.svg" width="900" height="1130" alt="Dify 三层架构。接入层为 Web 控制台、Nginx 和 API 调用方；执行层为 API 服务、索引 Worker 和 Plugin Daemon；数据层为文件存储、Redis、SQL 数据库和向量库。索引经 Redis 任务队列交给 Worker；基础 Chat 在 API 内处理检索和模型调用。">
+    </a>
+    <figcaption>10 个节点 · 13 条选定关系 · 三个逻辑层，不是三个部署服务。交互图可切换「文档入库 / 在线问答」；窄屏请打开后放大。箭头表示调用或任务交付，非完整时序。</figcaption>
+  </figure>
+  <div class="insight">
+    <p><strong>异步的是文档索引，不是这里的全部问答。</strong></p>
+    <p>本例的基础 <code>CHAT</code> 在 API 进程的新线程中检索知识、组织上下文并调用模型；文档索引则由 Celery Worker 提取、分段、向量化并写入索引。</p>
+  </div>
+  <p class="status">源码固定：Dify <strong>1.17.0</strong> · <a href="https://github.com/langgenius/dify/tree/09a855dcef24c0edc7431c46c0cfaa494481daf5">09a855d</a><br>这是基于源码阅读的架构试稿。源码引用校验不等于语义准确性证明；独立语义复核待完成，未运行 Dify 或调用真实模型。</p>
+  <details id="scope">
+    <summary>这张图画了什么，又没有画什么？</summary>
+    <ul>
+      <li>范围：自托管、本地文本文件、<code>high_quality</code> 段落索引，基础 <code>AppMode.CHAT</code>，已配置且选中的内部知识库与语义检索，正常成功路径。</li>
+      <li>三个数据形态：原始文件在文件存储，元数据与分段在 SQL，向量索引在向量库。PostgreSQL / Weaviate 是此例选择，并非唯一支持的存储。</li>
+      <li>图中 Worker 是独立 Celery 进程；API 内部的 Chat / RAG 代码不是额外的微服务。</li>
+      <li>查询 Embedding 命中 Redis 缓存时不再调用 Embedding 模型。知识库路由也可能先调用 LLM，所以图中连线不是严格的执行顺序。</li>
+      <li>只追踪到 Plugin Daemon 的 HTTP 接口；未审阅其独立仓库和具体模型插件，不画成已验证的外部模型调用链。</li>
+      <li>不包含 Workflow、Chatflow、Agent、知识流水线、多模态、重排、错误重试、Web 服务端托管及全部数据库/缓存访问。</li>
+    </ul>
+  </details>
+  <details id="reproduce">
+    <summary>把这个案例交给其他 Agent 复核</summary>
+    <pre>用 AniDiagram 分析 langgenius/dify 的固定提交
+09a855dcef24c0edc7431c46c0cfaa494481daf5（1.17.0）。
+核对本地文本文件的 high_quality paragraph 索引，以及基础 CHAT
+在已选中内部知识库时的 semantic_search 与回答生成。
+检查：文档何时提交与投递任务？Chat 的工作线程属于哪个进程？
+文件、SQL、Redis、向量库分别存什么？Embedding 缓存命中怎样改变模型调用？
+分清模块与独立服务；不要把所有问答都画进 Celery 队列。
+每条关键边给出固定 SHA 的源码依据。先审计语义，再评价视觉效果。</pre>
+    <p><a href="evidence.md">完整源码索引与构建命令</a> · <a href="accuracy.json">事实检查报告</a> · <a href="dify.plan.json">语义 Plan</a></p>
+  </details>
+</main>
+<footer>这是 AniDiagram 的源码解读案例，不是 Dify 官方架构图。图由 AniDiagram 实际渲染；动效表示流向，不表示真实请求耗时。</footer>
+</html>
