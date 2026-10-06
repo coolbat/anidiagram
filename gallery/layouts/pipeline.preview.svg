@@ -1,0 +1,292 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1632" height="720" viewBox="0 0 1632 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="off" data-motion-sequence="staged" data-motion-edge="packet-flow" data-motion-node="icon-performance" data-motion-group="border-scan" data-motion-title="highlight-sweep" data-motion-reduced="subtle" data-icon-system="illustrated" data-icon-system-version="2.5.0">
+<title id="diagram-title">RAG Ingestion Pipeline</title>
+<desc id="diagram-desc">documents become chunks, embeddings, retrieval, and grounded answers</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .edge-flow { stroke-linecap: round; }
+  .edge-draw, .edge-base { stroke-linecap: butt; stroke-linejoin: round; }
+  .edge-particle { filter: url(#particle-glow); }
+  .edge-arrow-particle { filter: url(#particle-glow); }
+  .semantic-icon { vector-effect: non-scaling-stroke; }
+  .semantic-icon-breathe { transform-box: fill-box; transform-origin: center; animation: semanticIconBreathe 2.8s ease-in-out infinite; }
+  .icon-breathe-halo { pointer-events: none; filter: url(#particle-glow); }
+  .node-glow, .node-burst { pointer-events: none; }
+  #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
+  #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
+  @keyframes titlePulse { 0%, 100% { opacity: 0.76; } 50% { opacity: 1; } }
+  @keyframes titleSlide { 0%, 100% { transform: translateX(0); opacity: 0.9; } 50% { transform: translateX(8px); opacity: 1; } }
+  @keyframes semanticIconBreathe { 0%, 100% { transform: scale(0.96); opacity: 0.72; } 50% { transform: scale(1.08); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    #title-accent, #title-highlight, .semantic-icon-breathe { animation: none; }
+  }
+</style>
+<rect width="100%" height="100%" fill="#07162c" />
+<defs>
+  <filter id="soft-glow" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="5" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <filter id="particle-glow" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="2.6" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#12345c" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="1576" height="668" rx="26" fill="none" stroke="#2f6f9f" stroke-width="1.4" opacity="1.00" />
+<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#55c7ff" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#0d3b5c" />
+
+<rect class="title-sweep" x="72" y="46" width="0" height="56" rx="16" fill="#55c7ff" opacity="0.16">
+  </rect>
+<text id="main-title" x="90" y="84" class="title" fill="#e6f7ff" opacity="1">
+  </text>
+<text x="74" y="126" class="subtitle" fill="#9cc7e8" opacity="1">
+  </text>
+
+<g id="group-rag" class="group" opacity="1">
+  <rect x="56.0" y="250.0" width="1475.0" height="185.0" rx="22" fill="#0b1d38" fill-opacity="0.34" stroke="#55c7ff" stroke-width="1.6" stroke-dasharray="9 8">
+    </rect>
+
+  <rect class="group-border-scan" x="56.0" y="250.0" width="1475.0" height="185.0" rx="22" fill="none" stroke="#55c7ff" stroke-width="3.4" stroke-linecap="round" stroke-dasharray="180.0 1162.0" opacity="0.72" filter="url(#soft-glow)">
+    </rect>
+
+  <text x="74.0" y="280.0" class="group-label" fill="#9cc7e8">RAG Pipeline</text>
+</g>
+
+<defs>
+  <marker id="arrow-1" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#55c7ff" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 329.5 357.0 L 329.5 357.0" fill="none" stroke="#55c7ff" stroke-width="1.3" opacity="0.24" />
+  <path class="edge-draw" d="M 329.5 357.0 L 329.5 357.0" fill="none" stroke="#55c7ff" stroke-width="2.0" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-1)" />
+
+  <circle class="edge-particle edge-packet" r="5.5" fill="#55c7ff" stroke="none" opacity="0.92">
+    </circle>
+
+  <text x="329.5" y="343.0" class="edge-label" fill="#9cc7e8" opacity="1">
+
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-2" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#55c7ff" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 573.0 357.0 L 573.0 357.0" fill="none" stroke="#55c7ff" stroke-width="1.3" opacity="0.24" />
+  <path class="edge-draw" d="M 573.0 357.0 L 573.0 357.0" fill="none" stroke="#55c7ff" stroke-width="2.0" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-2)" />
+
+  <circle class="edge-particle edge-packet" r="5.5" fill="#55c7ff" stroke="none" opacity="0.92">
+    </circle>
+
+  <text x="573.0" y="343.0" class="edge-label" fill="#9cc7e8" opacity="1">
+
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-3" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#55c7ff" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 817.0 357.0 L 817.0 357.0" fill="none" stroke="#55c7ff" stroke-width="1.3" opacity="0.24" />
+  <path class="edge-draw" d="M 817.0 357.0 L 817.0 357.0" fill="none" stroke="#55c7ff" stroke-width="2.0" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-3)" />
+
+  <circle class="edge-particle edge-packet" r="5.5" fill="#55c7ff" stroke="none" opacity="0.92">
+    </circle>
+
+  <text x="817.0" y="343.0" class="edge-label" fill="#9cc7e8" opacity="1">
+
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-4" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#55c7ff" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 1060.5 357.0 L 1060.5 357.0" fill="none" stroke="#55c7ff" stroke-width="1.3" opacity="0.24" />
+  <path class="edge-draw" d="M 1060.5 357.0 L 1060.5 357.0" fill="none" stroke="#55c7ff" stroke-width="2.0" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-4)" />
+
+  <circle class="edge-particle edge-packet" r="5.5" fill="#55c7ff" stroke="none" opacity="0.92">
+    </circle>
+
+  <text x="1060.5" y="343.0" class="edge-label" fill="#9cc7e8" opacity="1">
+
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-5" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#55c7ff" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 1304.0 357.0 L 1304.0 357.0" fill="none" stroke="#55c7ff" stroke-width="1.3" opacity="0.24" />
+  <path class="edge-draw" d="M 1304.0 357.0 L 1304.0 357.0" fill="none" stroke="#55c7ff" stroke-width="2.0" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-5)" />
+
+  <circle class="edge-particle edge-packet" r="5.5" fill="#55c7ff" stroke="none" opacity="0.92">
+    </circle>
+
+  <text x="1304.0" y="343.0" class="edge-label" fill="#9cc7e8" opacity="1">
+
+  </text>
+</g>
+
+<g id="node-docs" class="node motion-node" data-role="source" opacity="1">
+  <rect x="88.0" y="315.0" width="240.0" height="84.0" rx="8.0" fill="#0b273c" stroke="#7dd3fc" stroke-width="1.8" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="folder" data-node-id="docs" opacity="1">
+  <g id="icon-docs-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="collection-store-index-organize" data-rest-opacity="1" transform="translate(112.0 313.0) scale(0.7333)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-docs-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#2a2512" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-docs-folder-back" class="illustrated-part illustrated-folder-back" data-rest-opacity="1" d="M18 43h31l9 9h44v45H18Z" fill="#5268c9" stroke="#cfe9f5" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-docs-folder-tab" class="illustrated-part illustrated-folder-tab" data-rest-opacity="1" d="M18 43h31l9 9H18Z" fill="#b58b29" stroke="#cfe9f5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-docs-document" class="illustrated-part illustrated-document" data-rest-opacity="1" x="50" y="35" width="31" height="40" rx="5" fill="#0b1d38" stroke="#cfe9f5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-docs-folder-front" class="illustrated-part illustrated-folder-front" data-rest-opacity="1" d="M18 60h86l-8 37H27Z" fill="#b58b29" stroke="#cfe9f5" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-docs-index-label" class="illustrated-part illustrated-index-label" data-rest-opacity="1" x="44" y="70" width="34" height="15" rx="7.5" fill="#28b980" stroke="#cfe9f5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="277.0" y="343.0" text-anchor="middle" fill="#e6f7ff">
+<tspan x="277.0" dy="18" class="node-title">Docs</tspan>
+<tspan x="277.0" dy="17" class="node-caption">source</tspan>
+<tspan x="277.0" dy="17" class="node-caption">files</tspan>
+</text>
+</g>
+
+<g id="node-chunk" class="node motion-node" data-role="process" opacity="1">
+  <rect x="331.0" y="315.0" width="240.0" height="84.0" rx="8.0" fill="#0b1d38" stroke="#55c7ff" stroke-width="1.8" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="file" data-node-id="chunk" opacity="1">
+  <g id="icon-chunk-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="document-content-attach-reference" data-rest-opacity="1" transform="translate(355.0 313.0) scale(0.7333)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-chunk-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#101b45" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-chunk-page" class="illustrated-part illustrated-page" data-rest-opacity="1" x="29" y="17" width="62" height="86" rx="8" fill="#0b1d38" stroke="#cfe9f5" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-chunk-paperclip" class="illustrated-part illustrated-paperclip" data-rest-opacity="1" d="M45 35v38c0 13 18 13 18 0V44c0-8-11-8-11 0v27c0 5 6 5 6 0V49" fill="none" stroke="#667de0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-chunk-content-lines" class="illustrated-part illustrated-content-lines" data-rest-opacity="1" d="M68 49h12M68 64h12" fill="none" stroke="#58d5ce" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="520.0" y="343.0" text-anchor="middle" fill="#e6f7ff">
+<tspan x="520.0" dy="18" class="node-title">Chunk</tspan>
+<tspan x="520.0" dy="17" class="node-caption">split text</tspan>
+</text>
+</g>
+
+<g id="node-embed" class="node motion-node" data-role="tool" opacity="1">
+  <rect x="575.0" y="315.0" width="240.0" height="84.0" rx="8.0" fill="#1f2835" stroke="#f6d365" stroke-width="1.8" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="api" data-node-id="embed" opacity="1">
+  <g id="icon-embed-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="request-route-response" data-rest-opacity="1" transform="translate(599.0 313.0) scale(0.7333)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-embed-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="59" cy="61" r="49" fill="#101b45" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-embed-gateway" class="illustrated-part illustrated-gateway" data-rest-opacity="1" x="30" y="24" width="60" height="72" rx="16" fill="#0b1d38" stroke="#cfe9f5" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-embed-api-glyph" class="illustrated-part illustrated-api-glyph" data-rest-opacity="1" d="M51 44 42 60l9 16m18-32 9 16-9 16M63 40l-7 40" fill="none" stroke="#667de0" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-embed-request-path" class="illustrated-part illustrated-request-path" data-rest-opacity="1" d="M10 45h27m-8-7 8 7-8 7" fill="none" stroke="#168f89" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-embed-request-token" class="illustrated-part illustrated-request-token" data-rest-opacity="1" cx="12" cy="45" r="5" fill="#c64f79" stroke="#cfe9f5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-embed-response-path" class="illustrated-part illustrated-response-path" data-rest-opacity="1" d="M110 76H83m8-7-8 7 8 7" fill="none" stroke="#a7b8ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-embed-response-token" class="illustrated-part illustrated-response-token" data-rest-opacity="1" cx="108" cy="76" r="5" fill="#b58b29" stroke="#cfe9f5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="764.0" y="343.0" text-anchor="middle" fill="#e6f7ff">
+<tspan x="764.0" dy="18" class="node-title">Embed</tspan>
+<tspan x="764.0" dy="17" class="node-caption">vectors</tspan>
+</text>
+</g>
+
+<g id="node-vector" class="node motion-node" data-role="memory" opacity="1">
+  <rect x="819.0" y="315.0" width="240.0" height="84.0" rx="8.0" fill="#0b2f2b" stroke="#33e6a6" stroke-width="1.8" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="database" data-node-id="vector" opacity="1">
+  <g id="icon-vector-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="data-ingest-store-persist" data-rest-opacity="1" transform="translate(843.0 313.0) scale(0.7333)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-vector-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="59" cy="61" r="49" fill="#0b273c" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-vector-cylinder-body" class="illustrated-part illustrated-cylinder-body" data-rest-opacity="1" d="M25 37v50c0 9 16 16 35 16s35-7 35-16V37Z" fill="#238dbb" stroke="#cfe9f5" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <ellipse id="icon-vector-cylinder-top" class="illustrated-part illustrated-cylinder-top" data-rest-opacity="1" cx="60" cy="37" rx="35" ry="14" fill="#5268c9" stroke="#cfe9f5" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-vector-layer-top" class="illustrated-part illustrated-layer-top" data-rest-opacity="1" d="M25 58c0 9 16 16 35 16s35-7 35-16" fill="none" stroke="#cfe9f5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-vector-layer-bottom" class="illustrated-part illustrated-layer-bottom" data-rest-opacity="1" d="M25 78c0 9 16 16 35 16s35-7 35-16" fill="none" stroke="#cfe9f5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-vector-input-bead" class="illustrated-part illustrated-input-bead" data-rest-opacity="1" cx="14" cy="23" r="6" fill="#c64f79" stroke="#cfe9f5" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-vector-write-path" class="illustrated-part illustrated-write-path" data-rest-opacity="1" d="M20 25c11-4 17 0 24 8m-7-1 7 1-3-7" fill="none" stroke="#667de0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <ellipse id="icon-vector-commit-ripple" class="illustrated-part illustrated-commit-ripple" data-rest-opacity="1" cx="60" cy="85" rx="13" ry="5" fill="none" stroke="#168f89" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-vector-stored-bead" class="illustrated-part illustrated-stored-bead" data-rest-opacity="1" cx="60" cy="84" r="4.5" fill="#28b980" stroke="#cfe9f5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="1008.0" y="343.0" text-anchor="middle" fill="#e6f7ff">
+<tspan x="1008.0" dy="18" class="node-title">Vector</tspan>
+<tspan x="1008.0" dy="18" class="node-title">DB</tspan>
+<tspan x="1008.0" dy="17" class="node-caption">store</tspan>
+</text>
+</g>
+
+<g id="node-retrieve" class="node motion-node" data-role="agent" opacity="1">
+  <rect x="1062.0" y="315.0" width="240.0" height="84.0" rx="8.0" fill="#101b45" stroke="#a7b8ff" stroke-width="1.8" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="search" data-node-id="retrieve" opacity="1">
+  <g id="icon-retrieve-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="query-scan-discover" data-rest-opacity="1" transform="translate(1086.0 313.0) scale(0.7333)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-retrieve-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="58" cy="61" r="49" fill="#0b273c" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-retrieve-lens-glass" class="illustrated-part illustrated-lens-glass" data-rest-opacity="1" cx="49" cy="48" r="29" fill="#0b1d38" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-retrieve-lens" class="illustrated-part illustrated-lens" data-rest-opacity="1" cx="49" cy="48" r="30" fill="none" stroke="#cfe9f5" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-retrieve-handle" class="illustrated-part illustrated-handle" data-rest-opacity="1" d="M70 69l29 29" fill="none" stroke="#cfe9f5" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-retrieve-scan-cross" class="illustrated-part illustrated-scan-cross" data-rest-opacity="1" d="M49 34v28M35 48h28" fill="none" stroke="#667de0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-retrieve-target-ring" class="illustrated-part illustrated-target-ring" data-rest-opacity="1" cx="93" cy="24" r="11" fill="#0b2f2b" stroke="#168f89" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-retrieve-result-dot" class="illustrated-part illustrated-result-dot" data-rest-opacity="1" cx="93" cy="24" r="4" fill="#28b980" stroke="#cfe9f5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-retrieve-discovery" class="illustrated-part illustrated-discovery" data-rest-opacity="1" d="M20 79l3 8 8 3-8 3-3 8-3-8-8-3 8-3Z" fill="#b58b29" stroke="#cfe9f5" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="1251.0" y="343.0" text-anchor="middle" fill="#e6f7ff">
+<tspan x="1251.0" dy="18" class="node-title">Retrieve</tspan>
+<tspan x="1251.0" dy="17" class="node-caption">top-k</tspan>
+</text>
+</g>
+
+<g id="node-answer" class="node motion-node" data-role="output" opacity="1">
+  <rect x="1306.0" y="315.0" width="240.0" height="84.0" rx="8.0" fill="#0a2d33" stroke="#33e6a6" stroke-width="1.8" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="output" data-node-id="answer" opacity="1">
+  <g id="icon-answer-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="artifact-deliver-confirm" data-rest-opacity="1" transform="translate(1330.0 313.0) scale(0.7333)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-answer-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="58" cy="61" r="49" fill="#0b2f2b" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-answer-artifact-card" class="illustrated-part illustrated-artifact-card" data-rest-opacity="1" d="M33 14h36l16 16v51H33Z" fill="#0b1d38" stroke="#cfe9f5" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-answer-artifact-corner" class="illustrated-part illustrated-artifact-corner" data-rest-opacity="1" d="M69 14v17h16" fill="#5268c9" stroke="#cfe9f5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-answer-artifact-lines" class="illustrated-part illustrated-artifact-lines" data-rest-opacity="1" d="M44 43h29M44 55h29M44 67h20" fill="none" stroke="#667de0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-answer-emergence-track" class="illustrated-part illustrated-emergence-track" data-rest-opacity="1" d="M59 79v17" fill="none" stroke="#58d5ce" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-answer-delivery-tray" class="illustrated-part illustrated-delivery-tray" data-rest-opacity="1" d="M13 75h29l8 10h18l8-10h29l-6 29H19Z" fill="#238dbb" stroke="#cfe9f5" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-answer-delivery-lip" class="illustrated-part illustrated-delivery-lip" data-rest-opacity="1" d="M19 96h80M42 75l8 10h18l8-10" fill="none" stroke="#cfe9f5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="1495.0" y="343.0" text-anchor="middle" fill="#e6f7ff">
+<tspan x="1495.0" dy="18" class="node-title">Answer</tspan>
+<tspan x="1495.0" dy="17" class="node-caption">grounded</tspan>
+</text>
+</g>
+<style>
+* { animation: none !important; transition: none !important; }
+.edge-flow, .edge-particle, .edge-arrow-particle, .node-burst, .node-glow,
+.icon-breathe-halo, #title-highlight { display: none !important; }
+</style></svg>

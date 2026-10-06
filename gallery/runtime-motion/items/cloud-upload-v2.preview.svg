@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="360" viewBox="0 0 560 360" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="off" data-motion-sequence="simultaneous" data-motion-edge="static" data-motion-node="icon-performance" data-motion-group="static" data-motion-title="none" data-motion-reduced="subtle" data-icon-system="semantic-line-v1">
+<title id="diagram-title">Cloud Upload</title>
+<desc id="diagram-desc">cloud-upload-v2</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .edge-flow { stroke-linecap: round; }
+  .edge-draw, .edge-base { stroke-linecap: butt; stroke-linejoin: round; }
+  .edge-particle { filter: url(#particle-glow); }
+  .edge-arrow-particle { filter: url(#particle-glow); }
+  .semantic-icon { vector-effect: non-scaling-stroke; }
+  .semantic-icon-breathe { transform-box: fill-box; transform-origin: center; animation: semanticIconBreathe 2.8s ease-in-out infinite; }
+  .icon-breathe-halo { pointer-events: none; filter: url(#particle-glow); }
+  .node-glow, .node-burst { pointer-events: none; }
+  #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
+  #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
+  @keyframes titlePulse { 0%, 100% { opacity: 0.76; } 50% { opacity: 1; } }
+  @keyframes titleSlide { 0%, 100% { transform: translateX(0); opacity: 0.9; } 50% { transform: translateX(8px); opacity: 1; } }
+  @keyframes semanticIconBreathe { 0%, 100% { transform: scale(0.96); opacity: 0.72; } 50% { transform: scale(1.08); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    #title-accent, #title-highlight, .semantic-icon-breathe { animation: none; }
+  }
+</style>
+<rect width="100%" height="100%" fill="#050816" />
+<defs>
+  <filter id="soft-glow" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="5" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <filter id="particle-glow" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="2.6" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#111c36" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="504" height="308" rx="26" fill="none" stroke="#64748b" stroke-width="1.4" opacity="1.00" />
+<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#22d3ee" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#0f2742" />
+
+<text id="main-title" x="90" y="84" class="title" fill="#f8fafc" opacity="1">
+  </text>
+<text x="74" y="126" class="subtitle" fill="#cbd5e1" opacity="1">
+  </text>
+
+
+
+<g id="node-cloud" class="node motion-node" data-role="tool" opacity="1">
+  <rect x="170.0" y="190.0" width="220.0" height="96.0" rx="14.0" fill="#21160a" stroke="#f59e0b" stroke-width="2.0" />
+
+<g id="icon-cloud-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-cloud" data-icon="cloud" data-node-id="cloud" opacity="0.94">
+
+
+
+
+
+  <path id="icon-cloud-shell" d="M 191.0 242.6            C 191.0 234.2, 200.2 230.9, 206.1 230.4            C 209.5 219.1, 225.0 222.9, 223.8 234.6            C 234.7 235.9, 234.3 251.0, 223.3 251.0            H 196.9" class="semantic-icon icon-filled semantic-icon-cloud" stroke="#f59e0b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#50340a" />
+  <path id="icon-cloud-upload-arrow" class="icon-runtime-part" d="M 212.0 248.1 V 235.9            M 207.0 240.5 L 212.0 235.1 L 217.0 240.5" fill="none" stroke="#f59e0b" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" opacity="0" />
+  <circle id="icon-cloud-dot-1" class="icon-runtime-part icon-cloud-dot" cx="203.2" cy="245.1" r="2.1" fill="#f59e0b" opacity="0" />
+  <circle id="icon-cloud-dot-2" class="icon-runtime-part icon-cloud-dot" cx="212.0" cy="246.0" r="2.1" fill="#f59e0b" opacity="0" />
+  <circle id="icon-cloud-dot-3" class="icon-runtime-part icon-cloud-dot" cx="220.8" cy="245.1" r="2.1" fill="#f59e0b" opacity="0" />
+  <circle id="icon-cloud-status-ring" class="icon-runtime-part" cx="221.7" cy="236.7" r="5.5" fill="none" stroke="#f59e0b" stroke-width="2" opacity="0" />
+
+  <g class="icon-semantic-motion icon-motion-cloud-upload" data-icon-motion="cloud-upload">
+    <path d="M 212.0 250.2 V 235.5              M 206.5 240.5 L 212.0 234.6 L 217.5 240.5" fill="none" stroke="#f59e0b" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round" opacity="0.92">
+      </path>
+    <circle class="icon-cloud-dot" cx="204.9" cy="243.5" r="2.7" fill="#f59e0b" opacity="0">
+      </circle>
+    <circle class="icon-cloud-dot" cx="219.1" cy="244.3" r="2.3" fill="#f59e0b" opacity="0">
+      </circle>
+  </g>
+
+</g>
+
+  <text x="308.0" y="224.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="308.0" dy="18" class="node-title">Cloud</tspan>
+<tspan x="308.0" dy="18" class="node-title">Upload</tspan>
+<tspan x="308.0" dy="17" class="node-caption">Upload / Sync /</tspan>
+<tspan x="308.0" dy="17" class="node-caption">Deploy</tspan>
+</text>
+</g>
+<style>
+* { animation: none !important; transition: none !important; }
+.edge-flow, .edge-particle, .edge-arrow-particle, .node-burst, .node-glow,
+.icon-breathe-halo, #title-highlight { display: none !important; }
+</style></svg>

@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="360" viewBox="0 0 560 360" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="off" data-motion-sequence="simultaneous" data-motion-edge="static" data-motion-node="icon-performance" data-motion-group="static" data-motion-title="none" data-motion-reduced="subtle" data-icon-system="semantic-line-v1">
+<title id="diagram-title">Token Intent</title>
+<desc id="diagram-desc">token-intent-v2</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .edge-flow { stroke-linecap: round; }
+  .edge-draw, .edge-base { stroke-linecap: butt; stroke-linejoin: round; }
+  .edge-particle { filter: url(#particle-glow); }
+  .edge-arrow-particle { filter: url(#particle-glow); }
+  .semantic-icon { vector-effect: non-scaling-stroke; }
+  .semantic-icon-breathe { transform-box: fill-box; transform-origin: center; animation: semanticIconBreathe 2.8s ease-in-out infinite; }
+  .icon-breathe-halo { pointer-events: none; filter: url(#particle-glow); }
+  .node-glow, .node-burst { pointer-events: none; }
+  #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
+  #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
+  @keyframes titlePulse { 0%, 100% { opacity: 0.76; } 50% { opacity: 1; } }
+  @keyframes titleSlide { 0%, 100% { transform: translateX(0); opacity: 0.9; } 50% { transform: translateX(8px); opacity: 1; } }
+  @keyframes semanticIconBreathe { 0%, 100% { transform: scale(0.96); opacity: 0.72; } 50% { transform: scale(1.08); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    #title-accent, #title-highlight, .semantic-icon-breathe { animation: none; }
+  }
+</style>
+<rect width="100%" height="100%" fill="#050816" />
+<defs>
+  <filter id="soft-glow" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="5" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <filter id="particle-glow" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="2.6" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#111c36" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="504" height="308" rx="26" fill="none" stroke="#64748b" stroke-width="1.4" opacity="1.00" />
+<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#22d3ee" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#0f2742" />
+
+<text id="main-title" x="90" y="84" class="title" fill="#f8fafc" opacity="1">
+  </text>
+<text x="74" y="126" class="subtitle" fill="#cbd5e1" opacity="1">
+  </text>
+
+
+
+<g id="node-token" class="node motion-node" data-role="source" opacity="1">
+  <rect x="170.0" y="190.0" width="220.0" height="96.0" rx="14.0" fill="#071f2f" stroke="#22d3ee" stroke-width="2.0" />
+
+<g id="icon-token-root" class="semantic-icon-wrap semantic-icon-root semantic-icon-token" data-icon="token" data-node-id="token" opacity="0.94">
+
+
+
+
+
+  <polygon id="icon-token-shell" points="212.0,221.6 226.3,230.0 226.3,246.0 212.0,254.4 197.7,246.0 197.7,230.0" class="semantic-icon icon-filled semantic-icon-token" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#0d4759" />
+  <circle id="icon-token-core" class="icon-token-core" cx="212.0" cy="238.0" r="3.8" fill="#22d3ee" opacity="0.70" />
+  <path id="icon-token-tick-left" class="icon-token-tick" d="M 202.8 238.0 H 206.5" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" opacity="0.70" />
+  <path id="icon-token-tick-right" class="icon-token-tick" d="M 217.5 238.0 H 221.2" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" opacity="0.70" />
+  <path id="icon-token-tick-top" class="icon-token-tick" d="M 212.0 227.5 V 230.9" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" opacity="0.58" />
+  <path id="icon-token-tick-bottom" class="icon-token-tick" d="M 212.0 245.1 V 248.5" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" opacity="0.58" />
+  <circle id="icon-token-halo" class="icon-runtime-part" cx="212.0" cy="238.0" r="14.7" fill="none" stroke="#22d3ee" stroke-width="2" opacity="0" />
+
+  <g class="icon-semantic-motion icon-motion-token-pulse" data-icon-motion="token-pulse">
+    <circle class="icon-token-core" cx="212.0" cy="238.0" r="3.8" fill="#22d3ee" opacity="0.42">
+      </circle>
+    <path class="icon-token-tick" d="M 197.3 229.2 L 192.7 225.0" fill="none" stroke="#22d3ee" stroke-width="2.3" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0">
+      </path>
+    <path class="icon-token-tick" d="M 222.1 225.8 L 227.5 221.2" fill="none" stroke="#22d3ee" stroke-width="2.3" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0">
+      </path>
+    <path class="icon-token-tick" d="M 225.0 245.6 L 230.9 248.9" fill="none" stroke="#22d3ee" stroke-width="2.3" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0">
+      </path>
+    <path class="icon-token-tick" d="M 201.5 250.2 L 196.5 254.8" fill="none" stroke="#22d3ee" stroke-width="2.3" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0">
+      </path>
+  </g>
+
+</g>
+
+  <text x="308.0" y="224.0" text-anchor="middle" fill="#f8fafc">
+<tspan x="308.0" dy="18" class="node-title">Token</tspan>
+<tspan x="308.0" dy="18" class="node-title">Intent</tspan>
+<tspan x="308.0" dy="17" class="node-caption">Intent / Signal</tspan>
+<tspan x="308.0" dy="17" class="node-caption">/ Classify</tspan>
+</text>
+</g>
+<style>
+* { animation: none !important; transition: none !important; }
+.edge-flow, .edge-particle, .edge-arrow-particle, .node-burst, .node-glow,
+.icon-breathe-halo, #title-highlight { display: none !important; }
+</style></svg>

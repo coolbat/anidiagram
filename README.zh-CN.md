@@ -298,6 +298,10 @@ PYTHONPATH=src python3 scripts/render_readme_showcase_round_1.py \
 
 ## 文档导航
 
+Gallery 卡片会在可见时播放真实图标动效，并支持暂停和减少动态效果回退。
+仅刷新预览、不重建原始图：`PYTHONPATH=src python3 scripts/build_showcase.py --indexes-only`。
+参见[预览机制与验证说明](./docs/gallery-previews.md)。
+
 - [DiagramScript 参考](./docs/diagram-script.md)
 - [Prompt → DiagramPlan → DiagramScript](./docs/prompt-to-diagram-flow.md)
 - [语义与表现编排合约](./docs/diagram-composition-contract.md)

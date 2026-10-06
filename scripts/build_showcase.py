@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import sys
 from html import escape as html_escape
 from pathlib import Path
@@ -36,6 +37,7 @@ from build_style_showcase import (
     style_showcase_specs,
 )
 from render_readme_showcase_round_1 import render_round as render_readme_showcase_round
+from gallery_previews import live_preview, preview_controls, preview_head, write_preview_assets
 
 
 Spec = Dict[str, Any]
@@ -89,9 +91,11 @@ def main() -> None:
     parser.add_argument("--spec-root", default="examples/showcase", help="Directory for generated DiagramScript specs.")
     parser.add_argument("--outdir", default="gallery", help="Directory for generated gallery assets.")
     parser.add_argument("--quality", action="store_true", help="Also write quality report JSON files.")
+    parser.add_argument("--indexes-only", action="store_true", help="Refresh gallery previews without changing diagram artifacts or specs.")
     args = parser.parse_args()
 
-    result = build_showcase(Path(args.spec_root), Path(args.outdir), args.quality)
+    result = (refresh_indexes(Path(args.outdir)) if args.indexes_only else
+              build_showcase(Path(args.spec_root), Path(args.outdir), args.quality))
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
@@ -99,7 +103,10 @@ def build_showcase(spec_root: Path, outdir: Path, quality: bool = True) -> Dict[
     spec_root.mkdir(parents=True, exist_ok=True)
     outdir.mkdir(parents=True, exist_ok=True)
 
-    hero_entry = _build_hero(spec_root / "hero", outdir / "hero", quality)
+    legacy_hero = _build_hero(spec_root / "hero", outdir / "hero", quality)
+    hero_variants = _dify_hero_entries(outdir)
+    hero_entry = hero_variants[0]
+    _write_hero_index(outdir / "hero", hero_variants)
     style_entries = _build_styles(spec_root / "styles", outdir / "styles", quality)
     layout_entries = _build_layouts(spec_root / "layouts", outdir / "layouts", quality)
     runtime_catalog = load_runtime_motion_catalog()
@@ -123,6 +130,8 @@ def build_showcase(spec_root: Path, outdir: Path, quality: bool = True) -> Dict[
     }
     manifest = {
         "hero": hero_entry,
+        "hero_variants": hero_variants,
+        "legacy_hero": legacy_hero,
         "styles": style_entries,
         "layouts": layout_entries,
         "runtime_motion_page": _rel(outdir / "runtime-motion.html"),
@@ -138,13 +147,14 @@ def build_showcase(spec_root: Path, outdir: Path, quality: bool = True) -> Dict[
     _write_runtime_motion_index(outdir, runtime_catalog, runtime_entries, runtime_overview, runtime_demos)
     _write_gallery_index(
         outdir,
-        hero_entry,
+        hero_variants,
         style_entries,
         layout_entries,
         runtime_entries,
         runtime_overview,
         icon_system_releases,
     )
+    write_preview_assets(outdir)
     return {
         "ok": True,
         "hero": hero_entry["id"],
@@ -157,6 +167,35 @@ def build_showcase(spec_root: Path, outdir: Path, quality: bool = True) -> Dict[
         "runtime_motion_page": str((outdir / "runtime-motion.html").resolve()),
         "manifest": str((outdir / "showcase_manifest.json").resolve()),
     }
+
+
+def refresh_indexes(outdir: Path) -> Dict[str, Any]:
+    """Keep accepted source/diagram/media/review artifacts byte-for-byte intact."""
+    manifest = json.loads((outdir / "showcase_manifest.json").read_text(encoding="utf-8"))
+    if manifest["hero"]["id"] != "dify":
+        manifest["legacy_hero"] = manifest["hero"]
+    manifest["hero_variants"] = _dify_hero_entries(outdir)
+    manifest["hero"] = manifest["hero_variants"][0]
+    _write_hero_index(outdir / "hero", manifest["hero_variants"])
+    for directory, title, entries in (
+        ("styles", "Style Showcase", manifest["styles"]),
+        ("layouts", "Layout Showcase", manifest["layouts"]),
+    ):
+        cards = []
+        for entry in entries:
+            spec = json.loads((ROOT / entry["spec"]).read_text(encoding="utf-8"))
+            cards.append((entry["basename"], entry["title"], spec["title"].get("subtitle", ""),
+                          Path(entry["svg"]).name, Path(entry["html"]).name))
+        _write_section_index(outdir / directory, title, cards)
+    _write_icon_system_release_index(outdir / "icon-systems", manifest["icon_system_releases"])
+    _write_character_theme_index(outdir, manifest["character_theme_comparison"]["themes"])
+    _write_runtime_motion_index(outdir, load_runtime_motion_catalog(), manifest["runtime_motion"],
+                                manifest["runtime_motion_overview"], manifest["runtime_motion_demos"])
+    _write_gallery_index(outdir, manifest["hero_variants"], manifest["styles"], manifest["layouts"],
+                         manifest["runtime_motion"], manifest["runtime_motion_overview"],
+                         manifest["icon_system_releases"])
+    (outdir / "showcase_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return {"ok": True, "diagram_artifacts": "unchanged", **write_preview_assets(outdir)}
 
 
 def _build_icon_system_releases(outdir: Path, quality: bool) -> List[Dict[str, Any]]:
@@ -275,8 +314,7 @@ def _require_exact_icon_pairs(
 
 def _write_icon_system_release_index(outdir: Path, entries: List[Dict[str, Any]]) -> None:
     cards = "\n".join(
-        f'<article><a href="{Path(entry["html"]).name}"><img src="{Path(entry["svg"]).name}" '
-        f'alt="{html_escape(entry["title"])} public showcase"></a>'
+        '<article>' + live_preview(Path(entry["svg"]).name, Path(entry["html"]).name, entry["title"]) +
         f'<div class="body"><h2>{html_escape(entry["title"])}</h2>'
         f'<p><code>{html_escape(entry["icon_system"])}</code> · {entry["rendered_icon_count"]}/{entry["icon_count"]} icons · '
         f'<code>{html_escape(entry["motion_contract"])}</code></p>'
@@ -295,6 +333,7 @@ def _write_icon_system_release_index(outdir: Path, entries: List[Dict[str, Any]]
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AniDiagram Public Icon Systems</title>
+  {preview_head('../')}
   <link rel="icon" href="data:,">
   <style>
     body {{ margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: #f8fafc; color: #172033; }}
@@ -312,6 +351,7 @@ def _write_icon_system_release_index(outdir: Path, entries: List[Dict[str, Any]]
 <body><main>
   <p><a href="../index.html">Back to gallery</a> · <a href="../showcase_manifest.json">Manifest</a></p>
   <h1>Public Icon Systems</h1>
+  {preview_controls()}
   <p>Current frozen releases with complete public showcase coverage. Full browser export matrices are produced separately as release evidence.</p>
   <p><code>PYTHONPATH=src python3 scripts/build_icon_system_release_evidence.py</code><br>
   Verify later with <code>PYTHONPATH=src python3 scripts/build_icon_system_release_evidence.py --verify</code>.</p>
@@ -886,11 +926,16 @@ def _build_character_theme_comparison(outdir: Path, quality: bool) -> Dict[str, 
                 "motion_mode": "ambient / expressive",
             }
         )
+    _write_character_theme_index(outdir, entries)
+    return {"page": _rel(outdir / "character-themes.html"), "themes": entries}
+
+
+def _write_character_theme_index(outdir: Path, entries: List[Dict[str, Any]]) -> None:
     page_path = outdir / "character-themes.html"
     cards = "\n".join(
         f'<article><h2>{html_escape(entry["label"])}</h2>'
         f'<p><code>{html_escape(entry["style"])}</code> · <code>{entry["icon_system"]}</code> · <code>{entry["motion_mode"]}</code></p>'
-        f'<a href="{_path_for_html(entry["html"])}"><img src="{_path_for_html(entry["preview"])}" alt="{html_escape(entry["label"])} static preview"></a>'
+        + live_preview(_path_for_html(entry["svg"]), _path_for_html(entry["html"]), entry["label"]) +
         f'<p><a href="{_path_for_html(entry["html"])}">HTML</a> · <a href="{_path_for_html(entry["svg"])}">SVG</a> · '
         f'<a href="{_path_for_html(entry["quality"])}">Quality</a></p></article>'
         for entry in entries
@@ -902,6 +947,8 @@ def _build_character_theme_comparison(outdir: Path, quality: bool) -> Dict[str, 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Illustrated Character Theme Comparison</title>
+  <link rel="icon" href="data:,">
+  {preview_head()}
   <style>
     body {{ margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: #f6f7fb; color: #182033; }}
     main {{ max-width: 1320px; margin: 0 auto; padding: 28px; }}
@@ -915,6 +962,7 @@ def _build_character_theme_comparison(outdir: Path, quality: bool) -> Dict[str, 
 <body><main>
   <p><a href="index.html">Back to gallery</a></p>
   <h1>Illustrated Character Theme Comparison</h1>
+  {preview_controls()}
   <p>The same eight-icon flow rendered with the three supported Character v1 themes.</p>
   <section class="grid">{cards}</section>
 </main></body>
@@ -922,7 +970,6 @@ def _build_character_theme_comparison(outdir: Path, quality: bool) -> Dict[str, 
 """,
         encoding="utf-8",
     )
-    return {"page": _rel(page_path), "themes": entries}
 
 
 def _runtime_performance_demo_spec(entry: Dict[str, Any]) -> Spec:
@@ -1118,6 +1165,7 @@ def _write_runtime_motion_index(
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AniDiagram Runtime Motion Catalog</title>
+  {preview_head()}
   <link rel="icon" href="data:,">
   <style>
     body {{ margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: #0b1020; color: #f8fafc; }}
@@ -1133,8 +1181,6 @@ def _write_runtime_motion_index(
     .notice {{ border: 1px solid #f59e0b; background: rgba(245, 158, 11, 0.10); border-radius: 8px; padding: 14px 16px; }}
     .meta {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 16px 0; }}
     .meta div, article {{ border: 1px solid #243244; border-radius: 8px; background: #111827; padding: 14px; }}
-    iframe {{ width: 100%; height: 620px; border: 1px solid #334155; border-radius: 10px; background: #020617; }}
-    .visual-card iframe {{ height: 360px; margin: 10px 0 12px; }}
     .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }}
     .visual-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 16px; }}
     .phase-list {{ margin: 8px 0 0 20px; padding: 0; color: #cbd5e1; }}
@@ -1145,6 +1191,7 @@ def _write_runtime_motion_index(
 <body>
   <main>
     <h1>Runtime Motion Catalog</h1>
+    {preview_controls()}
     <p>Frozen baseline for the current high-fidelity HTML runtime effects. This page is the review surface for semantic icon performances, edge packet flow, and title sweep.</p>
     <nav class="topbar">
       <a href="index.html">Gallery Home</a>
@@ -1167,7 +1214,7 @@ def _write_runtime_motion_index(
     <section>
       <h2>Legacy v2 Live Overview</h2>
       <p>The overview preserves the explicit <code>semantic-line-v1</code> compatibility baseline; Character v1 is reviewed in the individual cards below.</p>
-      <iframe src="{_path_for_html(overview['html'])}" title="Legacy v2 Runtime Motion Catalog Overview"></iframe>
+      {live_preview(_path_for_html(overview['svg']), _path_for_html(overview['html']), 'Legacy v2 Runtime Motion Catalog Overview')}
     </section>
     <section>
       <h2>Individual Stage Effect Visuals</h2>
@@ -1226,7 +1273,7 @@ def _motion_visual_card(demo: Dict[str, Any]) -> str:
         f'<article class="visual-card" id="{html_escape(demo["id"])}">'
         f"<h3>{html_escape(demo['id'])}</h3>"
         f"<p>{html_escape(demo['title'])}</p>{icon_line}"
-        f'<iframe src="{_path_for_html(demo["html"])}" title="{html_escape(demo["title"])}"></iframe>'
+        + live_preview(_path_for_html(demo["svg"]), _path_for_html(demo["html"]), demo["title"]) +
         f"<p class=\"small\">Semantic phases</p><ol class=\"phase-list\">{phases}</ol>"
         f'<p class="small">Parts/selectors: {detail_text}</p>'
         f'<p class="small"><a href="{_path_from_gallery(demo["html"])}">Open demo</a> · <a href="{_path_from_gallery(demo["spec"])}">Spec</a> · <a href="{_path_from_gallery(demo["svg"])}">SVG</a></p>'
@@ -1254,9 +1301,77 @@ def _motion_detail_card(
     )
 
 
+def _dify_hero_entries(outdir: Path) -> List[Dict[str, Any]]:
+    """Reuse the pinned case bundle; gallery refreshes never re-analyze Dify."""
+    case_dir = outdir / "cases" / "dify"
+    if not case_dir.exists():
+        shutil.copytree(ROOT / "gallery/cases/dify", case_dir)
+    entries = []
+    for style, stem, page in (
+        ("minimal-light", "dify-en", "index.en.html"),
+        ("deep-tech", "dify-deep-tech-en", "index.deep-tech.en.html"),
+    ):
+        entries.append({
+            "id": "dify" if style == "minimal-light" else "dify-deep-tech",
+            "title": "Dify · From Document to Answer",
+            "basename": stem, "style": style, "icon_system": "illustrated",
+            "spec": _rel(case_dir / f"{stem}.diagram.json"),
+            "svg": _rel(case_dir / f"{stem}.svg"),
+            "html": _rel(case_dir / f"{stem}.html"),
+            "poster": _rel(case_dir / f"{stem}-static.svg"),
+            "quality": _rel(case_dir / f"{stem}.quality.json"),
+            "case_page": f"cases/dify/{page}",
+            "case_page_zh": f"cases/dify/{page.replace('.en', '')}",
+            "best_for": ["Three-layer architecture", "Document ingestion", "Basic Chat"],
+            "summary": json.loads((case_dir / f"{stem}.quality.json").read_text())["summary"],
+        })
+    return entries
+
+
+def _dify_hero_cards(entries: List[Dict[str, Any]], prefix: str = "") -> str:
+    cards = []
+    for entry in entries:
+        stem = entry["basename"]
+        label = "Minimal Light" if entry["style"] == "minimal-light" else "Deep Tech"
+        url = f"{prefix}cases/dify/{stem}"
+        cards.append(
+            f'<article><h3>{label}</h3><p>Same architecture. A different visual treatment.</p>'
+            + live_preview(url + ".svg", url + ".html", f"Dify — {label}", poster=url + "-static.svg")
+            + f'<p class="actions"><a href="{url}.html">Open interactive diagram</a>'
+            f'<a href="{prefix}{entry["case_page"]}">English case study</a>'
+            f'<a href="{prefix}{entry["case_page_zh"]}" lang="zh-CN">中文案例</a></p></article>'
+        )
+    return "\n".join(cards)
+
+
+def _write_hero_index(outdir: Path, entries: List[Dict[str, Any]]) -> None:
+    outdir.mkdir(parents=True, exist_ok=True)
+    (outdir / "index.html").write_text(f'''<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dify · Hero Demo — AniDiagram</title><link rel="icon" href="data:,">
+{preview_head("../")}
+<style>
+body {{ margin:0; font-family:ui-sans-serif,system-ui,sans-serif; background:#f8fafc; color:#111827; }}
+main {{ max-width:1240px; margin:auto; padding:28px; }}
+p {{ color:#4b5563; line-height:1.6; }}
+.grid {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }}
+article {{ background:#fff; border:1px solid #e5e7eb; border-radius:8px; overflow:hidden; }}
+article h3, article p {{ margin:14px; }}
+.actions {{ display:flex; flex-wrap:wrap; gap:8px; }}
+.actions a {{ border:1px solid #d1d5db; border-radius:6px; padding:7px 9px; color:#111827; text-decoration:none; }}
+@media (max-width:760px) {{ .grid {{ grid-template-columns:1fr; }} }}
+</style></head><body><main>
+<a href="../index.html">← All showcases</a><h1>Dify · From Document to Answer</h1>
+<p>One source-backed, three-layer architecture in two styles. 10 nodes · 13 relations · Dify 1.17.0.</p>
+<p>Source-reading draft: independent semantic review is pending. Dify runtime has not been tested.</p>
+{preview_controls()}<div class="grid">{_dify_hero_cards(entries, "../")}</div>
+</main></body></html>
+''', encoding="utf-8")
+
+
 def _write_gallery_index(
     outdir: Path,
-    hero: Dict[str, Any],
+    hero_variants: List[Dict[str, Any]],
     styles: List[Dict[str, Any]],
     layouts: List[Dict[str, Any]],
     runtime_motion: List[Dict[str, Any]],
@@ -1265,9 +1380,7 @@ def _write_gallery_index(
 ) -> None:
     style_cards = "\n".join(_entry_card_html(entry["style"], entry) for entry in styles)
     layout_cards = "\n".join(_entry_card_html(entry["preset"], entry) for entry in layouts)
-    hero_cli = _cli_command(hero)
-    hero_preview = hero.get("preview_webp") or hero["svg"]
-    hero_link = hero.get("preview_mp4") or hero["html"]
+    hero_cards = _dify_hero_cards(hero_variants)
     motion_cards = "\n".join(_motion_card_html(entry) for entry in runtime_motion)
     icon_system_cards = "\n".join(
         _entry_card_html(entry["title"], entry) for entry in icon_system_releases
@@ -1279,6 +1392,7 @@ def _write_gallery_index(
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AniDiagram Showcase</title>
+  {preview_head()}
   <link rel="icon" href="data:,">
   <style>
     body {{ margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: #f8fafc; color: #111827; }}
@@ -1287,7 +1401,8 @@ def _write_gallery_index(
     h2 {{ font-size: 24px; margin: 34px 0 12px; }}
     h3 {{ font-size: 16px; margin: 12px 14px 4px; }}
     p {{ color: #4b5563; }}
-    .hero img {{ width: 100%; display: block; border: 1px solid #e5e7eb; border-radius: 8px; background: #fff; }}
+    .grid.hero-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
+    .hero .actions {{ flex-wrap: wrap; margin-top: 14px; }}
     .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }}
     .style-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
     article {{ border: 1px solid #e5e7eb; border-radius: 8px; background: #ffffff; overflow: hidden; }}
@@ -1296,17 +1411,20 @@ def _write_gallery_index(
     .actions {{ display: flex; gap: 8px; margin: 0 14px 14px; }}
     .actions a, .actions button {{ border: 1px solid #d1d5db; border-radius: 6px; background: #fff; color: #111827; padding: 7px 9px; font: inherit; text-decoration: none; cursor: pointer; }}
     .links a {{ margin-right: 12px; }}
-    @media (max-width: 760px) {{ .style-grid {{ grid-template-columns: 1fr; }} }}
+    @media (max-width: 760px) {{ .style-grid, .grid.hero-grid {{ grid-template-columns: 1fr; }} }}
   </style>
 </head>
 <body>
   <main>
     <h1>AniDiagram Showcase</h1>
-    <p>Style Showcase makes diagrams look right. Layout Showcase makes diagram purpose obvious. The hero preview is browser-captured runtime media when available; card images stay lightweight SVG previews.</p>
-    <section>
-      <h2>Source-backed case study: Dify</h2>
-      <p>Follow document ingestion and basic Chat across three logical layers. Pinned to Dify 1.17.0; independent semantic review is pending, and Dify runtime has not been tested.</p>
-      <p class="links"><a href="cases/dify/index.en.html">English case study</a><a href="cases/dify/index.html" lang="zh-CN">中文案例</a></p>
+    <p>Style Showcase makes diagrams look right. Layout Showcase makes diagram purpose obvious. Every preview runs the actual diagram's icon and flow animations while visible, with a complete static fallback.</p>
+    {preview_controls()}
+    <section class="hero">
+      <h2>Hero Demo · Dify</h2>
+      <p>From Document to Answer: follow ingestion and basic Chat across three logical layers. 10 nodes · 13 relations · two styles, one architecture.</p>
+      <p>Pinned to Dify 1.17.0. Source-reading draft: independent semantic review is pending, and Dify runtime has not been tested.</p>
+      <div class="grid hero-grid">{hero_cards}</div>
+      <p class="links"><a href="hero/index.html">Compare Dify styles</a><a href="showcase_manifest.json">View manifest</a></p>
     </section>
     <section>
       <h2>Public Icon Systems</h2>
@@ -1315,13 +1433,6 @@ def _write_gallery_index(
       <div class="grid">
 {icon_system_cards}
       </div>
-    </section>
-    <section class="hero">
-      <h2>Hero Demo</h2>
-      <a href="{_path_for_html(hero_link)}"><img src="{_path_for_html(hero_preview)}" alt="{hero['title']}"></a>
-      <p>{hero['title']} - {', '.join(hero['best_for'])}</p>
-      <p class="actions"><a href="{_path_for_html(hero['html'])}">Open HTML</a><button type="button" data-copy="{html_escape(hero_cli, quote=True)}">Copy CLI</button></p>
-      <p class="links"><a href="hero/index.html">Open hero gallery</a><a href="showcase_manifest.json">View manifest</a></p>
     </section>
     <section>
       <h2>Style Showcase</h2>
@@ -1380,7 +1491,7 @@ def _write_section_index(outdir: Path, title: str, cards: Iterable[Tuple[str, st
         else ""
     )
     body = "\n".join(
-        f'      <article><a href="{html}"><img src="{svg}" alt="{label} showcase"></a>'
+        '      <article>' + live_preview(svg, html, f'{label} showcase') +
         f"<h2>{label}</h2><h3>{case_title}</h3><p>{subtitle}</p></article>"
         for label, case_title, subtitle, svg, html in cards
     )
@@ -1391,6 +1502,7 @@ def _write_section_index(outdir: Path, title: str, cards: Iterable[Tuple[str, st
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AniDiagram {title}</title>
+  {preview_head('../')}
   <link rel="icon" href="data:,">
   <style>
     body {{ margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: #f8fafc; color: #111827; }}
@@ -1409,6 +1521,7 @@ def _write_section_index(outdir: Path, title: str, cards: Iterable[Tuple[str, st
 <body>
   <main>
     <h1>AniDiagram {title}</h1>
+    {preview_controls()}
     <p class="intro"><a href="../index.html">Back to gallery home</a></p>
     <section class="{grid_class}">
 {body}
@@ -1428,7 +1541,7 @@ def _entry_card_html(label: str, entry: Dict[str, Any]) -> str:
     best_for = entry["best_for"]
     cli = _cli_command(entry)
     return (
-        f'<article><a href="{_path_for_html(html_path)}"><img src="{_path_for_html(svg_path)}" alt="{label} showcase"></a>'
+        '<article>' + live_preview(_path_for_html(svg_path), _path_for_html(html_path), f'{label} showcase') +
         f"<h3>{label}</h3><p>{title}</p><p>{', '.join(best_for)}</p>"
         f'<p class="actions"><a href="{_path_for_html(html_path)}">Open HTML</a><button type="button" data-copy="{html_escape(cli, quote=True)}">Copy CLI</button></p></article>'
     )

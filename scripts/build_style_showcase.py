@@ -17,6 +17,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from anidiagram.exporters import write_html, write_quality, write_svg
+from gallery_previews import live_preview, preview_controls, preview_head, write_preview_assets
 from anidiagram.edge_motion import canonical_edge_motion
 from anidiagram.quality import quality_report
 from anidiagram.schema import compile_scene
@@ -471,12 +472,13 @@ def build_showcase(spec_dir: Path, outdir: Path, quality: bool) -> Dict[str, Any
         cards.append((style_name, spec["title"]["text"], spec["title"]["subtitle"], svg_path.name, html_path.name))
         summaries[style_name] = report["summary"]
     write_index(outdir, cards)
+    write_preview_assets(outdir)
     return {"ok": True, "styles": catalog_styles, "spec_dir": str(spec_dir.resolve()), "outdir": str(outdir.resolve()), "quality": summaries}
 
 
 def write_index(outdir: Path, cards: Iterable[Tuple[str, str, str, str, str]]) -> None:
     body = "\n".join(
-        f'      <article><a href="{html}"><img src="{svg}" alt="{style} style showcase"></a>'
+        '      <article>' + live_preview(svg, html, f'{style} style showcase') +
         f"<h2>{style}</h2><h3>{title}</h3><p>{subtitle}</p></article>"
         for style, title, subtitle, svg, html in cards
     )
@@ -487,6 +489,7 @@ def write_index(outdir: Path, cards: Iterable[Tuple[str, str, str, str, str]]) -
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AniDiagram Style Showcase</title>
+  {preview_head()}
   <link rel="icon" href="data:,">
   <style>
     body {{ margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: #f8fafc; color: #111827; }}
@@ -505,6 +508,7 @@ def write_index(outdir: Path, cards: Iterable[Tuple[str, str, str, str, str]]) -
 <body>
   <main>
     <h1>AniDiagram Style Showcase</h1>
+    {preview_controls()}
     <p class="intro">One generated clean-room case for every bundled style. Click a card to open the high-fidelity HTML output.</p>
     <section class="grid">
 {body}

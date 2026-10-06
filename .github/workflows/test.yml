@@ -89,6 +89,7 @@ jobs:
           node --check runtime/reader-share-card.js
           node --check runtime/visual-check.mjs
           node --check runtime/label-audit.mjs
+          node --check runtime/gallery-preview.js
       - name: Render composition smoke test
         run: |
           PYTHONPATH=src python3 -m anidiagram.cli \
@@ -202,9 +203,11 @@ jobs:
           node scripts/verify_choreographer.mjs build/ci/choreographer/hybrid.html hybrid
       - name: Verify committed README visual quality
         run: node scripts/verify_readme_showcase_round_1.mjs gallery/readme-showcase
+      - name: Verify every gallery preview and its real icon motion
+        run: node scripts/verify_gallery_previews.mjs
       - name: Verify bilingual Dify diagram labels
         run: |
-          for name in dify dify-static dify-en dify-en-static; do
+          for name in dify dify-static dify-en dify-en-static dify-deep-tech dify-deep-tech-static dify-deep-tech-en dify-deep-tech-en-static; do
             python3 -I scripts/run_anidiagram.py visual-check "gallery/cases/dify/$name.html" \
               --strict-labels --viewports 1440x1100,1920x1320 --outdir "build/ci/dify/$name"
           done
@@ -212,6 +215,8 @@ jobs:
         run: |
           node scripts/verify_stage_motion_modes.mjs gallery/cases/dify/dify.html 10 13
           node scripts/verify_stage_motion_modes.mjs gallery/cases/dify/dify-en.html 10 13
+          node scripts/verify_stage_motion_modes.mjs gallery/cases/dify/dify-deep-tech.html 10 13
+          node scripts/verify_stage_motion_modes.mjs gallery/cases/dify/dify-deep-tech-en.html 10 13
       - name: Verify Simplified Chinese rendering and geometry
         run: node scripts/verify_chinese_architecture.mjs build/ci/zh-CN/enterprise-agent-platform.html
       - name: Upload browser diagnostics on failure
@@ -219,6 +224,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: runtime-browser-diagnostics-${{ github.sha }}
-          path: build/ci
+          path: |
+            build/ci
+            outputs/gallery-motion
           if-no-files-found: ignore
           retention-days: 7

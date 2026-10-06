@@ -264,7 +264,7 @@ class ShowcaseGalleryTest(unittest.TestCase):
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         catalog = load_runtime_motion_catalog()
 
-        self.assertEqual("Agent Runtime Flow", manifest["hero"]["title"])
+        self.assertEqual("Dify · From Document to Answer", manifest["hero"]["title"])
         self.assertEqual(13, len(manifest["styles"]))
         self.assertEqual(16, len(manifest["layouts"]))
         self.assertEqual("runtime/motion-catalog.json", manifest["runtime_motion_catalog"])

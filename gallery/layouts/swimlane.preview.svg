@@ -1,0 +1,313 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1632" height="720" viewBox="0 0 1632 720" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="off" data-motion-sequence="staged" data-motion-edge="packet-flow" data-motion-node="icon-performance" data-motion-group="border-scan" data-motion-title="highlight-sweep" data-motion-reduced="subtle" data-icon-system="illustrated" data-icon-system-version="2.5.0">
+<title id="diagram-title">Human-in-the-loop Approval Flow</title>
+<desc id="diagram-desc">user, agent, reviewer, and system each own a clear lane</desc>
+<style>
+  .title { font: 700 42px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 0; }
+  .subtitle { font: 400 16px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
+  .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .edge-flow { stroke-linecap: round; }
+  .edge-draw, .edge-base { stroke-linecap: butt; stroke-linejoin: round; }
+  .edge-particle { filter: url(#particle-glow); }
+  .edge-arrow-particle { filter: url(#particle-glow); }
+  .semantic-icon { vector-effect: non-scaling-stroke; }
+  .semantic-icon-breathe { transform-box: fill-box; transform-origin: center; animation: semanticIconBreathe 2.8s ease-in-out infinite; }
+  .icon-breathe-halo { pointer-events: none; filter: url(#particle-glow); }
+  .node-glow, .node-burst { pointer-events: none; }
+  #title-accent { transform-origin: 50px 70px; animation: titlePulse 4.8s ease-in-out infinite; }
+  #title-highlight { transform-origin: 252px 74px; animation: titleSlide 5.6s ease-in-out infinite; }
+  @keyframes titlePulse { 0%, 100% { opacity: 0.76; } 50% { opacity: 1; } }
+  @keyframes titleSlide { 0%, 100% { transform: translateX(0); opacity: 0.9; } 50% { transform: translateX(8px); opacity: 1; } }
+  @keyframes semanticIconBreathe { 0%, 100% { transform: scale(0.96); opacity: 0.72; } 50% { transform: scale(1.08); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    #title-accent, #title-highlight, .semantic-icon-breathe { animation: none; }
+  }
+</style>
+<rect width="100%" height="100%" fill="#ffffff" />
+<defs>
+  <filter id="soft-glow" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="5" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <filter id="particle-glow" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="2.6" result="blur" />
+    <feMerge>
+      <feMergeNode in="blur" />
+      <feMergeNode in="SourceGraphic" />
+    </feMerge>
+  </filter>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#edf2f7" stroke-width="1" />
+  </pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
+<rect x="28" y="26" width="1576" height="668" rx="26" fill="none" stroke="#94a3b8" stroke-width="1.4" opacity="1.00" />
+<rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#2563eb" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#e8f1ff" />
+
+<rect class="title-sweep" x="72" y="46" width="0" height="56" rx="16" fill="#2563eb" opacity="0.16">
+  </rect>
+<text id="main-title" x="90" y="84" class="title" fill="#172033" opacity="1">
+  </text>
+<text x="74" y="126" class="subtitle" fill="#5b6778" opacity="1">
+  </text>
+
+<g id="group-user" class="group" opacity="1">
+  <rect x="75.0" y="145.0" width="1375.0" height="100.0" rx="22" fill="#fff7ed" fill-opacity="0.34" stroke="#f97316" stroke-width="1.6" stroke-dasharray="9 8">
+    </rect>
+
+  <rect class="group-border-scan" x="75.0" y="145.0" width="1375.0" height="100.0" rx="22" fill="none" stroke="#f97316" stroke-width="3.4" stroke-linecap="round" stroke-dasharray="177.0 1032.5" opacity="0.72" filter="url(#soft-glow)">
+    </rect>
+
+  <text x="93.0" y="175.0" class="group-label" fill="#5b6778">User</text>
+</g>
+
+<g id="group-agent" class="group" opacity="1">
+  <rect x="75.0" y="285.0" width="1375.0" height="100.0" rx="22" fill="#f5f3ff" fill-opacity="0.34" stroke="#7c3aed" stroke-width="1.6" stroke-dasharray="9 8">
+    </rect>
+
+  <rect class="group-border-scan" x="75.0" y="285.0" width="1375.0" height="100.0" rx="22" fill="none" stroke="#7c3aed" stroke-width="3.4" stroke-linecap="round" stroke-dasharray="177.0 1032.5" opacity="0.72" filter="url(#soft-glow)">
+    </rect>
+
+  <text x="93.0" y="315.0" class="group-label" fill="#5b6778">Agent</text>
+</g>
+
+<g id="group-reviewer" class="group" opacity="1">
+  <rect x="75.0" y="425.0" width="1375.0" height="100.0" rx="22" fill="#fef2f2" fill-opacity="0.34" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="9 8">
+    </rect>
+
+  <rect class="group-border-scan" x="75.0" y="425.0" width="1375.0" height="100.0" rx="22" fill="none" stroke="#dc2626" stroke-width="3.4" stroke-linecap="round" stroke-dasharray="177.0 1032.5" opacity="0.72" filter="url(#soft-glow)">
+    </rect>
+
+  <text x="93.0" y="455.0" class="group-label" fill="#5b6778">Reviewer</text>
+</g>
+
+<defs>
+  <marker id="arrow-1" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 382.7 228.0 L 382.7 287.0 L 433.3 287.0 L 433.3 346.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 382.7 228.0 L 382.7 287.0 L 433.3 287.0 L 433.3 346.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-1)" />
+
+  <circle class="edge-particle edge-packet" r="5.5" fill="#2563eb" stroke="none" opacity="0.92">
+    </circle>
+
+  <text x="408.0" y="273.0" class="edge-label" fill="#5b6778" opacity="1">
+    handoff
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-2" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 682.7 368.0 L 682.7 427.0 L 733.3 427.0 L 733.3 486.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 682.7 368.0 L 682.7 427.0 L 733.3 427.0 L 733.3 486.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-2)" />
+
+  <circle class="edge-particle edge-packet" r="5.5" fill="#2563eb" stroke="none" opacity="0.92">
+    </circle>
+
+  <text x="708.0" y="413.0" class="edge-label" fill="#5b6778" opacity="1">
+    handoff
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-3" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 990.0 497.0 L 1008.0 497.0 L 1026.0 497.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 990.0 497.0 L 1008.0 497.0 L 1026.0 497.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-3)" />
+
+  <circle class="edge-particle edge-packet" r="5.5" fill="#2563eb" stroke="none" opacity="0.92">
+    </circle>
+
+  <text x="1008.0" y="483.0" class="edge-label" fill="#5b6778" opacity="1">
+    handoff
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-4" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 1158.0 443.0 L 1158.0 427.0 L 1158.0 411.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 1158.0 443.0 L 1158.0 427.0 L 1158.0 411.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-4)" />
+
+  <circle class="edge-particle edge-packet" r="5.5" fill="#2563eb" stroke="none" opacity="0.92">
+    </circle>
+
+  <text x="1158.0" y="413.0" class="edge-label" fill="#5b6778" opacity="1">
+    handoff
+  </text>
+</g>
+
+<defs>
+  <marker id="arrow-5" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+    <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#2563eb" />
+  </marker>
+</defs>
+<g class="edge" data-role="process">
+  <path class="edge-base" d="M 1278.9 345.0 L 1278.9 287.0 L 1287.1 287.0 L 1287.1 229.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
+  <path class="edge-draw" d="M 1278.9 345.0 L 1278.9 287.0 L 1287.1 287.0 L 1287.1 229.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-5)" />
+
+  <circle class="edge-particle edge-packet" r="5.5" fill="#2563eb" stroke="none" opacity="0.92">
+    </circle>
+
+  <text x="1283.0" y="273.0" class="edge-label" fill="#5b6778" opacity="1">
+    handoff
+  </text>
+</g>
+
+<g id="node-request" class="node motion-node" data-role="actor" opacity="1">
+  <rect x="138.0" y="175.0" width="240.0" height="84.0" rx="14.0" fill="#fff7ed" stroke="#f97316" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="agent" data-node-id="request" opacity="1">
+  <g id="icon-request-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="input-reason-result" data-rest-opacity="1" transform="translate(162.0 173.0) scale(0.7333)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-request-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="59" cy="61" r="49" fill="#f3efff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-request-brain-left" class="illustrated-part illustrated-brain-left" data-rest-opacity="1" d="M57 27C45 18 30 25 31 38c-11 4-12 19-2 25-5 12 7 23 18 18 3 8 10 9 15 3V38c-1-5-2-8-5-11Z" fill="#34c38f" stroke="#172033" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-request-brain-right" class="illustrated-part illustrated-brain-right" data-rest-opacity="1" d="M63 27c12-9 27-2 26 11 11 4 12 19 2 25 5 12-7 23-18 18-3 8-10 9-15 3V38c1-5 2-8 5-11Z" fill="#c4b5fd" stroke="#172033" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-request-brain-detail" class="illustrated-part illustrated-brain-detail" data-rest-opacity="0.68" d="M43 35c-5 4-3 9 1 11m-8 13c7-1 7 6 12 8m29-32c5 4 3 9-1 11m8 13c-7-1-7 6-12 8" opacity="0.68" fill="none" stroke="#172033" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-request-processor" class="illustrated-part illustrated-processor" data-rest-opacity="1" x="45" y="42" width="30" height="30" rx="6" fill="#ffffff" stroke="#172033" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-request-processor-core" class="illustrated-part illustrated-processor-core" data-rest-opacity="1" d="M50 63l4.5-13L59 63m-7.3-5h5.6M62.5 50h7m-3.5 0v13m-3.5 0h7" fill="none" stroke="#7c3aed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-request-input-nodes" class="illustrated-part illustrated-input-nodes" data-rest-opacity="1" d="M8 45h12v12H8Zm0 26h12V59H8Z" fill="#f97370" stroke="#172033" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-request-input-path" class="illustrated-part illustrated-input-path" data-rest-opacity="1" d="M20 51h9m-9 14h7c4 0 5-3 5-7" fill="none" stroke="#7c3aed" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-request-output-path" class="illustrated-part illustrated-output-path" data-rest-opacity="1" d="M90 54h10c5 0 7-3 7-7V35" fill="none" stroke="#7c3aed" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-request-result" class="illustrated-part illustrated-result" data-rest-opacity="1" d="M107 16l3 8 8 3-8 3-3 8-3-8-8-3 8-3Z" fill="#fbbf24" stroke="#172033" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="327.0" y="203.0" text-anchor="middle" fill="#172033">
+<tspan x="327.0" dy="18" class="node-title">Request</tspan>
+<tspan x="327.0" dy="17" class="node-caption">submit</tspan>
+</text>
+</g>
+
+<g id="node-draft" class="node motion-node" data-role="agent" opacity="1">
+  <rect x="438.0" y="315.0" width="240.0" height="84.0" rx="14.0" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="file" data-node-id="draft" opacity="1">
+  <g id="icon-draft-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="document-content-attach-reference" data-rest-opacity="1" transform="translate(462.0 313.0) scale(0.7333)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-draft-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="60" cy="61" r="49" fill="#f3efff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-draft-page" class="illustrated-part illustrated-page" data-rest-opacity="1" x="29" y="17" width="62" height="86" rx="8" fill="#ffffff" stroke="#172033" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-draft-paperclip" class="illustrated-part illustrated-paperclip" data-rest-opacity="1" d="M45 35v38c0 13 18 13 18 0V44c0-8-11-8-11 0v27c0 5 6 5 6 0V49" fill="none" stroke="#7c3aed" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-draft-content-lines" class="illustrated-part illustrated-content-lines" data-rest-opacity="1" d="M68 49h12M68 64h12" fill="none" stroke="#0f8f87" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="627.0" y="343.0" text-anchor="middle" fill="#172033">
+<tspan x="627.0" dy="18" class="node-title">Draft</tspan>
+<tspan x="627.0" dy="17" class="node-caption">agent</tspan>
+<tspan x="627.0" dy="17" class="node-caption">proposal</tspan>
+</text>
+</g>
+
+<g id="node-review" class="node motion-node" data-role="risk" opacity="1">
+  <rect x="738.0" y="455.0" width="240.0" height="84.0" rx="14.0" fill="#fef2f2" stroke="#dc2626" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="shield" data-node-id="review" opacity="1">
+  <g id="icon-review-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="security-lock-protect" data-rest-opacity="1" transform="translate(762.0 453.0) scale(0.7333)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-review-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="61" cy="61" r="49" fill="#f3efff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-review-shield-shell" class="illustrated-part illustrated-shield-shell" data-rest-opacity="1" d="M60 15l35 14v28c0 22-14 37-35 47-21-10-35-25-35-47V29Z" fill="#c4b5fd" stroke="#172033" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-review-inner-field" class="illustrated-part illustrated-inner-field" data-rest-opacity="1" d="M60 29l22 9v18c0 14-9 24-22 31-13-7-22-17-22-31V38Z" fill="#ffffff" stroke="#172033" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-review-lock-shackle" class="illustrated-part illustrated-lock-shackle" data-rest-opacity="1" d="M49 59v-8c0-15 22-15 22 0v8" fill="none" stroke="#0f8f87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-review-security-lock" class="illustrated-part illustrated-security-lock" data-rest-opacity="1" x="44" y="57" width="32" height="28" rx="7" fill="#34c38f" stroke="#172033" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-review-keyhole" class="illustrated-part illustrated-keyhole" data-rest-opacity="1" d="M60 66a4 4 0 1 0 .1 0M60 70v7" fill="none" stroke="#172033" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="927.0" y="483.0" text-anchor="middle" fill="#172033">
+<tspan x="927.0" dy="18" class="node-title">Review</tspan>
+<tspan x="927.0" dy="17" class="node-caption">human</tspan>
+<tspan x="927.0" dy="17" class="node-caption">check</tspan>
+</text>
+</g>
+
+<g id="node-approve" class="node motion-node" data-role="output" opacity="1">
+  <rect x="1038.0" y="455.0" width="240.0" height="84.0" rx="14.0" fill="#f0fdf4" stroke="#16a34a" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="output" data-node-id="approve" opacity="1">
+  <g id="icon-approve-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="artifact-deliver-confirm" data-rest-opacity="1" transform="translate(1062.0 453.0) scale(0.7333)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-approve-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="58" cy="61" r="49" fill="#e8f8ef" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-approve-artifact-card" class="illustrated-part illustrated-artifact-card" data-rest-opacity="1" d="M33 14h36l16 16v51H33Z" fill="#ffffff" stroke="#172033" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-approve-artifact-corner" class="illustrated-part illustrated-artifact-corner" data-rest-opacity="1" d="M69 14v17h16" fill="#c4b5fd" stroke="#172033" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-approve-artifact-lines" class="illustrated-part illustrated-artifact-lines" data-rest-opacity="1" d="M44 43h29M44 55h29M44 67h20" fill="none" stroke="#7c3aed" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-approve-emergence-track" class="illustrated-part illustrated-emergence-track" data-rest-opacity="1" d="M59 79v17" fill="none" stroke="#0f8f87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-approve-delivery-tray" class="illustrated-part illustrated-delivery-tray" data-rest-opacity="1" d="M13 75h29l8 10h18l8-10h29l-6 29H19Z" fill="#60a5fa" stroke="#172033" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-approve-delivery-lip" class="illustrated-part illustrated-delivery-lip" data-rest-opacity="1" d="M19 96h80M42 75l8 10h18l8-10" fill="none" stroke="#172033" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="1227.0" y="483.0" text-anchor="middle" fill="#172033">
+<tspan x="1227.0" dy="18" class="node-title">Approve</tspan>
+<tspan x="1227.0" dy="17" class="node-caption">decision</tspan>
+</text>
+</g>
+
+<g id="node-execute" class="node motion-node" data-role="tool" opacity="1">
+  <rect x="1038.0" y="315.0" width="240.0" height="84.0" rx="14.0" fill="#fffbeb" stroke="#d97706" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="api" data-node-id="execute" opacity="1">
+  <g id="icon-execute-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="request-route-response" data-rest-opacity="1" transform="translate(1062.0 313.0) scale(0.7333)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-execute-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="59" cy="61" r="49" fill="#f3efff" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <rect id="icon-execute-gateway" class="illustrated-part illustrated-gateway" data-rest-opacity="1" x="30" y="24" width="60" height="72" rx="16" fill="#ffffff" stroke="#172033" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-execute-api-glyph" class="illustrated-part illustrated-api-glyph" data-rest-opacity="1" d="M51 44 42 60l9 16m18-32 9 16-9 16M63 40l-7 40" fill="none" stroke="#7c3aed" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-execute-request-path" class="illustrated-part illustrated-request-path" data-rest-opacity="1" d="M10 45h27m-8-7 8 7-8 7" fill="none" stroke="#22b8b5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-execute-request-token" class="illustrated-part illustrated-request-token" data-rest-opacity="1" cx="12" cy="45" r="5" fill="#f97370" stroke="#172033" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-execute-response-path" class="illustrated-part illustrated-response-path" data-rest-opacity="1" d="M110 76H83m8-7-8 7 8 7" fill="none" stroke="#7c3aed" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle id="icon-execute-response-token" class="illustrated-part illustrated-response-token" data-rest-opacity="1" cx="108" cy="76" r="5" fill="#fbbf24" stroke="#172033" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="1227.0" y="343.0" text-anchor="middle" fill="#172033">
+<tspan x="1227.0" dy="18" class="node-title">Execute</tspan>
+<tspan x="1227.0" dy="17" class="node-caption">system</tspan>
+<tspan x="1227.0" dy="17" class="node-caption">action</tspan>
+</text>
+</g>
+
+<g id="node-notify" class="node motion-node" data-role="output" opacity="1">
+  <rect x="1288.0" y="175.0" width="240.0" height="84.0" rx="14.0" fill="#f0fdf4" stroke="#16a34a" stroke-width="2.0" />
+<g class="semantic-icon-wrap semantic-icon-character-wrap semantic-icon-illustrated-wrap" data-icon="output" data-node-id="notify" opacity="1">
+  <g id="icon-notify-root" class="semantic-icon semantic-icon-illustrated" data-icon-system="illustrated" data-icon-system-version="2.5.0" data-semantic-role="artifact-deliver-confirm" data-rest-opacity="1" transform="translate(1312.0 173.0) scale(0.7333)">
+    <g class="illustrated-character-motion-shell">
+      <circle id="icon-notify-wash" class="illustrated-part illustrated-wash" data-rest-opacity="1" cx="58" cy="61" r="49" fill="#e8f8ef" stroke="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-notify-artifact-card" class="illustrated-part illustrated-artifact-card" data-rest-opacity="1" d="M33 14h36l16 16v51H33Z" fill="#ffffff" stroke="#172033" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-notify-artifact-corner" class="illustrated-part illustrated-artifact-corner" data-rest-opacity="1" d="M69 14v17h16" fill="#c4b5fd" stroke="#172033" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-notify-artifact-lines" class="illustrated-part illustrated-artifact-lines" data-rest-opacity="1" d="M44 43h29M44 55h29M44 67h20" fill="none" stroke="#7c3aed" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-notify-emergence-track" class="illustrated-part illustrated-emergence-track" data-rest-opacity="1" d="M59 79v17" fill="none" stroke="#0f8f87" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-notify-delivery-tray" class="illustrated-part illustrated-delivery-tray" data-rest-opacity="1" d="M13 75h29l8 10h18l8-10h29l-6 29H19Z" fill="#60a5fa" stroke="#172033" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+      <path id="icon-notify-delivery-lip" class="illustrated-part illustrated-delivery-lip" data-rest-opacity="1" d="M19 96h80M42 75l8 10h18l8-10" fill="none" stroke="#172033" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</g>
+
+  <text x="1477.0" y="203.0" text-anchor="middle" fill="#172033">
+<tspan x="1477.0" dy="18" class="node-title">Notify</tspan>
+<tspan x="1477.0" dy="17" class="node-caption">result</tspan>
+</text>
+</g>
+<style>
+* { animation: none !important; transition: none !important; }
+.edge-flow, .edge-particle, .edge-arrow-particle, .node-burst, .node-glow,
+.icon-breathe-halo, #title-highlight { display: none !important; }
+</style></svg>

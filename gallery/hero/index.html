@@ -1,31 +1,22 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AniDiagram Hero Demo</title>
-  <link rel="icon" href="data:,">
-  <style>
-    body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: #f8fafc; color: #111827; }
-    main { max-width: 1220px; margin: 0 auto; padding: 28px; }
-    h1 { font-size: 32px; margin: 0 0 8px; }
-    .intro { color: #4b5563; margin: 0 0 24px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; }
-
-    article { border: 1px solid #e5e7eb; border-radius: 8px; background: #ffffff; overflow: hidden; }
-    img { display: block; width: 100%; height: auto; }
-    h2 { font-size: 18px; margin: 12px 14px 2px; }
-    h3 { font-size: 15px; margin: 0 14px 4px; font-weight: 600; color: #1f2937; }
-    p { margin: 0 14px 14px; color: #4b5563; }
-  </style>
-</head>
-<body>
-  <main>
-    <h1>AniDiagram Hero Demo</h1>
-    <p class="intro"><a href="../index.html">Back to gallery home</a></p>
-    <section class="grid">
-      <article><a href="agent-runtime-flow.html"><img src="agent-runtime-flow.svg" alt="agent-runtime-flow showcase"></a><h2>agent-runtime-flow</h2><h3>Agent Runtime Flow</h3><p>One agent retrieves, acts, verifies, remembers, and delivers</p></article>
-    </section>
-  </main>
-</body>
-</html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dify · Hero Demo — AniDiagram</title><link rel="icon" href="data:,">
+<link rel="stylesheet" href="../preview-motion.css">
+  <script defer src="../preview-motion.js"></script>
+<style>
+body { margin:0; font-family:ui-sans-serif,system-ui,sans-serif; background:#f8fafc; color:#111827; }
+main { max-width:1240px; margin:auto; padding:28px; }
+p { color:#4b5563; line-height:1.6; }
+.grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+article { background:#fff; border:1px solid #e5e7eb; border-radius:8px; overflow:hidden; }
+article h3, article p { margin:14px; }
+.actions { display:flex; flex-wrap:wrap; gap:8px; }
+.actions a { border:1px solid #d1d5db; border-radius:6px; padding:7px 9px; color:#111827; text-decoration:none; }
+@media (max-width:760px) { .grid { grid-template-columns:1fr; } }
+</style></head><body><main>
+<a href="../index.html">← All showcases</a><h1>Dify · From Document to Answer</h1>
+<p>One source-backed, three-layer architecture in two styles. 10 nodes · 13 relations · Dify 1.17.0.</p>
+<p>Source-reading draft: independent semantic review is pending. Dify runtime has not been tested.</p>
+<div class="preview-controls"><button type="button" data-preview-toggle aria-pressed="true" hidden>Pause previews</button><span>Live icon motion in visible cards. Open HTML for full-size details.</span></div><div class="grid"><article><h3>Minimal Light</h3><p>Same architecture. A different visual treatment.</p><figure class="motion-preview"><a href="../cases/dify/dify-en.html" data-preview-url="../cases/dify/dify-en.html" data-preview-poster="../cases/dify/dify-en-static.svg"><img loading="lazy" src="../cases/dify/dify-en-static.svg" alt="Dify — Minimal Light" width="900" height="1130"></a><figcaption class="preview-status" hidden>Animation unavailable; open HTML or view the static preview.</figcaption></figure><p class="actions"><a href="../cases/dify/dify-en.html">Open interactive diagram</a><a href="../cases/dify/index.en.html">English case study</a><a href="../cases/dify/index.html" lang="zh-CN">中文案例</a></p></article>
+<article><h3>Deep Tech</h3><p>Same architecture. A different visual treatment.</p><figure class="motion-preview"><a href="../cases/dify/dify-deep-tech-en.html" data-preview-url="../cases/dify/dify-deep-tech-en.html" data-preview-poster="../cases/dify/dify-deep-tech-en-static.svg"><img loading="lazy" src="../cases/dify/dify-deep-tech-en-static.svg" alt="Dify — Deep Tech" width="900" height="1130"></a><figcaption class="preview-status" hidden>Animation unavailable; open HTML or view the static preview.</figcaption></figure><p class="actions"><a href="../cases/dify/dify-deep-tech-en.html">Open interactive diagram</a><a href="../cases/dify/index.deep-tech.en.html">English case study</a><a href="../cases/dify/index.deep-tech.html" lang="zh-CN">中文案例</a></p></article></div>
+</main></body></html>

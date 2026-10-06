@@ -30,7 +30,9 @@ async function main() {
     title_text_overflow: [],
     label_collisions: [],
   };
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({ headless: true,
+    ...(process.env.ANIDIAGRAM_BROWSER_CHANNEL ? { channel: process.env.ANIDIAGRAM_BROWSER_CHANNEL } : {}),
+  });
   try {
     const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
     let currentCase = "review-page";

@@ -1,0 +1,17 @@
+.motion-preview { margin: 0; min-width: 0; }
+.motion-preview > a { display: block; position: relative; overflow: hidden; }
+.motion-preview img { display: block; width: 100%; height: auto; }
+.motion-preview iframe { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; border: 0; border-radius: 0; pointer-events: none; opacity: 0; }
+.motion-preview[data-ready="true"] iframe { opacity: 1; }
+.motion-preview[data-ready="true"] img { opacity: 0; }
+.preview-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 18px 0 24px; font-size: 14px; }
+.preview-controls button { padding: 8px 12px; border: 1px solid #64748b; border-radius: 6px; background: #fff; color: #172033; font: inherit; cursor: pointer; }
+.preview-controls button:disabled { cursor: default; opacity: .7; }
+.preview-controls button:focus-visible, .motion-preview > a:focus-visible { outline: 3px solid #3b82f6; outline-offset: -3px; }
+.preview-status { padding: 8px 12px; font-size: 12px; line-height: 1.5; }
+/* Existing section grids must also fit narrow screens. */
+@media (max-width: 420px) {
+  main { padding: 16px !important; }
+  .grid, .visual-grid { grid-template-columns: minmax(0, 1fr) !important; }
+  .actions { flex-wrap: wrap; }
+}

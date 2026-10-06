@@ -1,0 +1,518 @@
+{
+  "version": 1,
+  "mode": "visible-only-live-html",
+  "previews": [
+    {
+      "html": "cases/dify/dify-deep-tech-en.html",
+      "svg": "cases/dify/dify-deep-tech-en.svg",
+      "poster": "cases/dify/dify-deep-tech-en-static.svg",
+      "html_sha256": "8cfc0f0812e25366687207aaa62ace0e76e60502e25a36ee9ede80ad05bae89f",
+      "svg_sha256": "e0af2bb58ec52f2341217dd899c243c706efecd7e92af50fc09f1de208d0bcca",
+      "poster_sha256": "cc04ef2251b75cfa74f6882f3e8a3096dad641a7392c3cb0fde4809463ce8f8d"
+    },
+    {
+      "html": "cases/dify/dify-en.html",
+      "svg": "cases/dify/dify-en.svg",
+      "poster": "cases/dify/dify-en-static.svg",
+      "html_sha256": "6b93a2c2369ea26bada44e3debf0fb74ec7a33219e6fe5f9e94d168bd4b0a8c5",
+      "svg_sha256": "b3dd351477cd1e18d80c3b4add5826650079f27cdcdb35dadd81cebdeb1e3f67",
+      "poster_sha256": "0a0463e713ac8172bbf5513c144aa5ea72904adabbca09891b4bfa25080aa8af"
+    },
+    {
+      "html": "character-themes/deep-tech.html",
+      "svg": "character-themes/deep-tech.svg",
+      "poster": "character-themes/deep-tech.preview.svg",
+      "html_sha256": "561397a6cd987e4bff74390f2d634e2e75371ad5ed3f1b77b064617e229b2905",
+      "svg_sha256": "6dab6dc9a49fe1ddca2563796a6d36f79f55671190f78703f1fef8be0650f826",
+      "poster_sha256": "48ffa8ce1d256eb5992464239afaf46f55af191668c9e3df2bd6da4d94a88756"
+    },
+    {
+      "html": "character-themes/illustrated-character.html",
+      "svg": "character-themes/illustrated-character.svg",
+      "poster": "character-themes/illustrated-character.preview.svg",
+      "html_sha256": "c7b61e2416e780f40bd030a37883f9e134bf7bca289aa5327f713e7e4a0d2598",
+      "svg_sha256": "e77775169640f8baa6bf132680da7fe42baafbc587a1c5e09a074eb7aed1db64",
+      "poster_sha256": "5daf6618a7ddff2dd17f785a2bfffd03bf56b8ddbd0a01087706df2970ac40ff"
+    },
+    {
+      "html": "character-themes/teaching-sketch-character.html",
+      "svg": "character-themes/teaching-sketch-character.svg",
+      "poster": "character-themes/teaching-sketch-character.preview.svg",
+      "html_sha256": "abcd1c68af27fe8b256e6bfba3e0f9a42d54613da7797e9af3591aaeff8f9d91",
+      "svg_sha256": "64cb0e7fc26ed1bd61bac5f09e3efe2eea7e4a4d6ffc7c5728a637cce2ba866a",
+      "poster_sha256": "2f892760e96299c937b749089d7a163728abe0936c6d44c2f8ead77290c403df"
+    },
+    {
+      "html": "icon-systems/diagram-core-v1.html",
+      "svg": "icon-systems/diagram-core-v1.svg",
+      "poster": "icon-systems/diagram-core-v1.preview.svg",
+      "html_sha256": "e72a9d52bbb4a5acefd8a1bd0b81cd4462e7adc32fc211f6d861bd14167fc6e6",
+      "svg_sha256": "c29606f6358b9e931a3769e26b654f5731e500bbe3b3c6fb626fff81a25f119e",
+      "poster_sha256": "1739ad972916b9f5f54d5e3b456b05a060bc66f62a8324888f8f84f0971bc77a"
+    },
+    {
+      "html": "icon-systems/illustrated-2.5.html",
+      "svg": "icon-systems/illustrated-2.5.svg",
+      "poster": "icon-systems/illustrated-2.5.preview.svg",
+      "html_sha256": "cdc60e07f3ed66701757c919f994bb5b193ff3a455c528ef430ad4a49bcc6758",
+      "svg_sha256": "4b35311f20f7e77d3f76e10eb90a40590aab9ba0d5c639826df28a4633f3bc7e",
+      "poster_sha256": "e29de4d1b55e514b7a6139c0b5dfad7b32f5e0fbed2d8ea610c9a6de9f92a827"
+    },
+    {
+      "html": "layouts/agent-loop.html",
+      "svg": "layouts/agent-loop.svg",
+      "poster": "layouts/agent-loop.preview.svg",
+      "html_sha256": "0550f3587d22cba757218499c8fc2f37fa886ef06db8a5fdb178b646d328769e",
+      "svg_sha256": "d74c0b182d7d063309e2fbed9f8cb6644c9a5161dc58a2c46add2382cf13033d",
+      "poster_sha256": "bf18fdc6eb1894c8a82bb2189f539aacb86c1de3800e8b1ce923de8dd974eafc"
+    },
+    {
+      "html": "layouts/agent-memory.html",
+      "svg": "layouts/agent-memory.svg",
+      "poster": "layouts/agent-memory.preview.svg",
+      "html_sha256": "cf97dd4613811109a1744b63ac4fa9fb74fcaf99e22eb0b9e879a0910fbcf9dc",
+      "svg_sha256": "4b2368ddb5e04fade56b0ef72efc9b65cd47def0165b5a2d71fdcc5d3d2158b2",
+      "poster_sha256": "11d124e90f6a01e1307cf07d53af13ff200b4eac33c7a2b20773e45184e7ad8a"
+    },
+    {
+      "html": "layouts/compare.html",
+      "svg": "layouts/compare.svg",
+      "poster": "layouts/compare.preview.svg",
+      "html_sha256": "6048f921ba69589cdfb5ce3f05203b0cdbd083984b53fdf905c07c947370322e",
+      "svg_sha256": "fe38b2d6ce1fc714988f22781d6e9f45de5f54cfa2d481bbdcaf48c47e7668a8",
+      "poster_sha256": "e6f2925839a96c5dd82ac458906891d929e2ffc7b2f2b4fb576f3ad38557b8b9"
+    },
+    {
+      "html": "layouts/er.html",
+      "svg": "layouts/er.svg",
+      "poster": "layouts/er.preview.svg",
+      "html_sha256": "c4a1dad7d9675788e745af0255384a3e20d42aca32417219d91f22f8ce7a9444",
+      "svg_sha256": "e91f0acd02c4ae607d15f88b0a5957c02959694b375006299b7a6e9355bf7bc6",
+      "poster_sha256": "40d1545a076965d25c2649b7e8e931fbb1372a609f3310556a4e6eaa26d445f3"
+    },
+    {
+      "html": "layouts/funnel.html",
+      "svg": "layouts/funnel.svg",
+      "poster": "layouts/funnel.preview.svg",
+      "html_sha256": "37b3cf4c3c3e2cb25d986639e78eb005d845aa0aa2f5613934df1a6c2ef15081",
+      "svg_sha256": "0b508867a4f11392a221dbe0ff66d7c0ff826bfc6f732c0c890ca3fa52e5e974",
+      "poster_sha256": "bb078f53fb50d1e02cfcbe731c0a23e059e5a601a331bbcacf8de8848d07ac9b"
+    },
+    {
+      "html": "layouts/hub-spoke.html",
+      "svg": "layouts/hub-spoke.svg",
+      "poster": "layouts/hub-spoke.preview.svg",
+      "html_sha256": "9310f70d14813462245eefe95a7e07d2bb9ce8776612d8d280c3029d576fdf4a",
+      "svg_sha256": "527c3cc63975b4f9768c6bdcda01c31a810dc7e8fdfaadfaea958776a62fa058",
+      "poster_sha256": "984c12da3bdcf1440d16f3a572337986aa429e9da87ed5bc567c4efeab4ec951"
+    },
+    {
+      "html": "layouts/layered-loop.html",
+      "svg": "layouts/layered-loop.svg",
+      "poster": "layouts/layered-loop.preview.svg",
+      "html_sha256": "d33bb505fe915389f7c079d6ce40439c93f54d433329221c07ae904473eff1cc",
+      "svg_sha256": "e0e4c19c079f6999b7ce42ee8819da7a5e992fc7c14f888a75b4bad2017a0971",
+      "poster_sha256": "f808b7d01a2cb3e124860aea5fc672bf795e9c351cb0ccaeb5f80397ca2d7d2e"
+    },
+    {
+      "html": "layouts/layered.html",
+      "svg": "layouts/layered.svg",
+      "poster": "layouts/layered.preview.svg",
+      "html_sha256": "0dca8b44d0e35136103f0958fdd7a69bd9a4ad62fc08b99745aa1e3a636bbacb",
+      "svg_sha256": "2182b94a00f360b73edfd3d1c269cf898cde49a5e8f24870dcfffc369af42cd0",
+      "poster_sha256": "8a56c9fb15218b746b218e31689c195b5a1e5cb1b04268be1f52537c5a47ddaf"
+    },
+    {
+      "html": "layouts/loop.html",
+      "svg": "layouts/loop.svg",
+      "poster": "layouts/loop.preview.svg",
+      "html_sha256": "cad55cbecce8148dcea924c130e552eb58ec03532a21d8e98c82c541bcd3ab13",
+      "svg_sha256": "3e7fefe41b11451f8444ebf5ffbda0431903e9e925a4731d3fe7a119033ee7ae",
+      "poster_sha256": "6093a76681210b041424c5fa72f6a52026d3ef30efaf758772cd4ac238e1ff2a"
+    },
+    {
+      "html": "layouts/matrix.html",
+      "svg": "layouts/matrix.svg",
+      "poster": "layouts/matrix.preview.svg",
+      "html_sha256": "444fd370ea66c1a151843f67214ca8f35758a73920d9bfb3993ca4d188ffbcbc",
+      "svg_sha256": "ad395e5bed67d74b144eb488dd65d5ed970a77fc78c28475e630a68cd6feb011",
+      "poster_sha256": "8a3ee1981d42cd93373951c34f6e043e275f20193e28258c5abbcc6c396eb3bc"
+    },
+    {
+      "html": "layouts/network.html",
+      "svg": "layouts/network.svg",
+      "poster": "layouts/network.preview.svg",
+      "html_sha256": "35c88b6f3f956e4486b1ce2e362539e20c00fc925feb4a394ea94a95bf782fd6",
+      "svg_sha256": "9ceeeba4326a18b85c68a6f7d61d9ee124a9e1d0db4ba79a72e0561b19ec84c5",
+      "poster_sha256": "ca36a0c0ec9b66884440f9868dec3cd9536ccca8e2f8012af3ddfda476d36810"
+    },
+    {
+      "html": "layouts/pipeline.html",
+      "svg": "layouts/pipeline.svg",
+      "poster": "layouts/pipeline.preview.svg",
+      "html_sha256": "a22554ca3fee8ae2d1a71eaa98432552d7f140e5f1522eab88d61f4cf45048c6",
+      "svg_sha256": "1d7e1e5c94e300fb33d6cde3abf9101c3e1988c2dcb09443359408085c669f6b",
+      "poster_sha256": "f90b97b8db96bc2ad0a453faabd3ff8ef57ea1071d1307da10a1ab6bbb0aaab3"
+    },
+    {
+      "html": "layouts/sequence.html",
+      "svg": "layouts/sequence.svg",
+      "poster": "layouts/sequence.preview.svg",
+      "html_sha256": "b931877f2be194e35176d1ff361cf522ce5dc2955cac4b29c6cf9b700b2097f0",
+      "svg_sha256": "e3cd0468811ea6ca55d0f4f7021a81772d84f640bc418bb65ef4af6b3b78624f",
+      "poster_sha256": "223fd4a5048231e6abec4e6beaa77707b89ef6e9ca4b7112a2653f6240dd0ca8"
+    },
+    {
+      "html": "layouts/stack.html",
+      "svg": "layouts/stack.svg",
+      "poster": "layouts/stack.preview.svg",
+      "html_sha256": "79fff79b50b2b5388771edb2e573f0608b1f7f9f1095b2f315cd46ff4e6f8511",
+      "svg_sha256": "4c7019ce86aceb66f3844c1508fa31ae9e5c5278e52a7032a75652496ab4cfae",
+      "poster_sha256": "fec91efc7ad197aab200c94a8f9ac6ef4514da8d48de27b113181b8d32d6b7f9"
+    },
+    {
+      "html": "layouts/swimlane.html",
+      "svg": "layouts/swimlane.svg",
+      "poster": "layouts/swimlane.preview.svg",
+      "html_sha256": "b1f8a9fa5c46d3aba9a32df99e9625a8f93f1173115d47db32462780ff148e0b",
+      "svg_sha256": "8603331889f6f9c37eeebc1ee75a89543d06c332e1d340df40c75b99b1fe36ca",
+      "poster_sha256": "cfd7692a36814c1308225db5e53fe2539d617036258be193b3b4d8200f1444aa"
+    },
+    {
+      "html": "layouts/timeline.html",
+      "svg": "layouts/timeline.svg",
+      "poster": "layouts/timeline.preview.svg",
+      "html_sha256": "2c76323e375bc4aa97b0ed7093a862196a5135e89f9dcdf7e9e5fef7c0fe3f57",
+      "svg_sha256": "261a96df24258430a66bc525a7e43910143805bd7f59a4d35481f4801279edb2",
+      "poster_sha256": "4b1ca6e505532309446d0f5d47342e2325b61be80608055104d2f0eda05b698c"
+    },
+    {
+      "html": "runtime-motion/items/agent-think-act-v2.html",
+      "svg": "runtime-motion/items/agent-think-act-v2.svg",
+      "poster": "runtime-motion/items/agent-think-act-v2.preview.svg",
+      "html_sha256": "e34a1d5979de34ad5c73b29fdd28b8d8adc341c78063729db1aac1cb1660c0ae",
+      "svg_sha256": "24d015071f14502b420a4349c3e66279f1abda1ffc0a34deb922068be14a46d1",
+      "poster_sha256": "3df93bdbc1d83292997dbaa97d1bcf45366b208cf6c9d713525cc821c44f81bb"
+    },
+    {
+      "html": "runtime-motion/items/api-request-response-v2.html",
+      "svg": "runtime-motion/items/api-request-response-v2.svg",
+      "poster": "runtime-motion/items/api-request-response-v2.preview.svg",
+      "html_sha256": "01de73d91730300ec47d91906b0c45f7410e9f02e7e1395bc5a454f347c43b0f",
+      "svg_sha256": "60b451a05e5788cc4f90883c11e4056d03767902831f75905298794737074d89",
+      "poster_sha256": "91a2e8b14697f6bef76f7fd419b19b1222041b941034d339dca67e6ee1fd3512"
+    },
+    {
+      "html": "runtime-motion/items/api-signal-return-v1.html",
+      "svg": "runtime-motion/items/api-signal-return-v1.svg",
+      "poster": "runtime-motion/items/api-signal-return-v1.preview.svg",
+      "html_sha256": "074e2db527325292179197fff868dffb7041fdf9d784be7364f71c1490a23185",
+      "svg_sha256": "4a9e44b8b5a6a913e794d65739824b1f29c589349cbcf16fe313c887c03a9517",
+      "poster_sha256": "7da31a4422d1d32f2f1512b1bba545fb50b747188426d92621562e997c9328b5"
+    },
+    {
+      "html": "runtime-motion/items/brain-think-pulse-v1.html",
+      "svg": "runtime-motion/items/brain-think-pulse-v1.svg",
+      "poster": "runtime-motion/items/brain-think-pulse-v1.preview.svg",
+      "html_sha256": "a465ac29a0c2dc340c371115cfdf5c69315f4d1d3da077e04d9ec3846a6cefd0",
+      "svg_sha256": "a70287faeb8ef7aa547496db827a792a7ca9a04494a3490c388a7fcda95cdd5f",
+      "poster_sha256": "5640386fb642710194524f908522cf739bd543ed6fa26325f6ec8c203d9b4c81"
+    },
+    {
+      "html": "runtime-motion/items/bucket-ingest-confirm-v1.html",
+      "svg": "runtime-motion/items/bucket-ingest-confirm-v1.svg",
+      "poster": "runtime-motion/items/bucket-ingest-confirm-v1.preview.svg",
+      "html_sha256": "4ebd4b8c86a3f292ab5cbd17170995b931e73e57fd000c9ecf31c3b7fd900e82",
+      "svg_sha256": "de8fe35069bed8628b17b7709112b01d603eb6deeb1f5037279a7b5931d10502",
+      "poster_sha256": "b9d3fa86343cd57c59eadb09f19c0c0d73836eb5c0efb05d5115c010199ade26"
+    },
+    {
+      "html": "runtime-motion/items/cloud-uplink-ready-v1.html",
+      "svg": "runtime-motion/items/cloud-uplink-ready-v1.svg",
+      "poster": "runtime-motion/items/cloud-uplink-ready-v1.preview.svg",
+      "html_sha256": "9339f221bbc0729cf6c9a590030ab3148d2151e23f57191f367d421017e8a40b",
+      "svg_sha256": "760e1f0154326ea4a69d7fc3d5eccea9a64af069b05348c748643d961cf9d912",
+      "poster_sha256": "de10284acb148768a76168fa66f9995f5c109c835592c9def32e525f099f7e70"
+    },
+    {
+      "html": "runtime-motion/items/cloud-upload-v2.html",
+      "svg": "runtime-motion/items/cloud-upload-v2.svg",
+      "poster": "runtime-motion/items/cloud-upload-v2.preview.svg",
+      "html_sha256": "cdc759a834026b5d9be5bb8143cef60c6aecb4909207f97500c35a90db9de323",
+      "svg_sha256": "38f4bb925779d4616b2641dd9ea5151eb67824dcd0b5e644281ee960eb724463",
+      "poster_sha256": "4d5602e9ef73d2ad3a5334e9050f46a4553db95eb1c19a584fc3c0baa42cf9db"
+    },
+    {
+      "html": "runtime-motion/items/database-write-v2.html",
+      "svg": "runtime-motion/items/database-write-v2.svg",
+      "poster": "runtime-motion/items/database-write-v2.preview.svg",
+      "html_sha256": "753781945a276091dce981378bc6c30136a300ce802c64a9b75697e31323a83e",
+      "svg_sha256": "58ddaff9b296ac8fcc005c1a87eac6cb7baf375c596efe37fa0e70bc0232f15a",
+      "poster_sha256": "4ddaa87d624d3794df0da41314ffd01995ea8a968f65600ca0426af41f69db48"
+    },
+    {
+      "html": "runtime-motion/items/file-lines-v2.html",
+      "svg": "runtime-motion/items/file-lines-v2.svg",
+      "poster": "runtime-motion/items/file-lines-v2.preview.svg",
+      "html_sha256": "bfbdd283bd7662f3e3594013289bae0a447f51cd495dbfb2c281416f6f17fdad",
+      "svg_sha256": "ab82175b441c2c6bf7d9543f7755d3d6962238fb83b3a4decb97d671a77d7bc7",
+      "poster_sha256": "c5e23156a4c9ef4bab9e80f8fe04a72c2635896016ad6a636c58140742bfe7fd"
+    },
+    {
+      "html": "runtime-motion/items/file-note-write-v1.html",
+      "svg": "runtime-motion/items/file-note-write-v1.svg",
+      "poster": "runtime-motion/items/file-note-write-v1.preview.svg",
+      "html_sha256": "fa2832b33467d1b6424c13656c854ab7d655bc33b9943a3508d7e38552e07f02",
+      "svg_sha256": "89c0fdba15cfbb19b0c8d8122487e272b1de6cc203b5e27a56aa69a2df29fa0e",
+      "poster_sha256": "949e1519f2c9956a9ac39a8644812d3aefd0dcdc544b57c50b794ff2bb637f24"
+    },
+    {
+      "html": "runtime-motion/items/folder-file-store-v1.html",
+      "svg": "runtime-motion/items/folder-file-store-v1.svg",
+      "poster": "runtime-motion/items/folder-file-store-v1.preview.svg",
+      "html_sha256": "4ccfca361a08a7dd20e6ca4b97fc486589b19ddecb1b77dc23c60d4831530977",
+      "svg_sha256": "c24e1b4541ced9ff4bbffba01cf28ee4aa7cf6cf88181ef463446690a3643341",
+      "poster_sha256": "9d472cd48a82a55959ce6a822ac948539a9df10b2f33393e787a28846be644e6"
+    },
+    {
+      "html": "runtime-motion/items/folder-open-v2.html",
+      "svg": "runtime-motion/items/folder-open-v2.svg",
+      "poster": "runtime-motion/items/folder-open-v2.preview.svg",
+      "html_sha256": "ce0cc007d575cde5f095964a4d09f6b52a3ac48c8ff0429d9c325ca8d26862b0",
+      "svg_sha256": "6e25ba1ac81eb0fe72e1a4e392be0c74ef77dfd82fae1dd1c53696ff99a29c41",
+      "poster_sha256": "794f739dba49baa31756ed0134c9ba224992aaa8c860e5a95cedba60eb97cb1e"
+    },
+    {
+      "html": "runtime-motion/items/memory-commit-v2.html",
+      "svg": "runtime-motion/items/memory-commit-v2.svg",
+      "poster": "runtime-motion/items/memory-commit-v2.preview.svg",
+      "html_sha256": "a52e5e6fafe07ab156662de3f1e430159deb3d0290cf928cfa348265222d11b6",
+      "svg_sha256": "cd1f7e172e5299ec733e1d5bee6722fdfaefb8b4cb6b66779e641f0650a91dec",
+      "poster_sha256": "713d60c0d1afe4a2e5e967a3448e8efbc0ecc65c47e50424f71d9ed0c2837a22"
+    },
+    {
+      "html": "runtime-motion/items/memory-index-commit-v1.html",
+      "svg": "runtime-motion/items/memory-index-commit-v1.svg",
+      "poster": "runtime-motion/items/memory-index-commit-v1.preview.svg",
+      "html_sha256": "659265a1e30732dc87cf7ac67c3d5d8cb7f5196868176b97f266a33873d69a11",
+      "svg_sha256": "994965b9aacb71915b426ef3d08bbc3391e0c3b8bbb9ceb6e90c0c0868bc67f3",
+      "poster_sha256": "67a0ced559a0719efecefa7c90e3eb8453e83c8ad740af7b88b7a1e41958070b"
+    },
+    {
+      "html": "runtime-motion/items/operator-type-focus-v1.html",
+      "svg": "runtime-motion/items/operator-type-focus-v1.svg",
+      "poster": "runtime-motion/items/operator-type-focus-v1.preview.svg",
+      "html_sha256": "0653de2151af24fcc9e659632b69e1273f63da31d5229eb0f976cd9b56f71449",
+      "svg_sha256": "1ab00264d99a5ed6cb203333d52855809a8560dbada5e5fd061b8812adcb0b7c",
+      "poster_sha256": "1d153a81bb45617f408d32e432991184bc254624b35893e9357ad37c4f1930c1"
+    },
+    {
+      "html": "runtime-motion/items/output-envelope-reveal-v1.html",
+      "svg": "runtime-motion/items/output-envelope-reveal-v1.svg",
+      "poster": "runtime-motion/items/output-envelope-reveal-v1.preview.svg",
+      "html_sha256": "aea52fa3ea04833e54e7e1ed909ddf255e4dec9942df36d1d7808600b7083434",
+      "svg_sha256": "bcef594b9ed6138e2991f02761ec8ac202934cbc7c1ee6890423325e15d8ba6f",
+      "poster_sha256": "9becf86d0717d991bf8a61bc72d4bb68764e559cfc8975d4560d911ba897a10f"
+    },
+    {
+      "html": "runtime-motion/items/output-reveal-v2.html",
+      "svg": "runtime-motion/items/output-reveal-v2.svg",
+      "poster": "runtime-motion/items/output-reveal-v2.preview.svg",
+      "html_sha256": "269919bb4ae240b72a617aef288f41dfad18614c636fc8c4999bdc45b79f26c2",
+      "svg_sha256": "f2500af79a922263ae41739a1b0292aa127a2afb46eaa18d7bd5b52736578afe",
+      "poster_sha256": "7abe4f4cbe582ba915f7ac80fda298723272dae0b99b86f82749cc2495415a3a"
+    },
+    {
+      "html": "runtime-motion/items/runtime-edge-packet-flow.html",
+      "svg": "runtime-motion/items/runtime-edge-packet-flow.svg",
+      "poster": "runtime-motion/items/runtime-edge-packet-flow.preview.svg",
+      "html_sha256": "719a43473f88c67bc52f6f60be8bbb99e70361595daaaff1b7f3f7e84c2e5fac",
+      "svg_sha256": "85d84aa08fd4c0774e6f1d1ff18fc1e1cc3b9119f1fc64006679eaead605440f",
+      "poster_sha256": "28c330def7a54eeab5414c641eb9827966ade811aab96bc7f75358b7684cdf61"
+    },
+    {
+      "html": "runtime-motion/items/runtime-title-sweep.html",
+      "svg": "runtime-motion/items/runtime-title-sweep.svg",
+      "poster": "runtime-motion/items/runtime-title-sweep.preview.svg",
+      "html_sha256": "871d4e343c94f11a4bfe49b56e8cbe3409984b95202479c5586eaa38070425b1",
+      "svg_sha256": "a9d064b777585e8ce8a1e6d975ef4e71a34b100a94d7060d2e894ed8a68f940e",
+      "poster_sha256": "500558965449d5d5dd16fa85e84bccbcbaf5317009d174c4d7743967b3c8e949"
+    },
+    {
+      "html": "runtime-motion/items/search-discover-v2.html",
+      "svg": "runtime-motion/items/search-discover-v2.svg",
+      "poster": "runtime-motion/items/search-discover-v2.preview.svg",
+      "html_sha256": "1f8bdedfa742e253984f6c1e41e17771ae41e324a9d864191c8e04b22d49b17b",
+      "svg_sha256": "da63d2783ed23e2382894a4f6e291373f6e08d537ce47c53a64104519d49b406",
+      "poster_sha256": "daf0ab7be421f294943e45064cc590efac8924bdc72d81592dbde08b2a0ed480"
+    },
+    {
+      "html": "runtime-motion/items/search-scout-find-v1.html",
+      "svg": "runtime-motion/items/search-scout-find-v1.svg",
+      "poster": "runtime-motion/items/search-scout-find-v1.preview.svg",
+      "html_sha256": "4bb50c2f064fb46661b177536e196150d6d5b87e15388fdb8b64b2202e1e801a",
+      "svg_sha256": "663a2ac801c772ba14934a73dccb32128092fc3f9b37afdf1ec7071ff86baf77",
+      "poster_sha256": "4b037f47ee6769c97d8392c2d73fa170641d94a8067e0e05c82b4db3ef45d165"
+    },
+    {
+      "html": "runtime-motion/items/shield-check-v2.html",
+      "svg": "runtime-motion/items/shield-check-v2.svg",
+      "poster": "runtime-motion/items/shield-check-v2.preview.svg",
+      "html_sha256": "f795f17936020bbdd8c9eed608a5aa6062491b4149a166eadcdd6a84e903c22c",
+      "svg_sha256": "4df4bf9acf1f0d3a3958f1acc35465999a30a94ca3b83219bdc8322f91ffeaf6",
+      "poster_sha256": "aa59e804b641137f0ba278de1ef5bb4d8bf21d0611e61525673d4c27c507c9df"
+    },
+    {
+      "html": "runtime-motion/items/shield-guard-confirm-v1.html",
+      "svg": "runtime-motion/items/shield-guard-confirm-v1.svg",
+      "poster": "runtime-motion/items/shield-guard-confirm-v1.preview.svg",
+      "html_sha256": "e6baa37101d53b22d8213d559e2b4a6443e5cd6b5a5bddd75c46154ded7cb1f5",
+      "svg_sha256": "9f64624467d2ed8d0d5ade023dbd6aecb9bf783a2e6928e4b680f496e9e789d9",
+      "poster_sha256": "dcb17396a011c0af2201543c361386462105f34e0e83f0ac5dc2b8d65bdf942a"
+    },
+    {
+      "html": "runtime-motion/items/token-intent-ready-v1.html",
+      "svg": "runtime-motion/items/token-intent-ready-v1.svg",
+      "poster": "runtime-motion/items/token-intent-ready-v1.preview.svg",
+      "html_sha256": "879287501c05e9c1f60ba848de08c82404ad30196b2b57087f4f63be19edec96",
+      "svg_sha256": "10fbd70bece7e01ff95a63d44bba4707733c4f608bffea82e14177a31b9f1ee8",
+      "poster_sha256": "1d2ef064e62f91bc54b7f3f9d6ff7c8370dd2d4bc7ccf81121f4610959e78da4"
+    },
+    {
+      "html": "runtime-motion/items/token-intent-v2.html",
+      "svg": "runtime-motion/items/token-intent-v2.svg",
+      "poster": "runtime-motion/items/token-intent-v2.preview.svg",
+      "html_sha256": "1bb57f61f088ff376e4f163ba67a0244ab9d8943c95ad8dca1ae2744d146f9fc",
+      "svg_sha256": "e744d4349d038cfe721879f68cdeb14945120ef6b69131207671aca819a2e7b6",
+      "poster_sha256": "abc6dd74a9ce0afd2d7f51626ff47ebbf99613ed407675b9db2d3c7fb230bbfe"
+    },
+    {
+      "html": "runtime-motion/items/tool-kit-action-v1.html",
+      "svg": "runtime-motion/items/tool-kit-action-v1.svg",
+      "poster": "runtime-motion/items/tool-kit-action-v1.preview.svg",
+      "html_sha256": "5fc9488183cbc200012ea5c53fd6cf7b2414ac6ded9a0948eddbede0aaf4a27a",
+      "svg_sha256": "d016bca42a7d9a18877131107da2722c9fb7e48b17b214f939e2bd9ce13c7648",
+      "poster_sha256": "2a9876754fd967d6e8ccb401475c468f4383d1e1db244e9ce62492e8946fa701"
+    },
+    {
+      "html": "runtime-motion/items/tool-run-v2.html",
+      "svg": "runtime-motion/items/tool-run-v2.svg",
+      "poster": "runtime-motion/items/tool-run-v2.preview.svg",
+      "html_sha256": "981d1c1998614c87cb3ab25beb0e516bac9d32dfa0b4fb1bed529dbae262c413",
+      "svg_sha256": "21d6107f84e24799d67e601e1d7b35ac15eabd5f841accbe6a6c6e3dd930042a",
+      "poster_sha256": "cc65a94dd703fa5da2be81bf49a53f60268fa2a00378f2e84689fcfcbc75e159"
+    },
+    {
+      "html": "runtime-motion/overview.html",
+      "svg": "runtime-motion/overview.svg",
+      "poster": "runtime-motion/overview.preview.svg",
+      "html_sha256": "54ae6beb8c87faff6cd19f17217b4fd91f7ec9f62a245529749924a13fa61149",
+      "svg_sha256": "a4199c388b7d94f8cd9521869e1aad093c2bf5453e659466c051b0e7832be444",
+      "poster_sha256": "6e7f9d4161996cebcb79e459951df9b938fdb6f75d4a38094dca09e01c72631c"
+    },
+    {
+      "html": "styles/aurora-orb.html",
+      "svg": "styles/aurora-orb.svg",
+      "poster": "styles/aurora-orb.preview.svg",
+      "html_sha256": "b1a351cbf1bfd6f069876aab34c920013ae0fcbc8c7f90b446e2b12c23bc0926",
+      "svg_sha256": "d85f185759248c8aa2445a8221f78181b77b1cfabf3824e67aa68f17d1141267",
+      "poster_sha256": "c93ce904a1fc2f32b79d8e3b68c9239f52b11c747b08a2486f55471d40a4aabc"
+    },
+    {
+      "html": "styles/blueprint.html",
+      "svg": "styles/blueprint.svg",
+      "poster": "styles/blueprint.preview.svg",
+      "html_sha256": "622f40628853805c7a96ca74776f50044de3c8f73de3dc52846c2159e118644b",
+      "svg_sha256": "c90a264c8517819d9e3368bf0f5fbb636c7596791d31521cb51fb1745c303a70",
+      "poster_sha256": "f08216671248e01b977f40d6114f172bf8c0302fea097dafa6455e65c2d37306"
+    },
+    {
+      "html": "styles/claude-warm.html",
+      "svg": "styles/claude-warm.svg",
+      "poster": "styles/claude-warm.preview.svg",
+      "html_sha256": "7c4209d1d55f9704dd4e8c109803ddfc744a1ed66242d3308537e67c27a7f202",
+      "svg_sha256": "a2fdaf4259653abb221bb858629cd4e775e0f50e8f3e93d2f6fe6991d393ffed",
+      "poster_sha256": "28ecc313f32b2c97f600119049d719defa6cec847bdad33a07fc061c4e523353"
+    },
+    {
+      "html": "styles/dark-luxury.html",
+      "svg": "styles/dark-luxury.svg",
+      "poster": "styles/dark-luxury.preview.svg",
+      "html_sha256": "01660718bcacaa08be3a144b809a27d6751c4a2729d5881ebd9fdebba6877a7d",
+      "svg_sha256": "b40b6a9859d6f44e217bf8e474436ca46393cb6e0159aba9a36d651be1d161c5",
+      "poster_sha256": "b7022c23d57ba98ee64a85e14bff1ea93c146630f3491f62ea255a54cbe385fd"
+    },
+    {
+      "html": "styles/dark-terminal.html",
+      "svg": "styles/dark-terminal.svg",
+      "poster": "styles/dark-terminal.preview.svg",
+      "html_sha256": "8abef632191058df7c02d83a875e86bc0a470c34617049a76787ec504bd82be5",
+      "svg_sha256": "33e3bc09e695cf51ae31274e29f09750c592c0d6c2dba9dda6e054c25052adcc",
+      "poster_sha256": "a649f25f8a35582d1a5e5a63c1f9a2e2612c0cfccd13634c5813ef4f52d0b876"
+    },
+    {
+      "html": "styles/deep-tech.html",
+      "svg": "styles/deep-tech.svg",
+      "poster": "styles/deep-tech.preview.svg",
+      "html_sha256": "78529c891b4976382e7b529b8f9d6048fe8f408a9a7daa96c9727a5e645388ab",
+      "svg_sha256": "8c92dfff241deaf500a7197beac4416f4296e5da464a6f5acf697e9333cd2078",
+      "poster_sha256": "99aedf4c641d7e504e53922088d8b89483fbe498c64ba93f9e3c03be1b711563"
+    },
+    {
+      "html": "styles/flat-icon.html",
+      "svg": "styles/flat-icon.svg",
+      "poster": "styles/flat-icon.preview.svg",
+      "html_sha256": "24055742271e0c7d5469b97b681d423e344d6178897369027f41b601b9ffde6c",
+      "svg_sha256": "295356bfc0f41bdcf7cdfd48d1289a0e7bc8fe37f069634b1a22d628ba0ef008",
+      "poster_sha256": "2cd6aab8a41e9d5c86696ff0469ea04052e92575c0b56bc4f9b6918308113140"
+    },
+    {
+      "html": "styles/glassmorphism.html",
+      "svg": "styles/glassmorphism.svg",
+      "poster": "styles/glassmorphism.preview.svg",
+      "html_sha256": "3ad95101e8917aeba1366f78ea5e378aca58921e38c4c0c01de003950fb245df",
+      "svg_sha256": "087de9800c2ebe37427ec41863a26028bca067f225bfcd5305942f991e3e12ca",
+      "poster_sha256": "6f967ec0ef545ca5f4ec4f6239ed3e4ad4f6e205a5353de2d56b59c33ccfd73c"
+    },
+    {
+      "html": "styles/illustrated-semantic.html",
+      "svg": "styles/illustrated-semantic.svg",
+      "poster": "styles/illustrated-semantic.preview.svg",
+      "html_sha256": "48ef7e5709669b18d745bef682105ff727dab79aec857c477c74951102f6690c",
+      "svg_sha256": "5140a77b347e7e427567181dd75414ea2708a5a2092cc0b9494a132c729c6924",
+      "poster_sha256": "fbd6e00debfbe1fc4f803bc3538e6bb7ab4a3cf117587225c307b77b9b3a5a89"
+    },
+    {
+      "html": "styles/minimal-light.html",
+      "svg": "styles/minimal-light.svg",
+      "poster": "styles/minimal-light.preview.svg",
+      "html_sha256": "f84105f320562c90b8b0f65b1db959e61721ac78bba4e92677bf87a6b4a56973",
+      "svg_sha256": "5813f3240746c89161d17a917f955fd6852c2374a4d27c8362c8a547bc6b2005",
+      "poster_sha256": "40eb079c886ab0b635da51f78b93fcb9397393c05f8a8e308ccc550baaa2be56"
+    },
+    {
+      "html": "styles/notion-clean.html",
+      "svg": "styles/notion-clean.svg",
+      "poster": "styles/notion-clean.preview.svg",
+      "html_sha256": "d8843016fab9b20456463a205743c2b59657da11772b3c8c4c13f893957ffe68",
+      "svg_sha256": "4e9ffaafbab9ff753f1b10e484a8bb3f92523ba5f8783b9e7bcccd997b64846d",
+      "poster_sha256": "1f49780b2b461252ad698b9bbf6cac88f9e618b49b4b71f4ba07fdc9b2849c40"
+    },
+    {
+      "html": "styles/openai-minimal.html",
+      "svg": "styles/openai-minimal.svg",
+      "poster": "styles/openai-minimal.preview.svg",
+      "html_sha256": "a58acdfee71fd371a1fa797842b8b2be81b2aba7165eb100794e6f9e1303cc0a",
+      "svg_sha256": "25a9b5bbf5f5a5c9738951a7ba300a65517d3bfe57de9d3e4432756a33ea5cef",
+      "poster_sha256": "3edf2d5661d30ef3eed08c3b5bf064b9664f95fc51caedef1c5e4dfd7960ce22"
+    },
+    {
+      "html": "styles/sketch-board.html",
+      "svg": "styles/sketch-board.svg",
+      "poster": "styles/sketch-board.preview.svg",
+      "html_sha256": "d3fbf6880b12af888743b37b2519eb57d1efb1f82c4618c01ba69d7c2048cf9d",
+      "svg_sha256": "c0e464bc68ec9eb7666a6e58d56e1ec79a570d8b414f6c817a5b84fec8a5b340",
+      "poster_sha256": "71eefac8063b6b661c874f67adbc73eb0241e804df594e6e14e77790510a3afd"
+    }
+  ]
+}

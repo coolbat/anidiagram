@@ -1,28 +1,27 @@
 {
   "hero": {
-    "id": "agent-runtime-flow",
-    "title": "Agent Runtime Flow",
-    "basename": "agent-runtime-flow",
-    "spec": "examples/showcase/hero/agent-runtime-flow.diagram.json",
-    "style": "deep-tech",
+    "id": "dify",
+    "title": "Dify · From Document to Answer",
+    "basename": "dify-en",
+    "style": "minimal-light",
     "icon_system": "illustrated",
-    "svg": "gallery/hero/agent-runtime-flow.svg",
-    "html": "gallery/hero/agent-runtime-flow.html",
-    "quality": "gallery/hero/agent-runtime-flow.quality.json",
+    "spec": "gallery/cases/dify/dify-en.diagram.json",
+    "svg": "gallery/cases/dify/dify-en.svg",
+    "html": "gallery/cases/dify/dify-en.html",
+    "poster": "gallery/cases/dify/dify-en-static.svg",
+    "quality": "gallery/cases/dify/dify-en.quality.json",
+    "case_page": "cases/dify/index.en.html",
+    "case_page_zh": "cases/dify/index.html",
     "best_for": [
-      "High-fidelity runtime",
-      "Agent flow",
-      "Semantic icon performance"
+      "Three-layer architecture",
+      "Document ingestion",
+      "Basic Chat"
     ],
     "summary": {
       "errors": 0,
       "warnings": 0,
       "issues": 0
-    },
-    "preview_webp": "gallery/previews/agent-runtime-flow.webp",
-    "preview_gif": "gallery/previews/agent-runtime-flow.gif",
-    "preview_apng": "gallery/previews/agent-runtime-flow.apng",
-    "preview_mp4": "gallery/previews/agent-runtime-flow.mp4"
+    }
   },
   "styles": [
     {
@@ -2416,5 +2415,80 @@
     "case_count": 8,
     "review_page": "gallery/readme-showcase/readme-showcase-round-1.html",
     "manifest": "gallery/readme-showcase/manifest.json"
-  }
+  },
+  "legacy_hero": {
+    "id": "agent-runtime-flow",
+    "title": "Agent Runtime Flow",
+    "basename": "agent-runtime-flow",
+    "spec": "examples/showcase/hero/agent-runtime-flow.diagram.json",
+    "style": "deep-tech",
+    "icon_system": "illustrated",
+    "svg": "gallery/hero/agent-runtime-flow.svg",
+    "html": "gallery/hero/agent-runtime-flow.html",
+    "quality": "gallery/hero/agent-runtime-flow.quality.json",
+    "best_for": [
+      "High-fidelity runtime",
+      "Agent flow",
+      "Semantic icon performance"
+    ],
+    "summary": {
+      "errors": 0,
+      "warnings": 0,
+      "issues": 0
+    },
+    "preview_webp": "gallery/previews/agent-runtime-flow.webp",
+    "preview_gif": "gallery/previews/agent-runtime-flow.gif",
+    "preview_apng": "gallery/previews/agent-runtime-flow.apng",
+    "preview_mp4": "gallery/previews/agent-runtime-flow.mp4"
+  },
+  "hero_variants": [
+    {
+      "id": "dify",
+      "title": "Dify · From Document to Answer",
+      "basename": "dify-en",
+      "style": "minimal-light",
+      "icon_system": "illustrated",
+      "spec": "gallery/cases/dify/dify-en.diagram.json",
+      "svg": "gallery/cases/dify/dify-en.svg",
+      "html": "gallery/cases/dify/dify-en.html",
+      "poster": "gallery/cases/dify/dify-en-static.svg",
+      "quality": "gallery/cases/dify/dify-en.quality.json",
+      "case_page": "cases/dify/index.en.html",
+      "case_page_zh": "cases/dify/index.html",
+      "best_for": [
+        "Three-layer architecture",
+        "Document ingestion",
+        "Basic Chat"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    },
+    {
+      "id": "dify-deep-tech",
+      "title": "Dify · From Document to Answer",
+      "basename": "dify-deep-tech-en",
+      "style": "deep-tech",
+      "icon_system": "illustrated",
+      "spec": "gallery/cases/dify/dify-deep-tech-en.diagram.json",
+      "svg": "gallery/cases/dify/dify-deep-tech-en.svg",
+      "html": "gallery/cases/dify/dify-deep-tech-en.html",
+      "poster": "gallery/cases/dify/dify-deep-tech-en-static.svg",
+      "quality": "gallery/cases/dify/dify-deep-tech-en.quality.json",
+      "case_page": "cases/dify/index.deep-tech.en.html",
+      "case_page_zh": "cases/dify/index.deep-tech.html",
+      "best_for": [
+        "Three-layer architecture",
+        "Document ingestion",
+        "Basic Chat"
+      ],
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "issues": 0
+      }
+    }
+  ]
 }

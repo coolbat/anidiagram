@@ -313,6 +313,11 @@ PYTHONPATH=src python3 scripts/render_readme_showcase_round_1.py \
 
 </details>
 
+Gallery cards play real icon motion only while visible, with pause and reduced-motion
+fallbacks. To refresh previews without replacing existing diagrams, use
+`PYTHONPATH=src python3 scripts/build_showcase.py --indexes-only`.
+See [gallery preview behavior and verification](./docs/gallery-previews.md).
+
 ## Documentation
 
 - [DiagramScript reference](./docs/diagram-script.md)
