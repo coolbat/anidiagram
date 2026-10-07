@@ -359,6 +359,31 @@ diagrams. See [gallery previews](./docs/gallery-previews.md).
 - [Runtime motion roadmap](./docs/runtime-motion-roadmap.md)
 - [Release evidence](./docs/release-evidence.md)
 
+## Contributing
+
+Issues and pull requests are welcome.
+
+- **Bugs and ideas:** open an [issue](https://github.com/coolbat/anidiagram/issues)
+  with the command, input Plan or brief, and a screenshot or the
+  `.quality.json` report.
+- **Pull requests:** keep changes focused, add or update tests, and run
+  `PYTHONPATH=src python3 -m unittest discover -s tests` before submitting.
+  Changes to rendered output should include the regenerated assets.
+- **New icons, styles, or layouts:** follow the existing catalogs in
+  [`styles/`](./styles/) and the [icon-system release status](./docs/icon-system-release-status.md).
+
 ## License
 
 [MIT](./LICENSE)
+
+## Acknowledgements
+
+AniDiagram learned a lot from these projects. Thank you:
+
+- [fireworks-tech-graph](https://github.com/yizhiyanhua-ai/fireworks-tech-graph): production-quality SVG/PNG technical diagrams from natural language.
+- [archify](https://github.com/tt-a1i/archify): turns ideas, plans, and codebases into interactive diagrams as an agent skill.
+- [diagram-design](https://github.com/cathrynlavery/diagram-design): editorial diagram design for coding agents.
+
+## Contact
+
+X: [@coolbat1999](https://x.com/coolbat1999)

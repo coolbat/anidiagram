@@ -340,6 +340,30 @@ node scripts/build_gallery_narration.mjs     # 讲解模式录屏
 - [Runtime motion 路线图](./docs/runtime-motion-roadmap.md)
 - [发布证据](./docs/release-evidence.md)
 
+## 参与贡献
+
+欢迎提交 Issue 和 Pull Request。
+
+- **问题与建议：** 提交 [Issue](https://github.com/coolbat/anidiagram/issues)，
+  附上使用的命令、输入的 Plan 或简报，以及截图或 `.quality.json` 报告。
+- **Pull Request：** 保持改动聚焦，补充或更新测试，提交前运行
+  `PYTHONPATH=src python3 -m unittest discover -s tests`。
+  影响渲染结果的改动请一并提交重新生成的资产。
+- **新增图标、风格或布局：** 参照 [`styles/`](./styles/) 中的现有目录和
+  [图标系统发布状态](./docs/icon-system-release-status.md)。
+
 ## License
 
 [MIT](./LICENSE)
+
+## 致谢
+
+AniDiagram 从以下项目中获得了很多启发，在此感谢：
+
+- [fireworks-tech-graph](https://github.com/yizhiyanhua-ai/fireworks-tech-graph)：用自然语言生成生产级 SVG/PNG 技术图。
+- [archify](https://github.com/tt-a1i/archify)：以 Agent Skill 的形式把想法、计划和代码库变成可交互的架构图。
+- [diagram-design](https://github.com/cathrynlavery/diagram-design)：面向编程 Agent 的编辑级图表设计。
+
+## 联系方式
+
+X：[@coolbat1999](https://x.com/coolbat1999)
