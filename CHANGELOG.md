@@ -9,6 +9,13 @@
   HTML, browser exports, and the lightweight Pillow raster renderer.
 - Added a complete Chinese enterprise agent-platform architecture example and
   end-to-end Chinese plan, spec, SVG, HTML, PNG, PDF, and quality gates.
+- Reduced the public style catalog to 12 visually distinct styles. The retired
+  `minimal-light` id still validates and renders as an alias of
+  `openai-minimal`, which is now the deterministic fallback style.
+- Redesigned `notion-clean` (borderless Notion-palette blocks, no grid or
+  frame) and `flat-icon` (solid role fills with white labels, light group
+  bands). Approved Illustrated token mappings are unchanged.
+- Added optional `group.fill_opacity` and `group.stroke_dasharray` style tokens.
 
 ## 0.2.0 - 2026-07-29
 

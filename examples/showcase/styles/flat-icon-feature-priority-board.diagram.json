@@ -163,7 +163,7 @@
       "to": "roadmap",
       "label": "select",
       "role": "output",
-      "route": "orthogonal",
+      "route": "vh",
       "effect": {
         "preset": "packet-flow"
       },

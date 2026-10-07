@@ -2,63 +2,71 @@
   "name": "notion-clean",
   "canvas": {
     "background": "#ffffff",
-    "text": "#1f2937",
-    "muted": "#6b7280",
-    "grid": "#f3f4f6"
+    "text": "#37352f",
+    "muted": "#787774",
+    "grid": "#ffffff"
   },
   "title": {
-    "accent": "#111827",
-    "highlight": "#f5f5f4"
+    "accent": "#37352f",
+    "highlight": "#f1f1ef"
   },
   "node": {
-    "radius": 7,
-    "stroke_width": 1.4
+    "radius": 4,
+    "stroke_width": 0
+  },
+  "edge": {
+    "width": 1.5,
+    "duration": "4.6s"
+  },
+  "effects": {
+    "grid_opacity": 0,
+    "frame_opacity": 0
   },
   "roles": {
     "actor": {
-      "stroke": "#d97706",
-      "fill": "#fff7ed",
-      "text": "#1f2937"
+      "stroke": "#d9730d",
+      "fill": "#fbecdd",
+      "text": "#37352f"
     },
     "source": {
-      "stroke": "#0f766e",
-      "fill": "#f0fdfa",
-      "text": "#1f2937"
+      "stroke": "#337ea9",
+      "fill": "#e7f3f8",
+      "text": "#37352f"
     },
     "process": {
-      "stroke": "#4b5563",
-      "fill": "#f9fafb",
-      "text": "#1f2937"
+      "stroke": "#787774",
+      "fill": "#f1f1ef",
+      "text": "#37352f"
     },
     "agent": {
-      "stroke": "#7c3aed",
-      "fill": "#faf5ff",
-      "text": "#1f2937"
+      "stroke": "#9065b0",
+      "fill": "#f6f3f9",
+      "text": "#37352f"
     },
     "memory": {
-      "stroke": "#15803d",
-      "fill": "#f0fdf4",
-      "text": "#1f2937"
+      "stroke": "#9f6b53",
+      "fill": "#f4eeee",
+      "text": "#37352f"
     },
     "tool": {
-      "stroke": "#2563eb",
-      "fill": "#eff6ff",
-      "text": "#1f2937"
+      "stroke": "#cb912f",
+      "fill": "#fbf3db",
+      "text": "#37352f"
     },
     "output": {
-      "stroke": "#16a34a",
-      "fill": "#f0fdf4",
-      "text": "#1f2937"
+      "stroke": "#448361",
+      "fill": "#edf3ec",
+      "text": "#37352f"
     },
     "risk": {
-      "stroke": "#b91c1c",
-      "fill": "#fef2f2",
-      "text": "#1f2937"
+      "stroke": "#d44c47",
+      "fill": "#fdebec",
+      "text": "#37352f"
     },
     "neutral": {
-      "stroke": "#d1d5db",
-      "fill": "#ffffff",
-      "text": "#1f2937"
+      "stroke": "#9b9a97",
+      "fill": "#f7f6f3",
+      "text": "#37352f"
     }
   },
   "illustrated_tokens": {

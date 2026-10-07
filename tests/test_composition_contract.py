@@ -32,7 +32,7 @@ class CompositionContractTest(unittest.TestCase):
         self.assertEqual("0.4", spec["version"])
         self.assertEqual("illustrated", DEFAULT_ICON_SYSTEM)
         self.assertEqual("illustrated", spec["icon_system"])
-        self.assertEqual("minimal-light", spec["style"])
+        self.assertEqual("openai-minimal", spec["style"])
         self.assertEqual("layered", spec["preset"])
         self.assertEqual("showcase-v1", spec["motion"]["profile"])
         self.assertEqual(
@@ -46,7 +46,7 @@ class CompositionContractTest(unittest.TestCase):
         self.assertEqual(
             {
                 "icon_system": {"value": "illustrated", "version": "2.5.0", "source": "default"},
-                "style": {"value": "minimal-light", "source": "fallback"},
+                "style": {"value": "openai-minimal", "source": "fallback"},
                 "layout": {"value": "layered", "source": "fallback"},
                 "motion": {"value": "showcase-v1", "source": "explicit"},
             },
@@ -175,7 +175,7 @@ class CompositionContractTest(unittest.TestCase):
         self.assertEqual(
             {
                 "icon_system": {"value": "illustrated", "version": "2.5.0", "source": "default"},
-                "style": {"value": "minimal-light", "source": "fallback"},
+                "style": {"value": "openai-minimal", "source": "fallback"},
                 "layout": {"value": "layered", "source": "fallback"},
                 "motion": {"value": "showcase-v1", "source": "default"},
             },

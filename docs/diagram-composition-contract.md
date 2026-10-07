@@ -254,19 +254,20 @@ Target input field:
 "style": "deep-tech"
 ```
 
-The public catalog currently contains 13 styles. Resolution policy:
+The public catalog currently contains 12 styles. The retired `minimal-light`
+id remains accepted as an alias and resolves to `openai-minimal`. Resolution policy:
 
 1. Explicit user selection.
 2. Model selection from the public catalog using intent, audience, content
    density, and delivery context.
-3. `minimal-light` deterministic fallback.
+3. `openai-minimal` deterministic fallback.
 
 The resolved style id MUST be serialized before rendering. A renderer does not
 call a model. Styles own canvas, typography-like spacing, node surfaces, edge
 colors, and semantic role colors. They do not own the icon-system selection.
 For the Illustrated system, styles may additionally map the approved visual
 color tokens, but cannot change icon geometry or semantic structure.
-All 13 public styles contain approved Illustrated 2.5.0 token mappings. Review
+All 12 public styles contain approved Illustrated 2.5.0 token mappings. Review
 files must not become a second source of truth.
 
 When a Skill or another model-facing planner resolves an `auto` style or layout

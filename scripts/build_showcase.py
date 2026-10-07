@@ -44,7 +44,6 @@ from gallery_narration import install_narration
 Spec = Dict[str, Any]
 
 STYLE_BEST_FOR = {
-    "minimal-light": ["SaaS", "Operations", "Support flows"],
     "deep-tech": ["AI ops", "Realtime systems", "Agent meshes"],
     "blueprint": ["Architecture", "Protocols", "Cloud boundaries"],
     "flat-icon": ["Roadmaps", "Priority boards", "Product planning"],
@@ -52,7 +51,7 @@ STYLE_BEST_FOR = {
     "notion-clean": ["Product discovery", "Docs", "Workflow notes"],
     "glassmorphism": ["Growth funnels", "Journeys", "Presentation flows"],
     "claude-warm": ["Reasoning", "Research loops", "Planning"],
-    "openai-minimal": ["Evaluation", "Benchmarks", "Quality gates"],
+    "openai-minimal": ["Evaluation", "Quality gates", "SaaS operations"],
     "dark-luxury": ["Executive views", "Signal maps", "Strategy"],
     "aurora-orb": ["Creative tools", "Multimodal agents", "Studio flows"],
     "illustrated-semantic": ["Technical explainers", "Semantic workflows", "Warm presentations"],
@@ -64,7 +63,7 @@ LAYOUT_CASES = (
     ("loop", "Agent Reflection Loop", "claude-warm", ["Feedback loops", "Agent learning", "Refinement"]),
     ("hub-spoke", "Agent Tool Hub", "deep-tech", ["Tool routers", "Agent hubs", "Capability maps"]),
     ("layered", "LLM App Architecture Layers", "notion-clean", ["System layers", "Architecture", "Ownership"]),
-    ("swimlane", "Human-in-the-loop Approval Flow", "minimal-light", ["Handoffs", "Approvals", "Responsibility"]),
+    ("swimlane", "Human-in-the-loop Approval Flow", "openai-minimal", ["Handoffs", "Approvals", "Responsibility"]),
     ("compare", "RAG vs Agentic RAG", "openai-minimal", ["Tradeoffs", "Before after", "Architecture decisions"]),
     ("matrix", "AI Feature Priority Matrix", "flat-icon", ["Prioritization", "PM planning", "Roadmaps"]),
     ("timeline", "AI Product Launch Roadmap", "blueprint", ["Roadmaps", "Milestones", "Release planning"]),
@@ -75,7 +74,7 @@ LAYOUT_CASES = (
     ("network", "Distributed Agent Runtime Mesh", "dark-luxury", ["Distributed systems", "Runtime meshes", "Routing"]),
     ("agent-memory", "Personalized Agent Memory Flow", "deep-tech", ["Agent memory", "Retrieval", "Grounded output"]),
     ("agent-loop", "Agent Loop Runtime Architecture", "sketch-board", ["Agent internals", "Governed tool loops", "Memory and safety"]),
-    ("layered-loop", "Loop Engineering Operating Architecture", "minimal-light", ["Governed loops", "Layered execution", "External state"]),
+    ("layered-loop", "Loop Engineering Operating Architecture", "openai-minimal", ["Governed loops", "Layered execution", "External state"]),
 )
 
 MOTION_CATALOG_PATH = ROOT / "runtime" / "motion-catalog.json"

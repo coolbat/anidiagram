@@ -6,21 +6,6 @@
   "archived_motion_review_contract": "illustrated-performance-v7-review",
   "mappings": [
     {
-      "style": "minimal-light",
-      "status": "approved",
-      "human_visual_acceptance": "confirmed",
-      "approved_at": "2026-07-22",
-      "token_source": "styles/minimal-light.json#illustrated_tokens",
-      "illustrated_tokens_sha256": "6e238652b4dde7bf5381bc7ab3a4b055c857b6a62be29bfc9e170a882fe271c7",
-      "template_matrix_review": "outputs/illustrated-template-matrix/illustrated-template-matrix.html",
-      "constraints": {
-        "geometry_overrides": false,
-        "semantic_structure_overrides": false,
-        "public_style": true
-      },
-      "final_template_matrix": "outputs/illustrated-template-matrix-2.5/illustrated-template-matrix.html"
-    },
-    {
       "style": "deep-tech",
       "status": "approved",
       "human_visual_acceptance": "confirmed",

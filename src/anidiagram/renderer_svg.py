@@ -1411,10 +1411,13 @@ def render_group(
   </path>"""
     dash_line = f"    {dash_markup}\n" if dash_markup else ""
     enter_line = f"  {enter_markup}\n" if enter_markup else ""
+    group_style = style.get("group", {})
+    fill_opacity = float(group_style.get("fill_opacity", 0.34))
+    dasharray = esc(group_style.get("stroke_dasharray", "9 8"))
     return f"""
 <g id="group-{esc(group.group_id)}" class="group" opacity="{group_opacity}">
 {enter_line}  <rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="22"
-        fill="{esc(fill)}" fill-opacity="0.34" stroke="{esc(stroke)}" stroke-width="1.6" stroke-dasharray="9 8">
+        fill="{esc(fill)}" fill-opacity="{fill_opacity:.2f}" stroke="{esc(stroke)}" stroke-width="1.6" stroke-dasharray="{dasharray}">
 {dash_line}  </rect>
 {scan_markup}
 {corner_markup}

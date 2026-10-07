@@ -30,7 +30,6 @@ Spec = Dict[str, Any]
 
 
 STYLE_ORDER = (
-    "minimal-light",
     "deep-tech",
     "blueprint",
     "flat-icon",
@@ -46,7 +45,6 @@ STYLE_ORDER = (
 )
 
 STYLE_SHOWCASE_LAYOUTS = {
-    "minimal-light": "pipeline",
     "deep-tech": "network",
     "blueprint": "layered",
     "flat-icon": "matrix",
@@ -161,21 +159,6 @@ def apply_public_showcase_contract(
 
 def style_showcase_specs() -> Dict[str, Spec]:
     specs = {
-        "minimal-light": _flow_case(
-            "minimal-light",
-            "Customer Support Triage",
-            "intake, classify, answer, and learn",
-            [
-                _node("customer", "Customer", "new request", (90, 335), "actor", "agent"),
-                _node("inbox", "Inbox", "ticket queue", (300, 335), "source", "folder"),
-                _node("triage", "Triage", "route issue", (510, 335), "process", "search"),
-                _node("reply", "Reply", "draft answer", (720, 335), "tool", "file"),
-                _node("learn", "Learn", "update notes", (930, 335), "memory", "memory"),
-            ],
-            _chain(["customer", "inbox", "triage", "reply", "learn"], "handoff", "straight"),
-            [_group("ops", "Support Desk", (60, 250, 1080, 190), "neutral")],
-            _motion("subtle", "draw", "fade", "soft-reveal", "fade", intensity=0.55),
-        ),
         "deep-tech": _flow_case(
             "deep-tech",
             "Realtime AI Ops Mesh",
@@ -243,7 +226,7 @@ def style_showcase_specs() -> Dict[str, Spec]:
             [
                 _edge("demand", "quick", "score", "source", "orthogonal"),
                 _edge("demand", "fill", "score", "source", "orthogonal"),
-                _edge("quick", "roadmap", "select", "output", "orthogonal", effect="flow-dot"),
+                _edge("quick", "roadmap", "select", "output", "vh", effect="flow-dot"),
                 _edge("bet", "roadmap", "sequence", "agent", "orthogonal"),
                 _edge("avoid", "roadmap", "defer", "risk", "orthogonal", effect="static"),
             ],

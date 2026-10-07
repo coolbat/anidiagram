@@ -462,9 +462,9 @@
       "html": "styles/flat-icon.html",
       "svg": "styles/flat-icon.svg",
       "poster": "styles/flat-icon.preview.svg",
-      "html_sha256": "24055742271e0c7d5469b97b681d423e344d6178897369027f41b601b9ffde6c",
-      "svg_sha256": "295356bfc0f41bdcf7cdfd48d1289a0e7bc8fe37f069634b1a22d628ba0ef008",
-      "poster_sha256": "2cd6aab8a41e9d5c86696ff0469ea04052e92575c0b56bc4f9b6918308113140"
+      "html_sha256": "fba1603eb05d6c40f15da920e5fb4046ccf8827285617412c99faf942364be31",
+      "svg_sha256": "d0dae73fd6536686fac31ecd079cd520a8f3f53a612e3798e83bf67573a9c2a1",
+      "poster_sha256": "742e4a6aea42e2bb791a40cb941680873b0a7155102c3f4398e64d125db6f842"
     },
     {
       "html": "styles/glassmorphism.html",
@@ -483,20 +483,12 @@
       "poster_sha256": "fbd6e00debfbe1fc4f803bc3538e6bb7ab4a3cf117587225c307b77b9b3a5a89"
     },
     {
-      "html": "styles/minimal-light.html",
-      "svg": "styles/minimal-light.svg",
-      "poster": "styles/minimal-light.preview.svg",
-      "html_sha256": "f84105f320562c90b8b0f65b1db959e61721ac78bba4e92677bf87a6b4a56973",
-      "svg_sha256": "5813f3240746c89161d17a917f955fd6852c2374a4d27c8362c8a547bc6b2005",
-      "poster_sha256": "40eb079c886ab0b635da51f78b93fcb9397393c05f8a8e308ccc550baaa2be56"
-    },
-    {
       "html": "styles/notion-clean.html",
       "svg": "styles/notion-clean.svg",
       "poster": "styles/notion-clean.preview.svg",
-      "html_sha256": "d8843016fab9b20456463a205743c2b59657da11772b3c8c4c13f893957ffe68",
-      "svg_sha256": "4e9ffaafbab9ff753f1b10e484a8bb3f92523ba5f8783b9e7bcccd997b64846d",
-      "poster_sha256": "1f49780b2b461252ad698b9bbf6cac88f9e618b49b4b71f4ba07fdc9b2849c40"
+      "html_sha256": "83340b6345ecefcb3307192293e3864109195f851f6e152355ba923ee0f4efd0",
+      "svg_sha256": "a1aea4ceb44fc5203ed3b9d10fb650f9a2c176b82b4608d9f894baa243d288be",
+      "poster_sha256": "cba552c86dc203b03f02a2b1879c670144f857ca47ccfea7fd51028018c8c610"
     },
     {
       "html": "styles/openai-minimal.html",

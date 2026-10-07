@@ -25,26 +25,6 @@
   },
   "styles": [
     {
-      "style": "minimal-light",
-      "icon_system": "illustrated",
-      "title": "Customer Support Triage",
-      "basename": "minimal-light",
-      "spec": "examples/showcase/styles/minimal-light-customer-support-triage.diagram.json",
-      "svg": "gallery/styles/minimal-light.svg",
-      "html": "gallery/styles/minimal-light.html",
-      "quality": "gallery/styles/minimal-light.quality.json",
-      "best_for": [
-        "SaaS",
-        "Operations",
-        "Support flows"
-      ],
-      "summary": {
-        "errors": 0,
-        "warnings": 0,
-        "issues": 0
-      }
-    },
-    {
       "style": "deep-tech",
       "icon_system": "illustrated",
       "title": "Realtime AI Ops Mesh",
@@ -195,8 +175,8 @@
       "quality": "gallery/styles/openai-minimal.quality.json",
       "best_for": [
         "Evaluation",
-        "Benchmarks",
-        "Quality gates"
+        "Quality gates",
+        "SaaS operations"
       ],
       "summary": {
         "errors": 0,

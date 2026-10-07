@@ -59,7 +59,7 @@ installing missing dependencies; never alter the target project's dependencies.
    - Use `icon_system: auto` when none was requested; it resolves to the
      versioned default `illustrated` (currently Illustrated 2.5.0).
    - Choose one concrete public style from the catalog when the user did not
-     choose. Record `presentation_sources.style: model`. Use `minimal-light`
+     choose. Record `presentation_sources.style: model`. Use `openai-minimal`
      only as the deterministic fallback.
    - Choose one concrete layout from the 16-layout catalog when the user did
      not choose. Record `presentation_sources.layout: model`. Use `layered`
@@ -190,9 +190,10 @@ record; they do not choose a style, layout, icon system, or motion profile.
 
 Public styles:
 
-`minimal-light`, `deep-tech`, `blueprint`, `flat-icon`, `dark-terminal`,
-`notion-clean`, `glassmorphism`, `claude-warm`, `openai-minimal`, `dark-luxury`,
-`aurora-orb`, `illustrated-semantic`, `sketch-board`.
+`openai-minimal`, `deep-tech`, `blueprint`, `flat-icon`, `dark-terminal`,
+`notion-clean`, `glassmorphism`, `claude-warm`, `dark-luxury`, `aurora-orb`,
+`illustrated-semantic`, `sketch-board`. `minimal-light` is a retired alias of
+`openai-minimal`; do not choose it for new diagrams.
 
 Choose by communication need: minimal styles for dense technical content;
 `deep-tech`/`blueprint`/`dark-terminal` for infrastructure; warm or sketch

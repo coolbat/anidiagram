@@ -1,65 +1,77 @@
 {
   "name": "flat-icon",
   "canvas": {
-    "background": "#f8fafc",
-    "text": "#111827",
-    "muted": "#64748b",
-    "grid": "#e2e8f0"
+    "background": "#eef2f7",
+    "text": "#0f172a",
+    "muted": "#475569",
+    "grid": "#eef2f7"
   },
   "title": {
-    "accent": "#0ea5e9",
-    "highlight": "#e0f2fe"
+    "accent": "#2563eb",
+    "highlight": "#dbeafe"
   },
   "node": {
-    "radius": 10,
-    "stroke_width": 2
+    "radius": 18,
+    "stroke_width": 0
+  },
+  "edge": {
+    "width": 3,
+    "duration": "4.0s"
+  },
+  "effects": {
+    "grid_opacity": 0,
+    "frame_opacity": 0
   },
   "roles": {
     "actor": {
-      "stroke": "#f97316",
-      "fill": "#ffedd5",
-      "text": "#111827"
+      "stroke": "#9a3412",
+      "fill": "#c2410c",
+      "text": "#ffffff"
     },
     "source": {
-      "stroke": "#06b6d4",
-      "fill": "#cffafe",
-      "text": "#111827"
+      "stroke": "#155e75",
+      "fill": "#0e7490",
+      "text": "#ffffff"
     },
     "process": {
-      "stroke": "#2563eb",
-      "fill": "#dbeafe",
-      "text": "#111827"
+      "stroke": "#1d4ed8",
+      "fill": "#2563eb",
+      "text": "#ffffff"
     },
     "agent": {
-      "stroke": "#9333ea",
-      "fill": "#f3e8ff",
-      "text": "#111827"
+      "stroke": "#6d28d9",
+      "fill": "#7c3aed",
+      "text": "#ffffff"
     },
     "memory": {
-      "stroke": "#059669",
-      "fill": "#d1fae5",
-      "text": "#111827"
+      "stroke": "#065f46",
+      "fill": "#047857",
+      "text": "#ffffff"
     },
     "tool": {
-      "stroke": "#ca8a04",
-      "fill": "#fef3c7",
-      "text": "#111827"
+      "stroke": "#92400e",
+      "fill": "#b45309",
+      "text": "#ffffff"
     },
     "output": {
-      "stroke": "#16a34a",
-      "fill": "#dcfce7",
-      "text": "#111827"
+      "stroke": "#166534",
+      "fill": "#15803d",
+      "text": "#ffffff"
     },
     "risk": {
-      "stroke": "#dc2626",
-      "fill": "#fee2e2",
-      "text": "#111827"
+      "stroke": "#b91c1c",
+      "fill": "#dc2626",
+      "text": "#ffffff"
     },
     "neutral": {
-      "stroke": "#64748b",
-      "fill": "#ffffff",
-      "text": "#111827"
+      "stroke": "#334155",
+      "fill": "#475569",
+      "text": "#ffffff"
     }
+  },
+  "group": {
+    "fill_opacity": 0.07,
+    "stroke_dasharray": "none"
   },
   "illustrated_tokens": {
     "ink": "#111827",

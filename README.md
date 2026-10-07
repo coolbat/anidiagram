@@ -67,7 +67,7 @@ official Dify diagram; independent semantic review is pending.
 | **Explanation mode** | Step-by-step walkthrough with focus, camera, narration card, and keyboard control | `--runtime-mode timeline` / `hybrid` |
 | **Living motion** | Icons perform their role; packets, streams, and failures move along relations | default HTML |
 | **Event-driven playback** | Arrivals trigger the target's performance and propagate downstream | `--runtime-mode event-driven` |
-| **Visual systems** | 56 illustrated icons or precise `diagram-core-v1` linework, 16 layouts, 13 styles | `--style`, Plan `presentation` |
+| **Visual systems** | 56 illustrated icons or precise `diagram-core-v1` linework, 16 layouts, 12 styles | `--style`, Plan `presentation` |
 | **Interactive viewer** | Fit-to-screen, zoom/pan, hover highlights neighbors, Expressive / Readable / Off | default HTML |
 | **Verified reading** | Search, upstream/downstream, shortest route, chapters, share cards, Git-pinned sources | `--reader`, `--repo-root` |
 | **Quality gate** | Overlaps, routes through nodes, label collisions, text fit, brief coverage | `--formats quality` |
@@ -288,10 +288,10 @@ Raster exports find an installed CJK font; set
 - **16 layouts:** `pipeline`, `loop`, `hub-spoke`, `layered`, `swimlane`,
   `compare`, `matrix`, `timeline`, `stack`, `funnel`, `sequence`, `er`,
   `network`, `agent-memory`, `agent-loop`, `layered-loop`.
-- **13 styles:** `minimal-light`, `deep-tech`, `blueprint`, `flat-icon`,
+- **12 styles:** `openai-minimal`, `deep-tech`, `blueprint`, `flat-icon`,
   `dark-terminal`, `notion-clean`, `glassmorphism`, `claude-warm`,
-  `openai-minimal`, `dark-luxury`, `aurora-orb`, `illustrated-semantic`,
-  `sketch-board`.
+  `dark-luxury`, `aurora-orb`, `illustrated-semantic`, `sketch-board`.
+  `minimal-light` is retired and kept as an alias of `openai-minimal`.
 
 Browse the [style gallery](https://coolbat.github.io/anidiagram/gallery/styles/),
 [layout gallery](https://coolbat.github.io/anidiagram/gallery/layouts/), or the

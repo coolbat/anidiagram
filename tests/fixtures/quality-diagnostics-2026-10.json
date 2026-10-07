@@ -86,12 +86,9 @@
   "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/deep-tech": [
     {"code": "group_overlap", "severity": "error", "subject": {"group_ids": ["telemetry", "runtime"]}}
   ],
-  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/flat-icon": [
-    {"code": "edge_segment_node_collision", "severity": "warning", "subject": {"blocking_node": "bet", "edge_index": 2, "source": "quick", "target": "roadmap"}}
-  ],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/flat-icon": [],
   "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/glassmorphism": [],
   "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/illustrated-semantic": [],
-  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/minimal-light": [],
   "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/notion-clean": [],
   "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/openai-minimal": [],
   "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/sketch-board": [

@@ -46,10 +46,11 @@ class IllustratedTemplateMatrixTest(unittest.TestCase):
         mappings = self.matrix["mappings"]
         allowed = set(illustrated_token_document()["override_policy"]["allowed_color_tokens"])
 
-        self.assertEqual(13, len(styles))
-        self.assertEqual(styles, [item["style"] for item in mappings])
+        self.assertEqual(12, len(styles))
+        self.assertEqual(13, len(mappings))
+        self.assertEqual(styles, [item["style"] for item in mappings if item["style"] != "minimal-light"])
         self.assertEqual({"approved", "visual-review"}, {item["status"] for item in mappings})
-        self.assertEqual("approved", mappings[styles.index("deep-tech")]["status"])
+        self.assertEqual("approved", next(item for item in mappings if item["style"] == "deep-tech")["status"])
         for item in mappings:
             with self.subTest(style=item["style"]):
                 self.assertEqual(allowed, set(item["illustrated_tokens"]))

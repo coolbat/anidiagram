@@ -33,7 +33,7 @@ class GalleryPreviewTest(unittest.TestCase):
     def test_committed_preview_assets_match_sources(self):
         gallery = ROOT / "gallery"
         manifest = json.loads((gallery / "preview-manifest.json").read_text())
-        self.assertEqual(64, len(manifest["previews"]))
+        self.assertEqual(63, len(manifest["previews"]))
         for entry in manifest["previews"]:
             for kind in ("html", "svg", "poster"):
                 self.assertEqual(entry[kind + "_sha256"],
@@ -48,7 +48,7 @@ class GalleryPreviewTest(unittest.TestCase):
 
     def test_all_public_gallery_surfaces_have_live_previews(self):
         for name, count in {
-            "index.html": 33, "styles/index.html": 13, "layouts/index.html": 16,
+            "index.html": 32, "styles/index.html": 12, "layouts/index.html": 16,
             "hero/index.html": 2, "icon-systems/index.html": 2,
             "character-themes.html": 3, "runtime-motion.html": 28,
         }.items():
@@ -69,7 +69,7 @@ class GalleryPreviewTest(unittest.TestCase):
 
     def test_static_posters_are_complete_and_do_not_mutate_diagrams(self):
         from gallery_previews import write_static_poster
-        source = ROOT / "gallery/styles/minimal-light.svg"
+        source = ROOT / "gallery/styles/openai-minimal.svg"
         original = source.read_bytes()
         with tempfile.TemporaryDirectory() as temporary:
             poster = Path(temporary) / "poster.svg"
@@ -93,7 +93,7 @@ class GalleryPreviewTest(unittest.TestCase):
             output = Path(temporary)
             (output / "index.html").write_text(
                 '<a data-preview-url="demo.html"><img src="demo.preview.svg"></a>')
-            svg = (ROOT / "gallery/styles/minimal-light.svg").read_bytes()
+            svg = (ROOT / "gallery/styles/openai-minimal.svg").read_bytes()
             (output / "demo.svg").write_bytes(svg)
             html = b"<html>existing diagram</html>"
             (output / "demo.html").write_bytes(html)

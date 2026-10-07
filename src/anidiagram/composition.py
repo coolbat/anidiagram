@@ -16,7 +16,7 @@ from .planning import validate_planning
 
 
 DEFAULT_ICON_SYSTEM = "illustrated"
-DEFAULT_STYLE = "minimal-light"
+DEFAULT_STYLE = "openai-minimal"
 DEFAULT_LAYOUT = "layered"
 DEFAULT_MOTION = "showcase-v1"
 
@@ -43,6 +43,8 @@ STYLES = {
     "illustrated-semantic",
     "sketch-board",
 }
+# Retired public styles that still validate and render as their replacement.
+STYLE_ALIASES = {"minimal-light": "openai-minimal"}
 LAYOUTS = {
     "pipeline",
     "loop",
@@ -258,7 +260,7 @@ def resolve_presentation(value: Any, source_value: Any = None) -> Dict[str, Dict
         icon_system["version"] = version
     return {
         "icon_system": icon_system,
-        "style": _resolve_axis(presentation.get("style"), DEFAULT_STYLE, STYLES, "fallback", sources.get("style")),
+        "style": _resolve_axis(STYLE_ALIASES.get(presentation.get("style"), presentation.get("style")), DEFAULT_STYLE, STYLES, "fallback", sources.get("style")),
         "layout": _resolve_axis(presentation.get("layout"), DEFAULT_LAYOUT, LAYOUTS, "fallback", sources.get("layout")),
         "motion": _resolve_axis(presentation.get("motion"), DEFAULT_MOTION, MOTIONS, "default", sources.get("motion")),
     }

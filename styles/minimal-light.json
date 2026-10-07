@@ -1,32 +1,4 @@
 {
   "name": "minimal-light",
-  "canvas": {
-    "background": "#ffffff",
-    "text": "#172033",
-    "muted": "#5b6778",
-    "grid": "#edf2f7"
-  },
-  "title": {
-    "accent": "#2563eb",
-    "highlight": "#e8f1ff"
-  },
-  "illustrated_tokens": {
-    "ink": "#172033",
-    "paper": "#ffffff",
-    "mint": "#34c38f",
-    "lavender": "#c4b5fd",
-    "lavender-dark": "#7c3aed",
-    "violet": "#7c3aed",
-    "peach": "#fdba9a",
-    "sky": "#60a5fa",
-    "teal": "#22b8b5",
-    "teal-dark": "#0f8f87",
-    "coral": "#f97370",
-    "sun": "#fbbf24",
-    "shadow": "#cbd5e1",
-    "lavender-wash": "#f3efff",
-    "sky-wash": "#eaf6ff",
-    "sun-wash": "#fff7dd",
-    "mint-wash": "#e8f8ef"
-  }
+  "alias_of": "openai-minimal"
 }

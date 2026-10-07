@@ -268,7 +268,7 @@ class SvgRendererTest(unittest.TestCase):
         self.assertEqual(9, mapping["mapping_revision"])
         self.assertEqual("illustrated-performance-v6", mapping["public_motion_contract"])
         self.assertEqual("illustrated-performance-v7-review", mapping["archived_motion_review_contract"])
-        self.assertEqual(13, len(mapping["mappings"]))
+        self.assertEqual(12, len(mapping["mappings"]))
         approved = next(item for item in mapping["mappings"] if item["style"] == "deep-tech")
         self.assertEqual("deep-tech", approved["style"])
         self.assertEqual("approved", approved["status"])
@@ -1371,7 +1371,7 @@ class SvgRendererTest(unittest.TestCase):
         svg = render_svg(scene, load_style(ROOT / "styles" / "minimal-light.json"))
 
         self.assertEqual(
-            "b8f2121bc9112f98e7ab04f08217d5145166455554352fc75e65d8445127d29d",
+            "45c5edb291b6d7fdd1d6a7325f0959ac89e558f9ad3df3e715397e82eec84fe9",
             hashlib.sha256(svg.encode("utf-8")).hexdigest(),
         )
 
@@ -1638,7 +1638,7 @@ class SvgRendererTest(unittest.TestCase):
         self.assertIn(".semantic-icon { vector-effect: non-scaling-stroke; }", svg)
         self.assertNotIn(".semantic-icon { fill: none;", svg)
         self.assertNotRegex(svg, r'fill="none"[^>]*fill="#')
-        self.assertIn('fill="#c8edf3"', svg)
+        self.assertIn('fill="#cbecf3"', svg)
         self.assertIn("icon-file-page-motion", svg)
         self.assertIn("icon-file-fold-motion", svg)
         self.assertIn("icon-folder-body", svg)

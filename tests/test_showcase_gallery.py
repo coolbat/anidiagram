@@ -220,7 +220,7 @@ class ShowcaseGalleryTest(unittest.TestCase):
         }
 
         for collection, specs in collections.items():
-            expected_count = {"hero": 1, "styles": 13, "layouts": 14}[collection]
+            expected_count = {"hero": 1, "styles": 12, "layouts": 14}[collection]
             self.assertEqual(expected_count, len(specs), collection)
             for name, spec in specs.items():
                 with self.subTest(collection=collection, name=name):
@@ -266,7 +266,7 @@ class ShowcaseGalleryTest(unittest.TestCase):
         catalog = load_runtime_motion_catalog()
 
         self.assertEqual("Dify · From Document to Answer", manifest["hero"]["title"])
-        self.assertEqual(13, len(manifest["styles"]))
+        self.assertEqual(12, len(manifest["styles"]))
         self.assertEqual(16, len(manifest["layouts"]))
         self.assertEqual("runtime/motion-catalog.json", manifest["runtime_motion_catalog"])
         self.assertEqual("gallery/runtime-motion.html", manifest["runtime_motion_page"])

@@ -63,7 +63,7 @@ Dify：**文档如何成为答案** —— 沿文档入库和基础 Chat 两条�
 | **讲解模式** | 逐步讲解：焦点淡化、镜头跟随、讲解卡片、键盘翻页 | `--runtime-mode timeline` / `hybrid` |
 | **语义动效** | 图标表演自身角色；数据包、数据流、失败回弹沿关系运动 | HTML 默认 |
 | **事件驱动播放** | 数据到达后触发目标节点表演，并继续向下游传播 | `--runtime-mode event-driven` |
-| **视觉系统** | 56 枚插画图标或精确的 `diagram-core-v1` 线框；16 种布局、13 种风格 | `--style`、Plan 的 `presentation` |
+| **视觉系统** | 56 枚插画图标或精确的 `diagram-core-v1` 线框；16 种布局、12 种风格 | `--style`、Plan 的 `presentation` |
 | **交互查看器** | 自动适配窗口、缩放平移、悬停高亮相邻节点、Expressive / Readable / Off | HTML 默认 |
 | **核验阅读** | 搜索、上下游、最短路径、章节、分享卡、固定 Git 提交的源码引用 | `--reader`、`--repo-root` |
 | **质量门禁** | 检查重叠、连线穿节点、标签碰撞、文字溢出、简报覆盖率 | `--formats quality` |
@@ -269,10 +269,10 @@ anidiagram --plan examples/zh-CN/enterprise-agent-platform.plan.json \
 - **16 种布局：** `pipeline`、`loop`、`hub-spoke`、`layered`、`swimlane`、
   `compare`、`matrix`、`timeline`、`stack`、`funnel`、`sequence`、`er`、
   `network`、`agent-memory`、`agent-loop`、`layered-loop`。
-- **13 种风格：** `minimal-light`、`deep-tech`、`blueprint`、`flat-icon`、
+- **12 种风格：** `openai-minimal`、`deep-tech`、`blueprint`、`flat-icon`、
   `dark-terminal`、`notion-clean`、`glassmorphism`、`claude-warm`、
-  `openai-minimal`、`dark-luxury`、`aurora-orb`、`illustrated-semantic`、
-  `sketch-board`。
+  `dark-luxury`、`aurora-orb`、`illustrated-semantic`、`sketch-board`。
+  `minimal-light` 已退役，作为 `openai-minimal` 的别名继续可用。
 
 浏览[风格 Gallery](https://coolbat.github.io/anidiagram/gallery/styles/)、
 [布局 Gallery](https://coolbat.github.io/anidiagram/gallery/layouts/)或

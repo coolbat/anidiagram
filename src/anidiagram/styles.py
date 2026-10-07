@@ -9,10 +9,13 @@ from typing import Any, Dict, Optional, Union
 from .schema import KNOWN_ROLES, ValidationIssue
 from .icon_system import DEFAULT_ICON_SYSTEM, SUPPORTED_ICON_SYSTEMS, resolve_icon_system
 from .illustrated_tokens import illustrated_tokens_for_style
+from .resources import resource_path
 
+
+DEFAULT_STYLE_NAME = "openai-minimal"
 
 DEFAULT_STYLE: Dict[str, Any] = {
-    "name": "minimal-light",
+    "name": DEFAULT_STYLE_NAME,
     "icon_system": DEFAULT_ICON_SYSTEM,
     "canvas": {
         "background": "#ffffff",
@@ -59,8 +62,14 @@ def deep_merge(base: Dict[str, Any], override: Dict[str, Any]) -> Dict[str, Any]
 
 def load_style(path: Optional[Union[str, Path]] = None) -> Dict[str, Any]:
     if not path:
-        return json.loads(json.dumps(DEFAULT_STYLE))
-    data = json.loads(Path(path).read_text(encoding="utf-8"))
+        path = resource_path("styles", f"{DEFAULT_STYLE_NAME}.json")
+    path = Path(path)
+    data = json.loads(path.read_text(encoding="utf-8"))
+    alias_of = data.get("alias_of") if isinstance(data, dict) else None
+    if alias_of is not None:
+        if not isinstance(alias_of, str) or not alias_of or set(data) - {"name", "alias_of"}:
+            raise ValueError("style profile validation failed: $.alias_of: an alias may only declare name and alias_of")
+        return load_style(path.with_name(f"{alias_of}.json"))
     issues = validate_style_profile(data)
     if issues:
         messages = "; ".join(f"{issue.path}: {issue.message}" for issue in issues)
@@ -98,6 +107,14 @@ def validate_style_profile(data: Dict[str, Any]) -> list:
         fill_mode = node.get("fill_mode")
         if fill_mode is not None and fill_mode not in {"solid", "aurora"}:
             issues.append(ValidationIssue("$.node.fill_mode", "expected 'solid' or 'aurora'", "enum"))
+    group = data.get("group", {})
+    if group and not isinstance(group, dict):
+        issues.append(ValidationIssue("$.group", "expected an object", "type"))
+    elif isinstance(group, dict):
+        if "fill_opacity" in group and not _is_opacity(group["fill_opacity"]):
+            issues.append(ValidationIssue("$.group.fill_opacity", "expected a number from 0 to 1", "type"))
+        if "stroke_dasharray" in group and not isinstance(group["stroke_dasharray"], str):
+            issues.append(ValidationIssue("$.group.stroke_dasharray", "expected a string", "type"))
     effects = data.get("effects", {})
     if effects and not isinstance(effects, dict):
         issues.append(ValidationIssue("$.effects", "expected an object", "type"))

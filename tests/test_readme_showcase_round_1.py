@@ -114,7 +114,7 @@ class ReadmeShowcaseRound1Test(unittest.TestCase):
         self.assertEqual("hero-loop-engineering", CASES[0]["id"])
         self.assertEqual("Loop Engineering Operating Architecture", spec["title"]["text"])
         self.assertEqual("layered-loop", spec["layout"])
-        self.assertEqual("minimal-light", spec["style"])
+        self.assertEqual("openai-minimal", spec["style"])
         self.assertEqual("illustrated", spec["icon_system"])
         self.assertEqual({"nodes": 8, "edges": 8, "groups": 3}, compile_scene(spec).stats())
         compact_svg = render_svg(

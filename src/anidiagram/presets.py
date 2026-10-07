@@ -148,7 +148,7 @@ def _build_layered() -> Dict[str, Any]:
 
 
 def _build_swimlane() -> Dict[str, Any]:
-    spec = _base("Swimlane", "handoffs across owners", "minimal-light")
+    spec = _base("Swimlane", "handoffs across owners", "openai-minimal")
     spec["groups"] = [
         {"id": "customer", "label": "Customer", "bounds": [60, 160, 1080, 140], "role": "actor", "members": ["request", "notify"]},
         {"id": "team", "label": "Team", "bounds": [60, 330, 1080, 140], "role": "agent", "members": ["triage", "approve"]},
@@ -373,7 +373,7 @@ def _build_layered_loop() -> Dict[str, Any]:
     spec = _base(
         "Layered Loop",
         "governance, execution, verification, delivery, and feedback",
-        "minimal-light",
+        "openai-minimal",
     )
     spec["canvas"] = {"width": 1280, "height": 920}
     spec["groups"] = [

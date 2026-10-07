@@ -52,7 +52,7 @@ class IllustratedRelease25Test(unittest.TestCase):
         self.assertEqual("2.5.0", tokens["version"])
         self.assertEqual("2.5.0", mapping["version"])
         self.assertEqual("illustrated-performance-v6", mapping["public_motion_contract"])
-        self.assertEqual(13, len(mapping["mappings"]))
+        self.assertEqual(12, len(mapping["mappings"]))
 
     def test_public_v6_motion_contract_covers_every_public_icon(self):
         contract = _read("assets/illustrated/motion-contracts/illustrated-performance-v6.json")

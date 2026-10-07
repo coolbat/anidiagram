@@ -48,7 +48,7 @@ class EnterpriseRagProductionCaseTest(unittest.TestCase):
         self.assertEqual("illustrated", spec["icon_system"])
         self.assertEqual("2.5.0", spec["resolved_presentation"]["icon_system"]["version"])
         self.assertEqual(
-            {"value": "minimal-light", "source": "model"},
+            {"value": "openai-minimal", "source": "model"},
             spec["resolved_presentation"]["style"],
         )
         self.assertEqual("showcase-v1", spec["resolved_presentation"]["motion"]["value"])

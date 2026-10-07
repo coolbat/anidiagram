@@ -66,7 +66,7 @@ class AtomicDeliveryTest(unittest.TestCase):
             self.assertEqual("spec", receipt["input"]["source"]["kind"])
             self.assertEqual("DiagramScript", receipt["input"]["specification"]["schema"])
             self.assertEqual("0.1", receipt["input"]["specification"]["version"])
-            self.assertEqual("minimal-light", receipt["input"]["style"]["name"])
+            self.assertEqual("openai-minimal", receipt["input"]["style"]["name"])
             self.assertEqual(0, receipt["validation"]["quality"]["errors"])
             self.assertEqual(["svg", "quality"], list(receipt["artifacts"]))
             for format_name, artifact in receipt["artifacts"].items():

@@ -313,7 +313,7 @@ def main(argv: Optional[List[str]] = None) -> None:
         "locale": scene.locale,
         "preset": scene.preset,
         "icon_system": scene.icon_system or style.get("icon_system"),
-        "style": style.get("name", scene.style.name or "minimal-light"),
+        "style": style.get("name", scene.style.name or "openai-minimal"),
         "outputs": outputs,
         "stats": scene.stats(),
     }
