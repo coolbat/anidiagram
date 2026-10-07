@@ -12,6 +12,7 @@ from .icon_system import canonical_icon_system_id, icon_system_version
 from .illustrated_registry import illustrated_icon_ids
 from .localization import resolve_locale
 from .repository_evidence import compile_evidence, validate_repository
+from .planning import validate_planning
 
 
 DEFAULT_ICON_SYSTEM = "illustrated"
@@ -124,7 +125,7 @@ _ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]*$")
 _KIND_PATTERN = re.compile(r"^[a-z][a-z0-9-]*$")
 _ROLES = {"actor", "source", "process", "agent", "memory", "tool", "output", "risk", "neutral"}
 _IMPORTANCE = {"primary", "supporting", "context"}
-_PLAN_FIELDS = {"version", "semantic", "presentation", "presentation_sources", "reader"}
+_PLAN_FIELDS = {"version", "semantic", "presentation", "presentation_sources", "reader", "planning"}
 _SEMANTIC_FIELDS = {"language", "title", "subtitle", "summary", "intent", "entities", "relations", "groups", "flows", "sources", "annotations", "type_details"}
 _INTENT_FIELDS = {"diagram_kind", "primary_question", "audience", "scope", "exclusions"}
 _ENTITY_FIELDS = {"id", "label", "description", "kind", "role", "importance", "tags", "attributes", "state", "source_refs"}
@@ -189,6 +190,8 @@ def compile_plan_v02(plan: Mapping[str, Any]) -> Dict[str, Any]:
         )
         _apply_layered_loop_presentation(edges, nodes, lane_by_entity, lanes, canvas)
     groups = _compile_semantic_groups(groups_semantic, nodes)
+    from .routing import route_compiled_edges
+    route_compiled_edges(nodes, edges, groups, canvas)
     locale = resolve_locale(
         str(semantic.get("language") or "auto"),
         (
@@ -220,6 +223,8 @@ def compile_plan_v02(plan: Mapping[str, Any]) -> Dict[str, Any]:
         "nodes": nodes,
         "edges": edges,
     }
+    if "planning" in plan:
+        specification["planning"] = validate_planning(plan["planning"])
     evidence = compile_evidence(semantic)
     if evidence is not None:
         specification["evidence"] = evidence
@@ -542,7 +547,7 @@ def _layout_entities(
         "timeline": lambda: _timeline_layout(ordered),
         "sequence": lambda: _sequence_layout(ordered),
         "stack": lambda: _linear_layout(ordered, horizontal=False, x=110, y=135, gap=155, canvas_width=760),
-        "layered": lambda: _layered_layout(ordered, relations),
+        "layered": lambda: _layered_layout(ordered, relations, groups),
         "swimlane": lambda: _swimlane_layout(ordered, entity_by_id, groups),
         "compare": lambda: _compare_layout(ordered),
         "matrix": lambda: _grid_layout(ordered, columns=2, x=90, y=145, x_gap=330, y_gap=170, canvas_width=900),
@@ -621,8 +626,46 @@ def _sequence_layout(ordered: Sequence[str]) -> Tuple[Dict[str, Tuple[int, int]]
 
 
 def _layered_layout(
-    ordered: Sequence[str], relations: Sequence[Mapping[str, Any]]
+    ordered: Sequence[str],
+    relations: Sequence[Mapping[str, Any]],
+    groups: Sequence[Mapping[str, Any]] = (),
 ) -> Tuple[Dict[str, Tuple[int, int]], Dict[str, int]]:
+    # Rank independent semantic groups within separate bands. Ranking the whole
+    # graph first can interleave groups, especially when cross-group feedback
+    # stalls Kahn's traversal. Wrapping those interleaved nodes cannot produce
+    # non-overlapping group boxes. Nested/shared groups retain their established
+    # geometry; their membership is not a partition and must not be reassigned.
+    bands: List[List[str]] = []
+    assigned: set[str] = set()
+    for group in groups:
+        members = set(str(member) for member in group.get("members", []))
+        if group.get("parent") or assigned.intersection(members):
+            bands = []
+            break
+        bands.append([item_id for item_id in ordered if item_id in members])
+        assigned.update(members)
+    if bands:
+        ungrouped = [item_id for item_id in ordered if item_id not in assigned]
+        if ungrouped:
+            bands.append(ungrouped)
+    if len(bands) > 1:
+        positions: Dict[str, Tuple[int, int]] = {}
+        width, bottom, next_y = 960, 0, 210
+        for band in bands:
+            member_ids = set(band)
+            local_relations = [
+                relation for relation in relations
+                if str(relation["from"]) in member_ids and str(relation["to"]) in member_ids
+            ]
+            local_positions, local_canvas = _layered_layout(band, local_relations)
+            local_top = min(y for _, y in local_positions.values())
+            for item_id, (x, y) in local_positions.items():
+                positions[item_id] = (x, next_y + y - local_top)
+            bottom = max(positions[item_id][1] + 108 for item_id in band)
+            next_y = bottom + 110  # Group footer + gap + next group heading.
+            width = max(width, local_canvas["width"])
+        return positions, {"width": width, "height": max(720, bottom + 70)}
+
     ids = list(ordered)
     incoming = {item_id: 0 for item_id in ids}
     outgoing: Dict[str, List[str]] = defaultdict(list)
@@ -1048,8 +1091,8 @@ def _compile_entity(entity: Mapping[str, Any], position: Tuple[int, int], icon_s
     icon, resolution = _resolve_icon_for_entity(entity, icon_system)
     compiled = {
         "id": str(entity["id"]),
-        "label": str(entity.get("label") or entity["id"])[:42],
-        "caption": str(entity.get("description") or entity.get("kind") or "")[:64],
+        "label": str(entity.get("label") or entity["id"]),
+        "caption": str(entity.get("description") or entity.get("kind") or ""),
         "position": [position[0], position[1]],
         "size": [220, 108],
         "role": role,
@@ -1126,7 +1169,7 @@ def _compile_relation(
     compiled = {
         "from": str(relation["from"]),
         "to": str(relation["to"]),
-        "label": str(relation.get("label") or "")[:44],
+        "label": str(relation.get("label") or ""),
         "role": _relation_role(str(relation.get("kind") or ""), importance),
         "direction": str(relation.get("direction") or "forward"),
         "route": "straight",
@@ -1465,6 +1508,7 @@ def _compile_semantic_groups(groups: Any, nodes: Sequence[Mapping[str, Any]]) ->
             "role": "neutral",
             "semantic_kind": str(group.get("kind") or "group"),
             "importance": str(group.get("importance") or "supporting"),
+            "members": [str(member) for member in group.get("members", [])],
             "effect": {"preset": "border-scan"},
         }
         if group.get("parent") is not None:

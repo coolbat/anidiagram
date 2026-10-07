@@ -2,15 +2,14 @@
 
 from __future__ import annotations
 
-from .illustrated_expansion_batch_5_motion import (
-    ILLUSTRATED_V6_REVIEW_ICON_PERFORMANCES,
-    ILLUSTRATED_V6_REVIEW_REST_AT,
-)
-from .illustrated_expansion_batches_6_10_motion import (
-    ILLUSTRATED_V7_REVIEW_ICON_PERFORMANCES,
-    ILLUSTRATED_V7_REVIEW_MOTION_SPECS,
-    ILLUSTRATED_V7_REVIEW_REST_AT,
-)
+from .illustrated_sources import compose_motion_values, merge_registered_maps, source_value
+
+# Compatibility exports retain the frozen batch objects.
+ILLUSTRATED_V6_REVIEW_ICON_PERFORMANCES = source_value("expansion-5", "performances")
+ILLUSTRATED_V6_REVIEW_REST_AT = source_value("expansion-5", "rest_at")
+ILLUSTRATED_V7_REVIEW_ICON_PERFORMANCES = source_value("expansion-6-10", "performances")
+ILLUSTRATED_V7_REVIEW_MOTION_SPECS = source_value("expansion-6-10", "motion_specs")
+ILLUSTRATED_V7_REVIEW_REST_AT = source_value("expansion-6-10", "rest_at")
 from .illustrated_motion_spec import illustrated_motion_spec as _spec
 
 
@@ -139,19 +138,9 @@ _CONVENTION_RECIPE_OVERRIDES = {
     ),
 }
 
-ILLUSTRATED_PUBLIC_ICON_PERFORMANCES = {
-    **_PUBLIC_24_PERFORMANCES,
-    **ILLUSTRATED_V6_REVIEW_ICON_PERFORMANCES,
-    **ILLUSTRATED_V7_REVIEW_ICON_PERFORMANCES,
-}
-
-ILLUSTRATED_PUBLIC_REST_AT = {
-    **_PUBLIC_24_REST_AT,
-    **ILLUSTRATED_V6_REVIEW_REST_AT,
-    **ILLUSTRATED_V7_REVIEW_REST_AT,
-}
-
-ILLUSTRATED_PUBLIC_MOTION_SPECS = {
-    **ILLUSTRATED_V7_REVIEW_MOTION_SPECS,
-    **_CONVENTION_RECIPE_OVERRIDES,
-}
+ILLUSTRATED_PUBLIC_ICON_PERFORMANCES = compose_motion_values("performances", _PUBLIC_24_PERFORMANCES)
+ILLUSTRATED_PUBLIC_REST_AT = compose_motion_values("rest_at", _PUBLIC_24_REST_AT)
+ILLUSTRATED_PUBLIC_MOTION_SPECS = merge_registered_maps([
+    ("expansion-6-10", ILLUSTRATED_V7_REVIEW_MOTION_SPECS, ()),
+    ("convention-alignment", _CONVENTION_RECIPE_OVERRIDES, tuple(_CONVENTION_RECIPE_OVERRIDES)),
+])

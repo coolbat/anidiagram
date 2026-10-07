@@ -1,0 +1,495 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anidiagram.dev/schemas/planning-diagnostics-v0.1.schema.json",
+  "title": "Brief planning diagnostics",
+  "description": "Versioned template, explicit-rule, and subprocess diagnostics. All methods explicitly leave semantic accuracy unassessed.",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "semantic_accuracy",
+        "limitations",
+        "coverage",
+        "warnings"
+      ],
+      "properties": {
+        "method": {
+          "const": "agent-template-v1"
+        },
+        "semantic_accuracy": {
+          "const": "not-assessed"
+        },
+        "limitations": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "method",
+            "status",
+            "matched_terms",
+            "unmatched_terms",
+            "unrecognized_fragments",
+            "ratio"
+          ],
+          "properties": {
+            "method": {
+              "const": "known-term-heuristic-v1"
+            },
+            "status": {
+              "enum": [
+                "partial",
+                "template-match",
+                "unassessed"
+              ]
+            },
+            "matched_terms": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "unmatched_terms": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "unrecognized_fragments": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "ratio": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "unassessed"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "ratio": {
+                    "type": "null"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "ratio": {
+                    "type": "number"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "template-match"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "ratio": {
+                    "const": 1
+                  },
+                  "matched_terms": {
+                    "minItems": 3,
+                    "contains": {
+                      "const": "agent"
+                    }
+                  },
+                  "unmatched_terms": {
+                    "maxItems": 0
+                  },
+                  "unrecognized_fragments": {
+                    "maxItems": 0
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "partial"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "unmatched_terms": {
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "code",
+              "message"
+            ],
+            "properties": {
+              "code": {
+                "enum": [
+                  "brief_coverage_low",
+                  "brief_coverage_unassessed"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              }
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "coverage": {
+                "properties": {
+                  "status": {
+                    "const": "partial"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "warnings": {
+                "minItems": 1,
+                "maxItems": 1,
+                "items": {
+                  "properties": {
+                    "code": {
+                      "const": "brief_coverage_low"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "coverage": {
+                "properties": {
+                  "status": {
+                    "const": "unassessed"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "warnings": {
+                "minItems": 1,
+                "maxItems": 1,
+                "items": {
+                  "properties": {
+                    "code": {
+                      "const": "brief_coverage_unassessed"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "coverage": {
+                "properties": {
+                  "status": {
+                    "const": "template-match"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "warnings": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "semantic_accuracy",
+        "limitations",
+        "coverage",
+        "warnings",
+        "provenance"
+      ],
+      "properties": {
+        "method": {
+          "const": "explicit-rules-v1"
+        },
+        "semantic_accuracy": {
+          "const": "not-assessed"
+        },
+        "limitations": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "method",
+            "status",
+            "parsed_clauses",
+            "total_clauses",
+            "unparsed_spans",
+            "ratio"
+          ],
+          "properties": {
+            "method": {
+              "const": "explicit-clause-rules-v1"
+            },
+            "status": {
+              "enum": [
+                "extracted",
+                "partial"
+              ]
+            },
+            "parsed_clauses": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "total_clauses": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "unparsed_spans": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              }
+            },
+            "ratio": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "code",
+              "message"
+            ],
+            "properties": {
+              "code": {
+                "enum": [
+                  "brief_rule_unparsed",
+                  "brief_rule_negation"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              }
+            }
+          }
+        },
+        "provenance": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source_ref",
+              "text",
+              "start",
+              "end",
+              "status",
+              "reason"
+            ],
+            "properties": {
+              "source_ref": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "start": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "end": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "status": {
+                "enum": [
+                  "extracted",
+                  "partial",
+                  "unsupported",
+                  "negated"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              }
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "coverage": {
+                "properties": {
+                  "status": {
+                    "const": "extracted"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "coverage": {
+                "properties": {
+                  "ratio": {
+                    "const": 1
+                  },
+                  "unparsed_spans": {
+                    "maxItems": 0
+                  }
+                }
+              },
+              "warnings": {
+                "maxItems": 0
+              },
+              "provenance": {
+                "items": {
+                  "properties": {
+                    "status": {
+                      "const": "extracted"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "coverage": {
+                "properties": {
+                  "unparsed_spans": {
+                    "minItems": 1
+                  }
+                }
+              },
+              "warnings": {
+                "minItems": 1,
+                "contains": {
+                  "properties": {
+                    "code": {
+                      "const": "brief_rule_unparsed"
+                    }
+                  }
+                }
+              },
+              "provenance": {
+                "contains": {
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "partial",
+                        "unsupported",
+                        "negated"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "const": {
+        "method": "subprocess-plan-v1",
+        "semantic_accuracy": "not-assessed",
+        "limitations": "Opt-in external command output passed DiagramPlan structural validation only. Provider accuracy, source fidelity, and complete brief coverage are not assessed.",
+        "coverage": {
+          "method": "provider-unassessed-v1",
+          "status": "unassessed",
+          "ratio": null
+        },
+        "warnings": [
+          {
+            "code": "brief_provider_unassessed",
+            "message": "Provider output has structural validation only; review all entities, relations, and provenance against the brief."
+          }
+        ]
+      }
+    }
+  ]
+}

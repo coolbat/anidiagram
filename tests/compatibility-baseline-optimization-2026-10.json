@@ -1,0 +1,141 @@
+{
+  "preset/pipeline": {
+    "spec": "c37f3039e9d2600ed935d9b7e0838fed283a062f139584e41ff2daeb55000677",
+    "quality": "defeadb62ef8ee437637d9e6c050ad81f2509ea02b3ac646e4fa3b12ca7d8728",
+    "svg": "e4b17eda3aaf4e8bfdf133f40eb2a33dec783df9890e9462883b0b60cfa59b08",
+    "html": "36d9243d4341e3082beb8e19c99d6d8c569d0bb665af235587a9d1b5f853f66b"
+  },
+  "preset/loop": {
+    "spec": "a43d7c07a89e7e0d739e030a6f5e3f3d3d051cc68aa1da0bf8cf67bf686a8538",
+    "quality": "3e231d6c858fcfd335de45cb3b19b734a2dff01dc13a26ac2a33052ac14f528b",
+    "svg": "7c46e83113e09c766a77e03f33ec12e595d2def7b9700e260b4023e735a52075",
+    "html": "2012f30bfc7f0359f0e1c9bedb16ae5187c5ea2af46e8e10b09d5bbc8bd6cb27"
+  },
+  "preset/hub-spoke": {
+    "spec": "304cb88accee960ff6a7929e6313a7d5577d23b4161f53a5f9dc95fd616b54f5",
+    "quality": "52b3b20d71fadb80658e8623189d87f5f5f0a72695f282b46c66effdbc93c94b",
+    "svg": "9c6403264348672fbe714eae3b725266c67e970f3cbf9ab3383514c47fbfef0b",
+    "html": "a7452684796406879fb12bae1d1f30a4dc677f3ec80f01027ef2c178e1da41f5"
+  },
+  "preset/layered": {
+    "spec": "cc525cff4e4f3a4c5eb7da2cbe458124971a7a8b4052f5b7cdba9fa15b2e642e",
+    "quality": "0a03b83986fc2a7009e790eb14d02fab0d6907cf99f9e85f2bd894ab95f38f91",
+    "svg": "c2652c2371959a8ac4fa7e5cd0e027c2356450a9a70089cbcc25598a616b0aa2",
+    "html": "5bb704a40319c1f2d1658fa8517607be1471fdc11abb94caf08fdea3d7e38f07"
+  },
+  "preset/swimlane": {
+    "spec": "f218a367234bb6c0f13f1754996ba274e52d8e5c0a5dc81d9a73f437a98a658e",
+    "quality": "7b49950577e5fbb612bbb5eb4f9f29d7d63625a7658e73b550ce2dfa5370e021",
+    "svg": "117949949ce2fefc645463145d28f2f530b382a096e90caf3686689ac049320e",
+    "html": "632529ba7a63759349160786044d5a6a59c47742f997d8b330777e21b9a7a923"
+  },
+  "preset/compare": {
+    "spec": "673f36bc28731d72295c15334c1dbe5dfad543c4947f3a60489d1c87c3f436b4",
+    "quality": "ba351788e5c6190655c31f3536d1b028f0aca31f3cdff5e0f7732f61d9778458",
+    "svg": "750c58bcc7e6d8831070994606dd69781418c17b5da60a84f969d2ea8ac174cd",
+    "html": "c55e043bee31cc8c036b7a7946860f3198218fa401718ed64a2a368417126e60"
+  },
+  "preset/matrix": {
+    "spec": "6ef793b25f8c4e646e4cc317d11d558ab84690a4e0c5f671a3c80acff764bcbc",
+    "quality": "8c685d2b1d2f33f7d2ff99b8180ece1bae2fad3fe14413406ac1bf075943198a",
+    "svg": "fa5deb3a9b2e630f92bef62c95ae0c2863687eaea3dddd7126472b576217f5bc",
+    "html": "7f9045b13ca88ebd64bc0b9dd05f6cd033005fb99a87ea2975211d3f4c4725f9"
+  },
+  "preset/timeline": {
+    "spec": "ff309549677eea653424999e86d440625608cd342458dafa729b1d7ffb0a47d2",
+    "quality": "e87c6a4a06c91b8109c840fc4bb72d5f0786d39a4b5a8fdc3ad3344661cf119f",
+    "svg": "84fa4316b795dce0ae8e67dd5cd8bb154494413342ff8f7c8281261e0043fee9",
+    "html": "a6df2d30b1dbafbabd1e6a135635e1ef7b2f34213957e5326d77db56bdd172f4"
+  },
+  "preset/stack": {
+    "spec": "1d754ae0337990d15f3024dff441aa81faaa78915b0ca9fe7df402e2aa78e165",
+    "quality": "3554f8f75446f016ece487a2efbefe6cf19a5cc90c3a2462e1e193d51708cb29",
+    "svg": "9a3f9c46243873f1525329af2785f648c3c40d8e8493d71c14d487170e1b9b5b",
+    "html": "4d1c3c6695005e8e0ad19dca87803da0fd77e58819f7a1d7d014fb732d307a0c"
+  },
+  "preset/funnel": {
+    "spec": "2ea4a24527db25e01a44d22e6d1f6cce10f85c33b69de1c5bcff800ac66ab82a",
+    "quality": "3554f8f75446f016ece487a2efbefe6cf19a5cc90c3a2462e1e193d51708cb29",
+    "svg": "0077ac5ec5d807161d29b306f3f1c14e85134f4dddab549eee2a1cd26e4ae1a3",
+    "html": "43ee8ac50c7a4a797b2e9fd4a9530d97004e675ead4d12df268467897e75b3af"
+  },
+  "preset/sequence": {
+    "spec": "8b0e673490c1b7a347e3454b1e11b0b6d62217589a205d6de99ee47c862e1fa5",
+    "quality": "eb9ecbe3ea38763842aa5cd426f4bbee26326b4a60b142b8609bce32da7e0f06",
+    "svg": "51840ced2966cc2464accfc724e59a9a4c8eb95bc426beb29157c412335690ab",
+    "html": "06e8f27f2c9e3c4e3c09634fcbfb94418396892e9f7d26dc59a59c588ab21db5"
+  },
+  "preset/er": {
+    "spec": "885f8f5e5843ac457e68aaa8b7634226c1caddb81a31833319512f443a482a29",
+    "quality": "d3773540b35e7ec53465b6d5ae0c09d3e3c137e6812e349f2e0ac97f84e7acc7",
+    "svg": "6b93e32212168911db9ab5609e6a87318e589f32b4c8528f54c5f670b9f99dfc",
+    "html": "15a68fe417ad0978aac40899774aa1e27b7c4ef222731370b519dfca3530a451"
+  },
+  "preset/network": {
+    "spec": "5084a215e45131081024cf396c9b918cb0548bb8867613434f4705d5b8aaab28",
+    "quality": "20fbc674c4cc13618818e6c3179487c03e6c6c4f4584f23f04ed744f68755d80",
+    "svg": "9f044f33c775fa512a9d38cc677292dc85c39376c7e10624c6b9f332853b9f2c",
+    "html": "b74f1bb94c978432a37686a2af18eaac5260988f211df0a25eb489cde9fe4b60"
+  },
+  "preset/agent-memory": {
+    "spec": "e019d6ae1809640f4c6eb13df2c336fe0f55a19ce2ff397397506c0ff3fb60aa",
+    "quality": "c3309d8efc43370250aeb24293681fbdbe08c2693c52da72e01a01c884f64d42",
+    "svg": "14a6f674bb6ff6974c8dc550de7c052a3cdaade195f378769de9e9c7060e51b4",
+    "html": "7b6d4aec82e880b695ab447ebbee48d5c1fd2551d8e43cf519fb8e31c893e9be"
+  },
+  "preset/agent-loop": {
+    "spec": "a5bff6684d3b8573ac3ce0ecf0ba566c6410127917f8fff74c8c9c0e91a97de1",
+    "quality": "a080ed93288d3478b87500ec670aee5b14e453bb56913970867962badd89e60a",
+    "svg": "0a4e59307f3693e9936bab032a9d62433486c20679b987b165e0aa576e4dced6",
+    "html": "ce28dd01fb66dc7c340e2fce62853b94c60e98d8cca4fdff0dfe4ce5b37daf0f"
+  },
+  "preset/layered-loop": {
+    "spec": "d6514154843450a7052a89b953f4b0c54189f2c0641bcffe12be1583572c8375",
+    "quality": "98d25dd59268ddfb9e029fa219b0b9b2bce2766a4b0a003e9cb9b57e028e2049",
+    "svg": "7278a7beee1a45ddc4aeffab69852151d653fa76d9a8b04629aa5a3030412f06",
+    "html": "4a475753d0ddb20472bb5aa4a35ac13630452a2585177f9fdacc5d21c07459a7"
+  },
+  "tests/fixtures/invalid-edge.diagram.json": {
+    "validation_error": {
+      "code": "diagram_script_validation_failed",
+      "issues": [
+        {
+          "path": "$.edges[0].to",
+          "message": "unknown node id 'missing'",
+          "code": "reference",
+          "severity": "error"
+        },
+        {
+          "path": "$.edges[0].animated",
+          "message": "expected a boolean",
+          "code": "type",
+          "severity": "error"
+        }
+      ]
+    }
+  },
+  "tests/fixtures/minimal.diagram.json": {
+    "spec": "1bf0588f03cd3a6aa01875cd77e02be3ba55191f4b907bff238fdb0a6830f848",
+    "quality": "3554f8f75446f016ece487a2efbefe6cf19a5cc90c3a2462e1e193d51708cb29",
+    "svg": "b8f2121bc9112f98e7ab04f08217d5145166455554352fc75e65d8445127d29d",
+    "html": "7d610e9ed920c3757be3d3ce5e2ac8a42af02f69a54bf9dca81c201ad3aa5de1"
+  },
+  "examples/contracts/production-request-path.plan.json": {
+    "spec": "93c809ef02dafb677127335d8f87966485cc2be03f887ebcfaeb53fb7f6b2a20",
+    "quality": "3554f8f75446f016ece487a2efbefe6cf19a5cc90c3a2462e1e193d51708cb29",
+    "svg": "36144f34bc801f0f7545294e9643a395b47eb5d100a4f39832fba175747c027e",
+    "html": "513aa118ebbc418c474ac1073a8af9ee6e0a30e0dc2deab1767a5a155a7afd7f"
+  },
+  "examples/illustrated-2.5-showcase.diagram.json": {
+    "spec": "9cdfd46093dbcd1b6fabb6bfcf0155d2ae498d2a685c4f1a674479e7adbacef9",
+    "quality": "3554f8f75446f016ece487a2efbefe6cf19a5cc90c3a2462e1e193d51708cb29",
+    "svg": "2bdb6376023808495057c3e62b16ce1a348047ab991b0f93329644776c87b746",
+    "html": "959306417e72a497e88195c77135ebfa9ae0c3d3224610c2f3a111d7a4a1defc"
+  },
+  "examples/zh-CN/enterprise-agent-platform.plan.json": {
+    "spec": "4591240e2d6e550bb8417a10c0fade852cb00689d54dd717529c4dd01761c71a",
+    "quality": "23a3c755ac25ff225b2ac86258b1507f29d1c3bad0abf1d8b4324c72826c7e97",
+    "svg": "a453f08a4527f2f9dae6be73ceef4d4c6f5275f8888868b0bca8273bff4a8f3a",
+    "html": "c8e77185999f92af93e4afeabe2833b3b02e99e835ddf8cd23a1b9a360e4797a"
+  }
+}

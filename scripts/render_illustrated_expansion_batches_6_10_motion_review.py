@@ -9,6 +9,7 @@ import html
 import json
 from pathlib import Path
 
+from anidiagram.runtime_registry import archived_runtime_source
 from anidiagram.illustrated_expansion_batches_6_10 import (
     BATCHES,
     expansion_6_10_definition,
@@ -194,7 +195,7 @@ GENERIC_V7_RUNTIME = r'''
 
 
 def build_review_runtime() -> str:
-    source = (ROOT / "runtime" / "illustrated-performance-v5-review-runtime.js").read_text(encoding="utf-8")
+    source = archived_runtime_source("illustrated-performance-v5-review")
     marker = '  performances["illustrated-vector-database-embed-index-retrieve-v1"]'
     registrations = "\n".join(
         f'  performances[{json.dumps(performance)}] = playIllustratedV7Configured;'

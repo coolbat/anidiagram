@@ -7,6 +7,7 @@
   "required": ["version", "semantic", "presentation"],
   "additionalProperties": false,
   "properties": {
+    "planning": {"$ref": "planning-diagnostics-v0.1.schema.json"},
     "version": {"const": "0.2"},
     "semantic": {"$ref": "#/$defs/semantic"},
     "presentation": {"$ref": "#/$defs/presentation"},

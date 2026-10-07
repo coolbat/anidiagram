@@ -29,7 +29,7 @@ from .resources import resource_path
 
 MOTION_MANIFEST_VERSION = "motion-manifest-0.1"
 DEFAULT_RUNTIME_MODE = "ambient"
-SUPPORTED_RUNTIME_MODES = frozenset({"ambient", "timeline", "hybrid"})
+SUPPORTED_RUNTIME_MODES = frozenset({"ambient", "timeline", "hybrid", "event-driven"})
 _MOTION_CATALOG_PATH = resource_path("runtime", "motion-catalog.json")
 
 ICON_PERFORMANCE_V2 = {
@@ -388,7 +388,7 @@ def build_motion_manifest(
         stage.update(
             {
                 "relation_circles": scene.motion.profile in {"expressive", "teaching"},
-                "group_fields": scene.motion.profile in {"expressive", "teaching"},
+                "group_fields": False,  # Retired blurred group haze; borders remain static.
                 "data_particles": stage["edge_flow"],
             }
         )
@@ -406,6 +406,7 @@ def build_motion_manifest(
         "edges": edges,
     }
     if mode in {"timeline", "hybrid"}:
+        nodes_by_id = {node.node_id: node for node in scene.nodes}
         manifest["choreographer"] = {
             "version": "choreographer-v1",
             "initial_state": "ambient" if mode == "hybrid" else "timeline",
@@ -416,9 +417,14 @@ def build_motion_manifest(
                     "edge_index": index,
                     "source": edge.source,
                     "target": edge.target,
+                    "source_label": getattr(nodes_by_id.get(edge.source), "label", "") or edge.source,
+                    "target_label": getattr(nodes_by_id.get(edge.target), "label", "") or edge.target,
+                    "target_caption": getattr(nodes_by_id.get(edge.target), "caption", "") or "",
                     "label": edge.label or edge.semantic_kind or f"step {index + 1}",
                     "relation_id": edge.semantic_relation_id,
                     "flow_id": edge.flow_id,
+                    "condition": edge.condition,
+                    "source_refs": _step_source_refs(scene, edge.semantic_relation_id),
                     "duration": 1.2,
                 }
                 for index, edge in enumerate(scene.edges)
@@ -529,3 +535,14 @@ def _fragment_id(value: Any) -> str:
     text = str(value or "item").lower()
     cleaned = "".join(char if char.isalnum() else "-" for char in text).strip("-")
     return cleaned or "item"
+
+
+def _step_source_refs(scene: Scene, relation_id: str | None) -> List[Dict[str, str]]:
+    """Use only already verified evidence, never infer a source URL."""
+    from urllib.parse import urlsplit
+    refs = scene.source_evidence.get("subjects", {}).get(relation_id, [])
+    return [
+        {"id": source["id"], "title": source["title"], "href": source["href"]}
+        for source in scene.source_evidence.get("sources", [])
+        if source["id"] in refs and urlsplit(source.get("href", "")).scheme in {"https", "http"}
+    ]

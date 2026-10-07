@@ -83,8 +83,11 @@ def main(argv: Optional[List[str]] = None) -> None:
     source.add_argument("--spec", help="Path to DiagramScript JSON.")
     source.add_argument("--plan", help="Path to DiagramPlan JSON to validate and compile.")
     source.add_argument("--preset", choices=preset_names(), help="Render a built-in preset.")
-    source.add_argument("--brief", help="Path to a natural-language brief to compile into DiagramScript.")
-    source.add_argument("--text", help="Inline natural-language brief to compile into DiagramScript.")
+    source.add_argument("--brief", help="Path to an EN/ZH brief; explicit relation rules run before template fallback.")
+    source.add_argument("--text", help="Inline EN/ZH brief; explicit relation rules run before template fallback.")
+    parser.add_argument("--planner", choices=["auto", "rules", "template", "subprocess"], default="auto", help="Brief planner: explicit rules then template fallback by default; subprocess is opt-in.")
+    parser.add_argument("--planner-command", help='JSON argv array for an opt-in planner subprocess, e.g. ["python3", "my_planner.py"].')
+    parser.add_argument("--planner-timeout", type=float, default=30.0, help="Subprocess planner timeout in seconds, maximum 300.")
     parser.add_argument("--list-presets", action="store_true", help="Print available preset names and exit.")
     parser.add_argument("--title", help="Override title when rendering a preset.")
     parser.add_argument("--repo-root", help="Local Git top-level for verifying explicitly authored repository sources.")
@@ -116,7 +119,7 @@ def main(argv: Optional[List[str]] = None) -> None:
     )
     parser.add_argument(
         "--runtime-mode",
-        choices=["ambient", "timeline", "hybrid"],
+        choices=["ambient", "timeline", "hybrid", "event-driven"],
         default="ambient",
         help="Explicit runtime scheduler mode.",
     )
@@ -153,6 +156,19 @@ def main(argv: Optional[List[str]] = None) -> None:
     parser.add_argument("--plan-out", help="Optional path for a generated DiagramPlan JSON when using --brief or --text.")
     parser.add_argument("--spec-out", help="Optional path for a compiled DiagramScript JSON when using --plan, --brief, or --text.")
     args = parser.parse_args(argv)
+
+    planner_command = None
+    if args.planner_command:
+        try:
+            planner_command = json.loads(args.planner_command)
+        except ValueError:
+            parser.error("--planner-command must be a JSON argv array")
+    if args.planner_command and args.planner != "subprocess":
+        parser.error("--planner-command requires --planner subprocess")
+    if args.planner == "subprocess" and not args.planner_command:
+        parser.error("--planner subprocess requires --planner-command")
+    if (args.planner != "auto" or args.planner_command) and not (args.brief or args.text):
+        parser.error("planner options require --brief or --text")
 
     if args.receipt and not args.deliver:
         parser.error("--receipt requires --deliver")
@@ -191,12 +207,19 @@ def main(argv: Optional[List[str]] = None) -> None:
         else:
             brief_text = args.text or ""
             source_bytes = brief_text.encode("utf-8")
-        generated_plan = brief_to_plan(
-            brief_text or "",
-            title=args.title or "",
-            style=style_name_from_arg(args.style),
-            language=args.diagram_locale,
-        )
+        try:
+            generated_plan = brief_to_plan(
+                brief_text or "",
+                title=args.title or "",
+                style=style_name_from_arg(args.style),
+                language=args.diagram_locale,
+                planner=args.planner,
+                planner_command=planner_command,
+                planner_timeout=args.planner_timeout,
+            )
+        except ValueError as error:
+            _emit_result({"ok": False, "error": {"code": "brief_planning_failed", "message": str(error)}}, args.result, stderr=True)
+            raise SystemExit(2) from error
         spec = _compile_cli_plan(generated_plan)
     if args.diagram_locale != "auto":
         spec = dict(spec)
@@ -296,6 +319,8 @@ def main(argv: Optional[List[str]] = None) -> None:
     }
     if args.deliver:
         result["delivery"] = delivery
+    if scene.planning:
+        result["planning"] = scene.planning
     if generated_plan is not None:
         result["plan"] = {
             "schema": {"name": "DiagramPlan", "version": generated_plan["version"]},

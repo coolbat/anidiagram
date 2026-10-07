@@ -3,6 +3,7 @@ import unittest
 from pathlib import Path
 
 from anidiagram.quality import quality_report
+from quality_expectations import assert_quality_baseline
 from anidiagram.schema import compile_scene
 from anidiagram.styles import load_style
 from scripts.build_illustrated_deep_tech_case import build_case
@@ -30,7 +31,7 @@ class IllustratedDeepTechCaseTest(unittest.TestCase):
         self.assertEqual(7, len(spec["edges"]))
         self.assertEqual(3, len(spec["groups"]))
         self.assertTrue(report["ok"])
-        self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, report["summary"])
+        assert_quality_baseline(self, report)
 
     def test_case_node_boxes_do_not_overlap(self):
         plan = json.loads(

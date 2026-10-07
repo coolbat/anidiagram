@@ -111,7 +111,12 @@ class EdgeMotionV1Test(unittest.TestCase):
         self.assertFalse(acceptance["release_boundary"]["illustrated_2_4_candidate_promoted"])
         self.assertEqual("approved", contract["status"])
         self.assertEqual("frozen", contract["lifecycle"])
+        archived = {
+            "motion_manifest_adapter": "assets/edge-motion/snapshots/motion_manifest_v1.0.0.py",
+            "runtime": "assets/edge-motion/snapshots/edge-motion-v1.0.0-runtime.js",
+        }
         for name, relative_path in release["paths"].items():
+            relative_path = archived.get(name, relative_path)
             expected = release["hashes"][f"{name}_sha256"]
             actual = hashlib.sha256((ROOT / relative_path).read_bytes()).hexdigest()
             self.assertEqual(expected, actual, name)

@@ -38,6 +38,7 @@ from build_style_showcase import (
 )
 from render_readme_showcase_round_1 import render_round as render_readme_showcase_round
 from gallery_previews import live_preview, preview_controls, preview_head, write_preview_assets
+from gallery_narration import install_narration
 
 
 Spec = Dict[str, Any]
@@ -1378,6 +1379,7 @@ def _write_gallery_index(
     runtime_overview: Dict[str, Any],
     icon_system_releases: List[Dict[str, Any]],
 ) -> None:
+    narration_hero = install_narration(outdir)
     style_cards = "\n".join(_entry_card_html(entry["style"], entry) for entry in styles)
     layout_cards = "\n".join(_entry_card_html(entry["preset"], entry) for entry in layouts)
     hero_cards = _dify_hero_cards(hero_variants)
@@ -1418,6 +1420,7 @@ def _write_gallery_index(
   <main>
     <h1>AniDiagram Showcase</h1>
     <p>Style Showcase makes diagrams look right. Layout Showcase makes diagram purpose obvious. Every preview runs the actual diagram's icon and flow animations while visible, with a complete static fallback.</p>
+    {narration_hero}
     {preview_controls()}
     <section class="hero">
       <h2>Hero Demo · Dify</h2>
@@ -1435,14 +1438,14 @@ def _write_gallery_index(
       </div>
     </section>
     <section>
-      <h2>Style Showcase</h2>
+      <h2 id="style-showcase">Style Showcase</h2>
       <p>One signature case for every bundled visual style.</p>
       <div class="grid style-grid">
 {style_cards}
       </div>
     </section>
     <section>
-      <h2>Layout Showcase</h2>
+      <h2 id="layout-showcase">Layout Showcase</h2>
       <p>One standard teaching case for every semantic layout preset.</p>
       <div class="grid">
 {layout_cards}

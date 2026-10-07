@@ -10,6 +10,7 @@
     // Fit only the outer reader display; authored coordinates and the existing
     // pan/zoom transform remain owned by the original viewer.
     const fitReader = () => {
+      if (window.AniDiagramViewport) return;
       const box = svg.viewBox.baseVal;
       const scale = Math.min(1, (stage.clientWidth - 4) / box.width, (stage.clientHeight - 4) / box.height);
       if (scale > 0) document.getElementById("viewport").style.setProperty("--reader-fit-width", box.width * scale + "px");

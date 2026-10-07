@@ -85,8 +85,13 @@ Choreographer v1 ships as explicit `timeline` and `hybrid` runtime modes.
 Timeline starts as a causal source -> edge -> target explanation; hybrid starts
 with the familiar ambient overview and enters that explanation only when the
 user selects Start Explanation. Both add start, previous, and next controls and
-preserve the reduced-motion static contract. Event-driven scheduling, explicit
-node state machines, and arbitrary hover/click replay remain roadmap items. See
+preserve the reduced-motion static contract. Explanation steps dim
+non-focused elements, move the camera within the canvas bounds, and show a
+narration card with the step, label, `source → target`, condition, and source
+links; `←`/`→` and the progress dots navigate. `--runtime-mode event-driven`
+is a separate opt-in scheduler where arrivals trigger target performances and
+propagate downstream. Explicit node state machines and arbitrary hover/click
+replay remain roadmap items. See
 [runtime-motion-roadmap.md](./runtime-motion-roadmap.md).
 
 ## Runtime dependency ownership

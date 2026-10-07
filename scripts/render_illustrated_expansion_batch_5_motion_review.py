@@ -9,6 +9,7 @@ import html
 import json
 from pathlib import Path
 
+from anidiagram.runtime_registry import archived_runtime_source
 from anidiagram.illustrated_expansion_batch_5 import (
     expansion_batch_5_definition,
     expansion_batch_5_icon_ids,
@@ -300,7 +301,7 @@ BATCH_5_RUNTIME = r'''
 
 
 def build_review_runtime() -> str:
-    source = (ROOT / "runtime" / "illustrated-performance-v5-review-runtime.js").read_text(encoding="utf-8")
+    source = archived_runtime_source("illustrated-performance-v5-review")
     marker = '  performances["illustrated-vector-database-embed-index-retrieve-v1"]'
     if marker not in source:
         raise RuntimeError("archived review runtime registration marker changed")

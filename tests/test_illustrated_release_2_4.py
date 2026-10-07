@@ -5,7 +5,7 @@ from pathlib import Path
 
 from anidiagram.illustrated_registry import illustrated_definition, illustrated_icon_ids
 from anidiagram.motion_manifest import ILLUSTRATED_ICON_PERFORMANCES, ILLUSTRATED_REST_AT
-from anidiagram.renderer_html_runtime import render_html_runtime
+from anidiagram.renderer_html_runtime import _runtime_source, render_html_runtime
 from anidiagram.schema import compile_scene
 from anidiagram.styles import load_style
 
@@ -85,9 +85,9 @@ class IllustratedRelease24Test(unittest.TestCase):
             "public_motion_contract_sha256": ROOT / "assets" / "illustrated" / "motion-contracts" / "illustrated-performance-v5.json",
             "archived_motion_review_contract_sha256": ROOT / "assets" / "illustrated" / "motion-contracts" / "illustrated-performance-v5.review.json",
             "motion_manifest_sha256": ROOT / "src" / "anidiagram" / "motion_manifest.py",
-            "motion_manifest_v2_sha256": ROOT / "src" / "anidiagram" / "motion_manifest_v2.py",
-            "runtime_sha256": ROOT / "runtime" / "anidiagram-runtime.js",
-            "edge_motion_runtime_sha256": ROOT / "runtime" / "edge-motion-v1-runtime.js",
+            "motion_manifest_v2_sha256": ROOT / "assets" / "edge-motion" / "snapshots" / "motion_manifest_v1.0.0.py",
+            "runtime_sha256": ROOT / "assets" / "illustrated" / "snapshots" / "anidiagram-runtime-2.4.0.js",
+            "edge_motion_runtime_sha256": ROOT / "assets" / "edge-motion" / "snapshots" / "edge-motion-v1.0.0-runtime.js",
             "template_mapping_sha256": ROOT / "assets" / "illustrated" / "snapshots" / "template-mappings-2.4.0.json",
             "acceptance_record_sha256": ROOT / "assets" / "illustrated" / "reviews" / "2.4.0-acceptance.json",
             "static_acceptance_record_sha256": ROOT / "assets" / "illustrated" / "reviews" / "2.4.0-static-acceptance.json",
@@ -152,7 +152,7 @@ class IllustratedRelease24Test(unittest.TestCase):
         self.assertTrue(all(entry["asset_version"] == "2.5.0" for entry in manifest["icons"]))
 
     def test_runtime_dispatches_every_new_v5_performance(self):
-        source = (ROOT / "runtime" / "anidiagram-runtime.js").read_text(encoding="utf-8")
+        source = _runtime_source()
         for icon in NEW_ICONS:
             performance = ILLUSTRATED_ICON_PERFORMANCES[icon]
             function_name = RUNTIME_FUNCTIONS[icon]

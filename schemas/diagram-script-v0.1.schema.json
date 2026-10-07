@@ -5,6 +5,7 @@
   "type": "object",
   "required": ["version", "nodes"],
   "properties": {
+    "planning": {"$ref": "planning-diagnostics-v0.1.schema.json"},
     "version": {"const": "0.1"},
     "canvas": {
       "type": "object",

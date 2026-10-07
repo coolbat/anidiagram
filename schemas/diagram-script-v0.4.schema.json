@@ -19,6 +19,7 @@
     }
   ],
   "properties": {
+    "planning": {"$ref": "planning-diagnostics-v0.1.schema.json"},
     "type_semantics": {"$ref": "type-semantics-v0.1.schema.json"},
     "reader": {"$ref": "reader-options-v0.1.schema.json"},
     "evidence": {
@@ -504,6 +505,14 @@
         },
         "label": {
           "type": "string"
+        },
+        "members": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "bounds": {
           "$ref": "#/$defs/bounds"

@@ -5,21 +5,21 @@
 <p align="center">
   <a href="https://coolbat.github.io/anidiagram/gallery/"><strong>在线 Gallery</strong></a> ·
   <a href="#快速开始">快速开始</a> ·
+  <a href="#讲解模式">讲解模式</a> ·
   <a href="https://github.com/coolbat/anidiagram/releases/tag/v0.2.0">v0.2.0</a> ·
   <a href="./README.md">English</a>
 </p>
 
-AniDiagram 可以把一段自然语言架构需求变成经过校验、带有动效、能够直接交付的
-架构图，并输出 SVG、可交互 HTML、图片、视频或机器可读质量报告。它适合平台
-工程师、技术作者，以及需要比轻量文本图更强控制能力、又不想手工制作整套视觉
-稿件的团队。
+AniDiagram 把架构描述变成会"自己讲解"的动态架构图：图标表演各自的角色，数据沿着
+每条关系流动，讲解模式带观众一步步看懂系统。同一份源文件可输出 SVG、可交互 HTML、
+图片、视频和机器可读的质量报告。
 
 **核心合约：** `DiagramPlan 0.2` → `DiagramScript 0.4` → `SVG / HTML / quality`
 
-## 先看实际效果
+## 先看效果
 
-Dify：**文档如何成为答案**。沿着文档入库和基础 Chat 问答两条链路，
-看清接入层、执行层和数据层如何协作，区分 Celery 索引任务与 API 进程内的问答线程。
+Dify：**文档如何成为答案** —— 沿文档入库和基础 Chat 两条链路，看接入层、执行层、
+数据层如何协作。
 
 <a href="https://coolbat.github.io/anidiagram/gallery/cases/dify/index.html">
   <picture>
@@ -28,25 +28,18 @@ Dify：**文档如何成为答案**。沿着文档入库和基础 Chat 问答两
   </picture>
 </a>
 
-**[打开中英文案例 →](https://coolbat.github.io/anidiagram/gallery/cases/dify/index.html)** ·
+**[打开案例 →](https://coolbat.github.io/anidiagram/gallery/cases/dify/index.html)** ·
 [交互架构图](https://coolbat.github.io/anidiagram/gallery/cases/dify/dify.html) ·
 [静态 SVG](./gallery/cases/dify/dify-static.svg) ·
-[源码依据与复现](./examples/readme-showcase-v2/dify/evidence.md) ·
+[源码依据](./examples/readme-showcase-v2/dify/evidence.md) ·
 [DiagramPlan](./gallery/cases/dify/dify.plan.json) ·
 [事实核验报告](./gallery/cases/dify/accuracy.json)
 
-固定 Dify **1.17.0**（提交 `09a855d`），只覆盖选定链路，不代表完整平台，也不是
-Dify 官方架构图。当前为源码解读稿，**独立语义复核待完成**；未运行 Dify 或调用
-真实模型。源码引用有效、渲染检查通过，不等于架构准确性已经得到证明。
-
-完整 Gallery 包含两套公共图标系统、16 种语义布局、13 种风格、运行时动效证明
-和可以直接复制的 CLI 命令：
-**[打开在线 Gallery →](https://coolbat.github.io/anidiagram/gallery/)**
+固定 Dify **1.17.0**（`09a855d`）。这是限定范围的源码解读稿，不是 Dify 官方架构图；
+独立语义复核待完成。
 
 <details>
-<summary><strong>查看更多生成案例</strong></summary>
-
-此前的概念架构案例：企业级智能体平台。
+<summary><strong>更多生成案例</strong></summary>
 
 ![企业级智能体平台架构](./assets/readme/enterprise-agent-platform-zh.webp)
 
@@ -54,175 +47,224 @@ Dify 官方架构图。当前为源码解读稿，**独立语义复核待完成*
 [在线 HTML](https://coolbat.github.io/anidiagram/gallery/readme-showcase/enterprise-agent-platform-zh.html) ·
 [SVG](./assets/readme/enterprise-agent-platform-zh.svg)
 
-- [Governed RAG 生产架构](https://coolbat.github.io/anidiagram/gallery/readme-showcase/hero-governed-rag.html) —— 英文案例，Illustrated 2.5、Minimal Light、Layered。
-- [Kubernetes 生产分层](https://coolbat.github.io/anidiagram/gallery/readme-showcase/hero-kubernetes-three-layer.html) —— 英文案例，Diagram Core v1、Deep Tech、Layered。
-- [风格对照](https://coolbat.github.io/anidiagram/gallery/readme-showcase/readme-showcase-round-1.html) —— 相同语义分别使用 Minimal Light、Deep Tech 和 Claude Warm 渲染。
-- [布局 Gallery](https://coolbat.github.io/anidiagram/gallery/layouts/) —— 独立于视觉风格选择合适的拓扑布局。
+- [Governed RAG 生产架构](https://coolbat.github.io/anidiagram/gallery/readme-showcase/hero-governed-rag.html) —— Illustrated 2.5、Minimal Light、Layered。
+- [Kubernetes 生产分层](https://coolbat.github.io/anidiagram/gallery/readme-showcase/hero-kubernetes-three-layer.html) —— Diagram Core v1、Deep Tech、Layered。
+- [风格对照](https://coolbat.github.io/anidiagram/gallery/readme-showcase/readme-showcase-round-1.html) —— 同一语义的三种风格。
+- [完整 Gallery](https://coolbat.github.io/anidiagram/gallery/) —— 全部图标系统、布局、风格、动效，附可复制命令。
 
 </details>
+
+## 功能一览
+
+| 功能 | 能做什么 | 怎么开启 |
+| --- | --- | --- |
+| **Agent Skill** | 让编程 Agent 读源码、写带证据的 Plan 并出图 | `npx skills add …` |
+| **简报出图** | 明确的中英文关系句直接生成可复核草稿；解析不了的会标出，不会编造 | `--text`、`--brief` |
+| **讲解模式** | 逐步讲解：焦点淡化、镜头跟随、讲解卡片、键盘翻页 | `--runtime-mode timeline` / `hybrid` |
+| **语义动效** | 图标表演自身角色；数据包、数据流、失败回弹沿关系运动 | HTML 默认 |
+| **事件驱动播放** | 数据到达后触发目标节点表演，并继续向下游传播 | `--runtime-mode event-driven` |
+| **视觉系统** | 56 枚插画图标或精确的 `diagram-core-v1` 线框；16 种布局、13 种风格 | `--style`、Plan 的 `presentation` |
+| **交互查看器** | 自动适配窗口、缩放平移、悬停高亮相邻节点、Expressive / Readable / Off | HTML 默认 |
+| **核验阅读** | 搜索、上下游、最短路径、章节、分享卡、固定 Git 提交的源码引用 | `--reader`、`--repo-root` |
+| **质量门禁** | 检查重叠、连线穿节点、标签碰撞、文字溢出、简报覆盖率 | `--formats quality` |
+| **原子交付** | 全部成功才替换产物，并生成 SHA-256 回执 | `--deliver` |
+| **评审工具** | Plan 差异对比、截图回执、源码事实核验 | `compare`、`visual-check`、`accuracy-check` |
+| **多格式导出** | SVG、HTML、PNG、PDF、GIF、WebP、APNG、MP4、Lottie | `--formats` |
+| **中英文** | 自动识别中文、中文控件、CJK 字体回退 | `--diagram-locale` |
 
 ## 快速开始
 
 ### Agent Skill：让 Agent 分析项目并画图
 
-在你想分析的项目中安装，选择实际使用的 Agent；需要用户级安装时再加 `-g`：
+在要讲解的项目里安装（需要用户级安装时加 `-g`）：
 
 ```bash
 npx skills add coolbat/anidiagram --skill anidiagram -a claude-code
 # 也可改为：-a codex 或 -a cursor
 ```
 
-然后对 Agent 说：**“使用 AniDiagram 分析当前项目的核心请求链路，核验源码依据，
-标出未知项，生成可读的 SVG/HTML 和准确性检查报告。”**
+然后对 Agent 说：**"使用 AniDiagram 分析当前项目的核心请求链路，核验源码依据，
+标出未知项，生成可读的 SVG/HTML 和准确性检查报告。"**
 
-Skill 自带 Python 引擎，无需先全局安装 CLI。基础出图需要 Python 3.9+；
-浏览器验收和高级导出的可选依赖会先检查，不会自动安装。
-查看 [Skill 安装、依赖检查与跨 Agent 测试提示词](./docs/agent-skill.md)。
-必须安装完整 Skill 目录，不能只复制 SKILL.md；源码语义复核与呈现检查分别报告，
-不把检查通过等同于“架构准确率 100%”。
+Skill 自带 Python 引擎（Python 3.9+），使用前会检查浏览器和导出的可选依赖。
+详见 [Skill 安装说明](./docs/agent-skill.md)。
 
-### CLI：直接调用或接入自动化
-
-克隆仓库、建立隔离环境并安装 CLI：
+### CLI
 
 ```bash
 git clone https://github.com/coolbat/anidiagram.git
 cd anidiagram
-python3 -m venv .venv
-source .venv/bin/activate
-python3 -m pip install -e .
+python3 -m venv .venv && source .venv/bin/activate
+python3 -m pip install -e .          # 需要 PNG/PDF/GIF/WebP/MP4/Lottie 时安装 ".[raster]"
 ```
 
-用一句话生成第一张架构图：
+用一份可编辑的 Plan 生成第一张图：
 
 ```bash
-anidiagram \
-  --text "展示用户请求经过 API 网关、智能体、工具、安全校验，最终形成可信结果。" \
-  --outdir outputs/quickstart \
-  --basename request-flow \
-  --formats svg,html,quality \
-  --deliver
+anidiagram --plan examples/contracts/production-request-path.plan.json \
+  --outdir outputs/quickstart --basename request-flow \
+  --formats svg,html,quality --deliver
 ```
 
-第一次运行会生成：
-
-```text
-outputs/quickstart/
-├── request-flow.svg
-├── request-flow.html
-├── request-flow.quality.json
-└── request-flow.delivery.json
-```
-
-本地预览交互式 runtime（运行时）：
+会生成 `request-flow.svg`、`request-flow.html`、`request-flow.quality.json` 和
+`request-flow.delivery.json`。本地预览交互版：
 
 ```bash
 python3 -m http.server 8765
+# 打开 http://127.0.0.1:8765/outputs/quickstart/request-flow.html
 ```
 
-打开 `http://127.0.0.1:8765/outputs/quickstart/request-flow.html`。
-需要 PNG、PDF、GIF、WebP、APNG、MP4 或 Lottie 时，安装 `.[raster]`。
+未安装命令入口时，也可以用 `python3 -m anidiagram`。
 
-## 什么时候使用 AniDiagram
+## 使用说明
 
-| 需求 | 更合适的工具 |
-| --- | --- |
-| 希望用文本快速维护轻量静态关系图 | Mermaid、D2 或 Graphviz |
-| 需要语义实体和流程、可控视觉系统、动态运行时、多格式交付及质量证明 | **AniDiagram** |
-| 需要逐帧手工控制或精细视频剪辑 | 设计或视频工具 |
-
-AniDiagram 是语义编排和渲染管线，不是浏览器拖拽式编辑器。当语义模型、可重复
-生成和交付质量比手工画布编辑更重要时，AniDiagram 更合适。
-
-## 为什么选择 AniDiagram
-
-| 能力 | 带来的价值 |
-| --- | --- |
-| **语义优先编排** | 系统含义保存在实体、关系、分组和流程里；图标、风格、布局与动效保持独立。 |
-| **从需求直接生成** | 自然语言先编译为 DiagramPlan v0.2，再生成带表现来源记录的 DiagramScript v0.4。 |
-| **两套视觉语言** | 56 枚 Illustrated 图标适合生动讲解，`diagram-core-v1` 适合精确技术线框图。 |
-| **结构化动效** | 图标部件和数据流能够运动，同时不把业务含义塞进渲染器代码。 |
-| **中英文原生支持** | 自动识别中文需求，输出 `zh-CN` 元数据、中文控件和跨平台 CJK 字体回退。 |
-| **把校验当成交付物** | 校验 schema、边界、文字适配、重叠、路径、资产合约和浏览器 runtime。 |
-
-## 工作原理
-
-<p align="center">
-  <img src="./assets/readme/workflow-zh-cn.svg" width="100%" alt="AniDiagram 从架构意图到语义、表现编排、可视化输出与质量证据的工作流">
-</p>
-
-1. **描述含义** —— 输入自然语言需求、DiagramPlan、DiagramScript 或 preset。
-2. **建立稳定语义** —— 整理实体、关系、分组、流程、语言和来源。
-3. **解析表现系统** —— 独立选择图标系统、风格、布局和动效。
-4. **统一编译** —— 生成包含具体几何信息的 DiagramScript v0.4。
-5. **渲染并验证** —— 从同一个 Scene 生成视觉文件和质量证明。
-
-## 输入与输出
+### 输入方式
 
 | 输入 | 适用场景 | CLI |
 | --- | --- | --- |
-| 自然语言需求 | 从意图到架构图的最短路径 | `--text` 或 `--brief` |
-| DiagramPlan v0.2 | 需要稳定语义和可独立选择的表现系统 | `--plan` |
-| DiagramScript v0.4 | 需要精确几何、动效和渲染器控制 | `--spec` |
-| 内置 preset | 需要快速使用已知拓扑 | `--preset` |
+| DiagramPlan v0.2 | 语义稳定、表现可独立选择（推荐） | `--plan` |
+| 简报 | 关系明确的句子，作为草稿复核 | `--text` 或 `--brief` |
+| DiagramScript v0.4 | 需要精确几何、动效和渲染控制 | `--spec` |
+| 内置 preset | 从已知拓扑起步 | `--preset` |
+
+Plan 的 `semantic` 只放含义（实体、关系、分组、流程、来源），`presentation` 放外观
+（图标系统、风格、布局、动效）。详见
+[Prompt → DiagramPlan → DiagramScript](./docs/prompt-to-diagram-flow.md)。
+
+### 讲解模式
+
+<a href="./gallery/narration/explanation.mp4">
+  <img src="./gallery/narration/poster.png" width="900" alt="讲解模式：当前步骤处于焦点，其余元素淡化，底部讲解卡片显示步骤说明">
+</a>
+
+讲解模式把架构图变成一段可控的讲解。每一步对应一条关系：镜头移到这条关系上，
+其余元素淡化到 25%，连线从起点画到终点；底部卡片显示第几步、关系标签、
+"起点 → 终点"、条件和源码链接。
+
+```bash
+# 打开即进入讲解
+anidiagram --plan examples/contracts/production-request-path.plan.json \
+  --runtime-mode timeline --formats html --outdir outputs/explain
+
+# 先展示常驻动效，观众点击"开始讲解"后进入
+anidiagram --plan examples/contracts/production-request-path.plan.json \
+  --runtime-mode hybrid --formats html --outdir outputs/explain
+```
+
+| 操作 | 作用 |
+| --- | --- |
+| **开始讲解** / **上一步** / **下一步** | 进入讲解或翻页 |
+| `←` / `→` | 上一步 / 下一步（画布获得焦点时） |
+| 进度圆点 | 跳到任意一步 |
+| `空格` · `R` | 暂停/继续 · 重新播放 |
+| `+` / `-` / `0` | 放大 / 缩小 / 适配窗口 |
+
+步骤顺序按 Plan 中关系的编写顺序，用来讲解架构图，不是真实生产事件的追踪。
+开启"减少动态效果"或缺少 GSAP 时，仍可手动查看文字步骤。
+`--runtime-mode event-driven` 是不带讲解卡片的版本：数据到达后触发目标节点的表演，
+并继续向下游传播。
+
+### 动效
+
+HTML 查看器有三种模式：**Expressive** 播放全部语义动作；**Readable** 降低视觉密度
+（节点超过 12 个时会提示使用）；**Off** 显示标准静态结构。离散传输使用带短拖尾的
+数据包；异步消息会稍作等待再出发；连续或循环关系使用持续移动的数据流；失败关系变红
+并回弹。悬停节点会高亮其相邻节点。开启 reduced-motion 的用户看到稳定的静止状态。
+
+#### 动效预算
+
+`motion` 描述元素如何运动，`motion_policy` 限制可以同时保留多少动效。
+composition-v1 默认将 `showcase-v1` 与
+`motion_policy.profile=unrestricted` 配对；密集架构图可以选择 readable 或
+focused 预算，而不改变语义图。
+
+#### 节点动效
+
+公共节点路径是 `icon-performance`。Illustrated 2.5.0 包含 56 枚已批准图标，
+使用版本化 `illustrated-performance-v6` 合约和稳定 SVG part ID。查看
+[在线 runtime 目录](https://coolbat.github.io/anidiagram/gallery/runtime-motion.html)
+和旧版[角色主题对照](./gallery/character-themes.html)。
+
+### 简报出图
+
+```bash
+anidiagram --text "网关调用订单服务；订单服务调用库存服务和支付服务；订单服务通过消息队列通知物流服务。" \
+  --outdir outputs/brief --formats svg,html,quality --plan-out outputs/brief/flow.plan.json
+```
+
+每条关系都记录原文位置；解析不了的片段、否定句、未指明的发送方会作为警告列出，
+不会补成连线。规则表达不了的内容，可以编辑 `--plan-out` 保存的 Plan 补充。
+
+<details>
+<summary><strong>支持的句式与规划器</strong></summary>
+
+- **请求：** 调用、访问、发给、发送给、转发给、路由到、`A 把 … 发给 B` ·
+  `calls`、`invokes`、`talks to`、`connects to`、`forwards … to`、`sends … to`
+- **读取：** 读取、查询、采集 · `reads (from)`、`queries`、`fetches from`、`loads from`
+- **写入：** 写入、存入、存储到、保存到 · `writes to`、`stores … in`、`persists to`
+- **消息：** 通知、发布到、推送到、`A 通过 X 通知 Y` · `notifies`、`publishes`、`pushes … to`
+- **路由：** `A 经过 X 进入 Y`、`A 通过 X 访问 Y` · `passes through X to Y`、`P goes from X to Y`
+- **条件：** `如果…`、`…成功后` · `If / When / After …`、`On payment success`
+- `各自数据库` / `its own database` 会展开为每个服务各一个数据库；`Billing` 与
+  `billing service` 合并为同一实体；英文 `which` 只解析前一句的唯一宾语；
+  否定句不会变成连线。
+
+规划器：默认 `--planner auto` 先用规则抽取，只有简报里完全没有关系句式时才回退到
+原有的智能体模板。`--planner rules` 从不回退；`--planner template` 始终使用模板。
+`--planner subprocess --planner-command '["python3", "adapter.py"]'` 接入你自己的
+LLM 或规划器：从 stdin 接收 JSON 格式的简报，在 stdout 返回 DiagramPlan v0.2
+（不经过 shell，默认超时 30 秒，失败时不回显输出）。覆盖率只是诊断指标，不代表语义准确率。
+
+</details>
+
+### 输出与交付
 
 | 输出 | 适合场景 |
 | --- | --- |
-| `svg` | 文档与静态托管 |
-| `html` | 带本地化控件的最高保真交互播放 |
-| `png`, `pdf` | 文档、评审和演示 |
-| `gif`, `webp`, `apng`, `mp4` | 可直接分享的动图和视频 |
-| `lottie` | 结构化或逐帧动画交换 |
-| `quality` | 带测量证据与局部修复建议的 CI / 评审报告 |
+| `svg` | 文档与静态托管；不依赖动画即可完整显示 |
+| `html` | 带动效和讲解模式的交互查看器 |
+| `png`、`pdf` | 文档、评审、演示 |
+| `gif`、`webp`、`apng`、`mp4` | 可分享的动图和视频 |
+| `lottie` | 动画交换 |
+| `quality` | 带修复建议的 CI / 评审报告 |
 
-当导出结果必须与高保真 HTML runtime 一致时，使用
-`--export-renderer browser`。
+- `--export-renderer browser`：从 HTML 运行时录制动画导出，保真度最高。
+- `--readable-labels`：完整边标签避开节点，并附关系表。
+- `--runtime-dependency inline --runtime-source node_modules/gsap/dist/gsap.min.js`：
+  生成可离线使用的 HTML；默认从固定版本的 CDN 加载 GSAP。
+- `--deliver`：先在私有目录渲染全部格式并执行质量门禁，全部成功才替换公开文件。
+  质量 error 会阻断交付；失败时以状态码 3 退出，并恢复上一版产物。
 
-### 原子交付
-
-验收或发布产物应增加 `--deliver`。AniDiagram 会只读取一次源输入，在内存中解析
-DiagramScript 和风格，执行质量门禁，把所有指定格式写入目标文件系统上的私有
-目录，确认每个导出器都生成了非空文件，然后才替换公开目标。渲染或替换失败时，
-已有 last-good 产物会被恢复。
-
-成功事务会生成 `<basename>.delivery.json`，记录源输入原始字节、已解析
-DiagramScript、风格和每个产物的 SHA-256 与字节数。`--plan-out` 和
-`--spec-out` 位于 `--outdir` 时也会加入同一个事务。quality warning 和 advisory
-会写入回执，但只有 error 会阻断交付。失败时进程以状态码 3 退出，并向 stderr
-输出一个结构化 JSON 错误。
-
-## 可选的源码核验与阅读工具
-
-渲染 Plan 0.2 时加入 `--reader`，可启用节点搜索、上游/下游、最短路径、阅读链接、
-章节与 SVG／PNG 分享卡。源码来源可固定 Git 提交、文件和行号，通过 `--repo-root`
-核验；`anidiagram compare old.plan.json new.plan.json --out delta.html` 分别报告语义、
-表现与几何变化，`anidiagram visual-check diagram.html` 生成截图和待人工检查的回执。
-
-新能力均为可选扩展，旧图默认行为不变。详见[使用指南](docs/verified-reading.md)
-和[可运行示例](examples/verified-reading/)。
-
-## 生成中文版
-
-默认语言策略是 `auto`：中文需求会自动解析为 `zh-CN`，英文需求输出英文。
-需要显式锁定中文版时使用 `--diagram-locale zh-CN`：
+### 阅读与评审工具
 
 ```bash
-anidiagram \
-  --text "构建企业级智能体平台架构：请求经过 API 网关进入智能体，读取长期记忆和知识库，调用搜索工具，通过安全校验后输出结果。" \
-  --diagram-locale zh-CN \
-  --viewer-locale auto \
-  --outdir outputs/zh-CN \
-  --basename enterprise-agent-platform \
-  --formats svg,html,quality
+anidiagram --plan diagram.plan.json --reader --repo-root ../my-project --formats html
+anidiagram compare old.plan.json new.plan.json --out delta.html
+anidiagram visual-check diagram.html --outdir outputs/visual-check
+anidiagram accuracy-check diagram.plan.json --facts facts.json --repo-root ../my-project --strict
 ```
 
-查看完整的[中文 DiagramPlan](./examples/zh-CN/enterprise-agent-platform.plan.json)、
-[在线中文 runtime](https://coolbat.github.io/anidiagram/gallery/readme-showcase/enterprise-agent-platform-zh.html)
-和 [SVG 静态版本](./assets/readme/enterprise-agent-platform-zh.svg)。栅格导出会寻找
-本机可用 CJK 字体，也可以设置
+`--reader` 增加搜索、上下游、最短路径、章节、深链接和 SVG/PNG 分享卡。`compare`
+分别报告语义、表现和几何变化。`visual-check` 生成截图和待人工检查的回执。
+`accuracy-check` 校验固定 Git 提交的源码引用和必需事实；通过只是证据，不等于架构
+准确性得到证明。详见[核验阅读指南](docs/verified-reading.md)和
+[示例](examples/verified-reading/)。
+
+### 中文架构图
+
+中文输入会自动识别为 `zh-CN`，控件也随之切换为中文；可用 `--diagram-locale zh-CN`
+显式锁定：
+
+```bash
+anidiagram --plan examples/zh-CN/enterprise-agent-platform.plan.json \
+  --diagram-locale zh-CN --runtime-mode hybrid \
+  --outdir outputs/zh-CN --formats svg,html,quality
+```
+
+栅格导出会自动寻找本机 CJK 字体，也可设置
 `ANIDIAGRAM_CJK_FONT=/absolute/path/to/font.ttf` 固定构建字体。
 
-## 视觉系统
+### 视觉系统
 
 - **16 种布局：** `pipeline`、`loop`、`hub-spoke`、`layered`、`swimlane`、
   `compare`、`matrix`、`timeline`、`stack`、`funnel`、`sequence`、`er`、
@@ -232,30 +274,9 @@ anidiagram \
   `openai-minimal`、`dark-luxury`、`aurora-orb`、`illustrated-semantic`、
   `sketch-board`。
 
-浏览[在线风格 Gallery](https://coolbat.github.io/anidiagram/gallery/styles/)、
-[在线布局 Gallery](https://coolbat.github.io/anidiagram/gallery/layouts/)或
-[机器可读风格目录](./styles/catalog.json)。
-
-## 动效与兼容性
-
-HTML runtime 提供三种查看模式：**Expressive** 展示完整语义动作，
-**Readable** 降低视觉密度，**Off** 保留标准静态结构。离散传输使用 packet
-动效，连续或循环关系使用持续移动的 stream-flow；reduced-motion 用户会获得
-稳定静止状态。
-
-### 动效预算
-
-`motion` 描述元素如何运动，`motion_policy` 限制可以同时保留多少动效。
-composition-v1 默认将 `showcase-v1` 与
-`motion_policy.profile=unrestricted` 配对；密集架构图可以选择 readable 或
-focused 预算，而不改变语义图。
-
-### 节点动效
-
-公共节点路径是 `icon-performance`。Illustrated 2.5.0 包含 56 枚已批准图标，
-使用版本化 `illustrated-performance-v6` 合约和稳定 SVG part ID。查看
-[在线 runtime 目录](https://coolbat.github.io/anidiagram/gallery/runtime-motion.html)
-和旧版[角色主题对照](./gallery/character-themes.html)。
+浏览[风格 Gallery](https://coolbat.github.io/anidiagram/gallery/styles/)、
+[布局 Gallery](https://coolbat.github.io/anidiagram/gallery/layouts/)或
+[风格目录](./styles/catalog.json)。
 
 <details>
 <summary><strong>兼容性合约</strong></summary>
@@ -272,9 +293,17 @@ focused 预算，而不改变语义图。
 
 </details>
 
-## 开发与验证
+## 什么时候用 AniDiagram
 
-运行主要项目门禁：
+| 需求 | 更合适的工具 |
+| --- | --- |
+| 用文本快速维护轻量静态关系图 | Mermaid、D2 或 Graphviz |
+| 需要语义架构图、动效、逐步讲解、多格式交付和质量证据 | **AniDiagram** |
+| 需要逐帧手工控制或精细视频剪辑 | 设计或视频工具 |
+
+AniDiagram 是渲染管线，不是拖拽式编辑器。
+
+## 开发与验证
 
 ```bash
 PYTHONPATH=src python3 -m unittest discover -s tests
@@ -284,7 +313,7 @@ node --check runtime/anidiagram-runtime.js
 ```
 
 <details>
-<summary><strong>重新生成 Gallery 和 README 捕获资产</strong></summary>
+<summary><strong>重新生成 Gallery 和 README 资产</strong></summary>
 
 ```bash
 python3 -m pip install -e ".[raster]"
@@ -292,20 +321,21 @@ PYTHONPATH=src python3 scripts/build_showcase.py --quality
 PYTHONPATH=src python3 scripts/render_readme_showcase_round_1.py \
   --spec-root examples/readme-showcase-round-1 \
   --outdir gallery/readme-showcase
+node scripts/build_gallery_narration.mjs     # 讲解模式录屏
 ```
+
+`build_showcase.py --indexes-only` 只刷新预览、不重新渲染。详见
+[预览机制说明](./docs/gallery-previews.md)。
 
 </details>
 
 ## 文档导航
 
-Gallery 卡片会在可见时播放真实图标动效，并支持暂停和减少动态效果回退。
-仅刷新预览、不重建原始图：`PYTHONPATH=src python3 scripts/build_showcase.py --indexes-only`。
-参见[预览机制与验证说明](./docs/gallery-previews.md)。
-
 - [DiagramScript 参考](./docs/diagram-script.md)
 - [Prompt → DiagramPlan → DiagramScript](./docs/prompt-to-diagram-flow.md)
 - [语义与表现编排合约](./docs/diagram-composition-contract.md)
-- [HTML runtime 与动效模式](./docs/html-runtime.md)
+- [HTML runtime、动效与讲解模式](./docs/html-runtime.md)
+- [核验阅读](./docs/verified-reading.md)
 - [图标系统发布状态](./docs/icon-system-release-status.md)
 - [Runtime motion 路线图](./docs/runtime-motion-roadmap.md)
 - [发布证据](./docs/release-evidence.md)

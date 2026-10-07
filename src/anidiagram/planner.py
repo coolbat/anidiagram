@@ -8,38 +8,12 @@ from typing import Any, Dict, Iterable, List, Mapping, Optional
 
 from .composition import compile_plan_v02
 from .localization import contains_cjk, resolve_locale
+from .planning import brief_diagnostics, contains_term, validate_planning
 
 
 PlanDict = Dict[str, Any]
 SpecDict = Dict[str, Any]
 
-
-_STOP_WORDS = {
-    "about",
-    "after",
-    "agent",
-    "agents",
-    "also",
-    "and",
-    "architecture",
-    "build",
-    "content",
-    "diagram",
-    "flow",
-    "from",
-    "into",
-    "layout",
-    "make",
-    "need",
-    "needs",
-    "process",
-    "system",
-    "that",
-    "the",
-    "this",
-    "user",
-    "with",
-}
 
 _MEMORY_TERMS = (
     "memory", "context", "remember", "knowledge", "notes",
@@ -66,8 +40,30 @@ def brief_to_plan(
     style: Optional[str] = None,
     version: str = "0.2",
     language: str = "auto",
+    planner: str = "auto",
+    planner_command: Optional[List[str]] = None,
+    planner_timeout: float = 30.0,
 ) -> PlanDict:
-    """Create a deterministic plan; new calls default to composition-v1."""
+    """Extract explicit relations first; use the historical template as fallback.
+
+    ``subprocess`` is an opt-in provider-neutral JSON adapter, never automatic.
+    """
+    if planner not in {"auto", "rules", "template", "subprocess"}:
+        raise ValueError("planner must be auto, rules, template, or subprocess")
+    if planner_command is not None and planner != "subprocess":
+        raise ValueError("planner_command requires planner='subprocess'")
+    if version != "0.2" and planner in {"rules", "subprocess"}:
+        raise ValueError("rules and subprocess planners require DiagramPlan version 0.2")
+    if version == "0.2" and planner == "subprocess":
+        from .provider_planner import subprocess_to_plan
+        return subprocess_to_plan(brief, title, style, language, planner_command, planner_timeout)
+    if version == "0.2" and planner in {"auto", "rules"}:
+        from .rule_planner import extract_rule_plan
+        extracted = extract_rule_plan(brief, title=title, style=style, language=language)
+        if extracted is not None:
+            return extracted
+        if planner == "rules":
+            raise ValueError("No supported explicit relation was found; provide an authored --plan or choose --planner template.")
 
     if version == "0.1":
         return _brief_to_plan_v01(brief, title=title, style=style or "sketch-board")
@@ -84,8 +80,7 @@ def _brief_to_plan_v01(brief: str, title: str = "", style: str = "sketch-board")
     """
 
     cleaned = " ".join(brief.split())
-    keywords = _keywords(cleaned)
-    plan_title = title or _title_from_brief(cleaned, keywords)
+    plan_title = title or _title_from_brief(cleaned)
     has_memory = _contains(cleaned, _MEMORY_TERMS)
     has_tools = _contains(cleaned, _TOOL_TERMS)
     has_safety = _contains(cleaned, _SAFETY_TERMS)
@@ -102,21 +97,21 @@ def _brief_to_plan_v01(brief: str, title: str = "", style: str = "sketch-board")
         {
             "id": "clarify",
             "label": "Clarify",
-            "caption": _caption("goal and limits", keywords, 0),
+            "caption": "goal and limits",
             "role": "agent",
             "icon": "search",
         },
         {
             "id": "plan",
             "label": "Plan",
-            "caption": _caption("steps and layout", keywords, 1),
+            "caption": "steps and layout",
             "role": "process",
             "icon": "agent",
         },
         {
             "id": "act",
             "label": "Act",
-            "caption": _caption("tools and edits", keywords, 2) if has_tools else "make the change",
+            "caption": "tools and edits" if has_tools else "make the change",
             "role": "tool" if has_tools else "process",
             "icon": "tool" if has_tools else "api",
         },
@@ -133,7 +128,7 @@ def _brief_to_plan_v01(brief: str, title: str = "", style: str = "sketch-board")
             "caption": "quality gate",
             "role": "risk" if has_safety else "neutral",
             "shape": "decision",
-            "icon": "shield" if has_safety else None,
+            **({"icon": "shield"} if has_safety else {}),
         },
         {
             "id": "output",
@@ -183,8 +178,9 @@ def _brief_to_plan_v01(brief: str, title: str = "", style: str = "sketch-board")
 
     return {
         "version": "0.1",
+        "planning": brief_diagnostics(cleaned, ("request", "agent", "memory", "tool", "guardrail", "feedback", "output")),
         "title": plan_title,
-        "subtitle": "Brief-derived DiagramPlan compiled to freeform DiagramScript.",
+        "subtitle": "Agent workflow template; review against the original brief.",
         "source_summary": _source_summary(cleaned),
         "style": style,
         "layout_strategy": "explainer-board",
@@ -210,13 +206,12 @@ def _brief_to_plan_v02(
     style: Optional[str] = None,
     language: str = "auto",
 ) -> PlanDict:
-    """Extract a native semantic v0.2 plan without routing through v0.1 geometry."""
+    """Fill a native v0.2 agent template without interpreting domain semantics."""
 
     cleaned = " ".join(brief.split())
-    keywords = _keywords(cleaned)
     resolved_language = resolve_locale(language, (title, cleaned))
     is_chinese = resolved_language == "zh-CN"
-    plan_title = title or _title_from_brief(cleaned, keywords, language=resolved_language)
+    plan_title = title or _title_from_brief(cleaned, language=resolved_language)
     summary = _source_summary(cleaned)
     has_memory = _contains(cleaned, _MEMORY_TERMS)
     has_tools = _contains(cleaned, _TOOL_TERMS)
@@ -235,7 +230,7 @@ def _brief_to_plan_v02(
         {
             "id": "request",
             "label": labels["request"],
-            "description": "输入需求" if is_chinese else _caption("input brief", keywords, 0),
+            "description": "输入需求" if is_chinese else "input brief",
             "kind": "http-request",
             "role": "source",
             "importance": "primary",
@@ -245,7 +240,7 @@ def _brief_to_plan_v02(
         {
             "id": "agent",
             "label": labels["agent"],
-            "description": "推理与协调" if is_chinese else _caption("reason and coordinate", keywords, 1),
+            "description": "推理与协调" if is_chinese else "reason and coordinate",
             "kind": "agent",
             "role": "agent",
             "importance": "primary",
@@ -270,7 +265,7 @@ def _brief_to_plan_v02(
             {
                 "id": "tool",
                 "label": labels["tool"],
-                "description": "执行外部操作" if is_chinese else _caption("execute external action", keywords, 2),
+                "description": "执行外部操作" if is_chinese else "execute external action",
                 "kind": "search" if _contains(cleaned, _SEARCH_TERMS) else "tool",
                 "role": "tool",
                 "importance": "primary",
@@ -357,7 +352,7 @@ def _brief_to_plan_v02(
         {
             "id": "primary-flow",
             "label": "主请求流程" if is_chinese else "Primary request flow",
-            "description": "根据输入需求提取的有序执行流程。" if is_chinese else "Ordered execution extracted directly from the brief.",
+            "description": "智能体模板的默认执行顺序，需对照需求核验。" if is_chinese else "Default agent-template order; review against the brief.",
             "relation_ids": primary_relations,
             "importance": "primary",
             "repeat": "event-driven",
@@ -386,17 +381,18 @@ def _brief_to_plan_v02(
     }
     return {
         "version": "0.2",
+        "planning": brief_diagnostics(cleaned, [entity["id"] for entity in entities] + (["feedback"] if has_loop else [])),
         "semantic": {
             "language": resolved_language,
             "title": plan_title,
-            "subtitle": "由自然语言需求生成的语义优先架构图。" if is_chinese else "Semantic-first brief compiled with composition-v1.",
+            "subtitle": "智能体流程模板草稿，需对照原始需求核验。" if is_chinese else "Agent workflow template; review against the original brief.",
             "summary": summary,
             "intent": {
                 "diagram_kind": "workflow",
                 "primary_question": summary or plan_title,
                 "audience": ["技术团队"] if is_chinese else ["technical"],
-                "scope": "需求中明确或隐含的实体、关系、状态与执行流程。" if is_chinese else "Entities, relations, state, and execution flows stated or implied by the brief.",
-                "exclusions": [],
+                "scope": "按已知关键词选择智能体模板组件；关系顺序和状态为模板假设。" if is_chinese else "Known keywords select agent-template components; relationship order and states are template assumptions.",
+                "exclusions": ["未抽取任意业务实体，未核验语义准确性。"] if is_chinese else ["Arbitrary domain entities and semantic correctness are not assessed."],
             },
             "entities": entities,
             "relations": relations,
@@ -472,6 +468,8 @@ def compile_plan(plan: Mapping[str, Any]) -> SpecDict:
     spec["edges"] = [
         edge for edge in spec["edges"] if str(edge.get("from")) in node_ids and str(edge.get("to")) in node_ids
     ]
+    if "planning" in plan:
+        spec["planning"] = validate_planning(plan["planning"])
     return spec
 
 
@@ -486,33 +484,17 @@ def brief_to_diagram_script(
     return compile_plan(brief_to_plan(brief, title=title, style=style, language=language))
 
 
-def _keywords(text: str) -> List[str]:
-    words = re.findall(r"[A-Za-z][A-Za-z0-9_-]{2,}", text.lower())
-    seen = set()
-    result = []
-    for word in words:
-        normalized = word.strip("_-")
-        if normalized in _STOP_WORDS or normalized in seen:
-            continue
-        seen.add(normalized)
-        result.append(normalized)
-        if len(result) >= 6:
-            break
-    return result
-
-
 def _contains(text: str, needles: Iterable[str]) -> bool:
-    lowered = text.lower()
-    return any(needle in lowered for needle in needles)
+    return contains_term(text, needles)
 
 
 def _contains_cjk(text: str) -> bool:
     return contains_cjk(text)
 
 
-def _title_from_brief(text: str, keywords: List[str], language: str = "auto") -> str:
+def _title_from_brief(text: str, language: str = "auto") -> str:
     if not text:
-        return "中文架构图" if language == "zh-CN" else "Brief to Diagram Flow"
+        return "智能体流程模板" if language == "zh-CN" else "Agent workflow template"
     if language == "zh-CN" or _contains_cjk(text):
         candidate = re.split(r"[：:，,。！？；;\n]", text.strip(), maxsplit=1)[0].strip()
         candidate = re.sub(r"^(?:请(?:帮我)?|帮我|构建|绘制|生成|创建|设计|输出|展示)", "", candidate).strip()
@@ -521,15 +503,7 @@ def _title_from_brief(text: str, keywords: List[str], language: str = "auto") ->
     sentence = sentence.strip()
     if 8 <= len(sentence) <= 52:
         return sentence[0].upper() + sentence[1:]
-    if keywords:
-        return " ".join(word.capitalize() for word in keywords[:4]) + " Flow"
-    return "Brief to Diagram Flow"
-
-
-def _caption(default: str, keywords: List[str], offset: int) -> str:
-    if offset < len(keywords):
-        return f"{default}: {keywords[offset]}"
-    return default
+    return "Agent workflow template"
 
 
 def _source_summary(text: str) -> str:

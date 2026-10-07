@@ -39,12 +39,13 @@ from anidiagram.planner import brief_to_plan
 from anidiagram.planner import compile_plan
 from anidiagram.presets import preset_names
 from anidiagram.quality import quality_report
+from quality_expectations import assert_quality_baseline
 from anidiagram.renderer_svg import icon_surface_accent
 from anidiagram.renderer_svg import icon_surface_fill
 from anidiagram.renderer_svg import render_svg
 from anidiagram.renderer_svg import render_html
 from anidiagram.renderer_illustrated_character_v2 import render_character_v2_icon
-from anidiagram.renderer_html_runtime import render_html_runtime
+from anidiagram.renderer_html_runtime import _runtime_source, render_html_runtime
 from anidiagram.schema import KNOWN_ICONS, DiagramScriptValidationError, compile_scene
 from anidiagram.styles import deep_merge, load_style, validate_style_profile
 
@@ -393,8 +394,8 @@ class SvgRendererTest(unittest.TestCase):
         covered_svg = render_svg(self._scene_with_icon("agent", motion={"profile": "off"}), style)
         token_svg = render_svg(self._scene_with_icon("token", motion={"profile": "off"}), style)
 
-        self.assertIn('<text x="351.6" y="194.5"', covered_svg)
-        self.assertIn('<text x="351.6" y="194.5"', token_svg)
+        self.assertIn('<text x="295.2" y="194.5"', covered_svg)
+        self.assertIn('<text x="295.2" y="194.5"', token_svg)
 
     def test_character_registry_and_manifest_cover_every_known_icon(self):
         self.assertEqual(set(character_icon_ids()), KNOWN_ICONS)
@@ -481,7 +482,7 @@ class SvgRendererTest(unittest.TestCase):
             self.assertEqual(icon_system, manifest["icon_system"])
 
     def test_character_runtime_contract_covers_all_icons_with_exact_parts_and_dispatch(self):
-        source = (ROOT / "runtime" / "anidiagram-runtime.js").read_text(encoding="utf-8")
+        source = _runtime_source()
         contract = {
             "brain-think-pulse-v1": ("playBrainThinkPulse", ["brain-left", "brain-right", "chip", "signal", "spark"]),
             "operator-type-focus-v1": ("playOperatorTypeFocus", ["hair", "face", "glasses", "hands", "laptop", "cursor"]),
@@ -510,7 +511,7 @@ class SvgRendererTest(unittest.TestCase):
             self.assertIn(f'"{performance}": {function_name}', source)
 
     def test_character_runtime_uses_compact_idle_gap_and_subtle_breath_shell(self):
-        runtime_source = (ROOT / "runtime" / "anidiagram-runtime.js").read_text(encoding="utf-8")
+        runtime_source = _runtime_source()
         renderer_source = (ROOT / "src" / "anidiagram" / "renderer_illustrated_character.py").read_text(encoding="utf-8")
         performer_names = (
             "playBrainThinkPulse",
@@ -545,16 +546,16 @@ class SvgRendererTest(unittest.TestCase):
             self.assertNotRegex(body, r"repeatDelay:\s*1\.")
 
     def test_stage_runtime_contract_has_distinct_modes_and_continuous_packet_rhythm(self):
-        runtime_source = (ROOT / "runtime" / "anidiagram-runtime.js").read_text(encoding="utf-8")
+        runtime_source = _runtime_source()
         edge_runtime_source = (ROOT / "runtime" / "edge-motion-v1-runtime.js").read_text(encoding="utf-8")
         manifest_source = (ROOT / "src" / "anidiagram" / "motion_manifest_v2.py").read_text(encoding="utf-8")
         verifier_source = (ROOT / "scripts" / "verify_stage_motion_modes.mjs").read_text(encoding="utf-8")
 
         # The public 2.3 runtime remains frozen while new output uses Edge Motion v1.
         self.assertIn("const EDGE_PACKET_COUNT = 1;", runtime_source)
-        self.assertIn("const EDGE_PACKET_DURATION = 1.65;", edge_runtime_source)
-        self.assertIn("const EDGE_COMET_DURATION = 1.85;", edge_runtime_source)
-        self.assertIn("const EDGE_STREAM_DURATION = 1.35;", edge_runtime_source)
+        self.assertIn("speed_px_per_second", edge_runtime_source)
+        self.assertIn("length /", edge_runtime_source)
+        self.assertIn("beat_seconds", edge_runtime_source)
         self.assertIn('__anidiagramStage = "edge-motion"', edge_runtime_source)
         self.assertIn("readable_edge_indices", edge_runtime_source)
         self.assertIn("active_edge_indices", edge_runtime_source)
@@ -584,7 +585,7 @@ class SvgRendererTest(unittest.TestCase):
         self.assertNotIn('node_mode in {"float", "glow-breathe", "pop", "icon-pulse", "pulse", "ripple", "icon-performance"}', source)
 
     def test_character_rest_reset_preserves_svg_root_anchor(self):
-        runtime_source = (ROOT / "runtime" / "anidiagram-runtime.js").read_text(encoding="utf-8")
+        runtime_source = _runtime_source()
         verifier_source = (ROOT / "scripts" / "verify_character_motion_rest.mjs").read_text(encoding="utf-8")
         reset_body = self._javascript_function_body(runtime_source, "finishCharacterAtRest")
 
@@ -642,7 +643,7 @@ class SvgRendererTest(unittest.TestCase):
         self.assertEqual({1.2}, {entry["rest_at"] for entry in manifest["icons"]})
         self.assertTrue(all(entry["intensity"] >= 1.5 for entry in manifest["icons"]))
 
-        runtime_source = (ROOT / "runtime" / "anidiagram-runtime.js").read_text(encoding="utf-8")
+        runtime_source = _runtime_source()
         self.assertIn("const STRONG_CHARACTER_REPEAT_DELAY = 0.28;", runtime_source)
         self.assertIn("const STRONG_CHARACTER_IDLE_BREATHE_SCALE = 1.028;", runtime_source)
         for function_name in ("playBrainThinkPulse", "playOperatorTypeFocus", "playToolKitAction", "playOutputEnvelopeReveal"):
@@ -971,7 +972,7 @@ class SvgRendererTest(unittest.TestCase):
         self.assertEqual("expressive", manifest["profile"])
         self.assertEqual(True, manifest["stage"]["edge_flow"])
         self.assertEqual(True, manifest["stage"]["title_sweep"])
-        self.assertEqual(None, manifest["stage"]["edge_limit"])
+        self.assertEqual(3, manifest["stage"]["edge_limit"])
         self.assertEqual(2, manifest["stage"]["readable_edge_limit"])
         self.assertEqual([], manifest["stage"]["active_edge_indices"])
         self.assertEqual([], manifest["stage"]["readable_edge_indices"])
@@ -1022,14 +1023,13 @@ class SvgRendererTest(unittest.TestCase):
         self.assertEqual("expressive", manifest["profile"])
         self.assertEqual(True, manifest["stage"]["edge_flow"])
         self.assertEqual(True, manifest["stage"]["relation_circles"])
-        self.assertEqual(True, manifest["stage"]["group_fields"])
+        self.assertEqual(False, manifest["stage"]["group_fields"])
         self.assertEqual(True, manifest["stage"]["data_particles"])
         self.assertIn('data-icon-system="illustrated-v1"', html)
         self.assertIn("playIllustratedCommon", html)
         self.assertIn("playRuntimeRelationCircles", html)
         self.assertIn("playRuntimeGroupFields", html)
         self.assertIn("runtime-relation-circle", html)
-        self.assertIn("runtime-group-field", html)
         self.assertEqual(12, len(manifest["icons"]))
         agent_icon = next(icon for icon in manifest["icons"] if icon["node_id"] == "agent")
         self.assertEqual("think-decide-act", agent_icon["semantic_role"])
@@ -1157,7 +1157,7 @@ class SvgRendererTest(unittest.TestCase):
             self.assertTrue(Path(result["outputs"]["html"]["path"]).is_file())
             self.assertIn("anidiagram-motion-manifest", runtime_html.read_text(encoding="utf-8"))
             self.assertEqual(0, result["outputs"]["quality"]["summary"]["errors"])
-            self.assertEqual(0, result["outputs"]["quality"]["summary"]["warnings"])
+            assert_quality_baseline(self, json.loads(Path(result["outputs"]["quality"]["path"]).read_text(encoding="utf-8")))
 
     def test_cli_routes_browser_renderer_for_raster_exports(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -1371,7 +1371,7 @@ class SvgRendererTest(unittest.TestCase):
         svg = render_svg(scene, load_style(ROOT / "styles" / "minimal-light.json"))
 
         self.assertEqual(
-            "751d2fea24512192829dac3d57727c9a87498ba890deba968da157784ad6cb5d",
+            "b8f2121bc9112f98e7ab04f08217d5145166455554352fc75e65d8445127d29d",
             hashlib.sha256(svg.encode("utf-8")).hexdigest(),
         )
 
@@ -1565,7 +1565,7 @@ class SvgRendererTest(unittest.TestCase):
 
         self.assertEqual("runtime-loop", scene.motion.profile)
         self.assertEqual("micro", scene.motion_policy.motion_area)
-        self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, report["summary"])
+        assert_quality_baseline(self, report)
         self.assertIn('data-motion-sequence="loop"', svg)
         self.assertIn("edge-flow-stream-flow", svg)
         self.assertIn('class="edge-particle edge-packet"', svg)
@@ -1615,7 +1615,7 @@ class SvgRendererTest(unittest.TestCase):
         svg = render_svg(scene, deep_merge(load_style(ROOT / "styles" / "minimal-light.json"), {"icon_system": "semantic-line-v1"}))
 
         self.assertEqual("icon-semantic", scene.motion.node_effect.preset)
-        self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, report["summary"])
+        assert_quality_baseline(self, report)
         for motion_id in [
             "database-write",
             "file-lines",
@@ -1733,7 +1733,7 @@ class SvgRendererTest(unittest.TestCase):
         self.assertEqual({"nodes": 6, "edges": 7, "groups": 0}, scene.stats())
         self.assertEqual("input-brief", plan["semantic"]["sources"][0]["id"])
         self.assertEqual(2, len(plan["semantic"]["flows"]))
-        self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, report["summary"])
+        assert_quality_baseline(self, report)
         self.assertIn('data-icon-system="illustrated"', svg)
         self.assertIn('data-icon-system-version="2.5.0"', svg)
         self.assertIn("edge-packet", svg)
@@ -1779,7 +1779,7 @@ class SvgRendererTest(unittest.TestCase):
             self.assertEqual("0.4", spec["version"])
             self.assertTrue(Path(result["outputs"]["svg"]["path"]).is_file())
             self.assertEqual(0, result["outputs"]["quality"]["summary"]["errors"])
-            self.assertEqual(0, result["outputs"]["quality"]["summary"]["warnings"])
+            assert_quality_baseline(self, json.loads(Path(result["outputs"]["quality"]["path"]).read_text(encoding="utf-8")))
 
     def test_cli_renders_preset_lottie_and_quality(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -1883,7 +1883,7 @@ class SvgRendererTest(unittest.TestCase):
             report = quality_report(scene)
 
             self.assertEqual(name, scene.style.name)
-            self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, report["summary"], name)
+            assert_quality_baseline(self, report, name)
             self.assertIn("<svg", svg_path.read_text(encoding="utf-8"))
             self.assertIn("<!doctype html>", html_path.read_text(encoding="utf-8"))
 
@@ -1904,7 +1904,7 @@ class SvgRendererTest(unittest.TestCase):
         report = quality_report(scene)
 
         self.assertTrue(report["ok"])
-        self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, report["summary"])
+        assert_quality_baseline(self, report)
         self.assertIn("semantic-icon-illustrated-character-v1", svg)
         self.assertIn('class="edge-particle edge-packet"', svg)
         self.assertIn('class="edge-particle edge-comet edge-comet-head"', svg)

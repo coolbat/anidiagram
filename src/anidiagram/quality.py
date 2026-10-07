@@ -13,7 +13,7 @@ from .styles import deep_merge
 from .illustrated_character_icons import character_icon_ids
 from .illustrated_registry import illustrated_icon_ids
 from .model import Edge, Node, Point, Scene
-from .text_layout import node_text_region, text_block_layout
+from .text_layout import node_text_region, node_text_vertical_region, text_block_layout
 
 
 Rect = Tuple[float, float, float, float]
@@ -60,12 +60,16 @@ def quality_report(scene: Scene, style: Optional[Dict[str, object]] = None) -> D
     nodes = {node.node_id: node for node in scene.nodes}
     _check_node_bounds(scene, issues)
     _check_node_collisions(scene.nodes, issues)
-    quality_icon_system = scene.icon_system or (resolve_icon_system(style) if style is not None else "semantic-line-v1")
-    _check_text_fit(scene.nodes, issues, quality_icon_system)
-    _check_edge_node_collisions(scene.edges, nodes, issues, advisories)
+    quality_icon_system = scene.icon_system or resolve_icon_system(style or {})
+    _check_text_fit(scene.nodes, issues, quality_icon_system, advisories)
+    _check_edge_node_collisions(scene.edges, nodes, issues)
+    from .quality_geometry import check_groups, check_route_decorations
+    check_groups(scene, issues, advisories)
     from .label_placement import place_labels, readable_labels
-    if style is not None and readable_labels(style):
-        for index, placement in place_labels(scene).items():
+    placements = place_labels(scene) if readable_labels(style, scene) else {}
+    check_route_decorations(scene, style, quality_icon_system, issues, advisories, placements)
+    if readable_labels(style, scene):
+        for index, placement in placements.items():
             if not placement['placed']:
                 issues.append(QualityIssue('label_unplaced', 'error', f'$.edges[{index - 1}].label',
                                            placement['reason'], subject={'edge_index': index - 1},
@@ -84,16 +88,27 @@ def quality_report(scene: Scene, style: Optional[Dict[str, object]] = None) -> D
             _check_character_icon_fallbacks(scene, issues, icon_system, illustrated_icon_ids())
         elif icon_system == "diagram-core-v1":
             _check_diagram_core_coverage(scene, issues)
+    planning = getattr(scene, "planning", {})
+    for warning in planning.get("warnings", []):
+        issues.append(QualityIssue(
+            warning["code"], "warning", "$.planning.coverage", warning["message"],
+            subject={"method": planning.get("method")},
+            evidence=dict(planning.get("coverage", {})),
+            supported_fixes=("use_explicit_plan", "review_semantic_entities"),
+        ))
     errors = sum(1 for issue in issues if issue.severity == "error")
     warnings = sum(1 for issue in issues if issue.severity == "warning")
     score = max(0, 100 - errors * 20 - warnings * 5)
-    return {
+    report = {
         "ok": errors == 0,
         "score": score,
         "summary": {"errors": errors, "warnings": warnings, "issues": len(issues)},
         "issues": [issue.to_dict() for issue in issues],
         "advisories": [advisory.to_dict() for advisory in advisories],
     }
+    if planning:
+        report["planning"] = dict(planning)
+    return report
 
 
 def _check_character_icon_fallbacks(
@@ -195,7 +210,7 @@ def _check_node_collisions(nodes: List[Node], issues: List[QualityIssue]) -> Non
                 )
 
 
-def _check_text_fit(nodes: List[Node], issues: List[QualityIssue], icon_system: str) -> None:
+def _check_text_fit(nodes: List[Node], issues: List[QualityIssue], icon_system: str, advisories=None) -> None:
     for index, node in enumerate(nodes):
         width, height = node.size
         _offset, text_width = node_text_region(
@@ -204,6 +219,7 @@ def _check_text_fit(nodes: List[Node], issues: List[QualityIssue], icon_system: 
             has_icon=bool(node.icon),
             decision=node.shape == "decision",
         )
+        _y_offset, height = node_text_vertical_region(height, node.shape == "decision")
         layout = text_block_layout(node.label, node.caption, text_width, height)
         if layout.all_label_lines > 2:
             issues.append(
@@ -214,25 +230,35 @@ def _check_text_fit(nodes: List[Node], issues: List[QualityIssue], icon_system: 
                     f"label on node {node.node_id!r} is likely to overflow",
                 )
             )
-        if layout.all_caption_lines > len(layout.caption_lines) or layout.total_height + 20 > height:
-            issues.append(
-                QualityIssue(
-                    "caption_overflow",
-                    "warning",
-                    f"$.nodes[{index}].caption",
-                    f"caption on node {node.node_id!r} is likely to overflow",
-                )
-            )
+        if layout.total_height + 20 > height or (node.caption and not layout.caption_lines):
+            issues.append(QualityIssue(
+                "caption_overflow", "warning", f"$.nodes[{index}].caption",
+                f"node {node.node_id!r} has insufficient height for its caption; full text is in SVG/HTML hover only",
+                subject={"node_id": node.node_id},
+                supported_fixes=("resize_node", "shorten_caption"),
+            ))
+        elif layout.caption_truncated and advisories is not None:
+            advisories.append(QualityIssue(
+                "caption_truncated", "advisory", f"$.nodes[{index}].caption",
+                "caption intentionally ends with an ellipsis within two lines; full text is available in SVG/HTML hover, not PNG/PDF or other static exports",
+                subject={"node_id": node.node_id},
+                evidence={"visible_lines": len(layout.caption_lines), "full_lines": layout.all_caption_lines,
+                          "full_text": node.caption, "disclosure": "svg-title", "raster_text": "truncated"},
+                supported_fixes=("resize_node", "shorten_caption"),
+            ))
 
 
 def _check_edge_node_collisions(
     edges: Iterable[Edge],
     nodes: Dict[str, Node],
     issues: List[QualityIssue],
-    advisories: List[QualityIssue],
 ) -> None:
+    from .quality_geometry import rendered_route, segment_crosses_node
+    from .renderer_svg import node_box
+    boxes = {node_id: node_box(node) for node_id, node in nodes.items()}
     for index, edge in enumerate(edges):
-        if len(edge.points) < 2:
+        points = rendered_route(edge, boxes)
+        if len(points) < 2:
             continue
         for node_id, node in nodes.items():
             if node_id in {edge.source, edge.target}:
@@ -241,19 +267,18 @@ def _check_edge_node_collisions(
             collision = next(
                 (
                     (segment_index, start, end)
-                    for segment_index, (start, end) in enumerate(zip(edge.points, edge.points[1:]))
-                    if _segment_intersects_rect(start, end, node_rect)
+                    for segment_index, (start, end) in enumerate(zip(points, points[1:]))
+                    if segment_crosses_node(start, end, node)
                 ),
                 None,
             )
             if collision is not None:
                 segment_index, start, end = collision
-                waypoint_inside = any(_point_in_rect(point, node_rect) for point in edge.points)
-                target = issues if waypoint_inside else advisories
-                target.append(
+                waypoint_inside = any(segment_crosses_node(point, point, node) for point in edge.points)
+                issues.append(
                     QualityIssue(
                         "edge_node_collision" if waypoint_inside else "edge_segment_node_collision",
-                        "warning" if waypoint_inside else "advisory",
+                        "warning",
                         f"$.edges[{index}].points",
                         f"edge from {edge.source!r} to {edge.target!r} passes through node {node_id!r}",
                         subject={
@@ -266,6 +291,7 @@ def _check_edge_node_collisions(
                             "segment_index": segment_index,
                             "segment": [list(start), list(end)],
                             "node_rect": list(node_rect),
+                            "route_geometry": "flattened-cubic" if edge.route == "curved" and len(edge.points) < 2 else "rendered-polyline",
                         },
                         supported_fixes=("reroute_edge_points", "move_blocking_node", "change_layout"),
                     )

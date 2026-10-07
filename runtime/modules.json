@@ -1,0 +1,24 @@
+{
+  "version": "runtime-modules-v1",
+  "before": [
+    "viewer-viewport.js",
+    "stage-entrance.js"
+  ],
+  "core": [
+    "icon-performances.js",
+    "stage-effects.js",
+    "viewer-runtime.js",
+    "viewer-shell.js",
+    "illustrated-performance-v6-runtime.js"
+  ],
+  "extensions": [
+    "choreographer-v1-runtime.js",
+    "event-driven-runtime.js"
+  ],
+  "after": [
+    "edge-motion-v1-runtime.js"
+  ],
+  "archived": {
+    "illustrated-performance-v5-review": "illustrated-performance-v5-review-runtime.js"
+  }
+}

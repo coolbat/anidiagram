@@ -92,13 +92,13 @@ def add_reader(html, scene, locale):
     css = '''<style id="reader-style">
 main:has(#diagram-reader){display:flex;flex-direction:column;height:100vh;min-height:0}
 main:has(#diagram-reader) .stage{flex:1;min-height:200px}
-main:has(#diagram-reader) #viewport svg{width:var(--reader-fit-width);height:auto}
+main:has(#diagram-reader) #viewport svg{width:var(--reader-fit-width, auto);height:auto}
 #diagram-reader{font-size:14px}#diagram-reader summary{cursor:pointer;padding:6px 0}
 .reader-fields{display:flex;flex-wrap:wrap;align-items:end;gap:8px}.reader-fields label{display:grid;gap:4px}
 .reader-fields input,.reader-fields select{box-sizing:border-box;max-width:240px;padding:6px;border-radius:5px;color:inherit;background:#111827;border:1px solid #64748b;font:inherit}
 #reader-result{overflow-wrap:anywhere;max-height:100px;overflow:auto}.reader-note{color:#cbd5e1;margin:6px 0}
 #reader-evidence:empty{display:none}#reader-evidence{max-height:100px;overflow:auto;margin:6px 0}
-@media(max-width:600px){main:has(#diagram-reader){height:auto;min-height:100vh}main:has(#diagram-reader) .stage{height:65vh;flex:none}}
+@media(max-width:600px){main:has(#diagram-reader) .stage{min-height:120px}}
 @media print{#diagram-reader{display:none}}
 </style><style id="reader-selection-style"></style>'''
     graph_data = reader_data(scene)

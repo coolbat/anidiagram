@@ -150,16 +150,16 @@ def _build_layered() -> Dict[str, Any]:
 def _build_swimlane() -> Dict[str, Any]:
     spec = _base("Swimlane", "handoffs across owners", "minimal-light")
     spec["groups"] = [
-        {"id": "customer", "label": "Customer", "bounds": [60, 160, 1080, 120], "role": "actor"},
-        {"id": "team", "label": "Team", "bounds": [60, 310, 1080, 120], "role": "agent"},
-        {"id": "system", "label": "System", "bounds": [60, 460, 1080, 120], "role": "tool"},
+        {"id": "customer", "label": "Customer", "bounds": [60, 160, 1080, 140], "role": "actor", "members": ["request", "notify"]},
+        {"id": "team", "label": "Team", "bounds": [60, 330, 1080, 140], "role": "agent", "members": ["triage", "approve"]},
+        {"id": "system", "label": "System", "bounds": [60, 500, 1080, 140], "role": "tool", "members": ["automate"]},
     ]
     spec["nodes"] = [
-        _node("request", "Request", 130, 185, "actor", 1),
-        _node("triage", "Triage", 330, 335, "agent", 2),
-        _node("automate", "Automate", 560, 485, "tool", 3),
-        _node("approve", "Approve", 790, 335, "agent", 4),
-        _node("notify", "Notify", 990, 185, "output", 5),
+        _node("request", "Request", 130, 205, "actor", 1),
+        _node("triage", "Triage", 330, 375, "agent", 2),
+        _node("automate", "Automate", 560, 545, "tool", 3),
+        _node("approve", "Approve", 790, 375, "agent", 4),
+        _node("notify", "Notify", 950, 205, "output", 5),
     ]
     spec["edges"] = _chain(["request", "triage", "automate", "approve", "notify"], "handoff", "orthogonal")
     return spec

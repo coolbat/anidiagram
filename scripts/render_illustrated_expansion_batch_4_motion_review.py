@@ -12,6 +12,7 @@ import tempfile
 from pathlib import Path
 from types import SimpleNamespace
 
+from anidiagram.runtime_registry import archived_runtime_source
 from anidiagram.exporters import (
     _blend_loop_seam,
     _capture_browser_runtime,
@@ -193,9 +194,7 @@ def render_motion_review_html(
     download_name: str = "illustrated-2.4.0-candidate-motion-review.svg",
 ) -> str:
     manifest_json = json.dumps(manifest, ensure_ascii=False, indent=2).replace("</", "<\\/")
-    runtime = (
-        ROOT / "runtime" / "illustrated-performance-v5-review-runtime.js"
-    ).read_text(encoding="utf-8").replace("</script", "<\\/script")
+    runtime = archived_runtime_source("illustrated-performance-v5-review").replace("</script", "<\\/script")
     gsap = (ROOT / "node_modules" / "gsap" / "dist" / "gsap.min.js").read_text(encoding="utf-8").replace("</script", "<\\/script")
     return f'''<!doctype html>
 <html lang="zh-CN">

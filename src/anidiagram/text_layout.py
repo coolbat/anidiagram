@@ -84,7 +84,7 @@ def node_text_region(
     """Return horizontal text offset and width using renderer-owned rules."""
 
     if decision:
-        return 34.0, max(50.0, width - 68.0)
+        return width * 0.28, max(24.0, width * 0.44)
     if not has_icon:
         return 12.0, max(42.0, width - 24.0)
     if icon_system == "diagram-core-v1":
@@ -104,6 +104,7 @@ class TextBlockLayout:
     caption_lines: Tuple[str, ...]
     all_label_lines: int
     all_caption_lines: int
+    caption_truncated: bool
     first_baseline: float
     total_height: float
 
@@ -111,13 +112,13 @@ class TextBlockLayout:
 def text_block_layout(label: str, caption: str, width: float, height: float) -> TextBlockLayout:
     all_label_lines = wrap_text(label, max(8, int(width / 9)))
     all_caption_lines = wrap_text(caption, max(10, int(width / 7)))
-    label_lines = tuple(all_label_lines[:2])
+    label_lines = ellipsized_lines(all_label_lines, 2, max(8, int(width / 9)))
     available_caption_height = max(
         0.0,
         height - TEXT_VERTICAL_PADDING * 2 - len(label_lines) * LABEL_LINE_HEIGHT,
     )
-    caption_limit = max(0, min(4, int(available_caption_height // CAPTION_LINE_HEIGHT)))
-    caption_lines = tuple(all_caption_lines[:caption_limit])
+    caption_limit = max(0, min(2, int(available_caption_height // CAPTION_LINE_HEIGHT)))
+    caption_lines = ellipsized_lines(all_caption_lines, caption_limit, max(10, int(width / 7)), truncate_long=True)
     total_height = len(label_lines) * LABEL_LINE_HEIGHT + len(caption_lines) * CAPTION_LINE_HEIGHT
     usable_height = max(0.0, height - TEXT_VERTICAL_PADDING * 2)
     top = TEXT_VERTICAL_PADDING + max(0.0, (usable_height - total_height) / 2.0)
@@ -127,6 +128,28 @@ def text_block_layout(label: str, caption: str, width: float, height: float) -> 
         caption_lines=caption_lines,
         all_label_lines=len(all_label_lines),
         all_caption_lines=len(all_caption_lines),
+        caption_truncated=tuple(all_caption_lines) != caption_lines,
         first_baseline=first_baseline,
         total_height=total_height,
     )
+
+
+def ellipsized_lines(lines, limit, max_units, truncate_long=False):
+    visible = list(lines[:limit])
+    if truncate_long:
+        for index, line in enumerate(visible):
+            if visual_units(line) > max_units:
+                while line and visual_units(line + "…") > max_units:
+                    line = line[:-1]
+                visible[index] = line.rstrip() + "…"
+    if visible and len(lines) > limit:
+        last = visible[-1].rstrip()
+        while last and visual_units(last + "…") > max_units:
+            last = last[:-1]
+        visible[-1] = last.rstrip() + "…"
+    return tuple(visible)
+
+
+def node_text_vertical_region(height, decision=False):
+    """Decision text occupies the center band below its separate icon zone."""
+    return (height * 0.31, height * 0.52) if decision else (0.0, height)

@@ -5,6 +5,7 @@
   "type": "object",
   "required": ["version", "title", "layout_strategy"],
   "properties": {
+    "planning": {"$ref": "planning-diagnostics-v0.1.schema.json"},
     "version": {"const": "0.1"},
     "title": {"type": "string"},
     "subtitle": {"type": "string"},

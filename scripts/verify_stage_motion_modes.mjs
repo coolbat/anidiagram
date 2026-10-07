@@ -83,10 +83,10 @@ async function main() {
     await page.waitForSelector("svg");
     await page.waitForFunction(() => Boolean(window.AniDiagramRuntime) && Boolean(window.gsap) && Array.isArray(window.__ANIDIAGRAM_TIMELINES__));
     const manifest = await page.evaluate(() => JSON.parse(document.getElementById("anidiagram-motion-manifest").textContent));
-    const expectedCharacters = manifest.icons.length;
+    const expectedCharacters = manifest.stage.active_icon_node_ids?.length ?? manifest.icons.length;
     const totalEdges = await page.locator("g.edge").count();
     if (expectedCharacterArg !== null) {
-      assert(expectedCharacters === expectedCharacterArg, `manifest characters: ${expectedCharacters}/${expectedCharacterArg}`);
+      assert(manifest.icons.length === expectedCharacterArg, `manifest characters: ${manifest.icons.length}/${expectedCharacterArg}`);
     }
     if (expectedEdgeArg !== null) {
       assert(totalEdges === expectedEdgeArg, `rendered edges: ${totalEdges}/${expectedEdgeArg}`);
@@ -206,7 +206,7 @@ async function main() {
     assert(expressiveAgain.logicalComets === expectedExpressiveLogicalComets, "duplicate runtime-generated comet elements");
     assert(expressiveAgain.cometPartCounts.every((count) => count === 4), `restored comet part counts: ${expressiveAgain.cometPartCounts}`);
     assertCometRecipes(expressiveAgain, "restored");
-    assert(expressiveAgain.edgeGenerated === expressiveAgain.edgePackets, `duplicate edge-motion elements: ${expressiveAgain.edgeGenerated}/${expressiveAgain.edgePackets}`);
+    assert(expressiveAgain.edgeGenerated === expressive.edgeGenerated, `duplicate edge-motion elements: ${expressiveAgain.edgeGenerated}/${expressive.edgeGenerated}`);
 
     process.stdout.write(`verified stage modes Expressive -> Readable -> Off -> Expressive; characters=${expectedCharacters}; edges=${totalEdges}; readable=${readable.edgePackets}\n`);
   } finally {

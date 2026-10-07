@@ -138,6 +138,7 @@ class Group:
     importance: Optional[str] = None
     parent: Optional[str] = None
     effect: EffectConfig = field(default_factory=EffectConfig)
+    members: Tuple[str, ...] = field(default_factory=tuple)
 
 
 @dataclass(frozen=True)
@@ -160,6 +161,7 @@ class Scene:
     source_evidence: Dict[str, Any] = field(default_factory=dict)
     reader: Dict[str, Any] = field(default_factory=dict)
     type_semantics: Dict[str, Any] = field(default_factory=dict)
+    planning: Dict[str, Any] = field(default_factory=dict)
 
     def stats(self) -> dict:
         return {

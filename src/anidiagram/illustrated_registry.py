@@ -11,14 +11,17 @@ from typing import Dict, Tuple
 
 from .icon_system import ILLUSTRATED_ICON_SYSTEM, ILLUSTRATED_ICON_SYSTEM_VERSION
 from .illustrated_character_icons import CharacterIconDefinition
-from .illustrated_character_v2_icons import ILLUSTRATED_CHARACTER_V2_CONCEPTS
-from .illustrated_expansion_batch_1 import ILLUSTRATED_EXPANSION_BATCH_1
-from .illustrated_expansion_batch_2 import ILLUSTRATED_EXPANSION_BATCH_2
-from .illustrated_expansion_batch_3 import ILLUSTRATED_EXPANSION_BATCH_3
-from .illustrated_expansion_batch_4 import ILLUSTRATED_EXPANSION_BATCH_4
-from .illustrated_expansion_batch_5 import ILLUSTRATED_EXPANSION_BATCH_5
-from .illustrated_expansion_batches_6_10 import ILLUSTRATED_EXPANSION_BATCHES_6_10
-from .illustrated_convention_alignment_review import ILLUSTRATED_CONVENTION_ALIGNMENT_DEFINITIONS
+from .illustrated_sources import compose_static_definitions, source_value
+
+# Keep historical imported names available to downstream review tooling.
+ILLUSTRATED_CHARACTER_V2_CONCEPTS = source_value("character-v2", "definitions")
+ILLUSTRATED_EXPANSION_BATCH_1 = source_value("expansion-1", "definitions")
+ILLUSTRATED_EXPANSION_BATCH_2 = source_value("expansion-2", "definitions")
+ILLUSTRATED_EXPANSION_BATCH_3 = source_value("expansion-3", "definitions")
+ILLUSTRATED_EXPANSION_BATCH_4 = source_value("expansion-4", "definitions")
+ILLUSTRATED_EXPANSION_BATCH_5 = source_value("expansion-5", "definitions")
+ILLUSTRATED_EXPANSION_BATCHES_6_10 = source_value("expansion-6-10", "definitions")
+ILLUSTRATED_CONVENTION_ALIGNMENT_DEFINITIONS = source_value("convention-alignment", "definitions")
 
 
 ILLUSTRATED_SYSTEM_METADATA = {
@@ -34,16 +37,7 @@ ILLUSTRATED_SYSTEM_METADATA = {
     "previous_archived_motion_review_contract": "illustrated-performance-v6-review",
 }
 
-ILLUSTRATED_DEFINITIONS: Dict[str, CharacterIconDefinition] = {
-    **ILLUSTRATED_CHARACTER_V2_CONCEPTS,
-    **ILLUSTRATED_EXPANSION_BATCH_1,
-    **ILLUSTRATED_EXPANSION_BATCH_2,
-    **ILLUSTRATED_EXPANSION_BATCH_3,
-    **ILLUSTRATED_EXPANSION_BATCH_4,
-    **ILLUSTRATED_EXPANSION_BATCH_5,
-    **ILLUSTRATED_EXPANSION_BATCHES_6_10,
-    **ILLUSTRATED_CONVENTION_ALIGNMENT_DEFINITIONS,
-}
+ILLUSTRATED_DEFINITIONS: Dict[str, CharacterIconDefinition] = compose_static_definitions()
 
 ILLUSTRATED_ICON_STATUSES = {icon_id: "approved" for icon_id in ILLUSTRATED_DEFINITIONS}
 

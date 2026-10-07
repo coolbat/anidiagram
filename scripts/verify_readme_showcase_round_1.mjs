@@ -154,6 +154,7 @@ async function main() {
           icons: motion.icons.length,
           motionEdges: motion.edges.length,
           activeEdges,
+          expectedActiveEdges: motion.stage?.active_edge_indices?.length ?? motion.edges.length,
           outside,
           textOverflow,
           titleTextOverflow,
@@ -168,7 +169,7 @@ async function main() {
       assert(state.motionProfile === "showcase-v1", `${entry.id}: motion profile is ${state.motionProfile}`);
       assert(state.nodes === state.icons, `${entry.id}: nodes/icons ${state.nodes}/${state.icons}`);
       assert(state.edges === state.motionEdges, `${entry.id}: edges/manifest ${state.edges}/${state.motionEdges}`);
-      assert(state.activeEdges === state.edges, `${entry.id}: active edges ${state.activeEdges}/${state.edges}`);
+      assert(state.activeEdges === state.expectedActiveEdges, `${entry.id}: active edges ${state.activeEdges}/${state.expectedActiveEdges}`);
       report.nodes += state.nodes;
       report.edges += state.edges;
       report.active_runtime_edges += state.activeEdges;

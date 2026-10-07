@@ -58,7 +58,7 @@ async function main() {
         generatedEdges: document.querySelectorAll(".edge-motion-v1-generated").length,
       };
     });
-    assert(stepped.step === 0 && stepped.current === 0, "single-step did not select the first step");
+    assert(stepped.step === 1 && stepped.current === 1, "next did not advance the visible first step");
     assert(stepped.generatedEdges === 0, "ambient edge loops leaked into choreographer mode");
     assert(errors.length === 0, `console errors: ${errors.join("; ")}`);
     process.stdout.write(`${JSON.stringify({ ok: true, mode: expectedMode, steps: initial.steps })}\n`);

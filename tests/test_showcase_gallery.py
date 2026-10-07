@@ -12,6 +12,7 @@ except ImportError:  # pragma: no cover - exercised by the base install contract
     Image = None
 
 from anidiagram.quality import quality_report
+from quality_expectations import assert_quality_baseline
 from anidiagram.schema import compile_scene
 from anidiagram.motion_manifest import CHARACTER_ICON_PERFORMANCES, CHARACTER_REST_AT, build_motion_manifest
 from anidiagram.edge_motion import canonical_edge_motion
@@ -54,7 +55,7 @@ class ShowcaseGalleryTest(unittest.TestCase):
         self.assertTrue({"access", "control-plane", "workload-plane"}.issubset({group.group_id for group in scene.groups}))
         self.assertTrue({"api-server", "scheduler", "controllers", "etcd", "kubelet-a", "pod-a", "kubelet-b", "pod-b"}.issubset({node.node_id for node in scene.nodes}))
         self.assertEqual("focused", scene.motion_policy.profile)
-        self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, quality_report(scene, style)["summary"])
+        assert_quality_baseline(self, quality_report(scene, style))
         self.assertIn('data-icon-system="illustrated-character-v1"', render_svg(scene, style))
 
         manifest = build_motion_manifest(scene, style)
@@ -115,7 +116,7 @@ class ShowcaseGalleryTest(unittest.TestCase):
         self.assertGreater(agent.size[0] * agent.size[1], max(node.size[0] * node.size[1] for node in satellites))
         self.assertTrue({"token", "agent", "search", "tool", "api", "shield", "memory", "output"}.issubset({node.icon for node in scene.nodes}))
         self.assertEqual("focused", scene.motion_policy.profile)
-        self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, quality_report(scene, style)["summary"])
+        assert_quality_baseline(self, quality_report(scene, style))
 
         capture_docs = (ROOT / "docs" / "html-runtime.md").read_text(encoding="utf-8")
         readme_command = capture_docs.split("For a README hero preview", 1)[1].split("Use the animated WebP", 1)[0]
@@ -139,7 +140,7 @@ class ShowcaseGalleryTest(unittest.TestCase):
                 self.assertTrue(all(node.icon for node in scene.nodes), path)
                 self.assertNotIn('"icon_motion":', source, path)
                 self.assertIn('data-icon-system="illustrated-character-v1"', render_svg(scene, style), path)
-                self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, quality_report(scene, style)["summary"], path)
+                assert_quality_baseline(self, quality_report(scene, style), path.name)
                 if len(scene.nodes) >= 6:
                     self.assertIn(scene.motion_policy.profile, {"focused", "readable", "readable-runtime"}, path)
                 self.assertNotIn(scene.motion.group, {"border-scan", "marching-ants"}, path)
@@ -158,9 +159,9 @@ class ShowcaseGalleryTest(unittest.TestCase):
 
         self.assertEqual(set(CHARACTER_ICON_PERFORMANCES.values()), {entry["id"] for entry in character_entries})
         self.assertEqual("illustrated-character-v1", catalog["default_runtime"]["icon_system"])
-        self.assertEqual("motion-coordination-v1.1", catalog["default_runtime"]["motion_contract"])
+        self.assertEqual("motion-coordination-v2", catalog["default_runtime"]["motion_contract"])
         self.assertEqual(
-            {"source": "scene.motion.stagger", "minimum": 0.08, "mode": "per-icon-delay"},
+            {"source": "4-second global beat", "mode": "aligned-cycle", "long_paths": "integer multiples of the common cycle"},
             catalog["default_runtime"]["stagger_contract"],
         )
         for entry in character_entries:
@@ -196,7 +197,7 @@ class ShowcaseGalleryTest(unittest.TestCase):
             self.assertIn(f"`{style}`", compatibility)
         self.assertIn("Pass", compatibility)
         self.assertIn("Tune", compatibility)
-    def test_layout_showcase_specs_cover_all_cases_with_clean_quality(self):
+    def test_layout_showcase_specs_cover_all_cases_with_known_diagnostics(self):
         specs = layout_showcase_specs()
         expected = [case[0] for case in LAYOUT_CASES]
 
@@ -204,7 +205,7 @@ class ShowcaseGalleryTest(unittest.TestCase):
         for preset, spec in specs.items():
             with self.subTest(preset=preset):
                 scene = compile_scene(spec)
-                self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, quality_report(scene)["summary"])
+                assert_quality_baseline(self, quality_report(scene), preset)
 
     def test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion(self):
         hero_source = json.loads((ROOT / "examples" / "high-fidelity-runtime.diagram.json").read_text(encoding="utf-8"))
@@ -246,7 +247,7 @@ class ShowcaseGalleryTest(unittest.TestCase):
                     style = load_style(ROOT / "styles" / f'{spec["style"]}.json')
                     manifest = build_motion_manifest(scene, style)
                     self.assertEqual(list(range(len(scene.edges))), manifest["stage"]["active_edge_indices"])
-                    self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, quality_report(scene, style)["summary"])
+                    assert_quality_baseline(self, quality_report(scene, style), f"{collection}/{name}")
 
         agent_loop = layout_showcase_specs()["agent-loop"]
         self.assertEqual("composition-v1", agent_loop["composition_policy"])

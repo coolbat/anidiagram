@@ -278,7 +278,7 @@ class IllustratedMotionReviewTest(unittest.TestCase):
         self.assertTrue(paths["upload-arrow"].startswith("M44 80V49"))
         self.assertTrue(paths["download-arrow"].startswith("M76 47v31"))
 
-        source = (ROOT / "runtime" / "anidiagram-runtime.js").read_text(encoding="utf-8")
+        source = _runtime_source()
         cloud_source = source[source.index("function playIllustratedCloudTransfer") : source.index("function playIllustratedShieldLock")]
         self.assertIn('clipPath: "inset(100% 0% 0% 0%)"', cloud_source)
         self.assertIn('clipPath: "inset(0% 0% 100% 0%)"', cloud_source)

@@ -22,7 +22,7 @@ from .renderer_html_runtime import render_html_runtime
 from .runtime_dependencies import GSAP_CDN_URL, GSAP_VERSION
 from .renderer_svg import CONTINUOUS_EDGE_MOTION, PARTICLE_EDGE_MOTION, particle_radii, policy_allows, render_html, render_svg
 from .styles import role_style
-from .text_layout import CAPTION_LINE_HEIGHT, LABEL_LINE_HEIGHT, text_block_layout
+from .text_layout import CAPTION_LINE_HEIGHT, LABEL_LINE_HEIGHT, fitted_text_length, node_text_region, node_text_vertical_region, text_block_layout
 
 
 PointList = List[Point]
@@ -706,6 +706,14 @@ async function main() {
     page.setDefaultTimeout(config.timeoutMs || 30000);
     await page.goto(pathToFileURL(config.htmlPath).href, { waitUntil: "load" });
     await page.waitForSelector("svg");
+    // Captures use authored canvas dimensions, independent of the viewer camera.
+    await page.addStyleTag({ content: `
+      html, body, main { margin: 0 !important; padding: 0 !important; display: block !important; height: auto !important; min-height: 0 !important; }
+      .toolbar, #runtime-warning, #runtime-status, #diagram-reader, #relation-table, #narration, #readable-hint { display: none !important; }
+      .stage { width: ${config.width}px !important; height: ${config.height}px !important; border: 0 !important; overflow: visible !important; }
+      .viewport { transform: none !important; translate: none !important; width: ${config.width}px !important; }
+      svg { width: ${config.width}px !important; height: ${config.height}px !important; }
+    `});
     await page.waitForLoadState("networkidle", { timeout: config.timeoutMs || 30000 }).catch(() => {});
     await page.waitForTimeout(config.warmupMs || 800);
     const runtimeState = await page.evaluate(() => {
@@ -737,6 +745,9 @@ async function main() {
       if (window.AniDiagramRuntime && window.AniDiagramRuntime.restart) {
         window.AniDiagramRuntime.restart();
       }
+      // One-shot HTML entrances are presentation only. Frame-seeked exports
+      // must remain complete and deterministic at t=0 and at every loop seam.
+      if (window.AniDiagramEntrance) window.AniDiagramEntrance.clear();
     });
     if (config.format === "png" || config.format === "pdf") {
       await page.waitForTimeout(config.staticSettleMs || 2200);
@@ -854,7 +865,7 @@ def _render_frame(scene: Scene, style: Dict[str, Any], frame: int = 0, frames: i
     font = _load_raster_font(ImageFont, scene.locale, 14)
     small_font = _load_raster_font(ImageFont, scene.locale, 12)
     title_font = _load_raster_font(ImageFont, scene.locale, 34)
-    node_title_font = _load_raster_font(ImageFont, scene.locale, 16)
+    node_title_font = _load_raster_font(ImageFont, scene.locale, 18)
     node_caption_font = _load_raster_font(ImageFont, scene.locale, 13)
     draw.text((90, 64), scene.title.text, fill=canvas.get("text", "#172033"), font=title_font)
     draw.text((74, 112), scene.title.subtitle, fill=muted, font=small_font)
@@ -866,6 +877,8 @@ def _render_frame(scene: Scene, style: Dict[str, Any], frame: int = 0, frames: i
         draw.text((x + 18, y + 18), group.label, fill=muted, font=small_font)
 
     node_map = {node.node_id: node for node in scene.nodes}
+    from .label_placement import place_labels, readable_labels
+    placements = place_labels(scene) if readable_labels(style, scene) else {}
     for edge_index, edge in enumerate(scene.edges):
         points = _edge_points(edge, node_map)
         role = role_style(style, edge.role)
@@ -874,7 +887,15 @@ def _render_frame(scene: Scene, style: Dict[str, Any], frame: int = 0, frames: i
         if edge.label:
             sx, sy = points[0]
             ex, ey = points[-1]
-            draw.text(((sx + ex) / 2, (sy + ey) / 2 - 16), edge.label, fill=muted, font=small_font, anchor="mm")
+            placement = placements.get(edge_index + 1)
+            label_x, label_y = (placement['x'], placement['y']) if placement else ((sx + ex) / 2, (sy + ey) / 2 - 16)
+            draw.text((label_x, label_y), edge.label, fill=muted, font=small_font, anchor="ls", stroke_width=2, stroke_fill=background)
+        if edge.step is not None:
+            sx, sy = points[0]; ex, ey = points[-1]
+            placement = placements.get(edge_index + 1)
+            label_x, label_y = (placement['x'], placement['y']) if placement else ((sx + ex) / 2, (sy + ey) / 2 - 16)
+            draw.ellipse((label_x - 36, label_y - 19, label_x - 8, label_y + 9), fill=stroke)
+            draw.text((label_x - 22, label_y - 5), str(edge.step), fill="#ffffff", font=small_font, anchor="mm")
 
     for node in scene.nodes:
         x, y = node.position
@@ -891,22 +912,42 @@ def _render_frame(scene: Scene, style: Dict[str, Any], frame: int = 0, frames: i
                 draw.line([(cx, y), (x + w, cy), (cx, y + h), (x, cy), (cx, y)], fill=stroke, width=stroke_width)
         else:
             draw.rounded_rectangle((x, y, x + w, y + h), radius=int(node.radius or style.get("node", {}).get("radius", 14)), fill=fill, outline=stroke, width=stroke_width)
-        if node.step is not None:
+        if node.step is not None and not any(edge.step is not None for edge in scene.edges):
             draw.ellipse((x + 4, y + 4, x + 32, y + 32), fill=stroke)
             draw.text((x + 18, y + 18), str(node.step), fill=fill, font=small_font, anchor="mm")
-        horizontal_padding = 34 if node.shape == "decision" else 14
-        layout = text_block_layout(node.label, node.caption, w - horizontal_padding * 2, h)
-        text_x = x + w / 2
-        baseline = y + layout.first_baseline
+        from .icon_system import resolve_icon_system
+        offset, text_width = node_text_region(w, icon_system=scene.icon_system or resolve_icon_system(style), has_icon=bool(node.icon), decision=node.shape == "decision")
+        y_offset, text_height = node_text_vertical_region(h, node.shape == "decision")
+        layout = text_block_layout(node.label, node.caption, text_width, text_height)
+        text_x = x + offset
+        baseline = y + y_offset + layout.first_baseline
         for line in layout.label_lines:
-            draw.text((text_x, baseline), line, fill=text, font=node_title_font, anchor="mm")
+            _draw_fitted_raster_text(image, draw, (text_x, baseline), line, text, node_title_font, text_width, 18)
             baseline += LABEL_LINE_HEIGHT
+        if layout.label_lines:
+            baseline -= LABEL_LINE_HEIGHT - CAPTION_LINE_HEIGHT
         for line in layout.caption_lines:
-            draw.text((text_x, baseline), line, fill=text, font=node_caption_font, anchor="mm")
+            _draw_fitted_raster_text(image, draw, (text_x, baseline), line, text, node_caption_font, text_width, 13)
             baseline += CAPTION_LINE_HEIGHT
     if frames > 1 and scene.motion.profile != "off":
         _draw_raster_particles(draw, scene, style, node_map, frame, frames)
     return image
+
+
+def _draw_fitted_raster_text(image, draw, position, line, color, font, width, size):
+    """Use the SVG text region even when the host raster font is wider."""
+    from PIL import Image, ImageDraw
+    bounds = draw.textbbox((0, 0), line, font=font, anchor="ls")
+    actual_width, height = bounds[2] - bounds[0], bounds[3] - bounds[1]
+    fitted = fitted_text_length(line, width, size)
+    target_width = fitted or min(actual_width, max(1, width - 8))
+    if not actual_width or not height or abs(target_width - actual_width) < 1:
+        draw.text(position, line, fill=color, font=font, anchor="ls")
+        return
+    layer = Image.new("RGBA", (actual_width, height))
+    ImageDraw.Draw(layer).text((-bounds[0], -bounds[1]), line, fill=color, font=font, anchor="ls")
+    layer = layer.resize((max(1, round(target_width)), height), Image.Resampling.LANCZOS)
+    image.alpha_composite(layer, (round(position[0]), round(position[1] + bounds[1])))
 
 
 def _load_raster_font(image_font: Any, locale: str, size: int) -> Any:

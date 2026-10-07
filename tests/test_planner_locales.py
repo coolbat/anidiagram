@@ -58,13 +58,14 @@ class PlannerLocaleTest(unittest.TestCase):
     def test_long_chinese_brief_keeps_visible_architecture_copy_in_chinese(self):
         plan = brief_to_plan(
             "构建企业级智能体平台架构：用户请求进入 API 网关，智能体读取长期记忆，"
-            "调用搜索工具和知识库，经过安全校验后输出结果；失败时根据反馈重新规划并重试。"
+            "调用搜索工具和知识库，经过安全校验后输出结果；失败时根据反馈重新规划并重试。",
+            planner="template",
         )
         semantic = plan["semantic"]
 
         self.assertEqual("zh-CN", semantic["language"])
         self.assertEqual("企业级智能体平台架构", semantic["title"])
-        self.assertEqual("由自然语言需求生成的语义优先架构图。", semantic["subtitle"])
+        self.assertEqual("智能体流程模板草稿，需对照原始需求核验。", semantic["subtitle"])
         self.assertEqual(["技术团队"], semantic["intent"]["audience"])
         self.assertEqual("主请求流程", semantic["flows"][0]["label"])
         self.assertEqual(
@@ -154,12 +155,8 @@ class PlannerLocaleTest(unittest.TestCase):
         self.assertEqual(("verified-output", "agent-orchestrator"), (edges["output-retries"]["from"], edges["output-retries"]["to"]))
 
         retry = edges["output-retries"]
-        self.assertEqual("points", retry["route"])
-        retry_corridor = retry["points"][1][1]
-        core_bottom = nodes["agent-orchestrator"]["position"][1] + nodes["agent-orchestrator"]["size"][1]
-        resource_top = nodes["long-term-memory"]["position"][1]
-        self.assertGreater(retry_corridor, core_bottom)
-        self.assertLess(retry_corridor, resource_top)
+        self.assertEqual("orthogonal", retry["route"])
+        self.assertGreaterEqual(len(retry["points"]), 3)
 
         pair_ids = (
             "agent-reads-memory", "memory-returns",
@@ -168,25 +165,18 @@ class PlannerLocaleTest(unittest.TestCase):
         )
         self.assertTrue(all("step" not in edges[relation_id] for relation_id in (*pair_ids, "output-retries")))
         self.assertTrue(all("step" in edges[relation_id] for relation_id in ("request-enters", "gateway-routes", "agent-validates", "gate-delivers")))
-        corridors = []
+        paths = []
         for relation_id in pair_ids:
             edge = edges[relation_id]
-            self.assertEqual("points", edge["route"])
-            self.assertEqual(4, len(edge["points"]))
-            corridors.append(edge["points"][1][1])
-            self.assertGreater(edge["points"][1][1], core_bottom)
-            self.assertLess(edge["points"][1][1], resource_top)
-        self.assertEqual(len(pair_ids), len(set(corridors)))
-
-        agent_bottom_anchors = {
-            tuple(edges[relation_id]["points"][0 if relation_id.startswith("agent-") else -1])
-            for relation_id in pair_ids
-        }
-        self.assertEqual(6, len(agent_bottom_anchors))
+            self.assertEqual("orthogonal", edge["route"])
+            self.assertGreaterEqual(len(edge["points"]), 2)
+            paths.append(tuple(map(tuple, edge["points"])))
+        self.assertEqual(len(pair_ids), len(set(paths)))
+        report = quality_report(compile_scene(spec), load_style())
+        self.assertFalse([issue for issue in report["issues"] if "collision" in issue["code"]], report["issues"])
 
         for edge in edges.values():
-            if edge.get("route") != "points":
-                continue
+            self.assertEqual("orthogonal", edge["route"])
             for left, right in zip(edge["points"], edge["points"][1:]):
                 for node_id, node in nodes.items():
                     if node_id in {edge["from"], edge["to"]}:

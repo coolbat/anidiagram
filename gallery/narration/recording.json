@@ -1,0 +1,17 @@
+{
+  "version": "gallery-recording-v1",
+  "source_plan": "examples/contracts/production-request-path.plan.json",
+  "source_plan_sha256": "599197188304a86ed1e7c7aaf6d30fcba719b0e07dc6210dacf0403a705e8f8a",
+  "mode": "timeline",
+  "runtime_dependency": "inline",
+  "method": "Chromium screenshots of actual GSAP timeline at deterministic times",
+  "duration_seconds": 7,
+  "fps": 24,
+  "frames": 168,
+  "width": 1280,
+  "height": 800,
+  "audio": false,
+  "source_scope": "generic architecture example; no production runtime claim",
+  "command": "node scripts/build_gallery_narration.mjs",
+  "sha256": "503f14997590863718e747b32a83f08754e1313889575e55be46d8999f3bb12d"
+}

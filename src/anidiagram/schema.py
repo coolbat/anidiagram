@@ -13,6 +13,7 @@ from .icon_system import canonical_icon_system_id, icon_system_version
 from .illustrated_registry import illustrated_icon_ids
 from .localization import resolve_locale
 from .repository_evidence import EvidenceError, verify_evidence
+from .planning import validate_planning
 from .model import Bounds, Canvas, Edge, EffectConfig, Group, Motion, MotionPolicy, Node, Point, Scene, SceneMotion, Style, Title
 
 
@@ -145,10 +146,10 @@ def compile_scene(data: Dict[str, Any], *, repo_root=None) -> Scene:
         resolved_presentation = {}
     motion = _parse_scene_motion(data.get("motion", {}), "$.motion", issues)
     motion_policy = _parse_motion_policy(data.get("motion_policy"), "$.motion_policy", issues)
-    groups = _parse_groups(data.get("groups", []), "$.groups", issues, canvas)
     allowed_icons = _icons_for_system(icon_system)
     nodes = _parse_nodes(data.get("nodes"), "$.nodes", issues, canvas, allowed_icons)
     node_ids = {node.node_id for node in nodes}
+    groups = _parse_groups(data.get("groups", []), "$.groups", issues, canvas, node_ids)
     edges = _parse_edges(data.get("edges", []), "$.edges", node_ids, issues)
     requested_locale = _optional_enum(data, "locale", "$.locale", {"auto", "en", "zh-CN"}, issues) or "auto"
     locale = resolve_locale(
@@ -208,6 +209,13 @@ def compile_scene(data: Dict[str, Any], *, repo_root=None) -> Scene:
         except EvidenceError as error:
             raise DiagramScriptValidationError([ValidationIssue("$.evidence", str(error), error.code)]) from error
 
+    planning = {}
+    if "planning" in data:
+        try:
+            planning = validate_planning(data["planning"])
+        except ValueError as error:
+            raise DiagramScriptValidationError([ValidationIssue("$.planning", str(error))]) from error
+
     return Scene(
         version=version or SUPPORTED_VERSIONS[0],
         canvas=canvas,
@@ -227,6 +235,7 @@ def compile_scene(data: Dict[str, Any], *, repo_root=None) -> Scene:
         source_evidence=source_evidence,
         reader=reader,
         type_semantics=type_semantics,
+        planning=planning,
     )
 
 
@@ -584,7 +593,7 @@ def _optional_string_token(data: Dict[str, Any], key: str) -> Optional[str]:
     return value if isinstance(value, str) else None
 
 
-def _parse_groups(value: Any, path: str, issues: List[ValidationIssue], canvas: Canvas) -> List[Group]:
+def _parse_groups(value: Any, path: str, issues: List[ValidationIssue], canvas: Canvas, node_ids: Set[str]) -> List[Group]:
     if value is None:
         return []
     if not isinstance(value, list):
@@ -603,6 +612,21 @@ def _parse_groups(value: Any, path: str, issues: List[ValidationIssue], canvas: 
             _check_duplicate(group_id, seen, f"{item_path}.id", "group id", issues)
         bounds = _bounds(item.get("bounds"), f"{item_path}.bounds", issues)
         _check_bounds_inside_canvas(bounds, canvas, f"{item_path}.bounds", issues)
+        members: List[str] = []
+        raw_members = item.get("members", [])
+        if not isinstance(raw_members, list):
+            issues.append(ValidationIssue(f"{item_path}.members", "expected an array", "type"))
+        else:
+            member_ids: Set[str] = set()
+            for member_index, member in enumerate(raw_members):
+                member_path = f"{item_path}.members[{member_index}]"
+                if not isinstance(member, str) or not member.strip():
+                    issues.append(ValidationIssue(member_path, "expected a non-empty node id", "type"))
+                    continue
+                _check_duplicate(member, member_ids, member_path, "group member", issues)
+                if member not in node_ids:
+                    issues.append(ValidationIssue(member_path, f"unknown node id {member!r}", "reference"))
+                members.append(member)
         groups.append(
             Group(
                 group_id=group_id or f"group-{index + 1}",
@@ -626,6 +650,7 @@ def _parse_groups(value: Any, path: str, issues: List[ValidationIssue], canvas: 
                 ),
                 parent=_string(item, "parent", f"{item_path}.parent", issues, required=False),
                 effect=_effect_config(item.get("effect"), f"{item_path}.effect", KNOWN_GROUP_MOTION, issues, EffectConfig()),
+                members=tuple(members),
             )
         )
     return groups

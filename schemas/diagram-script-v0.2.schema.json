@@ -5,6 +5,7 @@
   "type": "object",
   "required": ["version", "nodes"],
   "properties": {
+    "planning": {"$ref": "planning-diagnostics-v0.1.schema.json"},
     "version": {"const": "0.2"},
     "preset": {"type": "string"},
     "motion": {"$ref": "#/$defs/motion"},
@@ -85,6 +86,7 @@
       "properties": {
         "id": {"type": "string", "minLength": 1},
         "label": {"type": "string"},
+        "members": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
         "bounds": {"$ref": "#/$defs/bounds"},
         "role": {"$ref": "#/$defs/role"},
         "fill": {"type": "string"},

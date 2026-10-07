@@ -52,17 +52,18 @@ class QualityDiagnosticsTest(unittest.TestCase):
 
         report = quality_report(scene)
         issues = [
-            issue for issue in report["advisories"] if issue["code"] == "edge_segment_node_collision"
+            issue for issue in report["issues"] if issue["code"] == "edge_segment_node_collision"
         ]
 
         self.assertEqual(1, len(issues))
-        self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, report["summary"])
+        self.assertEqual({"errors": 0, "warnings": 1, "issues": 1}, report["summary"])
+        self.assertTrue(report["ok"])  # Authored routes remain deliverable with diagnostics.
         self.assertEqual(
             {"edge_index": 0, "source": "source", "target": "target", "blocking_node": "obstacle"},
             issues[0]["subject"],
         )
         self.assertEqual(0, issues[0]["evidence"]["segment_index"])
-        self.assertEqual([[200, 208], [560, 208]], issues[0]["evidence"]["segment"])
+        self.assertEqual([[212, 208], [548, 208]], issues[0]["evidence"]["segment"])
         self.assertEqual(
             ["reroute_edge_points", "move_blocking_node", "change_layout"],
             issues[0]["supported_fixes"],

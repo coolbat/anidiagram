@@ -8,6 +8,7 @@ from anidiagram.motion_manifest import (
     build_motion_manifest,
 )
 from anidiagram.quality import quality_report
+from quality_expectations import assert_quality_baseline
 from anidiagram.schema import compile_scene
 from anidiagram.styles import load_style
 from scripts.build_enterprise_rag_production_case import build_case
@@ -55,7 +56,7 @@ class EnterpriseRagProductionCaseTest(unittest.TestCase):
         self.assertEqual(12, len(spec["edges"]))
         self.assertEqual(2, len(spec["groups"]))
         self.assertTrue(report["ok"])
-        self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, report["summary"])
+        assert_quality_baseline(self, report)
 
     def test_showcase_motion_is_automatic_and_public_for_all_twelve_icons(self):
         spec = self._spec()

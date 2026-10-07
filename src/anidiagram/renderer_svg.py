@@ -13,7 +13,7 @@ from dataclasses import dataclass, replace
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 from .effects import canonical_edge_effect, channel_effect, effect_active
-from .edge_motion import CONTINUOUS_EDGE_MOTION, DRAW_ENTRY_EDGE_MOTION, PARTICLE_EDGE_MOTION
+from .edge_motion import CONTINUOUS_EDGE_MOTION, PARTICLE_EDGE_MOTION
 from .diagram_core.adapter import render_approved_icon
 from .diagram_core.tokens import icon_tokens_for_style
 from .illustrated_icons import illustrated_definition as legacy_illustrated_definition, illustrated_palette, is_illustrated_style
@@ -24,11 +24,12 @@ from .model import Edge, EffectConfig, Group, MotionPolicy, Node, Scene, SceneMo
 from .motion_manifest import icon_part_id
 from .renderer_illustrated_character import render_character_icon
 from .renderer_illustrated_character_v2 import render_character_v2_icon
+from .resources import resource_path
 from .schema import compile_scene
 from .styles import deep_merge, role_style
 from .icon_system import icon_system_version, resolve_icon_system
 from .localization import font_stack, resolve_locale, scene_locale, viewer_labels
-from .text_layout import fitted_text_length, node_text_region, text_block_layout, wrap_text
+from .text_layout import fitted_text_length, node_text_region, node_text_vertical_region, text_block_layout, wrap_text
 
 
 Point = Tuple[float, float]
@@ -329,6 +330,8 @@ def render_style_defs(style: Dict[str, Any], grid: str) -> str:
     <path d="M 32 0 L 0 0 0 32" fill="none" stroke="{esc(grid)}" stroke-width="1" />
   </pattern>""",
     ]
+    if style.get("name") == "dark-luxury":
+        parts.append('<filter id="node-depth-shadow" x="-25%" y="-40%" width="150%" height="190%"><feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000000" flood-opacity="0.32" /></filter>')
     if aurora_nodes_enabled(style):
         parts.extend(
             [
@@ -427,17 +430,17 @@ def curve_path(start: Point, end: Point) -> str:
 
 def render_text_block(x: float, y: float, width: float, height: float, label: str, caption: str, color: str) -> str:
     layout = text_block_layout(label, caption, width, height)
-    parts = [f'<text x="{x + width / 2:.1f}" y="{y + layout.first_baseline:.1f}" class="node-text-block" text-anchor="middle" fill="{esc(color)}">']
+    parts = [f'<text x="{x:.1f}" y="{y + layout.first_baseline:.1f}" class="node-text-block" text-anchor="start" fill="{esc(color)}">']
     first = True
     for line in layout.label_lines:
         fitted = fitted_text_length(line, width, 18)
         fit = "" if fitted is None else f' textLength="{fitted:.1f}" lengthAdjust="spacingAndGlyphs"'
-        parts.append(f'<tspan x="{x + width / 2:.1f}" dy="{0 if first else 18}" class="node-title"{fit}>{esc(line)}</tspan>')
+        parts.append(f'<tspan x="{x:.1f}" dy="{0 if first else 18}" class="node-title"{fit}>{esc(line)}</tspan>')
         first = False
     for line in layout.caption_lines:
         fitted = fitted_text_length(line, width, 13)
         fit = "" if fitted is None else f' textLength="{fitted:.1f}" lengthAdjust="spacingAndGlyphs"'
-        parts.append(f'<tspan x="{x + width / 2:.1f}" dy="17" class="node-caption"{fit}>{esc(line)}</tspan>')
+        parts.append(f'<tspan x="{x:.1f}" dy="17" class="node-caption"{fit}>{esc(line)}</tspan>')
     parts.append("</text>")
     return "\n".join(parts)
 
@@ -1196,13 +1199,14 @@ def render_node_surface(
     style: Dict[str, Any],
     index: int,
 ) -> str:
+    shadow = ' filter="url(#node-depth-shadow)"' if style.get("name") == "dark-luxury" else ""
     if node.shape == "decision":
         points = diamond_points(box)
         return f"""  <polygon class="node-surface node-decision-shape" points="{points}"
-        fill="{esc(fill)}" stroke="{esc(stroke)}" stroke-width="{stroke_width:.1f}" />"""
+        fill="{esc(fill)}" stroke="{esc(stroke)}" stroke-width="{stroke_width:.1f}"{shadow} />"""
     if not aurora_nodes_enabled(style) or node.fill:
         return f"""  <rect class="node-surface" x="{box.x:.1f}" y="{box.y:.1f}" width="{box.w:.1f}" height="{box.h:.1f}" rx="{radius:.1f}"
-        fill="{esc(fill)}" stroke="{esc(stroke)}" stroke-width="{stroke_width:.1f}" />"""
+        fill="{esc(fill)}" stroke="{esc(stroke)}" stroke-width="{stroke_width:.1f}"{shadow} />"""
     role = role_style(style, node.role)
     clip_id = f"clip-{svg_fragment_id(box.node_id)}"
     gradient_id = role_gradient_id(node.role or "neutral")
@@ -1259,6 +1263,7 @@ def render_node(
     policy: MotionPolicy,
     node_motion_rank: Optional[int],
     suppress_icon_motion: bool = False,
+    show_step: bool = True,
 ) -> str:
     box = node_box(node)
     node_effect = channel_effect(motion, style, "node", node.effect)
@@ -1287,8 +1292,9 @@ def render_node(
         decision=node.shape == "decision",
     )
     text_x = box.x + text_offset
+    text_y_offset, text_height = node_text_vertical_region(box.h, node.shape == "decision")
     badge = ""
-    if node.step is not None:
+    if node.step is not None and show_step:
         badge = render_step_badge(box.x + 18, box.y + 18, node.step, stroke, fill)
     delay = motion_delay(index, motion, "node")
     float_duration = scaled_duration(5.4 + (index % 3) * 0.45, motion)
@@ -1305,15 +1311,23 @@ def render_node(
         suppress_icon_motion=suppress_icon_motion,
         style=style,
     )
+    if node.shape == "decision" and icon:
+        # Scale the existing icon group without changing any runtime part IDs.
+        if icon_system == "diagram-core-v1":
+            old_cx, old_cy, old_size = box.x + 10 + min(92, max(72, box.h * 0.78)) / 2, box.y + box.h / 2, min(92, max(72, box.h * 0.78))
+        elif icon_system == "illustrated":
+            old_cx, old_cy, old_size = box.x + min(82, max(68, box.w * 0.16)), box.y + box.h / 2, min(118, max(88, box.h * 0.64))
+        else:
+            old_cx, old_cy, old_size = box.x + min(42, max(30, box.w * 0.22)), box.y + box.h / 2, 42
+        target_size = min(32, box.h * 0.22)
+        scale = target_size / old_size
+        tx, ty = box.x + box.w / 2 - old_cx * scale, box.y + box.h * 0.20 - old_cy * scale
+        icon = f'<g class="decision-icon-zone" transform="translate({tx:.3f} {ty:.3f}) scale({scale:.4f})">{icon}</g>'
     enter_markup = ""
     float_markup = ""
     glow_markup = ""
-    node_opacity = "1" if motion.profile == "off" else "0"
+    node_opacity = "1"
     if effect_active(motion, node_effect):
-        if runtime_loop_active(motion):
-            enter_markup = '  <set attributeName="opacity" to="1" />'
-        else:
-            enter_markup = f'  <animate attributeName="opacity" values="0;1" dur="{seconds(scaled_duration(0.55, motion))}" begin="{seconds(delay)}" fill="freeze" />'
         if node_mode in {"float", "glow-breathe", "pop", "icon-pulse", "pulse", "ripple"}:
             float_markup = f"""  <animateTransform attributeName="transform" type="translate"
         values="{node_translate_values(motion, index, node_mode)}" dur="{seconds(float_duration)}" begin="{seconds(delay + 0.7)}"
@@ -1332,10 +1346,9 @@ def render_node(
     <animate attributeName="opacity" values="0.08;{glow_opacity:.2f};0.08" dur="{seconds(scaled_duration(3.9 + (index % 4) * 0.35, motion))}" begin="{seconds(delay + 0.2)}" repeatCount="indefinite" />
     <animate attributeName="stroke-width" values="1.0;{1.0 + 1.4 * clamp(motion.intensity, 0.25, 1.7):.1f};1.0" dur="{seconds(scaled_duration(3.9 + (index % 4) * 0.35, motion))}" begin="{seconds(delay + 0.2)}" repeatCount="indefinite" />
   </rect>"""
-    else:
-        enter_markup = "" if motion.profile == "off" else '  <set attributeName="opacity" to="1" />'
     return f"""
 <g id="node-{esc(box.node_id)}" class="node motion-node" data-role="{esc(node.role)}" opacity="{node_opacity}">
+<title>{esc(label + (" — " + caption if caption else ""))}</title>
 {enter_markup}
 {float_markup}
 {burst}
@@ -1343,7 +1356,7 @@ def render_node(
 {render_node_surface(node, box, radius, fill, stroke, stroke_width, style, index)}
 {icon}
 {badge}
-  {render_text_block(text_x, box.y, text_width, box.h, label, caption, text)}
+  {render_text_block(text_x, box.y + text_y_offset, text_width, text_height, label, caption, text)}
 </g>"""
 
 
@@ -1370,21 +1383,21 @@ def render_group(
     label = group.label
     muted = style.get("canvas", {}).get("muted", "#5b6778")
     delay = motion_delay(index, motion, "group")
-    group_opacity = "1" if motion.profile == "off" else "0"
-    enter_markup = "" if motion.profile == "off" else '<set attributeName="opacity" to="1" />'
+    group_opacity = "1"
+    enter_markup = ""
     dash_markup = ""
     scan_markup = ""
     corner_markup = ""
     if effect_active(motion, group_effect):
-        enter_markup = f'<animate attributeName="opacity" values="0;1" dur="{seconds(scaled_duration(0.7, motion))}" begin="{seconds(delay)}" fill="freeze" />'
         if group_mode in {"marching-ants", "border-scan"}:
             dash_markup = f'<animate attributeName="stroke-dashoffset" values="0;-34" dur="{seconds(scaled_duration(5.2 + index * 0.4, motion))}" begin="{seconds(delay)}" repeatCount="indefinite" />'
         if group_mode == "border-scan":
             scan_markup = f"""
   <rect class="group-border-scan" x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="22"
-        fill="none" stroke="{esc(stroke)}" stroke-width="3.4" stroke-linecap="round"
-        stroke-dasharray="{max(80, min(180, (w + h) * 0.12)):.1f} {max(260, (w + h) * 0.7):.1f}" opacity="0.72" filter="url(#soft-glow)">
-    <animate attributeName="stroke-dashoffset" values="0;-{2 * (w + h):.1f}" dur="{seconds(scaled_duration(6.8 + index * 0.35, motion))}" begin="{seconds(delay + 0.1)}" repeatCount="indefinite" />
+        fill="none" stroke="{esc(stroke)}" stroke-width="1.6" stroke-linecap="round"
+        stroke-dasharray="{max(80, min(180, (w + h) * 0.12)):.1f} {max(260, (w + h) * 0.7):.1f}" opacity="0">
+    <animate attributeName="stroke-dashoffset" values="0;-{2 * (w + h):.1f}" dur="0.8s" begin="0s" fill="freeze" />
+    <animate attributeName="opacity" values="0;0.6;0" dur="0.8s" begin="0s" fill="freeze" />
   </rect>"""
         if group_mode == "corner-pulse":
             line = max(24, min(54, min(w, h) * 0.16))
@@ -1511,7 +1524,6 @@ def render_edge(
         if edge.direction == "bidirectional"
         else f' marker-end="url(#{marker_id})"'
     )
-    draw_begin = motion_delay(index, motion, "edge") + edge.motion.delay
     badge = ""
     if edge.step is not None:
         badge = render_step_badge(mid_x - 22, mid_y - 5, edge.step, stroke, "#ffffff")
@@ -1537,11 +1549,6 @@ def render_edge(
         stroke-dasharray="1" stroke-dashoffset="0"{marker_attributes} />"""
     flow_markup = ""
     motion_markup = ""
-    if edge_is_active and edge_mode in DRAW_ENTRY_EDGE_MOTION:
-        draw_markup = f"""  <path class="edge-draw" d="{path}" fill="none" stroke="{esc(stroke)}" stroke-width="{width:.1f}" pathLength="1"
-        stroke-dasharray="1" stroke-dashoffset="1"{marker_attributes}>
-    <animate attributeName="stroke-dashoffset" values="1;0" dur="{seconds(scaled_duration(0.9, motion))}" begin="{seconds(draw_begin)}" fill="freeze" />
-  </path>"""
     if edge_is_active and edge_mode == "stream-flow":
         stream_duration = scaled_duration(max(1.35, duration_value * 0.72), motion)
         flow_markup = f"""  <path class="edge-flow edge-flow-stream-flow" d="{path}" fill="none" stroke="{esc(stroke)}" stroke-width="{max(1.2, width * 0.86):.1f}"
@@ -1570,11 +1577,8 @@ def render_edge(
   </circle>"""
             )
         motion_markup = "\n".join(particles)
-    label_static = label_placement is not None or not edge_is_active or edge_mode in CONTINUOUS_EDGE_MOTION or runtime_loop_active(motion)
-    label_opacity = "1" if label_static else "0"
+    label_opacity = "1"
     label_motion = ""
-    if not label_static and label:
-        label_motion = f'<animate attributeName="opacity" values="0;1" dur="{seconds(scaled_duration(0.45, motion))}" begin="{seconds(motion_delay(index, motion, "label") + edge.motion.delay)}" fill="freeze" />'
     label_motion_line = f"    {label_motion}\n" if label_motion else ""
     label_text = f"    {esc(label)}" if label else ""
     placement_attrs = ''
@@ -1583,7 +1587,7 @@ def render_edge(
         placement_attrs = (' data-label-placement="' + ('placed' if label_placement['placed'] else 'failed') +
                            '" data-expected-label="' + esc(edge.label) + '" data-direction="' + esc(edge.direction) +
                            '" data-relation-id="' + esc(edge.semantic_relation_id or f'@edge:{index - 1}') +
-                           '" data-source="' + esc(edge.source) + '" data-target="' + esc(edge.target) + '"')
+                           '"')
         if label_placement['placed']:
             ax, ay = label_placement['anchor']
             box = label_placement['box']
@@ -1595,7 +1599,7 @@ def render_edge(
     <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="{esc(stroke)}" />
   </marker>
 </defs>
-<g class="edge" data-role="{esc(edge.role)}"{placement_attrs}>
+<g class="edge" data-role="{esc(edge.role)}" data-source="{esc(edge.source)}" data-target="{esc(edge.target)}"{placement_attrs}>
   <path class="edge-base" d="{path}" fill="none" stroke="{esc(stroke)}" stroke-width="{max(1, width - 0.7):.1f}" opacity="0.24" />
 {draw_markup}
 {flow_markup}
@@ -1643,8 +1647,6 @@ def render_svg(
     group_letter_spacing = "0.04em" if resolved_locale == "zh-CN" else "0.08em"
     edge_label_halo = (
         f" paint-order: stroke; stroke: {background}; stroke-width: 4px; stroke-linejoin: round;"
-        if resolved_locale == "zh-CN"
-        else ""
     )
     nodes = {node.node_id: node_box(node) for node in scene.nodes}
     motion = scene.motion
@@ -1686,7 +1688,7 @@ def render_svg(
         for index, group in enumerate(scene.groups, start=1)
     )
     from .label_placement import place_labels, readable_labels
-    label_placements = place_labels(scene) if readable_labels(style) else {}
+    label_placements = place_labels(scene) if readable_labels(style, scene) else {}
     edges_markup = "\n".join(
         render_edge(edge, nodes, style, index, motion, policy, edge_motion_ranks.get(index), particle_motion_ranks.get(index), label_placements.get(index))
         for index, edge in enumerate(scene.edges, start=1)
@@ -1700,6 +1702,7 @@ def render_svg(
             policy,
             node_motion_ranks.get(index),
             suppress_icon_motion=node.node_id in suppress_icon_motion_node_ids,
+            show_step=not any(edge.step is not None for edge in scene.edges),
         )
         for index, node in enumerate(scene.nodes, start=1)
     )
@@ -1708,20 +1711,12 @@ def render_svg(
     frame_opacity = float(style_effect(style, "frame_opacity", 1.0))
 
     title_is_breathing = effect_active(motion, title_effect) and title_effect.preset == "breathe"
-    title_style_attr = ' style="animation:none"' if motion.profile == "off" or title_is_breathing or runtime_loop_active(motion) else ""
-    title_text_opacity = "1" if motion.profile == "off" or title_is_breathing or runtime_loop_active(motion) else "0"
+    title_style_attr = ' style="animation:none"'
+    title_text_opacity = "1"
+    title_text_anim = ""
     if title_is_breathing:
         title_text_anim = f'<animate attributeName="opacity" values="0.86;1;0.86" dur="{seconds(scaled_duration(3.6, motion))}" begin="0s" repeatCount="indefinite" />'
-    elif motion.profile == "off":
-        title_text_anim = ""
-    else:
-        title_text_anim = '<animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.08s" fill="freeze" />'
-    if runtime_loop_active(motion):
-        subtitle_anim = ""
-    elif motion.profile == "off":
-        subtitle_anim = ""
-    else:
-        subtitle_anim = '<animate attributeName="opacity" values="0;1" dur="0.65s" begin="0.28s" fill="freeze" />'
+    subtitle_anim = ""
     illustrated_css = ""
     if illustrated_icons_enabled(style):
         illustrated_css = """  .semantic-icon-illustrated-v1 .illustrated-icon-backplate { pointer-events: none; }
@@ -1742,10 +1737,10 @@ def render_svg(
 </path>"""
     elif effect_active(motion, title_effect) and title_effect.preset == "highlight-sweep":
         title_motion_markup = f"""
-<rect class="title-sweep" x="72" y="46" width="0" height="56" rx="16" fill="{esc(title_style.get("accent", "#2563eb"))}" opacity="0.16">
-  <animate attributeName="width" values="0;360;0" dur="{seconds(scaled_duration(3.2, motion))}" begin="0.34s" repeatCount="indefinite" />
-  <animate attributeName="x" values="72;72;432" dur="{seconds(scaled_duration(3.2, motion))}" begin="0.34s" repeatCount="indefinite" />
-</rect>"""
+<path class="title-sweep" d="M 90 99 H 432" fill="none" stroke="{esc(title_style.get("accent", "#2563eb"))}" stroke-width="2" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0">
+  <animate attributeName="stroke-dashoffset" values="1;0" dur="0.55s" begin="0s" fill="freeze" />
+  <animate attributeName="opacity" values="0;0.4;0" dur="0.8s" begin="0s" fill="freeze" />
+</path>"""
     title_text_anim_line = f"  {title_text_anim}\n" if title_text_anim else ""
     subtitle_anim_line = f"  {subtitle_anim}\n" if subtitle_anim else ""
 
@@ -1759,8 +1754,6 @@ def render_svg(
         icon_system_attr += f' data-icon-system-version="{esc(resolved_icon_system_version)}"'
     locale_attr = (
         f' lang="{esc(resolved_locale)}" xml:lang="{esc(resolved_locale)}" data-locale="{esc(resolved_locale)}"'
-        if resolved_locale == "zh-CN"
-        else ""
     )
 
     typed_markup = ('<metadata id="anidiagram-type-semantics">' + esc(json.dumps(scene.type_semantics, ensure_ascii=False)) + '</metadata>\n') if scene.type_semantics else ''
@@ -1773,7 +1766,7 @@ def render_svg(
   .node-title {{ font: 700 18px {font_family}; }}
   .node-caption {{ font: 400 13px {font_family}; opacity: 0.84; }}
   .group-label {{ font: 700 14px {font_family}; text-transform: {group_text_transform}; letter-spacing: {group_letter_spacing}; }}
-  .edge-label {{ font: 600 13px {font_family};{edge_label_halo} }}
+  .edge-label {{ font: 600 12px {font_family};{edge_label_halo} }}
   .step-label {{ font: 700 12px {font_family}; }}
   .edge-flow {{ stroke-linecap: round; }}
   .edge-draw, .edge-base {{ stroke-linecap: butt; stroke-linejoin: round; }}
@@ -1797,7 +1790,7 @@ def render_svg(
 <rect width="100%" height="100%" fill="url(#grid)" opacity="{grid_opacity:.2f}" />
 <rect x="28" y="26" width="{width - 56}" height="{height - 52}" rx="26" fill="none" stroke="{esc(style.get("roles", {}).get("neutral", {}).get("stroke", "#94a3b8"))}" stroke-width="1.4" opacity="{frame_opacity:.2f}" />
 <rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="{esc(title_style.get("accent", "#2563eb"))}"{title_style_attr} />
-<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="{esc(title_style.get("highlight", "#e8f1ff"))}"{title_style_attr} />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="{esc(title_style.get("highlight", "#e8f1ff"))}" opacity="0"{title_style_attr} />
 {title_motion_markup}
 <text id="main-title" x="90" y="84" class="title" fill="{esc(text)}" opacity="{title_text_opacity}">
 {title_text_anim_line}  {esc(title_text)}
@@ -1816,6 +1809,7 @@ def render_html(svg: str, title: str, locale: str = "en") -> str:
     resolved_locale = resolve_locale(locale, (title,))
     labels = viewer_labels(resolved_locale)
     font_family = font_stack(resolved_locale)
+    viewport_js = resource_path("runtime", "viewer-viewport.js").read_text(encoding="utf-8")
     return f"""<!doctype html>
 <html lang="{esc(resolved_locale)}">
 <head>
@@ -1824,12 +1818,12 @@ def render_html(svg: str, title: str, locale: str = "en") -> str:
   <title>{esc(title)}</title>
   <style>
     body {{ margin: 0; background: #111827; color: #f8fafc; font-family: {font_family}; }}
-    main {{ min-height: 100vh; display: grid; grid-template-rows: auto 1fr; gap: 12px; padding: 16px; box-sizing: border-box; }}
+    main {{ height: 100vh; height: 100dvh; min-height: 360px; display: flex; flex-direction: column; gap: 12px; padding: 16px; box-sizing: border-box; }}
     .toolbar {{ display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }}
     button, a {{ border: 1px solid #475569; background: #1f2937; color: #f8fafc; border-radius: 8px; padding: 8px 10px; font: inherit; text-decoration: none; cursor: pointer; }}
     button:hover, a:hover {{ background: #334155; }}
     button[aria-pressed="true"] {{ background: #475569; border-color: #94a3b8; }}
-    .stage {{ width: 100%; min-height: 0; overflow: hidden; border: 1px solid #334155; border-radius: 12px; background: #020617; cursor: grab; }}
+    .stage {{ position: relative; box-sizing: border-box; flex: 1; width: 100%; min-height: 120px; overflow: hidden; border: 1px solid #334155; border-radius: 12px; background: #020617; cursor: grab; }}
     .stage.dragging {{ cursor: grabbing; }}
     .viewport {{ transform-origin: 0 0; width: max-content; }}
     svg {{ display: block; max-width: none; height: auto; user-select: none; }}
@@ -1866,20 +1860,13 @@ def render_html(svg: str, title: str, locale: str = "en") -> str:
     </div>
   </main>
   <script>
+{viewport_js}
     const stage = document.getElementById('stage');
     const viewer = document.getElementById('viewer');
     const viewport = document.getElementById('viewport');
     const svg = viewport.querySelector('svg');
     const download = document.getElementById('download');
-    let scale = 1;
-    let x = 0;
-    let y = 0;
-    let dragging = false;
-    let lastX = 0;
-    let lastY = 0;
-    function applyTransform() {{
-      viewport.style.transform = `translate(${{x}}px, ${{y}}px) scale(${{scale}})`;
-    }}
+    window.__ANIDIAGRAM_VIEWPORT__ = window.AniDiagramViewport.mount(stage, viewport, svg);
     function setDownload() {{
       const blob = new Blob([new XMLSerializer().serializeToString(svg)], {{type: 'image/svg+xml'}});
       download.href = URL.createObjectURL(blob);
@@ -1915,19 +1902,6 @@ def render_html(svg: str, title: str, locale: str = "en") -> str:
     document.querySelectorAll('.motion-choice').forEach((button) => {{
       button.addEventListener('click', () => setMotionMode(button.dataset.motion));
     }});
-    document.getElementById('zoom-in').addEventListener('click', () => {{ scale = Math.min(3, scale + 0.15); applyTransform(); }});
-    document.getElementById('zoom-out').addEventListener('click', () => {{ scale = Math.max(0.35, scale - 0.15); applyTransform(); }});
-    document.getElementById('reset').addEventListener('click', () => {{ scale = 1; x = 0; y = 0; applyTransform(); }});
-    stage.addEventListener('pointerdown', (event) => {{ dragging = true; stage.classList.add('dragging'); lastX = event.clientX; lastY = event.clientY; stage.setPointerCapture(event.pointerId); }});
-    stage.addEventListener('pointermove', (event) => {{
-      if (!dragging) return;
-      x += event.clientX - lastX;
-      y += event.clientY - lastY;
-      lastX = event.clientX;
-      lastY = event.clientY;
-      applyTransform();
-    }});
-    stage.addEventListener('pointerup', () => {{ dragging = false; stage.classList.remove('dragging'); }});
     setDownload();
     if (svg.dataset.motionProfile === 'off') {{
       setMotionMode('off');

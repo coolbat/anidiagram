@@ -101,9 +101,11 @@ async function main() {
     await page.waitForSelector("svg");
     await page.waitForFunction(() => Boolean(window.AniDiagramRuntime) && Boolean(window.gsap) && Array.isArray(window.__ANIDIAGRAM_TIMELINES__));
     const manifest = await readCharacterManifest(page, expectedSystem);
-    const expectedEntries = characterEntries(manifest, expectedCount);
+    const allEntries = characterEntries(manifest, expectedCount);
+    const residentIds = new Set(manifest.stage?.active_icon_node_ids || allEntries.map(entry => entry.node_id));
+    const expectedEntries = allEntries.filter(entry => residentIds.has(entry.node_id));
 
-    const result = await page.evaluate((characterEntries) => {
+    const result = await page.evaluate(({characterEntries, beat}) => {
       const timelines = (window.__ANIDIAGRAM_TIMELINES__ || []).filter((timeline) => timeline.__anidiagramCharacter);
       const failures = [];
       const strongCycles = [];
@@ -137,7 +139,7 @@ async function main() {
         if (entry.performance_tier === "strong-loop") {
           const cycle = timeline.duration() + timeline.repeatDelay();
           strongCycles.push(cycle);
-          if (cycle < 1.72 || cycle > 1.88) {
+          if (beat ? Math.abs(cycle / beat - Math.round(cycle / beat)) > 0.001 : cycle < 1.72 || cycle > 1.88) {
             failures.push(`strong-loop cycle out of range for ${metadata.nodeId}: ${cycle}`);
           }
         }
@@ -185,13 +187,13 @@ async function main() {
         }
       }
       return { failures, expected: characterEntries.length, actual: timelines.length, strongCycles };
-    }, expectedEntries);
+    }, {characterEntries: expectedEntries, beat: manifest.stage?.beat_seconds || 0});
 
     if (result.failures.length) {
       throw new Error(result.failures.join("\n"));
     }
     const strongSummary = result.strongCycles.length ? `; strong-loop cycles=${result.strongCycles.map((value) => value.toFixed(2)).join(",")}` : "";
-    process.stdout.write(`verified character rest state for ${result.actual}/${result.expected} timelines${strongSummary}\n`);
+    process.stdout.write(`verified character rest state for ${result.actual}/${result.expected} resident timelines; manifest=${allEntries.length}${strongSummary}\n`);
   } finally {
     await browser.close();
   }

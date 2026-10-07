@@ -69,7 +69,7 @@ jobs:
           PYTHONPATH=src python3 -m unittest discover -s tests
           node --test tests/reader-graph.test.cjs
           PYTHONPATH=src python3 scripts/verify_reading_schemas.py
-          PYTHONPATH=src python3 scripts/check_compatibility_snapshot.py tests/compatibility-baseline-18cb0f3.json
+          PYTHONPATH=src python3 scripts/check_compatibility_snapshot.py tests/compatibility-baseline-optimization-2026-10.json
       - name: Verify portable Agent Skill installation
         run: python3 scripts/verify_skill_install.py --outdir build/ci/skill-install
       - name: Verify bilingual Dify publication and source consistency
@@ -81,6 +81,13 @@ jobs:
       - name: Check runtime JavaScript syntax
         run: |
           node --check runtime/anidiagram-runtime.js
+          node --check runtime/icon-performances.js
+          node --check runtime/stage-effects.js
+          node --check runtime/viewer-runtime.js
+          node --check runtime/viewer-shell.js
+          node --check runtime/event-driven-runtime.js
+          node --check runtime/viewer-viewport.js
+          node --check runtime/stage-entrance.js
           node --check runtime/illustrated-performance-v6-runtime.js
           node --check runtime/edge-motion-v1-runtime.js
           node --check runtime/choreographer-v1-runtime.js
@@ -201,6 +208,10 @@ jobs:
             build/ci/composition/production-request-path.html
           node scripts/verify_choreographer.mjs build/ci/choreographer/timeline.html timeline
           node scripts/verify_choreographer.mjs build/ci/choreographer/hybrid.html hybrid
+      - name: Verify fitted viewports, complete SVG exports and endpoint-ready entrances
+        run: node scripts/verify_optimization_viewer.mjs build/ci/optimization
+      - name: Verify explanation, toolbar and motion fallbacks
+        run: node scripts/verify_product_viewer.mjs build/ci/product-viewer
       - name: Verify committed README visual quality
         run: node scripts/verify_readme_showcase_round_1.mjs gallery/readme-showcase
       - name: Verify every gallery preview and its real icon motion

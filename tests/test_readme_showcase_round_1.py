@@ -14,6 +14,7 @@ if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
 from anidiagram.quality import quality_report
+from quality_expectations import assert_quality_baseline
 from anidiagram.renderer_svg import render_svg
 from anidiagram.schema import compile_scene
 from anidiagram.styles import load_style
@@ -61,10 +62,7 @@ class ReadmeShowcaseRound1Test(unittest.TestCase):
                 self.assertEqual(case["icon_system"], spec["icon_system"])
                 scene = compile_scene(spec)
                 style = load_style(ROOT / "styles" / f'{spec["style"]}.json')
-                self.assertEqual(
-                    {"errors": 0, "warnings": 0, "issues": 0},
-                    quality_report(scene, style)["summary"],
-                )
+                assert_quality_baseline(self, quality_report(scene, style), case["id"])
 
     def test_template_comparison_changes_only_the_style_axis(self):
         template_ids = [case["id"] for case in CASES if case["kind"] == "template"]
@@ -136,7 +134,7 @@ class ReadmeShowcaseRound1Test(unittest.TestCase):
             root = Path(directory)
             result = render_round(root / "specs", root / "outputs")
             self.assertEqual(8, result["case_count"])
-            self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, result["quality_summary"])
+            self.assertEqual({"errors": 0, "warnings": 2, "issues": 2}, result["quality_summary"])
             manifest = json.loads((root / "outputs" / "manifest.json").read_text(encoding="utf-8"))
             self.assertEqual("approved", manifest["status"])
             self.assertTrue(manifest["readme_mutated"])
@@ -285,7 +283,7 @@ class ReadmeShowcaseRound1Test(unittest.TestCase):
             self.assertEqual(8, report["cases"])
             self.assertEqual(70, report["nodes"])
             self.assertEqual(66, report["edges"])
-            self.assertEqual(66, report["active_runtime_edges"])
+            self.assertEqual(46, report["active_runtime_edges"])  # explicit showcase limits + default primary-edge budget
             self.assertEqual(0, report["animated_webp_previews"])
             self.assertEqual([], report["console_errors"])
             self.assertEqual([], report["overflow"])

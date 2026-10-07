@@ -63,7 +63,7 @@ class IllustratedRelease22Test(unittest.TestCase):
             "public_motion_contract_sha256": ROOT / "assets" / "illustrated" / "motion-contracts" / "illustrated-performance-v3.json",
             "archived_public_motion_contract_sha256": ROOT / "assets" / "illustrated" / "motion-contracts" / "illustrated-performance-v2.json",
             "archived_motion_review_contract_sha256": ROOT / "assets" / "illustrated" / "motion-contracts" / "illustrated-performance-v3.review.json",
-            "stage_motion_catalog_sha256": ROOT / "runtime" / "motion-catalog.json",
+            "stage_motion_catalog_sha256": ROOT / "assets" / "illustrated" / "snapshots" / "runtime-motion-catalog-2026-07-08.json",
             "stage_motion_acceptance_sha256": ROOT / "assets" / "illustrated" / "reviews" / "motion-coordination-v1.2-acceptance.json",
             "showcase_spec_sha256": ROOT / "examples" / "illustrated-2.2-showcase.diagram.json",
             "acceptance_record_sha256": ROOT / "assets" / "illustrated" / "reviews" / "2.2.0-acceptance.json",

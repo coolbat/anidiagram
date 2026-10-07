@@ -32,6 +32,15 @@
     <h1>AniDiagram Showcase</h1>
     <p>Style Showcase makes diagrams look right. Layout Showcase makes diagram purpose obvious. Every preview runs the actual diagram's icon and flow animations while visible, with a complete static fallback.</p>
     <div class="preview-controls"><button type="button" data-preview-toggle aria-pressed="true" hidden>Pause previews</button><span>Live icon motion in visible cards. Open HTML for full-size details.</span></div>
+    <section class="narration-hero" aria-labelledby="narration-title">
+      <h2 id="narration-title">Follow one request, step by step</h2>
+      <p>A seven-second recording of the actual explanation mode: focus, camera movement, relation labels, and step controls. This is a generic architecture sample, not a verified production system.</p>
+      <video controls muted loop playsinline preload="metadata" poster="narration/poster.png" style="display:block;width:100%;max-height:65vh;background:#fff;border:1px solid #e5e7eb;border-radius:12px" aria-label="Seven-second request-flow explanation">
+        <source src="narration/explanation.mp4" type="video/mp4">
+        <a href="narration/production-request.html">Open the interactive explanation</a>
+      </video>
+      <p class="links"><a href="narration/production-request.html">Try the interactive explanation</a><a href="narration/recording.json">Recording details</a><a href="#style-showcase">Explore styles</a><a href="#layout-showcase">Explore layouts</a></p>
+    </section>
     <section class="hero">
       <h2>Hero Demo · Dify</h2>
       <p>From Document to Answer: follow ingestion and basic Chat across three logical layers. 10 nodes · 13 relations · two styles, one architecture.</p>
@@ -50,7 +59,7 @@
       </div>
     </section>
     <section>
-      <h2>Style Showcase</h2>
+      <h2 id="style-showcase">Style Showcase</h2>
       <p>One signature case for every bundled visual style.</p>
       <div class="grid style-grid">
 <article><figure class="motion-preview"><a href="styles/minimal-light.html" data-preview-url="styles/minimal-light.html"><img loading="lazy" src="styles/minimal-light.preview.svg" alt="minimal-light showcase" width="1632" height="720"></a><figcaption class="preview-status" hidden>Animation unavailable; open HTML or view the static preview.</figcaption></figure><h3>minimal-light</h3><p>Customer Support Triage</p><p>SaaS, Operations, Support flows</p><p class="actions"><a href="styles/minimal-light.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/styles/minimal-light-customer-support-triage.diagram.json --style styles/minimal-light.json --outdir outputs --basename minimal-light --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>
@@ -69,7 +78,7 @@
       </div>
     </section>
     <section>
-      <h2>Layout Showcase</h2>
+      <h2 id="layout-showcase">Layout Showcase</h2>
       <p>One standard teaching case for every semantic layout preset.</p>
       <div class="grid">
 <article><figure class="motion-preview"><a href="layouts/pipeline.html" data-preview-url="layouts/pipeline.html"><img loading="lazy" src="layouts/pipeline.preview.svg" alt="pipeline showcase" width="1632" height="720"></a><figcaption class="preview-status" hidden>Animation unavailable; open HTML or view the static preview.</figcaption></figure><h3>pipeline</h3><p>RAG Ingestion Pipeline</p><p>ETL, Build steps, AI pipelines</p><p class="actions"><a href="layouts/pipeline.html">Open HTML</a><button type="button" data-copy="PYTHONPATH=src python3 -m anidiagram.cli --spec examples/showcase/layouts/pipeline-rag-ingestion-pipeline.diagram.json --style styles/blueprint.json --outdir outputs --basename pipeline --formats svg,html,quality --html-runtime gsap">Copy CLI</button></p></article>

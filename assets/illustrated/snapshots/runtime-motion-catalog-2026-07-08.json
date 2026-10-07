@@ -1,0 +1,1787 @@
+{
+  "version": "runtime-motion-catalog-0.1",
+  "status": "frozen-baseline",
+  "baseline_date": "2026-07-08",
+  "default_runtime": {
+    "mode": "ambient",
+    "profile": "expressive",
+    "sequence": "independent-icon-loops",
+    "runtime": "gsap",
+    "icon_system": "illustrated-character-v1",
+    "motion_contract": "motion-coordination-v1.1",
+    "stagger_contract": {"source": "scene.motion.stagger", "minimum": 0.08, "mode": "per-icon-delay"},
+    "readable": "character loops plus at most two key edge packets; no title or decorative stage loops",
+    "off": "canonical static scene",
+    "reduced_motion": "zero GSAP timelines"
+  },
+  "change_control": {
+    "requires_confirmation": true,
+    "rule": "Changes that alter visual timing, intensity, icon semantics, part IDs, stage effects, defaults, or runtime scheduling must be confirmed before implementation.",
+    "allowed_without_confirmation": [
+      "documentation-only typo fixes",
+      "test coverage that does not change runtime behavior",
+      "gallery regeneration from the same specs and runtime code"
+    ]
+  },
+  "diagram_core_presentations": [
+    {
+      "id": "agent.showcase-loop-v1",
+      "runtime_id": "agent-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "agent",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["body", "antenna", "eye-left", "eye-right", "core"],
+      "optional_parts": [],
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.24,
+      "duration_ms": 2070,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "database.showcase-loop-v1",
+      "runtime_id": "database-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "database",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["body", "top-ring", "layer-top", "layer-middle", "layer-bottom", "core"],
+      "optional_parts": [],
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.12,
+      "duration_ms": 1870,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "api.showcase-loop-v1",
+      "runtime_id": "api-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "api",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["body", "input-interface", "output-interface", "processor", "indicator-group"],
+      "optional_parts": [],
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.36,
+      "duration_ms": 2270,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "server.showcase-loop-v1",
+      "runtime_id": "server-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "server",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["body", "tray-top", "tray-bottom", "indicator-top", "indicator-bottom", "vent-top", "vent-bottom"],
+      "optional_parts": [],
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.36,
+      "duration_ms": 2270,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "operator.showcase-loop-v1",
+      "runtime_id": "operator-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "operator",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["head", "panel", "cursor", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["head"], "steps": [{"to": {"y": -3, "rotate": -6, "scale": 1.08}, "duration": 0.24, "ease": "power2.out", "at": 0.0}, {"to": {"y": 0, "rotate": 0, "scale": 1}, "duration": 0.18, "ease": "power2.out", "at": 0.34}]},
+          {"parts": ["panel"], "steps": [{"to": {"scaleX": 1.08, "scaleY": 0.94}, "duration": 0.24, "ease": "power2.inOut", "at": 0.18}, {"to": {"scaleX": 1, "scaleY": 1}, "duration": 0.18, "ease": "power2.out", "at": 0.48}]},
+          {"parts": ["cursor"], "steps": [{"to": {"x": 10, "y": -5, "rotate": 8}, "duration": 0.28, "ease": "power2.inOut", "at": 0.38}, {"to": {"x": 0, "y": 0, "rotate": 0}, "duration": 0.18, "ease": "power2.out", "at": 0.78}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.42}, "duration": 0.2, "ease": "power2.out", "at": 0.78}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.06}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.3,
+      "duration_ms": 2160,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "memory.showcase-loop-v1",
+      "runtime_id": "memory-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "memory",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["drawer-top", "drawer-bottom", "card", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["drawer-top"], "steps": [{"to": {"y": -4, "scaleX": 1.06}, "duration": 0.22, "ease": "power2.out", "at": 0.0}, {"to": {"y": 0, "scaleX": 1}, "duration": 0.18, "ease": "power2.inOut", "at": 0.44}]},
+          {"parts": ["drawer-bottom"], "steps": [{"to": {"y": 4, "scaleX": 1.06}, "duration": 0.22, "ease": "power2.out", "at": 0.16}, {"to": {"y": 0, "scaleX": 1}, "duration": 0.18, "ease": "power2.inOut", "at": 0.6}]},
+          {"parts": ["card"], "steps": [{"to": {"y": -10, "scale": 1.1}, "duration": 0.32, "ease": "power2.out", "at": 0.25}, {"to": {"y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.72}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.42}, "duration": 0.2, "ease": "power2.out", "at": 0.78}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.08}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.32,
+      "duration_ms": 2200,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "tool.showcase-loop-v1",
+      "runtime_id": "tool-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "tool",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["handle", "mechanism", "core", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["handle"], "steps": [{"to": {"y": -6, "scaleX": 1.06}, "duration": 0.28, "ease": "power2.out", "at": 0.0}, {"to": {"y": 0, "scaleX": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.42}]},
+          {"parts": ["mechanism"], "steps": [{"to": {"rotate": 14, "scale": 1.08}, "duration": 0.36, "ease": "power2.inOut", "at": 0.18}, {"to": {"rotate": 0, "scale": 1}, "duration": 0.26, "ease": "power2.out", "at": 0.68}]},
+          {"parts": ["core"], "steps": [{"to": {"scale": 1.4}, "duration": 0.28, "ease": "power2.out", "at": 0.42}, {"to": {"scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.84}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.42}, "duration": 0.2, "ease": "power2.out", "at": 0.78}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.08}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.34,
+      "duration_ms": 2230,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "token.showcase-loop-v1",
+      "runtime_id": "token-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "token",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["shell", "tick-group", "core", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["shell"], "steps": [{"to": {"scale": 1.08}, "duration": 0.3, "ease": "sine.out", "at": 0.0}, {"to": {"scale": 1}, "duration": 0.2, "ease": "sine.inOut", "at": 0.5}]},
+          {"parts": ["tick-group"], "steps": [{"to": {"rotate": 14, "scale": 1.1}, "duration": 0.38, "ease": "power2.inOut", "at": 0.12}, {"to": {"rotate": 0, "scale": 1}, "duration": 0.24, "ease": "power2.out", "at": 0.66}]},
+          {"parts": ["core"], "steps": [{"to": {"scale": 1.35}, "duration": 0.28, "ease": "power2.out", "at": 0.36}, {"to": {"scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.84}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.42}, "duration": 0.2, "ease": "power2.out", "at": 0.74}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.08}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.32,
+      "duration_ms": 2200,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "search.showcase-loop-v1",
+      "runtime_id": "search-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "search",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["body", "lens", "handle", "scan", "target", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["body"], "steps": [{"to": {"x": 0, "y": -4}, "duration": 0.06, "ease": "power2.out", "at": 0.0}, {"to": {"x": 3, "y": -3}, "duration": 0.055, "ease": "none", "at": 0.06}, {"to": {"x": 4, "y": 0}, "duration": 0.055, "ease": "none", "at": 0.115}, {"to": {"x": 3, "y": 3}, "duration": 0.055, "ease": "none", "at": 0.17}, {"to": {"x": 0, "y": 4}, "duration": 0.055, "ease": "none", "at": 0.225}, {"to": {"x": -3, "y": 3}, "duration": 0.055, "ease": "none", "at": 0.28}, {"to": {"x": -4, "y": 0}, "duration": 0.055, "ease": "none", "at": 0.335}, {"to": {"x": -3, "y": -3}, "duration": 0.055, "ease": "none", "at": 0.39}, {"to": {"x": 0, "y": -4}, "duration": 0.055, "ease": "none", "at": 0.445}, {"to": {"x": 0, "y": 0}, "duration": 0.08, "ease": "power2.out", "at": 0.5}]},
+          {"parts": ["scan"], "steps": [{"to": {"rotate": 180}, "duration": 0.18, "ease": "power2.inOut", "at": 0.58}, {"to": {"rotate": 360}, "duration": 0.18, "ease": "power2.inOut", "at": 0.76}]},
+          {"parts": ["target"], "steps": [{"to": {"scale": 1.45}, "duration": 0.22, "ease": "power2.out", "at": 0.94}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.16}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.45}, "duration": 0.2, "ease": "power2.out", "at": 1.02}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.22}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.44,
+      "duration_ms": 2400,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "file.showcase-loop-v1",
+      "runtime_id": "file-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "file",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["body", "fold", "content-line-top", "content-line-bottom", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["body"], "steps": [{"to": {"y": -4, "scale": 1.04}, "duration": 0.28, "ease": "power2.out", "at": 0.0}, {"to": {"y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.inOut", "at": 0.46}]},
+          {"parts": ["fold"], "steps": [{"to": {"y": -3, "rotate": 10, "scale": 1.1}, "duration": 0.24, "ease": "back.out(3)", "at": 0.12}, {"to": {"y": 0, "rotate": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.5}]},
+          {"parts": ["content-line-top"], "steps": [{"to": {"x": 6, "scaleX": 1.08}, "duration": 0.22, "ease": "power2.out", "at": 0.28}, {"to": {"x": 0, "scaleX": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.62}]},
+          {"parts": ["content-line-bottom"], "steps": [{"to": {"x": 6, "scaleX": 1.08}, "duration": 0.22, "ease": "power2.out", "at": 0.42}, {"to": {"x": 0, "scaleX": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.76}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.4}, "duration": 0.2, "ease": "power2.out", "at": 0.8}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.1}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.32,
+      "duration_ms": 2200,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "folder.showcase-loop-v1",
+      "runtime_id": "folder-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "folder",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["body", "tab", "file-card", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["body"], "steps": [{"to": {"y": -3, "scale": 1.04}, "duration": 0.28, "ease": "power2.out", "at": 0.0}, {"to": {"y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.inOut", "at": 0.5}]},
+          {"parts": ["tab"], "steps": [{"to": {"y": -5, "rotate": -10, "scale": 1.08}, "duration": 0.28, "ease": "back.out(3)", "at": 0.12}, {"to": {"y": 0, "rotate": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.56}]},
+          {"parts": ["file-card"], "steps": [{"to": {"y": -8, "scale": 1.08}, "duration": 0.32, "ease": "power2.out", "at": 0.28}, {"to": {"y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.76}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.4}, "duration": 0.2, "ease": "power2.out", "at": 0.8}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.12}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.34,
+      "duration_ms": 2230,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "output.showcase-loop-v1",
+      "runtime_id": "output-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "output",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["card", "send-path", "check", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["card"], "steps": [{"to": {"y": -7, "scale": 1.06}, "duration": 0.3, "ease": "power2.out", "at": 0.0}, {"to": {"y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.5}]},
+          {"parts": ["send-path"], "steps": [{"to": {"x": 8, "scaleX": 1.12}, "duration": 0.28, "ease": "power2.inOut", "at": 0.22}, {"to": {"x": 0, "scaleX": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.68}]},
+          {"parts": ["check"], "steps": [{"to": {"rotate": 10, "scale": 1.35}, "duration": 0.24, "ease": "back.out(3)", "at": 0.5}, {"to": {"rotate": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.84}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.4}, "duration": 0.2, "ease": "power2.out", "at": 0.78}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.1}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.34,
+      "duration_ms": 2230,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "shield.showcase-loop-v1",
+      "runtime_id": "shield-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "shield",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["shell", "scan", "core", "check"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["shell"], "steps": [{"to": {"y": -3, "scale": 1.06}, "duration": 0.3, "ease": "sine.out", "at": 0.0}, {"to": {"y": 0, "scale": 1}, "duration": 0.22, "ease": "sine.inOut", "at": 0.52}]},
+          {"parts": ["scan"], "steps": [{"to": {"y": 8, "opacity": 0.35}, "duration": 0.36, "ease": "power2.inOut", "at": 0.18}, {"to": {"y": 0, "opacity": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.68}]},
+          {"parts": ["core"], "steps": [{"to": {"scale": 1.35}, "duration": 0.26, "ease": "power2.out", "at": 0.48}, {"to": {"scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.86}]},
+          {"parts": ["check"], "steps": [{"to": {"scale": 1.3, "rotate": 10}, "duration": 0.22, "ease": "back.out(3)", "at": 0.7}, {"to": {"scale": 1, "rotate": 0}, "duration": 0.2, "ease": "power2.out", "at": 1.02}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.24,
+      "duration_ms": 2070,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "cloud.showcase-loop-v1",
+      "runtime_id": "cloud-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "cloud",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["cloud-shell", "module-left", "module-center", "module-right", "signal"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["cloud-shell"], "steps": [{"to": {"y": -4, "scale": 1.05}, "duration": 0.28, "ease": "sine.out", "at": 0.0}, {"to": {"y": 0, "scale": 1}, "duration": 0.22, "ease": "sine.inOut", "at": 0.48}]},
+          {"parts": ["module-left"], "steps": [{"to": {"y": -5, "scale": 1.08}, "duration": 0.22, "ease": "power2.out", "at": 0.16}, {"to": {"y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.48}]},
+          {"parts": ["module-center"], "steps": [{"to": {"y": -7, "scale": 1.12}, "duration": 0.24, "ease": "power2.out", "at": 0.28}, {"to": {"y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.6}]},
+          {"parts": ["module-right"], "steps": [{"to": {"y": -5, "scale": 1.08}, "duration": 0.22, "ease": "power2.out", "at": 0.4}, {"to": {"y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.72}]},
+          {"parts": ["signal"], "steps": [{"to": {"y": -4, "scale": 1.3}, "duration": 0.24, "ease": "back.out(3)", "at": 0.94}, {"to": {"y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.18}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.38,
+      "duration_ms": 2300,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "user.showcase-loop-v1",
+      "runtime_id": "user-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "user",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["head", "shoulders", "request-bubble", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["head"], "steps": [{"to": {"y": -4, "scale": 1.08}, "duration": 0.25, "ease": "power2.out", "at": 0.0}, {"to": {"y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.42}]},
+          {"parts": ["shoulders"], "steps": [{"to": {"scaleX": 1.08, "scaleY": 0.94}, "duration": 0.28, "ease": "sine.out", "at": 0.14}, {"to": {"scaleX": 1, "scaleY": 1}, "duration": 0.2, "ease": "sine.inOut", "at": 0.52}]},
+          {"parts": ["request-bubble"], "steps": [{"to": {"y": -6, "scale": 1.14}, "duration": 0.3, "ease": "power2.out", "at": 0.34}, {"to": {"y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.8}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.35}, "duration": 0.2, "ease": "power2.out", "at": 0.78}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.08}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.3,
+      "duration_ms": 2160,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "developer.showcase-loop-v1",
+      "runtime_id": "developer-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "developer",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["head", "code-panel", "code-mark", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["head"], "steps": [{"to": {"x": 3, "y": -3, "rotate": 5}, "duration": 0.25, "ease": "power2.out", "at": 0.0}, {"to": {"x": 0, "y": 0, "rotate": 0}, "duration": 0.2, "ease": "power2.out", "at": 0.42}]},
+          {"parts": ["code-panel"], "steps": [{"to": {"y": -4, "scale": 1.06}, "duration": 0.28, "ease": "sine.out", "at": 0.16}, {"to": {"y": 0, "scale": 1}, "duration": 0.2, "ease": "sine.inOut", "at": 0.58}]},
+          {"parts": ["code-mark"], "steps": [{"to": {"x": 6, "scale": 1.18}, "duration": 0.3, "ease": "power2.inOut", "at": 0.36}, {"to": {"x": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.82}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.35}, "duration": 0.2, "ease": "power2.out", "at": 0.8}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.1}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.32,
+      "duration_ms": 2200,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "agent-team.showcase-loop-v1",
+      "runtime_id": "agent-team-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "agent-team",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["leader", "member-left", "member-right", "link", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["leader"], "steps": [{"to": {"y": -6, "scale": 1.1}, "duration": 0.28, "ease": "power2.out", "at": 0.0}, {"to": {"y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.44}]},
+          {"parts": ["member-left"], "steps": [{"to": {"x": -5, "y": -3, "scale": 1.1}, "duration": 0.25, "ease": "power2.out", "at": 0.18}, {"to": {"x": 0, "y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.58}]},
+          {"parts": ["member-right"], "steps": [{"to": {"x": 5, "y": -3, "scale": 1.1}, "duration": 0.25, "ease": "power2.out", "at": 0.34}, {"to": {"x": 0, "y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.74}]},
+          {"parts": ["link"], "steps": [{"to": {"scale": 1.2}, "duration": 0.26, "ease": "sine.out", "at": 0.54}, {"to": {"scale": 1}, "duration": 0.2, "ease": "sine.inOut", "at": 0.9}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.35}, "duration": 0.2, "ease": "power2.out", "at": 0.82}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.12}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.34,
+      "duration_ms": 2230,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "assistant.showcase-loop-v1",
+      "runtime_id": "assistant-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "assistant",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["shell", "service-core", "reply-tail", "sparkle", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["shell"], "steps": [{"to": {"scaleX": 1.08, "scaleY": 0.94}, "duration": 0.3, "ease": "sine.out", "at": 0.0}, {"to": {"scaleX": 1, "scaleY": 1}, "duration": 0.22, "ease": "sine.inOut", "at": 0.48}]},
+          {"parts": ["service-core"], "steps": [{"to": {"scale": 1.24, "rotate": 8}, "duration": 0.28, "ease": "power2.out", "at": 0.2}, {"to": {"scale": 1, "rotate": 0}, "duration": 0.22, "ease": "power2.out", "at": 0.62}]},
+          {"parts": ["reply-tail"], "steps": [{"to": {"x": 5, "y": 4, "rotate": 10}, "duration": 0.24, "ease": "power2.out", "at": 0.4}, {"to": {"x": 0, "y": 0, "rotate": 0}, "duration": 0.2, "ease": "power2.out", "at": 0.76}]},
+          {"parts": ["sparkle"], "steps": [{"to": {"y": -5, "rotate": 12, "scale": 1.3}, "duration": 0.26, "ease": "power2.out", "at": 0.62}, {"to": {"y": 0, "rotate": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.98}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.35}, "duration": 0.2, "ease": "power2.out", "at": 0.82}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.12}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.34,
+      "duration_ms": 2230,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "human-reviewer.showcase-loop-v1",
+      "runtime_id": "human-reviewer-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "human-reviewer",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["head", "review-card", "lens", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["head"], "steps": [{"to": {"x": 4, "y": -2, "rotate": 6}, "duration": 0.26, "ease": "power2.out", "at": 0.0}, {"to": {"x": 0, "y": 0, "rotate": 0}, "duration": 0.2, "ease": "power2.out", "at": 0.44}]},
+          {"parts": ["review-card"], "steps": [{"to": {"y": -4, "scale": 1.06}, "duration": 0.28, "ease": "sine.out", "at": 0.18}, {"to": {"y": 0, "scale": 1}, "duration": 0.2, "ease": "sine.inOut", "at": 0.58}]},
+          {"parts": ["lens"], "steps": [{"to": {"x": 5, "y": -5, "rotate": 10, "scale": 1.2}, "duration": 0.3, "ease": "power2.inOut", "at": 0.38}, {"to": {"x": 0, "y": 0, "rotate": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.84}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.35}, "duration": 0.2, "ease": "power2.out", "at": 0.82}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.12}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.34,
+      "duration_ms": 2230,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "ai-model.showcase-loop-v1",
+      "runtime_id": "ai-model-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "ai-model",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["layer-back", "layer-front", "core", "ports", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["layer-back"], "steps": [{"to": {"y": -6, "scale": 1.08}, "duration": 0.28, "ease": "power2.out", "at": 0.0}, {"to": {"y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.46}]},
+          {"parts": ["layer-front"], "steps": [{"to": {"y": 5, "scale": 1.1}, "duration": 0.28, "ease": "power2.out", "at": 0.18}, {"to": {"y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.64}]},
+          {"parts": ["core"], "steps": [{"to": {"rotate": 12, "scale": 1.35}, "duration": 0.3, "ease": "power2.inOut", "at": 0.4}, {"to": {"rotate": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.86}]},
+          {"parts": ["ports"], "steps": [{"to": {"scaleX": 1.25}, "duration": 0.25, "ease": "sine.out", "at": 0.58}, {"to": {"scaleX": 1}, "duration": 0.2, "ease": "sine.inOut", "at": 0.94}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.35}, "duration": 0.2, "ease": "power2.out", "at": 0.84}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.14}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.36,
+      "duration_ms": 2270,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "llm.showcase-loop-v1",
+      "runtime_id": "llm-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "llm",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["shell", "token-row", "context-band", "attention-path", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["shell"], "steps": [{"to": {"y": -3, "scale": 1.04}, "duration": 0.28, "ease": "sine.out", "at": 0.0}, {"to": {"y": 0, "scale": 1}, "duration": 0.22, "ease": "sine.inOut", "at": 0.46}]},
+          {"parts": ["token-row"], "steps": [{"to": {"x": 7, "y": -3, "scale": 1.1}, "duration": 0.3, "ease": "power2.out", "at": 0.18}, {"to": {"x": 0, "y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.66}]},
+          {"parts": ["context-band"], "steps": [{"to": {"x": 6, "scaleX": 1.2}, "duration": 0.28, "ease": "power2.inOut", "at": 0.4}, {"to": {"x": 0, "scaleX": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.84}]},
+          {"parts": ["attention-path"], "steps": [{"to": {"y": -5, "rotate": 8, "scale": 1.22}, "duration": 0.28, "ease": "power2.out", "at": 0.6}, {"to": {"y": 0, "rotate": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 1.02}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.35}, "duration": 0.2, "ease": "power2.out", "at": 0.84}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.14}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.36,
+      "duration_ms": 2270,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "neural-network.showcase-loop-v1",
+      "runtime_id": "neural-network-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "neural-network",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["layer-a", "layer-b", "layer-c", "signal"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["layer-a"], "steps": [{"to": {"x": 4, "scale": 1.08}, "duration": 0.24, "ease": "power2.out", "at": 0.0}, {"to": {"x": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.38}]},
+          {"parts": ["layer-b"], "steps": [{"to": {"x": 5, "scale": 1.12}, "duration": 0.26, "ease": "power2.out", "at": 0.22}, {"to": {"x": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.62}]},
+          {"parts": ["layer-c"], "steps": [{"to": {"x": 6, "scale": 1.1}, "duration": 0.26, "ease": "power2.out", "at": 0.46}, {"to": {"x": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.86}]},
+          {"parts": ["signal"], "steps": [{"to": {"x": 8, "scaleX": 1.28}, "duration": 0.32, "ease": "power2.inOut", "at": 0.56}, {"to": {"x": 0, "scaleX": 1}, "duration": 0.22, "ease": "power2.out", "at": 1.02}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.26,
+      "duration_ms": 2100,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "reasoning.showcase-loop-v1",
+      "runtime_id": "reasoning-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "reasoning",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["premise", "path", "branch", "result"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["premise"], "steps": [{"to": {"scale": 1.18}, "duration": 0.24, "ease": "power2.out", "at": 0.0}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.38}]},
+          {"parts": ["path"], "steps": [{"to": {"x": 6, "scaleX": 1.2}, "duration": 0.3, "ease": "power2.inOut", "at": 0.22}, {"to": {"x": 0, "scaleX": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.66}]},
+          {"parts": ["branch"], "steps": [{"to": {"y": -6, "rotate": -8, "scale": 1.16}, "duration": 0.28, "ease": "power2.out", "at": 0.42}, {"to": {"y": 0, "rotate": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.82}]},
+          {"parts": ["result"], "steps": [{"to": {"rotate": 10, "scale": 1.35}, "duration": 0.26, "ease": "power2.out", "at": 0.68}, {"to": {"rotate": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 1.04}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.28,
+      "duration_ms": 2130,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "embedding.showcase-loop-v1",
+      "runtime_id": "embedding-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "embedding",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["input-card", "projection", "points", "vector"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["input-card"], "steps": [{"to": {"x": 6, "scale": 1.08}, "duration": 0.28, "ease": "power2.out", "at": 0.0}, {"to": {"x": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.44}]},
+          {"parts": ["projection"], "steps": [{"to": {"x": 5, "scaleX": 1.3}, "duration": 0.3, "ease": "power2.inOut", "at": 0.2}, {"to": {"x": 0, "scaleX": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.64}]},
+          {"parts": ["points"], "steps": [{"to": {"y": -5, "scale": 1.3}, "duration": 0.28, "ease": "power2.out", "at": 0.46}, {"to": {"y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.86}]},
+          {"parts": ["vector"], "steps": [{"to": {"rotate": 10, "scale": 1.22}, "duration": 0.28, "ease": "power2.inOut", "at": 0.68}, {"to": {"rotate": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 1.06}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.3,
+      "duration_ms": 2160,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "vector-database.showcase-loop-v1",
+      "runtime_id": "vector-database-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "vector-database",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["layers", "points", "scanner", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["layers"], "steps": [{"to": {"y": -4, "scaleY": 1.08}, "duration": 0.28, "ease": "sine.out", "at": 0.0}, {"to": {"y": 0, "scaleY": 1}, "duration": 0.22, "ease": "sine.inOut", "at": 0.46}]},
+          {"parts": ["points"], "steps": [{"to": {"scale": 1.32}, "duration": 0.26, "ease": "power2.out", "at": 0.3}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.68}]},
+          {"parts": ["scanner"], "steps": [{"to": {"x": -8, "scaleX": 1.18}, "duration": 0.36, "ease": "power2.inOut", "at": 0.46}, {"to": {"x": 0, "scaleX": 1}, "duration": 0.24, "ease": "power2.out", "at": 0.96}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.35}, "duration": 0.2, "ease": "power2.out", "at": 0.82}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.12}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.34,
+      "duration_ms": 2230,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "data-warehouse.showcase-loop-v1",
+      "runtime_id": "data-warehouse-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "data-warehouse",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["roof", "bins", "door", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["roof"], "steps": [{"to": {"y": -5, "scaleX": 1.06}, "duration": 0.28, "ease": "power2.out", "at": 0.0}, {"to": {"y": 0, "scaleX": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.46}]},
+          {"parts": ["bins"], "steps": [{"to": {"y": -5, "scale": 1.08}, "duration": 0.3, "ease": "power2.out", "at": 0.22}, {"to": {"y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.68}]},
+          {"parts": ["door"], "steps": [{"to": {"y": 5, "scaleX": 1.16}, "duration": 0.28, "ease": "power2.inOut", "at": 0.48}, {"to": {"y": 0, "scaleX": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.9}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.35}, "duration": 0.2, "ease": "power2.out", "at": 0.82}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.12}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.34,
+      "duration_ms": 2230,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "knowledge-base.showcase-loop-v1",
+      "runtime_id": "knowledge-base-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "knowledge-base",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["card-left", "card-center", "card-right", "links", "core"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["card-left"], "steps": [{"to": {"x": -4, "y": -3, "scale": 1.08}, "duration": 0.26, "ease": "power2.out", "at": 0.0}, {"to": {"x": 0, "y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.42}]},
+          {"parts": ["card-right"], "steps": [{"to": {"x": 4, "y": -3, "scale": 1.08}, "duration": 0.26, "ease": "power2.out", "at": 0.16}, {"to": {"x": 0, "y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.58}]},
+          {"parts": ["card-center"], "steps": [{"to": {"y": 6, "scale": 1.1}, "duration": 0.28, "ease": "power2.out", "at": 0.34}, {"to": {"y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.76}]},
+          {"parts": ["links"], "steps": [{"to": {"scale": 1.2}, "duration": 0.28, "ease": "sine.out", "at": 0.5}, {"to": {"scale": 1}, "duration": 0.2, "ease": "sine.inOut", "at": 0.9}]},
+          {"parts": ["core"], "steps": [{"to": {"scale": 1.35}, "duration": 0.24, "ease": "power2.out", "at": 0.72}, {"to": {"scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 1.06}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.3,
+      "duration_ms": 2160,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "dataset.showcase-loop-v1",
+      "runtime_id": "dataset-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "dataset",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["container", "cards", "filter", "record"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["cards"], "steps": [{"to": {"y": -7, "scale": 1.08}, "duration": 0.3, "ease": "power2.out", "at": 0.0}, {"to": {"y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.5}]},
+          {"parts": ["filter"], "steps": [{"to": {"y": -4, "rotate": -10, "scale": 1.28}, "duration": 0.28, "ease": "power2.out", "at": 0.22}, {"to": {"y": 0, "rotate": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.64}]},
+          {"parts": ["record"], "steps": [{"to": {"x": 8, "scaleX": 1.25}, "duration": 0.3, "ease": "power2.inOut", "at": 0.46}, {"to": {"x": 0, "scaleX": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.9}]},
+          {"parts": ["container"], "steps": [{"to": {"scaleX": 1.07, "scaleY": 0.92}, "duration": 0.26, "ease": "sine.out", "at": 0.7}, {"to": {"scaleX": 1, "scaleY": 1}, "duration": 0.22, "ease": "sine.inOut", "at": 1.06}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.3,
+      "duration_ms": 2160,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "document-store.showcase-loop-v1",
+      "runtime_id": "document-store-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "document-store",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["drawer", "document-card-front", "document-card-back", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["drawer"], "steps": [{"to": {"y": 4, "scaleX": 1.06}, "duration": 0.28, "ease": "power2.out", "at": 0.0}, {"to": {"y": 0, "scaleX": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.48}]},
+          {"parts": ["document-card-front"], "steps": [{"to": {"y": 8, "scale": 0.92}, "duration": 0.32, "ease": "power2.inOut", "at": 0.18}, {"to": {"y": 0, "scale": 1}, "duration": 0.24, "ease": "power2.out", "at": 0.7}]},
+          {"parts": ["document-card-back"], "steps": [{"to": {"x": 4, "y": 6, "rotate": 8}, "duration": 0.3, "ease": "power2.inOut", "at": 0.36}, {"to": {"x": 0, "y": 0, "rotate": 0}, "duration": 0.22, "ease": "power2.out", "at": 0.82}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.35}, "duration": 0.2, "ease": "power2.out", "at": 0.82}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.12}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.34,
+      "duration_ms": 2230,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "document.showcase-loop-v1",
+      "runtime_id": "document-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "document",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["fold", "line-top", "line-middle", "line-bottom"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["fold"], "steps": [{"to": {"y": -3, "rotate": 10, "scale": 1.1}, "duration": 0.24, "ease": "power2.out", "at": 0.12}, {"to": {"y": 0, "rotate": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.5}]},
+          {"parts": ["line-top"], "steps": [{"to": {"x": 6, "scaleX": 1.12}, "duration": 0.22, "ease": "power2.out", "at": 0.3}, {"to": {"x": 0, "scaleX": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.64}]},
+          {"parts": ["line-middle"], "steps": [{"to": {"x": 6, "scaleX": 1.12}, "duration": 0.22, "ease": "power2.out", "at": 0.46}, {"to": {"x": 0, "scaleX": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.8}]},
+          {"parts": ["line-bottom"], "steps": [{"to": {"x": 6, "scaleX": 1.12}, "duration": 0.22, "ease": "power2.out", "at": 0.62}, {"to": {"x": 0, "scaleX": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.96}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.18,
+      "duration_ms": 1970,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "pdf.showcase-loop-v1",
+      "runtime_id": "pdf-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "pdf",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["pages", "spine", "fold", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["pages"], "steps": [{"to": {"x": 5, "y": 4, "scale": 1.06}, "duration": 0.3, "ease": "power2.out", "at": 0.0}, {"to": {"x": 0, "y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.5}]},
+          {"parts": ["spine"], "steps": [{"to": {"scaleY": 1.18}, "duration": 0.3, "ease": "sine.out", "at": 0.22}, {"to": {"scaleY": 1}, "duration": 0.22, "ease": "sine.inOut", "at": 0.68}]},
+          {"parts": ["fold"], "steps": [{"to": {"y": -3, "rotate": 10, "scale": 1.1}, "duration": 0.24, "ease": "power2.out", "at": 0.44}, {"to": {"y": 0, "rotate": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.82}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.35}, "duration": 0.2, "ease": "power2.out", "at": 0.76}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.08}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.3,
+      "duration_ms": 2160,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "image.showcase-loop-v1",
+      "runtime_id": "image-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "image",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["page", "preview", "scan-line", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["page"], "steps": [{"to": {"y": -4, "scale": 1.04}, "duration": 0.28, "ease": "power2.out", "at": 0.0}, {"to": {"y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.46}]},
+          {"parts": ["preview"], "steps": [{"to": {"scale": 1.1}, "duration": 0.28, "ease": "sine.out", "at": 0.2}, {"to": {"scale": 1}, "duration": 0.22, "ease": "sine.inOut", "at": 0.64}]},
+          {"parts": ["scan-line"], "steps": [{"to": {"y": 8, "scaleX": 1.15}, "duration": 0.34, "ease": "power2.inOut", "at": 0.4}, {"to": {"y": 0, "scaleX": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.86}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.35}, "duration": 0.2, "ease": "power2.out", "at": 0.84}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.14}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.36,
+      "duration_ms": 2270,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "audio.showcase-loop-v1",
+      "runtime_id": "audio-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "audio",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["page", "waveform", "playhead", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["page"], "steps": [{"to": {"scaleX": 1.06, "scaleY": 0.96}, "duration": 0.28, "ease": "sine.out", "at": 0.0}, {"to": {"scaleX": 1, "scaleY": 1}, "duration": 0.2, "ease": "sine.inOut", "at": 0.46}]},
+          {"parts": ["waveform"], "steps": [{"to": {"scaleX": 1.12, "scaleY": 1.25}, "duration": 0.32, "ease": "power2.out", "at": 0.18}, {"to": {"scaleX": 1, "scaleY": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.7}]},
+          {"parts": ["playhead"], "steps": [{"to": {"x": 8, "scale": 1.08}, "duration": 0.36, "ease": "power2.inOut", "at": 0.38}, {"to": {"x": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.88}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.35}, "duration": 0.2, "ease": "power2.out", "at": 0.84}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.14}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.36,
+      "duration_ms": 2270,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "video.showcase-loop-v1",
+      "runtime_id": "video-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "video",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["page", "play", "frame-a", "frame-b", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["page"], "steps": [{"to": {"y": -4, "scale": 1.04}, "duration": 0.28, "ease": "power2.out", "at": 0.0}, {"to": {"y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.46}]},
+          {"parts": ["play"], "steps": [{"to": {"scale": 1.35, "rotate": 8}, "duration": 0.28, "ease": "power2.out", "at": 0.18}, {"to": {"scale": 1, "rotate": 0}, "duration": 0.22, "ease": "power2.out", "at": 0.64}]},
+          {"parts": ["frame-a"], "steps": [{"to": {"y": -5, "scale": 1.12}, "duration": 0.26, "ease": "power2.out", "at": 0.34}, {"to": {"y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.72}]},
+          {"parts": ["frame-b"], "steps": [{"to": {"y": 5, "scale": 1.12}, "duration": 0.26, "ease": "power2.out", "at": 0.48}, {"to": {"y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.86}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.35}, "duration": 0.2, "ease": "power2.out", "at": 0.82}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.12}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.34,
+      "duration_ms": 2230,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "code-file.showcase-loop-v1",
+      "runtime_id": "code-file-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "code-file",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["page", "fold", "code-lines", "cursor", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["page"], "steps": [{"to": {"y": -4, "scale": 1.04}, "duration": 0.28, "ease": "power2.out", "at": 0.0}, {"to": {"y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.46}]},
+          {"parts": ["fold"], "steps": [{"to": {"y": -3, "rotate": 10, "scale": 1.1}, "duration": 0.24, "ease": "power2.out", "at": 0.14}, {"to": {"y": 0, "rotate": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.54}]},
+          {"parts": ["code-lines"], "steps": [{"to": {"x": 5, "scale": 1.1}, "duration": 0.3, "ease": "power2.out", "at": 0.3}, {"to": {"x": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.76}]},
+          {"parts": ["cursor"], "steps": [{"to": {"x": 6, "y": -4, "scale": 1.22}, "duration": 0.28, "ease": "power2.inOut", "at": 0.54}, {"to": {"x": 0, "y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.96}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.35}, "duration": 0.2, "ease": "power2.out", "at": 0.82}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.12}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.34,
+      "duration_ms": 2230,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "webhook.showcase-loop-v1",
+      "runtime_id": "webhook-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "webhook",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["trigger", "event-dot", "pulse", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["trigger"], "steps": [{"to": {"y": 6, "rotate": 10, "scale": 1.12}, "duration": 0.3, "ease": "power2.out", "at": 0.0}, {"to": {"y": 0, "rotate": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.5}]},
+          {"parts": ["event-dot"], "steps": [{"to": {"scale": 1.38}, "duration": 0.22, "ease": "power2.out", "at": 0.3}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.66}]},
+          {"parts": ["pulse"], "steps": [{"to": {"x": 4, "y": 2, "scale": 1.3}, "duration": 0.3, "ease": "sine.out", "at": 0.5}, {"to": {"x": 0, "y": 0, "scale": 1}, "duration": 0.22, "ease": "sine.inOut", "at": 0.96}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.35}, "duration": 0.2, "ease": "power2.out", "at": 0.8}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.12}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.34,
+      "duration_ms": 2230,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "http-request.showcase-loop-v1",
+      "runtime_id": "http-request-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "http-request",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["packet", "header", "payload", "direction-gap", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["packet"], "steps": [{"to": {"x": 7, "scale": 1.08}, "duration": 0.32, "ease": "power2.out", "at": 0.0}, {"to": {"x": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.5}]},
+          {"parts": ["header"], "steps": [{"to": {"x": 5, "scaleX": 1.18}, "duration": 0.26, "ease": "power2.out", "at": 0.22}, {"to": {"x": 0, "scaleX": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.62}]},
+          {"parts": ["payload"], "steps": [{"to": {"x": 6, "scale": 1.08}, "duration": 0.3, "ease": "power2.out", "at": 0.4}, {"to": {"x": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.84}]},
+          {"parts": ["direction-gap"], "steps": [{"to": {"x": 8, "scale": 1.3}, "duration": 0.28, "ease": "power2.out", "at": 0.62}, {"to": {"x": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 1.04}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.35}, "duration": 0.2, "ease": "power2.out", "at": 0.84}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.16}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.38,
+      "duration_ms": 2300,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "gateway.showcase-loop-v1",
+      "runtime_id": "gateway-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "gateway",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["gate", "scanner", "core", "input", "output"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["gate"], "steps": [{"to": {"scaleX": 1.08, "scaleY": 0.94}, "duration": 0.3, "ease": "sine.out", "at": 0.0}, {"to": {"scaleX": 1, "scaleY": 1}, "duration": 0.22, "ease": "sine.inOut", "at": 0.48}]},
+          {"parts": ["scanner"], "steps": [{"to": {"y": 8, "scaleY": 1.18}, "duration": 0.34, "ease": "power2.inOut", "at": 0.2}, {"to": {"y": 0, "scaleY": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.72}]},
+          {"parts": ["core"], "steps": [{"to": {"scale": 1.38}, "duration": 0.22, "ease": "power2.out", "at": 0.48}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.84}]},
+          {"parts": ["input"], "steps": [{"to": {"x": 6, "scale": 1.18}, "duration": 0.26, "ease": "power2.out", "at": 0.58}, {"to": {"x": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.98}]},
+          {"parts": ["output"], "steps": [{"to": {"x": 7, "scale": 1.2}, "duration": 0.26, "ease": "power2.out", "at": 0.72}, {"to": {"x": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.12}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.34,
+      "duration_ms": 2230,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "load-balancer.showcase-loop-v1",
+      "runtime_id": "load-balancer-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "load-balancer",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["distributor", "outlet-top", "outlet-middle", "outlet-bottom", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["distributor"], "steps": [{"to": {"rotate": 12, "scale": 1.1}, "duration": 0.3, "ease": "power2.out", "at": 0.0}, {"to": {"rotate": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.5}]},
+          {"parts": ["outlet-top"], "steps": [{"to": {"x": 7, "y": -5, "scale": 1.18}, "duration": 0.28, "ease": "power2.out", "at": 0.28}, {"to": {"x": 0, "y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.7}]},
+          {"parts": ["outlet-middle"], "steps": [{"to": {"x": 8, "scale": 1.22}, "duration": 0.28, "ease": "power2.out", "at": 0.42}, {"to": {"x": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.84}]},
+          {"parts": ["outlet-bottom"], "steps": [{"to": {"x": 7, "y": 5, "scale": 1.18}, "duration": 0.28, "ease": "power2.out", "at": 0.56}, {"to": {"x": 0, "y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.98}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.38}, "duration": 0.2, "ease": "power2.out", "at": 0.76}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.08}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.3,
+      "duration_ms": 2160,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "message-queue.showcase-loop-v1",
+      "runtime_id": "message-queue-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "message-queue",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["message-a", "message-b", "message-c", "consumer", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["message-a"], "steps": [{"to": {"x": 7, "y": -4, "scale": 1.12}, "duration": 0.28, "ease": "power2.out", "at": 0.0}, {"to": {"x": 0, "y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.44}]},
+          {"parts": ["message-b"], "steps": [{"to": {"x": 7, "y": -4, "scale": 1.12}, "duration": 0.28, "ease": "power2.out", "at": 0.18}, {"to": {"x": 0, "y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.62}]},
+          {"parts": ["message-c"], "steps": [{"to": {"x": 7, "y": -4, "scale": 1.14}, "duration": 0.28, "ease": "power2.out", "at": 0.36}, {"to": {"x": 0, "y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.8}]},
+          {"parts": ["consumer"], "steps": [{"to": {"y": 6, "scaleY": 1.18}, "duration": 0.3, "ease": "power2.inOut", "at": 0.58}, {"to": {"y": 0, "scaleY": 1}, "duration": 0.22, "ease": "power2.out", "at": 1.04}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.35}, "duration": 0.2, "ease": "power2.out", "at": 0.82}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.14}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.36,
+      "duration_ms": 2270,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "server-cluster.showcase-loop-v1",
+      "runtime_id": "server-cluster-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "server-cluster",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["node-a", "node-b", "node-c", "sync", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["node-a"], "steps": [{"to": {"x": -6, "y": 3, "scale": 1.08}, "duration": 0.28, "ease": "power2.out", "at": 0.0}, {"to": {"x": 0, "y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.44}]},
+          {"parts": ["node-b"], "steps": [{"to": {"y": -6, "scale": 1.1}, "duration": 0.28, "ease": "power2.out", "at": 0.18}, {"to": {"y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.62}]},
+          {"parts": ["node-c"], "steps": [{"to": {"x": 6, "y": 4, "scale": 1.08}, "duration": 0.28, "ease": "power2.out", "at": 0.36}, {"to": {"x": 0, "y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.8}]},
+          {"parts": ["sync"], "steps": [{"to": {"rotate": 12, "scale": 1.28}, "duration": 0.3, "ease": "sine.out", "at": 0.54}, {"to": {"rotate": 0, "scale": 1}, "duration": 0.22, "ease": "sine.inOut", "at": 1.0}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.35}, "duration": 0.2, "ease": "power2.out", "at": 0.8}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.12}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.34,
+      "duration_ms": 2230,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "container.showcase-loop-v1",
+      "runtime_id": "container-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "container",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["door", "app-core", "boundary", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["door"], "steps": [{"to": {"x": -7, "scaleX": 0.9}, "duration": 0.3, "ease": "power2.out", "at": 0.0}, {"to": {"x": 0, "scaleX": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.48}]},
+          {"parts": ["app-core"], "steps": [{"to": {"y": -6, "scale": 1.3}, "duration": 0.3, "ease": "power2.out", "at": 0.26}, {"to": {"y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.72}]},
+          {"parts": ["boundary"], "steps": [{"to": {"scaleX": 1.08, "scaleY": 1.08}, "duration": 0.32, "ease": "sine.out", "at": 0.5}, {"to": {"scaleX": 1, "scaleY": 1}, "duration": 0.22, "ease": "sine.inOut", "at": 0.98}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.38}, "duration": 0.2, "ease": "power2.out", "at": 0.78}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.1}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.32,
+      "duration_ms": 2200,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "function.showcase-loop-v1",
+      "runtime_id": "function-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "function",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["trigger", "function-core", "result", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["trigger"], "steps": [{"to": {"y": 6, "rotate": 10, "scale": 1.28}, "duration": 0.28, "ease": "power2.out", "at": 0.0}, {"to": {"y": 0, "rotate": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.44}]},
+          {"parts": ["function-core"], "steps": [{"to": {"rotate": 12, "scale": 1.34}, "duration": 0.3, "ease": "power2.out", "at": 0.28}, {"to": {"rotate": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.74}]},
+          {"parts": ["result"], "steps": [{"to": {"x": 7, "scale": 1.22}, "duration": 0.28, "ease": "power2.out", "at": 0.56}, {"to": {"x": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.98}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.38}, "duration": 0.2, "ease": "power2.out", "at": 0.82}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.14}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.36,
+      "duration_ms": 2270,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "edge-node.showcase-loop-v1",
+      "runtime_id": "edge-node-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "edge-node",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["signal", "core", "sync", "latency-ring", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["signal"], "steps": [{"to": {"y": -6, "scale": 1.3}, "duration": 0.3, "ease": "sine.out", "at": 0.0}, {"to": {"y": 0, "scale": 1}, "duration": 0.22, "ease": "sine.inOut", "at": 0.48}]},
+          {"parts": ["core"], "steps": [{"to": {"rotate": 12, "scale": 1.36}, "duration": 0.28, "ease": "power2.out", "at": 0.26}, {"to": {"rotate": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.7}]},
+          {"parts": ["sync"], "steps": [{"to": {"rotate": -10, "scale": 1.22}, "duration": 0.28, "ease": "power2.inOut", "at": 0.5}, {"to": {"rotate": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.94}]},
+          {"parts": ["latency-ring"], "steps": [{"to": {"scale": 1.22}, "duration": 0.3, "ease": "sine.out", "at": 0.68}, {"to": {"scale": 1}, "duration": 0.2, "ease": "sine.inOut", "at": 1.12}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.36}, "duration": 0.2, "ease": "power2.out", "at": 0.84}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.16}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.38,
+      "duration_ms": 2300,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "source-code.showcase-loop-v1",
+      "runtime_id": "source-code-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "source-code",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["cursor", "code-lines", "gutter", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["gutter"], "steps": [{"to": {"y": 5, "scaleY": 1.12}, "duration": 0.28, "ease": "power2.out", "at": 0.0}, {"to": {"y": 0, "scaleY": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.44}]},
+          {"parts": ["code-lines"], "steps": [{"to": {"x": 7, "scaleX": 1.12}, "duration": 0.32, "ease": "power2.out", "at": 0.24}, {"to": {"x": 0, "scaleX": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.72}]},
+          {"parts": ["cursor"], "steps": [{"to": {"x": -8, "y": -5, "scale": 1.34}, "duration": 0.3, "ease": "power2.inOut", "at": 0.52}, {"to": {"x": 0, "y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 1.0}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.38}, "duration": 0.2, "ease": "power2.out", "at": 0.84}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.16}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.38,
+      "duration_ms": 2300,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "git-repository.showcase-loop-v1",
+      "runtime_id": "git-repository-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "git-repository",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["branch-tree", "commit", "history", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["branch-tree"], "steps": [{"to": {"rotate": 10, "scale": 1.18}, "duration": 0.3, "ease": "sine.out", "at": 0.0}, {"to": {"rotate": 0, "scale": 1}, "duration": 0.22, "ease": "sine.inOut", "at": 0.48}]},
+          {"parts": ["commit"], "steps": [{"to": {"y": -6, "scale": 1.34}, "duration": 0.28, "ease": "power2.out", "at": 0.3}, {"to": {"y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.74}]},
+          {"parts": ["history"], "steps": [{"to": {"x": 7, "scaleX": 1.18}, "duration": 0.3, "ease": "power2.out", "at": 0.54}, {"to": {"x": 0, "scaleX": 1}, "duration": 0.22, "ease": "power2.out", "at": 1.0}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.38}, "duration": 0.2, "ease": "power2.out", "at": 0.82}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.14}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.36,
+      "duration_ms": 2270,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "branch.showcase-loop-v1",
+      "runtime_id": "branch-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "branch",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["branch-line", "commit-a", "commit-b", "commit-c", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["commit-a"], "steps": [{"to": {"x": -5, "scale": 1.28}, "duration": 0.26, "ease": "power2.out", "at": 0.0}, {"to": {"x": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.4}]},
+          {"parts": ["branch-line"], "steps": [{"to": {"y": -6, "scaleY": 1.16}, "duration": 0.3, "ease": "sine.out", "at": 0.2}, {"to": {"y": 0, "scaleY": 1}, "duration": 0.22, "ease": "sine.inOut", "at": 0.68}]},
+          {"parts": ["commit-b"], "steps": [{"to": {"y": -7, "scale": 1.34}, "duration": 0.28, "ease": "power2.out", "at": 0.44}, {"to": {"y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.88}]},
+          {"parts": ["commit-c"], "steps": [{"to": {"x": 7, "scale": 1.3}, "duration": 0.28, "ease": "power2.out", "at": 0.64}, {"to": {"x": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.08}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.36}, "duration": 0.2, "ease": "power2.out", "at": 0.82}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.14}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.36,
+      "duration_ms": 2270,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "pull-request.showcase-loop-v1",
+      "runtime_id": "pull-request-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "pull-request",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["source-path", "review", "merge", "target", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["source-path"], "steps": [{"to": {"x": 7, "scale": 1.12}, "duration": 0.3, "ease": "power2.out", "at": 0.0}, {"to": {"x": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.48}]},
+          {"parts": ["review"], "steps": [{"to": {"y": -6, "rotate": -8, "scale": 1.22}, "duration": 0.3, "ease": "power2.out", "at": 0.3}, {"to": {"y": 0, "rotate": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.76}]},
+          {"parts": ["merge"], "steps": [{"to": {"x": 7, "scale": 1.34}, "duration": 0.26, "ease": "power2.out", "at": 0.58}, {"to": {"x": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.98}]},
+          {"parts": ["target"], "steps": [{"to": {"scale": 1.3}, "duration": 0.24, "ease": "power2.out", "at": 0.76}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.12}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.36}, "duration": 0.2, "ease": "power2.out", "at": 0.86}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.18}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.4,
+      "duration_ms": 2330,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "deployment.showcase-loop-v1",
+      "runtime_id": "deployment-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "deployment",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["package", "path", "target", "release-core", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["package"], "steps": [{"to": {"x": 8, "y": -5, "rotate": 10, "scale": 1.18}, "duration": 0.32, "ease": "power2.out", "at": 0.0}, {"to": {"x": 0, "y": 0, "rotate": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.5}]},
+          {"parts": ["path"], "steps": [{"to": {"x": 7, "scaleX": 1.34}, "duration": 0.28, "ease": "sine.out", "at": 0.28}, {"to": {"x": 0, "scaleX": 1}, "duration": 0.2, "ease": "sine.inOut", "at": 0.72}]},
+          {"parts": ["target"], "steps": [{"to": {"scaleX": 1.12, "scaleY": 1.08}, "duration": 0.3, "ease": "power2.out", "at": 0.5}, {"to": {"scaleX": 1, "scaleY": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.98}]},
+          {"parts": ["release-core"], "steps": [{"to": {"rotate": 12, "scale": 1.38}, "duration": 0.26, "ease": "power2.out", "at": 0.72}, {"to": {"rotate": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.12}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.36}, "duration": 0.2, "ease": "power2.out", "at": 0.86}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.18}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.4,
+      "duration_ms": 2330,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "ci-cd.showcase-loop-v1",
+      "runtime_id": "ci-cd-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "ci-cd",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["build", "test", "deploy", "progress", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["build"], "steps": [{"to": {"x": -6, "y": -4, "rotate": -10, "scale": 1.22}, "duration": 0.3, "ease": "power2.out", "at": 0.0}, {"to": {"x": 0, "y": 0, "rotate": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.46}]},
+          {"parts": ["test"], "steps": [{"to": {"y": -7, "scale": 1.32}, "duration": 0.28, "ease": "power2.out", "at": 0.26}, {"to": {"y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.7}]},
+          {"parts": ["deploy"], "steps": [{"to": {"x": 7, "y": -6, "scale": 1.24}, "duration": 0.3, "ease": "power2.out", "at": 0.54}, {"to": {"x": 0, "y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 1.0}]},
+          {"parts": ["progress"], "steps": [{"to": {"x": 5, "scaleX": 1.28}, "duration": 0.28, "ease": "sine.out", "at": 0.38}, {"to": {"x": 0, "scaleX": 1}, "duration": 0.2, "ease": "sine.inOut", "at": 0.82}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.38}, "duration": 0.2, "ease": "power2.out", "at": 0.86}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.18}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.4,
+      "duration_ms": 2330,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "task.showcase-loop-v1",
+      "runtime_id": "task-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "task",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["handle", "progress", "check", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["handle"], "steps": [{"to": {"y": -6, "rotate": -8, "scale": 1.18}, "duration": 0.3, "ease": "power2.out", "at": 0.0}, {"to": {"y": 0, "rotate": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.46}]},
+          {"parts": ["progress"], "steps": [{"to": {"x": 5, "scaleX": 1.34}, "duration": 0.32, "ease": "sine.out", "at": 0.28}, {"to": {"x": 0, "scaleX": 1}, "duration": 0.22, "ease": "sine.inOut", "at": 0.78}]},
+          {"parts": ["check"], "steps": [{"to": {"rotate": 12, "scale": 1.38}, "duration": 0.26, "ease": "power2.out", "at": 0.62}, {"to": {"rotate": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.04}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.38}, "duration": 0.2, "ease": "power2.out", "at": 0.84}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.16}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.38,
+      "duration_ms": 2300,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "scheduler.showcase-loop-v1",
+      "runtime_id": "scheduler-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "scheduler",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["clock", "hand", "task-card", "trigger", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["clock"], "steps": [{"to": {"scale": 1.14}, "duration": 0.28, "ease": "sine.out", "at": 0.0}, {"to": {"scale": 1}, "duration": 0.2, "ease": "sine.inOut", "at": 0.44}]},
+          {"parts": ["hand"], "steps": [{"to": {"rotate": 12, "scale": 1.22}, "duration": 0.32, "ease": "power2.inOut", "at": 0.2}, {"to": {"rotate": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.7}]},
+          {"parts": ["task-card"], "steps": [{"to": {"y": -6, "scale": 1.22}, "duration": 0.3, "ease": "power2.out", "at": 0.48}, {"to": {"y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.94}]},
+          {"parts": ["trigger"], "steps": [{"to": {"y": -7, "scale": 1.36}, "duration": 0.24, "ease": "power2.out", "at": 0.72}, {"to": {"y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.1}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.36}, "duration": 0.2, "ease": "power2.out", "at": 0.84}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.16}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.38,
+      "duration_ms": 2300,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "monitoring.showcase-loop-v1",
+      "runtime_id": "monitoring-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "monitoring",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["screen", "scanner", "metric-line", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["screen"], "steps": [{"to": {"scaleX": 1.08, "scaleY": 1.06}, "duration": 0.3, "ease": "sine.out", "at": 0.0}, {"to": {"scaleX": 1, "scaleY": 1}, "duration": 0.22, "ease": "sine.inOut", "at": 0.48}]},
+          {"parts": ["scanner"], "steps": [{"to": {"x": 8, "scaleY": 1.18}, "duration": 0.34, "ease": "power2.inOut", "at": 0.24}, {"to": {"x": 0, "scaleY": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.78}]},
+          {"parts": ["metric-line"], "steps": [{"to": {"y": -6, "scale": 1.2}, "duration": 0.3, "ease": "power2.out", "at": 0.56}, {"to": {"y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 1.02}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.38}, "duration": 0.2, "ease": "power2.out", "at": 0.84}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.16}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.38,
+      "duration_ms": 2300,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "logs.showcase-loop-v1",
+      "runtime_id": "logs-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "logs",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["lines", "cursor", "highlight", "scroll", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["lines"], "steps": [{"to": {"x": 6, "scaleX": 1.1}, "duration": 0.3, "ease": "power2.out", "at": 0.0}, {"to": {"x": 0, "scaleX": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.46}]},
+          {"parts": ["cursor"], "steps": [{"to": {"y": 7, "scale": 1.34}, "duration": 0.26, "ease": "power2.inOut", "at": 0.22}, {"to": {"y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.64}]},
+          {"parts": ["highlight"], "steps": [{"to": {"x": 7, "scaleX": 1.3}, "duration": 0.3, "ease": "sine.out", "at": 0.48}, {"to": {"x": 0, "scaleX": 1}, "duration": 0.22, "ease": "sine.inOut", "at": 0.94}]},
+          {"parts": ["scroll"], "steps": [{"to": {"y": 7, "scaleY": 1.12}, "duration": 0.3, "ease": "power2.inOut", "at": 0.64}, {"to": {"y": 0, "scaleY": 1}, "duration": 0.22, "ease": "power2.out", "at": 1.1}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.36}, "duration": 0.2, "ease": "power2.out", "at": 0.84}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.16}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.38,
+      "duration_ms": 2300,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "alert.showcase-loop-v1",
+      "runtime_id": "alert-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "alert",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["light", "wave", "core", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["wave"], "steps": [{"to": {"scale": 1.22}, "duration": 0.3, "ease": "sine.out", "at": 0.0}, {"to": {"scale": 1}, "duration": 0.22, "ease": "sine.inOut", "at": 0.46}]},
+          {"parts": ["light"], "steps": [{"to": {"y": -6, "scale": 1.22}, "duration": 0.3, "ease": "power2.out", "at": 0.26}, {"to": {"y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.72}]},
+          {"parts": ["core"], "steps": [{"to": {"rotate": 12, "scale": 1.38}, "duration": 0.26, "ease": "power2.out", "at": 0.58}, {"to": {"rotate": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.0}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.38}, "duration": 0.2, "ease": "power2.out", "at": 0.84}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.16}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.38,
+      "duration_ms": 2300,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.0,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    },
+    {
+      "id": "debug.showcase-loop-v1",
+      "runtime_id": "debug-showcase-loop-v1",
+      "kind": "presentation",
+      "profile": "showcase",
+      "icon": "debug",
+      "icon_system": "diagram-core-v1",
+      "required_parts": ["scanner", "code-card", "bug-dot", "fix-check", "indicator"],
+      "optional_parts": [],
+      "recipe": {
+        "tracks": [
+          {"parts": ["scanner"], "steps": [{"to": {"x": 6, "rotate": -12, "scale": 1.14}, "duration": 0.32, "ease": "power2.inOut", "at": 0.0}, {"to": {"x": 0, "rotate": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.5}]},
+          {"parts": ["bug-dot"], "steps": [{"to": {"rotate": 12, "scale": 1.38}, "duration": 0.26, "ease": "power2.out", "at": 0.28}, {"to": {"rotate": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 0.7}]},
+          {"parts": ["code-card"], "steps": [{"to": {"y": -6, "scale": 1.18}, "duration": 0.3, "ease": "power2.out", "at": 0.5}, {"to": {"y": 0, "scale": 1}, "duration": 0.22, "ease": "power2.out", "at": 0.96}]},
+          {"parts": ["fix-check"], "steps": [{"to": {"y": -5, "scale": 1.36}, "duration": 0.26, "ease": "power2.out", "at": 0.72}, {"to": {"y": 0, "scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.12}]},
+          {"parts": ["indicator"], "steps": [{"to": {"scale": 1.36}, "duration": 0.2, "ease": "power2.out", "at": 0.84}, {"to": {"scale": 1}, "duration": 0.2, "ease": "power2.out", "at": 1.16}]}
+        ]
+      },
+      "rest_pose": "authored-rest-pose",
+      "rest_at": 1.38,
+      "duration_ms": 2300,
+      "repeat_policy": "scene-controlled",
+      "repeat_delay": 1.1,
+      "cancel_behavior": "restore-rest-pose",
+      "reduced_motion_behavior": "static-rest",
+      "status": "approved"
+    }
+  ],
+  "stage_effects": [
+    {
+      "id": "runtime-edge-packet-flow",
+      "title": "Edge Packet Flow",
+      "owner": "GSAP runtime",
+      "selectors": [".runtime-edge-flow", ".runtime-edge-packet", ".runtime-edge-packet-core"],
+      "meaning": "A continuously moving low-opacity track keeps every enabled edge visibly active; short edges use a solid role-colored dot while longer paths use a bright packet segment.",
+      "phases": ["moving track is immediately visible", "solid packet enters source side", "dot or segment travels along path", "packet exits near target", "loop restarts without a quiet gap"],
+      "status": "approved"
+    },
+    {
+      "id": "runtime-title-sweep",
+      "title": "Title Sweep",
+      "owner": "GSAP runtime",
+      "selectors": ["#title-highlight"],
+      "meaning": "A one-shot highlight introduces the title without becoming a competing ambient loop.",
+      "phases": ["highlight starts collapsed", "sweep expands across title", "authored title highlight settles"],
+      "status": "frozen"
+    }
+  ],
+  "character_performances": [
+    {
+      "id": "brain-think-pulse-v1",
+      "icon": "agent",
+      "icon_system": "illustrated-character-v1",
+      "title": "Brain Think Pulse",
+      "best_for": ["Think", "Decide", "Confirm"],
+      "phases": ["brain prepares", "signal draws", "spark confirms", "canonical rest", "idle breath"],
+      "parts": ["root", "brain-left", "brain-right", "chip", "signal", "spark"],
+      "rest_at": 1.5,
+      "repeat_delay": 0.8,
+      "idle_breathe": {"duration": 0.44, "scale": 1.012},
+      "status": "frozen"
+    },
+    {
+      "id": "operator-type-focus-v1",
+      "icon": "operator",
+      "icon_system": "illustrated-character-v1",
+      "title": "Operator Type Focus",
+      "best_for": ["Focus", "Type", "Resolve"],
+      "phases": ["glasses focus", "hands type", "cursor confirms", "canonical rest", "idle breath"],
+      "parts": ["root", "hair", "face", "glasses", "hands", "laptop", "cursor"],
+      "rest_at": 1.35,
+      "repeat_delay": 0.8,
+      "idle_breathe": {"duration": 0.44, "scale": 1.012},
+      "status": "frozen"
+    },
+    {
+      "id": "search-scout-find-v1",
+      "icon": "search",
+      "icon_system": "illustrated-character-v1",
+      "title": "Search Scout Find",
+      "best_for": ["Scout", "Scan", "Find"],
+      "phases": ["lens prepares", "scan crosses", "marker and spark confirm", "canonical rest", "idle breath"],
+      "parts": ["root", "lens", "scan", "marker", "spark"],
+      "rest_at": 1.3,
+      "repeat_delay": 0.8,
+      "idle_breathe": {"duration": 0.44, "scale": 1.012},
+      "status": "frozen"
+    },
+    {
+      "id": "tool-kit-action-v1",
+      "icon": "tool",
+      "icon_system": "illustrated-character-v1",
+      "title": "Tool Kit Action",
+      "best_for": ["Ready", "Act", "Confirm"],
+      "phases": ["lid opens", "wrench acts", "spark confirms", "canonical rest", "idle breath"],
+      "parts": ["root", "bucket", "lid", "wrench", "spark"],
+      "rest_at": 1.4,
+      "repeat_delay": 0.8,
+      "idle_breathe": {"duration": 0.44, "scale": 1.012},
+      "status": "frozen"
+    },
+    {
+      "id": "api-signal-return-v1",
+      "icon": "api",
+      "icon_system": "illustrated-character-v1",
+      "title": "API Signal Return",
+      "best_for": ["Request", "Return", "Settle"],
+      "phases": ["interface prepares", "request travels", "receipt returns", "status confirms", "canonical rest", "idle breath"],
+      "parts": ["root", "interface", "request", "receipt", "status"],
+      "rest_at": 1.35,
+      "repeat_delay": 0.8,
+      "idle_breathe": {"duration": 0.44, "scale": 1.012},
+      "status": "frozen"
+    },
+    {
+      "id": "memory-index-commit-v1",
+      "icon": "memory",
+      "icon_system": "illustrated-character-v1",
+      "title": "Memory Index Commit",
+      "best_for": ["Index", "Commit", "Recall"],
+      "phases": ["cards prepare", "bookmark commits", "key line confirms", "canonical rest", "idle breath"],
+      "parts": ["root", "back-card", "front-card", "bookmark", "key-line"],
+      "rest_at": 1.45,
+      "repeat_delay": 0.8,
+      "idle_breathe": {"duration": 0.44, "scale": 1.012},
+      "status": "frozen"
+    },
+    {
+      "id": "output-envelope-reveal-v1",
+      "icon": "output",
+      "icon_system": "illustrated-character-v1",
+      "title": "Output Envelope Reveal",
+      "best_for": ["Reveal", "Deliver", "Confirm"],
+      "phases": ["envelope prepares", "card reveals", "check and spark confirm", "canonical rest", "idle breath"],
+      "parts": ["root", "envelope", "card", "check", "spark"],
+      "rest_at": 1.4,
+      "repeat_delay": 0.8,
+      "idle_breathe": {"duration": 0.44, "scale": 1.012},
+      "status": "frozen"
+    },
+    {
+      "id": "file-note-write-v1",
+      "icon": "file",
+      "icon_system": "illustrated-character-v1",
+      "title": "File Note Write",
+      "best_for": ["Note", "Write", "Settle"],
+      "phases": ["page prepares", "lines write", "dot confirms", "canonical rest", "idle breath"],
+      "parts": ["root", "page", "corner", "line-1", "line-2", "line-3", "dot"],
+      "rest_at": 1.35,
+      "repeat_delay": 0.8,
+      "idle_breathe": {"duration": 0.44, "scale": 1.012},
+      "status": "frozen"
+    },
+    {
+      "id": "folder-file-store-v1",
+      "icon": "folder",
+      "icon_system": "illustrated-character-v1",
+      "title": "Folder File Store",
+      "best_for": ["File", "Store", "Ready"],
+      "phases": ["folder prepares", "sheet stores", "seal confirms", "canonical rest", "idle breath"],
+      "parts": ["root", "folder", "tab", "sheet", "seal"],
+      "rest_at": 1.35,
+      "repeat_delay": 0.8,
+      "idle_breathe": {"duration": 0.44, "scale": 1.012},
+      "status": "frozen"
+    },
+    {
+      "id": "cloud-uplink-ready-v1",
+      "icon": "cloud",
+      "icon_system": "illustrated-character-v1",
+      "title": "Cloud Uplink Ready",
+      "best_for": ["Uplink", "Send", "Ready"],
+      "phases": ["cloud prepares", "kite uplinks", "data and ready light confirm", "canonical rest", "idle breath"],
+      "parts": ["root", "cloud", "kite", "data-dot", "ready-light"],
+      "rest_at": 1.4,
+      "repeat_delay": 0.8,
+      "idle_breathe": {"duration": 0.44, "scale": 1.012},
+      "status": "frozen"
+    },
+    {
+      "id": "shield-guard-confirm-v1",
+      "icon": "shield",
+      "icon_system": "illustrated-character-v1",
+      "title": "Shield Guard Confirm",
+      "best_for": ["Guard", "Scan", "Confirm"],
+      "phases": ["shield prepares", "scan passes", "check confirms", "canonical rest", "idle breath"],
+      "parts": ["root", "shell", "core", "scan", "check"],
+      "rest_at": 1.35,
+      "repeat_delay": 0.8,
+      "idle_breathe": {"duration": 0.44, "scale": 1.012},
+      "status": "frozen"
+    },
+    {
+      "id": "token-intent-ready-v1",
+      "icon": "token",
+      "icon_system": "illustrated-character-v1",
+      "title": "Token Intent Ready",
+      "best_for": ["Intent", "Orient", "Ready"],
+      "phases": ["shell orients", "core wakes", "ticks confirm", "canonical rest", "idle breath"],
+      "parts": ["root", "shell", "core", "tick-left", "tick-right", "tick-top", "tick-bottom"],
+      "rest_at": 1.35,
+      "repeat_delay": 0.8,
+      "idle_breathe": {"duration": 0.44, "scale": 1.012},
+      "status": "frozen"
+    },
+    {
+      "id": "bucket-ingest-confirm-v1",
+      "icon": "database",
+      "icon_system": "illustrated-character-v1",
+      "title": "Bucket Ingest Confirm",
+      "best_for": ["Ingest", "Settle", "Confirm"],
+      "phases": ["hat prepares", "bead ingests", "liquid settles", "check confirms", "canonical rest", "idle breath"],
+      "parts": ["root", "hat", "bucket", "liquid", "bead", "check"],
+      "rest_at": 1.55,
+      "repeat_delay": 0.8,
+      "idle_breathe": {"duration": 0.44, "scale": 1.012},
+      "status": "frozen"
+    }
+  ],
+  "performances": [
+    {
+      "id": "agent-think-act-v2",
+      "icon": "agent",
+      "icon_system": "semantic-line-v1",
+      "title": "Agent Think Act",
+      "best_for": ["Think", "Decide", "Act"],
+      "phases": ["brain outline draw", "circuit nodes light", "center decision pulse", "decision token exits", "quiet idle pause"],
+      "parts": ["root", "outlineLeft", "outlineRight", "centerLine", "branchLeft", "branchRight", "branchLower", "nodeTopLeft", "nodeTopRight", "nodeLeft", "nodeRight", "nodeCenter", "decisionToken", "pulse"],
+      "status": "frozen"
+    },
+    {
+      "id": "search-discover-v2",
+      "icon": "search",
+      "icon_system": "semantic-line-v1",
+      "title": "Search Discover",
+      "best_for": ["Scan", "Find", "Lock target"],
+      "phases": ["lens tilts", "scan crosses lens", "results pop", "target locks", "quiet idle pause"],
+      "parts": ["root", "lens", "handle", "scan", "result1", "result2", "target"],
+      "status": "frozen"
+    },
+    {
+      "id": "api-request-response-v2",
+      "icon": "api",
+      "icon_system": "semantic-line-v1",
+      "title": "API Request Response",
+      "best_for": ["Request", "Response", "Status"],
+      "phases": ["endpoints open", "request token travels", "target ring expands", "response token returns", "status appears"],
+      "parts": ["root", "leftEndpoint", "rightEndpoint", "requestToken", "responseToken", "targetRing", "status"],
+      "status": "frozen"
+    },
+    {
+      "id": "database-write-v2",
+      "icon": "database",
+      "icon_system": "semantic-line-v1",
+      "title": "Database Write",
+      "best_for": ["Write", "Commit", "Confirm"],
+      "phases": ["write token enters", "lid and body compress", "layers flash", "commit flash", "quiet idle pause"],
+      "parts": ["root", "lid", "body", "layer1", "layer2", "writeToken", "flash"],
+      "status": "frozen"
+    },
+    {
+      "id": "memory-commit-v2",
+      "icon": "memory",
+      "icon_system": "semantic-line-v1",
+      "title": "Memory Commit",
+      "best_for": ["Context", "Recall", "Commit"],
+      "phases": ["memory cards settle", "trace lines write", "dot recalls", "commit token lands", "flash confirms"],
+      "parts": ["root", "backCard", "frontCard", "trace1", "trace2", "trace3", "dot", "commitToken", "flash"],
+      "status": "frozen"
+    },
+    {
+      "id": "tool-run-v2",
+      "icon": "tool",
+      "icon_system": "semantic-line-v1",
+      "title": "Tool Run",
+      "best_for": ["Invoke", "Execute", "Resolve"],
+      "phases": ["chip wakes", "connector draws", "glyph pulses", "sparks fire", "flash confirms"],
+      "parts": ["root", "chip", "glyph", "connector", "spark1", "spark2", "flash"],
+      "status": "frozen"
+    },
+    {
+      "id": "token-intent-v2",
+      "icon": "token",
+      "icon_system": "semantic-line-v1",
+      "title": "Token Intent",
+      "best_for": ["Intent", "Signal", "Classify"],
+      "phases": ["shell wakes", "core pulses", "ticks align", "halo expands", "quiet idle pause"],
+      "parts": ["root", "shell", "core", "tickLeft", "tickRight", "tickTop", "tickBottom", "halo"],
+      "status": "frozen"
+    },
+    {
+      "id": "output-reveal-v2",
+      "icon": "output",
+      "icon_system": "semantic-line-v1",
+      "title": "Output Reveal",
+      "best_for": ["Result", "Confirm", "Complete"],
+      "phases": ["card appears", "lines reveal", "check draws", "flash confirms", "quiet idle pause"],
+      "parts": ["root", "card", "line1", "line2", "check", "flash"],
+      "status": "frozen"
+    },
+    {
+      "id": "file-lines-v2",
+      "icon": "file",
+      "icon_system": "semantic-line-v1",
+      "title": "File Lines",
+      "best_for": ["Document", "Parse", "Extract"],
+      "phases": ["sheet appears", "fold settles", "lines draw", "flash confirms", "quiet idle pause"],
+      "parts": ["root", "sheet", "fold", "line1", "line2", "line3", "flash"],
+      "status": "frozen"
+    },
+    {
+      "id": "folder-open-v2",
+      "icon": "folder",
+      "icon_system": "semantic-line-v1",
+      "title": "Folder Open",
+      "best_for": ["Collection", "Open", "Load"],
+      "phases": ["body presses", "tab opens", "open token enters", "file line appears", "flash confirms"],
+      "parts": ["root", "body", "tab", "fileLine", "openToken", "flash"],
+      "status": "frozen"
+    },
+    {
+      "id": "cloud-upload-v2",
+      "icon": "cloud",
+      "icon_system": "semantic-line-v1",
+      "title": "Cloud Upload",
+      "best_for": ["Upload", "Sync", "Deploy"],
+      "phases": ["cloud lifts", "upload arrow rises", "sync dots appear", "status ring expands", "quiet idle pause"],
+      "parts": ["root", "shell", "uploadArrow", "dot1", "dot2", "dot3", "statusRing"],
+      "status": "frozen"
+    },
+    {
+      "id": "shield-check-v2",
+      "icon": "shield",
+      "icon_system": "semantic-line-v1",
+      "title": "Shield Check",
+      "best_for": ["Validate", "Guard", "Approve"],
+      "phases": ["shield wakes", "scan passes", "check draws", "pulse expands", "quiet idle pause"],
+      "parts": ["root", "shell", "check", "pulse", "scan"],
+      "status": "frozen"
+    }
+  ]
+}

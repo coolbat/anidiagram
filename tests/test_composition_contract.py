@@ -11,6 +11,7 @@ from anidiagram.diagram_core.catalog import approved_icon_ids
 from anidiagram.motion_manifest import build_motion_manifest
 from anidiagram.planner import compile_plan
 from anidiagram.quality import quality_report
+from quality_expectations import assert_quality_baseline
 from anidiagram.renderer_svg import render_svg
 from anidiagram.schema import DiagramScriptValidationError, compile_scene
 from anidiagram.styles import load_style
@@ -275,10 +276,7 @@ class CompositionContractTest(unittest.TestCase):
         for relation_id in ("think-act", "act-observe", "observe-done", "done-think"):
             self.assertEqual("loop", edges[relation_id]["flow_repeat"])
             self.assertEqual("stream-flow", edges[relation_id]["effect"]["preset"])
-        self.assertEqual(
-            {"errors": 0, "warnings": 0, "issues": 0},
-            quality_report(scene, style)["summary"],
-        )
+        assert_quality_baseline(self, quality_report(scene, style))
 
     def test_all_56_approved_core_icons_render_and_receive_showcase_motion(self):
         icon_ids = sorted(DIAGRAM_CORE_ICONS)

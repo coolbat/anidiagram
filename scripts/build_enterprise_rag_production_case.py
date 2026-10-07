@@ -68,6 +68,9 @@ def build_case(plan: dict) -> dict:
     for group in scene["groups"]:
         group["bounds"] = list(GROUP_BOUNDS[group["id"]])
     for edge in scene["edges"]:
+        # This reviewed layout changes node coordinates after Plan compilation.
+        # Drop auto routes before applying its authored route choices.
+        edge.pop("points", None)
         endpoints = (edge["from"], edge["to"])
         edge["role"] = EDGE_ROLES[endpoints]
         edge["route"] = "straight"

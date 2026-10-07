@@ -10,7 +10,7 @@ from anidiagram.motion_manifest import (
     ILLUSTRATED_V4_REVIEW_ICON_PERFORMANCES,
     ILLUSTRATED_V4_REVIEW_REST_AT,
 )
-from anidiagram.renderer_html_runtime import render_html_runtime
+from anidiagram.renderer_html_runtime import _runtime_source, render_html_runtime
 from anidiagram.schema import compile_scene
 from anidiagram.styles import load_style
 
@@ -104,7 +104,7 @@ class IllustratedRelease23Test(unittest.TestCase):
             "acceptance_record_sha256": ROOT / "assets" / "illustrated" / "reviews" / "2.3.0-acceptance.json",
             "public_showcase_spec_sha256": ROOT / "examples" / "illustrated-2.3-showcase.diagram.json",
             "motion_review_spec_sha256": ROOT / "examples" / "illustrated-expansion-batch-3-motion-review.diagram.json",
-            "stage_motion_catalog_sha256": ROOT / "runtime" / "motion-catalog.json",
+            "stage_motion_catalog_sha256": ROOT / "assets" / "illustrated" / "snapshots" / "runtime-motion-catalog-2026-07-08.json",
             "stage_motion_acceptance_sha256": ROOT / "assets" / "illustrated" / "reviews" / "motion-coordination-v1.2-acceptance.json",
             "previous_stage_release_sha256": ROOT / "assets" / "illustrated" / "releases" / "2.3.0.static-motion-review.json",
             "previous_release_sha256": ROOT / "assets" / "illustrated" / "releases" / "2.2.0.json",
@@ -209,7 +209,7 @@ class IllustratedRelease23Test(unittest.TestCase):
         self.assertTrue(all("icon_motion" in node["effect"] for node in spec["nodes"]))
 
     def test_runtime_dispatches_every_v4_review_performance(self):
-        source = (ROOT / "runtime" / "anidiagram-runtime.js").read_text(encoding="utf-8")
+        source = _runtime_source()
         for icon, performance in ILLUSTRATED_V4_REVIEW_ICON_PERFORMANCES.items():
             function_name = RUNTIME_FUNCTIONS[icon]
             self.assertIn(f"function {function_name}", source)

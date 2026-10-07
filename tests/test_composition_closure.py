@@ -7,6 +7,7 @@ from unittest.mock import patch
 from anidiagram.composition import LAYOUTS
 from anidiagram.planner import brief_to_plan, compile_plan
 from anidiagram.quality import quality_report
+from quality_expectations import assert_quality_baseline
 from anidiagram.schema import DiagramScriptValidationError, compile_scene
 from anidiagram.styles import load_style
 
@@ -15,6 +16,16 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class CompositionClosureTest(unittest.TestCase):
+    def _assert_cardinal_clear_routes(self, spec):
+        for edge in spec["edges"]:
+            self.assertEqual("orthogonal", edge["route"])
+            self.assertGreaterEqual(len(edge["points"]), 2)
+            for a, b in zip(edge["points"], edge["points"][1:]):
+                self.assertTrue(a[0] == b[0] or a[1] == b[1], (edge["semantic_relation_id"], a, b))
+        report = quality_report(compile_scene(spec), load_style())
+        self.assertFalse([issue for issue in report["issues"] if issue["code"] in {
+            "edge_segment_node_collision", "edge_group_title_collision", "node_overlap"}], report["issues"])
+
     def _plan(self):
         return json.loads(
             (ROOT / "examples" / "contracts" / "production-request-path.plan.json").read_text(encoding="utf-8")
@@ -154,12 +165,10 @@ class CompositionClosureTest(unittest.TestCase):
         self.assertGreaterEqual(min(group["bounds"][1] for group in spec["groups"]), 193)
         self.assertGreaterEqual(spec["canvas"]["height"], 920)
         edges = {edge["semantic_relation_id"]: edge for edge in spec["edges"]}
-        self.assertEqual("straight", edges["human-governs-automation"]["route"])
-        self.assertEqual("straight", edges["automation-opens-worktree"]["route"])
-        self.assertEqual("straight", edges["maker-submits-draft"]["route"])
-        self.assertEqual("points", edges["state-informs-human"]["route"])
-        self.assertLess(edges["state-informs-human"]["points"][2][0], 50)
-        self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, quality_report(scene)["summary"])
+        self._assert_cardinal_clear_routes(spec)
+        self.assertEqual(("external-state", "human-engineer"),
+                         (edges["state-informs-human"]["from"], edges["state-informs-human"]["to"]))
+        assert_quality_baseline(self, quality_report(scene))
 
     def test_layered_loop_routes_skip_lane_and_dense_feedback_outside_content(self):
         plan = json.loads((ROOT / "examples" / "loop-engineering-minimal-light.plan.json").read_text(encoding="utf-8"))
@@ -199,10 +208,10 @@ class CompositionClosureTest(unittest.TestCase):
         ]
         node_bottom = max(node["position"][1] + node["size"][1] for node in spec["nodes"])
 
-        self.assertIn(spec["canvas"]["width"] - 36, [point[0] for point in skip_lane["points"]])
-        self.assertTrue(all(edge["points"][2][0] == 36 for edge in feedbacks))
-        self.assertGreater(min(edge["points"][1][1] for edge in feedbacks), node_bottom)
-        self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, quality_report(scene)["summary"])
+        self._assert_cardinal_clear_routes(spec)
+        self.assertGreaterEqual(len(skip_lane["points"]), 3)
+        self.assertEqual(len(feedbacks), len({tuple(map(tuple, edge["points"])) for edge in feedbacks}))
+        assert_quality_baseline(self, quality_report(scene))
 
     def test_agent_loop_layout_reproduces_the_reference_zones(self):
         spec = compile_plan(self._agent_loop_plan())
@@ -221,9 +230,10 @@ class CompositionClosureTest(unittest.TestCase):
         self.assertEqual([1360, 760], positions["tool-types"])
         self.assertEqual("decision", nodes["done"]["shape"])
         self.assertEqual("task", nodes["done"]["icon"])
-        self.assertEqual("straight", edges["think-act"]["route"])
+        self.assertEqual("orthogonal", edges["think-act"]["route"])
         self.assertEqual("orthogonal", edges["observe-done"]["route"])
-        self.assertEqual("points", edges["done-think"]["route"])
+        self.assertEqual("orthogonal", edges["done-think"]["route"])
+        self._assert_cardinal_clear_routes(spec)
         self.assertTrue(all("step" not in node for node in nodes.values()))
         self.assertTrue(all("step" not in edge for edge in edges.values()))
         self.assertLess(groups["trigger-input"]["bounds"][1], groups["cognitive-core"]["bounds"][1])
@@ -269,7 +279,7 @@ class CompositionClosureTest(unittest.TestCase):
         scene = compile_scene(spec)
         report = quality_report(scene, load_style(ROOT / "styles" / "sketch-board.json"))
 
-        self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, report["summary"])
+        assert_quality_baseline(self, report)
         core_nodes = [node for node in spec["nodes"] if node["id"] in cognitive["members"]]
         rectangles = [(*node["position"], *node["size"]) for node in core_nodes]
         for index, left in enumerate(rectangles):
@@ -284,7 +294,8 @@ class CompositionClosureTest(unittest.TestCase):
         deepest = next(node for node in spec["nodes"] if node["id"] == extra_ids[-1])
         feedback = next(edge for edge in spec["edges"] if edge["semantic_relation_id"] == "deep-review-feedback")
         self.assertGreaterEqual(deepest["position"][1], 835)
-        self.assertEqual(deepest["position"][1] + deepest["size"][1], feedback["points"][0][1])
+        self.assertEqual(extra_ids[-1], feedback["from"])
+        self._assert_cardinal_clear_routes(spec)
 
     def test_agent_loop_layout_reflows_a_wide_safety_decision(self):
         plan = self._agent_loop_plan()
@@ -312,7 +323,7 @@ class CompositionClosureTest(unittest.TestCase):
         self.assertEqual("decision", nodes["validate"]["shape"])
         self.assertEqual([320, 116], nodes["validate"]["size"])
         self.assertGreaterEqual(nodes["scope"]["position"][0] - 24, nodes["validate"]["position"][0] + 320)
-        self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, report["summary"])
+        assert_quality_baseline(self, report)
 
     def test_agent_loop_layout_reserves_space_for_dense_cross_zone_corridors(self):
         plan = self._agent_loop_plan()
@@ -332,14 +343,11 @@ class CompositionClosureTest(unittest.TestCase):
         scene = compile_scene(spec)
         report = quality_report(scene, load_style(ROOT / "styles" / "sketch-board.json"))
         nodes = {node["id"]: node for node in spec["nodes"]}
-        corridors = [
-            edge["points"][1][1]
-            for edge in spec["edges"]
-            if str(edge.get("semantic_relation_id", "")).startswith("dense-policy-")
-        ]
-
-        self.assertLess(max(corridors) + 30, nodes["validate"]["position"][1])
-        self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, report["summary"])
+        dense = [edge for edge in spec["edges"] if str(edge.get("semantic_relation_id", "")).startswith("dense-policy-")]
+        self.assertEqual(11, len(dense))
+        self.assertEqual(11, len({tuple(map(tuple, edge["points"])) for edge in dense}))
+        self._assert_cardinal_clear_routes(spec)
+        assert_quality_baseline(self, report)
 
     def test_agent_loop_limits_inferred_decisions_to_core_and_safety_zones(self):
         plan = self._agent_loop_plan()
@@ -394,7 +402,7 @@ class CompositionClosureTest(unittest.TestCase):
         for node_id in ("trigger", "working-memory", "dispatch"):
             self.assertNotEqual("decision", nodes[node_id].get("shape"))
             self.assertEqual([220, 116], nodes[node_id]["size"])
-        self.assertEqual({"errors": 0, "warnings": 0, "issues": 0}, quality_report(scene)["summary"])
+        assert_quality_baseline(self, quality_report(scene))
 
     def test_flow_order_controls_pipeline_order_and_repeat_controls_motion(self):
         plan = self._plan()

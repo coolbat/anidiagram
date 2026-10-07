@@ -1,0 +1,161 @@
+{
+  "CompositionClosureTest.test_agent_loop_layout_reflows_a_wide_safety_decision": [],
+  "CompositionClosureTest.test_agent_loop_layout_reserves_space_for_dense_cross_zone_corridors": [],
+  "CompositionClosureTest.test_agent_loop_layout_wraps_extended_core_nodes_without_overlap_or_zone_drift": [],
+  "CompositionClosureTest.test_agent_loop_limits_inferred_decisions_to_core_and_safety_zones": [],
+  "CompositionClosureTest.test_layered_loop_layout_uses_three_title_safe_serpentine_layers": [],
+  "CompositionClosureTest.test_layered_loop_routes_skip_lane_and_dense_feedback_outside_content": [],
+  "CompositionContractTest.test_agent_loop_reference_case_uses_the_new_layout_and_illustrated_default": [],
+  "EnterpriseRagProductionCaseTest.test_case_resolves_frozen_presentation_and_passes_quality": [],
+  "IllustratedDeepTechCaseTest.test_case_uses_only_frozen_icons_and_passes_quality": [],
+  "ReadmeShowcaseRound1Test.test_specs_use_readme_canvas_current_systems_and_showcase_motion/hero-governed-rag": [],
+  "ReadmeShowcaseRound1Test.test_specs_use_readme_canvas_current_systems_and_showcase_motion/hero-kubernetes-three-layer": [
+    {"code": "edge_group_title_collision", "severity": "warning", "subject": {"edge_index": 0, "group_index": 1}},
+    {"code": "edge_group_title_collision", "severity": "warning", "subject": {"edge_index": 7, "group_index": 2}}
+  ],
+  "ReadmeShowcaseRound1Test.test_specs_use_readme_canvas_current_systems_and_showcase_motion/hero-loop-engineering": [],
+  "ReadmeShowcaseRound1Test.test_specs_use_readme_canvas_current_systems_and_showcase_motion/layout-enterprise-rag-pipeline": [],
+  "ReadmeShowcaseRound1Test.test_specs_use_readme_canvas_current_systems_and_showcase_motion/layout-mcp-tool-hub": [],
+  "ReadmeShowcaseRound1Test.test_specs_use_readme_canvas_current_systems_and_showcase_motion/template-agent-lifecycle-claude-warm": [],
+  "ReadmeShowcaseRound1Test.test_specs_use_readme_canvas_current_systems_and_showcase_motion/template-agent-lifecycle-deep-tech": [],
+  "ReadmeShowcaseRound1Test.test_specs_use_readme_canvas_current_systems_and_showcase_motion/template-agent-lifecycle-minimal-light": [],
+  "ShowcaseGalleryTest.test_hero_uses_a_focal_agent_and_complete_runtime_story": [
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 1, "label_edge_index": 1}},
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 4, "label_edge_index": 4}},
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 6, "label_edge_index": 6}}
+  ],
+  "ShowcaseGalleryTest.test_kubernetes_hero_candidate_has_three_planes_and_focused_motion": [
+    {"code": "edge_group_title_collision", "severity": "warning", "subject": {"edge_index": 12, "group_index": 5}},
+    {"code": "edge_group_title_collision", "severity": "warning", "subject": {"edge_index": 13, "group_index": 5}},
+    {"code": "edge_group_title_collision", "severity": "warning", "subject": {"edge_index": 3, "group_index": 5}},
+    {"code": "edge_group_title_collision", "severity": "warning", "subject": {"edge_index": 8, "group_index": 2}},
+    {"code": "edge_group_title_collision", "severity": "warning", "subject": {"edge_index": 8, "group_index": 3}},
+    {"code": "edge_group_title_collision", "severity": "warning", "subject": {"edge_index": 9, "group_index": 4}},
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 1, "label_edge_index": 1}}
+  ],
+  "ShowcaseGalleryTest.test_layout_showcase_specs_cover_all_cases_with_known_diagnostics/agent-loop": [],
+  "ShowcaseGalleryTest.test_layout_showcase_specs_cover_all_cases_with_known_diagnostics/agent-memory": [],
+  "ShowcaseGalleryTest.test_layout_showcase_specs_cover_all_cases_with_known_diagnostics/compare": [],
+  "ShowcaseGalleryTest.test_layout_showcase_specs_cover_all_cases_with_known_diagnostics/er": [],
+  "ShowcaseGalleryTest.test_layout_showcase_specs_cover_all_cases_with_known_diagnostics/funnel": [],
+  "ShowcaseGalleryTest.test_layout_showcase_specs_cover_all_cases_with_known_diagnostics/hub-spoke": [],
+  "ShowcaseGalleryTest.test_layout_showcase_specs_cover_all_cases_with_known_diagnostics/layered": [
+    {"code": "node_group_title_collision", "severity": "warning", "subject": {"group_id": "interface", "node_id": "ui"}}
+  ],
+  "ShowcaseGalleryTest.test_layout_showcase_specs_cover_all_cases_with_known_diagnostics/layered-loop": [],
+  "ShowcaseGalleryTest.test_layout_showcase_specs_cover_all_cases_with_known_diagnostics/loop": [],
+  "ShowcaseGalleryTest.test_layout_showcase_specs_cover_all_cases_with_known_diagnostics/matrix": [
+    {"code": "edge_segment_node_collision", "severity": "warning", "subject": {"blocking_node": "big", "edge_index": 2, "source": "quick", "target": "roadmap"}}
+  ],
+  "ShowcaseGalleryTest.test_layout_showcase_specs_cover_all_cases_with_known_diagnostics/network": [],
+  "ShowcaseGalleryTest.test_layout_showcase_specs_cover_all_cases_with_known_diagnostics/pipeline": [],
+  "ShowcaseGalleryTest.test_layout_showcase_specs_cover_all_cases_with_known_diagnostics/sequence": [],
+  "ShowcaseGalleryTest.test_layout_showcase_specs_cover_all_cases_with_known_diagnostics/stack": [
+    {"code": "node_group_title_collision", "severity": "warning", "subject": {"group_id": "stack", "node_id": "ui"}}
+  ],
+  "ShowcaseGalleryTest.test_layout_showcase_specs_cover_all_cases_with_known_diagnostics/swimlane": [],
+  "ShowcaseGalleryTest.test_layout_showcase_specs_cover_all_cases_with_known_diagnostics/timeline": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/hero/agent-runtime-flow": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/layouts/agent-memory": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/layouts/compare": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/layouts/er": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/layouts/funnel": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/layouts/hub-spoke": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/layouts/layered": [
+    {"code": "node_group_title_collision", "severity": "warning", "subject": {"group_id": "interface", "node_id": "ui"}}
+  ],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/layouts/loop": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/layouts/matrix": [
+    {"code": "edge_segment_node_collision", "severity": "warning", "subject": {"blocking_node": "big", "edge_index": 2, "source": "quick", "target": "roadmap"}}
+  ],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/layouts/network": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/layouts/pipeline": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/layouts/sequence": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/layouts/stack": [
+    {"code": "node_group_title_collision", "severity": "warning", "subject": {"group_id": "stack", "node_id": "ui"}}
+  ],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/layouts/swimlane": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/layouts/timeline": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/aurora-orb": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/blueprint": [
+    {"code": "group_overlap", "severity": "error", "subject": {"group_ids": ["client-plane", "server-plane"]}}
+  ],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/claude-warm": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/dark-luxury": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/dark-terminal": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/deep-tech": [
+    {"code": "group_overlap", "severity": "error", "subject": {"group_ids": ["telemetry", "runtime"]}}
+  ],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/flat-icon": [
+    {"code": "edge_segment_node_collision", "severity": "warning", "subject": {"blocking_node": "bet", "edge_index": 2, "source": "quick", "target": "roadmap"}}
+  ],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/glassmorphism": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/illustrated-semantic": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/minimal-light": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/notion-clean": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/openai-minimal": [],
+  "ShowcaseGalleryTest.test_public_showcase_specs_use_composition_v1_illustrated_2_5_and_full_motion/styles/sketch-board": [
+    {"code": "edge_segment_node_collision", "severity": "warning", "subject": {"blocking_node": "align", "edge_index": 5, "source": "output", "target": "attend"}},
+    {"code": "group_overlap", "severity": "error", "subject": {"group_ids": ["input", "core"]}}
+  ],
+  "ShowcaseGalleryTest.test_representative_examples_use_default_character_icons_and_readable_budgets/agent-memory.diagram.json": [
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 4, "label_edge_index": 4}},
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 5, "label_edge_index": 5}}
+  ],
+  "ShowcaseGalleryTest.test_representative_examples_use_default_character_icons_and_readable_budgets/high-fidelity-runtime.diagram.json": [
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 1, "label_edge_index": 1}},
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 4, "label_edge_index": 4}},
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 6, "label_edge_index": 6}}
+  ],
+  "ShowcaseGalleryTest.test_representative_examples_use_default_character_icons_and_readable_budgets/illustrated-character-strong-loop-cases.diagram.json": [],
+  "SvgRendererTest.test_brief_planner_compiles_to_freeform_diagram": [],
+  "SvgRendererTest.test_cli_compiles_brief_to_plan_spec_and_outputs": [],
+  "SvgRendererTest.test_cli_writes_html_runtime": [
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 1, "label_edge_index": 1}},
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 4, "label_edge_index": 4}},
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 6, "label_edge_index": 6}}
+  ],
+  "SvgRendererTest.test_icon_semantic_motion_renders_icon_specific_micro_animations": [],
+  "SvgRendererTest.test_runtime_loop_motion_keeps_frames_static_and_animates_micro_elements": [],
+  "SvgRendererTest.test_style_showcase_specs_cover_catalog/aurora-orb": [],
+  "SvgRendererTest.test_style_showcase_specs_cover_catalog/blueprint": [
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 4, "label_edge_index": 4}},
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 5, "label_edge_index": 5}},
+    {"code": "group_overlap", "severity": "error", "subject": {"group_ids": ["client-plane", "server-plane"]}}
+  ],
+  "SvgRendererTest.test_style_showcase_specs_cover_catalog/claude-warm": [
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 0, "label_edge_index": 0}},
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 1, "label_edge_index": 1}},
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 2, "label_edge_index": 2}},
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 3, "label_edge_index": 3}}
+  ],
+  "SvgRendererTest.test_style_showcase_specs_cover_catalog/dark-luxury": [
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 1, "label_edge_index": 1}},
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 2, "label_edge_index": 2}}
+  ],
+  "SvgRendererTest.test_style_showcase_specs_cover_catalog/dark-terminal": [],
+  "SvgRendererTest.test_style_showcase_specs_cover_catalog/deep-tech": [
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 4, "label_edge_index": 4}},
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 5, "label_edge_index": 5}},
+    {"code": "group_overlap", "severity": "error", "subject": {"group_ids": ["telemetry", "runtime"]}}
+  ],
+  "SvgRendererTest.test_style_showcase_specs_cover_catalog/flat-icon": [
+    {"code": "edge_segment_node_collision", "severity": "warning", "subject": {"blocking_node": "bet", "edge_index": 2, "source": "quick", "target": "roadmap"}}
+  ],
+  "SvgRendererTest.test_style_showcase_specs_cover_catalog/glassmorphism": [],
+  "SvgRendererTest.test_style_showcase_specs_cover_catalog/illustrated-semantic": [],
+  "SvgRendererTest.test_style_showcase_specs_cover_catalog/minimal-light": [],
+  "SvgRendererTest.test_style_showcase_specs_cover_catalog/notion-clean": [],
+  "SvgRendererTest.test_style_showcase_specs_cover_catalog/openai-minimal": [],
+  "SvgRendererTest.test_style_showcase_specs_cover_catalog/sketch-board": [
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 3, "label_edge_index": 3}},
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 4, "label_edge_index": 4}},
+    {"code": "edge_segment_node_collision", "severity": "warning", "subject": {"blocking_node": "align", "edge_index": 5, "source": "output", "target": "attend"}},
+    {"code": "group_overlap", "severity": "error", "subject": {"group_ids": ["input", "core"]}}
+  ],
+  "SvgRendererTest.test_teaching_transformer_example_renders_cleanly": [
+    {"code": "edge_label_collision", "severity": "warning", "subject": {"edge_index": 11, "label_edge_index": 12}},
+    {"code": "edge_segment_node_collision", "severity": "warning", "subject": {"blocking_node": "aligned", "edge_index": 9, "source": "heads", "target": "attend"}},
+    {"code": "edge_segment_node_collision", "severity": "warning", "subject": {"blocking_node": "paper", "edge_index": 12, "source": "parallel", "target": "softmax"}}
+  ]
+}
