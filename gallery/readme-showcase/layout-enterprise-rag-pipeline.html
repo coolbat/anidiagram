@@ -7,14 +7,32 @@
   <title>Enterprise RAG Ingestion Pipeline Runtime</title>
   <link rel="icon" href="data:,">
   <style>
-    body { margin: 0; background: #0b1020; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    main { min-height: 100vh; display: grid; grid-template-rows: auto 1fr; gap: 12px; padding: 16px; box-sizing: border-box; }
-    .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-    button, a { border: 1px solid #475569; background: #111827; color: #f8fafc; border-radius: 8px; padding: 8px 10px; font: inherit; text-decoration: none; cursor: pointer; }
-    button:hover, a:hover { background: #1f2937; }
+    body { --surface: #ffffff; --ink: #172033; --muted: #5b6778; --accent: #2563eb; margin: 0; background: var(--surface); color: var(--ink); font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    main { height: 100vh; height: 100dvh; min-height: 360px; display: flex; flex-direction: column; gap: 12px; padding: 16px; box-sizing: border-box; }
+    .toolbar { max-width: 100%; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; align-self: center; z-index: 5; padding: 6px; border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); border-radius: 16px; background: color-mix(in srgb, var(--surface) 88%, transparent); backdrop-filter: blur(14px); box-shadow: 0 6px 24px #00000012; }
+    .toolbar-group { flex-wrap: wrap; max-width: 100%; display: flex; gap: 3px; align-items: center; }
+    .toolbar-group + .toolbar-group { border-left: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); padding-left: 8px; }
+    .viewer-menu { position: relative; }
+    .viewer-menu summary { padding: 8px 10px; cursor: pointer; }
+    .menu-items { position: absolute; right: 0; top: 100%; min-width: 170px; padding: 6px; display: grid; gap: 5px; background: var(--surface); border: 1px solid var(--muted); border-radius: 12px; }
+    .readable-hint { margin: 0; text-align: center; color: var(--muted); font-size: 13px; }
+    .narration { border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); border-radius: 14px; padding: 12px 18px; background: var(--surface); flex: none; }
+    .narration[hidden] { display: none; }
+    .narration-header { display: flex; align-items: center; gap: 12px; }
+    .narration h2 { overflow-wrap: anywhere; font-size: 18px; margin: 5px 0; }
+    .narration p { margin: 4px 0; color: var(--muted); font-size: 14px; }
+    .narration a { display: inline-block; padding: 3px 6px; font-size: 12px; }
+    .narration-progress { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+    .step-dot { padding: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--muted); opacity: .4; }
+    .step-dot[aria-current="step"] { background: var(--accent); opacity: 1; }
+    #viewport .context-dim { opacity: .25; }
+    #viewport .context-focus { filter: drop-shadow(0 0 3px color-mix(in srgb, var(--accent) 35%, transparent)); }
+    @media (max-width: 640px) { main { padding: 8px; gap: 6px; } .toolbar { gap: 4px; } button, a { font-size: 12px; padding: 6px; } .narration { padding: 8px 10px; } }
+    button, a { border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); background: transparent; color: var(--ink); border-radius: 8px; padding: 8px 10px; font: inherit; text-decoration: none; cursor: pointer; }
+    button:hover, a:hover { background: color-mix(in srgb, var(--ink) 9%, var(--surface)); }
     button:focus-visible, a:focus-visible, .stage:focus-visible { outline: 3px solid #38bdf8; outline-offset: 2px; }
-    button[aria-pressed="true"] { background: #475569; border-color: #94a3b8; }
-    .stage { width: 100%; min-height: 0; overflow: hidden; border: 1px solid #334155; border-radius: 12px; background: #020617; cursor: grab; }
+    button[aria-pressed="true"] { background: color-mix(in srgb, var(--accent) 15%, var(--surface)); border-color: var(--accent); }
+    .stage { position: relative; box-sizing: border-box; flex: 1; width: 100%; min-height: 120px; overflow: hidden; border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); border-radius: 12px; background: var(--surface); cursor: grab; }
     .stage.dragging { cursor: grabbing; }
     .viewport { transform-origin: 0 0; width: max-content; }
     svg { display: block; max-width: none; height: auto; user-select: none; }
@@ -38,24 +56,34 @@
         data-label-ready="Diagram ready" data-label-restarted="Animation restarted"
         data-label-dependency-warning="GSAP did not load; showing the static diagram.">
     <div class="toolbar" role="toolbar" aria-label="Diagram playback and view controls">
+      <div class="toolbar-group" role="group" aria-label="Playback">
       <button type="button" id="toggle">Pause</button>
       <button type="button" id="restart">Restart</button>
       <button type="button" id="timeline-start" hidden>Start Explanation</button>
       <button type="button" id="timeline-previous" hidden>Previous Step</button>
       <button type="button" id="timeline-next" hidden>Next Step</button>
+      </div>
+      <div class="toolbar-group" role="group" aria-label="Motion">
       <button type="button" class="motion-choice" data-motion="expressive" aria-pressed="true">Expressive</button>
       <button type="button" class="motion-choice" data-motion="readable" aria-pressed="false">Readable</button>
       <button type="button" class="motion-choice" data-motion="off" aria-pressed="false">Motion Off</button>
+      </div>
+      <div class="toolbar-group" role="group" aria-label="Zoom">
       <button type="button" id="zoom-in">Zoom In</button>
       <button type="button" id="zoom-out">Zoom Out</button>
       <button type="button" id="reset">Reset View</button>
+      </div>
+      <details class="viewer-menu"><summary>More</summary><div class="menu-items">
       <a id="download" download="Enterprise RAG Ingestion Pipeline.svg">Download SVG</a>
+      <button type="button" id="copy-link">Copy link</button>
+      </div></details>
     </div>
+    <p id="readable-hint" class="readable-hint" hidden>Many nodes — try Readable mode</p>
     <p id="runtime-warning" class="runtime-warning" role="alert" hidden></p>
     <p id="runtime-status" class="sr-only" role="status" aria-live="polite">Diagram ready</p>
     <div class="stage" id="stage" tabindex="0" aria-label="Zoomable and pannable animated diagram">
       <div class="viewport" id="viewport">
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="diagram-title diagram-desc" data-motion-profile="showcase-v1" data-motion-sequence="staged" data-motion-edge="packet-flow" data-motion-node="icon-performance" data-motion-group="none" data-motion-title="highlight-sweep" data-motion-reduced="static" data-icon-system="diagram-core-v1">
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="diagram-title diagram-desc" lang="en" xml:lang="en" data-locale="en" data-motion-profile="showcase-v1" data-motion-sequence="staged" data-motion-edge="packet-flow" data-motion-node="icon-performance" data-motion-group="none" data-motion-title="highlight-sweep" data-motion-reduced="static" data-icon-system="diagram-core-v1">
 <title id="diagram-title">Enterprise RAG Ingestion Pipeline</title>
 <desc id="diagram-desc">A strict left-to-right topology for sequential transformation and retrieval</desc>
 <style>
@@ -64,7 +92,7 @@
   .node-title { font: 700 18px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
   .node-caption { font: 400 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; opacity: 0.84; }
   .group-label { font: 700 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
-  .edge-label { font: 600 13px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .edge-label { font: 600 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; paint-order: stroke; stroke: #ffffff; stroke-width: 4px; stroke-linejoin: round; }
   .step-label { font: 700 12px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
   .edge-flow { stroke-linecap: round; }
   .edge-draw, .edge-base { stroke-linecap: butt; stroke-linejoin: round; }
@@ -106,7 +134,7 @@
 <rect width="100%" height="100%" fill="url(#grid)" opacity="0.52" />
 <rect x="28" y="26" width="1544" height="848" rx="26" fill="none" stroke="#94a3b8" stroke-width="1.4" opacity="1.00" />
 <rect id="title-accent" x="44" y="44" width="12" height="52" rx="6" fill="#2563eb" style="animation:none" />
-<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#e8f1ff" style="animation:none" />
+<rect id="title-highlight" x="72" y="46" width="360" height="56" rx="16" fill="#e8f1ff" opacity="0" style="animation:none" />
 
 <text id="main-title" x="90" y="84" class="title" fill="#172033" opacity="1">
   Enterprise RAG Ingestion Pipeline
@@ -121,15 +149,16 @@
     <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#2563eb" />
   </marker>
 </defs>
-<g class="edge" data-role="process">
+<g class="edge" data-role="process" data-source="documents" data-target="tokenizer" data-label-placement="placed" data-expected-label="ingest" data-direction="forward" data-relation-id="@edge:0">
   <path class="edge-base" d="M 272.0 430.0 L 293.0 430.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 272.0 430.0 L 293.0 430.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-1)" />
 
 
+<path class="edge-label-leader" d="M 282.5 430.0 L 282.5 334.0" fill="none" stroke="#2563eb" stroke-width="1" stroke-dasharray="2 3" opacity="0.55" pointer-events="none" />
 
-  <text x="282.5" y="416.0" class="edge-label" fill="#5b6778" opacity="1">
-
+  <text x="258.3" y="324.0" class="edge-label" fill="#5b6778" opacity="1">
+    ingest
   </text>
 </g>
 
@@ -138,15 +167,16 @@
     <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#2563eb" />
   </marker>
 </defs>
-<g class="edge" data-role="process">
+<g class="edge" data-role="process" data-source="tokenizer" data-target="embedding" data-label-placement="placed" data-expected-label="chunks" data-direction="forward" data-relation-id="@edge:1">
   <path class="edge-base" d="M 532.0 430.0 L 553.0 430.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 532.0 430.0 L 553.0 430.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-2)" />
 
 
+<path class="edge-label-leader" d="M 542.5 430.0 L 542.5 334.0" fill="none" stroke="#2563eb" stroke-width="1" stroke-dasharray="2 3" opacity="0.55" pointer-events="none" />
 
-  <text x="542.5" y="416.0" class="edge-label" fill="#5b6778" opacity="1">
-
+  <text x="518.3" y="324.0" class="edge-label" fill="#5b6778" opacity="1">
+    chunks
   </text>
 </g>
 
@@ -155,15 +185,16 @@
     <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#2563eb" />
   </marker>
 </defs>
-<g class="edge" data-role="process">
+<g class="edge" data-role="process" data-source="embedding" data-target="index" data-label-placement="placed" data-expected-label="vectors" data-direction="forward" data-relation-id="@edge:2">
   <path class="edge-base" d="M 792.0 430.0 L 813.0 430.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 792.0 430.0 L 813.0 430.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-3)" />
 
 
+<path class="edge-label-leader" d="M 802.5 430.0 L 802.5 334.0" fill="none" stroke="#2563eb" stroke-width="1" stroke-dasharray="2 3" opacity="0.55" pointer-events="none" />
 
-  <text x="802.5" y="416.0" class="edge-label" fill="#5b6778" opacity="1">
-
+  <text x="774.3" y="324.0" class="edge-label" fill="#5b6778" opacity="1">
+    vectors
   </text>
 </g>
 
@@ -172,15 +203,16 @@
     <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#2563eb" />
   </marker>
 </defs>
-<g class="edge" data-role="process">
+<g class="edge" data-role="process" data-source="index" data-target="retrieval" data-label-placement="placed" data-expected-label="top-k" data-direction="forward" data-relation-id="@edge:3">
   <path class="edge-base" d="M 1052.0 430.0 L 1073.0 430.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 1052.0 430.0 L 1073.0 430.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-4)" />
 
 
+<path class="edge-label-leader" d="M 1062.5 430.0 L 1062.5 334.0" fill="none" stroke="#2563eb" stroke-width="1" stroke-dasharray="2 3" opacity="0.55" pointer-events="none" />
 
-  <text x="1062.5" y="416.0" class="edge-label" fill="#5b6778" opacity="1">
-
+  <text x="1042.3" y="324.0" class="edge-label" fill="#5b6778" opacity="1">
+    top-k
   </text>
 </g>
 
@@ -189,19 +221,21 @@
     <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="#2563eb" />
   </marker>
 </defs>
-<g class="edge" data-role="process">
+<g class="edge" data-role="process" data-source="retrieval" data-target="output" data-label-placement="placed" data-expected-label="evidence" data-direction="forward" data-relation-id="@edge:4">
   <path class="edge-base" d="M 1312.0 430.0 L 1333.0 430.0" fill="none" stroke="#2563eb" stroke-width="1.7" opacity="0.24" />
   <path class="edge-draw" d="M 1312.0 430.0 L 1333.0 430.0" fill="none" stroke="#2563eb" stroke-width="2.4" pathLength="1"
         stroke-dasharray="1" stroke-dashoffset="0" marker-end="url(#arrow-5)" />
 
 
+<path class="edge-label-leader" d="M 1322.5 430.0 L 1322.5 334.0" fill="none" stroke="#2563eb" stroke-width="1" stroke-dasharray="2 3" opacity="0.55" pointer-events="none" />
 
-  <text x="1322.5" y="416.0" class="edge-label" fill="#5b6778" opacity="1">
-
+  <text x="1290.3" y="324.0" class="edge-label" fill="#5b6778" opacity="1">
+    evidence
   </text>
 </g>
 
 <g id="node-documents" class="node motion-node" data-role="source" opacity="1">
+<title>Documents — approved source files</title>
 
 
 
@@ -232,14 +266,15 @@
   </g>
 </g></g>
 
-  <text x="191.5" y="416.0" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="191.5" dy="0" class="node-title">Documents</tspan>
-<tspan x="191.5" dy="17" class="node-caption" textLength="105.0" lengthAdjust="spacingAndGlyphs">approved source</tspan>
-<tspan x="191.5" dy="17" class="node-caption">files</tspan>
+  <text x="135.0" y="416.0" class="node-text-block" text-anchor="start" fill="#172033">
+<tspan x="135.0" dy="0" class="node-title">Documents</tspan>
+<tspan x="135.0" dy="17" class="node-caption" textLength="105.0" lengthAdjust="spacingAndGlyphs">approved source</tspan>
+<tspan x="135.0" dy="17" class="node-caption">files</tspan>
 </text>
 </g>
 
 <g id="node-tokenizer" class="node motion-node" data-role="process" opacity="1">
+<title>Tokenizer — split and budget</title>
 
 
 
@@ -270,13 +305,14 @@
   </g>
 </g></g>
 
-  <text x="451.5" y="424.5" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="451.5" dy="0" class="node-title">Tokenizer</tspan>
-<tspan x="451.5" dy="17" class="node-caption" textLength="105.0" lengthAdjust="spacingAndGlyphs">split and budget</tspan>
+  <text x="395.0" y="424.5" class="node-text-block" text-anchor="start" fill="#172033">
+<tspan x="395.0" dy="0" class="node-title">Tokenizer</tspan>
+<tspan x="395.0" dy="17" class="node-caption" textLength="105.0" lengthAdjust="spacingAndGlyphs">split and budget</tspan>
 </text>
 </g>
 
 <g id="node-embedding" class="node motion-node" data-role="process" opacity="1">
+<title>Embedding — encode semantics</title>
 
 
 
@@ -314,13 +350,14 @@
   </g>
 </g></g>
 
-  <text x="711.5" y="424.5" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="711.5" dy="0" class="node-title">Embedding</tspan>
-<tspan x="711.5" dy="17" class="node-caption" textLength="105.0" lengthAdjust="spacingAndGlyphs">encode semantics</tspan>
+  <text x="655.0" y="424.5" class="node-text-block" text-anchor="start" fill="#172033">
+<tspan x="655.0" dy="0" class="node-title">Embedding</tspan>
+<tspan x="655.0" dy="17" class="node-caption" textLength="105.0" lengthAdjust="spacingAndGlyphs">encode semantics</tspan>
 </text>
 </g>
 
 <g id="node-index" class="node motion-node" data-role="memory" opacity="1">
+<title>Vector Index — store searchable vectors</title>
 
 
 
@@ -353,14 +390,15 @@
   </g>
 </g></g>
 
-  <text x="971.5" y="416.0" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="971.5" dy="0" class="node-title" textLength="105.0" lengthAdjust="spacingAndGlyphs">Vector Index</tspan>
-<tspan x="971.5" dy="17" class="node-caption" textLength="105.0" lengthAdjust="spacingAndGlyphs">store searchable</tspan>
-<tspan x="971.5" dy="17" class="node-caption">vectors</tspan>
+  <text x="915.0" y="416.0" class="node-text-block" text-anchor="start" fill="#172033">
+<tspan x="915.0" dy="0" class="node-title" textLength="105.0" lengthAdjust="spacingAndGlyphs">Vector Index</tspan>
+<tspan x="915.0" dy="17" class="node-caption" textLength="105.0" lengthAdjust="spacingAndGlyphs">store searchable</tspan>
+<tspan x="915.0" dy="17" class="node-caption">vectors</tspan>
 </text>
 </g>
 
 <g id="node-retrieval" class="node motion-node" data-role="agent" opacity="1">
+<title>Retrieval — rank relevant context</title>
 
 
 
@@ -388,14 +426,15 @@
   </g>
 </g></g>
 
-  <text x="1231.5" y="416.0" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="1231.5" dy="0" class="node-title">Retrieval</tspan>
-<tspan x="1231.5" dy="17" class="node-caption">rank relevant</tspan>
-<tspan x="1231.5" dy="17" class="node-caption">context</tspan>
+  <text x="1175.0" y="416.0" class="node-text-block" text-anchor="start" fill="#172033">
+<tspan x="1175.0" dy="0" class="node-title">Retrieval</tspan>
+<tspan x="1175.0" dy="17" class="node-caption">rank relevant</tspan>
+<tspan x="1175.0" dy="17" class="node-caption">context</tspan>
 </text>
 </g>
 
 <g id="node-output" class="node motion-node" data-role="output" opacity="1">
+<title>Grounded Output — answer with citations</title>
 
 
 
@@ -424,17 +463,21 @@
   </g>
 </g></g>
 
-  <text x="1491.5" y="407.0" class="node-text-block" text-anchor="middle" fill="#172033">
-<tspan x="1491.5" dy="0" class="node-title">Grounded</tspan>
-<tspan x="1491.5" dy="18" class="node-title">Output</tspan>
-<tspan x="1491.5" dy="17" class="node-caption">answer with</tspan>
-<tspan x="1491.5" dy="17" class="node-caption">citations</tspan>
+  <text x="1435.0" y="407.0" class="node-text-block" text-anchor="start" fill="#172033">
+<tspan x="1435.0" dy="0" class="node-title">Grounded</tspan>
+<tspan x="1435.0" dy="18" class="node-title">Output</tspan>
+<tspan x="1435.0" dy="17" class="node-caption">answer with</tspan>
+<tspan x="1435.0" dy="17" class="node-caption">citations</tspan>
 </text>
 </g>
 </svg>
 
       </div>
     </div>
+    <section id="narration" class="narration" aria-label="Step by step explanation" hidden>
+      <div class="narration-header"><span id="narration-count"></span><div id="narration-progress" class="narration-progress"></div></div>
+      <h2 id="narration-label"></h2><p id="narration-route"></p><p id="narration-condition" hidden></p><div id="narration-sources"></div>
+    </section>
   </main>
   <script type="application/json" id="anidiagram-motion-manifest">
 {
@@ -460,7 +503,21 @@
     "readable_edge_indices": [
       0,
       1
-    ]
+    ],
+    "hover_edge_indices": [],
+    "active_icon_node_ids": [
+      "documents",
+      "tokenizer",
+      "embedding",
+      "index",
+      "retrieval",
+      "output"
+    ],
+    "hover_icon_node_ids": [],
+    "icon_limit": 6,
+    "max_active_sites": 11,
+    "beat_seconds": 4,
+    "motion_budget_contract": "motion-budget-v2"
   },
   "icons": [
     {
@@ -1318,7 +1375,11 @@
       "importance": "primary",
       "flow_id": "rag-ingestion",
       "flow_importance": "primary",
-      "flow_repeat": "loop"
+      "flow_repeat": "loop",
+      "signal_semantic": "default",
+      "speed_px_per_second": 180,
+      "departure_delay": 0,
+      "arrival_feedback_seconds": 0.15
     },
     {
       "index": 1,
@@ -1337,7 +1398,11 @@
       "importance": "primary",
       "flow_id": "rag-ingestion",
       "flow_importance": "primary",
-      "flow_repeat": "loop"
+      "flow_repeat": "loop",
+      "signal_semantic": "default",
+      "speed_px_per_second": 180,
+      "departure_delay": 0,
+      "arrival_feedback_seconds": 0.15
     },
     {
       "index": 2,
@@ -1355,7 +1420,11 @@
       "importance": "primary",
       "flow_id": "rag-ingestion",
       "flow_importance": "primary",
-      "flow_repeat": "loop"
+      "flow_repeat": "loop",
+      "signal_semantic": "default",
+      "speed_px_per_second": 180,
+      "departure_delay": 0,
+      "arrival_feedback_seconds": 0.15
     },
     {
       "index": 3,
@@ -1373,7 +1442,11 @@
       "importance": "primary",
       "flow_id": "rag-ingestion",
       "flow_importance": "primary",
-      "flow_repeat": "loop"
+      "flow_repeat": "loop",
+      "signal_semantic": "default",
+      "speed_px_per_second": 180,
+      "departure_delay": 0,
+      "arrival_feedback_seconds": 0.15
     },
     {
       "index": 4,
@@ -1392,7 +1465,11 @@
       "importance": "primary",
       "flow_id": "rag-ingestion",
       "flow_importance": "primary",
-      "flow_repeat": "loop"
+      "flow_repeat": "loop",
+      "signal_semantic": "default",
+      "speed_px_per_second": 180,
+      "departure_delay": 0,
+      "arrival_feedback_seconds": 0.15
     }
   ],
   "icon_system": "diagram-core-v1",
@@ -1402,7 +1479,127 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" crossorigin="anonymous"></script>
   <script>
+/* Shared HTML/viewer camera. Authored SVG coordinates stay untouched. */
 (function () {
+  "use strict";
+  window.AniDiagramViewport = {
+    mount(stage, viewport, svg) {
+      const nativeScroll = stage.dataset.readableScroll === "true";
+      let scale = 1, x = 0, y = 0, fitted = true, pointer = null;
+      const size = () => ({ width: svg.width.baseVal.value, height: svg.height.baseVal.value });
+      function apply() {
+        viewport.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+      }
+      function fit() {
+        const { width, height } = size();
+        if (!(width > 0 && height > 0 && stage.clientWidth > 0 && stage.clientHeight > 0)) return;
+        scale = nativeScroll ? 1 : Math.min((stage.clientWidth - 16) / width, (stage.clientHeight - 16) / height);
+        scale = Math.max(0.01, scale);
+        x = nativeScroll ? 0 : (stage.clientWidth - width * scale) / 2;
+        y = nativeScroll ? 0 : (stage.clientHeight - height * scale) / 2;
+        fitted = true;
+        stage.scrollLeft = 0;
+        stage.scrollTop = 0;
+        apply();
+      }
+      function zoom(factor) {
+        const next = Math.max(0.01, Math.min(8, scale * factor));
+        const cx = stage.clientWidth / 2, cy = stage.clientHeight / 2;
+        x = cx - (cx - x) * next / scale;
+        y = cy - (cy - y) * next / scale;
+        scale = next;
+        fitted = false;
+        apply();
+      }
+      function panBy(dx, dy) { x += dx; y += dy; fitted = false; apply(); }
+      stage.addEventListener("pointerdown", event => {
+        if (event.button !== 0 || event.target.closest("a, button, input, select")) return;
+        pointer = { id: event.pointerId, x: event.clientX, y: event.clientY };
+        stage.classList.add("dragging");
+        stage.setPointerCapture(event.pointerId);
+      });
+      stage.addEventListener("pointermove", event => {
+        if (!pointer || event.pointerId !== pointer.id) return;
+        panBy(event.clientX - pointer.x, event.clientY - pointer.y);
+        pointer.x = event.clientX;
+        pointer.y = event.clientY;
+      });
+      const release = () => { pointer = null; stage.classList.remove("dragging"); };
+      for (const type of ["pointerup", "pointercancel", "lostpointercapture"]) stage.addEventListener(type, release);
+      document.getElementById("zoom-in")?.addEventListener("click", () => zoom(1.2));
+      document.getElementById("zoom-out")?.addEventListener("click", () => zoom(1 / 1.2));
+      document.getElementById("reset")?.addEventListener("click", fit);
+      const observer = new ResizeObserver(() => { if (fitted) fit(); });
+      observer.observe(stage);
+      fit();
+      return { fit, panBy, zoom,
+        state: () => ({ scale, x, y }),
+        setState(value) { scale = value.scale; x = value.x; y = value.y; fitted = false; apply(); },
+        focusTransform(bounds) {
+          if (nativeScroll) return { scale, x, y };
+          const base = Math.min((stage.clientWidth - 16) / size().width, (stage.clientHeight - 16) / size().height);
+          const next = Math.max(base, Math.min(base * 1.65, (stage.clientWidth - 48) / Math.max(1, bounds.width), (stage.clientHeight - 48) / Math.max(1, bounds.height)));
+          // Keep the canvas covering the stage on each axis it overflows, so the
+          // focus never exposes blank space beyond the diagram edge.
+          const clamp = (offset, available, extent) => extent <= available
+            ? (available - extent) / 2 : Math.min(0, Math.max(available - extent, offset));
+          const { width, height } = size();
+          return { scale: next,
+            x: clamp(stage.clientWidth / 2 - (bounds.x + bounds.width / 2) * next, stage.clientWidth, width * next),
+            y: clamp(stage.clientHeight / 2 - (bounds.y + bounds.height / 2) * next, stage.clientHeight, height * next) };
+        },
+      };
+    },
+  };
+})();
+
+/* A one-shot presentation entrance, independent of ambient icon scheduling. */
+(function () {
+  "use strict";
+  let animations = [];
+  function clear() { animations.forEach(animation => animation.cancel()); animations = []; }
+  function play() {
+    clear();
+    const viewer = document.getElementById("viewer"), svg = document.querySelector("#viewport svg");
+    if (!svg || !window.gsap || viewer?.classList.contains("motion-off") ||
+        viewer?.classList.contains("motion-readable") || viewer?.dataset.runtimeMode === "timeline" ||
+        matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const nodes = Array.from(svg.querySelectorAll("g.node"));
+    const nodeEnds = new Map();
+    const stagger = nodes.length > 1 ? Math.min(50, 500 / (nodes.length - 1)) : 0;
+    function reveal(element, delay, duration) {
+      const animation = element.animate([{ opacity: 0 }, { opacity: 1 }],
+        { delay, duration, easing: "cubic-bezier(0.22,1,0.36,1)", fill: "backwards" });
+      animations.push(animation);
+    }
+    svg.querySelectorAll("g.group").forEach(group => reveal(group, 0, 120));
+    nodes.forEach((node, index) => {
+      const start = 120 + index * stagger;
+      nodeEnds.set(node.id.replace(/^node-/, ""), start + 220);
+      reveal(node, start, 220);
+    });
+    svg.querySelectorAll("g.edge").forEach(edge => {
+      const start = Math.max(nodeEnds.get(edge.dataset.source) || 840, nodeEnds.get(edge.dataset.target) || 840);
+      // Hide the complete edge, including ambient packets, until both endpoints exist.
+      reveal(edge, start, 220);
+      const path = edge.querySelector(".edge-draw");
+      if (path) animations.push(path.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }],
+        { delay: start, duration: 220, easing: "ease-out", fill: "backwards" }));
+    });
+  }
+  window.AniDiagramEntrance = {
+    play, clear,
+    pause() { animations.filter(animation => animation.playState === "running").forEach(animation => animation.pause()); },
+    resume() { animations.filter(animation => animation.playState === "paused" &&
+      animation.currentTime < animation.effect.getComputedTiming().endTime).forEach(animation => animation.play()); },
+  };
+  addEventListener("beforeprint", clear);
+  matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", event => { if (event.matches) clear(); });
+})();
+
+(function () {
+  "use strict";
+  /* Semantic icon recipes; assembled in the shared runtime closure. */
   function getManifest() {
     const el = document.getElementById("anidiagram-motion-manifest");
     if (!el) return null;
@@ -2859,296 +3056,6 @@
     return finishCharacterAtRest(tl, parts, restAt);
   }
 
-  function createSvgElement(name, attrs) {
-    const el = document.createElementNS("http://www.w3.org/2000/svg", name);
-    Object.entries(attrs || {}).forEach(([key, value]) => {
-      el.setAttribute(key, String(value));
-    });
-    return el;
-  }
-
-  function numberAttr(el, name, fallback) {
-    const value = Number.parseFloat(el.getAttribute(name) || "");
-    return Number.isFinite(value) ? value : fallback;
-  }
-
-  const EDGE_PACKET_COUNT = 1;
-  const EDGE_PACKET_REPEAT_DELAY = 0.0;
-  const SHORT_EDGE_THRESHOLD = 120;
-  let currentMotionMode = "expressive";
-
-  function clearRuntimeStageEffects() {
-    document.querySelectorAll(".runtime-generated").forEach((el) => el.remove());
-    const highlight = document.querySelector("#viewport svg #title-highlight");
-    if (highlight && highlight.dataset.runtimeTitleWidth) {
-      highlight.setAttribute("x", highlight.dataset.runtimeTitleX || highlight.getAttribute("x") || "72");
-      highlight.setAttribute("width", highlight.dataset.runtimeTitleWidth);
-      highlight.style.removeProperty("opacity");
-      highlight.style.removeProperty("transform");
-      highlight.style.removeProperty("transform-origin");
-    }
-  }
-
-  function playTitleSweep(svg, manifest, gsap) {
-    if (!manifest.stage || !manifest.stage.title_sweep) return [];
-    const highlight = svg.querySelector("#title-highlight");
-    if (!highlight) return [];
-    const x = numberAttr(highlight, "x", 72);
-    const width = Math.max(120, numberAttr(highlight, "width", 360));
-    highlight.dataset.runtimeTitleX = String(x);
-    highlight.dataset.runtimeTitleWidth = String(width);
-    gsap.set(highlight, { attr: { x, width }, scaleX: 0, opacity: 0.08, transformOrigin: "left center" });
-    const tl = gsap.timeline();
-    tl.to(highlight, { scaleX: 1, opacity: 0.16, duration: 0.92, ease: "power2.out" });
-    tl.__anidiagramStage = "title-entry";
-    return [tl];
-  }
-
-  function playRuntimeEdgeFlow(svg, manifest, gsap, motionMode = "expressive") {
-    if (!manifest.stage || !manifest.stage.edge_flow) return [];
-    const edgeGroups = Array.from(svg.querySelectorAll("g.edge"));
-    const edgeEntries = Array.isArray(manifest.edges) ? manifest.edges : [];
-    const configuredIndices = motionMode === "readable"
-      ? manifest.stage.readable_edge_indices
-      : manifest.stage.active_edge_indices;
-    let activeEdges;
-    if (Array.isArray(configuredIndices)) {
-      activeEdges = configuredIndices
-        .filter((edgeIndex) => Number.isInteger(edgeIndex) && edgeIndex >= 0 && edgeGroups[edgeIndex])
-        .map((edgeIndex) => ({ group: edgeGroups[edgeIndex], edgeIndex, entry: edgeEntries[edgeIndex] || {} }));
-    } else {
-      const requestedLimit = motionMode === "readable" ? manifest.stage.readable_edge_limit : manifest.stage.edge_limit;
-      activeEdges = edgeGroups
-        .map((group, edgeIndex) => ({ group, edgeIndex, entry: edgeEntries[edgeIndex] || {} }))
-        .filter((item) => !Number.isInteger(requestedLimit) || item.edgeIndex < Math.max(0, requestedLimit));
-    }
-    const timelines = [];
-    activeEdges.forEach(({ group, edgeIndex, entry }) => {
-      const base = group.querySelector("path.edge-base");
-      if (!base || !base.getTotalLength) return;
-      const length = Math.max(1, base.getTotalLength());
-      const path = base.getAttribute("d");
-      if (!path) return;
-      const stroke = base.getAttribute("stroke") || "#38bdf8";
-      const width = Math.max(1, numberAttr(base, "stroke-width", 2.4));
-      const label = group.querySelector(".edge-label");
-      const effect = String(entry.effect || "signal-arrow").replace(/[^a-z0-9-]/gi, "-").toLowerCase();
-      const dotEffect = effect === "signal-dot" || effect === "flow-dot";
-      const dashEffect = effect === "dynamic-dash" || effect === "dash-flow" || effect === "trace" || effect === "draw";
-      const flowDash = Math.max(2.4, width * 1.4);
-      const flowGap = Math.max(12, width * 7);
-      const shortEdge = length <= SHORT_EDGE_THRESHOLD;
-      group.dataset.runtimeEdgeEffect = effect;
-      group.dataset.runtimeEdgePacketShape = shortEdge ? "dot" : "segment";
-      const flow = createSvgElement("path", {
-        class: `edge-flow runtime-edge-flow runtime-edge-effect-${effect} runtime-generated`,
-        d: path,
-        fill: "none",
-        stroke,
-        "stroke-width": Math.max(1.2, width * 0.86).toFixed(1),
-        "stroke-linecap": "round",
-        "stroke-dasharray": `${flowDash.toFixed(1)} ${flowGap.toFixed(1)}`,
-        "stroke-dashoffset": "0",
-        opacity: motionMode === "readable" ? "0.09" : "0.20",
-        "pointer-events": "none",
-      });
-      if (label) group.insertBefore(flow, label);
-      else group.appendChild(flow);
-      for (let particleIndex = 0; particleIndex < EDGE_PACKET_COUNT; particleIndex += 1) {
-        const packetLength = dotEffect
-          ? Math.max(1.8, width * 0.55)
-          : dashEffect
-            ? Math.max(8, Math.min(20, length * 0.18))
-            : Math.max(13, Math.min(34, length * 0.42));
-        const packetGap = Math.max(52, length + packetLength * 2.8);
-        const packet = shortEdge
-          ? createSvgElement("circle", {
-              class: `edge-particle runtime-edge-particle runtime-edge-packet runtime-edge-short-packet runtime-edge-effect-${effect} runtime-generated`,
-              cx: "0",
-              cy: "0",
-              r: Math.max(4.5, width * 2.2).toFixed(1),
-              fill: stroke,
-              opacity: "0",
-              "pointer-events": "none",
-            })
-          : createSvgElement("path", {
-              class: `edge-particle runtime-edge-particle runtime-edge-packet runtime-edge-effect-${effect} runtime-generated`,
-              d: path,
-              fill: "none",
-              stroke: "#ffffff",
-              "stroke-width": Math.max(4.2, width * (2.35 - particleIndex * 0.22)).toFixed(1),
-              "stroke-linecap": "round",
-              "stroke-linejoin": "round",
-              "stroke-dasharray": `${packetLength.toFixed(1)} ${packetGap.toFixed(1)}`,
-              "stroke-dashoffset": packetGap.toFixed(1),
-              opacity: "0",
-              "pointer-events": "none",
-            });
-        const core = shortEdge
-          ? createSvgElement("circle", {
-              class: `edge-particle runtime-edge-particle runtime-edge-packet-core runtime-edge-short-packet-core runtime-edge-effect-${effect} runtime-generated`,
-              cx: "0",
-              cy: "0",
-              r: Math.max(3.0, width * 1.45).toFixed(1),
-              fill: stroke,
-              opacity: "0",
-              "pointer-events": "none",
-            })
-          : createSvgElement("path", {
-              class: `edge-particle runtime-edge-particle runtime-edge-packet-core runtime-edge-effect-${effect} runtime-generated`,
-              d: path,
-              fill: "none",
-              stroke,
-              "stroke-width": Math.max(2.6, width * (1.48 - particleIndex * 0.14)).toFixed(1),
-              "stroke-linecap": "round",
-              "stroke-linejoin": "round",
-              "stroke-dasharray": `${(dotEffect ? Math.max(1.2, width * 0.35) : Math.max(6, packetLength * 0.62)).toFixed(1)} ${packetGap.toFixed(1)}`,
-              "stroke-dashoffset": packetGap.toFixed(1),
-              opacity: "0",
-              "pointer-events": "none",
-            });
-        if (label) {
-          group.insertBefore(packet, label);
-          group.insertBefore(core, label);
-        } else {
-          group.appendChild(packet);
-          group.appendChild(core);
-        }
-        const duration = 2.05 + ((edgeIndex + particleIndex) % 5) * 0.13;
-        const semanticDelay = Number.isFinite(Number(entry.delay)) ? Number(entry.delay) : 0;
-        const delay = semanticDelay;
-        const tl = gsap.timeline({ repeat: -1, repeatDelay: EDGE_PACKET_REPEAT_DELAY, delay });
-        tl.fromTo(
-          flow,
-          { attr: { "stroke-dashoffset": 0 } },
-          { attr: { "stroke-dashoffset": -(flowDash + flowGap) }, duration, ease: "none" },
-          0
-        );
-        if (shortEdge) {
-          const travel = { distance: 0 };
-          const placeDot = () => {
-            const point = base.getPointAtLength(travel.distance);
-            packet.setAttribute("cx", point.x.toFixed(2));
-            packet.setAttribute("cy", point.y.toFixed(2));
-            core.setAttribute("cx", point.x.toFixed(2));
-            core.setAttribute("cy", point.y.toFixed(2));
-          };
-          placeDot();
-          tl.to(travel, { distance: length, duration, ease: "none", onUpdate: placeDot }, 0);
-        } else {
-          tl.fromTo(
-            [packet, core],
-            { attr: { "stroke-dashoffset": packetGap + packetLength } },
-            { attr: { "stroke-dashoffset": -(length + packetLength) }, duration, ease: "none" },
-            0
-          );
-        }
-        tl.to(packet, { opacity: motionMode === "readable" ? 0.62 : 0.86, duration: 0.14, ease: "power1.out" }, 0)
-          .to(core, { opacity: motionMode === "readable" ? 0.82 : 1, duration: 0.14, ease: "power1.out" }, 0)
-          .to([packet, core], { opacity: 0, duration: 0.14, ease: "power1.in" }, Math.max(0, duration - 0.14));
-        tl.__anidiagramStage = "edge-packet";
-        tl.__anidiagramEdgeIndex = edgeIndex;
-        tl.__anidiagramEdgeEffect = effect;
-        timelines.push(tl);
-      }
-    });
-    return timelines;
-  }
-
-  function playRuntimeRelationCircles(svg, manifest, gsap) {
-    if (!manifest.stage || !manifest.stage.relation_circles) return [];
-    const timelines = [];
-    const edgeGroups = Array.from(svg.querySelectorAll("g.edge"));
-    const firstEdge = edgeGroups[0] || null;
-    edgeGroups.forEach((group, edgeIndex) => {
-      if (edgeIndex % 2 !== 0) return;
-      const base = group.querySelector("path.edge-base");
-      if (!base || !base.getBBox) return;
-      const box = base.getBBox();
-      const width = Math.max(44, box.width + 24);
-      const height = Math.max(32, box.height + 20);
-      if (width > 520 || height > 320) return;
-      const stroke = base.getAttribute("stroke") || "#7aa8ff";
-      const ring = createSvgElement("ellipse", {
-        class: "runtime-relation-circle runtime-generated",
-        cx: (box.x + box.width / 2).toFixed(1),
-        cy: (box.y + box.height / 2).toFixed(1),
-        rx: (width / 2).toFixed(1),
-        ry: (height / 2).toFixed(1),
-        fill: "none",
-        stroke,
-        "stroke-width": "1.5",
-        "stroke-dasharray": "7 8",
-        "stroke-dashoffset": "0",
-        opacity: "0.18",
-        "pointer-events": "none",
-      });
-      if (firstEdge) svg.insertBefore(ring, firstEdge);
-      else svg.appendChild(ring);
-      timelines.push(
-        gsap.to(ring, {
-          attr: { "stroke-dashoffset": -48 },
-          opacity: 0.34,
-          duration: 4.8 + (edgeIndex % 3) * 0.35,
-          yoyo: true,
-          repeat: -1,
-          ease: "sine.inOut",
-        })
-      );
-    });
-    return timelines;
-  }
-
-  function playRuntimeGroupFields(svg, manifest, gsap) {
-    if (!manifest.stage || !manifest.stage.group_fields) return [];
-    const timelines = [];
-    const groups = Array.from(svg.querySelectorAll("g.group"));
-    groups.forEach((group, groupIndex) => {
-      const rect = group.querySelector("rect");
-      if (!rect) return;
-      const stroke = rect.getAttribute("stroke") || "#7aa8ff";
-      const field = createSvgElement("rect", {
-        class: "runtime-group-field runtime-generated",
-        x: rect.getAttribute("x") || "0",
-        y: rect.getAttribute("y") || "0",
-        width: rect.getAttribute("width") || "0",
-        height: rect.getAttribute("height") || "0",
-        rx: rect.getAttribute("rx") || "22",
-        fill: stroke,
-        opacity: "0.045",
-        filter: "url(#soft-glow)",
-        "pointer-events": "none",
-      });
-      group.insertBefore(field, rect);
-      timelines.push(
-        gsap.to(field, {
-          opacity: 0.11,
-          x: groupIndex % 2 === 0 ? 3 : -3,
-          y: groupIndex % 2 === 0 ? -2 : 2,
-          duration: 3.8 + groupIndex * 0.28,
-          yoyo: true,
-          repeat: -1,
-          ease: "sine.inOut",
-        })
-      );
-    });
-    return timelines;
-  }
-
-  function playStageEffects(manifest, motionMode = "expressive") {
-    if (!window.gsap) return [];
-    const svg = document.querySelector("#viewport svg");
-    if (!svg) return [];
-    clearRuntimeStageEffects();
-    if (motionMode === "off") return [];
-    return [
-      ...(motionMode === "expressive" ? playTitleSweep(svg, manifest, window.gsap) : []),
-      ...playRuntimeEdgeFlow(svg, manifest, window.gsap, motionMode),
-      ...(motionMode === "expressive" ? playRuntimeRelationCircles(svg, manifest, window.gsap) : []),
-      ...(motionMode === "expressive" ? playRuntimeGroupFields(svg, manifest, window.gsap) : []),
-    ];
-  }
-
   const SHOWCASE_TIME_SCALE = 0.6;
 
   function showcaseTimeline(gsap, config) {
@@ -3497,6 +3404,274 @@
     return timelines;
   }
 
+
+/* Decorative stage effects; assembled in the shared runtime closure. */
+  function createSvgElement(name, attrs) {
+    const el = document.createElementNS("http://www.w3.org/2000/svg", name);
+    Object.entries(attrs || {}).forEach(([key, value]) => {
+      el.setAttribute(key, String(value));
+    });
+    return el;
+  }
+
+  function numberAttr(el, name, fallback) {
+    const value = Number.parseFloat(el.getAttribute(name) || "");
+    return Number.isFinite(value) ? value : fallback;
+  }
+
+  const EDGE_PACKET_COUNT = 1;
+  const EDGE_PACKET_REPEAT_DELAY = 0.0;
+  const SHORT_EDGE_THRESHOLD = 120;
+  let currentMotionMode = "expressive";
+
+  function clearRuntimeStageEffects() {
+    document.querySelectorAll(".runtime-generated").forEach((el) => el.remove());
+    const highlight = document.querySelector("#viewport svg #title-highlight");
+    if (highlight && highlight.dataset.runtimeTitleWidth) {
+      highlight.setAttribute("x", highlight.dataset.runtimeTitleX || highlight.getAttribute("x") || "72");
+      highlight.setAttribute("width", highlight.dataset.runtimeTitleWidth);
+      highlight.style.removeProperty("opacity");
+      highlight.style.removeProperty("transform");
+      highlight.style.removeProperty("transform-origin");
+    }
+  }
+
+  function playTitleSweep(svg, manifest, gsap) {
+    if (!manifest.stage || !manifest.stage.title_sweep) return [];
+    const highlight = svg.querySelector("#title-highlight");
+    if (!highlight) return [];
+    const x = numberAttr(highlight, "x", 72);
+    const width = Math.max(120, numberAttr(highlight, "width", 360));
+    highlight.dataset.runtimeTitleX = String(x);
+    highlight.dataset.runtimeTitleWidth = String(width);
+    gsap.set(highlight, { attr: { x, width }, scaleX: 0, opacity: 0.08, transformOrigin: "left center" });
+    const tl = gsap.timeline();
+    tl.to(highlight, { scaleX: 1, opacity: 0.16, duration: 0.55, ease: "power2.out" })
+      .to(highlight, { opacity: 0, duration: 0.25, ease: "power1.out" });
+    tl.__anidiagramStage = "title-entry";
+    return [tl];
+  }
+
+  function playRuntimeEdgeFlow(svg, manifest, gsap, motionMode = "expressive") {
+    if (manifest.edge_motion_contract === "edge-motion-v1") return [];
+    if (!manifest.stage || !manifest.stage.edge_flow) return [];
+    const edgeGroups = Array.from(svg.querySelectorAll("g.edge"));
+    const edgeEntries = Array.isArray(manifest.edges) ? manifest.edges : [];
+    const configuredIndices = motionMode === "readable"
+      ? manifest.stage.readable_edge_indices
+      : manifest.stage.active_edge_indices;
+    let activeEdges;
+    if (Array.isArray(configuredIndices)) {
+      activeEdges = configuredIndices
+        .filter((edgeIndex) => Number.isInteger(edgeIndex) && edgeIndex >= 0 && edgeGroups[edgeIndex])
+        .map((edgeIndex) => ({ group: edgeGroups[edgeIndex], edgeIndex, entry: edgeEntries[edgeIndex] || {} }));
+    } else {
+      const requestedLimit = motionMode === "readable" ? manifest.stage.readable_edge_limit : manifest.stage.edge_limit;
+      activeEdges = edgeGroups
+        .map((group, edgeIndex) => ({ group, edgeIndex, entry: edgeEntries[edgeIndex] || {} }))
+        .filter((item) => !Number.isInteger(requestedLimit) || item.edgeIndex < Math.max(0, requestedLimit));
+    }
+    const timelines = [];
+    activeEdges.forEach(({ group, edgeIndex, entry }) => {
+      const base = group.querySelector("path.edge-base");
+      if (!base || !base.getTotalLength) return;
+      const length = Math.max(1, base.getTotalLength());
+      const path = base.getAttribute("d");
+      if (!path) return;
+      const stroke = base.getAttribute("stroke") || "#38bdf8";
+      const width = Math.max(1, numberAttr(base, "stroke-width", 2.4));
+      const label = group.querySelector(".edge-label");
+      const effect = String(entry.effect || "signal-arrow").replace(/[^a-z0-9-]/gi, "-").toLowerCase();
+      const dotEffect = effect === "signal-dot" || effect === "flow-dot";
+      const dashEffect = effect === "dynamic-dash" || effect === "dash-flow" || effect === "trace" || effect === "draw";
+      const flowDash = Math.max(2.4, width * 1.4);
+      const flowGap = Math.max(12, width * 7);
+      const shortEdge = length <= SHORT_EDGE_THRESHOLD;
+      group.dataset.runtimeEdgeEffect = effect;
+      group.dataset.runtimeEdgePacketShape = shortEdge ? "dot" : "segment";
+      const flow = createSvgElement("path", {
+        class: `edge-flow runtime-edge-flow runtime-edge-effect-${effect} runtime-generated`,
+        d: path,
+        fill: "none",
+        stroke,
+        "stroke-width": Math.max(1.2, width * 0.86).toFixed(1),
+        "stroke-linecap": "round",
+        "stroke-dasharray": `${flowDash.toFixed(1)} ${flowGap.toFixed(1)}`,
+        "stroke-dashoffset": "0",
+        opacity: motionMode === "readable" ? "0.09" : "0.20",
+        "pointer-events": "none",
+      });
+      if (label) group.insertBefore(flow, label);
+      else group.appendChild(flow);
+      for (let particleIndex = 0; particleIndex < EDGE_PACKET_COUNT; particleIndex += 1) {
+        const packetLength = dotEffect
+          ? Math.max(1.8, width * 0.55)
+          : dashEffect
+            ? Math.max(8, Math.min(20, length * 0.18))
+            : Math.max(13, Math.min(34, length * 0.42));
+        const packetGap = Math.max(52, length + packetLength * 2.8);
+        const packet = shortEdge
+          ? createSvgElement("circle", {
+              class: `edge-particle runtime-edge-particle runtime-edge-packet runtime-edge-short-packet runtime-edge-effect-${effect} runtime-generated`,
+              cx: "0",
+              cy: "0",
+              r: Math.max(4.5, width * 2.2).toFixed(1),
+              fill: stroke,
+              opacity: "0",
+              "pointer-events": "none",
+            })
+          : createSvgElement("path", {
+              class: `edge-particle runtime-edge-particle runtime-edge-packet runtime-edge-effect-${effect} runtime-generated`,
+              d: path,
+              fill: "none",
+              stroke: "#ffffff",
+              "stroke-width": Math.max(4.2, width * (2.35 - particleIndex * 0.22)).toFixed(1),
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round",
+              "stroke-dasharray": `${packetLength.toFixed(1)} ${packetGap.toFixed(1)}`,
+              "stroke-dashoffset": packetGap.toFixed(1),
+              opacity: "0",
+              "pointer-events": "none",
+            });
+        const core = shortEdge
+          ? createSvgElement("circle", {
+              class: `edge-particle runtime-edge-particle runtime-edge-packet-core runtime-edge-short-packet-core runtime-edge-effect-${effect} runtime-generated`,
+              cx: "0",
+              cy: "0",
+              r: Math.max(3.0, width * 1.45).toFixed(1),
+              fill: stroke,
+              opacity: "0",
+              "pointer-events": "none",
+            })
+          : createSvgElement("path", {
+              class: `edge-particle runtime-edge-particle runtime-edge-packet-core runtime-edge-effect-${effect} runtime-generated`,
+              d: path,
+              fill: "none",
+              stroke,
+              "stroke-width": Math.max(2.6, width * (1.48 - particleIndex * 0.14)).toFixed(1),
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round",
+              "stroke-dasharray": `${(dotEffect ? Math.max(1.2, width * 0.35) : Math.max(6, packetLength * 0.62)).toFixed(1)} ${packetGap.toFixed(1)}`,
+              "stroke-dashoffset": packetGap.toFixed(1),
+              opacity: "0",
+              "pointer-events": "none",
+            });
+        if (label) {
+          group.insertBefore(packet, label);
+          group.insertBefore(core, label);
+        } else {
+          group.appendChild(packet);
+          group.appendChild(core);
+        }
+        const duration = 2.05 + ((edgeIndex + particleIndex) % 5) * 0.13;
+        const semanticDelay = Number.isFinite(Number(entry.delay)) ? Number(entry.delay) : 0;
+        const delay = semanticDelay;
+        const tl = gsap.timeline({ repeat: -1, repeatDelay: EDGE_PACKET_REPEAT_DELAY, delay });
+        tl.fromTo(
+          flow,
+          { attr: { "stroke-dashoffset": 0 } },
+          { attr: { "stroke-dashoffset": -(flowDash + flowGap) }, duration, ease: "none" },
+          0
+        );
+        if (shortEdge) {
+          const travel = { distance: 0 };
+          const placeDot = () => {
+            const point = base.getPointAtLength(travel.distance);
+            packet.setAttribute("cx", point.x.toFixed(2));
+            packet.setAttribute("cy", point.y.toFixed(2));
+            core.setAttribute("cx", point.x.toFixed(2));
+            core.setAttribute("cy", point.y.toFixed(2));
+          };
+          placeDot();
+          tl.to(travel, { distance: length, duration, ease: "none", onUpdate: placeDot }, 0);
+        } else {
+          tl.fromTo(
+            [packet, core],
+            { attr: { "stroke-dashoffset": packetGap + packetLength } },
+            { attr: { "stroke-dashoffset": -(length + packetLength) }, duration, ease: "none" },
+            0
+          );
+        }
+        tl.to(packet, { opacity: motionMode === "readable" ? 0.62 : 0.86, duration: 0.14, ease: "power1.out" }, 0)
+          .to(core, { opacity: motionMode === "readable" ? 0.82 : 1, duration: 0.14, ease: "power1.out" }, 0)
+          .to([packet, core], { opacity: 0, duration: 0.14, ease: "power1.in" }, Math.max(0, duration - 0.14));
+        tl.__anidiagramStage = "edge-packet";
+        tl.__anidiagramEdgeIndex = edgeIndex;
+        tl.__anidiagramEdgeEffect = effect;
+        timelines.push(tl);
+      }
+    });
+    return timelines;
+  }
+
+  function playRuntimeRelationCircles(svg, manifest, gsap) {
+    if (manifest.stage?.motion_budget_contract) return [];
+    if (!manifest.stage || !manifest.stage.relation_circles) return [];
+    const timelines = [];
+    const edgeGroups = Array.from(svg.querySelectorAll("g.edge"));
+    const firstEdge = edgeGroups[0] || null;
+    edgeGroups.forEach((group, edgeIndex) => {
+      if (edgeIndex % 2 !== 0) return;
+      const base = group.querySelector("path.edge-base");
+      if (!base || !base.getBBox) return;
+      const box = base.getBBox();
+      const width = Math.max(44, box.width + 24);
+      const height = Math.max(32, box.height + 20);
+      if (width > 520 || height > 320) return;
+      const stroke = base.getAttribute("stroke") || "#7aa8ff";
+      const ring = createSvgElement("ellipse", {
+        class: "runtime-relation-circle runtime-generated",
+        cx: (box.x + box.width / 2).toFixed(1),
+        cy: (box.y + box.height / 2).toFixed(1),
+        rx: (width / 2).toFixed(1),
+        ry: (height / 2).toFixed(1),
+        fill: "none",
+        stroke,
+        "stroke-width": "1.5",
+        "stroke-dasharray": "7 8",
+        "stroke-dashoffset": "0",
+        opacity: "0.18",
+        "pointer-events": "none",
+      });
+      if (firstEdge) svg.insertBefore(ring, firstEdge);
+      else svg.appendChild(ring);
+      timelines.push(
+        gsap.to(ring, {
+          attr: { "stroke-dashoffset": -48 },
+          opacity: 0.34,
+          duration: 4.8 + (edgeIndex % 3) * 0.35,
+          yoyo: true,
+          repeat: -1,
+          ease: "sine.inOut",
+        })
+      );
+    });
+    return timelines;
+  }
+
+  function playRuntimeGroupFields(svg, manifest, gsap) {
+    if (!manifest.stage || !manifest.stage.group_fields) return [];
+    return [];
+  }
+
+  function playStageEffects(manifest, motionMode = "expressive") {
+    if (!window.gsap) return [];
+    const svg = document.querySelector("#viewport svg");
+    if (!svg) return [];
+    clearRuntimeStageEffects();
+    if (motionMode === "off") return [];
+    return [
+      ...(motionMode === "expressive" ? playTitleSweep(svg, manifest, window.gsap) : []),
+      ...playRuntimeEdgeFlow(svg, manifest, window.gsap, motionMode),
+      ...(motionMode === "expressive" ? playRuntimeRelationCircles(svg, manifest, window.gsap) : []),
+      ...(motionMode === "expressive" ? playRuntimeGroupFields(svg, manifest, window.gsap) : []),
+    ];
+  }
+
+
+/* Scheduler and playback lifecycle; assembled in the shared runtime closure. */
+  let runtimePaused = false; window.__ANIDIAGRAM_USER_PAUSED__ = false;
+  let pausedPlayback = new Map();
   function play() {
     window.__ANIDIAGRAM_TIMELINES__ = window.__ANIDIAGRAM_TIMELINES__ || [];
     window.__ANIDIAGRAM_STAGE_TIMELINES__ = window.__ANIDIAGRAM_STAGE_TIMELINES__ || [];
@@ -3504,10 +3679,9 @@
     const manifest = getManifest();
     if (!manifest || !Array.isArray(manifest.icons)) return [];
     const mode = manifest.mode || "ambient";
-    if (mode !== "ambient") {
-      console.warn(`AniDiagram runtime: unsupported runtime mode "${mode}"; only ambient mode is available.`);
-      return [];
-    }
+    if (currentMotionMode === "off") { stop(); return []; }
+    runtimePaused = false; window.__ANIDIAGRAM_USER_PAUSED__ = false;
+    if (mode === "timeline") return playChoreographer(manifest, true);
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       stop();
       return [];
@@ -3518,8 +3692,10 @@
     }
     stop();
     if (currentMotionMode === "off") return [];
+    if (mode === "event-driven") return playEventDriven(manifest, currentMotionMode);
     window.__ANIDIAGRAM_STAGE_TIMELINES__ = playStageEffects(manifest, currentMotionMode);
-    window.__ANIDIAGRAM_ICON_TIMELINES__ = manifest.icons.flatMap((iconConfig) => playIcon(iconConfig) || []);
+    window.__ANIDIAGRAM_ICON_TIMELINES__ = playAmbientIcons(manifest);
+    window.AniDiagramEdgeMotion?.play(currentMotionMode);
     return syncTimelineStore();
   }
 
@@ -3554,23 +3730,34 @@
 
   function setRuntimeMotionMode(mode) {
     currentMotionMode = mode;
+    window.AniDiagramEntrance?.clear();
     const manifest = getManifest();
+    if (mode === "off") { stop(); return []; }
+    runtimePaused = false; window.__ANIDIAGRAM_USER_PAUSED__ = false;
+    if (manifest?.mode === "timeline") return playChoreographer(manifest, true);
     const reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (!manifest || !window.gsap || reduced || mode === "off") {
       stop();
       return [];
     }
-    if (!(window.__ANIDIAGRAM_ICON_TIMELINES__ || []).length) {
-      window.__ANIDIAGRAM_ICON_TIMELINES__ = manifest.icons.flatMap((iconConfig) => playIcon(iconConfig) || []);
-    }
-    stopStageTimelines();
-    window.__ANIDIAGRAM_STAGE_TIMELINES__ = mode === "readable"
-      ? playStageEffects(manifest, "readable")
-      : playStageEffects(manifest, "expressive");
+    stop();
+    if (manifest.mode === "event-driven") return playEventDriven(manifest, mode);
+    window.__ANIDIAGRAM_ICON_TIMELINES__ = playAmbientIcons(manifest);
+    window.__ANIDIAGRAM_STAGE_TIMELINES__ = playStageEffects(manifest, mode);
+    window.AniDiagramEdgeMotion?.play(mode);
+
     return syncTimelineStore();
   }
 
   function stop() {
+    pausedPlayback.clear();
+    clearEventHover();
+    clearIconHover();
+    if (typeof clearChoreographerFocus === "function") clearChoreographerFocus();
+    window.AniDiagramEdgeMotion?.clear();
+    settleCharacterTimelines(window.__ANIDIAGRAM_EVENT_DRIVEN__?.iconTimelines || []);
+    window.__ANIDIAGRAM_EVENT_DRIVEN__ = null;
+    window.AniDiagramEntrance?.clear();
     settleCharacterTimelines(window.__ANIDIAGRAM_ICON_TIMELINES__ || []);
     (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).forEach((tl) => tl.kill());
     (window.__ANIDIAGRAM_STAGE_TIMELINES__ || []).forEach((tl) => tl.kill());
@@ -3581,17 +3768,41 @@
   }
 
   function pause() {
-    (window.__ANIDIAGRAM_TIMELINES__ || []).forEach((tl) => tl.pause());
+    const alreadyPaused = runtimePaused;
+    runtimePaused = true; window.__ANIDIAGRAM_USER_PAUSED__ = true;
+    window.AniDiagramEntrance?.pause();
+    const all = [...(window.__ANIDIAGRAM_TIMELINES__ || [])];
+    const scrub = window.__ANIDIAGRAM_CHOREOGRAPHER__?.scrub;
+    if (scrub) all.push(scrub);
+    all.forEach(timeline => {
+      if (!alreadyPaused) pausedPlayback.set(timeline, timeline.paused());
+      timeline.pause();
+    });
   }
 
   function resume() {
-    (window.__ANIDIAGRAM_TIMELINES__ || []).forEach((tl) => tl.resume());
+    runtimePaused = false; window.__ANIDIAGRAM_USER_PAUSED__ = false;
+    window.AniDiagramEntrance?.resume();
+    const all = [...(window.__ANIDIAGRAM_TIMELINES__ || [])];
+    const scrub = window.__ANIDIAGRAM_CHOREOGRAPHER__?.scrub;
+    if (scrub) all.push(scrub);
+    all.forEach(timeline => {
+      if (!timeline.__anidiagramHoverSuspended && !pausedPlayback.get(timeline)) timeline.resume();
+    });
+    pausedPlayback.clear();
   }
 
   function restart() {
+    window.__ANIDIAGRAM_CHOREOGRAPHER__?.scrub?.kill();
+    if (window.__ANIDIAGRAM_CHOREOGRAPHER__) window.__ANIDIAGRAM_CHOREOGRAPHER__.scrub = null;
+    pausedPlayback.clear();
+    runtimePaused = false; window.__ANIDIAGRAM_USER_PAUSED__ = false;
+    if (!window.__ANIDIAGRAM_CHOREOGRAPHER_ACTIVE__) window.AniDiagramEntrance?.play();
     (window.__ANIDIAGRAM_TIMELINES__ || []).forEach((tl) => tl.restart());
   }
 
+
+/* Viewer controls; assembled in the shared runtime closure. */
   function wireViewer() {
     const stage = document.getElementById("stage");
     const viewer = document.getElementById("viewer");
@@ -3599,15 +3810,7 @@
     if (!stage || !viewer || !viewport) return;
     const svg = viewport.querySelector("svg");
     const download = document.getElementById("download");
-    let scale = 1;
-    let x = 0;
-    let y = 0;
-    let dragging = false;
-    let lastX = 0;
-    let lastY = 0;
-    function applyTransform() {
-      viewport.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
-    }
+    window.__ANIDIAGRAM_VIEWPORT__ = window.AniDiagramViewport.mount(stage, viewport, svg);
     function setDownload() {
       if (!download || !svg) return;
       const blob = new Blob([new XMLSerializer().serializeToString(svg)], { type: "image/svg+xml" });
@@ -3657,41 +3860,35 @@
     document.querySelectorAll(".motion-choice").forEach((button) => {
       button.addEventListener("click", () => setMotionMode(button.dataset.motion));
     });
-    const zoomIn = document.getElementById("zoom-in");
-    const zoomOut = document.getElementById("zoom-out");
-    const reset = document.getElementById("reset");
-    if (zoomIn) zoomIn.addEventListener("click", () => { scale = Math.min(3, scale + 0.15); applyTransform(); });
-    if (zoomOut) zoomOut.addEventListener("click", () => { scale = Math.max(0.35, scale - 0.15); applyTransform(); });
-    if (reset) reset.addEventListener("click", () => { scale = 1; x = 0; y = 0; applyTransform(); });
-    stage.addEventListener("pointerdown", (event) => {
-      dragging = true;
-      stage.classList.add("dragging");
-      lastX = event.clientX;
-      lastY = event.clientY;
-      stage.setPointerCapture(event.pointerId);
+    const hint = document.getElementById("readable-hint");
+    if (hint) hint.hidden = document.querySelectorAll("g.node").length <= 12;
+    document.getElementById("copy-link")?.addEventListener("click", async () => {
+      const status = document.getElementById("runtime-status");
+      try { await navigator.clipboard.writeText(location.href); if (status) status.textContent = document.documentElement.lang === "zh-CN" ? "链接已复制" : "Link copied"; }
+      catch (_) { if (status) status.textContent = document.documentElement.lang === "zh-CN" ? "复制失败，请复制地址栏" : "Copy failed; copy the address bar"; }
     });
-    stage.addEventListener("pointermove", (event) => {
-      if (!dragging) return;
-      x += event.clientX - lastX;
-      y += event.clientY - lastY;
-      lastX = event.clientX;
-      lastY = event.clientY;
-      applyTransform();
-    });
-    stage.addEventListener("pointerup", () => {
-      dragging = false;
-      stage.classList.remove("dragging");
+    const nodes = Array.from(document.querySelectorAll("g.node")), edges = Array.from(document.querySelectorAll("g.edge"));
+    const clearContext = () => document.querySelectorAll(".context-dim,.context-focus").forEach(el => el.classList.remove("context-dim", "context-focus"));
+    function highlight(node) {
+      if (window.__ANIDIAGRAM_CHOREOGRAPHER_ACTIVE__ || document.getElementById("diagram-reader")) return;
+      const id = node.id.replace(/^node-/, ""), related = new Set([id]);
+      const active = edges.filter(edge => edge.dataset.source === id || edge.dataset.target === id);
+      active.forEach(edge => { related.add(edge.dataset.source); related.add(edge.dataset.target); });
+      nodes.forEach(el => { el.classList.toggle("context-dim", !related.has(el.id.replace(/^node-/, ""))); el.classList.toggle("context-focus", el === node); });
+      edges.forEach(el => el.classList.toggle("context-dim", !active.includes(el)));
+    }
+    nodes.forEach(node => {
+      node.addEventListener("pointerenter", () => highlight(node));
+      node.addEventListener("pointerleave", clearContext);
+      node.addEventListener("focus", () => highlight(node));
+      node.addEventListener("blur", clearContext);
     });
     setDownload();
     if (svg && svg.dataset.motionProfile === "off") setMotionMode("off");
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) setMotionMode("readable");
   }
 
-  window.AniDiagramRuntime = { play, pause, resume, restart, stop };
-  document.addEventListener("DOMContentLoaded", () => {
-    wireViewer();
-    play();
-  });
+
   // Illustrated 2.5.0 public extension: approved Batch 5 motions.
   function playIllustratedDeveloper({ config, parts, gsap }) {
     const required = ["body", "head", "hair", "code-console", "console-header", "code-glyphs", "hands"];
@@ -3930,454 +4127,503 @@
   characterPerformanceIds.add("illustrated-alert-detect-escalate-acknowledge-v1");
   characterPerformanceIds.add("illustrated-debug-reproduce-inspect-fix-v1");
 
-  function playChoreographer(manifest, autoplay = true) {
-    if (!window.gsap || !manifest || !isPlainObject(manifest.choreographer)) return [];
-    stop();
-    if (window.AniDiagramEdgeMotion && window.AniDiagramEdgeMotion.clear) {
-      window.AniDiagramEdgeMotion.clear();
-    }
-    const steps = Array.isArray(manifest.choreographer.steps) ? manifest.choreographer.steps : [];
-    const edges = Array.from(document.querySelectorAll("g.edge"));
-    const timeline = window.gsap.timeline({ paused: !autoplay });
-    const stepStates = [];
-    steps.forEach((step, index) => {
-      const source = document.getElementById(`node-${step.source}`);
-      const target = document.getElementById(`node-${step.target}`);
-      const edge = edges[Number(step.edge_index)];
-      const path = edge && (edge.querySelector(".edge-draw") || edge.querySelector(".edge-base"));
-      const start = timeline.duration();
-      timeline.addLabel(`step-${index}`, start);
-      if (source) {
-        timeline.to(source, {
-          scale: 1.025,
-          transformOrigin: "center center",
-          duration: 0.18,
-          ease: "power1.out",
-        }, start);
-      }
-      if (path) {
-        timeline.fromTo(path, {
-          strokeDasharray: 1,
-          strokeDashoffset: 1,
-          opacity: 0.35,
-        }, {
-          strokeDashoffset: 0,
-          opacity: 1,
-          duration: 0.58,
-          ease: "power1.inOut",
-        }, start + 0.18);
-      }
-      if (source) timeline.to(source, { scale: 1, duration: 0.2 }, start + 0.58);
-      if (target) {
-        timeline.to(target, {
-          scale: 1.035,
-          transformOrigin: "center center",
-          duration: 0.2,
-          ease: "back.out(1.5)",
-        }, start + 0.68);
-        timeline.to(target, { scale: 1, duration: 0.24 }, start + 0.9);
-      }
-      const duration = Math.max(1.2, Number(step.duration) || 1.2);
-      timeline.to({}, { duration: Math.max(0, start + duration - timeline.duration()) });
-      stepStates.push({ index, start, end: start + duration, label: step.label || `Step ${index + 1}` });
+  window.AniDiagramRuntime = { play, pause, resume, restart, stop };
+  /* Causal explanation and camera; assembled in the shared runtime closure. */
+  function setChoreographerPlayback(playing) {
+    const svg=document.querySelector('#viewport svg'), viewer=document.getElementById('viewer'), toggle=document.getElementById('toggle');
+    if(svg) { if(playing)svg.unpauseAnimations?.();else svg.pauseAnimations?.(); }
+    if(toggle&&viewer)toggle.textContent=playing?viewer.dataset.labelPause:viewer.dataset.labelPlay;
+  }
+  function clearChoreographerFocus() {
+    const state = window.__ANIDIAGRAM_CHOREOGRAPHER__;
+    if (state?.scrub) state.scrub.kill();
+    window.__ANIDIAGRAM_CHOREOGRAPHER_ACTIVE__ = false;
+    window.__ANIDIAGRAM_CHOREOGRAPHER__ = null;
+    document.querySelectorAll('.narration-dim').forEach(el => {
+      el.style.removeProperty('opacity'); el.classList.remove('narration-dim');
     });
-    timeline.addLabel("timeline-end", timeline.duration());
+    document.querySelectorAll('.context-dim,.context-focus').forEach(el => el.classList.remove('context-dim','context-focus'));
+    (state?.restore || []).forEach(({el,style,transform}) => {
+      if (style === null) el.removeAttribute('style'); else el.setAttribute('style',style);
+      if (transform === null) el.removeAttribute('transform'); else el.setAttribute('transform',transform);
+      if (el._gsap) el._gsap.uncache = 1;
+    });
+    const card = document.getElementById('narration');
+    if (card) card.hidden = true;
+    if (state) window.__ANIDIAGRAM_VIEWPORT__?.fit();
+    if (state?.readerStyle) state.readerStyle.media = state.readerMedia;
+  }
+
+  function updateNarration(state, index) {
+    if (!state || !state.steps.length) return;
+    state.current = index;
+    const step = state.steps[index], zh = document.documentElement.lang === 'zh-CN';
+    const activeNodes = new Set([`node-${step.source}`, `node-${step.target}`]);
+    document.querySelectorAll('g.node,g.edge').forEach(el => {
+      const focus = activeNodes.has(el.id) || el === state.edges[Number(step.edge_index)];
+      el.classList.add('narration-dim'); el.style.opacity = focus ? '1' : '.25';
+    });
+    const card = document.getElementById('narration');
+    if (!card) return;
+    card.hidden = false;
+    document.getElementById('narration-count').textContent = zh ? `第 ${index + 1} / ${state.steps.length} 步` : `Step ${index + 1} / ${state.steps.length}`;
+    document.getElementById('narration-label').textContent = step.label || `${step.source} → ${step.target}`;
+    const route = document.getElementById('narration-route');
+    if (route) {
+      const path = `${step.source_label || step.source} → ${step.target_label || step.target}`;
+      route.textContent = step.target_caption ? `${path} · ${step.target_caption}` : path;
+    }
+    const condition = document.getElementById('narration-condition');
+    condition.hidden = !step.condition;
+    condition.textContent = step.condition ? `${zh ? '条件' : 'Condition'}: ${step.condition}` : '';
+    const sources = document.getElementById('narration-sources'); sources.replaceChildren();
+    (step.source_refs || []).forEach(ref => {
+      if (!ref || !/^https?:\/\//i.test(ref.href || '')) return;
+      const link = document.createElement('a'); link.href = ref.href;
+      link.textContent = ref.title || ref.id || (zh ? '源码' : 'Source');
+      link.target = '_blank'; link.rel = 'noopener noreferrer'; sources.append(link);
+    });
+    document.querySelectorAll('.step-dot').forEach((dot, i) => {
+      if (i === index) dot.setAttribute('aria-current', 'step'); else dot.removeAttribute('aria-current');
+    });
+  }
+
+  function playChoreographer(manifest, autoplay = true) {
+    if (!manifest || !isPlainObject(manifest.choreographer)) return [];
+    stop();
+    window.__ANIDIAGRAM_CHOREOGRAPHER_ACTIVE__ = true;
+    const raw = Array.isArray(manifest.choreographer.steps) ? manifest.choreographer.steps : [];
+    const state = { timeline: null, steps: [], edges: Array.from(document.querySelectorAll('g.edge')), current: -1, scrub: null };
+    state.readerStyle=document.getElementById('reader-selection-style');
+    state.readerMedia=state.readerStyle?.media || '';
+    if(state.readerStyle)state.readerStyle.media='not all';
+    state.restore = [...document.querySelectorAll('g.node,g.edge,.edge-draw,.edge-base')].map(el=>({el,style:el.getAttribute('style'),transform:el.getAttribute('transform')}));
+    window.__ANIDIAGRAM_CHOREOGRAPHER__ = state;
+    let cursor = 0;
+    raw.forEach((step, index) => { const duration = Math.max(1.8, Number(step.duration) || 1.8); state.steps.push({ ...step, index, start: cursor, end: cursor + duration }); cursor += duration; });
+    const progress = document.getElementById('narration-progress');
+    if (progress) {
+      progress.replaceChildren(); state.steps.forEach((step, index) => {
+        const dot = document.createElement('button'); dot.type = 'button'; dot.className = 'step-dot';
+        dot.setAttribute('aria-label', `${document.documentElement.lang === 'zh-CN' ? '步骤' : 'Step'} ${index + 1}: ${step.label || ''}`);
+        dot.addEventListener('click', () => selectChoreographerStep(index)); progress.append(dot);
+      });
+    }
+    if (!state.steps.length) { clearChoreographerFocus(); return []; }
+    updateNarration(state, 0);
+    window.__ANIDIAGRAM_VIEWPORT__?.fit();
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (!window.gsap || reduced || currentMotionMode === 'off') { setChoreographerPlayback(false); return []; }
+    const camera = window.__ANIDIAGRAM_VIEWPORT__;
+    const cameraState = camera?.state();
+    const timeline = window.gsap.timeline({ paused: true, onComplete: () => setChoreographerPlayback(false), onUpdate: () => {
+      const time = timeline.time();
+      const index = Math.max(0, state.steps.findLastIndex(step => time >= step.start));
+      if (index !== state.current) updateNarration(state, index);
+    }});
+    state.timeline = timeline;
+    state.steps.forEach(step => {
+      const source = document.getElementById(`node-${step.source}`), target = document.getElementById(`node-${step.target}`);
+      const edge = state.edges[Number(step.edge_index)];
+      const path = edge && (edge.querySelector('.edge-draw') || edge.querySelector('.edge-base'));
+      timeline.addLabel(`step-${step.index}`, step.start);
+      if (camera && cameraState && source && target) {
+        const boxes = [source.getBBox(), target.getBBox()];
+        if (path) boxes.push(path.getBBox());
+        const left = Math.min(...boxes.map(box => box.x)), top = Math.min(...boxes.map(box => box.y));
+        const right = Math.max(...boxes.map(box => box.x + box.width)), bottom = Math.max(...boxes.map(box => box.y + box.height));
+        const bounds = { x: left - 24, y: top - 24, width: right - left + 48, height: bottom - top + 48 };
+        timeline.to(cameraState, { ...camera.focusTransform(bounds), duration: .4, ease: 'power2.inOut', onUpdate: () => camera.setState(cameraState) }, step.start);
+      }
+      if (path) timeline.fromTo(path, { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: .58, ease: 'none' }, step.start+.18);
+      if (target) { timeline.to(target, { scale: 1.025, transformOrigin: 'center center', duration: .075 }, step.start+.76); timeline.to(target, { scale: 1, duration: .075 }, step.start+.835); }
+      timeline.to({}, { duration: step.end-step.start }, step.start);
+    });
+    timeline.addLabel('timeline-end', timeline.duration());
     timeline.__anidiagramChoreographer = true;
-    window.__ANIDIAGRAM_CHOREOGRAPHER__ = { timeline, steps: stepStates, current: -1 };
-    window.__ANIDIAGRAM_STAGE_TIMELINES__ = [timeline];
-    window.__ANIDIAGRAM_ICON_TIMELINES__ = [];
-    syncTimelineStore();
+    window.__ANIDIAGRAM_STAGE_TIMELINES__ = [timeline]; window.__ANIDIAGRAM_ICON_TIMELINES__ = []; syncTimelineStore();
+    setChoreographerPlayback(autoplay);
     if (autoplay) timeline.play(0);
     return [timeline];
   }
 
-  function startChoreographer() {
-    const manifest = getManifest();
-    return playChoreographer(manifest, true);
-  }
-
-  function stepChoreographer(direction) {
+  function startChoreographer() { return playChoreographer(getManifest(), true); }
+  function selectChoreographerStep(index, animate = false) {
+    if (!window.__ANIDIAGRAM_CHOREOGRAPHER__) playChoreographer(getManifest(), false);
     const state = window.__ANIDIAGRAM_CHOREOGRAPHER__;
-    if (!state || !state.timeline || !state.steps.length) {
-      playChoreographer(getManifest(), false);
+    if (!state?.steps.length) return null;
+    const step = state.steps[Math.max(0, Math.min(state.steps.length - 1, index))];
+    state.scrub?.kill();
+    if (state.timeline) {
+      state.timeline.pause(step.start);
+      if (animate) state.scrub = state.timeline.tweenTo(step.end - .001, { onComplete: () => { state.timeline.pause();setChoreographerPlayback(false); } });
+      else state.timeline.pause(Math.min(step.end-.001,step.start+.5));
     }
-    const current = window.__ANIDIAGRAM_CHOREOGRAPHER__;
-    if (!current || !current.steps.length) return null;
-    const targetIndex = Math.max(0, Math.min(current.steps.length - 1, current.current + direction));
-    const step = current.steps[targetIndex];
-    current.current = targetIndex;
-    current.timeline.pause(step.start);
-    if (direction > 0) {
-      current.timeline.tweenTo(step.end, { onComplete: () => current.timeline.pause() });
-    }
-    return step;
+    setChoreographerPlayback(Boolean(animate && state.timeline));
+    updateNarration(state, step.index); return step;
+  }
+  function stepChoreographer(direction) {
+    if (!window.__ANIDIAGRAM_CHOREOGRAPHER__) playChoreographer(getManifest(), false);
+    const state = window.__ANIDIAGRAM_CHOREOGRAPHER__;
+    return state ? selectChoreographerStep(state.current + direction, direction > 0) : null;
   }
 
-  function enhanceProductViewer(originalManifest) {
-    const viewer = document.getElementById("viewer");
-    const stage = document.getElementById("stage");
-    const viewport = document.getElementById("viewport");
-    const status = document.getElementById("runtime-status");
-    const warning = document.getElementById("runtime-warning");
-    if (!viewer || !stage || !viewport) return;
-    const notify = (message) => {
-      if (status) status.textContent = message || viewer.dataset.labelReady || "Diagram ready";
-    };
-    const showWarning = (message) => {
-      if (!warning) return;
-      warning.textContent = message || "";
-      warning.hidden = !message;
-    };
-    if (!window.gsap) showWarning(viewer.dataset.labelDependencyWarning);
-    else showWarning("");
-
-    const timelineStart = document.getElementById("timeline-start");
-    const timelinePrevious = document.getElementById("timeline-previous");
-    const timelineNext = document.getElementById("timeline-next");
-    if (["timeline", "hybrid"].includes(originalManifest.mode)) {
-      [timelineStart, timelinePrevious, timelineNext].forEach((button) => {
-        if (button) button.hidden = false;
-      });
-      if (timelineStart) timelineStart.addEventListener("click", () => {
-        startChoreographer();
-        notify(timelineStart.textContent);
-      });
-      if (timelinePrevious) timelinePrevious.addEventListener("click", () => {
-        const step = stepChoreographer(-1);
-        if (step) notify(step.label);
-      });
-      if (timelineNext) timelineNext.addEventListener("click", () => {
-        const step = stepChoreographer(1);
-        if (step) notify(step.label);
-      });
+  function enhanceProductViewer(manifest) {
+    const viewer = document.getElementById('viewer'), stage = document.getElementById('stage');
+    if (!viewer || !stage) return;
+    const notify = text => { const el=document.getElementById('runtime-status'); if(el)el.textContent=text||viewer.dataset.labelReady; };
+    const warning=document.getElementById('runtime-warning');
+    if (warning) { warning.hidden=Boolean(window.gsap); warning.textContent=window.gsap?'':viewer.dataset.labelDependencyWarning; }
+    const explain=document.getElementById('timeline-start'), previous=document.getElementById('timeline-previous'), next=document.getElementById('timeline-next');
+    if (manifest.choreographer?.steps?.length) {
+      [explain,previous,next].forEach(el=>{ if(el)el.hidden=false; });
+      explain?.addEventListener('click',()=>{startChoreographer();stage.focus();});
+      previous?.addEventListener('click',()=>{ const step=stepChoreographer(-1); if(step)notify(step.label); });
+      next?.addEventListener('click',()=>{ const step=stepChoreographer(1); if(step)notify(step.label); });
     }
-
-    const toggle = document.getElementById("toggle");
-    const restartButton = document.getElementById("restart");
-    const zoomIn = document.getElementById("zoom-in");
-    const zoomOut = document.getElementById("zoom-out");
-    const reset = document.getElementById("reset");
-    const svg = viewport.querySelector("svg");
-    const localizeToggle = () => {
-      if (!toggle || !svg) return;
-      const paused = svg.animationsPaused && svg.animationsPaused();
-      toggle.textContent = paused ? viewer.dataset.labelPlay || "Play" : viewer.dataset.labelPause || "Pause";
-    };
-    if (toggle) toggle.addEventListener("click", () => setTimeout(localizeToggle, 0));
-    if (restartButton) restartButton.addEventListener("click", () => {
-      setTimeout(localizeToggle, 0);
-      notify(viewer.dataset.labelRestarted);
-    });
-    document.querySelectorAll(".motion-choice").forEach((button) => {
-      button.addEventListener("click", () => {
-        notify(button.textContent);
-        if (originalManifest.mode === "timeline" && button.dataset.motion !== "off") {
-          setTimeout(startChoreographer, 0);
-        }
-      });
-    });
-
-    let keyboardX = 0;
-    let keyboardY = 0;
-    const applyKeyboardPan = () => {
-      viewport.style.translate = `${keyboardX}px ${keyboardY}px`;
-    };
-    stage.addEventListener("keydown", (event) => {
-      if (["+", "="].includes(event.key)) {
-        event.preventDefault();
-        if (zoomIn) zoomIn.click();
-      } else if (event.key === "-") {
-        event.preventDefault();
-        if (zoomOut) zoomOut.click();
-      } else if (event.key === "0") {
-        event.preventDefault();
-        keyboardX = 0;
-        keyboardY = 0;
-        applyKeyboardPan();
-        if (reset) reset.click();
-      } else if (event.key === " " && toggle) {
-        event.preventDefault();
-        toggle.click();
-      } else if (event.key.toLowerCase() === "r" && restartButton) {
-        event.preventDefault();
-        restartButton.click();
-      } else if (event.key === "ArrowLeft") {
-        event.preventDefault();
-        keyboardX -= 24;
-        applyKeyboardPan();
-      } else if (event.key === "ArrowRight") {
-        event.preventDefault();
-        keyboardX += 24;
-        applyKeyboardPan();
-      } else if (event.key === "ArrowUp") {
-        event.preventDefault();
-        keyboardY -= 24;
-        applyKeyboardPan();
-      } else if (event.key === "ArrowDown") {
-        event.preventDefault();
-        keyboardY += 24;
-        applyKeyboardPan();
-      }
+    const toggle=document.getElementById('toggle'), svg=document.querySelector('#viewport svg');
+    const localize=()=>{ if(toggle&&svg) toggle.textContent=svg.animationsPaused?.()?viewer.dataset.labelPlay:viewer.dataset.labelPause; };
+    toggle?.addEventListener('click',()=>setTimeout(localize,0));
+    document.getElementById('restart')?.addEventListener('click',()=>{ setTimeout(localize,0); notify(viewer.dataset.labelRestarted); });
+    document.querySelectorAll('.motion-choice').forEach(button=>button.addEventListener('click',()=>{ setTimeout(localize,0); notify(button.textContent); }));
+    stage.addEventListener('keydown',event=>{
+      const controls={ '+':'zoom-in','=':'zoom-in','-':'zoom-out','0':'reset',' ':'toggle','r':'restart','R':'restart' };
+      if(controls[event.key]) { event.preventDefault(); document.getElementById(controls[event.key])?.click(); }
+      else if(['ArrowLeft','ArrowRight'].includes(event.key)) { event.preventDefault(); if(window.__ANIDIAGRAM_CHOREOGRAPHER_ACTIVE__)stepChoreographer(event.key==='ArrowRight'?1:-1); else window.__ANIDIAGRAM_VIEWPORT__?.panBy(event.key==='ArrowRight'?24:-24,0); }
+      else if(['ArrowUp','ArrowDown'].includes(event.key)) { event.preventDefault(); window.__ANIDIAGRAM_VIEWPORT__?.panBy(0,event.key==='ArrowDown'?24:-24); }
     });
   }
+  Object.assign(window.AniDiagramRuntime,{ startChoreographer, nextStep:()=>stepChoreographer(1),previousStep:()=>stepChoreographer(-1),selectStep:selectChoreographerStep });
+  document.addEventListener('DOMContentLoaded',()=>enhanceProductViewer(getManifest()||{}));
 
-  const productManifestElement = document.getElementById("anidiagram-motion-manifest");
-  let productManifest = null;
-  if (productManifestElement) {
-    try {
-      productManifest = JSON.parse(productManifestElement.textContent || "{}");
-    } catch (_error) {
-      productManifest = null;
+/* Event scheduling and ambient budgets share the existing semantic performances.
+   Every arrival is a child timeline, making backwards and forwards export seeks
+   reproducible; no setTimeout callbacks create or restart node animations. */
+  let iconHover = null;
+  const iconHoverBindings = new WeakSet();
+  function clearIconHover() {
+    if (!iconHover) return;
+    settleCharacterTimelines(iconHover.timelines);
+    iconHover.timelines.forEach(timeline => timeline.kill());
+    iconHover.victims.forEach(timeline => { timeline.__anidiagramHoverSuspended = false; if (!runtimePaused && !iconHover.wasPaused.get(timeline)) timeline.resume(); });
+    const removed = new Set(iconHover.timelines);
+    window.__ANIDIAGRAM_ICON_TIMELINES__ = (window.__ANIDIAGRAM_ICON_TIMELINES__ || []).filter(timeline => !removed.has(timeline));
+    iconHover = null;
+    syncTimelineStore();
+  }
+  function registerIconHover(manifest) {
+    (manifest.icons || []).forEach(config => {
+      const node = document.getElementById(`node-${config.node_id}`);
+      if (!node || iconHoverBindings.has(node)) return;
+      iconHoverBindings.add(node);
+      node.addEventListener('pointerenter', () => {
+        if (runtimePaused) return;
+        if (currentMotionMode === 'off' || manifest.mode === 'event-driven' || manifest.mode === 'timeline' || window.__ANIDIAGRAM_CHOREOGRAPHER_ACTIVE__) return;
+        if (!manifest.stage.hover_icon_node_ids.includes(config.node_id) || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+        clearIconHover();
+        const resident = window.__ANIDIAGRAM_ICON_TIMELINES__ || [];
+        const lastId = resident.at(-1)?.__anidiagramNodeId;
+        const victims = resident.filter(timeline => timeline.__anidiagramNodeId === lastId);
+        const wasPaused = new Map(victims.map(timeline => [timeline, timeline.paused()]));
+        settleCharacterTimelines(victims); victims.forEach(timeline => { timeline.__anidiagramHoverSuspended = true; timeline.pause(); });
+        const timelines = (playIcon({...config, delay: 0}) || []).map(timeline => {
+          timeline.repeat(0).delay(0); timeline.__anidiagramNodeId = config.node_id; return timeline;
+        });
+        iconHover = {timelines, victims, wasPaused};
+        window.__ANIDIAGRAM_ICON_TIMELINES__ = [...resident, ...timelines];
+        syncTimelineStore();
+      });
+      node.addEventListener('pointerleave', clearIconHover);
+    });
+  }
+  function playAmbientIcons(manifest) {
+    if (!manifest.stage?.motion_budget_contract) return manifest.icons.flatMap(config => playIcon(config) || []);
+    registerIconHover(manifest);
+    const selected = new Set(manifest.stage.active_icon_node_ids || []);
+    const cycle = window.AniDiagramEdgeMotion?.period() || manifest.stage.beat_seconds || 4;
+    return manifest.icons.filter(config => selected.has(config.node_id)).flatMap(config => (playIcon({...config, delay: 0}) || []).map(timeline => {
+      const scale = timeline.timeScale() || 1;
+      const beats = Math.ceil(Math.max(cycle, timeline.duration() / scale) / cycle);
+      timeline.repeat(-1).repeatDelay(Math.max(0, cycle * beats * scale - timeline.duration())).delay(0);
+      timeline.__anidiagramNodeId = config.node_id;
+      timeline.__anidiagramBeat = cycle;
+      return timeline;
+    }));
+  }
+  function playEventDriven(manifest, profile = 'expressive') {
+    if (!window.gsap || !window.AniDiagramEdgeMotion || profile === 'off' || manifest.profile === 'off' || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return [];
+    window.AniDiagramEdgeMotion.clear();
+    registerEventHover(manifest);
+    const selected = new Set(manifest.event_driven?.edge_indices || manifest.stage.active_edge_indices || []);
+    const pending = (manifest.edges || []).filter(entry => selected.has(entry.index) && entry.active);
+    const configs = new Map(manifest.icons.map(config => [config.node_id, config]));
+    const readyAt = new Map();
+    const events = [];
+    const iconTimelines = [];
+    const timeline = window.gsap.timeline({repeat: -1});
+    let serial = 0;
+    // Topological traversal where possible, bounded traversal for cycles. A
+    // signal's target performance finishes before its outgoing signal departs.
+    while (pending.length) {
+      let next = pending.findIndex(entry => !pending.some(other => other !== entry && other.target === entry.source));
+      if (next < 0) next = 0;
+      const entry = pending.splice(next, 1)[0];
+      const start = Math.max(serial, readyAt.get(entry.source) || 0);
+      const edge = window.AniDiagramEdgeMotion.create(entry, {repeat: 0, delay: 0, mode: profile});
+      if (!edge) continue;
+      timeline.add(edge, start);
+      const arrival = start + edge.__anidiagramArrivalAt;
+      let end = arrival + 0.15;
+      const config = configs.get(entry.target);
+      const performances = manifest.stage.icon_limit > 0 && config && entry.signal_semantic !== 'failure' ? playIcon({...config, delay: 0}) || [] : [];
+      iconTimelines.push(...performances);
+      performances.forEach(performance => {
+        performance.repeat(0).delay(0);
+        timeline.add(performance, end);
+      });
+      end += Math.max(0, ...performances.map(performance => performance.totalDuration() / (performance.timeScale() || 1)));
+      serial = Math.max(start + edge.duration(), end);
+      readyAt.set(entry.target, serial);
+      events.push({edge_index: entry.index, source: entry.source, target: entry.target, start, arrival, feedback_end: arrival + 0.15, end: serial, icon: performances.length > 0});
     }
-  }
-  if (productManifest && ["timeline", "hybrid"].includes(productManifest.mode)) {
-    const ambientManifest = {
-      ...productManifest,
-      mode: "ambient",
-      sequence: "independent-icon-loops",
-    };
-    delete ambientManifest.choreographer;
-    productManifestElement.textContent = JSON.stringify(ambientManifest);
+    const beat = Number(manifest.stage.beat_seconds) || 4;
+    const cycle = Math.max(beat, Math.ceil(timeline.duration() / beat) * beat);
+    if (timeline.duration() < cycle) timeline.to({}, {duration: cycle - timeline.duration()});
+    timeline.__anidiagramStage = 'event-driven';
+    timeline.__anidiagramEvents = events;
+    window.__ANIDIAGRAM_EVENT_DRIVEN__ = {timeline, events, cycle, iconTimelines};
+    window.__ANIDIAGRAM_STAGE_TIMELINES__ = [timeline];
+    window.__ANIDIAGRAM_ICON_TIMELINES__ = [];
+    return syncTimelineStore();
   }
 
-  Object.assign(window.AniDiagramRuntime, {
-    startChoreographer,
-    nextStep: () => stepChoreographer(1),
-    previousStep: () => stepChoreographer(-1),
-  });
+  let eventHover = null;
+  const eventHoverBindings = new WeakSet();
+  function clearEventHover() {
+    if (!eventHover) return;
+    const previous = eventHover;
+    eventHover = null;
+    previous.timeline.kill();
+    settleCharacterTimelines(previous.icons);
+    previous.edge.__anidiagramGenerated.forEach(element => element.remove());
+    previous.parent.__anidiagramHoverSuspended = false;
+    if (!previous.wasPaused && !runtimePaused) previous.parent.resume();
+    window.__ANIDIAGRAM_STAGE_TIMELINES__ = (window.__ANIDIAGRAM_STAGE_TIMELINES__ || []).filter(timeline => timeline !== previous.timeline);
+    syncTimelineStore();
+  }
+  function registerEventHover(manifest) {
+    document.querySelectorAll('g.edge').forEach((group, index) => {
+      if (eventHoverBindings.has(group)) return;
+      eventHoverBindings.add(group);
+      group.addEventListener('pointerenter', () => {
+        if (runtimePaused || currentMotionMode === 'off' || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+        if (!manifest.stage.hover_edge_indices.includes(index) || !window.__ANIDIAGRAM_EVENT_DRIVEN__) return;
+        clearEventHover();
+        const parent = window.__ANIDIAGRAM_EVENT_DRIVEN__.timeline;
+        const wasPaused = parent.paused();
+        parent.__anidiagramHoverSuspended = true;
+        parent.pause();
+        const entry = manifest.edges[index];
+        const edge = window.AniDiagramEdgeMotion.create(entry, {repeat: 0, delay: 0, mode: currentMotionMode});
+        if (!edge) { parent.__anidiagramHoverSuspended = false; if (!wasPaused) parent.resume(); return; }
+        const timeline = window.gsap.timeline();
+        timeline.add(edge, 0);
+        const config = manifest.icons.find(icon => icon.node_id === entry.target);
+        const icons = manifest.stage.icon_limit > 0 && config && entry.signal_semantic !== 'failure' ? playIcon({...config, delay: 0}) || [] : [];
+        icons.forEach(icon => { icon.repeat(0).delay(0); timeline.add(icon, edge.__anidiagramArrivalAt + 0.15); });
+        timeline.__anidiagramStage = 'event-hover';
+        eventHover = {parent, wasPaused, timeline, icons, edge};
+        window.__ANIDIAGRAM_STAGE_TIMELINES__.push(timeline);
+        syncTimelineStore();
+      });
+      group.addEventListener('pointerleave', clearEventHover);
+    });
+  }
 
   document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => {
-      if (productManifestElement && productManifest) {
-        productManifestElement.textContent = JSON.stringify(productManifest);
-      }
-      enhanceProductViewer(productManifest || {});
-      if (productManifest && productManifest.mode === "timeline") {
-        playChoreographer(productManifest, productManifest.choreographer.autoplay !== false);
-      }
-    }, 0);
+    wireViewer();
+    play();
+    if (!window.__ANIDIAGRAM_CHOREOGRAPHER_ACTIVE__) window.AniDiagramEntrance?.play();
   });
-
 })();
 
 (function () {
-  const EDGE_PACKET_DURATION = 1.65;
-  const EDGE_COMET_DURATION = 1.85;
-  const EDGE_STREAM_DURATION = 1.35;
   const SVG_NS = "http://www.w3.org/2000/svg";
   const manifestElement = document.getElementById("anidiagram-motion-manifest");
   if (!manifestElement) return;
   let manifest;
-  try {
-    manifest = JSON.parse(manifestElement.textContent || "{}");
-  } catch (error) {
-    console.warn("AniDiagram Edge Motion v1: invalid manifest", error);
-    return;
-  }
+  try { manifest = JSON.parse(manifestElement.textContent || "{}"); }
+  catch (error) { console.warn("AniDiagram Edge Motion: invalid manifest", error); return; }
   if (manifest.edge_motion_contract !== "edge-motion-v1") return;
   window.__ANIDIAGRAM_EDGE_MOTION_MANIFEST__ = manifest;
-  const legacyManifest = JSON.parse(JSON.stringify(manifest));
-  if (legacyManifest.stage) legacyManifest.stage.edge_flow = false;
-  const edgeManifestSource = JSON.stringify(manifest);
-  const legacyManifestSource = JSON.stringify(legacyManifest);
-  manifestElement.textContent = legacyManifestSource;
-
+  let currentMode = "expressive";
+  const hoverBindings = new WeakSet();
+  let hoverState = null;
   function createSvgElement(name, attributes) {
     const element = document.createElementNS(SVG_NS, name);
     Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, String(value)));
     return element;
   }
-
+  function groups() { return Array.from(document.querySelectorAll("#viewport svg g.edge, #stage svg g.edge")); }
+  function basePath(group) { return group?.querySelector("path.edge-base, path[id$='-path']"); }
+  function metrics(entry, group) {
+    const base = basePath(group);
+    const length = Math.max(1, base?.getTotalLength?.() || 1);
+    return { length, duration: length / (Number(entry.speed_px_per_second) || 180), departure: Number(entry.departure_delay) || 0 };
+  }
+  function period(entries = manifest.edges || []) {
+    const edgeGroups = groups();
+    const beat = Number(manifest.stage?.beat_seconds) || 4;
+    const longest = Math.max(beat, ...entries.map(entry => {
+      const value = metrics(entry, edgeGroups[entry.index]);
+      return value.duration + value.departure + 0.3;
+    }));
+    return Math.ceil(longest / beat) * beat;
+  }
   function insertBeforeLabel(group, element) {
     const label = group.querySelector(".edge-label");
-    if (label) group.insertBefore(element, label);
-    else group.appendChild(element);
+    if (label) group.insertBefore(element, label); else group.appendChild(element);
   }
-
+  function clearHover() {
+    if (!hoverState) return;
+    hoverState.timeline.kill();
+    hoverState.timeline.__anidiagramGenerated.forEach(element => element.remove());
+    if (hoverState.victim) {
+      hoverState.victim.__anidiagramHoverSuspended = false;
+      hoverState.victim.__anidiagramGenerated.forEach(element => element.style.removeProperty("visibility"));
+      if (!window.__ANIDIAGRAM_USER_PAUSED__ && !document.querySelector("#viewer.motion-off") && !hoverState.wasPaused) hoverState.victim.resume();
+    }
+    const removed = hoverState.timeline;
+    hoverState = null;
+    sync((window.__ANIDIAGRAM_EDGE_MOTION_TIMELINES__ || []).filter(timeline => timeline !== removed));
+  }
   function clear() {
-    document.querySelectorAll(".edge-motion-v1-generated").forEach((element) => element.remove());
-    document.querySelectorAll("[data-edge-motion-v1-opacity]").forEach((element) => {
-      const previous = element.dataset.edgeMotionV1Opacity;
-      if (previous) element.setAttribute("opacity", previous);
-      else element.removeAttribute("opacity");
-      delete element.dataset.edgeMotionV1Opacity;
-    });
-    (window.__ANIDIAGRAM_EDGE_MOTION_TIMELINES__ || []).forEach((timeline) => timeline.kill());
+    clearHover();
+    document.querySelectorAll(".edge-motion-v1-generated").forEach(element => element.remove());
+    (window.__ANIDIAGRAM_EDGE_MOTION_TIMELINES__ || []).forEach(timeline => timeline.kill());
     window.__ANIDIAGRAM_EDGE_MOTION_TIMELINES__ = [];
   }
-
   function sync(timelines) {
-    const previous = (window.__ANIDIAGRAM_STAGE_TIMELINES__ || []).filter(
-      (timeline) => timeline.__anidiagramStage !== "edge-motion"
-    );
+    const previous = (window.__ANIDIAGRAM_STAGE_TIMELINES__ || []).filter(timeline => timeline.__anidiagramStage !== "edge-motion");
     window.__ANIDIAGRAM_EDGE_MOTION_TIMELINES__ = timelines;
     window.__ANIDIAGRAM_STAGE_TIMELINES__ = [...previous, ...timelines];
-    window.__ANIDIAGRAM_TIMELINES__ = [
-      ...window.__ANIDIAGRAM_STAGE_TIMELINES__,
-      ...(window.__ANIDIAGRAM_ICON_TIMELINES__ || []),
-    ];
+    window.__ANIDIAGRAM_TIMELINES__ = [...window.__ANIDIAGRAM_STAGE_TIMELINES__, ...(window.__ANIDIAGRAM_ICON_TIMELINES__ || [])];
     return timelines;
   }
-
-  function playEdge(entry, group, mode) {
-    const base = group.querySelector("path.edge-base, path[id$='-path']");
-    if (!base || !base.getTotalLength || !window.gsap) return null;
+  function create(entry, options = {}) {
+    const group = options.group || groups()[entry.index];
+    const base = basePath(group);
+    if (!base || !window.gsap || !entry.active) return null;
     const path = base.getAttribute("d");
     if (!path) return null;
-    const length = Math.max(1, base.getTotalLength());
-    const stroke = entry.color || base.getAttribute("stroke") || "#38bdf8";
+    const timing = metrics(entry, group);
+    const { length, duration, departure } = timing;
+    const stroke = entry.signal_color || entry.color || base.getAttribute("stroke") || "#38bdf8";
     const width = Math.max(1, Number.parseFloat(base.getAttribute("stroke-width") || "2.4"));
     const kind = entry.motion_kind || "packet";
-    const delay = Number(entry.delay) || 0;
-    let timeline;
-    if (kind === "stream") {
-      const authoredLine = group.querySelector("path.edge-draw");
-      if (authoredLine) {
-        authoredLine.dataset.edgeMotionV1Opacity = authoredLine.getAttribute("opacity") || "";
-        authoredLine.setAttribute("opacity", "0.24");
-      }
-      const stream = createSvgElement("path", {
-        class: "runtime-edge-stream edge-motion-v1-generated",
-        d: path,
-        fill: "none",
-        stroke,
-        "stroke-width": Math.max(1.2, width * 0.86).toFixed(1),
-        "stroke-linecap": "round",
-        "stroke-dasharray": "8 14",
-        opacity: mode === "readable" ? "0.68" : "0.88",
-        "pointer-events": "none",
-      });
-      insertBeforeLabel(group, stream);
-      timeline = window.gsap.timeline({ repeat: -1, repeatDelay: 0, delay });
-      timeline.fromTo(stream, { attr: { "stroke-dashoffset": 0 } }, {
-        attr: { "stroke-dashoffset": -44 },
-        duration: Number(entry.duration) || EDGE_STREAM_DURATION,
-        ease: "none",
-      }, 0);
-    } else if (kind === "draw") {
-      const authoredLine = group.querySelector("path.edge-draw");
-      if (authoredLine) {
-        authoredLine.dataset.edgeMotionV1Opacity = authoredLine.getAttribute("opacity") || "";
-        authoredLine.setAttribute("opacity", "0.18");
-      }
-      const draw = createSvgElement("path", {
-        class: "runtime-edge-draw edge-motion-v1-generated",
-        d: path,
-        fill: "none",
-        stroke,
-        "stroke-width": width.toFixed(1),
-        "stroke-linecap": "round",
-        "stroke-dasharray": length.toFixed(2),
-        "stroke-dashoffset": length.toFixed(2),
-        "pointer-events": "none",
-      });
-      insertBeforeLabel(group, draw);
-      timeline = window.gsap.timeline({ delay });
-      timeline.to(draw, { attr: { "stroke-dashoffset": 0 }, duration: 0.9, ease: "power1.out" }, 0);
-    } else if (kind === "comet") {
-      const comet = createSvgElement("g", {
-        class: "runtime-edge-comet edge-motion-v1-generated",
-        "pointer-events": "none",
-      });
-      const radii = [Math.max(5.2, width * 1.9), Math.max(3.8, width * 1.42), Math.max(2.7, width), Math.max(1.8, width * 0.68)];
-      const baseOpacities = mode === "readable" ? [0.82, 0.5, 0.3, 0.16] : [1, 0.62, 0.38, 0.2];
-      const parts = radii.map((radius, index) => {
-        const part = createSvgElement("circle", {
-          class: index === 0 ? "runtime-edge-comet-head" : "runtime-edge-comet-tail",
-          cx: "0",
-          cy: "0",
-          r: radius.toFixed(1),
-          fill: stroke,
-          stroke: "none",
-          opacity: "0",
-        });
-        comet.appendChild(part);
-        return part;
-      });
-      insertBeforeLabel(group, comet);
-      const travel = { progress: 0 };
-      const placeComet = () => {
-        parts.forEach((part, index) => {
-          const local = travel.progress - index * 0.045;
-          if (local < 0 || local > 1) {
-            part.setAttribute("opacity", "0");
-            return;
-          }
-          const point = base.getPointAtLength(local * length);
-          const edgeFade = Math.min(1, local / 0.055, (1 - local) / 0.055);
-          part.setAttribute("cx", point.x.toFixed(2));
-          part.setAttribute("cy", point.y.toFixed(2));
-          part.setAttribute("opacity", Math.max(0, baseOpacities[index] * edgeFade).toFixed(2));
-        });
-      };
-      placeComet();
-      timeline = window.gsap.timeline({ repeat: -1, repeatDelay: 0, delay });
-      timeline.to(travel, {
-        progress: 1,
-        duration: Number(entry.duration) || EDGE_COMET_DURATION,
-        ease: "none",
-        onUpdate: placeComet,
-      }, 0);
-    } else if (kind === "packet") {
-      const packet = createSvgElement("circle", {
-        class: "edge-particle runtime-edge-packet edge-motion-v1-generated",
-        cx: "0",
-        cy: "0",
-        r: Math.max(4.8, width * 1.8).toFixed(1),
-        fill: stroke,
-        stroke: "none",
-        opacity: "0",
-        "pointer-events": "none",
-      });
-      insertBeforeLabel(group, packet);
-      const travel = { distance: 0 };
-      const placePacket = () => {
-        const point = base.getPointAtLength(travel.distance);
-        packet.setAttribute("cx", point.x.toFixed(2));
-        packet.setAttribute("cy", point.y.toFixed(2));
-      };
-      placePacket();
-      const duration = Number(entry.duration) || EDGE_PACKET_DURATION;
-      timeline = window.gsap.timeline({ repeat: -1, repeatDelay: 0, delay });
-      timeline.to(travel, { distance: length, duration, ease: "none", onUpdate: placePacket }, 0)
-        .to(packet, { opacity: mode === "readable" ? 0.78 : 1, duration: 0.12, ease: "power1.out" }, 0)
-        .to(packet, { opacity: 0, duration: 0.12, ease: "power1.in" }, duration - 0.12);
-    } else {
-      return null;
+    if (!["stream", "draw", "comet", "packet"].includes(kind)) return null;
+    const generated = [];
+    const add = (name, attributes) => {
+      const element = createSvgElement(name, { ...attributes, class: `${attributes.class || ''} edge-motion-v1-generated`, "pointer-events": "none" });
+      insertBeforeLabel(group, element); generated.push(element); return element;
+    };
+    const repeat = options.repeat === undefined ? -1 : options.repeat;
+    const beat = Number(manifest.stage?.beat_seconds) || 4;
+    const authoredDelay = Math.ceil((Number(entry.delay) || 0) / beat) * beat;
+    const timeline = window.gsap.timeline({ repeat, delay: options.delay === undefined ? authoredDelay : options.delay });
+    const visibleOpacity = (options.mode || currentMode) === "readable" ? 0.78 : 1;
+    if (entry.signal_semantic === "async") {
+      add("path", { class: "runtime-edge-async-line", d: path, fill: "none", stroke, "stroke-width": width, "stroke-dasharray": "5 7", opacity: 0.65 });
     }
+    if (kind === "stream") {
+      const stream = add("path", { class: "runtime-edge-stream", d: path, fill: "none", stroke, "stroke-width": Math.max(1.2, width * 0.86).toFixed(1), "stroke-linecap": "round", "stroke-dasharray": "8 14", opacity: visibleOpacity });
+      // Dash distance / time uses the same physical speed as discrete packets.
+      const cycle = options.period || period();
+      timeline.fromTo(stream, { attr: { "stroke-dashoffset": 0 } }, { attr: { "stroke-dashoffset": -(Number(entry.speed_px_per_second) || 180) * cycle }, duration: cycle, ease: "none" }, 0);
+    } else if (kind === "draw") {
+      const draw = add("path", { class: "runtime-edge-draw", d: path, fill: "none", stroke, "stroke-width": width, "stroke-linecap": "round", "stroke-dasharray": length, "stroke-dashoffset": length });
+      timeline.to(draw, { attr: { "stroke-dashoffset": 0 }, duration, ease: "none" }, departure);
+    } else {
+      const comet = kind === "comet" ? add("g", {class: "runtime-edge-comet"}) : null;
+      const count = kind === "comet" ? 4 : 1;
+      const parts = Array.from({length: count}, (_, index) => add("circle", {
+        class: kind === "comet" ? `runtime-edge-comet-${index === 0 ? 'head' : 'tail'}` : "edge-particle runtime-edge-packet",
+        cx: 0, cy: 0, r: Math.max(1.8, Math.max(4.8, width * 1.8) * Math.pow(0.66, index)), fill: stroke, stroke: "none", opacity: 0,
+      }));
+      if (comet) parts.forEach(part => comet.appendChild(part));
+      const travel = { distance: 0, visibility: 0 };
+      const place = () => parts.forEach((part, index) => {
+        // Tail spacing is in pixels, so short and long routes have equal tails.
+        const distance = travel.distance - index * 8;
+        const point = base.getPointAtLength(Math.max(0, Math.min(length, distance)));
+        part.setAttribute("cx", point.x.toFixed(2)); part.setAttribute("cy", point.y.toFixed(2));
+        part.setAttribute("opacity", distance < 0 || distance > length ? "0" : (travel.visibility * Math.pow(0.57, index)).toFixed(3));
+      });
+      place();
+      timeline.to(travel, { distance: length, duration, ease: "none", onUpdate: place }, departure)
+        .to(travel, { visibility: visibleOpacity, duration: Math.min(0.08, duration / 4), onUpdate: place }, departure);
+      if (entry.signal_semantic === "failure") {
+        timeline.to(travel, { distance: Math.max(0, length - 18), duration: 0.12, ease: "power1.out", onUpdate: place }, departure + duration)
+          .to(travel, { visibility: 0, duration: 0.08, onUpdate: place }, departure + duration + 0.12);
+      } else {
+        timeline.to(travel, { visibility: 0, duration: 0.08, onUpdate: place }, departure + duration);
+      }
+    }
+    const arrival = departure + duration;
+    if (options.feedback !== false && kind !== "draw") {
+      const point = base.getPointAtLength(length);
+      const ring = add("circle", { class: "runtime-arrival-feedback", cx: point.x, cy: point.y, r: 2, fill: "none", stroke, "stroke-width": Math.max(1.5, width), opacity: 0 });
+      timeline.fromTo(ring, { attr: {r: 2}, opacity: 0.8 }, { attr: {r: 13}, opacity: 0, duration: 0.15, ease: "power1.out", immediateRender: false }, arrival);
+    }
+    const cycle = options.period || period();
+    if (repeat !== 0 && timeline.duration() < cycle) timeline.to({}, { duration: cycle - timeline.duration() });
     timeline.__anidiagramStage = "edge-motion";
     timeline.__anidiagramEdgeIndex = entry.index;
     timeline.__anidiagramEdgeEffect = entry.effect;
     timeline.__anidiagramEdgeKind = kind;
+    timeline.__anidiagramArrivalAt = arrival;
+    timeline.__anidiagramTravelSeconds = duration;
+    timeline.__anidiagramPathLength = length;
+    timeline.__anidiagramGenerated = generated;
     return timeline;
   }
-
-  function play(mode = "expressive") {
-    clear();
-    const reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (mode === "off" || reduced || !manifest.stage || !manifest.stage.edge_flow) return sync([]);
-    const indices = mode === "readable"
-      ? manifest.stage.readable_edge_indices || []
-      : manifest.stage.active_edge_indices || [];
-    const groups = Array.from(document.querySelectorAll("#viewport svg g.edge, #stage svg g.edge"));
-    const entries = new Map((manifest.edges || []).map((entry) => [entry.index, entry]));
-    return sync(indices.map((index) => playEdge(entries.get(index) || {}, groups[index], mode)).filter(Boolean));
-  }
-
-  document.addEventListener("click", (event) => {
-    if (!event.target.closest || !event.target.closest(".motion-choice")) return;
-    manifestElement.textContent = legacyManifestSource;
-    setTimeout(() => { manifestElement.textContent = edgeManifestSource; }, 0);
-  }, true);
-
-  document.addEventListener("DOMContentLoaded", () => {
-    manifestElement.textContent = edgeManifestSource;
-    play("expressive");
-    document.querySelectorAll(".motion-choice").forEach((button) => {
-      button.addEventListener("click", () => play(button.dataset.motion || "expressive"));
+  function bindHover() {
+    groups().forEach((group, index) => {
+      if (hoverBindings.has(group)) return;
+      hoverBindings.add(group);
+      const enter = () => {
+        if (window.__ANIDIAGRAM_USER_PAUSED__) return;
+        if (!manifest.stage?.hover_edge_indices?.includes(index) || currentMode === "off" || window.__ANIDIAGRAM_CHOREOGRAPHER_ACTIVE__ || manifest.mode === "event-driven" || manifest.mode === "timeline") return;
+        if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+        clearHover();
+        const resident = window.__ANIDIAGRAM_EDGE_MOTION_TIMELINES__ || [];
+        const limit = currentMode === "readable" ? manifest.stage.readable_edge_limit : manifest.stage.edge_limit;
+        if (!limit) return;
+        const victim = resident.length >= limit ? resident[resident.length - 1] : null;
+        const wasPaused = victim?.paused();
+        if (victim) { victim.__anidiagramHoverSuspended = true; victim.pause(); victim.__anidiagramGenerated.forEach(element => element.style.visibility = "hidden"); }
+        const timeline = create(manifest.edges[index], { repeat: 0, delay: 0, mode: currentMode });
+        if (!timeline) return;
+        hoverState = {timeline, victim, wasPaused};
+        sync([...resident, timeline]);
+      };
+      group.addEventListener("pointerenter", enter);
+      group.addEventListener("pointerleave", clearHover);
+      group.addEventListener("focusin", enter);
+      group.addEventListener("focusout", clearHover);
     });
-  });
-  window.AniDiagramEdgeMotion = { play, clear };
+  }
+  function play(mode = "expressive") {
+    currentMode = mode;
+    if (manifest.mode === "event-driven") return [];
+    clear(); bindHover();
+    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (mode === "off" || reduced || !manifest.stage?.edge_flow || ["event-driven", "timeline"].includes(manifest.mode) || window.__ANIDIAGRAM_CHOREOGRAPHER_ACTIVE__) return sync([]);
+    const indices = mode === "readable" ? manifest.stage.readable_edge_indices || [] : manifest.stage.active_edge_indices || [];
+    const cycle = period();
+    return sync(indices.map(index => create(manifest.edges[index], {mode, period: cycle})).filter(Boolean));
+  }
+  window.AniDiagramEdgeMotion = { play, clear, create, metrics, period };
 })();
 
   </script>

@@ -6,8 +6,8 @@
   "canvas_policy": "per-case",
   "quality_summary": {
     "errors": 0,
-    "warnings": 0,
-    "issues": 0
+    "warnings": 2,
+    "issues": 2
   },
   "review_page": "gallery/readme-showcase/readme-showcase-round-1.html",
   "cases": [
@@ -43,7 +43,7 @@
         "quality": 65,
         "runtime_dependency": "gsap@3.15.0",
         "capture_contract": "browser-capture-v1",
-        "input_sha256": "2400491f29cc7581b0ab86c223fffd3dabd1d9ad193eff6fc7eee1b769844a9b"
+        "input_sha256": "48a81840031bd4c1088347e57abd15c02d92f7fa781a124faf865779f171faa4"
       }
     },
     {
@@ -78,7 +78,7 @@
         "quality": 65,
         "runtime_dependency": "gsap@3.15.0",
         "capture_contract": "browser-capture-v1",
-        "input_sha256": "94477febff5ea4a5d81bf7e1b259d1cdadadfe073d864d73ab134162fc85f72a"
+        "input_sha256": "e1271d06acad464d9d0c921a4c037155972d137331ebaf4490981b2ef0896c05"
       }
     },
     {
@@ -96,8 +96,8 @@
       "quality": "gallery/readme-showcase/hero-kubernetes-three-layer.quality.json",
       "quality_summary": {
         "errors": 0,
-        "warnings": 0,
-        "issues": 0
+        "warnings": 2,
+        "issues": 2
       },
       "canvas": {
         "width": 1600,
@@ -113,7 +113,7 @@
         "quality": 65,
         "runtime_dependency": "gsap@3.15.0",
         "capture_contract": "browser-capture-v1",
-        "input_sha256": "50f0d9c2e32be2f3f6037d26b6d18d33066ca0455a15cb3ac437c31b8620547c"
+        "input_sha256": "e5f6c65fd2c2babf7acb143985ea9da70e95fb646377ddf114debc86af2e3325"
       }
     },
     {
@@ -148,7 +148,7 @@
         "quality": 65,
         "runtime_dependency": "gsap@3.15.0",
         "capture_contract": "browser-capture-v1",
-        "input_sha256": "f730ff340270cb3df80f5280f2a60fef4a403b8f72b596c19686527c2f824158"
+        "input_sha256": "653650113b522ad91dc9abf1fdf019f7fbafb694175b7360728b23d2b1a00eb6"
       }
     },
     {
@@ -183,7 +183,7 @@
         "quality": 65,
         "runtime_dependency": "gsap@3.15.0",
         "capture_contract": "browser-capture-v1",
-        "input_sha256": "e0dd3aadb4da3f753844a7038854d0b52e31375e98502987f46a07f8b0cc9748"
+        "input_sha256": "95836aa6f98ca5a0a45fdd83d26961475c9a601061729cdc6097a0d0e6c7d541"
       }
     },
     {
@@ -218,7 +218,7 @@
         "quality": 65,
         "runtime_dependency": "gsap@3.15.0",
         "capture_contract": "browser-capture-v1",
-        "input_sha256": "d32a0c0fbcec36e007b9631d85fe2464f7cc03c894cc1ee67f1dcc3e30849cdc"
+        "input_sha256": "4b07f84e94c573aa52e96f691ccf9efe22f73399369192eab96de93552f01755"
       }
     },
     {
@@ -253,7 +253,7 @@
         "quality": 65,
         "runtime_dependency": "gsap@3.15.0",
         "capture_contract": "browser-capture-v1",
-        "input_sha256": "26b4eff4552469743d96514f833ef7b0d6fad5ca57074df58bd49aa5be097017"
+        "input_sha256": "0e7c7595b6d2d08700782c5a58f5042f58dbb7f90d3d0100d357b1179495c584"
       }
     },
     {
@@ -288,7 +288,7 @@
         "quality": 65,
         "runtime_dependency": "gsap@3.15.0",
         "capture_contract": "browser-capture-v1",
-        "input_sha256": "7681cc2fd4e986b1af7115928065b31644e94476fb13e67a3b73f522071a5db2"
+        "input_sha256": "30d16d8abad075af5deedad8a92b699b017ccd9f13638ea43f70f211ebbc9fd9"
       }
     }
   ]

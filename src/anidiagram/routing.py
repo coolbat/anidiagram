@@ -75,6 +75,10 @@ def _route(source, target, obstacles, tracks, canvas, offset):
             _crosses(a, b, r) for key, r in obstacles if key != own)
     starts = [p for p in starts if usable(p, source['id'])]
     ends = [p for p in ends if usable(p, target['id'])]
+    # A port already used by another edge would merge two arrows into one stub.
+    claimed = {tuple(point) for track in tracks for point in track}
+    starts = [p for p in starts if tuple(p[0]) not in claimed] or starts
+    ends = [p for p in ends if tuple(p[0]) not in claimed] or ends
     if not starts or not ends:
         return None
     xs = {12.0, canvas['width'] - 12.0}
@@ -166,7 +170,9 @@ def route_compiled_edges(nodes, edges, groups, canvas):
     for edge in edges:
         bundles[tuple(sorted((edge['from'], edge['to'])))].append(edge)
     tracks = []
-    for edge in edges:
+    # Earlier narrative steps claim the direct lanes; feedback edges detour.
+    order = sorted(range(len(edges)), key=lambda i: (edges[i].get('step') is None, edges[i].get('step') or 0, i))
+    for edge in (edges[i] for i in order):
         bundle = bundles[tuple(sorted((edge['from'], edge['to'])))]
         offset = (bundle.index(edge) - (len(bundle)-1)/2) * TRACK_SPACING
         source, target = by_id[edge['from']], by_id[edge['to']]

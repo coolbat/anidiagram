@@ -1,10 +1,99 @@
 {
   "ok": true,
-  "score": 100,
+  "score": 90,
   "summary": {
     "errors": 0,
-    "warnings": 0,
-    "issues": 0
+    "warnings": 2,
+    "issues": 2
   },
-  "issues": []
+  "issues": [
+    {
+      "code": "edge_group_title_collision",
+      "severity": "warning",
+      "path": "$.edges[0]",
+      "message": "edge from 'external-users' to 'ingress' crosses group title 1",
+      "subject": {
+        "edge_index": 0,
+        "group_index": 1
+      },
+      "evidence": {
+        "segment": [
+          [
+            210.0,
+            317.0
+          ],
+          [
+            210.0,
+            378.0
+          ]
+        ],
+        "label_rect": [
+          58.0,
+          366.0,
+          279.76,
+          383.0
+        ],
+        "measurement": "estimated-text-bounds"
+      },
+      "supported_fixes": [
+        "reroute_edge_points",
+        "reposition_label"
+      ]
+    },
+    {
+      "code": "edge_group_title_collision",
+      "severity": "warning",
+      "path": "$.edges[7]",
+      "message": "edge from 'ingress' to 'deployments' crosses group title 2",
+      "subject": {
+        "edge_index": 7,
+        "group_index": 2
+      },
+      "evidence": {
+        "segment": [
+          [
+            210.0,
+            527.0
+          ],
+          [
+            210.0,
+            608.0
+          ]
+        ],
+        "label_rect": [
+          58.0,
+          586.0,
+          252.04,
+          603.0
+        ],
+        "measurement": "estimated-text-bounds"
+      },
+      "supported_fixes": [
+        "reroute_edge_points",
+        "reposition_label"
+      ]
+    }
+  ],
+  "advisories": [
+    {
+      "code": "caption_truncated",
+      "severity": "advisory",
+      "path": "$.nodes[8].caption",
+      "message": "caption intentionally ends with an ellipsis within two lines; full text is available in SVG/HTML hover, not PNG/PDF or other static exports",
+      "subject": {
+        "node_id": "deployments"
+      },
+      "evidence": {
+        "visible_lines": 2,
+        "full_lines": 3,
+        "full_text": "versioned application releases",
+        "disclosure": "svg-title",
+        "raster_text": "truncated"
+      },
+      "supported_fixes": [
+        "resize_node",
+        "shorten_caption"
+      ]
+    }
+  ]
 }

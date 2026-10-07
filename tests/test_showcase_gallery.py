@@ -426,7 +426,14 @@ class ShowcaseGalleryTest(unittest.TestCase):
             self.assertEqual(64, len(case["webp_capture"]["input_sha256"]))
             with Image.open(path) as image:
                 self.assertTrue(getattr(image, "is_animated", False), case["webp"])
-                self.assertEqual(24, image.n_frames, case["webp"])
+                # libwebp merges identical consecutive frames into one longer frame.
+                self.assertLessEqual(image.n_frames, 24, case["webp"])
+                total_ms = 0
+                for index in range(image.n_frames):
+                    image.seek(index)
+                    image.load()
+                    total_ms += image.info["duration"]
+                self.assertEqual(24 * round(1000 / 12), total_ms, case["webp"])
         self.assertLess(total_bytes, 6_000_000)
 
     def test_full_gallery_builders_keep_two_column_style_grids(self):

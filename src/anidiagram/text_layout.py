@@ -137,8 +137,10 @@ def text_block_layout(label: str, caption: str, width: float, height: float) -> 
 def ellipsized_lines(lines, limit, max_units, truncate_long=False):
     visible = list(lines[:limit])
     if truncate_long:
+        # Slightly long single words are compressed by fitted_text_length instead.
+        long_units = max_units * 1.25
         for index, line in enumerate(visible):
-            if visual_units(line) > max_units:
+            if visual_units(line) > long_units:
                 while line and visual_units(line + "…") > max_units:
                     line = line[:-1]
                 visible[index] = line.rstrip() + "…"

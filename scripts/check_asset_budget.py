@@ -14,6 +14,7 @@ README_TOTAL_BUDGET = 6 * 1024 * 1024
 README_CASE_BUDGET = 1024 * 1024
 TRACKED_GALLERY_BUDGET = 55 * 1024 * 1024
 README_FRAME_CONTRACT = 24
+README_FRAME_MS = round(1000 / 12)
 README_ASSET_COUNT = 4
 README_FILES = (ROOT / "README.md", ROOT / "README.zh-CN.md")
 README_WEBP_PATTERN = re.compile(r"\]\(\./([^)]+\.webp)\)")
@@ -34,10 +35,18 @@ def _inspect_webp(path: Path, image_module) -> dict:
     with image_module.open(path) as image:
         frames = int(getattr(image, "n_frames", 1))
         dimensions = list(image.size)
+        duration_ms = 0
+        for index in range(frames):
+            image.seek(index)
+            image.load()
+            duration_ms += int(image.info.get("duration") or 0)
     return {
         "path": str(path.relative_to(ROOT)),
         "bytes": path.stat().st_size,
         "frames": frames,
+        # libwebp merges identical consecutive frames, so the contract counts
+        # authored frame slots from total duration rather than stored frames.
+        "frame_slots": round(duration_ms / README_FRAME_MS) if duration_ms else frames,
         "dimensions": dimensions,
     }
 
@@ -61,8 +70,8 @@ def audit(gallery: Path) -> dict:
     for item in inspected:
         if item["bytes"] > README_CASE_BUDGET:
             issues.append(f'{item["path"]}: {item["bytes"]} bytes exceeds {README_CASE_BUDGET}')
-        if item["frames"] != README_FRAME_CONTRACT:
-            issues.append(f'{item["path"]}: {item["frames"]} frames, expected {README_FRAME_CONTRACT}')
+        if item["frame_slots"] != README_FRAME_CONTRACT:
+            issues.append(f'{item["path"]}: {item["frame_slots"]} frames, expected {README_FRAME_CONTRACT}')
     readme_total = sum(item["bytes"] for item in cases)
     gallery_total = sum(path.stat().st_size for path in gallery.rglob("*") if path.is_file())
     if len(cases) != README_ASSET_COUNT:

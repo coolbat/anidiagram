@@ -72,6 +72,10 @@
       "role": "neutral",
       "semantic_kind": "governance",
       "importance": "primary",
+      "members": [
+        "human-engineer",
+        "automation-heartbeat"
+      ],
       "effect": {
         "preset": "border-scan"
       }
@@ -88,6 +92,11 @@
       "role": "neutral",
       "semantic_kind": "execution",
       "importance": "primary",
+      "members": [
+        "isolated-worktree",
+        "project-skills",
+        "maker-agent"
+      ],
       "effect": {
         "preset": "border-scan"
       }
@@ -104,6 +113,11 @@
       "role": "neutral",
       "semantic_kind": "delivery",
       "importance": "primary",
+      "members": [
+        "verifier-agent",
+        "tool-connectors",
+        "external-state"
+      ],
       "effect": {
         "preset": "border-scan"
       }
@@ -294,7 +308,7 @@
       "label": "discover + isolate",
       "role": "process",
       "direction": "forward",
-      "route": "straight",
+      "route": "orthogonal",
       "step": 2,
       "semantic_relation_id": "automation-opens-worktree",
       "semantic_kind": "orchestration",
@@ -305,7 +319,17 @@
       },
       "flow_id": "outer-loop",
       "flow_importance": "primary",
-      "flow_repeat": "loop"
+      "flow_repeat": "loop",
+      "points": [
+        [
+          810.0,
+          343
+        ],
+        [
+          810.0,
+          455
+        ]
+      ]
     },
     {
       "from": "isolated-worktree",
@@ -313,7 +337,7 @@
       "label": "load context",
       "role": "process",
       "direction": "forward",
-      "route": "straight",
+      "route": "orthogonal",
       "step": 3,
       "semantic_relation_id": "worktree-loads-skills",
       "semantic_kind": "context-loading",
@@ -324,7 +348,17 @@
       },
       "flow_id": "outer-loop",
       "flow_importance": "primary",
-      "flow_repeat": "loop"
+      "flow_repeat": "loop",
+      "points": [
+        [
+          700,
+          509.0
+        ],
+        [
+          620,
+          509.0
+        ]
+      ]
     },
     {
       "from": "project-skills",
@@ -332,7 +366,7 @@
       "label": "use",
       "role": "process",
       "direction": "forward",
-      "route": "straight",
+      "route": "orthogonal",
       "step": 4,
       "semantic_relation_id": "skills-guide-maker",
       "semantic_kind": "instruction",
@@ -343,7 +377,17 @@
       },
       "flow_id": "outer-loop",
       "flow_importance": "primary",
-      "flow_repeat": "loop"
+      "flow_repeat": "loop",
+      "points": [
+        [
+          400,
+          509.0
+        ],
+        [
+          320,
+          509.0
+        ]
+      ]
     },
     {
       "from": "maker-agent",
@@ -351,7 +395,7 @@
       "label": "review",
       "role": "process",
       "direction": "bidirectional",
-      "route": "straight",
+      "route": "orthogonal",
       "step": 5,
       "semantic_relation_id": "maker-submits-draft",
       "semantic_kind": "verification",
@@ -362,7 +406,25 @@
       },
       "flow_id": "outer-loop",
       "flow_importance": "primary",
-      "flow_repeat": "loop"
+      "flow_repeat": "loop",
+      "points": [
+        [
+          100,
+          509.0
+        ],
+        [
+          80.0,
+          509.0
+        ],
+        [
+          80.0,
+          729.0
+        ],
+        [
+          100,
+          729.0
+        ]
+      ]
     },
     {
       "from": "verifier-agent",
@@ -370,7 +432,7 @@
       "label": "OK",
       "role": "process",
       "direction": "forward",
-      "route": "straight",
+      "route": "orthogonal",
       "step": 6,
       "semantic_relation_id": "verifier-authorizes-connectors",
       "semantic_kind": "approval",
@@ -382,7 +444,17 @@
       "condition": "Tests and acceptance evidence pass",
       "flow_id": "outer-loop",
       "flow_importance": "primary",
-      "flow_repeat": "loop"
+      "flow_repeat": "loop",
+      "points": [
+        [
+          320,
+          729.0
+        ],
+        [
+          400,
+          729.0
+        ]
+      ]
     },
     {
       "from": "tool-connectors",
@@ -390,7 +462,7 @@
       "label": "publish + record",
       "role": "process",
       "direction": "forward",
-      "route": "straight",
+      "route": "orthogonal",
       "step": 7,
       "semantic_relation_id": "connectors-update-state",
       "semantic_kind": "delivery",
@@ -401,7 +473,17 @@
       },
       "flow_id": "outer-loop",
       "flow_importance": "primary",
-      "flow_repeat": "loop"
+      "flow_repeat": "loop",
+      "points": [
+        [
+          620,
+          729.0
+        ],
+        [
+          700,
+          729.0
+        ]
+      ]
     },
     {
       "from": "external-state",
@@ -409,7 +491,7 @@
       "label": "review",
       "role": "output",
       "direction": "forward",
-      "route": "points",
+      "route": "orthogonal",
       "step": 8,
       "semantic_relation_id": "state-informs-human",
       "semantic_kind": "observability",
@@ -423,24 +505,28 @@
       "flow_repeat": "loop",
       "points": [
         [
-          810,
-          783
+          810.0,
+          675
         ],
         [
-          810,
-          890
+          810.0,
+          575.0
         ],
         [
-          36,
-          890
+          332.0,
+          575.0
         ],
         [
-          36,
-          289
+          332.0,
+          363.0
         ],
         [
-          100,
-          289
+          210.0,
+          363.0
+        ],
+        [
+          210.0,
+          343
         ]
       ]
     },
@@ -450,7 +536,7 @@
       "label": "goals + stops",
       "role": "process",
       "direction": "forward",
-      "route": "straight",
+      "route": "orthogonal",
       "step": 1,
       "semantic_relation_id": "human-governs-automation",
       "semantic_kind": "governance",
@@ -461,7 +547,17 @@
       },
       "flow_id": "outer-loop",
       "flow_importance": "primary",
-      "flow_repeat": "loop"
+      "flow_repeat": "loop",
+      "points": [
+        [
+          320,
+          289.0
+        ],
+        [
+          700,
+          289.0
+        ]
+      ]
     }
   ]
 }
