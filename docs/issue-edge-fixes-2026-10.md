@@ -59,3 +59,16 @@ hashes change in 18 cases, for unconditional edge identity and preservation of
 explicit route endpoints. The new edge-fix checkpoint covers the current style
 contract and these intentional renderer changes, without weakening the exact
 hash comparison or rewriting the older checkpoint.
+
+## Gallery verification exposed by the restored CI gate
+
+The first full browser CI run reached the previously skipped Gallery check and
+failed on the committed `flat-icon` preview. Its `motion-budget-v2` manifest
+declares two ambient icons and four hover-only icons; the old checker required
+all six to animate without interaction. This also reproduces locally with
+unchanged Gallery HTML.
+
+The checker now samples declared ambient icons for a complete beat and triggers
+each declared hover-only icon separately. Every icon must belong to one tested
+set, ambient icons must move, and each hover-only performance must move when
+triggered. No Gallery assets or production runtime behavior are changed.

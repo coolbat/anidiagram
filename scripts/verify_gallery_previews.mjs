@@ -50,20 +50,43 @@ try {
       const frame = await card.locator("iframe").elementHandle().then(handle => handle.contentFrame());
       const motion = await frame.evaluate(async () => {
         const manifest = JSON.parse(document.getElementById("anidiagram-motion-manifest").textContent);
-        const icons = manifest.icons.filter(icon => icon.performance || icon.recipe);
+        const allIcons = manifest.icons.filter(icon => icon.performance || icon.recipe);
+        const budgeted = Boolean(manifest.stage?.motion_budget_contract);
+        const activeIds = new Set(manifest.stage?.active_icon_node_ids || []);
+        const hoverIds = new Set(manifest.stage?.hover_icon_node_ids || []);
+        const icons = budgeted ? allIcons.filter(icon => activeIds.has(icon.node_id)) : allIcons;
+        const hoverIcons = budgeted ? allIcons.filter(icon => hoverIds.has(icon.node_id)) : [];
         await new Promise(resolve => setTimeout(resolve, Math.max(0, ...icons.map(icon => Number(icon.delay) || 0)) * 1000));
         const parts = icons.map(icon => Object.values(icon.parts || {}).map(selector => document.querySelector(selector)).filter(Boolean));
         const states = parts.map(() => new Set());
         const timelines = window.__ANIDIAGRAM_TIMELINES__ || [];
         const start = timelines.map(timeline => timeline.totalTime());
-        for (let sample = 0; sample < 8; sample += 1) {
+        const samples = budgeted ? Math.ceil((manifest.stage.beat_seconds || 4) / 0.3) + 2 : 8;
+        for (let sample = 0; sample < samples; sample += 1) {
           parts.forEach((elements, index) => states[index].add(elements.map(element => element.outerHTML).join("")));
           await new Promise(resolve => setTimeout(resolve, 300));
+        }
+        const frozenHoverIcons = [];
+        for (const icon of hoverIcons) {
+          const node = document.getElementById(`node-${icon.node_id}`);
+          const elements = Object.values(icon.parts || {}).map(selector => document.querySelector(selector)).filter(Boolean);
+          const values = new Set();
+          node?.dispatchEvent(new PointerEvent('pointerenter'));
+          try {
+            for (let sample = 0; sample < 8; sample += 1) {
+              values.add(elements.map(element => element.outerHTML).join(''));
+              await new Promise(resolve => setTimeout(resolve, 200));
+            }
+          } finally {
+            node?.dispatchEvent(new PointerEvent('pointerleave'));
+          }
+          if (!node || values.size < 2) frozenHoverIcons.push(icon.node_id);
         }
         const svg = document.querySelector("#viewport > svg");
         const box = svg.getBoundingClientRect();
         return {
           nodes: document.querySelectorAll(".node").length, icons: icons.length,
+          totalIcons: allIcons.length, hoverIcons: hoverIcons.length, frozenHoverIcons,
           changedIcons: states.filter(values => values.size > 1).length,
           frozenIcons: icons.filter((_, index) => states[index].size < 2).map(icon => icon.node_id),
           running: timelines.filter((timeline, index) => timeline.totalTime() > start[index]).length,
@@ -74,6 +97,8 @@ try {
         };
       });
       assert.equal(motion.changedIcons, motion.icons, `${relative}: frozen icon parts ${motion.frozenIcons}`);
+      assert.equal(motion.icons + motion.hoverIcons, motion.totalIcons, `${relative}: untested icon performances`);
+      assert.deepEqual(motion.frozenHoverIcons, [], `${relative}: frozen hover icon parts`);
       assert(motion.running > 0 || motion.completedTitleEntry, `${relative}: no playing timelines or completed title entry`);
       assert(motion.fits, `${relative}: diagram clipped by preview`);
       // Dense four-column grids can legitimately show more than eight cards.
@@ -85,7 +110,7 @@ try {
       assert.deepEqual(offscreen, [], `${surface}: off-screen runtimes were not released`);
       report.cases.push({html: relative, ...motion});
       seen.add(relative);
-      console.log(`verified ${seen.size}/${manifest.previews.length}: ${relative} (${motion.changedIcons}/${motion.icons} icons)`);
+      console.log(`verified ${seen.size}/${manifest.previews.length}: ${relative} (${motion.changedIcons}/${motion.icons} ambient icons, ${motion.hoverIcons} hover icons)`);
     }
     for (const width of [1440, 390]) {
       await page.setViewportSize({width, height: 1000});
@@ -140,4 +165,4 @@ try {
   await browser.close();
   await new Promise(resolve => server.close(resolve));
 }
-console.log(JSON.stringify({ok: report.ok, cases: report.cases.length, icons: report.cases.reduce((sum, entry) => sum + entry.changedIcons, 0), surfaces: report.surfaces.length, checks: report.checks}));
+console.log(JSON.stringify({ok: report.ok, cases: report.cases.length, icons: report.cases.reduce((sum, entry) => sum + entry.changedIcons + entry.hoverIcons, 0), surfaces: report.surfaces.length, checks: report.checks}));
