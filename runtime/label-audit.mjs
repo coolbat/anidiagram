@@ -35,6 +35,11 @@ export function auditLabels() {
   for (const [index, expected] of data.edges.entries()) {
     const group = groups[index], id = expected.id;
     if (!group) { fail('edge-missing', { id }); continue; }
+    for (const [attribute, field] of [['relationId', 'id'], ['source', 'source'], ['target', 'target'], ['direction', 'direction']]) {
+      if (group.dataset[attribute] !== expected[field]) {
+        fail('edge-identity', { id, field, expected: expected[field], actual: group.dataset[attribute] ?? null });
+      }
+    }
     const label = group.querySelector('.edge-label');
     const actual = normalize(label?.textContent), bounds = label ? box(label) : null;
     if (actual !== normalize(expected.label)) fail('label-content', { id, expected: expected.label, actual });

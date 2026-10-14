@@ -52,6 +52,17 @@ for fixture in ('short-label', 'detour-label', 'reverse-label', 'directions'):
         (outdir / fixture / 'legacy-negative.json').write_text(old.stdout)
 
     if fixture == 'detour-label':
+        unlabelled = json.loads(spec_path.read_text())
+        unlabelled['edges'][0]['label'] = ''
+        unlabelled_html = render_html_runtime(compile_scene(unlabelled), style, dependency_mode='inline',
+                                             dependency_source=ROOT / 'node_modules/gsap/dist/gsap.min.js')
+        probe('unlabelled-edge', unlabelled_html, 'passed')
+        missing_id = unlabelled_html.replace(' data-relation-id="staged-render"', '', 1)
+        assert missing_id != unlabelled_html
+        probe('unlabelled-missing-identity', missing_id, 'failed', ['edge-identity'])
+        wrong_source = unlabelled_html.replace(' data-source="source"', ' data-source="target"', 1)
+        assert wrong_source != unlabelled_html
+        probe('unlabelled-wrong-source', wrong_source, 'failed', ['edge-identity'])
         # Mutations happen in isolated test artifact strings, never in the user's page/source.
         probe('hidden-label', html.replace('</head>', '<style>.edge-label{display:none}</style></head>'), 'failed', ['label-not-visible'])
         probe('tiny-label', html.replace('</head>', '<style>.edge-label{font-size:4px!important}</style></head>'), 'failed', ['label-too-small'])

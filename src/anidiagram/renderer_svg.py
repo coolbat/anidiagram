@@ -1427,7 +1427,7 @@ def render_group(
 
 def edge_points(edge: Edge, nodes: Dict[str, NodeBox]) -> Tuple[Point, Point]:
     if len(edge.points) >= 2:
-        points = trim_route_endpoints(compact_points(list(edge.points)))
+        points = compact_points(list(edge.points))
         return points[0], points[-1]
     source = nodes.get(edge.source)
     target = nodes.get(edge.target)
@@ -1438,7 +1438,9 @@ def edge_points(edge: Edge, nodes: Dict[str, NodeBox]) -> Tuple[Point, Point]:
 
 def route_points(edge: Edge, nodes: Dict[str, NodeBox]) -> List[Point]:
     if len(edge.points) >= 2:
-        return trim_route_endpoints(compact_points(list(edge.points)))
+        # Explicit routes already own their boundary anchors and clearance.
+        # Moving them here detaches arrows and disagrees with raster exports.
+        return compact_points(list(edge.points))
     start, end = edge_points(edge, nodes)
     sx, sy = start
     ex, ey = end
@@ -1588,9 +1590,7 @@ def render_edge(
     leader = ''
     if label_placement is not None:
         placement_attrs = (' data-label-placement="' + ('placed' if label_placement['placed'] else 'failed') +
-                           '" data-expected-label="' + esc(edge.label) + '" data-direction="' + esc(edge.direction) +
-                           '" data-relation-id="' + esc(edge.semantic_relation_id or f'@edge:{index - 1}') +
-                           '"')
+                           '" data-expected-label="' + esc(edge.label) + '"')
         if label_placement['placed']:
             ax, ay = label_placement['anchor']
             box = label_placement['box']
@@ -1602,7 +1602,7 @@ def render_edge(
     <path d="M 1 1.5 L 11 6 L 1 10.5 z" fill="{esc(stroke)}" />
   </marker>
 </defs>
-<g class="edge" data-role="{esc(edge.role)}" data-source="{esc(edge.source)}" data-target="{esc(edge.target)}"{placement_attrs}>
+<g class="edge" data-role="{esc(edge.role)}" data-source="{esc(edge.source)}" data-target="{esc(edge.target)}" data-direction="{esc(edge.direction)}" data-relation-id="{esc(edge.semantic_relation_id or f'@edge:{index - 1}')}"{placement_attrs}>
   <path class="edge-base" d="{path}" fill="none" stroke="{esc(stroke)}" stroke-width="{max(1, width - 0.7):.1f}" opacity="0.24" />
 {draw_markup}
 {flow_markup}

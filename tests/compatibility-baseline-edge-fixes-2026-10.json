@@ -1,0 +1,141 @@
+{
+  "preset/pipeline": {
+    "spec": "c37f3039e9d2600ed935d9b7e0838fed283a062f139584e41ff2daeb55000677",
+    "quality": "defeadb62ef8ee437637d9e6c050ad81f2509ea02b3ac646e4fa3b12ca7d8728",
+    "svg": "1fc7623f7de7175970550c2264dcbbf02325ba246340c865ee7f9e6213a78b0c",
+    "html": "47247723e4a28561b16f7e1f8366141a2441c241eae92ecd5bc405c9bad87458"
+  },
+  "preset/loop": {
+    "spec": "a43d7c07a89e7e0d739e030a6f5e3f3d3d051cc68aa1da0bf8cf67bf686a8538",
+    "quality": "3e231d6c858fcfd335de45cb3b19b734a2dff01dc13a26ac2a33052ac14f528b",
+    "svg": "dbfadb50853e9f95321b4a5e294d5e8688c9eee188b91242ef95c86bdad22045",
+    "html": "ac13a41abb5da6beb7ee5deda44c7f6bf3080221a26f0fa112d124cf6808cfb2"
+  },
+  "preset/hub-spoke": {
+    "spec": "304cb88accee960ff6a7929e6313a7d5577d23b4161f53a5f9dc95fd616b54f5",
+    "quality": "52b3b20d71fadb80658e8623189d87f5f5f0a72695f282b46c66effdbc93c94b",
+    "svg": "ec05da27b8860400cd88a8b07f5db229adc79f32d0d641220c0d05669c93740d",
+    "html": "0d58d4a044bde4dad6374fafb8cac8450a953e52872c1d5882ac7520d9a0a990"
+  },
+  "preset/layered": {
+    "spec": "cc525cff4e4f3a4c5eb7da2cbe458124971a7a8b4052f5b7cdba9fa15b2e642e",
+    "quality": "0a03b83986fc2a7009e790eb14d02fab0d6907cf99f9e85f2bd894ab95f38f91",
+    "svg": "695113588556afe7ce049753ceaa110154c4060517f51d980c9ccb18e840df21",
+    "html": "5b0a04cd74293e80566a822500314eff6e008af1e044c97791352fe66e49b442"
+  },
+  "preset/swimlane": {
+    "spec": "2bdfccf3cecf25a4848aa6b4ef21e977b626c39e50907fc0b469569c0ba1dcbc",
+    "quality": "7b49950577e5fbb612bbb5eb4f9f29d7d63625a7658e73b550ce2dfa5370e021",
+    "svg": "84b4068a04201c503a08dc5fb3ab824fd7c6b0c8e5deba2a63ab90fb5d666ba4",
+    "html": "cd159f0da5ba85217efe86544a5fef06d5a9c6f6fcf586ef36be8e3df79ecda9"
+  },
+  "preset/compare": {
+    "spec": "673f36bc28731d72295c15334c1dbe5dfad543c4947f3a60489d1c87c3f436b4",
+    "quality": "ba351788e5c6190655c31f3536d1b028f0aca31f3cdff5e0f7732f61d9778458",
+    "svg": "903c131718c1a27d952d401a80016d450a150cb022a1a7fcf1fc5b43238f6d98",
+    "html": "3269576ca872415ef12c340409856fe4733ef0d2e91b235d8832888336310343"
+  },
+  "preset/matrix": {
+    "spec": "6ef793b25f8c4e646e4cc317d11d558ab84690a4e0c5f671a3c80acff764bcbc",
+    "quality": "8c685d2b1d2f33f7d2ff99b8180ece1bae2fad3fe14413406ac1bf075943198a",
+    "svg": "13e81b7cc33eb482a0c3a3a4424e5718a6db7d0dec933f83d6136dd20bb7db9a",
+    "html": "26c21fbf0e950618592f49a8acc7c843875c890511c0a5357ca56ddd9fa4f833"
+  },
+  "preset/timeline": {
+    "spec": "ff309549677eea653424999e86d440625608cd342458dafa729b1d7ffb0a47d2",
+    "quality": "e87c6a4a06c91b8109c840fc4bb72d5f0786d39a4b5a8fdc3ad3344661cf119f",
+    "svg": "301f29003314f097458a0d6bfa10458c3bdd8a8464a789c9c55d28c0a124ab40",
+    "html": "8778c16c106a42168ce2d2b8d83c29ee14532afa270f96df7f76d6410b6a0bb6"
+  },
+  "preset/stack": {
+    "spec": "1d754ae0337990d15f3024dff441aa81faaa78915b0ca9fe7df402e2aa78e165",
+    "quality": "3554f8f75446f016ece487a2efbefe6cf19a5cc90c3a2462e1e193d51708cb29",
+    "svg": "6af327cacc56a0d11b7f28eefe4af2e1aef25d8fd2c13c9f182e9597bfb94780",
+    "html": "7ca69773f4cc2e0b45f1d883b7f00a26551360d1d235e47aa4e2ea86db91968b"
+  },
+  "preset/funnel": {
+    "spec": "2ea4a24527db25e01a44d22e6d1f6cce10f85c33b69de1c5bcff800ac66ab82a",
+    "quality": "3554f8f75446f016ece487a2efbefe6cf19a5cc90c3a2462e1e193d51708cb29",
+    "svg": "67a6a759d57d88f2e4c0be99e23c88e92b5d840921d9afa7e9f85f0167f70f57",
+    "html": "1d28abafdd2745f2a9c469839de0a26ecb61d7e56767897eb7b7190116b62a09"
+  },
+  "preset/sequence": {
+    "spec": "8b0e673490c1b7a347e3454b1e11b0b6d62217589a205d6de99ee47c862e1fa5",
+    "quality": "eb9ecbe3ea38763842aa5cd426f4bbee26326b4a60b142b8609bce32da7e0f06",
+    "svg": "d4576ff8060ec6eef20038956541d2f59c31b75c1155fb63a81e18aed85b1419",
+    "html": "c3e0d320cfd842f3d8323073ab540f8b66347f4de343831d94c4a656e3d26b43"
+  },
+  "preset/er": {
+    "spec": "885f8f5e5843ac457e68aaa8b7634226c1caddb81a31833319512f443a482a29",
+    "quality": "d3773540b35e7ec53465b6d5ae0c09d3e3c137e6812e349f2e0ac97f84e7acc7",
+    "svg": "47028f09396cd25b139ab7ceb748865e2443e47ae12001e3bee5f24d803cace0",
+    "html": "4f8a22d176d53255bceb803d1700d4f81976f63aee22eb591d1b30e14f863cb1"
+  },
+  "preset/network": {
+    "spec": "5084a215e45131081024cf396c9b918cb0548bb8867613434f4705d5b8aaab28",
+    "quality": "20fbc674c4cc13618818e6c3179487c03e6c6c4f4584f23f04ed744f68755d80",
+    "svg": "562a8404b801d90f4e3815e3bfe82bea04672313b4799140e178958d25ce41be",
+    "html": "26af04c94f85ed4d2466103c4bbf037c9fe0d9c770b222098640e52f9a84f6ee"
+  },
+  "preset/agent-memory": {
+    "spec": "e019d6ae1809640f4c6eb13df2c336fe0f55a19ce2ff397397506c0ff3fb60aa",
+    "quality": "c3309d8efc43370250aeb24293681fbdbe08c2693c52da72e01a01c884f64d42",
+    "svg": "326c51b0ecbc7eaff2709782b9432028933853d6aed6538de53059583e83af0b",
+    "html": "dd213cdec8adbe505acfb3999d7d91a04941aad3e661aabecd6caa4be11b9097"
+  },
+  "preset/agent-loop": {
+    "spec": "a5bff6684d3b8573ac3ce0ecf0ba566c6410127917f8fff74c8c9c0e91a97de1",
+    "quality": "a080ed93288d3478b87500ec670aee5b14e453bb56913970867962badd89e60a",
+    "svg": "4dc3c6f80f02b873033ce57159da6516989b59e7530f522c6d7b41dd4186a376",
+    "html": "d8a070b7022a2442870fc0fd7b77a694a867b2601c407de7467f6efeaf17f292"
+  },
+  "preset/layered-loop": {
+    "spec": "933694a7fceb6b0999604cfe1406b6fbee6fa2c081f7d708584760420c8a7e4d",
+    "quality": "98d25dd59268ddfb9e029fa219b0b9b2bce2766a4b0a003e9cb9b57e028e2049",
+    "svg": "136c3a396b028315e62bd47b164b849922b514af4a31a7521290903e67503d28",
+    "html": "ff88d4879bb08d42a3973a6f15ec1437575c9ee73aa6d76dffe167d1c5510c9f"
+  },
+  "tests/fixtures/invalid-edge.diagram.json": {
+    "validation_error": {
+      "code": "diagram_script_validation_failed",
+      "issues": [
+        {
+          "path": "$.edges[0].to",
+          "message": "unknown node id 'missing'",
+          "code": "reference",
+          "severity": "error"
+        },
+        {
+          "path": "$.edges[0].animated",
+          "message": "expected a boolean",
+          "code": "type",
+          "severity": "error"
+        }
+      ]
+    }
+  },
+  "tests/fixtures/minimal.diagram.json": {
+    "spec": "1bf0588f03cd3a6aa01875cd77e02be3ba55191f4b907bff238fdb0a6830f848",
+    "quality": "3554f8f75446f016ece487a2efbefe6cf19a5cc90c3a2462e1e193d51708cb29",
+    "svg": "9a1809d42eeb795b9b258bd16ae60fed835c4a4ff9dc553de39226b1fa57f71e",
+    "html": "d2f5788b20d6b1a9be767d79c49d187a1ddf4f5d27d9e3dc073fb4a9afc602dc"
+  },
+  "examples/contracts/production-request-path.plan.json": {
+    "spec": "78c737ee2caa92d88ea439cf45a15a6928a6ded39b8ea8d827f436d2c3edcf86",
+    "quality": "3554f8f75446f016ece487a2efbefe6cf19a5cc90c3a2462e1e193d51708cb29",
+    "svg": "8048bb95ee58504623034079858ccd710911f70d5c5cb27d671ec9c03a97b0cd",
+    "html": "683f77cfef8d9fdc7b8484e79748d3aae2825b60baa4f7bd954840b07fc08bc0"
+  },
+  "examples/illustrated-2.5-showcase.diagram.json": {
+    "spec": "9cdfd46093dbcd1b6fabb6bfcf0155d2ae498d2a685c4f1a674479e7adbacef9",
+    "quality": "3554f8f75446f016ece487a2efbefe6cf19a5cc90c3a2462e1e193d51708cb29",
+    "svg": "2bdb6376023808495057c3e62b16ce1a348047ab991b0f93329644776c87b746",
+    "html": "97a3813e372751fe99427598b2ab58bdecee4e80c8bc976adeb78b7060426c95"
+  },
+  "examples/zh-CN/enterprise-agent-platform.plan.json": {
+    "spec": "668538a7f6b79f71aa3c61474af6b58a146896757dab918d1c6f7fde1da2bb73",
+    "quality": "23a3c755ac25ff225b2ac86258b1507f29d1c3bad0abf1d8b4324c72826c7e97",
+    "svg": "a8820c82432c5e661db66257a784c2cfc32122ccd566e7d746b0cdaa2f0eb662",
+    "html": "c9f320582bd25ae35314fcddaac2e135e3a2bab60b735d15de3e92425a36a91b"
+  }
+}
