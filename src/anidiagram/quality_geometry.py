@@ -53,7 +53,7 @@ def segment_crosses_node(start, end, node):
 
 
 def rendered_route(edge: Edge, boxes):
-    """Use the actual trimmed routes; flatten cubic curves to <=0.5px error."""
+    """Use the actual rendered routes; flatten cubic curves to <=0.5px error."""
     from .renderer_svg import curve_controls, route_points
     points = route_points(edge, boxes)
     if edge.route != "curved" or len(edge.points) >= 2 or len(points) < 2:

@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 from contextlib import redirect_stdout, redirect_stderr
 
 from anidiagram.cli import main
@@ -41,6 +42,39 @@ class ReadableLabelsTest(unittest.TestCase):
             receipt = json.loads((Path(temporary) / 'diagram.delivery.json').read_text())
             self.assertIn('readable_labels', json.dumps(receipt))
             self.assertIn('data-label-placement="placed"', (Path(temporary) / 'diagram.svg').read_text())
+
+    def test_edge_identity_survives_missing_or_failed_label_placement(self):
+        for mode in ('unlabelled', 'legacy', 'unplaceable'):
+            with self.subTest(mode=mode):
+                spec = json.loads(FIXTURE.read_text())
+                style = load_style()
+                if mode != 'legacy':
+                    style['edge']['label_placement'] = 'avoid-nodes'
+                if mode == 'unlabelled':
+                    spec['edges'][0]['label'] = ''
+                elif mode == 'unplaceable':
+                    spec['edges'][0]['label'] = '完整标签' * 100
+                scene = compile_scene(spec)
+                svg = ET.fromstring(render_svg(scene, style))
+                edge = next(element for element in svg.iter() if element.get('class') == 'edge')
+                self.assertEqual('staged-render', edge.get('data-relation-id'))
+                self.assertEqual('source', edge.get('data-source'))
+                self.assertEqual('target', edge.get('data-target'))
+                self.assertEqual('forward', edge.get('data-direction'))
+                if mode == 'unlabelled':
+                    self.assertIsNone(edge.get('data-label-placement'))
+                elif mode == 'unplaceable':
+                    self.assertEqual('failed', edge.get('data-label-placement'))
+
+    def test_unlabelled_edge_fallback_id_matches_html_relation_table(self):
+        self.spec['edges'][0]['label'] = ''
+        self.spec['edges'][0].pop('semantic_relation_id')
+        scene = compile_scene(self.spec)
+        html = render_html_runtime(scene, self.style, dependency_mode='none')
+        self.assertIn('<tr data-relation-id="@edge:0">', html)
+        svg = ET.fromstring(render_svg(scene, self.style))
+        edge = next(element for element in svg.iter() if element.get('class') == 'edge')
+        self.assertEqual('@edge:0', edge.get('data-relation-id'))
 
     def test_unsupported_native_exports_do_not_claim_readable_mode(self):
         with tempfile.TemporaryDirectory() as temporary, redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as error:

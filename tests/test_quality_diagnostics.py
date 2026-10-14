@@ -63,7 +63,7 @@ class QualityDiagnosticsTest(unittest.TestCase):
             issues[0]["subject"],
         )
         self.assertEqual(0, issues[0]["evidence"]["segment_index"])
-        self.assertEqual([[212, 208], [548, 208]], issues[0]["evidence"]["segment"])
+        self.assertEqual([[200, 208], [560, 208]], issues[0]["evidence"]["segment"])
         self.assertEqual(
             ["reroute_edge_points", "move_blocking_node", "change_layout"],
             issues[0]["supported_fixes"],

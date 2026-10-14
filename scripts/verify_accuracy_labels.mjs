@@ -129,6 +129,13 @@ try {
         return Math.hypot(Math.max(box.x - point.x, 0, point.x - right), Math.max(box.y - point.y, 0, point.y - bottom));
       };
       const scale = Math.max(Math.hypot(transform.a, transform.b), Math.hypot(transform.c, transform.d));
+      if (edge.points?.length >= 2) {
+        for (const [actual, authoredPoint, endpointName] of [[start, edge.points[0], 'start'], [end, edge.points.at(-1), 'end']]) {
+          const expected = new DOMPoint(...authoredPoint).matrixTransform(transform);
+          const distance = Math.hypot(actual.x - expected.x, actual.y - expected.y);
+          if (distance > 0.5 * scale) issues.push({id, code: 'path-authored-endpoint', endpoint: endpointName, distance});
+        }
+      }
       const source = nodes.find((node) => node.id === edge.from);
       const target = nodes.find((node) => node.id === edge.to);
       const sourceDistance = boundaryDistance(start, source.box);
